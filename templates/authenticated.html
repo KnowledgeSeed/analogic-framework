@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{  cnf.customerName }}</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="static/assets/skins/{{cnf.customerAssetsFolder}}/favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="static/assets/skins/{{cnf.customerAssetsFolder}}/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="static/assets/skins/{{cnf.customerAssetsFolder}}/favicon/favicon-16x16.png">
+        <link rel="manifest" href="static/assets/skins/{{cnf.customerAssetsFolder}}/favicon/site.webmanifest">
+        <link rel="mask-icon" href="static/assets/skins/{{cnf.customerAssetsFolder}}/favicon/safari-pinned-tab.svg" color="#0066b1">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="theme-color" content="#ffffff">
+        <link href="static/assets/css/bootstrap-grid.min.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-general.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+
+        {%  if (cnf.customerAssetsFolder == "risksimulation") %} <!-- deprecated -->
+        <link href="static/assets/css/style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        {%  endif %}
+        <link href="static/assets/css/media.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/css/widgets/loader.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <!--link href="static/assets/css/widgets/slider.css?v={{cnf.version}}" rel="stylesheet" type="text/css"-->
+        <link href="static/assets/css/widgets/simulation-panel-slider.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/css/lib/Chart-2.9.3.min.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/css/lib/nouislider.min.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+
+        <!-- widget skins -->
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-container.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-container-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-button.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-button-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-text.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-text-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-textbox.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-textbox-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-grid-table.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-grid-table-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-grid-table-cell.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-grid-table-cell-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-dropbox.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-dropbox-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-grid.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-grid-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-grid-cell.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-grid-cell-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-toggle.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-toggle-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-slider.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-slider-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-slider-touch.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-slider-touch-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-segmentedbar.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-segmentedbar-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-page.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-page-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-panel.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-panel-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-segmented.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-segmented-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-gauge.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-gauge-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-legend.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-legend-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-datepicker.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-datepicker-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-waterfall.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-waterfall-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-tornado.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-tornado-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-tornado-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-horizontal-table.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-horizontal-table-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-scrolltable.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-scrolltable-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-line-scatter-combo.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-grid-row.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-grid-row-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-combo-chart.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-textarea.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-textarea-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-popup.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-horizontalbarchart.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-pie-chart.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-pie-chart-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-line-area-chart.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-line-area-chart-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-vertical-line-box.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <link href="static/assets/skins/{{cnf.customerAssetsFolder}}/css/ks-vertical-line-box-style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+        <!-- end widget skins -->
+    </head>
+    <body>
+        <!-- libs -->
+        <script type="text/javascript" src="static/assets/js/lib/jquery/jquery-3.5.0.min.js"></script>
+        <script type="text/javascript" src="static/assets/js/lib/jquery/jquery.doubletap.js"></script>
+        <!--script type="text/javascript" src="static/assets/js/lib/jquery/jquery.mouse2touch.min.js"></script-->
+        <script type="text/javascript" src="static/assets/js/lib/jquery/jquery.cookie.js"></script>
+        <script type="text/javascript" src="static/assets/js/lib/jquery/tableSort.js"></script>
+        <script type="text/javascript" src="static/assets/js/lib/debounceAndThrottle.1.8.3.min.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/lib/jquery/jquery.actual.min.js"></script>
+        <script type="text/javascript" src="static/assets/js/lib/Chart-2.9.3.min.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/lib/chartjs-plugin-datalabels.min.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/lib/chartjs-plugin-dragdata.min.js?v={{cnf.version}}"></script>
+        <!--script type="text/javascript" src="static/assets/js/lib/chartjs-plugin-labels.js?v={{cnf.version}}"></script-->
+        <script type="text/javascript" src="static/assets/js/lib/nouislider.min.js?v={{cnf.version}}"></script>
+        {% include 'config.html' %}
+        <!-- end libs -->
+
+        <!-- framework -->
+        <script type="text/javascript" src="static/assets/js/app.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/api.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/utils.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/tm1/authentication.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/tm1/query-builder.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/shout.js?v={{cnf.version}}"></script>
+        <!-- end framework -->
+
+
+
+        <!-- widgets -->
+        <script type="text/javascript" src="static/assets/js/widgets/base/widget.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/loader.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/container.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/popup.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/swipe.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/side-bar.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/simulation-panel.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/scroll-table.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/datepicker.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/combo-chart.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/simulation-panel-slider.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/water-fall.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/grid-table/grid-table.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/grid-table/grid-table-cell.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/grid-table/grid-table-header-row.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/grid-table/grid-table-header-cell.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/button.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/text.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/textbox.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/dropbox.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/toggle.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/slider.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/gauge.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/histogram-combo-chart.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/line-scatter-combo.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/segmented-bar.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/bubble-chart.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/tornado-chart.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/page.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/image.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/segmented-control.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/segmented-control-item.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/droppable.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/horizontal-table.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/horizontaltable/radio-button-row.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/horizontaltable/action-button-row.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/horizontaltable/delete-button-row.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/textarea.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/system-popup.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/pie-chart.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/line-area-chart.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/vertical-line-box.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/shadow.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/file-upload.js?v={{cnf.version}}"></script>
+
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/horizontal-bar-chart.js?v={{cnf.version}}"></script>
+        <!-- end widgets -->
+
+        <!-- layouts -->
+        <script type="text/javascript" src="static/assets/js/widgets/new/grid/grid.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/grid/grid-row.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/grid/grid-cell.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/new/panel.js?v={{cnf.version}}"></script>
+        <!-- end layouts -->
+
+        <!-- deprecated - Ote: Csak a roche-hoz (törölve lesz)-->
+        {%  if (cnf.customerAssetsFolder == "risksimulation") %}
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/main-content.js?v={{cnf.version}}"></script>
+
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/comment.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/comment-form.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/form.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/header.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/main-menu.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/message-board.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/horizontal-table.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/textbox.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/dropbox.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/small-header.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/textarea.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/side-menu.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/button.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/text.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/checkbox.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/segmented-control.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/vertical-table.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/horizontal-buttons.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/title.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/popup.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/status-bar.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/page-title.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/main-menu-button.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/segmented-control-item.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/side-menu-button.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/horizontaltable/radio-button-row.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/horizontaltable/action-button-row.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/horizontaltable/delete-button-row.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/icon-button.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/switch-button.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/site-menu-sub.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/sitemenusub/site-menu-button.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/sitemenusub/site-menu-checkbox.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/sitemenusub/site-menu-list.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/sitemenusub/site-menu-list-item.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/combo-chart.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/datepicker.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/horizontal-bar-chart.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/widgets/deprecated/vertical-bar-chart.js?v={{cnf.version}}"></script>
+        {% endif %}
+        <!-- end deprecated -->
+
+        <!-- configs -->
+        <script type="text/javascript" src="static/assets/js/configs/{{cnf.customerAssetsFolder}}/repository.js?v={{cnf.version}}" charset="UTF-8"></script>
+        <script type="text/javascript" src="static/assets/js/configs/{{cnf.customerAssetsFolder}}/widget-config.js?v={{cnf.version}}" charset="UTF-8"></script>
+        <script type="text/javascript" src="static/assets/js/configs/{{cnf.customerAssetsFolder}}/event-map.js?v={{cnf.version}}" charset="UTF-8"></script>
+        <!-- end configs -->
+
+        <script type="text/javascript" src="static/assets/js/exports/base/export.js?v={{cnf.version}}"></script>
+        <script type="text/javascript" src="static/assets/js/exports/config-export.js?v={{cnf.version}}" async></script>
+        <script type="text/javascript" src="static/assets/js/exports/event-map-export.js?v={{cnf.version}}" async></script>
+        <script type="text/javascript" src="static/assets/js/exports/widget-config-export.js?v={{cnf.version}}" async></script>
+        <script type="text/javascript" src="static/assets/js/exports/repository-export.js?v={{cnf.version}}" async></script>
+        <script type="text/javascript" src="static/assets/js/exports/repository-extract-export.js?v={{cnf.version}}" async></script>
+    </body>
+</html>

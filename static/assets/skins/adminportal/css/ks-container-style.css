@@ -1,0 +1,8 @@
+.ks-container-withborder.ks-container {
+    border-radius: 10px;
+    border: 1px solid #b1b3b3;
+}
+
+.ks-container-scrollable.ks-container {
+    overflow-y: auto;
+}

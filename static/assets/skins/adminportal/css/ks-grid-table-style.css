@@ -1,0 +1,78 @@
+
+.ks-grid-table-standard .ks-grid-table-row {
+    border-bottom: 1px solid #e6e5e0;
+    height: 60px;
+}
+
+.ks-grid-table-standard .ks-grid-table-cell {
+    padding: 5px;
+}
+
+.ks-grid-table-standard .ks-grid-table-cell {
+    border-right: 3px solid #f4f2ed;
+}
+
+.ks-grid-table-standard .ks-grid-table-head{
+	display:none;
+
+}
+
+.ks-grid-table-standard .ks-grid-table-head .ks-grid-table-cell {
+	border:none;
+}
+
+/* risk stat */
+
+.ks-grid-table-riskstat .ks-grid-table-row {
+    border-bottom: 0px;
+    height: 60px;
+}
+
+.ks-grid-table-riskstat .ks-grid-table-cell {
+    padding: 5px;
+}
+
+.ks-grid-table-riskstat .ks-grid-table-cell {
+    border-right: 0px;
+}
+
+.ks-grid-table-riskstat .ks-grid-table-head{
+	display:none;
+
+}
+.ks-grid-table-riskstat .ks-grid-table-head .ks-grid-table-cell {
+	border:none;
+}
+
+/* risk finance */
+
+.ks-grid-table-riskfinance .ks-grid-table-row {
+    border-bottom: 1px solid #e6e5e0;
+    height: 60px;
+}
+
+.ks-grid-table-riskfinance .ks-grid-table-cell {
+    padding: 5px;
+}
+
+.ks-grid-table-riskfinance .ks-grid-table-cell {
+    border-right: 3px solid #f4f2ed;
+}
+
+
+/* widgetconfiguration */
+
+.ks-grid-table-widgetconfiguration .ks-grid-table-row {
+    border-bottom: 1px solid #e6e5e0;
+    height: 40px;
+}
+
+.ks-grid-table-widgetconfiguration .ks-grid-table-cell {
+    padding: 5px;
+}
+
+.ks-grid-table-widgetconfiguration .ks-grid-table-cell {
+    border-right: 1px solid #f4f2ed;
+    border-left: 1px solid #f4f2ed;
+
+}

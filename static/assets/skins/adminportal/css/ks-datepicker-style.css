@@ -1,0 +1,289 @@
+.ks-datepicker-standard .ks-datepicker-title {
+	color: #000;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 14px;
+	margin-bottom: 8px;
+}
+
+.ks-datepicker-standard .ks-datepicker-field {
+	background-color: #f0f1f1;
+	border: 1px solid #b1b3b3;
+	border-radius: 7px;
+	color: #000;
+	display: block;
+	font-size: 16px;
+	height: 40px;
+}
+
+.ks-datepicker-standard .ks-datepicker-icon {
+	color: #000;
+	font-size: 20px;
+	left: 14px;
+	line-height: 20px;
+	margin-top: -10px;
+	margin-right: 20px;
+	position: absolute;
+	top: 50%;
+}
+
+.ks-datepicker-standard .ks-datepicker-icon:after {
+	
+}
+
+.ks-datepicker-standard .ks-datepicker-input {
+	font-size: 16px;
+	padding: 0 12px 0 50px;
+}
+
+
+.ks-datepicker-standard .ks-datepicker-panel {
+	background-color: #fff;
+	border: 1px solid #b1b3b3;
+	border-radius: 7px;
+	padding: 4px 4px 0;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-header {
+	border-bottom: 1px solid #d8d9d9;
+	padding: 13px 0;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-year {
+	color: #000;
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 18px;
+	margin: 0 10px;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-pager {
+	background-color: #0066cc;
+	border-radius: 50%;
+	height: 18px;
+	padding-top: 5px;
+	width: 18px;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-pager:after {
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent;
+	height: 0;
+	padding: 0;
+	width: 0;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-pager.ks-left {
+	padding-left: 5px;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-pager.ks-left:after {
+	border-right: 6px solid #fff;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-pager.ks-right {
+	padding-left: 6px;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-pager.ks-right:after {
+	border-left: 6px solid #fff;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-months {
+	border-bottom: 1px solid #d8d9d9;
+	padding: 5px 0;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-month-item {
+	border-radius: 7px;
+	font-size: 14px;
+	font-weight: 600;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-month-item.on {
+	background-color: #0066cc;
+	color: #fff;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-days {
+	padding: 5px 0;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-day-item {
+	border-radius: 7px;
+	font-size: 14px;
+	font-weight: 600;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-day-item.on {
+	background-color: #0066cc;
+	color: #fff;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-day-item.ks-weekend {
+	background-color: #f2f2f2;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-day-item.ks-weekend-1 {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.ks-datepicker-standard .ks-datepicker-panel-day-item.ks-weekend-2 {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+/*analogic skin*/
+
+.ks-datepicker-analogic .ks-datepicker-title {
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 14px;
+	margin-bottom: 8px;
+}
+
+.ks-datepicker-analogic .ks-datepicker-field {
+	background-color: #f0f1f1;
+	border: 1px solid #b1b3b3;
+	border-radius: 7px;
+	color: #000;
+	display: block;
+	font-size: 16px;
+	height: 40px;
+	width: 240px;
+}
+
+.ks-datepicker-analogic .ks-datepicker-icon {
+	color: #000;
+	font-size: 20px;
+	left: 14px;
+	line-height: 20px;
+	margin-top: -10px;
+	position: absolute;
+	top: 50%;
+}
+
+.ks-datepicker-analogic .ks-datepicker-icon:after {
+	
+}
+
+.ks-datepicker-analogic .ks-datepicker-input {
+	font-size: 16px;
+	padding: 0 12px 0 12px;
+	margin-left: 40px;
+}
+
+
+.ks-datepicker-analogic .ks-datepicker-panel {
+	background-color: #fff;
+	border: 1px solid #b1b3b3;
+	border-radius: 7px;
+	padding: 4px 4px 0;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-header {
+	border-bottom: 1px solid #d8d9d9;
+	padding: 13px 0;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-year {
+	color: #000;
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 18px;
+	margin: 0 10px;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-pager {
+	background-color: #007aff;
+	border-radius: 50%;
+	height: 18px;
+	padding-top: 5px;
+	width: 18px;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-pager:after {
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent;
+	height: 0;
+	padding: 0;
+	width: 0;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-pager.ks-left {
+	padding-left: 5px;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-pager.ks-left:after {
+	border-right: 6px solid #fff;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-pager.ks-right {
+	padding-left: 6px;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-pager.ks-right:after {
+	border-left: 6px solid #fff;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-months {
+	border-bottom: 1px solid #d8d9d9;
+	padding: 5px 0;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-month-item {
+	border-radius: 7px;
+	font-size: 14px;
+	font-weight: 600;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-month-item.on {
+	background-color: #007aff;
+	color: #fff;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-days {
+	padding: 5px 0;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-day-item {
+	border-radius: 7px;
+	font-size: 14px;
+	font-weight: 600;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-day-item.on {
+	background-color: #007aff;
+	color: #fff;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-day-item.ks-weekend {
+	background-color: #f2f2f2;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-day-item.ks-weekend-1 {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.ks-datepicker-analogic .ks-datepicker-panel-day-item.ks-weekend-2 {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}

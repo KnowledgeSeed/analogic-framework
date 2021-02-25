@@ -1,0 +1,53 @@
+/*analogic skin*/
+
+.ks-segmented-analogic.ks-segmented {
+	border: 1px solid #007aff;
+	border-radius: 5px;
+	height: 30px;
+}
+
+.ks-segmented-analogic .ks-segment {
+	color: #007aff;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.ks-segmented-analogic .ks-segment {
+	border-left: 1px solid #007aff;
+}
+
+.ks-segmented-analogic .ks-segment:first-child {
+	border-left: 1px solid #007aff;
+}
+
+.ks-segmented-analogic .ks-segment.ks-on {
+	background-color: #007aff;
+	color: #fff;
+}
+
+/*analogic skin*/
+
+.ks-segmented-standard.ks-segmented {
+	border: 1px solid #007aff;
+	border-radius: 5px;
+	height: 30px;
+}
+
+.ks-segmented-standard .ks-segment {
+	color: #007aff;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.ks-segmented-standard .ks-segment {
+	border-left: 1px solid #007aff;
+}
+
+.ks-segmented-standard .ks-segment:first-child {
+	border-left: 1px solid #007aff;
+}
+
+.ks-segmented-standard .ks-segment.ks-on {
+	background-color: #007aff;
+	color: #fff;
+}

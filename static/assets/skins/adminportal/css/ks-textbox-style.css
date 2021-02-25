@@ -1,0 +1,187 @@
+/* standard skin*/
+
+.ks-textbox-standard .ks-textbox-title {
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 14px;
+	margin-bottom: 5px;
+	color:#007aff;
+}
+
+.ks-textbox-standard .ks-textbox-field {
+	background-color: #f0f1f1;
+	border: 1px solid #f0f1f1;
+	border-radius: 7px;
+	color: #000;
+	display: block;
+	font-size: 16px;
+	height: 40px;
+}
+
+.ks-textbox-standard .ks-textbox-input {
+	font-size: 16px;
+	padding: 0 10px;
+}
+
+.ks-textbox-standard .ks-textbox-field::selection {
+	border: 1px solid #747b85;
+	border-radius: 5px;
+	color:#007aff;
+}
+
+
+.ks-textbox-standard .ks-textbox-input::-webkit-input-placeholder {
+	color: #838388;
+}
+.ks-textbox-standard .ks-textbox-input::-moz-placeholder {
+	color: #838388;
+}
+.ks-textbox-standard .ks-textbox-input:-ms-input-placeholder {
+	color: #838388;
+}
+.ks-textbox-standard .ks-textbox-input:-moz-placeholder {
+	color: #838388;
+}
+
+/* searchbox skin*/
+
+.ks-textbox-searchbox .ks-textbox-title {
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 14px;
+	margin-bottom: 5px;
+	color:#007aff;
+}
+
+.ks-textbox-searchbox .ks-textbox-field {
+	background-color: #f0f1f1;
+	border: 1px solid #f0f1f1;
+	border-radius: 7px;
+	color: #000;
+	display: block;
+	font-size: 16px;
+	height: 40px;
+}
+
+.ks-textbox-searchbox .ks-textbox-input {
+	font-size: 16px;
+	padding: 0 10px;
+}
+
+.ks-textbox-searchbox .ks-textbox-field::selection {
+	border: 1px solid #747b85;
+	border-radius: 5px;
+	color:#007aff;
+}
+
+.ks-textbox-searchbox .ks-textbox-icon{
+	display: flex;
+	margin-left: 10px;
+
+}
+.ks-textbox-searchbox .ks-textbox-icon::before{
+	font-family: 'analogic' !important;
+    content: "\e991";
+    color: #000;
+    cursor: pointer;
+    font-size: 20px;
+
+}
+
+.ks-textbox-searchbox .ks-textbox-input::-webkit-input-placeholder {
+	color: #838388;
+}
+.ks-textbox-searchbox .ks-textbox-input::-moz-placeholder {
+	color: #838388;
+}
+.ks-textbox-searchbox .ks-textbox-input:-ms-input-placeholder {
+	color: #838388;
+}
+.ks-textbox-searchbox .ks-textbox-input:-moz-placeholder {
+	color: #838388;
+}
+
+
+/* analogic skin*/
+
+.ks-textbox-analogic .ks-textbox-title {
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 14px;
+	margin-bottom: 5px;
+	color:#007aff;
+}
+
+.ks-textbox-analogic .ks-textbox-field {
+	background-color: #f0f1f1;
+	border: 1px solid #f0f1f1;
+	border-radius: 7px;
+	color: #000;
+	display: block;
+	font-size: 16px;
+	height: 40px;
+}
+
+.ks-textbox-analogic .ks-textbox-input {
+	font-size: 16px;
+	padding: 0 10px;
+}
+
+.ks-textbox-analogic .ks-textbox-field::selection {
+	border: 1px solid #747b85;
+	border-radius: 5px;
+	color:#007aff;
+}
+
+
+.ks-textbox-analogic .ks-textbox-input::-webkit-input-placeholder {
+	color: #838388;
+}
+.ks-textbox-analogic .ks-textbox-input::-moz-placeholder {
+	color: #838388;
+}
+.ks-textbox-analogic .ks-textbox-input:-ms-input-placeholder {
+	color: #838388;
+}
+.ks-textbox-analogic .ks-textbox-input:-moz-placeholder {
+	color: #838388;
+}
+
+/* gridtablebox skin*/
+
+
+.ks-textbox-gridtablebox .ks-textbox-field {
+	background-color: transparent;
+	border: 0px solid transparent;
+	border-radius: 5px;
+	color:#747b85;
+	display: block;
+	font-size: 14px;
+	height: 25px;
+	width: 250px;
+}
+
+.ks-textbox-gridtablebox .ks-textbox-input {
+	font-size: 14px;
+	padding: 0 10px;
+}
+
+.ks-textbox-gridtablebox .ks-textbox-field::selection {
+	border: 1px solid #747b85;
+	border-radius: 5px;
+	color:#007aff;
+}
+
+
+.ks-textbox-gridtablebox .ks-textbox-input::-webkit-input-placeholder {
+	color: #838388;
+}
+.ks-textbox-gridtablebox .ks-textbox-input::-moz-placeholder {
+	color: #838388;
+}
+.ks-textbox-gridtablebox .ks-textbox-input:-ms-input-placeholder {
+	color: #838388;
+}
+.ks-textbox-gridtablebox .ks-textbox-input:-moz-placeholder {
+	color: #838388;
+}

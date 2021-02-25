@@ -1,0 +1,18 @@
+[
+    [
+        {
+            "title": "Total delta",
+            "delta": -70,
+            "base": 500,
+            "scenario": 430
+        }
+    ],
+    [
+        {
+            "title": "Instrumental Placements (10 year total)",
+            "delta": 55,
+            "base": 500,
+            "scenario": 430
+        }
+    ]
+]

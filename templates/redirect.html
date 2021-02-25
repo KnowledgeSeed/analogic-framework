@@ -1,0 +1,15 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <title>{{ cnf.customerName }}</title>
+    </head>
+    <body>
+
+        <script type="text/javascript" src="static/assets/js/lib/jquery/jquery-3.5.0.min.js"></script>
+        {% include 'config.html' %}
+        <script type="text/javascript">
+            window.location.href = app.url.cognosAuthenticationBridge;
+        </script>
+    </body>
+</html>

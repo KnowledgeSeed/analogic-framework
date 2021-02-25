@@ -1,0 +1,19 @@
+.ks-grid-cell-cellwhitebackground {
+    background-color: white;
+    box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.2), 0px 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.ks-grid-cell-borderskin {
+    border-color: #f4f2ed;
+    border-width: 3px;
+    border-style: solid;
+}
+
+.ks-grid-cell-paramborderskin {
+    border-bottom: 1px solid #e6e5e0;
+    border-right: 3px solid #f4f2ed;
+}
+
+.ks-grid-cell-cellwithtable .ks-grid-cell-content {
+	display: contents;
+}

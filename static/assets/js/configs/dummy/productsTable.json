@@ -1,0 +1,157 @@
+{
+    "cells": [
+        [
+            {
+                "editable": false,
+                "type": "string",
+                "value": "LP03834 CC_attack_nephelometer"
+            },
+            {
+                "editable": false,
+                "type": "string",
+                "value": "CC Reagent"
+            },
+            {
+                "editable": false,
+                "type": "float",
+                "value": "22.3"
+            },
+            {
+                "editable": false,
+                "type": "float",
+                "value": "10"
+            }
+        ],
+        [
+            {
+                "editable": false,
+                "type": "string",
+                "value": "LP03358 CC_TDM_Attack"
+            },
+            {
+                "editable": false,
+                "type": "string",
+                "value": "CC Reagent"
+            },
+            {
+                "editable": false,
+                "type": "float",
+                "value": "0.00"
+            },
+            {
+                "editable": false,
+                "type": "float",
+                "value": "2.35"
+            }
+        ],
+        [
+            {
+                "editable": false,
+                "type": "string",
+                "value": "LP03839 CC_Instrument_specific_PCh_attackkegsf"
+            },
+            {
+                "editable": false,
+                "type": "string",
+                "value": "CC Reagent"
+            },
+            {
+                "editable": false,
+                "type": "float",
+                "value": "1.5"
+            },
+            {
+                "editable": false,
+                "type": "float",
+                "value": "0.85"
+            }
+        ],
+        [
+            {
+                "editable": false,
+                "type": "string",
+                "value": "Added Product Name"
+            },
+            {
+                "editable": false,
+                "type": "string",
+                "value": "CC Instrument"
+            },
+            {
+                "editable": false,
+                "type": "float",
+                "value": ""
+            },
+            {
+                "editable": false,
+                "type": "float",
+                "value": ""
+            }
+        ]
+
+    ],
+    "leftActionCells": [
+     [
+            {
+                "active": true
+            }
+        ],
+        [
+            {
+                "active": true
+            }
+        ],
+        [
+            {
+                "active": true
+            }
+        ],
+        [
+            {
+                "active": true
+            }
+        ]],
+    "rightActionCells": [
+        [
+            {
+                "active": true,
+                "visible": false
+            },
+            {
+                "active": true,
+                "visible": true
+            }
+        ],
+        [
+            {
+                "active": true,
+                "visible": false
+            },
+            {
+                "active": true,
+                "visible": true
+            }
+        ],
+        [
+            {
+                "active": false,
+                "visible": true
+            },
+            {
+                "active": true,
+                "visible": true
+            }
+        ],
+        [
+            {
+                "active": false,
+                "visible": true
+            },
+            {
+                "active": true,
+                "visible": true
+            }
+        ]
+    ],
+    "infoText": ""
+}

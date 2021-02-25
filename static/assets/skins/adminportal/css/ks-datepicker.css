@@ -1,0 +1,92 @@
+.ks-datepicker {
+	display: block;
+	position: relative;
+}
+
+.ks-datepicker-inner {
+	height: 100%;
+}
+
+.ks-datepicker-field-inner {
+	-ms-flex-align: center;
+	align-items: center;
+	display: flex;
+	height: 100%;
+	overflow: hidden;
+	position: relative;
+}
+
+.ks-datepicker-icon {
+	cursor: pointer;
+	height: 100%;
+	position: absolute;
+	right: 0;
+}
+
+.ks-datepicker-icon:after {
+	content: "";
+	left: 50%;
+	position: absolute;
+	top: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+.ks-datepicker-input {
+	appearance: none;
+	-webkit-appearance: none;
+	background-color: transparent;
+	border: 0;
+	display: block;
+	height: 100%;
+	outline: none;
+	width: 100%;
+}
+
+.ks-datepicker-panel {
+	left: 0;
+	position: absolute;
+	top: 100%;
+	width: 100%;
+	z-index: 9;
+}
+
+.ks-datepicker-panel-header-inner {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	position: relative;
+}
+
+.ks-datepicker-panel-pager {
+	cursor: pointer;
+	position: relative;
+}
+
+.ks-datepicker-panel-pager:after {
+	content: "";
+	position: absolute;
+}
+
+.ks-datepicker-panel-months {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.ks-datepicker-panel-month-item {
+	cursor: pointer;
+	flex: 1 0 16%;
+}
+
+.ks-datepicker-panel-days {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.ks-datepicker-panel-day-item {
+	cursor: pointer;
+	flex: 1 0 14%;
+}

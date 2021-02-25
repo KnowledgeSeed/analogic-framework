@@ -1,0 +1,49 @@
+.ks-waterfall {
+    padding-left: 30px;
+}
+
+.ks-waterfall-y-line {
+    border-bottom: 2px solid #d9dde1;
+}
+.ks-waterfall-y-line.ks-axis {
+    border-bottom-width: 4px;
+}
+
+.ks-waterfall-y-line-label {
+    bottom: -2px;
+    color: #687079;
+    font-size: 12px;
+    line-height: 12px;
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -o-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+}
+
+.ks-waterfall-y-line-label.ks-left {
+    margin-right: 13px;
+}
+
+.ks-waterfall-bar-group {
+    padding: 0 10px;
+}
+
+.ks-waterfall-bar {
+    margin: 0 1px;
+}
+
+.ks-waterfall-x-line-tick {
+    background-color: #d9dde1;
+    height: 10px;
+}
+.ks-waterfall-x-line.ks-secondary .ks-waterfall-x-line-tick {
+    width: 2px;
+}
+
+.ks-waterfall-x-line-label {
+    color: #687079;
+    font-size: 12px;
+    line-height: 12px;
+    margin-top: 13px;
+}

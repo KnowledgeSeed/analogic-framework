@@ -1,0 +1,7 @@
+{
+    "values": [9.0, 9.1, 10], 
+    "labels": ["Modelled", "Plan", "Target"],
+    "minRange": 0, 
+    "maxRange": 14, 
+    "title": 2020
+}

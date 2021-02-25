@@ -1,0 +1,253 @@
+/* analogic main button */
+
+.ks-button-analogicmain.ks-button {
+	background-color: #007aff;
+	height: 40px;
+        border-radius: 5px;
+        width: 200px;
+}
+
+.ks-button-analogicmain .ks-button-label {
+	color: #fff;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+/* analogic popup button */
+
+.ks-button-analogicpopup.ks-button {
+    background-color: #007aff;
+    height: 40px;
+    border-radius: 5px;
+    width: 200px;
+}
+
+.ks-button-analogicpopup .ks-button-label {
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.ks-button-analogicpopup .ks-button-icon {
+	height: 30px;
+	color: #fff;
+}
+
+/* analogic cancel button */
+
+.ks-button-analogiccancel.ks-button {
+    height: 40px;
+    border-radius: 5px;
+    width: 200px;
+}
+
+.ks-button-analogiccancel .ks-button-label {
+    color: #007aff;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* analogic popup icon button */
+
+.ks-button-analogicpopupicon .ks-button-icon {
+	font-size: 18px;
+	color: #007aff;
+}
+
+/* analogic back button */
+
+.ks-button-analogicbackbutton .ks-button-icon {
+	font-size: 20px;
+	color: #007aff;
+}
+
+
+/* analogic add button */
+
+.ks-button-analogicaddbutton .ks-button-icon {
+	font-size: 40px;
+	color: #007aff;
+}
+
+/* userpanel */
+
+.ks-button-userpanel.ks-button {
+    height: 30px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #ebecec;
+}
+
+.ks-button-userpanel .ks-button-inner {
+    background-color: #ebecec;
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-userpanel .ks-button-icon,
+.ks-button-userpanel .ks-button-icon img {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #585959;
+}
+
+.ks-button-userpanel .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-userpanel .ks-button-label {
+    color: #585959;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* userpanelbutton */
+
+.ks-button-userpanelbutton.ks-button {
+    height: 40px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+.ks-button-userpanelbutton .ks-button-inner {
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.ks-button-userpanelbutton.ks-button:hover {
+    background-color: #bfd9f2;
+}
+
+.ks-button-userpanelbutton .ks-button-inner:hover {
+    background-color: #bfd9f2;
+}
+
+.ks-button-userpanelbutton .ks-button-icon,
+.ks-button-userpanelbutton .ks-button-icon img {
+    float: right;
+    font-size: 18px;
+    margin-top: 4px;
+    color: #b1b3b3;
+}
+
+.ks-button-userpanelbutton .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-userpanelbutton .ks-button-label {
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+/* sitemenu application button*/
+
+.ks-button-sitemenuapp.ks-button {
+    background-color: #ebecec;
+    height: 30px;
+    padding: 1px;
+    border-radius: 5px;
+    width: 180px;
+}
+
+.ks-button-sitemenuapp .ks-button-inner {
+    background-color: #ebecec;
+    border-radius: 5px;
+}
+
+.ks-button-sitemenuapp .ks-button-icon,
+.ks-button-sitemenuapp .ks-button-icon img {
+	height: 20px;
+	fill: #ff254d;
+}
+
+.ks-button-sitemenuapp .ks-button-divider {
+	width: 10px;
+}
+
+.ks-button-sitemenuapp .ks-button-label {
+	color: #585959;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+/* mainmenu button */
+
+.ks-button-appmainmenu.ks-button {
+	background-color: transparent;
+	height: 150px;
+	width: 150px;
+}
+
+.ks-button-appmainmenu .ks-button-icon {
+    color: #fff;
+	font-size: 70px;
+	display: flex;
+}
+
+.ks-button-appmainmenu.ks-button .ks-button-inner {
+	border-radius: 25px;
+	background-color: #007aff;
+}
+
+.ks-button-appmainmenu.ks-button.has-icon .ks-button-icon{
+
+	display: flex;
+}
+
+/* mainmenu */
+
+.ks-button-mainmenu.ks-button,
+.ks-button-mainmenu-on.ks-button {
+	background-color: transparent;
+        height: 30px;
+}
+
+.ks-button-mainmenu .ks-button-icon {
+        color: #747b85;
+	font-size: 22px;
+        line-height: 2px;
+}
+
+/* mainmenu on */
+
+.ks-button-mainmenuon.ks-button,
+.ks-button-mainmenuon-on.ks-button {
+	background-color: transparent;
+        height: 30px;
+}
+
+.ks-button-mainmenuon .ks-button-icon {
+        color: #007aff;
+	font-size: 22px;
+        line-height: 2px;
+}
+
+
+.ks-button-deepblue_backbutton.ks-button {
+    background-color: #0066cc;
+    border-radius: 7px;
+    height: 40px;
+    width: 40px;
+}
+
+.ks-button-deepblue_backbutton .ks-button-icon {
+    color: white;
+    font-size: 19px;
+}
+
+.ks-button-backbutton.ks-button {
+    background-color: #0066cc;
+    border-radius: 7px;
+    height: 40px;
+    width: 40px;
+}
+
+.ks-button-backbutton .ks-button-icon {
+    color: white;
+    font-size: 19px;
+}

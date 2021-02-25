@@ -1,0 +1,7 @@
+Flask==1.1.2
+Flask-Caching==1.9.0
+TM1py==1.6.0
+jwt==1.2.0
+PyJWT==2.0.1
+redis==3.5.3
+requests==2.25.1

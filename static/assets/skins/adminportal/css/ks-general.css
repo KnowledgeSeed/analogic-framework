@@ -1,0 +1,475 @@
+@font-face {
+    font-family: 'imago';
+    src: url('../fonts/berthold_imago_book-webfont.eot');
+    src: url('../fonts/berthold_imago_book-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/berthold_imago_book-webfont.woff') format('woff'),
+         url('../fonts/berthold_imago_book-webfont.ttf') format('truetype'),
+         url('../fonts/berthold_imago_book-webfont.svg#imagoregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'imago';
+    src: url('../fonts/berthold_imago_medium-webfont.eot');
+    src: url('../fonts/berthold_imago_medium-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/berthold_imago_medium-webfont.woff') format('woff'),
+         url('../fonts/berthold_imago_medium-webfont.ttf') format('truetype'),
+         url('../fonts/berthold_imago_medium-webfont.svg#imagobold') format('svg');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+  font-family: 'analogic';
+  src:  url('../fonts/analogic.eot?7hu53f');
+  src:  url('../fonts/analogic.eot?7hu53f#iefix') format('embedded-opentype'),
+    url('../fonts/analogic.ttf?7hu53f') format('truetype'),
+    url('../fonts/analogic.woff?7hu53f') format('woff'),
+    url('../fonts/analogic.svg?7hu53f#analogic') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'analogic' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'imago', sans-serif;
+    margin: 0;
+    padding: 0;
+    outline: 0;
+}
+
+.aligned-center-auto {
+    display: table!important;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.aligned-center-horizontal {
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.aligned-center-vertical {
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.aligned-center-both {
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.ks-chart-holder, .ks-chart-widget {
+    position: relative;
+}
+
+.noselect {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    -khtml-user-select: none !important;
+    -khtml-user-drag: none;
+    -o-user-select: none;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+
+.icon-arrow-left:before {
+  content: "\e900";
+}
+.icon-checkbox-on:before {
+  content: "\e901";
+}
+.icon-arrow-right:before {
+  content: "\e902";
+}
+.icon-chevron-right:before {
+  content: "\e903";
+}
+.icon-chevron-left:before {
+  content: "\e904";
+}
+.icon-icon-check:before {
+  content: "\e905";
+}
+.icon-icon-jump:before {
+  content: "\e906";
+}
+.icon-icon-main-financials-off:before {
+  content: "\e907";
+}
+.icon-icon-main-financials-on:before {
+  content: "\e908";
+}
+.icon-icon-main-report-off:before {
+  content: "\e909";
+}
+.icon-icon-main-report-on:before {
+  content: "\e90a";
+}
+.icon-icon-main-risks-off:before {
+  content: "\e90b";
+}
+.icon-icon-main-risks-on:before {
+  content: "\e90c";
+}
+.icon-column-status:before {
+  content: "\e90d";
+}
+.icon-column-contract-end:before {
+  content: "\e90e";
+}
+.icon-column-superior:before {
+  content: "\e90f";
+}
+.icon-column-time:before {
+  content: "\e910";
+}
+.icon-delete:before {
+  content: "\e911";
+}
+.icon-column-marital:before {
+  content: "\e912";
+}
+.icon-column-position:before {
+  content: "\e913";
+}
+.icon-delta-down:before {
+  content: "\e914";
+}
+.icon-column-type:before {
+  content: "\e915";
+}
+.icon-main-planning:before {
+  content: "\e916";
+}
+.icon-jump:before {
+  content: "\e917";
+}
+.icon-main-report:before {
+  content: "\e918";
+}
+.icon-group:before {
+  content: "\e919";
+}
+.icon-main-settings:before {
+  content: "\e91a";
+}
+.icon-ellipsis:before {
+  content: "\e91b";
+}
+.icon-remove:before {
+  content: "\e91c";
+}
+.icon-edit:before {
+  content: "\e91d";
+}
+.icon-duplicate:before {
+  content: "\e91e";
+}
+.icon-delta-updown:before {
+  content: "\e91f";
+}
+.icon-sort-down:before {
+  content: "\e920";
+}
+.icon-add-circle:before {
+  content: "\e921";
+}
+.icon-back-arrow:before {
+  content: "\e922";
+}
+.icon-sort-up:before {
+  content: "\e923";
+}
+.icon-swap:before {
+  content: "\e924";
+}
+.icon-column-salary:before {
+  content: "\e925";
+}
+.icon-column-sex:before {
+  content: "\e926";
+}
+.icon-user:before {
+  content: "\e927";
+}
+.icon-change-flow:before {
+  content: "\e928";
+}
+.icon-change-momentary:before {
+  content: "\e929";
+}
+.icon-checkbox-intermediate:before {
+  content: "\e92a";
+}
+.icon-add:before {
+  content: "\e92b";
+}
+.icon-checkbox-off:before {
+  content: "\e92c";
+}
+.icon-chevron:before {
+  content: "\e92d";
+}
+.icon-column-contract-start:before {
+  content: "\e92e";
+}
+.icon-close:before {
+  content: "\e92f";
+}
+.icon-delta-up:before {
+  content: "\e930";
+}
+.icon-checkbox-on1:before {
+  content: "\e931";
+}
+.icon-column-age:before {
+  content: "\e932";
+}
+.icon-column-cost:before {
+  content: "\e933";
+}
+.icon-arrow-left1:before {
+  content: "\e934";
+}
+.icon-back-to-top:before {
+  content: "\e935";
+}
+.icon-checkbox-off1:before {
+  content: "\e979";
+}
+.icon-icon-1:before {
+  content: "\e97a";
+}
+.icon-icon-2:before {
+  content: "\e97b";
+}
+.icon-icon-3:before {
+  content: "\e97c";
+}
+.icon-add1:before {
+  content: "\e97d";
+}
+.icon-arrow-right1:before {
+  content: "\e97e";
+}
+.icon-close1:before {
+  content: "\e97f";
+}
+.icon-full-screen:before {
+  content: "\e980";
+}
+.icon-checkbox-on11:before {
+  content: "\e981";
+}
+.icon-comment-off:before {
+  content: "\e982";
+}
+.icon-comment-on:before {
+  content: "\e983";
+}
+.icon-edit1:before {
+  content: "\e984";
+}
+.icon-icon-4:before {
+  content: "\e985";
+}
+.icon-date:before {
+  content: "\e986";
+}
+.icon-icon-5:before {
+  content: "\e987";
+}
+.icon-icon-6:before {
+  content: "\e988";
+}
+.icon-info:before {
+  content: "\e989";
+}
+.icon-main:before {
+  content: "\e98a";
+}
+.icon-minimize:before {
+  content: "\e98b";
+}
+.icon-open:before {
+  content: "\e98c";
+}
+.icon-original:before {
+  content: "\e98d";
+}
+.icon-profile:before {
+  content: "\e98e";
+}
+.icon-radio-off:before {
+  content: "\e98f";
+}
+.icon-radio-on:before {
+  content: "\e990";
+}
+.icon-search:before {
+  content: "\e991";
+}
+.icon-trash-fill:before {
+  content: "\e992";
+}
+.icon-trash:before {
+  content: "\e993";
+}
+.icon-logo-swissre:before {
+  content: "\e936";
+}
+.icon-start-continue:before {
+  content: "\e937";
+}
+.icon-start-new:before {
+  content: "\e938";
+}
+.icon-footer-am-ir:before {
+  content: "\e939";
+}
+.icon-footer-am-se-active:before {
+  content: "\e93a";
+}
+.icon-footer-am-se:before {
+  content: "\e93b";
+}
+.icon-footer-expenses-active:before {
+  content: "\e93c";
+}
+.icon-footer-expenses:before {
+  content: "\e93d";
+}
+.icon-footer-fx:before {
+  content: "\e93e";
+}
+.icon-footer-results-active:before {
+  content: "\e93f";
+}
+.icon-footer-results:before {
+  content: "\e940";
+}
+.icon-footer-start-active:before {
+  content: "\e941";
+}
+.icon-footer-start:before {
+  content: "\e942";
+}
+.icon-footer-summary-active:before {
+  content: "\e943";
+}
+.icon-footer-summary:before {
+  content: "\e944";
+}
+.icon-footer-uw-active:before {
+  content: "\e945";
+}
+.icon-footer-uw:before {
+  content: "\e946";
+}
+.icon-icon-history:before {
+  content: "\e972";
+}
+.icon-icon-location:before {
+  content: "\e974";
+}
+.icon-icon-maximize:before {
+  content: "\e975";
+}
+
+.c-0-W {
+    background-color: #ffffff !important;
+}
+
+.c-0-B {
+    background-color: #bfd9f2 !important;
+}
+
+.c-0-R {
+    background-color: #f8bfd1 !important;
+}
+
+.c-0-G {
+    background-color: #dff2eb !important;
+}
+
+.c-0-Y {
+    background-color: #fff1ca !important;
+}
+
+.c-0-G1 {
+    background-color: #ebecec !important;
+}
+
+.c-0-G2 {
+    background-color: #d8d9d9 !important;
+}
+
+.c-0-G3 {
+    background-color: #c5c6c6 !important;
+}
+
+.c-1-B {
+    color: #000000 !important;
+}
+
+.c-1-R {
+    color: #e40046 !important;
+}
+
+.c-1-G {
+    color: #00965e !important;
+}
+
+.c-1-G3 {
+    color: #858686 !important;
+}
+
+.c-2-N {
+    font-style: normal !important;
+}
+
+.c-2-B {
+    font-weight: bold !important;
+}
+
+.c-2-U {
+    text-decoration: underline !important;
+}
+
+.c-2-I {
+    font-style: italic !important;
+}

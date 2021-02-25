@@ -1,0 +1,192 @@
+{
+    "cells": [
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Cumulative Sales"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Peak year sales abs."
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },        
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Gross profit"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        }
+        ,        
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Operating Profit"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        }
+        ,        
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "NPV with sunk cost"
+        }
+        ,        
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        }
+        ,        
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "IRR with sunk cost"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        }
+        ,        
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "NPV without sunk cost"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        }
+        ,        
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "IRR without sunk cost"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        }
+        ,        
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },        
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Payback year"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        }
+        ,        
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        }
+    ]
+}

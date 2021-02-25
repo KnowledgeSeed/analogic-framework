@@ -1,0 +1,18 @@
+.loader {
+    background-color: rgba(116, 123, 133, 0.75);
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 8;
+}
+
+.loader img {
+    height: 75px;
+    left: 50%;
+    margin: -37px 0 0 -37px;
+    position: absolute;
+    top: 50%;
+    width: 75px;
+}

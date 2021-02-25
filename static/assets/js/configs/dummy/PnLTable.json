@@ -1,0 +1,1804 @@
+{
+    "cells": [
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Sales - Product 1"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Sales - Product 2"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Sales - Product 3"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-B",
+            "value": "Total Sales"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G2-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "COGS - Product 1"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "COGS - Product 2"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "COGS - Product 3"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-B",
+            "value": "Total COGS"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G2-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Period cost"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-B",
+            "value": "Cost of Sales"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G2-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "B-B-B",
+            "value": "Gross Profit"
+        },        
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G2-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "B-B-B",
+            "value": "in % of sales"
+        },        
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },        
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },        
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },        
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },        
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },        
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },        
+        {
+            "editable": false,
+            "type": "B-B-N",
+            "value": "0.0%"
+        },
+        {
+            "editable": false,
+            "type": "G2-B-N",
+            "value": "0.0%"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "M&D"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "R&D"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "G&A"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Royalties"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G1-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "CAPEX"
+        },        
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G2-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Deprecation"
+        },        
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },        
+        {
+            "editable": false,
+            "type": "G-B-N",
+            "value": "0.0"
+        },
+        {
+            "editable": false,
+            "type": "G2-B-N",
+            "value": "0.0"
+        }        
+    ]
+}

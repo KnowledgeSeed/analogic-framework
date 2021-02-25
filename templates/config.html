@@ -1,0 +1,67 @@
+<script type="text/javascript">
+    /* global jQuery, _ */'use strict';
+    let app = {};
+    (($, _) => {
+        app = {
+            el: {body: $('body')},
+            cache: {},
+            doc: $(document).on('touchstart', () => app.prop.isTouched = true),
+            dummy: {},
+            eventMap: {},
+            fn: {},
+            id: 0,
+            initMap: {},
+            listeners: [],
+            prop: {isMobile: null, isTouched: false},
+            repository: {},
+            shoutWaiting: false,
+            symbol: {},
+            url: {},
+            user: {},
+            widgetConfig: {},
+            widgetValue: {
+                infoData: {}
+    //            ,rocheDraftTable: {
+    //                open: {
+    //                    name: 'User Day Data',
+    //                    version: 'Draft 1'
+    //                }
+    //            },
+    //            rocheActiveCasesTable: {
+    //                open: {
+    //                    name: 'Zsolt Demo Case'
+    //                    //name: 'Hospital Glucose Others (RDG)'
+    //                }
+    //            }
+            },
+            widgetState: {},
+            pageState: {current: '', previous: ''}
+        };
+        app.customerAssetsFolder = '{{cnf.customerAssetsFolder}}';
+        app.useShout = {% if cnf.useShout %}true{% else %}false{% endif %};
+        app.host = '{{ cnf.host }}';
+        app.tm1Server = '{{ cnf.tm1Server }}';
+        app.tm1ServerHost = '{{ cnf.tm1ServerHost }}';
+        app.cognosHost = '{{ cnf.cognosHost }}';
+        app.authenticationMode = '{{ cnf.authenticationMode }}';
+        app.camNamespace = '{{ cnf.camNamespace }}';
+        app.noauthUser = '{{ cnf.noauthUser }}';
+        app.noauthPwd = '{{ cnf.noauthPwd }}';
+        app.sessionExpiresInMinutes = {{ cnf.sessionExpiresInMinutes }};
+        app.useCamNameSpaceForMobileView = {% if cnf.useCamNameSpaceForMobileView %}true{% else %}false{% endif %};
+        app.url.cognosAuthenticationBridge = "{{ cnf.cognosAuthenticationBridge|safe }}";
+        app.url.apiLogout = '{{ cnf.apiLogout }}';
+        app.url.logout = '{{ cnf.logout }}';
+        app.restRequestDebugFlag = {% if cnf.restRequestDebugFlag %}true{% else %}false{% endif %};
+        app.tm1ApiHost = '{{ cnf.tm1ApiHost }}';
+        app.tm1ApiSubPath = '{{ cnf.tm1ApiSubPath }}';
+        app.tm1ExecuteMDX = '{{ cnf.tm1ExecuteMDX }}';
+        app.tm1CellsetId = (cellsetId) => `Cellsets('${cellsetId}')?`;
+        app.MDXUrl = '{{ cnf.MDXUrl }}';
+        app.CellSetUrl = (cellsetId) => app.tm1ApiHost + app.tm1ApiSubPath + app.tm1CellsetId(cellsetId);
+        app.defaultMDXQuery = '{{ cnf.defaultMDXQuery }}';
+        app.defaultCellsetIdQuery = (cellsetId) => app.CellSetUrl(cellsetId) + '$expand=Cells($select=Ordinal,Value)';
+        app.SideBar = '{{ cnf.SideBar }}';
+        app.MainPage = '{{ cnf.MainPage }}';
+    })(jQuery);
+</script>

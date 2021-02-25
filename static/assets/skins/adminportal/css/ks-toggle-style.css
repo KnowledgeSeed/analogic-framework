@@ -1,0 +1,112 @@
+.ks-toggle-grid.ks-toggle {
+    background-color: #fff;
+    border: 1px solid #dddcd7;
+    border-radius: 4px;
+    height: 30px;
+    padding: 0 5px;
+    width: 50px;
+}
+
+.ks-toggle-grid .ks-toggle-label {
+    font-family: 'tele-groteskfetregular';
+    font-size: 10px;
+    text-align: center;
+}
+
+.ks-toggle-grid .ks-toggle-label-off {
+    color: #939290;
+}
+.ks-toggle-grid .ks-toggle-label-on {
+    color: #fff;
+}
+
+.ks-toggle-grid.ks-toggle.ks-on {
+    background-color: #e20074;
+    border-color: #e20074;
+}
+
+/* risksimulation1 */
+
+.ks-toggle-risksimulation1.ks-toggle {
+	border-radius: 10px;
+	padding: 0 10px;
+    background-color: #dee1e5;
+    border-color: #dee1e5;
+    width: 300px;
+    height: 40px;
+}
+
+.ks-toggle-risksimulation1 .ks-toggle-icon {
+	position: absolute;
+	left: 5px;
+}
+
+.ks-toggle-risksimulation1 .ks-toggle-icon img {
+	height: 20px;
+}
+
+.ks-toggle-risksimulation1 .ks-toggle-label {
+	font-size: 16px;
+	font-weight: 600;
+	text-align: center;
+}
+
+.ks-toggle-risksimulation1.ks-toggle.ks-on .ks-toggle-icon-off {
+        display: none;
+}
+.ks-toggle-risksimulation1.ks-toggle .ks-toggle-icon-on {
+        display: none;
+}
+.ks-toggle-risksimulation1.ks-toggle .ks-toggle-icon-off {
+	display: block;
+}
+.ks-toggle-risksimulation1.ks-toggle.ks-on .ks-toggle-icon-on {
+	display: block;
+}
+
+
+/* riskfinancial */
+
+.ks-toggle-riskfinancial.ks-toggle {
+    background-color: #f1f3f5;
+    border: 1px solid #f1f3f5;
+    border-radius: 10px;
+    height: 40px;
+    padding: 0 10px;
+    width: 200px;
+}
+
+.ks-toggle-riskfinancial .ks-toggle-label {
+    font-size: 16px;
+    text-align: center;
+}
+
+.ks-toggle-riskfinancial .ks-toggle-label-off {
+    color: #979da4;
+}
+.ks-toggle-riskfinancial .ks-toggle-label-on {
+    color: #fff;
+}
+
+.ks-toggle-riskfinancial.ks-toggle.ks-on {
+    background-color: #007aff;
+    border-color: #007aff;
+}
+
+
+.ks-toggle-riskfinancial .ks-toggle-icon {
+	position: absolute;
+	left: 5px;
+}
+
+.ks-toggle-riskfinancial .ks-toggle-icon img {
+	height: 20px;
+}
+
+.ks-toggle-riskfinancial .ks-toggle .ks-toggle-icon-on {
+    src: url('../images/circle_tick.svg');
+}
+
+.ks-toggle-riskfinancial .ks-toggle .ks-toggle-icon-off {
+	src: url('../images/circle_no_tick.svg');
+}

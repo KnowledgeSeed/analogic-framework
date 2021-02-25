@@ -1,0 +1,62 @@
+{
+    "cells": [
+        [
+            {
+                "editable": false,
+                "type": "string",
+                "value": "Sales (mCHF)"
+            },
+            {
+                "editable": false,
+                "type": "float",
+                "value": "1,120"
+            },
+            {
+                "editable": false,
+                "type": "float",
+                "value": "1,200"
+            },
+            {
+                "editable": false,
+                "type": "string",
+                "value": "-"
+            },
+            {
+                "editable": true,
+                "type": "string",
+                "value": "-"
+            }
+        ],
+        [
+            {
+                "editable": false,
+                "type": "string",
+                "value": "Gross Profit (%)"
+            },
+            {
+                "editable": false,
+                "type": "float",
+                "value": "92"
+            },
+            {
+                "editable": false,
+                "type": "float",
+                "value": "92"
+            },
+            {
+                "editable": false,
+                "type": "string",
+                "value": "+14"
+            },
+            {
+                "editable": true,
+                "type": "string",
+                "value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
+            }
+        ]
+      
+    ],
+    "leftActionCells": [],
+    "rightActionCells": [],
+    "infoText": ""
+}

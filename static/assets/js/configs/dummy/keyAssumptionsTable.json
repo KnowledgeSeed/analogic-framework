@@ -1,0 +1,160 @@
+{
+    "cells": [
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Launch Date"
+        },
+        {
+            "editable": false,
+            "type": "",
+            "value": "2016"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Pricing"
+        },        
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "ASP",
+            "parentRow": 1
+        },                
+        {
+            "editable": false,
+            "type": "",
+            "value": "EUR"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Price Erosion",
+            "parentRow": 1            
+        },                
+        {
+            "editable": false,
+            "type": "",
+            "value": "-1%"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Test Columes"
+        },        
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Peak test volume per year",
+            "parentRow": 3
+        },                
+        {
+            "editable": false,
+            "type": "",
+            "value": "32 m (in year)"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "SMC per test"
+        },                
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Product Title",
+            "parentRow": 4
+        },                        
+        {
+            "editable": false,
+            "type": "",
+            "value": "EUR"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Investment in kEUR" 
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Plant Property & Equipment",
+            "parentRow": 5
+        },        
+        {
+            "editable": false,
+            "type": "bold",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "M&D launch preparation",
+            "parentRow": 5
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Additional FTE",
+            "parentRow": 5
+        },                
+        {
+            "editable": false,
+            "type": "",
+            "value": "kEUR"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Royalties",
+            "parentRow": 5
+        },                        
+        {
+            "editable": false,
+            "type": "",
+            "value": "None"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Standard rates (as per T0 2018)" 
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "Period Cost",
+            "parentRow": 9
+        },        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0%"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "M&D",
+            "parentRow": 9
+        },                                        
+        {
+            "editable": false,
+            "type": "",
+            "value": "0%"
+        },
+        {
+            "editable": false,
+            "type": "W-B-B",
+            "value": "G&A",
+            "parentRow": 9
+        },                                                
+        {
+            "editable": false,
+            "type": "",
+            "value": "0%"
+        }
+    ]
+}

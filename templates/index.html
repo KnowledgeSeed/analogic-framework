@@ -1,0 +1,5 @@
+{% if authenticated %}
+    {% include 'authenticated.html' %}
+{% else %}
+    {%  include 'redirect.html' %}
+{% endif %}

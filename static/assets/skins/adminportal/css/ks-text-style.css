@@ -1,0 +1,237 @@
+/* template1*/
+.ks-text-template1 .ks-text-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.ks-text-template1 .ks-text-title-input {
+    font-weight: bold;
+    font-size: 16px;
+    border-width: 0px;
+    width: 100%;
+    color: #007aff;
+}
+
+.ks-text-template1 .ks-text-title-input::-moz-selection {
+    background-color: white;
+    color: #007aff;
+}
+
+.ks-text-template1 .ks-text-title-input::selection {
+    background-color: white;
+    color: #007aff;
+}
+
+/* template2*/
+.ks-text-template2.ks-text .ks-text-inner {
+    border: 1px solid red;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.ks-text-template2 .ks-text-title {
+    color: red;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.ks-text-template2 .ks-text-separator {
+    border-bottom: 1px dotted red;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.ks-text-template2 .ks-text-body {
+    color: #000;
+    font-size: 14px;
+    line-height: 16px;
+}
+
+/* template3*/
+.ks-text-template3.ks-text {
+    background-color: #ffc3ce;
+    height: 50px;
+    padding: 10px 40px;
+    border-radius: 25px;
+    display: table!important;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.ks-text-template3 .ks-text-title {
+    color: #ff274e;
+    font-size: 18px;
+    line-height: 30px;
+}
+
+/* template4 */
+
+.ks-text-template4.ks-text {
+    background-color: #ededf2;
+    padding: 0 15px;
+}
+
+.ks-text-template4 .ks-text-title {
+    color: #838388;
+    font-size: 20px;
+    padding: 15px 0;
+    text-align: center;
+}
+
+.ks-text-template4 .ks-text-separator {
+    border-bottom: 1px solid #838388;
+    display: block;
+}
+
+.ks-text-template4 .ks-text-body {
+    color: #000;
+    font-size: 16px;
+    padding: 15px 0;
+}
+
+/* template5*/
+.ks-text-template5 .ks-text-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 11px;
+    text-align: right;
+}
+
+/* template6*/
+.ks-text-template6 .ks-text-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 36px;
+}
+
+/* template7*/
+.ks-text-template7 .ks-text-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 11px;
+    color: #747b85;
+}
+
+/* template8*/
+.ks-text-template8 .ks-text-title {
+    font-size: 11px;
+    text-align: right;
+    color: #747b85;
+}
+
+/* template9*/
+.ks-text-template9 .ks-text-title {
+    font-size: 12px;
+    color: #747b85;
+}
+
+/* risk gridtable text*/
+.ks-text-riskgridtable .ks-text-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.ks-text-riskgridtable .ks-text-title-input {
+    font-weight: bold;
+    font-size: 16px;
+    border-width: 0px;
+    width: 100%;
+    color: #007aff;
+}
+
+.ks-text-riskgridtable .ks-text-title-input::-moz-selection {
+    background-color: white;
+    color: #007aff;
+}
+
+.ks-text-riskgridtable .ks-text-title-input::selection {
+    background-color: white;
+    color: #007aff;
+}
+
+
+/* buttontext */
+
+.ks-toggle-risksimulation1.ks-toggle {
+	border-radius: 10px;
+	padding: 0 10px;
+    background-color: #dee1e5;
+    border-color: #dee1e5;
+    width: 300px;
+    height: 40px;
+}
+
+.ks-toggle-risksimulation1 .ks-toggle-icon {
+	position: absolute;
+	left: 5px;
+}
+
+.ks-toggle-risksimulation1 .ks-toggle-icon img {
+	height: 20px;
+}
+
+.ks-toggle-risksimulation1 .ks-toggle-label {
+	font-size: 16px;
+	font-weight: 600;
+	text-align: center;
+}
+
+.ks-toggle-risksimulation1.ks-toggle.ks-on .ks-toggle-icon-off {
+        display: none;
+}
+.ks-toggle-risksimulation1.ks-toggle .ks-toggle-icon-on {
+        display: none;
+}
+.ks-toggle-risksimulation1.ks-toggle .ks-toggle-icon-off {
+	display: block;
+}
+.ks-toggle-risksimulation1.ks-toggle.ks-on .ks-toggle-icon-on {
+	display: block;
+}
+
+/*analogic parent*/
+
+.ks-text-analogicparent .ks-text-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.ks-text-analogicparent .ks-text-body {
+	margin-top: 15px;
+
+}
+
+/* widgetconfiguration*/
+.ks-text-widgetconfiguration .ks-text-title {
+    margin-bottom: 5px;
+}
+
+.ks-text-widgetconfiguration .ks-text-title-input {
+    font-weight: bold;
+    font-size: 16px;
+    border-width: 0px;
+    width: 100%;
+    color: #007aff;
+}
+
+.ks-text-widgetconfiguration .ks-text-title-input::-moz-selection {
+    background-color: white;
+    color: #007aff;
+}
+
+.ks-text-widgetconfiguration .ks-text-title-input::selection {
+    background-color: white;
+    color: #007aff;
+}
+
+/*light text*/
+
+.ks-text-lighttext .ks-text-title {
+    font-weight: 200;
+    margin-bottom: 4px;
+}
+
+.ks-text-lighttext .ks-text-body {
+    font-weight: 100;
+
+}
