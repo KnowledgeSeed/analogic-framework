@@ -1,7 +1,6 @@
 import jwt
 import requests
 import base64
-import json
 from AuthenticationProviders.Pool import Pool
 from flask import render_template, request, session, make_response, redirect, url_for, Response
 
@@ -17,7 +16,7 @@ class SSOPool(Pool):
         decoded = self.decodeToken(sso_token)
 
         if decoded.get('msg') != '':
-            return make_response(redirect(cnf['sso']['authenticationBridge']))
+            return make_response(redirect(cnf['sso']['authenticationBridge']))#TODO ez ajax híváskor történik, egy időben küldött több ajax híváskor több popup is feljön (biztos, hogy el akar navigálni..). Egyszer jöjjön csak fel.
 
         authenticated = request.cookies.get('authenticated') is not None
         return render_template('index.html', authenticated=authenticated, cnf=cnf)
@@ -32,14 +31,17 @@ class SSOPool(Pool):
             return render_template('sso_error.html', msg=decoded['msg'], cnf=cnf)
 
         user_name = decoded['token'].get('unique_name')
+        #TODO Józsival tesztelni!!
       #  if self.hasPoolUserAccess(user_name.replace('\\', '/'), decoded['token']) is None:
        #     return render_template('unauthorized.html')
 
         session['sso_token'] = sso_token
+
         # proxy workaround:
         # resp = make_response(redirect(url_for('index')))
         resp = make_response(redirect(self.getBaseUrl()))
         # end proxy workaround
+
         return self.addAuthenticatedCookie(resp)
 
     def hasPoolUserAccess(self, user_name, token):
@@ -116,5 +118,6 @@ class SSOPool(Pool):
         return Response('', 401)
 
     def setCustomMDXData(self, mdx):
+        if len(mdx) > 0:
+            return mdx.replace('$ssoToken', session['sso_token'])
         return mdx
-       # return mdx.replace('$ssoToken', session['sso_token'])

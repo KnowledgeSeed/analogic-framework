@@ -8,7 +8,7 @@
   "tm1Server": "Analogic Portal",
   "tm1ServerHost": "hq.coresystems.hu",
   "cognosHost" : "https://hq.coresystems.hu:9610",
-  "authenticationMode" : "SSOPool",
+  "authenticationMode" : "LoginPool",
   "camNamespace" : "knowledgeseed",
   "noauthUser" : "sovegjarto.andras",
   "noauthPwd" : "SM4DAsdf1234%",

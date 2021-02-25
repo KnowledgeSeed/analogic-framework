@@ -1,6 +1,7 @@
 import os
 import shutil
 import sys
+import datetime
 
 from flask import json, request
 from werkzeug.utils import secure_filename
@@ -29,6 +30,9 @@ class Base:
         pass
 
     def authsso(self):
+        pass
+
+    def getTM1Service(self):
         pass
 
     def processFiles(self):
@@ -111,4 +115,11 @@ class Base:
         #TODO secure, httpOnly!!!
         response.set_cookie('authenticated', 'authenticated', max_age=cnf['sessionExpiresInMinutes'] * 60)
         return response
+
+    def getTM1SessionId(self):
+        if self.cache.get(self.TM1SessionId) is None or (
+                    self.cache.get(self.TM1SessionExpires) is not None and datetime.datetime.now() >= self.cache.get(
+                self.TM1SessionExpires)):
+            return None
+        return self.cache.get(self.TM1SessionId)
 

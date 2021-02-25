@@ -4,6 +4,7 @@ from flask import request, json
 from typing import Callable
 from AuthenticationProviders.Base import Base
 import datetime
+from TM1py.Services import TM1Service
 
 
 class Pool(Base):
@@ -20,6 +21,7 @@ class Pool(Base):
         return mdx
 
     def pool(self, sub_path):
+        #TODO multi pool user
         start_time = time.time()
 
         if self.checkAppAuthenticated() is False:
@@ -48,12 +50,14 @@ class Pool(Base):
                                    'Accept-Encoding': 'gzip, deflate, br'}
         cookies: dict[str, str] = {}
 
-        authorization_required = self.cache.get(self.TM1SessionId) is None or (self.cache.get(self.TM1SessionExpires) is not None and datetime.datetime.now() >= self.cache.get(self.TM1SessionExpires))
+        tm1_session_id = self.getTM1SessionId()
+
+        authorization_required = tm1_session_id is None
 
         if authorization_required:
             headers['Authorization'] = pool_user
         else:
-            cookies["TM1SessionId"] = self.cache.get(self.TM1SessionId)
+            cookies["TM1SessionId"] = tm1_session_id
 
         response = requests.request(url=url, method=method, data=mdx, headers=headers, cookies=cookies, verify=False)
 
@@ -66,3 +70,17 @@ class Pool(Base):
         print(duration())
 
         return response.text, response.status_code, {'Content-Type': 'application/json'}
+
+    def getTM1Service(self):
+        cnf = self.getConfig()
+
+        tm1_session_id = self.getTM1SessionId()
+
+        authorization_required = tm1_session_id is None
+
+        if authorization_required:
+            print('Not implemented')
+            #TODO master user password secure módon tárolásának kitalálása után implementálható
+            #TM1Service(base_url=address, namespace=NAMESPACE, user=USER, password=PWD, ssl=SSL)
+        else:
+            return TM1Service(base_url=cnf['pool']['target'], session_id=tm1_session_id)

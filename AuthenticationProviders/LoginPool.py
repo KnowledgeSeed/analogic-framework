@@ -20,3 +20,7 @@ class LoginPool(Pool):
         if 'username' in session:
             return render_template('index.html', authenticated=True, cnf=cnf)
         return redirect(url_for('login'))
+
+
+
+
