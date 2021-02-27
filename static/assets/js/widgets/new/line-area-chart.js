@@ -1,4 +1,4 @@
-/* global app */
+/* global app, Utils */
 
 'use strict';
 
@@ -126,7 +126,7 @@ class LineAreaChartWidget extends Widget {
                     datasets[j].data = [];
                 }
 
-                datasets[j].data.push(app.utils.parseNumber(d[i][j].value || '0'));
+                datasets[j].data.push(Utils.parseNumber(d[i][j].value || '0'));
             }
         }
 

@@ -1,4 +1,4 @@
-/* global app, Widget */
+/* global app, El, Utils, Widget */
 
 'use strict';
 class PopupWidget extends Widget {
@@ -16,13 +16,13 @@ class PopupWidget extends Widget {
             bgScrollable: this.getRealValue('bgScrollable', d, true),
             closeBtn: this.getRealValue('closeBtn', d, false),
             fixed: this.getRealValue('fixed', d, true),
-            heightStr: app.utils.getSize(this.getRealValue('height', d, 200)),
+            heightStr: Utils.getSize(this.getRealValue('height', d, 200)),
             offset: this.getRealValue('offset', d, 0),
             position: this.getRealValue('position', d, 'center'),
             skin: this.getRealValue('skin', d, 'standard'),
             fadingSpeed: this.getRealValue('fadingSpeed', d, 300),
             visible: this.getRealValue('visible', d, true),
-            widthStr: app.utils.getSize(this.getRealValue('width', d, 400))
+            widthStr: Utils.getSize(this.getRealValue('width', d, 400))
         };
 
         const s = [], w = v.widthStr, h = v.heightStr, isVertical = ('top' === v.position || 'bottom' === v.position);
@@ -90,7 +90,6 @@ ${v.backdrop ? '<div class="ks-container-backdrop" ' + b + '><\/div>' : ''}
         if (v.visible) {
             this.open();
         }
-
 
         PopupWidget.popupsByIds[v.id] = this;
     }
@@ -185,7 +184,7 @@ ${v.backdrop ? '<div class="ks-container-backdrop" ' + b + '><\/div>' : ''}
 
     adjustBgScrolling() {
         if (!this.value.bgScrollable) {
-            app.el.body.css('overflow', this.isOpened ? ' hidden' : 'auto');
+            El.body.css('overflow', this.isOpened ? ' hidden' : 'auto');
         }
     }
 }

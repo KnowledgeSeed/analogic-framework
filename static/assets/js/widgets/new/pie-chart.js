@@ -42,9 +42,7 @@ class PieChartWidget extends Widget {
 
         return `
 <div class="ks-pie-chart ks-pie-chart-${v.skin}" style="${this.getGeneralStyles(v.data, {width: 450, height: 450}).join('')}">
-    <div class="ks-pie-chart-title">
-        <h3>${o.title}</h3>
-    </div>
+    <div class="ks-pie-chart-title"><h3>${o.title}</h3></div>
     <div class="ks-pie-chart-widget">
         <canvas ${v.canvasWidth ? `width="${v.canvasWidth}"` : ''} ${v.canvasHeight ? `height="${v.canvasHeight}"` : ''} id="${o.id}Canvas"></canvas>
     </div>
@@ -53,20 +51,13 @@ class PieChartWidget extends Widget {
     }
 
     initEventHandlers(section) {
-        const canvas = $('#' + this.options.id + 'Canvas');
-
-        const ctx = canvas[0].getContext('2d');
-
-        const c = new Chart(ctx, PieChartWidget.getChartConfig(this.value));
+        const canvas = $('#' + this.options.id + 'Canvas'), ctx = canvas[0].getctx('2d'), c = new Chart(ctx, PieChartWidget.getChartConfig(this.value));
 
         canvas.parent().next().html(c.generateLegend()).on('click', '.ks-legend-item', e => {
-            let legend = $(e.target).closest('.ks-legend-item'), id = legend.data('id');
-            if (legend.hasClass('off')) {
-                legend.removeClass('off');
-            } else {
-                legend.addClass('off');
-            }
+            let legend = $(e.target).closest('.ks-legend-item').toggleClass('off'), id = legend.data('id');
+
             c.getDatasetMeta(0).data[id].hidden = !c.getDatasetMeta(0).data[id].hidden;
+
             c.update();
         });
     }
@@ -95,31 +86,19 @@ class PieChartWidget extends Widget {
         };
 
         if (v.labelBackgroundColor === 'useDataBorderColor') {
-            datalabels.backgroundColor = function (context) {
-                var index = context.dataIndex;
-                return v.data[index].borderColor;
-            };
+            datalabels.backgroundColor = ctx => v.data[ctx.dataIndex].borderColor;
         }
 
         if (v.labelBackgroundColor === 'useDataBackgroundColor') {
-            datalabels.backgroundColor = function (context) {
-                var index = context.dataIndex;
-                return v.data[index].backgroundColor;
-            };
+            datalabels.backgroundColor = ctx => v.data[ctx.dataIndex].backgroundColor;
         }
 
         if (v.labelFontColor === 'useDataBorderColor') {
-            datalabels.color = function (context) {
-                var index = context.dataIndex;
-                return v.data[index].borderColor;
-            };
+            datalabels.color = ctx => v.data[ctx.dataIndex].borderColor;
         }
 
         if (v.labelFontColor === 'useDataBackgroundColor') {
-            datalabels.color = function (context) {
-                var index = context.dataIndex;
-                return v.data[index].backgroundColor;
-            };
+            datalabels.color = ctx => v.data[ctx.dataIndex].backgroundColor;
         }
 
         return {
@@ -149,20 +128,17 @@ class PieChartWidget extends Widget {
                     display: false
                 },
                 legendCallback: (chart) => {
-                    let text = [], i;
+                    let text = [], i, d = chart.data.datasets[0], len = d.data.length, labels = chart.data.labels;
+
                     text.push('<div class="ks-legend-inner">');
-                    for (i = 0; i < chart.data.datasets[0].data.length; ++i) {
-                        text.push(`
-<div data-id="${i}" style="background-color: ${chart.data.datasets[0].backgroundColor[i]};" class="ks-legend-item">
-    <div class="ks-legend-item-inner">
-        <div style="color: #fff;" class="ks-legend-icon"></div>
-        <div style="color: #fff;" class="ks-legend-label">${chart.data.labels[i] }</div>
-    </div>
-</div>`);
+
+                    for (i = 0; i < len; ++i) {
+                        text.push(`<div data-id="${i}" style="background-color: ${d.backgroundColor[i]};" class="ks-legend-item"><div class="ks-legend-item-inner"><div style="color: #fff;" class="ks-legend-icon"></div><div style="color: #fff;" class="ks-legend-label">${labels[i] }</div></div></div>`);
                     }
+
                     text.push('</div>');
 
-                    return text.join("");
+                    return text.join('');
                 }
             }
         };

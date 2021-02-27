@@ -1,4 +1,4 @@
-/* global app */
+/* global app, Utils */
 
 'use strict';
 class EventMapExport extends Export {
@@ -51,7 +51,7 @@ class EventMapExport extends Export {
 
         for (eventMapKey in exportableDataByEventMapKeys) {
             d = exportableDataByEventMapKeys[eventMapKey];
-            eventMapArray = app.utils.getObjectValueByDotSeparatedKeys(app.eventMap, eventMapKey);
+            eventMapArray = Utils.getObjectValueByDotSeparatedKeys(app.eventMap, eventMapKey);
 
             v = eventMapKey.split('.');
             len = eventMapArray.length;

@@ -1,4 +1,4 @@
-/* global app, Widget */
+/* global app, El, Listeners, QB, Utils, Widget, WidgetValue */
 
 'use strict';
 class HorizontalTableWidget extends Widget {
@@ -18,35 +18,32 @@ class HorizontalTableWidget extends Widget {
         if (!withState) {
             this.state = {};
             this.value = {rows: data.cells};
-
         }
 
         if (v.searchField) {
-            s.push(`<div class="ks-horizontal-table-search">
-                        <div class="ks-horizontal-table-search-icon"><span class="icon-search"></span></div>
-                        <input type="text" value=" ${withState && this.state.searchInput ? this.state.searchInput : '' }" class="ks-horizontal-table-search-input" placeholder="Search...">
-                    </div>`);
+            s.push(`<div class="ks-horizontal-table-search"><div class="ks-horizontal-table-search-icon"><span class="icon-search"></span></div><input type="text" value=" ${withState && this.state.searchInput ? this.state.searchInput : '' }" class="ks-horizontal-table-search-input" placeholder="Search..."></div>`);
         }
 
         if (o.checkbox) {
             s.push(`
-                    <div class="ks-horizontal-table-search-toggle-holder">
-                        <div class="ks-horizontal-table-search-toggle ${withState && this.state.checkbox === true ? 'ks-on' : '' }" data-value="${o.checkbox.value}">
-                                <div class="ks-horizontal-table-toggle-icon ks-horizontal-table-toggle-icon-off"><span class="icon-checkbox-off"></span></div>
-                                <div class="ks-horizontal-table-toggle-icon ks-horizontal-table-toggle-icon-on"><span class="icon-checkbox-on"></span></div>
-                                <div class="ks-horizontal-table-toggle-label ks-horizontal-table-toggle-label-on">${o.checkbox.value} Only</div>
-                        </div>
-                    </div>`);
+<div class="ks-horizontal-table-search-toggle-holder">
+    <div class="ks-horizontal-table-search-toggle ${withState && this.state.checkbox === true ? 'ks-on' : '' }" data-value="${o.checkbox.value}">
+        <div class="ks-horizontal-table-toggle-icon ks-horizontal-table-toggle-icon-off"><span class="icon-checkbox-off"></span></div>
+        <div class="ks-horizontal-table-toggle-icon ks-horizontal-table-toggle-icon-on"><span class="icon-checkbox-on"></span></div>
+        <div class="ks-horizontal-table-toggle-label ks-horizontal-table-toggle-label-on">${o.checkbox.value} Only</div>
+    </div>
+</div>`
+            );
         }
-        
-        if(o.columnWidths && (leftRowWidgets.length + rightRowWidgets.length) > 0){
+
+        if (o.columnWidths && (leftRowWidgets.length + rightRowWidgets.length) > 0) {
             let sumWidth = 0;
-            for(i = 0; i < o.columnWidths.length; ++i){
-                if(o.columnWidths[i].indexOf('%') !== -1 ){
+            for (i = 0; i < o.columnWidths.length; ++i) {
+                if (o.columnWidths[i].indexOf('%') !== -1) {
                     sumWidth += parseInt(o.columnWidths[i].replace('%', ''));
                 }
             }
-            if(sumWidth !== 0){
+            if (sumWidth) {
                 actionWidth = (100 - sumWidth) / (leftRowWidgets.length + rightRowWidgets.length);
             }
         }
@@ -54,48 +51,39 @@ class HorizontalTableWidget extends Widget {
         h = this.getTableHeader(o, data, leftRowWidgets, rightRowWidgets, actionWidth);
         d = this.getTableBody(o, data, h.dataColumnNames, leftRowWidgets, rightRowWidgets, withState, actionWidth);
 
-        return `<div class="ks-horizontal-table ${data.cells.length > v.fadeOutNum ? 'ks-scroll' : ''}  ks-horizontal-table-${v.skin}" style="${mainDivStyle.join('')}">
-                    <div class="ks-horizontal-table-inner">
-                        <div class="ks-horizontal-table-header">
-                            ${s.join('')}
-                        </div>
-                        <div class="ks-horizontal-table-body">
-                            <div class="ks-horizontal-table-row ks-horizontal-table-head-row">
-                                ${h.html}
-                            </div>
-                            <div class="ks-horizontal-table-body-scroll" style="max-height:${fadeOutHeight}px;${data.cells.length <= v.fadeOutNum ? 'overflow:hidden;' : ''}">
-                                ${d}
-                            </div>
-                            ${data.cells.length > v.fadeOutNum ? '<div class="ks-horizontal-table-fade"></div>' : ''}                           
-                        </div>
-                        ${data.cells.length > v.fadeOutNum ?
-                        `<div class="ks-horizontal-table-footer">
-                            <div class="ks-horizontal-table-info">
-                                    ${data.cells.length}  ${data.cells.length > 1 ? 'results' : 'result' }
-                            </div>
-                        </div>` : '' }
-                    </div>
-                </div>`;
+        return `
+<div class="ks-horizontal-table ${data.cells.length > v.fadeOutNum ? 'ks-scroll' : ''}  ks-horizontal-table-${v.skin}" style="${mainDivStyle.join('')}">
+    <div class="ks-horizontal-table-inner">
+        <div class="ks-horizontal-table-header">${s.join('')}</div>
+        <div class="ks-horizontal-table-body">
+            <div class="ks-horizontal-table-row ks-horizontal-table-head-row">${h.html}</div>
+            <div class="ks-horizontal-table-body-scroll" style="max-height:${fadeOutHeight}px;${data.cells.length <= v.fadeOutNum ? 'overflow:hidden;' : ''}">${d}</div>
+            ${data.cells.length > v.fadeOutNum ? '<div class="ks-horizontal-table-fade"></div>' : ''}
+        </div>
+        ${data.cells.length > v.fadeOutNum ? `<div class="ks-horizontal-table-footer"><div class="ks-horizontal-table-info">${data.cells.length}  ${data.cells.length > 1 ? 'results' : 'result' }</div></div>` : '' }
+    </div>
+</div>`;
     }
 
     getTableHeader(o, data, leftRowWidgets, rightRowWidgets, actionWidth) {
-        let l, s = [], dataColumnNames = [], h, i = 0;
+        let l, s = [], dataColumnNames = [], i = 0;
+
         if (data.leftActionCells.length > 0) {
             for (l of data.leftActionCells[0]) {
-                s.push(`<div class="ks-horizontal-table-cell ks-${leftRowWidgets[i].constructor.name === 'RadioButtonRowWidget' ? 'checkbox' : 'action'}-cell" ${actionWidth !== false ? `style="flex: 0 0 ${actionWidth}%;"` :  ''}></div>`);
+                s.push(`<div class="ks-horizontal-table-cell ks-${leftRowWidgets[i].name === 'RadioButtonRowWidget' ? 'checkbox' : 'action'}-cell" ${actionWidth !== false ? `style="flex: 0 0 ${actionWidth}%;"` : ''}></div>`);
                 ++i;
             }
         }
+
         for (const [ind, vi] of o.columnNames.entries()) {
-            
-            s.push(`<div class="ks-horizontal-table-cell sortable" style="${o.columnWidths && o.columnWidths[ind] && o.columnWidths[ind].replace('%', '') == 0 ? 'display:none;' : ''}${o.columnWidths && o.columnWidths[ind] ? 'flex: 0 0 ' + o.columnWidths[ind] + (o.columnWidths[ind].indexOf('%') === -1 ? 'px;' : ';') : ''}"><div class="ks-horizontal-table-cell-inner">${vi}<div class="ks-order"></div></div></div>`);
+            s.push(`<div class="ks-horizontal-table-cell sortable" style="${o.columnWidths && o.columnWidths[ind] && parseInt(o.columnWidths[ind].replace('%', '')) === 0 ? 'display:none;' : ''}${o.columnWidths && o.columnWidths[ind] ? 'flex: 0 0 ' + o.columnWidths[ind] + (o.columnWidths[ind].indexOf('%') === -1 ? 'px;' : ';') : ''}"><div class="ks-horizontal-table-cell-inner">${vi}<div class="ks-order"></div></div></div>`);
             dataColumnNames.push(vi.toLowerCase().replace(/[&\/\\#, +()$~%.'":*?<>{}]/g, ''));
         }
 
         if (data.rightActionCells.length > 0) {
             i = 0;
             for (l of data.rightActionCells[0]) {
-                s.push(`<div class="ks-horizontal-table-cell ks-${rightRowWidgets[i].constructor.name === 'RadioButtonRowWidget' ? 'checkbox' : 'action'}-cell"  ${actionWidth !== false ? `style="flex: 0 0 ${actionWidth}%;"` :  ''}></div>`);
+                s.push(`<div class="ks-horizontal-table-cell ks-${rightRowWidgets[i].name === 'RadioButtonRowWidget' ? 'checkbox' : 'action'}-cell"  ${actionWidth !== false ? `style="flex: 0 0 ${actionWidth}%;"` : ''}></div>`);
                 ++i;
             }
         }
@@ -104,30 +92,32 @@ class HorizontalTableWidget extends Widget {
     }
 
     getTableBody(o, data, dataColumnNames, leftRowWidgets, rightRowWidgets, withState, actionWidth) {
-        let i, j, k, l, c = [], d = [], leftActionsNum = 0, rightActionsNum = 0, s = [];
-        for (i = 0; i < data.cells.length; ++i) {//content
-            let enabled = data.leftActionCells.length > 0 && data.leftActionCells[i].length > 0 ? data.leftActionCells[i][0].active : true;
-            s.push(`<div class="ks-horizontal-table-row ${!enabled ? 'ks-disabled' : ''}">`);
+        let i, j, k, l, c = [], d = [], leftActionsNum = 0, rightActionsNum = 0, s = [], mtx = data.cells, len = mtx.length, cells, cell, escapedValue, enabled, len2;
 
+        for (i = 0; i < len; ++i) {//content
+            enabled = data.leftActionCells.length > 0 && data.leftActionCells[i].length > 0 ? data.leftActionCells[i][0].active : true;
+            s.push(`<div class="ks-horizontal-table-row ${!enabled ? 'ks-disabled' : ''}">`);
             c = [];
             d = [];
-            //cells:
-            for (j = 0; j < data.cells[i].length; ++j) {
-                let escapedValue = data.cells[i][j].value.replace(/(<([^>]+)>)/ig, "").replace(/"/ig,"");
-                c.push(`<div class="ks-horizontal-table-cell" style="${o.columnWidths && o.columnWidths[j] ? 'flex: 0 0 ' + o.columnWidths[j] + (o.columnWidths[j].indexOf('%') === -1 ? 'px;' : ';') : ''}white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><div class="ks-horizontal-table-cell-inner ${data.cells[i][j].editable ? 'editable' : ''}" data-row="${i}" data-col="${j}" data-ordinal="${data.cells[i][j].ordinal}" data-editable="${data.cells[i][j].editable}" title="${escapedValue}">${data.cells[i][j].value.replace(/</ig, "< ")}</div></div>`);
-                if (data.leftActionCells.length + data.rightActionCells.length > 0) {
-                    if (dataColumnNames[j] !== '') {
-                        if (data.cells[i][j].value.length < 200) {
-                            d.push(` data-${dataColumnNames[j]}="${escapedValue}" `);
-                        }
-                    }
+
+            cells = mtx[i];
+            len2 = cells.length;
+            for (j = 0; j < len2; ++j) {
+                cell = cells[j];
+                escapedValue = cell.value.replace(/(<([^>]+)>)/ig, "").replace(/"/ig, "");
+                c.push(`<div class="ks-horizontal-table-cell" style="${o.columnWidths && o.columnWidths[j] ? 'flex: 0 0 ' + o.columnWidths[j] + (o.columnWidths[j].indexOf('%') === -1 ? 'px;' : ';') : ''}white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><div class="ks-horizontal-table-cell-inner ${cell.editable ? 'editable' : ''}" data-row="${i}" data-col="${j}" data-ordinal="${cell.ordinal}" data-editable="${cell.editable}" title="${escapedValue}">${cell.value.replace(/</ig, "< ")}</div></div>`);
+
+                if (data.leftActionCells.length + data.rightActionCells.length > 0 && dataColumnNames[j] !== '' && cell.value.length < 200) {
+                    d.push(` data-${dataColumnNames[j]}="${escapedValue}" `);
                 }
             }
 
-            //left actions
-            if (data.leftActionCells.length > i) {
-                for (k = 0; k < data.leftActionCells[i].length; ++k) {
-                    s.push(leftRowWidgets[k].getHtml([], {index: i, on: withState && this.state.radio === i, d: d, active: data.leftActionCells[i][k].active === true, id: o.id, num: leftActionsNum, actionWidth: actionWidth}));
+            cells = data.leftActionCells;
+            if (cells.length > i) {
+                cell = cells[i];
+                len2 = cell.length;
+                for (k = 0; k < len2; ++k) {
+                    s.push(leftRowWidgets[k].getHtml([], {index: i, on: withState && this.state.radio === i, d: d, active: cell[k].active === true, id: o.id, num: leftActionsNum, actionWidth: actionWidth}));
                     ++leftActionsNum;
                 }
 
@@ -135,23 +125,25 @@ class HorizontalTableWidget extends Widget {
 
             s.push(c.join(''));
 
-            //right actions
-            if (data.rightActionCells.length > i) {
-                for (k = 0; k < data.rightActionCells[i].length; ++k) {
-                    s.push(rightRowWidgets[k].getHtml([], {index: i, d: d, active: data.rightActionCells[i][k].active === true, id: o.id, num: rightActionsNum, actionWidth: actionWidth}));
+            cells = data.rightActionCells;
+            if (cells.length > i) {
+                cell = cells[i];
+                len2 = cell.length;
+                for (k = 0; k < len2; ++k) {
+                    s.push(rightRowWidgets[k].getHtml([], {index: i, d: d, active: cell[k].active === true, id: o.id, num: rightActionsNum, actionWidth: actionWidth}));
                     ++rightActionsNum;
                 }
 
             }
+
             s.push(`</div>`);
         }
+
         return s.join('');
     }
 
     render(withState) {
-        const o = this.options;
-        const instance = this;
-
+        const o = this.options, instance = this, h = Listeners.handle;
 
         let widgetOptions, widgets = [];
 
@@ -161,20 +153,19 @@ class HorizontalTableWidget extends Widget {
 
         if (o.listen) {
             for (let l of o.listen) {
-                app.listeners.push({
+                Listeners.push({
                     options: o,
                     method: l.method,
                     eventName: l.event,
-                    parameters: l.parameters ? l.parameters : [],
-                    handler: app.fn.handleListener
+                    parameters: l.parameters || [],
+                    handler: h
                 });
             }
         }
 
-        app.listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: app.fn.handleListener});
+        Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
 
-
-        return app.fn.loadData(o.id, instance.constructor.name).then(function (data) {
+        return QB.loadData(o.id, instance.name).then(function (data) {
             let deffered = [], w, i = 0, leftRowWidgets = [], rightRowWidgets = [], buttonWidgets = [], position = 1000, processedData;
 
             for (w of widgets) {
@@ -182,23 +173,23 @@ class HorizontalTableWidget extends Widget {
                     w.options.position = position;
                     ++position;
                 }
-                w.constructor.name.includes('RowWidget') ? w.options.align === 'left' ? leftRowWidgets.push(w) : rightRowWidgets.push(w) : buttonWidgets.push(w);
+
+                w.name.includes('RowWidget') ? w.options.align === 'left' ? leftRowWidgets.push(w) : rightRowWidgets.push(w) : buttonWidgets.push(w);
             }
-            rightRowWidgets = rightRowWidgets.sort((a, b) => {
-                return a.options.position > b.options.position ? 1 : -1;
-            });
-            leftRowWidgets = leftRowWidgets.sort((a, b) => {
-                return a.options.position > b.options.position ? 1 : -1;
-            });
-            buttonWidgets = buttonWidgets.sort((a, b) => {
-                return a.options.position > b.options.position ? 1 : -1;
-            });
+
+            rightRowWidgets = rightRowWidgets.sort((a, b) => a.options.position > b.options.position ? 1 : -1);
+
+            leftRowWidgets = leftRowWidgets.sort((a, b) => a.options.position > b.options.position ? 1 : -1);
+
+            buttonWidgets = buttonWidgets.sort((a, b) => a.options.position > b.options.position ? 1 : -1);
 
             for (w of buttonWidgets) {
                 deffered.push(w.render(withState));
             }
+
             o.leftActionsLength = leftRowWidgets.length;
             o.rightActionsLength = rightRowWidgets.length;
+
             processedData = instance.processData(data);
 
             return $.when.apply($, deffered).then(function (...results) {
@@ -207,38 +198,42 @@ class HorizontalTableWidget extends Widget {
                 for (r of results) {
                     widgetHtmls.push(r);
                 }
-                let visible = data && typeof data.visible !== "undefined" ? data.visible : o.visible;
+
+                let visible = data && typeof data.visible !== 'undefined' ? data.visible : o.visible;
+
                 return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" ${visible === false ? 'style="display:none"' : '' } id="${o.id}">${instance.getHtml(widgetHtmls, processedData, withState, leftRowWidgets, rightRowWidgets)}</section>`;
             });
         });
     }
 
     initEventHandlers(section, withState) {
-
         Widget.handleSystemEvent(section, 'click', '.horizontal-table-row-action');
 
+        section.find('.horizontal-table-row-action-delete').on('click', e => {
+            let w = $(e.currentTarget), p = w.parent(), t = [];
 
-        section.find('.horizontal-table-row-action-delete').on('click', (e) => {
-            let w = $(e.currentTarget), s = w.closest('section'), p = w.parent(), t = [];
-            t.push('<div class="row"><div class="col-12"><div class="row"><div class="col-12"><h4 style="margin-top: 20px;margin-bottom: 20px;">', w.data('message'), '</h4></div></div></div></div>')
+            t.push('<div class="row"><div class="col-12"><div class="row"><div class="col-12"><h4 style="margin-top: 20px;margin-bottom: 20px;">', w.data('message'), '</h4></div></div></div></div>');
             t.push('<div class="row"><div class="col-12"><div class="row">');
             t.push('<div class="col-6"><a id="deleteOk" class="widget-btn button-widget">Delete</a></div>');
             t.push('<div class="col-6"><a id="deleteCancel" style="text-align: center;display:block;" class="widget-link-cancel button-widget-cancel">CANCEL</a></div>');
             t.push('</div></div></div>');
-            app.el.body.prepend(`<div id="horizontalpopup" style="bottom: 0;left: 0;position: fixed;right: 0;top: 0;z-index: 8;"></div>`);
-            p.append(`<div class="widget-table-row-edit-menu">
-                        ${t.join('')}
-                        </div>`).promise().then(() => {
+
+            El.body.prepend(`<div id="horizontalpopup" style="bottom: 0;left: 0;position: fixed;right: 0;top: 0;z-index: 8;"></div>`);
+
+            p.append(`<div class="widget-table-row-edit-menu">${t.join('')}</div>`).promise().then(() => {
                 let c = p.find('.widget-table-row-edit-menu'), g = $('#horizontalpopup');
+
                 g.on('click', () => {
                     g.remove();
                     c.remove();
                 });
+
                 $('#deleteOk').on('click', () => {
                     Widget.doHandleSystemEvent(w, e);
                     g.remove();
                     c.remove();
                 });
+
                 $('#deleteCancel').on('click', () => {
                     g.remove();
                     c.remove();
@@ -246,71 +241,62 @@ class HorizontalTableWidget extends Widget {
             });
         });
 
-
         section.find('.sortable').each(function () {
-            let s = $(this).closest('section'), table = s.find('.ks-horizontal-table-body-scroll');
+            let th = $(this), s = th.closest('section'), table = s.find('.ks-horizontal-table-body-scroll'), thIndex = th.index(), inverse = false;
 
-            var th = $(this),
-                    thIndex = th.index(),
-                    inverse = false;
 
             th.click(function () {
                 s.find('.ks-horizontal-table-cell').removeClass('ks-ordered').removeClass('ks-asc').removeClass('ks-desc');
                 table.find('.ks-horizontal-table-cell').filter(function () {
-
                     return $(this).index() === thIndex;
-
                 }).sortElements(function (a, b) {
-                    if ($(a).find('div').text() == $(b).find('div').text())
+                    if ($(a).find('div').text() === $(b).find('div').text()) {
                         return 0;
+                    }
 
-                    return $(a).find('div').text() > $(b).find('div').text() ?
-                            inverse ? -1 : 1
-                            : inverse ? 1 : -1;
-
+                    return $(a).find('div').text() > $(b).find('div').text() ? inverse ? -1 : 1 : inverse ? 1 : -1;
                 }, function () {
                     return this.parentNode;
                 });
+
                 inverse ? th.addClass('ks-ordered ks-asc') : th.addClass('ks-ordered ks-desc');
+
                 inverse = !inverse;
             });
-
         });
 
-        section.find('.ks-horizontal-table-row-toggle').on('click', (e) => {
+        section.find('.ks-horizontal-table-row-toggle').on('click', e => {
             let p = section.find('.ks-horizontal-table-row-toggle.ks-on'), w = $(e.currentTarget);
 
-            this.state['radio'] = w.data('index');
+            this.state.radio = w.data('index');
+
             p.closest('.ks-horizontal-table-row').prop('style', '');
             p.removeClass('ks-on');
 
             w.addClass('ks-on');
             w.closest('.ks-horizontal-table-row').prop('style', 'background-color:#bfd9f2;');
+
             Widget.doHandleSystemEvent(w, e, true);
         });
 
         section.find('.ks-horizontal-table-search-toggle').on('click', e => {
-            let c = $(e.currentTarget), s = c.closest('section'), t = s.find('.ks-horizontal-table-body-scroll'), w = s.find('.ks-horizontal-table-search'), i = w.find('input');
-            c.toggleClass('ks-on');
-            this.state['checkbox'] = c.hasClass('ks-on');
+            let c = $(e.currentTarget).toggleClass('ks-on'), s = c.closest('section'), t = s.find('.ks-horizontal-table-body-scroll'), w = s.find('.ks-horizontal-table-search'), i = w.find('input');
+
+            this.state.checkbox = c.hasClass('ks-on');
+
             HorizontalTableWidget.filter(t, i.val(), c);
         });
 
         for (let g of section.find('.ks-horizontal-table-search')) {
             let w = $(g), s = w.closest('section'), t = s.find('.ks-horizontal-table-body-scroll'), i = w.find('input'), c = s.find('.ks-horizontal-table-search-toggle');
-            i.on('focus', () => {
-                i.select();
-            });
-            i.on('input', () => {
+            i.on('focus', () => i.select()).on('input', () => {
                 i.attr('value', i.val());
-                this.state['searchInput'] = i.val();
+                this.state.searchInput = i.val();
                 HorizontalTableWidget.filter(t, i.val(), c);
             });
         }
 
-        section.find('div.editable').on('click', e => {
-            HorizontalTableWidget.addEdit(e);
-        });
+        section.find('div.editable').on('click', e => HorizontalTableWidget.addEdit(e));
 
         if (withState) {
             const o = this.options;
@@ -320,8 +306,8 @@ class HorizontalTableWidget extends Widget {
             }
 
             if (o.leftActionsLength > 0) {
-                let tr = section.find('.ks-horizontal-table-row-toggle.ks-on').closest('.ks-horizontal-table-row');
-                tr.prop('style', 'background-color:#bfd9f2;');
+                let tr = section.find('.ks-horizontal-table-row-toggle.ks-on').closest('.ks-horizontal-table-row').prop('style', 'background-color:#bfd9f2;');
+
                 if (tr) {
                     let trPos = tr.position(), trCtr = tr.height() / 2, tableContainer = $(section.find('.ks-horizontal-table-body')[0]), dataTblctr = (tableContainer.height()) / 2;
 
@@ -335,22 +321,19 @@ class HorizontalTableWidget extends Widget {
     }
 
     static addEdit(e) {
-        let c = $(e.currentTarget), s = c.closest('section');
+        let c = $(e.currentTarget), s = c.closest('section'), vv = c.text();
+
         c.off('click');
         c.addClass('editing');
         c.addClass('cell-selected');
-        let vv = c.text();
         c.html(`<input type="text" data-row="${c.data('row')}" data-col="${c.data('col')}" data-id="${s.prop('id')}" data-action="cellEdit" data-ordinal="${c.data('ordinal')}" class="widget-input edit-cell">`).promise().then(() => {
-              
             let r = c.find('.edit-cell');
-            r.val(vv);
-            r.focus();
-            r.select();
-            r.on('keydown', f => {
+            r.val(vv).focus().select().on('keydown', f => {
+                ;
                 if (f.keyCode === 13) {
                     HorizontalTableWidget.addCellPressed(f, c);
-                    r.data('value', app.utils.escapeText(r.val()));
-                    app.widgetValue[r.data('id')].rows[r.data('row')][r.data('col')].value = app.utils.escapeText(r.val());
+                    r.data('value', Utils.escapeText(r.val()));
+                    WidgetValue[r.data('id')].rows[r.data('row')][r.data('col')].value = Utils.escapeText(r.val());
                     Widget.doHandleSystemEvent(r, f);
                 }
                 if (f.keyCode === 9) {
@@ -365,39 +348,34 @@ class HorizontalTableWidget extends Widget {
                         j = -1;
                     }
                     HorizontalTableWidget.addCellPressed(f, c);
-                    r.data('value', app.utils.escapeText(r.val()));
-                    app.widgetValue[r.data('id')].rows[r.data('row')][r.data('col')].value = app.utils.escapeText(r.val());
+                    r.data('value', Utils.escapeText(r.val()));
+                    WidgetValue[r.data('id')].rows[r.data('row')][r.data('col')].value = Utils.escapeText(r.val());
                     $(editables[j + 1]).click();
                     Widget.doHandleSystemEvent(r, f);
+
                     return false;
                 }
             });
+
             r.on('focusout', f => {
                 HorizontalTableWidget.addCellPressed(f, c);
-                r.data('value', app.utils.escapeText(r.val()));
-                app.widgetValue[r.data('id')].rows[r.data('row')][r.data('col')].value = app.utils.escapeText(r.val());
+                r.data('value', Utils.escapeText(r.val()));
+                WidgetValue[r.data('id')].rows[r.data('row')][r.data('col')].value = Utils.escapeText(r.val());
                 Widget.doHandleSystemEvent(r, f);
             });
         });
     }
 
     static addCellPressed(f, c) {
-        let d = $(f.currentTarget), v = d.val();
-        d.off('keydown');
-        d.off('focusout');
-        c.removeClass('editing');
-        c.removeClass('cell-selected');
-        c.html(v);
-        c.attr('title', v);
-        c.on('click', e => {
-            HorizontalTableWidget.addEdit(e);
-        });
+        let v = $(f.currentTarget).off('keydown focusout').val();
+
+        c.removeClass('editing cell-selected').html(v).attr('title', v).on('click', e => HorizontalTableWidget.addEdit(e));
     }
 
     static filter(tbody, searchTerm, checkBox, additionalFilterRowFunc) {
-        let i, j, m, n, rows, r, cells, mL = 3, checkBoxValue, additionalFilterRowFuncFinal = additionalFilterRowFunc, dd;
+        let i, j, m, n, rows, r, cells, mL = 3, checkBoxValue, additionalFilterRowFuncFinal = additionalFilterRowFunc;
 
-        searchTerm = app.utils.cleanStr(searchTerm.trim()).toLowerCase();
+        searchTerm = Utils.cleanStr(searchTerm.trim()).toLowerCase();
 
         if (checkBox) {
             checkBoxValue = checkBox.hasClass('ks-on') ? checkBox.data('value') : '';
@@ -439,7 +417,7 @@ class HorizontalTableWidget extends Widget {
 
             cells = r.children();
             for (j = 0, m = cells.length; j < m; ++j) {
-                if (-1 !== app.utils.cleanStr(cells.eq(j).text()).toLowerCase().indexOf(searchTerm)) {
+                if (-1 !== Utils.cleanStr(cells.eq(j).text()).toLowerCase().indexOf(searchTerm)) {
                     r.show();
 
                     break;
@@ -457,18 +435,22 @@ class HorizontalTableWidget extends Widget {
         if (!checkBoxValue) {
             return true;
         }
+
         let j, m, c = row.children();
+
         for (j = 0, m = c.length; j < m; ++j) {
-            if (-1 !== app.utils.cleanStr(c.eq(j).text()).toLowerCase().indexOf(checkBoxValue.toLowerCase())) {
+            if (-1 !== Utils.cleanStr(c.eq(j).text()).toLowerCase().indexOf(checkBoxValue.toLowerCase())) {
                 return true;
             }
 
         }
+
         return false;
     }
 
     static clearFilter(tbody, callbackFunc) {
         tbody.lastSearchedTerm = '';
+
         tbody.children().show().promise().done(function () {
             if (callbackFunc) {
                 callbackFunc();
@@ -480,10 +462,14 @@ class HorizontalTableWidget extends Widget {
         if (data.cells) {
             return data; //dummy
         }
+
         const o = this.options;
+
         let leftActionCells = [], rightActionCells = [], cells = [], j, i, r, k;
+
         for (k = 0; k < data.length; ++k) {
             j = 0;
+
             while (j < data[k].length) {
                 r = [];
                 for (i = 0; i < o.leftActionsLength; ++i) {
@@ -507,6 +493,7 @@ class HorizontalTableWidget extends Widget {
                 rightActionCells.push(r);
             }
         }
+
         return {cells: cells, leftActionCells: leftActionCells, rightActionCells: rightActionCells};
     }
 }

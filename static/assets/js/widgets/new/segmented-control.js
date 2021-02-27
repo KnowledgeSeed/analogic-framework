@@ -1,4 +1,4 @@
-/* global Widget */
+/* global app, Listeners, QB, Widget */
 
 'use strict';
 class SegmentedControlWidget extends Widget {
@@ -7,21 +7,14 @@ class SegmentedControlWidget extends Widget {
         const v = {
             skin: this.getRealValue('skin', d, 'standard')
         };
-        let mainDivStyle = this.getGeneralStyles(d);
+
         this.value = {};
 
-        return `<div class="ks-segmented ks-segmented-${v.skin}"  style="${mainDivStyle.join('')}">
-                    <div class="ks-segmented-inner">
-                        ${widgets.join('')}
-                    </div>
-                </div>`;
-
+        return `<div class="ks-segmented ks-segmented-${v.skin}"  style="${this.getGeneralStyles(d).join('')}"><div class="ks-segmented-inner">${widgets.join('')}</div></div>`;
     }
 
     render(withState) {
-        const o = this.options;
-        const instance = this;
-
+        const o = this.options, instance = this, h = Listeners.handle;
 
         let widgetOptions, widgets = [];
 
@@ -31,27 +24,28 @@ class SegmentedControlWidget extends Widget {
 
         if (o.listen) {
             for (let l of o.listen) {
-                app.listeners.push({
+                Listeners.push({
                     options: o,
                     method: l.method,
                     eventName: l.event,
-                    parameters: l.parameters ? l.parameters : [],
-                    handler: app.fn.handleListener
+                    parameters: l.parameters || [],
+                    handler: h
                 });
             }
         }
 
-        app.listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: app.fn.handleListener});
+        Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
 
         //rekurzív renderelés, adatbetöltéssel
 
-        return app.fn.loadData(o.id, instance.constructor.name).then(function (data) {
-            let deffered = [], w, i = 0;
+        return QB.loadData(o.id, instance.name).then(function (data) {
+            let deffered = [], w, i = 0, childrenData;
 
             for (w of widgets) {
-                //   let childrenData = {width: 100 / o.widgets.length, id: o.id, position: i};
-                let childrenData = {id: o.id, position: i};
+                //childrenData = {width: 100 / o.widgets.length, id: o.id, position: i};
+                childrenData = {id: o.id, position: i};
                 deffered.push(w.embeddedRender(withState, childrenData));
+
                 ++i;
             }
 
@@ -61,31 +55,40 @@ class SegmentedControlWidget extends Widget {
                 for (r of results) {
                     widgetHtmls.push(r);
                 }
-                let visible = data && typeof data.visible !== "undefined" ? data.visible : o.visible;
+
+                let visible = data && typeof data.visible !== 'undefined' ? data.visible : o.visible;
+
                 return `<section title="${o.title || ''}" ${visible === false ? 'style="display:none"' : 'style="display:contents;"' } id="${o.id}">${instance.getHtml(widgetHtmls, instance.processData(data), withState)}</section>`;
             });
         });
     }
 
     initEventHandlers(section) {
-        
         section.find('.ks-segment').on('click', (e) => {
             let s = $(e.currentTarget);
+
             this.value = {selected: s.find('.ks-segment-label').html(), value: s.data('value')};
-            let second = $('<div></div>').data('id', s.data('id')).data('action', 'switch');
+
+            let second = $('<div>').data('id', s.data('id')).data('action', 'switch');
+
             Widget.doHandleSystemEvent(s, e, false);
             Widget.doHandleSystemEvent(second, e, false);
         });
 
-        section.find('a').on('click', (e) => {
+        section.find('a').on('click', e => {
             let s = $(e.target).closest('section').parent().closest('section').find('.ks-segment'), b = false, i, w = $(e.target).closest('a');
+
             $(e.target).closest('section').parent().closest('section').find('.ks-segment').removeClass('ks-on').removeClass('ks-right').removeClass('ks-left');
+
             w.addClass('ks-on');
-            for(i = 0; i < s.length; ++i){
-                if($(s[i]).attr('id') === w.attr('id')){
+
+            for (i = 0; i < s.length; ++i) {
+                e = $(s[i]);
+
+                if (e.attr('id') === w.attr('id')) {
                     b = true;
-                }else{
-                    b ? $(s[i]).addClass('ks-right') : $(s[i]).addClass('ks-left');
+                } else {
+                    b ? e.addClass('ks-right') : e.addClass('ks-left');
                 }
             }
         });

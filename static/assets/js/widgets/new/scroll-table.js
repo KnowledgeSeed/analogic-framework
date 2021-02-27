@@ -1,4 +1,4 @@
-/* global Widget, app, Node, _ */
+/* global Doc, El, Render, Widget, WidgetValue, Utils, app, Node, _ */
 
 'use strict';
 class ScrollTableWidget extends Widget {
@@ -6,7 +6,7 @@ class ScrollTableWidget extends Widget {
     constructor(options) {
         super(options);
 
-        this.isMobile = app.utils.isMobile() || app.prop.isTouched;
+        this.isMobile = Utils.isMobile() || app.isTouched;
         this.removableClasses = 'ks-cell-selected ks-editing ks-cell-active b s cell-range-top-left-corner cell-range-top-right-corner cell-range-top cell-range-bottom-left-corner cell-range-bottom-right-corner cell-range-bottom cell-range-left cell-range-right';
     }
 
@@ -42,14 +42,16 @@ class ScrollTableWidget extends Widget {
 
             j = (parent ? 43 : 29) + (e.childrenIds.length ? 20 : 0);
 
-            colHeaderHtml.push('<tr', (parent ? (isExpanded ? '' : ' style="display: none;"') + (' class="inner-row" data-parent="' + parent.id + '"') : ''), '>', '<td style="min-width: ' + o.headerWidth + 'px !important;" class="', app.utils.parseFormatStringToCSSClasses(e.format || defaultFormat), ' ks-scrolltable-name-col ', (isExpanded ? 'opened' : ''), '"><span data-label="', label, '" class="ellipsis" style="display: inline-block; width: ', (o.headerWidth - j), 'px;">', label, ' <\/span><span data-value="', labelId, '" class="icon-comment-', (e.comment ? 'on' : 'off'), '"><\/span>', (e.expandable ? '<span class="open-arrow"><\/span>' : ''), '<\/td><\/tr>');
+            colHeaderHtml.push('<tr', (parent ? (isExpanded ? '' : ' style="display: none;"') + (' class="inner-row" data-parent="' + parent.id + '"') : ''), '>', '<td style="min-width: ' + o.headerWidth + 'px !important;" class="', Utils.parseFormatStringToCSSClasses(e.format || defaultFormat), ' ks-scrolltable-name-col ', (isExpanded ? 'opened' : ''), '"><span data-label="', label, '" class="ellipsis" style="display: inline-block; width: ', (o.headerWidth - j), 'px;">', label, ' <\/span><span data-value="', labelId, '" class="icon-comment-', (e.comment ? 'on' : 'off'), '"><\/span>', (e.expandable ? '<span class="open-arrow"><\/span>' : ''), '<\/td><\/tr>');
 
             if (parent && !isExpanded) {
                 hiddenRowIds.push(i);
             }
         }
 
-        const ribbonOffsets = Array.from({length: ribbonsCount}, () => ({leftOffset: 0, rightOffset: 0, wasTrue: false})), ribbonsHtml = [];
+        const ribbonsHtml = [], ribbonOffsets = Array.from({length: ribbonsCount}, function () {
+            return {leftOffset: 0, rightOffset: 0, wasTrue: false};
+        });
 
         for (i = 0; i < rowHeaderCount; ++i) {
             e = rowHeaderData[i].ribbons;
@@ -91,7 +93,7 @@ class ScrollTableWidget extends Widget {
                 cellHtml.push('<tr', (parent ? (hiddenRowIds.includes(j) ? ' style="display: none;"' : '') + (' data-parent="' + parent + '"') : ''), '>');
             }
 
-            cellHtml.push('<td class="', app.utils.parseFormatStringToCSSClasses(cellFormatsByOrdinals[e.ordinal] || defaultFormat), (e.disabled ? ' disabled' : ''), '" data-ordinal="', e.ordinal, '" data-value="', e.value, '"><span>', e.value, '<\/span><\/td>');
+            cellHtml.push('<td class="', Utils.parseFormatStringToCSSClasses(cellFormatsByOrdinals[e.ordinal] || defaultFormat), (e.disabled ? ' disabled' : ''), '" data-ordinal="', e.ordinal, '" data-value="', e.value, '"><span>', e.value, '<\/span><\/td>');
 
             if (0 === (i + 1) % rowHeaderCount) {
                 cellHtml.push('</tr>');
@@ -110,15 +112,12 @@ class ScrollTableWidget extends Widget {
         }
 
         return `
-<div style="${e.join('')}">
-${scrollTableWindowHtml}
+<div style="${e.join('')}">${scrollTableWindowHtml}
 <div class="row">
     <div class="col">
         <div class="ks-scrolltable-holder">
             <div class="ks-scrolltable-holder-inner" style="padding-left: ${o.headerWidth + 1}px;">
-                <table class="ks-scrolltable-table ks-scrolltable-table-names">
-                    ${colHeaderHtml.join('')}
-                </table>
+                <table class="ks-scrolltable-table ks-scrolltable-table-names">${colHeaderHtml.join('')}</table>
                 <table class="ks-scrolltable-table">
                     <thead class="ks-scrolltable-header">${ribbonsHtml.join('') + rowHeaderHtml.join('')}</thead>
                     <tbody style="height: ${o.height}px;" class="ks-scrolltable-body noselect">${cellHtml.join('')}</tbody>
@@ -159,14 +158,14 @@ ${scrollTableWindowHtml}
         if (!ScrollTableWidget.isDocEventsHaveBeenBound) {
             $(window).on('resize', () => ScrollTableWidget.initScrollTableWindowEventHandlers(null, true));
 
-            app.doc.on('mouseup touchend', () => ScrollTableWidget.clientX = null);
+            Doc.on('mouseup touchend', () => ScrollTableWidget.clientX = null);
 
             ScrollTableWidget.isDocEventsHaveBeenBound = true;
         }
     }
 
     static initScrollTableWindowEventHandlers(section) {
-        (section || app.doc).find('.ks-scrolltable').each((i, e) => ScrollTableWidget.initScrollTableWindowEventHandlersForHolder($(e)));
+        (section || Doc).find('.ks-scrolltable').each((i, e) => ScrollTableWidget.initScrollTableWindowEventHandlersForHolder($(e)));
     }
 
     static initScrollTableWindowEventHandlersForHolder(scrollTableWindowHolder) {
@@ -212,8 +211,6 @@ ${scrollTableWindowHtml}
             });
 
             adjustScrollWindowToTableHolder();
-
-            //dayWindow.mouse2touch();
         }
 
         function getClientX(e) {
@@ -247,7 +244,7 @@ ${scrollTableWindowHtml}
         let selectedCell = $(), hoveredCellOrdinal, contextMenu, cellsToSave;
 
         const focusInput = $('<div class="ks-cell-selected-control">...<input id="focusInput" style="width: 0; height: 0; opacity: 0;" type="text"><\/div>').on('mousedown touchstart', e => {
-            app.utils.stopEvent(e);
+            Utils.stopEvent(e);
 
             const btn = $(e.currentTarget), cell = btn.parent().removeClass('ks-cell-selected').addClass('ks-cell-active s');
 
@@ -263,7 +260,7 @@ ${scrollTableWindowHtml}
         const contextMenuBtn = copyPasteBtns.find('.ks-cell-active-more');
 
         copyPasteBtns.on('mousedown dblclick touchstart', '>', e => {
-            app.utils.stopEvent(e);
+            Utils.stopEvent(e);
 
             const btn = $(e.currentTarget), i = btn.index();
 
@@ -285,7 +282,7 @@ ${scrollTableWindowHtml}
         });
 
         const closeBtn = $('<div class="ks-cell-active-close"><span class="icon-add"><\/span><\/div>').on('mousedown', e => {
-            app.utils.stopEvent(e);
+            Utils.stopEvent(e);
 
             selectFirstSelectedCell();
 
@@ -295,7 +292,7 @@ ${scrollTableWindowHtml}
         const confirmCancelBtns = $('<div class="ks-cell-active-controls ks-control-finalize"><div class="ks-cell-active-control ks-cell-active-confirm">Confirm<\/div><div class="ks-cell-active-control ks-cell-active-cancel">Cancel<\/div><\/div>');
 
         confirmCancelBtns.on('mousedown', '.ks-cell-active-confirm', e => {
-            app.utils.stopEvent(e);
+            Utils.stopEvent(e);
 
             saveCellsData(cellsToSave || cells.filter('.s'), e);
 
@@ -303,7 +300,7 @@ ${scrollTableWindowHtml}
 
             return false;
         }).on('mousedown', '.ks-cell-active-cancel', e => {
-            app.utils.stopEvent(e);
+            Utils.stopEvent(e);
 
             selectFirstSelectedCell();
 
@@ -318,20 +315,20 @@ ${scrollTableWindowHtml}
         ScrollTableWidget.selectedCellStates = withState ? (ScrollTableWidget.selectedCellStates || {}) : {};
 
         if (!ScrollTableWidget.loupe) {
-            ScrollTableWidget.loupe = $('<div class="widget-loupe" style="position: absolute; display: none;"><\/div>').prependTo(app.el.body);
+            ScrollTableWidget.loupe = $('<div class="widget-loupe" style="position: absolute; display: none;"><\/div>').prependTo(El.body);
             ScrollTableWidget.mobileLoupe = $('<div class="widget-loupe mobile-control"><span><\/span><span style="display: block;" class="icon-tooltip-arrow"><\/span><\/div>');
         }
 
         section.find('.ks-scrolltable-table-names').on('touchstart click', '.icon-comment-on', e => {
             if (o.oldComment) {
                 const commentWidget = new CommentWidget({id: section.attr('id') + 'Comment'}), a = $(e.currentTarget);
-                app.widgetValue[id].comment = {value: a.data('value')};
+                WidgetValue[id].comment = {value: a.data('value')};
 
-                app.fn.renderWidget(null, app.el.sideBarContent, commentWidget);
+                Render.renderWidget(null, El.sideBarContent, commentWidget);
 
-                app.el.sideBar.open('comment-holder');
+                El.sideBar.open('comment-holder');
             } else {
-                delete app.widgetValue[widgetId].commentEdit;
+                delete WidgetValue[widgetId].commentEdit;
 
                 Widget.doHandleSystemEvent($(e.currentTarget).data({id: widgetId, action: 'commentShow'}));
             }
@@ -340,13 +337,13 @@ ${scrollTableWindowHtml}
         }).on('touchstart click', '.icon-comment-off', e => {
             if (o.oldComment) {
                 const a = $(e.currentTarget), commentFormWidget = new CommentFormWidget({id: section.attr('id') + 'Comment'});
-                app.widgetValue[id].comment = {value: a.data('value')};
+                WidgetValue[id].comment = {value: a.data('value')};
 
-                app.fn.renderWidget(null, app.el.sideBarContent, commentFormWidget);
+                Render.renderWidget(null, El.sideBarContent, commentFormWidget);
 
-                app.el.sideBar.open('comment-holder');
+                El.sideBar.open('comment-holder');
             } else {
-                delete app.widgetValue[widgetId].commentShow;
+                delete WidgetValue[widgetId].commentShow;
 
                 Widget.doHandleSystemEvent($(e.currentTarget).data({id: widgetId, action: 'commentEdit'}));
             }
@@ -458,7 +455,7 @@ ${scrollTableWindowHtml}
             selectedCell.prepend(focusInput).promise().then(() => {
                 if (this.isMobile) {
                     const rowParent = scrollTableHeaderColRows.eq(selectedCell.parent().index()).data('parent'), left = tableHolder.scrollLeft();
-                    ScrollTableWidget.selectedCellStates[id] = {docTop: app.doc.scrollTop(), top: scrollTable.scrollTop(), left: left, ordinal: selectedCell.data('ordinal'), parent: rowParent};
+                    ScrollTableWidget.selectedCellStates[id] = {docTop: Doc.scrollTop(), top: scrollTable.scrollTop(), left: left, ordinal: selectedCell.data('ordinal'), parent: rowParent};
                     cancelCellEditing(editedCell);
                     editedCell.children('input').remove();
                     tableHolder.scrollLeft(left).trigger('scrollchanged');
@@ -466,7 +463,7 @@ ${scrollTableWindowHtml}
                     selectedCell.find('input').focus().promise().then(() => {
                         callback().promise().then(() => {
                             const rowParent = scrollTableHeaderColRows.eq(selectedCell.parent().index()).data('parent');
-                            ScrollTableWidget.selectedCellStates[id] = {docTop: app.doc.scrollTop(), top: scrollTable.scrollTop(), left: tableHolder.scrollLeft(), ordinal: selectedCell.data('ordinal'), parent: rowParent};
+                            ScrollTableWidget.selectedCellStates[id] = {docTop: Doc.scrollTop(), top: scrollTable.scrollTop(), left: tableHolder.scrollLeft(), ordinal: selectedCell.data('ordinal'), parent: rowParent};
                         });
                     });
                 }
@@ -480,7 +477,7 @@ ${scrollTableWindowHtml}
 
             return false;
         }).on('dblclick', 'td', e => {
-            app.utils.stopEvent(e);
+            Utils.stopEvent(e);
 
             const cell = $(e.currentTarget), value = getCellValue(cell);
 
@@ -608,7 +605,7 @@ ${scrollTableWindowHtml}
 
             //add disabled classes!
 
-            app.el.body.prepend(contextMenu.css({top: t, left: p.left - 33}));
+            El.body.prepend(contextMenu.css({top: t, left: p.left - 33}));
         }, 10);
 
         function contextMenuItemClicked(e) {
@@ -671,7 +668,7 @@ ${scrollTableWindowHtml}
         }
 
         function scrollToLastSelectedCell(s) {
-            app.doc.scrollTop(s.docTop);
+            Doc.scrollTop(s.docTop);
             scrollTable.scrollTop(s.top);
             cells.filter('[data-ordinal="' + s.ordinal + '"]').trigger('mousedown');
             tableHolder.scrollLeft(s.left).trigger('scrollchanged');
@@ -840,19 +837,19 @@ ${scrollTableWindowHtml}
             }
 
             c.data({action: 'pasteCells', id: widgetId});
-            app.widgetValue[widgetId].pastedCellValues = d;
+            WidgetValue[widgetId].pastedCellValues = d;
 
             Widget.doHandleSystemEvent(c, event);
         }
 
         function convertCellValueToPost(cellValue) {
-            let newVal = app.utils.parseNumber(cellValue);
+            let newVal = Utils.parseNumber(cellValue);
 
             if (cellValue.match(/%$|%\)$/)) {
                 newVal /= 100;
             }
 
-            return app.utils.replaceDecimal(newVal);
+            return Utils.replaceDecimal(newVal);
         }
 
         function undoLastPaste() {

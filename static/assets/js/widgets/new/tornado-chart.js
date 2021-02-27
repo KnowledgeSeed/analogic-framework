@@ -1,4 +1,4 @@
-/* global app */
+/* global app, Utils */
 
 'use strict';
 class TornadoChartWidget extends Widget {
@@ -23,7 +23,7 @@ class TornadoChartWidget extends Widget {
         const step = range / (this.getRealValue('gridLinesNum', d, 9) - 1);
 
         for (let i = xMin; i <= xMax + 1; i += step) {
-            h.push('<div class="ks-tornado-x-line"><div class="ks-tornado-x-line-label">', app.utils.precisionRound(i, 1), '<\/div><\/div>');
+            h.push('<div class="ks-tornado-x-line"><div class="ks-tornado-x-line-label">', Utils.precisionRound(i, 1), '<\/div><\/div>');
         }
 
         return `
@@ -56,14 +56,14 @@ class TornadoChartWidget extends Widget {
         }
 
         return `
-            <div class="ks-input-control ks-input-low">
-                ${this.getRealValue('leftTitle', d, 'Input Low')}
-                <div class="ks-input-control-icon"></div>
-            </div>
-            <div class="ks-input-control ks-input-high">
-                <div class="ks-input-control-icon"></div>
-                ${this.getRealValue('rightTitle', d, 'Input High')}
-            </div>`;
+<div class="ks-input-control ks-input-low">
+    ${this.getRealValue('leftTitle', d, 'Input Low')}
+    <div class="ks-input-control-icon"></div>
+</div>
+<div class="ks-input-control ks-input-high">
+    <div class="ks-input-control-icon"></div>
+    ${this.getRealValue('rightTitle', d, 'Input High')}
+</div>`;
     }
 
     createLegendHtml(v) {

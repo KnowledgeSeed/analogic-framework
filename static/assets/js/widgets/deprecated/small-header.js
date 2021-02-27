@@ -4,18 +4,15 @@ class SmallHeaderWidget extends Widget {
 
     getHtml() {
         const o = this.options;
-        const html =
-        `<header class="small-header ${o.noStyle? 'no-style' : ''}">
-			<div class="wrapper">
-				<div class="row">
-					<div class="col">
-						<h1>${o.title}</h1>
-					</div>
-				</div>
-			</div>
-		</header>`;
 
-        return html;
+        return `
+<header class="small-header ${o.noStyle ? 'no-style' : ''}">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col"><h1>${o.title}</h1></div>
+        </div>
+    </div>
+</header>`;
     }
 }
 ;

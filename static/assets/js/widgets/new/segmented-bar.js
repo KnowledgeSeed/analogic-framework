@@ -35,10 +35,7 @@ class SegmentedBarWidget extends Widget {
 
         this.addSeparatorHtml(h, f);
 
-        return `
-<div class="ks-segmentedbar" style="${this.getGeneralStyles(d).join('')}">
-    <div class="ks-segmentedbar-inner">${h.join('')}</div>
-</div>`;
+        return `<div class="ks-segmentedbar" style="${this.getGeneralStyles(d).join('')}"><div class="ks-segmentedbar-inner">${h.join('')}</div></div>`;
     }
 
     addSeparatorHtml(h, e) {

@@ -1,4 +1,4 @@
-/* global app, Widget */
+/* global app, Utils, Widget */
 
 'use strict';
 
@@ -33,7 +33,7 @@ class DroppableWidget extends Widget {
         if (visible === false) {
             gs.push('display:none;');
         }
-        return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" style="${gs.join('')}" id="${o.id ? o.id : app.utils.getRandomId()}">${this.getHtml(widgetHtmls, this.processData(data), withState)}</section>`;
+        return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" style="${gs.join('')}" id="${o.id ? o.id : Utils.getRandomId()}">${this.getHtml(widgetHtmls, this.processData(data), withState)}</section>`;
     }
 
 }

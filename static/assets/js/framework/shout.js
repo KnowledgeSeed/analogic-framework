@@ -1,7 +1,6 @@
-/* global app */
+/* global app, El */
 
 'use strict';
-
 
 app.fn.shout = (message) => {
     if (app.useShout) {
@@ -35,8 +34,8 @@ app.fn.getShouts = () => {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     app.shoutWaiting = false;
                     let r = JSON.parse(xhr.responseText);
-                    if (r.id != app.id) { //saját event-re nem figyelünk a szerver felöl
-                        app.el.body.triggerHandler(r.message);
+                    if (r.id !== app.id) { //saját event-re nem figyelünk a szerver felöl
+                        El.body.triggerHandler(r.message);
                     }
                 }
 

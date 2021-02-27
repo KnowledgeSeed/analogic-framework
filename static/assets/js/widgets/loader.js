@@ -1,49 +1,43 @@
-/* global app, jQuery */
+/* global app, Doc, jQuery */
 
 'use strict';
 
-app.loader = ((app, $) => {
-
-    let ajaxCallNum = 0, timeoutId;
-    let globalLoader = $('<div style="position: fixed; z-index: 9999; display: none;" class="loader"><img src="static/assets/images/loading2.gif"><\/div>');
+const Loader = ($ => {
+    let ajaxCallNum = 0, timeoutId, e = $('<div style="position: fixed; z-index: 9999; display: none;" class="loader"><img src="static/assets/images/loading2.gif"><\/div>');
 
     return {
-        start: increaseAjaxCallNum => {
-            if (increaseAjaxCallNum) {
+        start: incAjaxCallNum => {
+            if (incAjaxCallNum) {
                 ++ajaxCallNum;
             }
 
-            if (!globalLoader.is(':visible')) {
-                if (increaseAjaxCallNum) {
-                    timeoutId = setTimeout(() => globalLoader.show(), 2000);
+            if (!e.is(':visible')) {
+                if (incAjaxCallNum) {
+                    timeoutId = setTimeout(() => e.show(), 2000);
                 } else {
-                    globalLoader.show();
+                    e.show();
                 }
             }
 
-            globalLoader.appendTo('body');
+            e.appendTo('body');
         },
-        stop: decreaseAjaxCallNum => {
-            if (decreaseAjaxCallNum) {
+        stop: decAjaxCallNum => {
+            if (decAjaxCallNum) {
                 clearTimeout(timeoutId);
 
                 --ajaxCallNum;
 
                 setTimeout(() => {
                     if (0 === ajaxCallNum) {
-                        globalLoader.hide().remove();
+                        e.hide().remove();
                     }
                 }, 500);
             } else {
-                globalLoader.hide().remove();
+                e.hide().remove();
             }
         },
         autoOn: () => {
-            app.doc.ajaxStart(() => {
-                app.loader.start(true);
-            }).ajaxStop(() => {
-                app.loader.stop(true);
-            });
+            Doc.ajaxStart(() => Loader.start(true)).ajaxStop(() => Loader.stop(true));
         }
     };
-})(app, jQuery);
+})(jQuery);

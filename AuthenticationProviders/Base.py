@@ -82,11 +82,11 @@ class Base:
         return "OK"
 
     def getConfig(self):
-        config = self.cache.get('knowledge_seed_config')
+        config = self.cache.get(self.CONFIG)
         if config is None:
             json_url = os.path.join(self.site_root, "static", "config.json")
             config = json.load(open(json_url))
-            self.cache.set('knowledge_seed_config', config)
+            self.cache.set(self.CONFIG, config)
         return config
 
     def getParam(self, param_name):

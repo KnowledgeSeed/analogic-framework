@@ -1,4 +1,4 @@
-/* global app, Widget */
+/* global app, Utils, Widget, WidgetValue */
 
 'use strict';
 
@@ -6,11 +6,15 @@ class TextBoxWidget extends Widget {
 
     getHtml(widgets, d) {
         const o = this.options;
+
         d = d || {value: ''};
+
         if (!d.value) {
             d.value = '';
         }
+
         this.value = d;
+
         let hide = o.hideIfNoData === true && d.value === '';
 
         const v = {
@@ -26,8 +30,7 @@ class TextBoxWidget extends Widget {
             title: this.getRealValue('title', d, false),
             titleFontColor: this.getRealValue('titleFontColor', d, false),
             titleFontSize: this.getRealValue('titleFontSize', d, false),
-            titleTextAlignment: this.getRealValue('titleTextAlignment', d, false),
-
+            titleTextAlignment: this.getRealValue('titleTextAlignment', d, false)
         };
 
         let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], textStyles = [];
@@ -46,35 +49,38 @@ class TextBoxWidget extends Widget {
 
         hide && mainDivStyle.push('display:none;');
 
-        return `<div class="ks-textbox ${mainDivClass.join(' ')} ks-textbox-${v.skin}"  style="${mainDivStyle.join('')}">
-                        <div class="ks-textbox-inner">
-                                <div class="ks-textbox-title" style="${titleStyles.join('')}">
-                                        <span class="ks-textbox-title-primary">${v.title ? v.title : ''}</span>
-                                        <span class="ks-textbox-title-secondary"></span>
-                                </div>
-                                <div class="ks-textbox-field">
-                                        <div class="ks-textbox-field-inner ${v.editable === false ? 'readonly' : ''}">
-                                                <div class="ks-textbox-icon">${v.icon !== false ? `<img src="assets/skins/${app.customerAssetsFolder}/images/${v.icon}">` : '' }</div>
-                                                <div class="ks-textbox-divider"></div>
-                                                <input ${v.editable === false ? 'readonly' : ''} style="${textStyles.join('')}" data-action="writeEnd" data-id="${o.id}"  type="${v.textBoxType}" value="${d.value}" class="ks-textbox-input" placeholder="${v.defaultText ? v.defaultText : ''}">
-                                        </div>
-                                </div>
-                        </div>
-                </div>`;
+        return `
+<div class="ks-textbox ${mainDivClass.join(' ')} ks-textbox-${v.skin}"  style="${mainDivStyle.join('')}">
+    <div class="ks-textbox-inner">
+        <div class="ks-textbox-title" style="${titleStyles.join('')}">
+            <span class="ks-textbox-title-primary">${v.title ? v.title : ''}</span>
+            <span class="ks-textbox-title-secondary"></span>
+        </div>
+        <div class="ks-textbox-field">
+            <div class="ks-textbox-field-inner ${v.editable === false ? 'readonly' : ''}">
+                <div class="ks-textbox-icon">${v.icon !== false ? `<img src="assets/skins/${app.customerAssetsFolder}/images/${v.icon}">` : '' }</div>
+                <div class="ks-textbox-divider"></div>
+                <input ${v.editable === false ? 'readonly' : ''} style="${textStyles.join('')}" data-action="writeEnd" data-id="${o.id}"  type="${v.textBoxType}" value="${d.value}" class="ks-textbox-input" placeholder="${v.defaultText ? v.defaultText : ''}">
+            </div>
+        </div>
+    </div>
+</div>`;
     }
 
     initEventHandlers(section) {
         section.find('.ks-textbox-input').on('focusout', e => {
             let w = $(e.currentTarget), id = section.prop('id');
+
             if (!w.hasClass('readonly')) {
-                let value = app.utils.escapeText(w.val());
-                app.widgetValue[id].value = value;
+                let value = Utils.escapeText(w.val());
+
+                WidgetValue[id].value = value;
+
                 w.attr('value', value);
+
                 Widget.doHandleSystemEvent(w, e);
             }
         });
     }
 }
 ;
-
-

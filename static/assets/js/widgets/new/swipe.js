@@ -1,4 +1,4 @@
-/* global app, Widget */
+/* global app, Doc, El, Utils, Widget */
 
 'use strict';
 class SwipeWidget extends Widget {
@@ -7,19 +7,19 @@ class SwipeWidget extends Widget {
         d = d || {};
 
         const v = {
-            id: this.options.id,
+            id: this.id,
             backdrop: this.getRealValue('backdrop', d, false),
             bgColor: this.getRealValue('bgColor', d),
             bgScrollable: this.getRealValue('bgScrollable', d, true),
             closeBtn: this.getRealValue('closeBtn', d, false),
-            closedSizeStr: app.utils.getSize(this.getRealValue('closedSize', d, 30)),
+            closedSizeStr: Utils.getSize(this.getRealValue('closedSize', d, 30)),
             fixed: this.getRealValue('fixed', d, true),
-            heightStr: app.utils.getSize(this.getRealValue('height', d, 200)),
+            heightStr: Utils.getSize(this.getRealValue('height', d, 200)),
             pinned: this.getRealValue('pinned', d, true),
             position: this.getRealValue('position', d, 'bottom'),
             skin: this.getRealValue('skin', d, 'standard'),
             fadingSpeed: this.getRealValue('fadingSpeed', d, 300),
-            widthStr: app.utils.getSize(this.getRealValue('width', d, 400))
+            widthStr: Utils.getSize(this.getRealValue('width', d, 400))
         };
 
         const s = [], w = v.widthStr, h = v.heightStr, isVertical = ('top' === v.position || 'bottom' === v.position);
@@ -74,7 +74,7 @@ ${v.backdrop ? '<div class="ks-container-backdrop" style="display: none;"><\/div
         this.backdrop = this.container.prev();
 
         if (!v.pinned) {
-            this.container.on(app.prop.clickEvent + ' mouseenter swipeIn', () => this.swipeIn()).on('mouseleave swipeOut', () => this.swipeOut());
+            this.container.on(app.clickEvent + ' mouseenter swipeIn', () => this.swipeIn()).on('mouseleave swipeOut', () => this.swipeOut());
         }
 
         SwipeWidget.swipesByIds[v.id] = this;
@@ -147,7 +147,7 @@ ${v.backdrop ? '<div class="ks-container-backdrop" style="display: none;"><\/div
 
     adjustBgScrolling() {
         if (!this.value.bgScrollable) {
-            app.el.body.css('overflow', this.isSwiped ? ' hidden' : 'auto');
+            El.body.css('overflow', this.isSwiped ? ' hidden' : 'auto');
         }
     }
 
@@ -158,7 +158,7 @@ ${v.backdrop ? '<div class="ks-container-backdrop" style="display: none;"><\/div
             v.closedSizeRatio = v.closedSize / 100;
 
             if (-1 === v.sizeStr.indexOf('%')) {
-                v.closedSizeStr = (v.closedSize * v.size / app.doc[v.swipeAxis]()) + '%';
+                v.closedSizeStr = (v.closedSize * v.size / Doc[v.swipeAxis]()) + '%';
             } else {
                 v.closedSizeStr = (v.closedSize * v.size / 100) + '%';
             }

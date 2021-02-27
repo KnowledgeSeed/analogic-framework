@@ -1,11 +1,11 @@
-/* global app, noUiSlider, Widget */
+/* global app, noUiSlider, Utils, Widget */
 
 'use strict';
 
 class SimulationPanelSliderWidget extends Widget {
 
     getHtml() {
-        const o = this.options, unit = o.unit || '', id = app.utils.getRandomId();
+        const o = this.options, unit = o.unit || '', id = Utils.getRandomId();
         const min = null === o.minValue ? 0 : o.minValue;
         const max = null === o.maxValue ? 0 : o.maxValue;
         const delta = null === o.currentValue ? 0 : o.currentValue;
@@ -37,17 +37,13 @@ class SimulationPanelSliderWidget extends Widget {
                 max: max
             },
             tooltips: {
-                to: v => {
-                    return Math.round(v) + ' ' + unit;
-                },
-                from: v => {
-                    return Math.round(v).toString().replace(' ' + unit, '');
-                }
+                to: v => Math.round(v) + ' ' + unit,
+                from: v => Math.round(v).toString().replace(' ' + unit, '')
             }
         });
 
         slider.on('set', () => {
-            const v = slider.get(), e = $('<div\/>').data({action: 'slide', id: parentWidgetId, ordinal: ordinal, value: v});
+            const v = slider.get(), e = $('<div>').data({action: 'slide', id: parentWidgetId, ordinal: ordinal, value: v});
 
             Widget.doHandleSystemEvent(e, null, true);
 

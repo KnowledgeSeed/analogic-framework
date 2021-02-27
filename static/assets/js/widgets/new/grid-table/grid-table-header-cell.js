@@ -1,4 +1,4 @@
-/* global app, Widget */
+/* global app, Listeners, PageState, QB, Widget */
 
 'use strict';
 class GridTableHeaderCellWidget extends Widget {
@@ -11,28 +11,28 @@ class GridTableHeaderCellWidget extends Widget {
             cellVisible: this.getRealValue('cellVisible', d, true),
             width: this.getRealValue('width', d, false)
         };
-        
+
         let mainDivStyle = [];
-        v.width && mainDivStyle.push(`width:${v.width}${isNaN(v.width)?';':'px;'}`);
+
+        v.width && mainDivStyle.push(`width:${v.width}${isNaN(v.width) ? ';' : 'px;'}`);
+
         if (v.cellVisible === false) {
             mainDivStyle.push('display:none;');
         }
 
-        return  `<div class="ks-grid-table-cell ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}" style="${mainDivStyle.join('')}"><div class="ks-pos-${v.alignment} ks-grid-table-cell-content">${widgets.join('')}</div></div>`;
+        return `<div class="ks-grid-table-cell ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}" style="${mainDivStyle.join('')}"><div class="ks-pos-${v.alignment} ks-grid-table-cell-content">${widgets.join('')}</div></div>`;
     }
-    
 
+    render(withState, d, loadFunction = QB.loadData) {
+        const o = this.options, instance = this;
 
-    render(withState, d, loadFunction = app.fn.loadData) {
-        const o = this.options;
-        const instance = this;
-
-        if (withState && 'PageWidget' === instance.constructor.name) {
+        if (withState && 'PageWidget' === instance.name) {
             this.addListeners();
-            return $.Deferred().resolve(app.pageState[o.id]);
+
+            return $.Deferred().resolve(PageState[o.id]);
         }
 
-        let widgetOptions, widgets = [];
+        let widgetOptions, widgets = [], h = Listeners.handle;
 
         for (widgetOptions of o.widgets || []) {
             widgets.push(new widgetOptions.type(widgetOptions));
@@ -40,34 +40,35 @@ class GridTableHeaderCellWidget extends Widget {
 
         if (o.listen) {
             for (let l of o.listen) {
-                app.listeners.push({
+                Listeners.push({
                     options: o,
                     method: l.method,
                     eventName: l.event,
-                    parameters: l.parameters ? l.parameters : [],
-                    handler: app.fn.handleListener
+                    parameters: l.parameters || [],
+                    handler: h
                 });
             }
         }
 
         if (o.depends) {//grid
-            const f = o.id.split('_');
+            const f = o.id.split('_'), a = f[0], b = f[0];
+
             for (let l of o.depends) {
-                app.listeners.push({
+                Listeners.push({
                     options: o,
                     method: 'refreshGridCell',
-                    eventName: l.action + '.' + f[0] + '_' + f[1] + '_' + l.col + '.finished',
-                    parameters: l.parameters ? l.parameters : [],
-                    handler: app.fn.handleListener
+                    eventName: l.action + '.' + a + '_' + b + '_' + l.col + '.finished',
+                    parameters: l.parameters || [],
+                    handler: h
                 });
             }
         }
 
-        app.listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: app.fn.handleListener});
+        Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
 
         //rekurzív renderelés, adatbetöltéssel
 
-        return loadFunction(o.id, instance.constructor.name).then(function (data) {
+        return loadFunction(o.id, instance.name).then(function (data) {
             let deffered = [], w;
 
             for (w of widgets) {
@@ -80,10 +81,10 @@ class GridTableHeaderCellWidget extends Widget {
                 for (r of results) {
                     widgetHtmls.push(r);
                 }
+
                 return `${instance.getHtml(widgetHtmls, instance.processData(d.cellVisible === false ? {...data, ...{cellVisible: d.cellVisible}} : data), withState)}`;
             });
         });
     }
 }
 ;
-

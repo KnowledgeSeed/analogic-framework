@@ -1,4 +1,4 @@
-/* global app, Widget */
+/* global app, El, Widget */
 
 'use strict';
 
@@ -49,12 +49,14 @@ class ButtonWidget extends Widget {
         }
 
         if (v.backgroundColor) {
+            let a = v.gradient[0], b = v.gradient[1];
+
             if (v.gradient) {
-                innerStyle.push('background:', v.gradient[0], ';');//old browsers
-                innerStyle.push('background:', `-moz-linear-gradient(top, ${v.gradient[0]} 0%, ${v.gradient[1]} 100%);`);//FF3.6-15
-                innerStyle.push('background:', `-webkit-linear-gradient(top, ${v.gradient[0]} 0%,${v.gradient[1]} 100%);`);//Chrome10-25,Safari5.1-6
-                innerStyle.push('background:', `linear-gradient(to bottom, ${v.gradient[0]} 0%,${v.gradient[1]} 100%);`);//W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+
-                innerStyle.push('filter:', `progid:DXImageTransform.Microsoft.gradient( startColorstr='${v.gradient[0]}', endColorstr='${v.gradient[1]}',GradientType=0 )`);//IE6-9
+                innerStyle.push('background:', a, ';');//old browsers
+                innerStyle.push('background:', `-moz-linear-gradient(top, ${a} 0%, ${b} 100%);`);//FF3.6-15
+                innerStyle.push('background:', `-webkit-linear-gradient(top, ${a} 0%,${b} 100%);`);//Chrome10-25,Safari5.1-6
+                innerStyle.push('background:', `linear-gradient(to bottom, ${a} 0%,${b} 100%);`);//W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+
+                innerStyle.push('filter:', `progid:DXImageTransform.Microsoft.gradient( startColorstr='${a}', endColorstr='${b}',GradientType=0 )`);//IE6-9
             } else {
                 innerStyle.push('background-color:', v.backgroundColor, ';');
             }
@@ -72,59 +74,62 @@ class ButtonWidget extends Widget {
         v.iconWidth && imgStyle.push('width:', v.iconWidth, 'px;');
         v.iconHeight && imgStyle.push('height:', v.iconHeight, 'px;');
 
-        return `<a  style="${aStyle.join('')}"
-                            ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''}
-                            ${v.url ? `target="_blank" href="${v.url}"` : `data-id="${o.id}" data-action="launch"`}
-                            class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
-                    <div class="ks-button-inner" style="${innerStyle.join('')}">
-                            <div class="ks-button-content">
-                                    <div class="ks-button-icon" style="${imgStyle.join('')}">${v.icon !== false ? `<span style="${imgStyle.join('')}" class="${v.icon}"></span>` : '' }</div>
-                                    <div class="ks-button-divider" style="${dividerStyle.join('')}"></div>
-                                    <div class="ks-button-label" style="${labelStyle.join('')}">${v.label}</div>
-                            </div>
-                    </div>
-            </a>`;
+        return `
+<a style="${aStyle.join('')}" ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''} ${v.url ? `target="_blank" href="${v.url}"` : `data-id="${o.id}" data-action="launch"`} class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
+    <div class="ks-button-inner" style="${innerStyle.join('')}">
+        <div class="ks-button-content">
+            <div class="ks-button-icon" style="${imgStyle.join('')}">${v.icon !== false ? `<span style="${imgStyle.join('')}" class="${v.icon}"></span>` : '' }</div>
+            <div class="ks-button-divider" style="${dividerStyle.join('')}"></div>
+            <div class="ks-button-label" style="${labelStyle.join('')}">${v.label}</div>
+        </div>
+    </div>
+</a>`;
     }
 
     initEventHandlers(section) {
-        if (section.find('a').data('confirmmessage')) {
-            section.find('a').on('click', (e) => {
-                let w = $(e.currentTarget), p = w.parent().parent(), t = [];
-                t.push('<div class="row"><div class="col-12"><div class="row"><div class="col-12"><h4 style="margin-top: 20px;margin-bottom: 20px;">', w.data('confirmmessage'), '</h4></div></div></div></div>')
-                t.push('<div class="row"><div class="col-12"><div class="row">');
-                t.push('<div class="col-6"><a id="deleteOk" class="widget-btn button-widget">OK</a></div>');
-                t.push('<div class="col-6"><a id="deleteCancel" style="text-align: center;display:block;" class="widget-link-cancel button-widget-cancel">CANCEL</a></div>');
-                t.push('</div></div></div>');
-                app.el.body.prepend(`<div id="horizontalpopup" style="bottom: 0;left: 0;position: fixed;right: 0;top: 0;z-index: 8;"></div>`);
-                p.append(`<div class="widget-table-row-edit-menu" style="right:-150px;">
-                        ${t.join('')}
-                        </div>`).promise().then(() => {
-                    let c = p.find('.widget-table-row-edit-menu'), g = $('#horizontalpopup');
-                    g.on('click', () => {
-                        g.remove();
-                        c.remove();
-                    });
-                    $('#deleteOk').on('click', () => {
-                        Widget.doHandleSystemEvent(w, e);
-                        g.remove();
-                        c.remove();
-                    });
-                    $('#deleteCancel').on('click', () => {
-                        g.remove();
-                        c.remove();
-                    });
-                });
-            });
-        } else {
-            section.find('a').on('click', (e) => {
+        if (!section.find('a').data('confirmmessage')) {
+            return section.find('a').on('click', (e) => {
                 let s = $(e.currentTarget);
+
                 Widget.doHandleSystemEvent(s, e);
+
                 if (this.amIOnAGridTable()) {
                     Widget.doHandleGridTableSystemEvent(s, e);
                 }
             });
-            
         }
+
+        section.find('a').on('click', e => {
+            let w = $(e.currentTarget), p = w.parent().parent(), t = [];
+
+            t.push('<div class="row"><div class="col-12"><div class="row"><div class="col-12"><h4 style="margin-top: 20px;margin-bottom: 20px;">', w.data('confirmmessage'), '</h4></div></div></div></div>');
+            t.push('<div class="row"><div class="col-12"><div class="row">');
+            t.push('<div class="col-6"><a id="deleteOk" class="widget-btn button-widget">OK</a></div>');
+            t.push('<div class="col-6"><a id="deleteCancel" style="text-align: center;display:block;" class="widget-link-cancel button-widget-cancel">CANCEL</a></div>');
+            t.push('</div></div></div>');
+
+            El.body.prepend(`<div id="horizontalpopup" style="bottom: 0;left: 0;position: fixed;right: 0;top: 0;z-index: 8;"></div>`);
+
+            p.append(`<div class="widget-table-row-edit-menu" style="right:-150px;">${t.join('')}</div>`).promise().then(() => {
+                let c = p.find('.widget-table-row-edit-menu'), g = $('#horizontalpopup');
+
+                g.on('click', () => {
+                    g.remove();
+                    c.remove();
+                });
+
+                $('#deleteOk').on('click', () => {
+                    Widget.doHandleSystemEvent(w, e);
+                    g.remove();
+                    c.remove();
+                });
+
+                $('#deleteCancel').on('click', () => {
+                    g.remove();
+                    c.remove();
+                });
+            });
+        });
     }
 }
 ;

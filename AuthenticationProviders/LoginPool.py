@@ -11,7 +11,7 @@ class LoginPool(Pool):
         if request.method == 'POST':
             if request.form['username'] == 'test' and request.form['password'] == 'test':
                 session['username'] = request.form['username']
-                resp = make_response(redirect(url_for('index')))
+                resp = make_response(redirect(self.getBaseUrl()))
                 return self.addAuthenticatedCookie(resp)
         return render_template('login.html', cnf=cnf)
 
@@ -19,7 +19,7 @@ class LoginPool(Pool):
         cnf = self.getConfig()
         if 'username' in session:
             return render_template('index.html', authenticated=True, cnf=cnf)
-        return redirect(url_for('login'))
+        return redirect(self.getBaseUrl('login'))
 
 
 

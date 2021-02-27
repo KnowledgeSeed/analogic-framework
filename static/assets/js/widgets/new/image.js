@@ -6,9 +6,10 @@ class ImageWidget extends Widget {
 
     getHtml(widgets, d) {
         const o = this.options, s = this.getGeneralStyles();
+
         const v = {
             fileName: this.getRealValue('fileName', d, ''),
-            title: this.getRealValue('title', d, ''),
+            title: this.getRealValue('title', d, '')
         };
 
         if (o.fontSize) {

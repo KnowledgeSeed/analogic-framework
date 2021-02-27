@@ -1,4 +1,4 @@
-/* global app, Widget */
+/* global app, Widget, WidgetValue */
 
 'use strict';
 
@@ -34,11 +34,10 @@ class FileUploadWidget extends Widget {
             maxFileSize: v.maxFileSize,
             staging: v.staging,
             target: v.target,
-            uploadSuccessMessage: v.uploadSuccessMessage,
-            
+            uploadSuccessMessage: v.uploadSuccessMessage
         };
 
-        let aClass = [], aStyle = this.getWithAndHeight(d), pStyle = [...aStyle], innerStyle = [], labelStyle = [], dividerStyle = [], imgStyle = [];
+        let aClass = [], aStyle = this.getWidthAndHeight(d), pStyle = [...aStyle], innerStyle = [], labelStyle = [], dividerStyle = [], imgStyle = [];
         let outerDivSyle = this.getPaddings(d).concat(this.getMargins(d));
 
         /* Override css */
@@ -61,11 +60,12 @@ class FileUploadWidget extends Widget {
 
         if (v.backgroundColor) {
             if (v.gradient) {
-                innerStyle.push('background:', v.gradient[0], ';');//old browsers
-                innerStyle.push('background:', `-moz-linear-gradient(top, ${v.gradient[0]} 0%, ${v.gradient[1]} 100%);`);//FF3.6-15
-                innerStyle.push('background:', `-webkit-linear-gradient(top, ${v.gradient[0]} 0%,${v.gradient[1]} 100%);`);//Chrome10-25,Safari5.1-6
-                innerStyle.push('background:', `linear-gradient(to bottom, ${v.gradient[0]} 0%,${v.gradient[1]} 100%);`);//W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+
-                innerStyle.push('filter:', `progid:DXImageTransform.Microsoft.gradient( startColorstr='${v.gradient[0]}', endColorstr='${v.gradient[1]}',GradientType=0 )`);//IE6-9
+                const a = v.gradient[0], b = v.gradient[1];
+                innerStyle.push('background:', a, ';');//old browsers
+                innerStyle.push('background:', `-moz-linear-gradient(top, ${a} 0%, ${b} 100%);`);//FF3.6-15
+                innerStyle.push('background:', `-webkit-linear-gradient(top, ${a} 0%,${b} 100%);`);//Chrome10-25,Safari5.1-6
+                innerStyle.push('background:', `linear-gradient(to bottom, ${a} 0%,${b} 100%);`);//W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+
+                innerStyle.push('filter:', `progid:DXImageTransform.Microsoft.gradient( startColorstr='${a}', endColorstr='${b}',GradientType=0 )`);//IE6-9
             } else {
                 innerStyle.push('background-color:', v.backgroundColor, ';');
             }
@@ -82,52 +82,53 @@ class FileUploadWidget extends Widget {
         /* override img tag style */
         v.iconWidth && imgStyle.push('width:', v.iconWidth, 'px;');
         v.iconHeight && imgStyle.push('height:', v.iconHeight, 'px;');
-        
-        v.progressVisible === false && pStyle.push('display:none;')
+
+        v.progressVisible === false && pStyle.push('display:none;');
 
         return `
-            <div style="${outerDivSyle.join('')}">
-                <label style="${aStyle.join('')}"
-                                class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
-                        <div class="ks-button-inner" style="${innerStyle.join('')}">
-                                <div class="ks-button-content">
-                                        <input style="opacity: 0;width: 0.1px;height: 0.1px;" onchange="" data-id="${o.id}" data-action="upload" type="file" multiple>
-                                        <div class="ks-button-icon" style="${imgStyle.join('')}">${v.icon !== false ? `<span style="${imgStyle.join('')}" class="${v.icon}"></span>` : '' }</div>
-                                        <div class="ks-button-divider" style="${dividerStyle.join('')}"></div>
-                                        <div class="ks-button-label" style="${labelStyle.join('')}">${v.label}</div>
-                                </div>
-                        </div>
-                </label>
-                <div style="${pStyle.join('')}" class="progress">
-                   <div class="progress-bar" style="text-align: center;"></div>
-                </div>
+<div style="${outerDivSyle.join('')}">
+    <label style="${aStyle.join('')}"class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
+        <div class="ks-button-inner" style="${innerStyle.join('')}">
+            <div class="ks-button-content">
+                <input style="opacity: 0;width: 0.1px;height: 0.1px;" onchange="" data-id="${o.id}" data-action="upload" type="file" multiple>
+                <div class="ks-button-icon" style="${imgStyle.join('')}">${v.icon !== false ? `<span style="${imgStyle.join('')}" class="${v.icon}"></span>` : '' }</div>
+                <div class="ks-button-divider" style="${dividerStyle.join('')}"></div>
+                <div class="ks-button-label" style="${labelStyle.join('')}">${v.label}</div>
             </div>
-           `;
+        </div>
+    </label>
+    <div style="${pStyle.join('')}" class="progress"><div class="progress-bar" style="text-align: center;"></div></div>
+</div>`;
     }
 
     initEventHandlers(section) {
+        section.find('input').on('change', e => {
+            let s = $(e.currentTarget), f = new FormData(), i = 0, size = 0, w = section.attr('id'), v = WidgetValue[w], m = v.maxFileSize, file, files = s[0].files, len = files.length;
 
-        section.find('input').on('change', (e) => {
-            let s = $(e.currentTarget), f = new FormData(), i = 0, size = 0, w = section.attr('id'), m = app.widgetValue[w].maxFileSize, file;
-            for (i = 0; i < s[0].files.length; ++i) {
-                size += s[0].files[i].size;
+            for (i = 0; i < len; ++i) {
+                size += files[i].size;
             }
+
             if (size / 1048576 <= m) {
-                app.widgetValue[w]['fileNames'] = [];
-                for (i = 0; i < s[0].files.length; ++i) {
-                    file = s[0].files[i];
+                v.fileNames = [];
+
+                for (i = 0; i < len; ++i) {
+                    file = files[i];
                     f.append('file' + i, file);
-                    app.widgetValue[w]['fileNames'].push(file.name);
+                    v.fileNames.push(file.name);
                 }
-                f.append('fileNum', s[0].files.length);
-                app.widgetValue[w]['form'] = f;
+
+                f.append('fileNum', len);
+
+                v.form = f;
+
                 Widget.doHandleSystemEvent(s, e);
             } else {
                 app.fn.showPopup('Maximum file size: ' + m + ' mb!');
+
                 s.val('');
             }
         });
-
     }
 }
 ;

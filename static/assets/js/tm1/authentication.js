@@ -1,50 +1,37 @@
-/* global app */
+/* global app, El, Loader, Utils */
 
 'use strict';
+const Auth = {};
 
-app.fn.fileUploadToServer = (widgetId) => {
+Auth.loadDefault = arg => {
     return $.ajax({
-        xhr: function () {
-            var xhr = new window.XMLHttpRequest();
-            xhr.upload.addEventListener('progress', function (evt) {
-                if (evt.lengthComputable) {
-                    var percentComplete = Math.round(((evt.loaded / evt.total) * 100));
-                    $('#' + widgetId).find('.progress-bar').html(percentComplete + '%');
-                }
-            }, false);
-            return xhr;
-        },
-        url: 'upload',
-        method: 'POST',
-        dataType: 'text',
-        cache: false,
-        contentType: false,
-        processData: false,
-        data: app.widgetValue[widgetId].form
+        url: 'assets/js/configs/default/' + arg + '.json',
+        dataType: 'json',
+        cache: false
     });
 };
 
-app.fn.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
+Auth.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
     return $.ajax({
         cache: true,
         type: type,
         url: url,
-        headers: app.fn.getHeader(),
+        headers: Auth.getHeader(),
         xhrFields: {withCredentials: true},
         data: type === 'GET' ? {} : data,
         global: true,
         success: function (data) {
-            app.fn.handleSuccessLogin();
+            Auth.handleSuccessLogin();
         },
         error: function (response, e) {
             L('error:', response, e, widgetId);
             if (app.restRequestDebugFlag === true) {
-                app.fn.showTm1ErrorPage(url, data, response, widgetId);
+                Auth.showTm1ErrorPage(url, data, response, widgetId);
             }
         },
         statusCode: {
             401: function () {
-                if ('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode) {
+                if ('CAM' === app.authenticationMode || 'POOLSSO' === app.authenticationMode) {
                     $.cookie("authenticated", 0);
                     window.location.href = app.url.cognosAuthenticationBridge;
                 }
@@ -53,17 +40,17 @@ app.fn.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
     });
 };
 
-app.fn.handleSuccessLogin = function () {
-    if ('Cam' === app.authenticationMode && $.cookie('camPassport') !== '0') {
+Auth.handleSuccessLogin = () => {
+    if ('CAM' === app.authenticationMode && $.cookie('camPassport') !== '0') {
         let date = new Date();
         date.setTime(date.getTime() + (app.sessionExpiresInMinutes * 60 * 1000));
         $.cookie("authenticated", 'authenticated', {expires: date});
-        //   $.cookie("camPassport", 0);
+        //$.cookie("camPassport", 0);
     }
 };
 
 
-app.fn.getHeader = (contentType = 'application/json; charset=utf-8', accept = 'application/json; charset=utf-8') => {
+Auth.getHeader = (contentType = 'application/json; charset=utf-8', accept = 'application/json; charset=utf-8') => {
     let headers = {};
 
     if (accept) {
@@ -76,15 +63,31 @@ app.fn.getHeader = (contentType = 'application/json; charset=utf-8', accept = 'a
 
     headers['Access-Control-Allow-Origin'] = '*';
 
-    if ('NoAuth' === app.authenticationMode) {
+    if ('NOAUTH' === app.authenticationMode) {
         headers['Authorization'] = "CAMNamespace " + btoa(app.noauthUser + ":" + app.noauthPwd + ":" + app.camNamespace);
     }
 
-    if ('Cam' === app.authenticationMode && $.cookie('camPassport') !== '0') {
+    if ('CAM' === app.authenticationMode && $.cookie('camPassport') !== '0') {
         headers['Authorization'] = 'CAMPassport ' + $.cookie('camPassport');
     }
 
     return headers;
 };
 
-
+Auth.showTm1ErrorPage = (url, body, event, widgetId) => {
+    El.body.empty().off().promise().then(() => {
+        El.body.html(`
+<div style="margin-left: 15px;">
+    <br/><h1>Error in api request!</h1><br/><br/>
+    ${widgetId !== '' ? ` <h3>widget:</h3><br/><textarea rows="1" cols="100">${widgetId }</textarea><br/><br/>` : ''}
+    <h3>response status:</h3><br/>
+    <textarea rows="2" cols="100">${event.status + ' ' + event.statusText }</textarea><br/><br/>
+    <h3>response text:</h3><br/>
+    <textarea rows="2" cols="100">${event.responseText}</textarea><br/><br/>
+    <h3>request url:</h3><br/>
+    <textarea rows="4" cols="100">${url}</textarea><br/><br/>
+    <h3>request body:</h3><br/>
+    <textarea rows="25" cols="100">${body}</textarea><br/><br/>
+</div>`);
+    });
+};

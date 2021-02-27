@@ -1,4 +1,4 @@
-/* global app */
+/* global app, Repository */
 
 'use strict';
 class RepositoryExport extends Export {
@@ -8,8 +8,8 @@ class RepositoryExport extends Export {
 
         let widgetId, eventTypeConfigs, eventType, configs, order;
 
-        for (widgetId in app.repository) {
-            eventTypeConfigs = app.repository[widgetId];
+        for (widgetId in Repository) {
+            eventTypeConfigs = Repository[widgetId];
 
             order = 1;
 

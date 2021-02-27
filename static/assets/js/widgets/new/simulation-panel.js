@@ -1,4 +1,4 @@
-/* global app, SimulationPanelSliderWidget, Widget */
+/* global app, El, SimulationPanelSliderWidget, Widget */
 
 'use strict';
 class SimulationPanelWidget extends Widget {
@@ -34,7 +34,7 @@ class SimulationPanelWidget extends Widget {
             this.doEvent($(e.target));
         });
 
-        section.find('.icon-trash-fill').on('click', (e) => {
+        section.find('.icon-trash-fill').on('click', e => {
             const w = $(e.currentTarget), p = w.parent(), t = [];
 
             t.push('<div class="row"><div class="col-12"><div class="row"><div class="col-12"><h4 style="margin-top: 20px;margin-bottom: 20px;color: #000;font-size: 15px;padding-left:10px;">', o.deleteMessage ? o.deleteMessage : 'Are you sure?', '<\/h4><\/div><\/div><\/div><\/div>');
@@ -43,12 +43,9 @@ class SimulationPanelWidget extends Widget {
             t.push('<div class="col-6"><a id="deleteCancel" style="text-align: center;display:block;" class="widget-link-cancel button-widget-cancel">CANCEL<\/a><\/div>');
             t.push('<\/div><\/div><\/div>');
 
-            app.el.body.prepend(`<div id="horizontalpopup" style="bottom: 0;left: 0;position: fixed;right: 0;top: 0;z-index: 8;"></div>`);
+            El.body.prepend(`<div id="horizontalpopup" style="bottom: 0;left: 0;position: fixed;right: 0;top: 0;z-index: 8;"></div>`);
 
-            p.append(`<div class="widget-table-row-edit-menu" style="right:40px;">
-                        ${t.join('')}
-                        </div>`).promise().then(() => {
-
+            p.append(`<div class="widget-table-row-edit-menu" style="right:40px;">${t.join('')}</div>`).promise().then(() => {
                 let c = p.find('.widget-table-row-edit-menu'), g = $('#horizontalpopup');
 
                 g.on('click', () => {
@@ -90,7 +87,7 @@ class SimulationPanelWidget extends Widget {
             }
         }
 
-        Widget.doHandleSystemEvent($('<div\/>').data(data), null, true);
+        Widget.doHandleSystemEvent($('<div>').data(data), null, true);
     }
 
     getOneSimulationPanelHtml(d) {

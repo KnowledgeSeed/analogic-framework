@@ -1,27 +1,24 @@
-/* global Widget */
+/* global app, Listeners, QB, Widget */
 
 'use strict';
 class OldSegmentedControlWidget extends Widget {
 
     getHtml(widgets, data) {
-        const o = this.options;
-        let w = o.width ? Math.round((o.width / 100) * 12) : 3;
-        return `<div class="row">
-                    <div class="col-${w}">
-                            <div class="widget-segmented-control-holder">
-                                    <div class="widget-segmented-control segment-2">
-                                        ${widgets.join('')}
-                                    </div>
-                                    <div class="tooltip-icon" data-title="${o.tooltipTitle}" data-tooltip="${o.tooltip}"><span class="icon-info"></span></div>
-                            </div>
-                    </div>
-                </div>`;
+        const o = this.options, w = o.width ? Math.round((o.width / 100) * 12) : 3;
+
+        return `
+<div class="row">
+    <div class="col-${w}">
+        <div class="widget-segmented-control-holder">
+            <div class="widget-segmented-control segment-2">${widgets.join('')}</div>
+            <div class="tooltip-icon" data-title="${o.tooltipTitle}" data-tooltip="${o.tooltip}"><span class="icon-info"></span></div>
+        </div>
+    </div>
+</div>`;
     }
 
     render(withState) {
-        const o = this.options;
-        const instance = this;
-
+        const o = this.options, instance = this, h = Listeners.handle;
 
         let widgetOptions, widgets = [];
 
@@ -31,23 +28,23 @@ class OldSegmentedControlWidget extends Widget {
 
         if (o.listen) {
             for (let l of o.listen) {
-                app.listeners.push({
+                Listeners.push({
                     options: o,
                     method: l.method,
                     eventName: l.event,
-                    parameters: l.parameters ? l.parameters : [],
-                    handler: app.fn.handleListener
+                    parameters: l.parameters || [],
+                    handler: h
                 });
             }
         }
 
-        app.listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: app.fn.handleListener});
+        Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
 
         //rekurzív renderelés, adatbetöltéssel
 
-        return app.fn.loadData(o.id, instance.constructor.name).then(function (data) {
-            let deffered = [], w, i = 0; 
-            
+        return QB.loadData(o.id, instance.name).then(function (data) {
+            let deffered = [], w, i = 0;
+
             for (w of widgets) {
                 let childrenData = {width: 100 / o.widgets.length, id: o.id, position: i};
                 deffered.push(w.embeddedRender(withState, childrenData));
@@ -60,7 +57,9 @@ class OldSegmentedControlWidget extends Widget {
                 for (r of results) {
                     widgetHtmls.push(r);
                 }
+
                 let visible = data && data.visible ? data.visible : o.visible;
+
                 return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" ${visible === false ? 'style="display:none"' : '' } id="${o.id}">${instance.getHtml(widgetHtmls, instance.processData(data), withState)}</section>`;
             });
         });
@@ -68,9 +67,11 @@ class OldSegmentedControlWidget extends Widget {
 
     initEventHandlers(section) {
         Widget.handleSystemEvent(section, 'click', '.segment');
-        $('.segment').on('click', (e) => {
-            $(e.target).closest('section').parent().closest('section').find('.segment').removeClass('on');
-            $(e.target).addClass('on');
+
+        $('.segment').on('click', e => {
+            e = $(e.target);
+            e.closest('section').parent().closest('section').find('.segment').removeClass('on');
+            e.addClass('on');
         });
     }
 }

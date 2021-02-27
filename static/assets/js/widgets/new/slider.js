@@ -1,4 +1,4 @@
-/* global app, Widget, noUiSlider */
+/* global app, Doc, Widget, noUiSlider, Utils */
 
 'use strict';
 
@@ -25,7 +25,7 @@ class SliderWidget extends Widget {
             }
         };
 
-        v.value = app.utils.parseNumber(v.value); //temp!!!!!!
+        v.value = Utils.parseNumber(v.value); //temp!!!!!!
 
         this.value = v;
 
@@ -66,7 +66,7 @@ class SliderWidget extends Widget {
             <div class="ks-slider-track-zero-indicator"></div>
             <div class="ks-slider-track widget"></div>
         </div>
-        <div class="ks-slider-steppers" ${!v.buttonsVisible || app.prop.isTouched ? 'style="display: none;"' : ''}>
+        <div class="ks-slider-steppers" ${!v.buttonsVisible || app.isTouched ? 'style="display: none;"' : ''}>
             <div class="ks-slider-stepper ks-slider-stepper-big-left">
                 <div class="ks-slider-stepper-inner noselect">-${v.largeIncrement}</div>
             </div>
@@ -119,7 +119,7 @@ class SliderWidget extends Widget {
     }
 
     createSlider(section) {
-        const id = section.prop('id'), isTouchMode = app.prop.isTouched, sliderDiv = section.find('.ks-slider'), d = this.value, s = SliderWidget.slidersByIds[id];
+        const id = section.prop('id'), isTouchMode = app.isTouched, sliderDiv = section.find('.ks-slider'), d = this.value, s = SliderWidget.slidersByIds[id];
         const widgetDiv = SliderWidget.getWidgetDiv(sliderDiv), ordinal = d.ordinal, css = d.css, tooltipFontSize = css.tooltip['font-size'];
 
         if (s) {
@@ -206,10 +206,10 @@ class SliderWidget extends Widget {
     }
 
     static initSliderDocEvents() {
-        const isTouchMode = app.prop.isTouched;
+        const isTouchMode = app.isTouched;
 
-        app.doc.on('mouseover.slider', '.ks-slider', e => {
-            e = $(app.utils.stopEvent(e).currentTarget);
+        Doc.on('mouseover.slider', '.ks-slider', e => {
+            e = $(Utils.stopEvent(e).currentTarget);
 
             if (isTouchMode || e.attr('disabled')) {
                 return;
@@ -220,9 +220,9 @@ class SliderWidget extends Widget {
             e.find('.noUi-handle').removeClass('off');
             e.find('.noUi-tooltip').removeClass('noUi-tooltip').addClass('noUi-tooltipHover').css(c.tooltipHover);
         }).on('mouseleave.slider', '.ks-slider', e => {
-            SliderWidget.hideToolTips($(app.utils.stopEvent(e).currentTarget));
-        }).on(app.prop.clickEvent, '.ks-slider-stepper-inner,.ks-slider-touch-stepper-inner', e => {
-            e = $(app.utils.stopEvent(e).currentTarget);
+            SliderWidget.hideToolTips($(Utils.stopEvent(e).currentTarget));
+        }).on(app.clickEvent, '.ks-slider-stepper-inner,.ks-slider-touch-stepper-inner', e => {
+            e = $(Utils.stopEvent(e).currentTarget);
 
             const sliderDiv = SliderWidget.getSliderDiv(e);
 
@@ -239,8 +239,8 @@ class SliderWidget extends Widget {
             } else {
                 slider.set(slider.get() + step);
             }
-        }).on(app.prop.clickEvent, '.ks-slider-options-button,.ks-slider-touch-options-button', e => {
-            e = $(app.utils.stopEvent(e).currentTarget);
+        }).on(app.clickEvent, '.ks-slider-options-button,.ks-slider-touch-options-button', e => {
+            e = $(Utils.stopEvent(e).currentTarget);
 
             let sliderDiv = SliderWidget.getSliderDiv(e), v, p = sliderDiv.removeClass('Highlighted').find('.ks-slider-touch,.ks-slider-options');
 
@@ -265,11 +265,11 @@ class SliderWidget extends Widget {
                 SliderWidget.enableSlider(sliderDiv);
             }
 
-            app.utils.backdrop.hide();
+            Utils.backdrop.hide();
 
             sliderDiv.trigger('change');
-        }).on(app.prop.clickEvent, '.ks-slider-inner', e => {
-            const sliderDiv = $(app.utils.stopEvent(e).currentTarget).parent();
+        }).on(app.clickEvent, '.ks-slider-inner', e => {
+            const sliderDiv = $(Utils.stopEvent(e).currentTarget).parent();
 
             if (!isTouchMode || sliderDiv.hasClass('Highlighted')) {
                 return;
@@ -280,7 +280,7 @@ class SliderWidget extends Widget {
             SliderWidget.setRulerValue(sliderDiv, SliderWidget.getSlider(sliderDiv).get());
             SliderWidget.getSliderButtons(sliderDiv).show();
 
-            app.utils.backdrop.show();
+            Utils.backdrop.show();
         }).on('keydown', '.ks-slider-options input', e => {
             const p = $(e.currentTarget).closest('.ks-slider-options');
 
@@ -304,7 +304,7 @@ class SliderWidget extends Widget {
 
             popup.show().promise().done(() => e.focus());
 
-            app.utils.backdrop.show();
+            Utils.backdrop.show();
         }
     }
 

@@ -3,8 +3,7 @@
 class PanelWidget extends Widget {
 
     getHtml(widgets) {
-        let mainDivStyle = this.getGeneralStyles({});
-        return `<div style="${mainDivStyle.join('')}">${widgets.join('')}</div>`;
+        return `<div style="${this.getGeneralStyles({}).join('')}">${widgets.join('')}</div>`;
     }
 }
 ;

@@ -1,4 +1,4 @@
-/* global app, Widget */
+/* global app, Utils, Widget, WidgetValue */
 
 'use strict';
 class WaterFallWidget extends Widget {
@@ -21,7 +21,7 @@ class WaterFallWidget extends Widget {
             minYAxis: parseFloat(this.getRealValue('minYAxis', d, -10)),
             maxYAxis: parseFloat(this.getRealValue('maxYAxis', d, 100)),
             yAxisGridLineNum: parseInt(this.getRealValue('yAxisGridLineNum', d, 11)),
-            height: parseFloat(app.utils.getSize(this.getRealValue('height', d, 300), false, 'height')),
+            height: parseFloat(Utils.getSize(this.getRealValue('height', d, 300), false, 'height')),
             defaultColor: this.getRealValue('defaultColor', d, '#F3F4F6'),
             skin: this.getRealValue('skin', d, 'attila-1')
         };
@@ -54,7 +54,7 @@ class WaterFallWidget extends Widget {
         let i, j = max, d, label, isLastCol, hb, lastHeights = [zeroHeight, zeroHeight], val;
 
         for (i = 0; i <= v.yAxisGridLineNum; ++i) {
-            yAxisHtml.push('<div class="ks-waterfall-y-line ks-primary"><div class="ks-waterfall-y-line-tick ks-left"><\/div><div class="ks-waterfall-y-line-label ks-left">', app.utils.precisionRound(j, 1), '<\/div><div class="ks-waterfall-y-line-tick ks-right"><\/div><div class="ks-waterfall-y-line-label ks-right"><\/div><\/div>');
+            yAxisHtml.push('<div class="ks-waterfall-y-line ks-primary"><div class="ks-waterfall-y-line-tick ks-left"><\/div><div class="ks-waterfall-y-line-label ks-left">', Utils.precisionRound(j, 1), '<\/div><div class="ks-waterfall-y-line-tick ks-right"><\/div><div class="ks-waterfall-y-line-label ks-right"><\/div><\/div>');
 
             j -= yAxisStep;
         }
@@ -69,7 +69,7 @@ class WaterFallWidget extends Widget {
                 lastHeights = [zeroHeight, zeroHeight];
             }
 
-            val = app.utils.parseNumber(d.value);
+            val = Utils.parseNumber(d.value);
 
             hb = this.calculateHeightAndBottom(val, yAxisRange, chartHeight, lastHeights, 0);
 
@@ -84,7 +84,7 @@ class WaterFallWidget extends Widget {
             d = datapoints2[i];
 
             if (d) {
-                val = app.utils.parseNumber(d.value);
+                val = Utils.parseNumber(d.value);
 
                 hb = this.calculateHeightAndBottom(val, yAxisRange, chartHeight, lastHeights, 1);
 
@@ -164,13 +164,13 @@ class WaterFallWidget extends Widget {
             data.action = 'commentShow';
         }
 
-        delete app.widgetValue[id][data.action];
+        delete WidgetValue[id][data.action];
 
         Widget.doHandleSystemEvent(e.data(data));
 
         data.action = 'selectLabel';
 
-        delete app.widgetValue[id][data.action];
+        delete WidgetValue[id][data.action];
 
         data.label = e.text();
 
@@ -181,8 +181,10 @@ class WaterFallWidget extends Widget {
 
     processData(data) {
         let d = data[0];
+
         d.dataset1 = {datapoints: data.length > 1 ? data[1][0] || [] : []}; //matrix!!
         d.dataset2 = {datapoints: data.length > 2 ? data[2][0] || [] : []}; //matrix!!
+
         return d;
     }
 }

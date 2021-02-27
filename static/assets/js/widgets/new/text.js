@@ -1,4 +1,4 @@
-/* global app, Widget */
+/* global app, Utils, Widget, WidgetValue */
 
 'use strict';
 
@@ -29,21 +29,20 @@ class TextWidget extends Widget {
         v.titleAlignment && titleStyles.push(`display: flex;padding-left: 0px;justify-content: ${v.titleAlignment === 'start' || v.titleAlignment === 'end' ? `flex-${v.titleAlignment}` : v.titleAlignment};`);
         v.titleFontColor && titleStyles.push(`color:${v.titleFontColor};`);
         v.titleFontSize && titleStyles.push(`font-size:${v.titleFontSize}px;`);
-        v.editable && (v.title === false || v.title === '') && titleStyles.push('height: 20px;') 
+        v.editable && (v.title === false || v.title === '') && titleStyles.push('height: 20px;');
 
         v.bodyAlignment && bodyStyles.push(`display: flex;padding-left: 0px;justify-content: ${v.bodyAlignment === 'start' || v.bodyAlignment === 'end' ? `flex-${v.bodyAlignment}` : v.bodyAlignment};`);
         v.bodyFontColor && bodyStyles.push(`color:${v.bodyFontColor};`);
         v.bodyFontSize && bodyStyles.push(`font-size:${v.bodyFontSize}px;`);
 
-        return `<div class="ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}" style="${mainDivStyle.join('')}">
-                    <div class="ks-text-inner">
-                            <div class="ks-text-title" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title ? v.title : ''}</div>
-                            <div class="ks-text-separator"></div>
-                            <div class="ks-text-body" style="${bodyStyles.join('')}">
-                                    ${v.body ? v.body : ''}
-                            </div>
-                    </div>
-                </div>`;
+        return `
+<div class="ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}" style="${mainDivStyle.join('')}">
+    <div class="ks-text-inner">
+        <div class="ks-text-title" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title ? v.title : ''}</div>
+        <div class="ks-text-separator"></div>
+        <div class="ks-text-body" style="${bodyStyles.join('')}">${v.body ? v.body : ''}</div>
+    </div>
+</div>`;
     }
 
     initEventHandlers(section) {
@@ -61,16 +60,17 @@ class TextWidget extends Widget {
         section.find('.ks-text-title').on('click', e => {
             let c = $(e.currentTarget);
             c.off('click');
+
             c.html(`<input class="ks-text-title-input" data-id="${o.id}" data-action="write" data-ordinal="${c.data('ordinal')}" type="text" value="${c.text()}"/>`).promise().then(() => {
-                let r = c.find('.ks-text-title-input');
-                r.focus(); 
-                r.select();
-                r.on('focusout', f => {
-                    r.off('focusout');
-                    r.data('value', app.utils.escapeText(r.val()));
-                    app.widgetValue[r.data('id')] = {value: app.utils.escapeText(r.val())};
+                let r = c.find('.ks-text-title-input').focus().select().on('focusout', f => {
+                    r.off('focusout').data('value', Utils.escapeText(r.val()));
+
+                    WidgetValue[r.data('id')] = {value: Utils.escapeText(r.val())};
+
                     Widget.doHandleSystemEvent(r, f);
+
                     c.html(r.val());
+
                     TextWidget.addEdit(section, o);
                 });
             });

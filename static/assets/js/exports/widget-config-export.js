@@ -8,8 +8,8 @@ class WidgetConfigExport extends Export {
 
         let pageKey, widgetOrder = 0, config;
 
-        for (pageKey in app.widgetConfig) {
-            config = app.widgetConfig[pageKey];
+        for (pageKey in WidgetConfig) {
+            config = WidgetConfig[pageKey];
 
             this.processConfigForWidget(config, '', ++widgetOrder);
         }

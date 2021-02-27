@@ -1,4 +1,4 @@
-/* global app, Widget */
+/* global app, Utils, Widget */
 
 'use strict';
 class BubbleChartWidget extends Widget {
@@ -35,7 +35,7 @@ class BubbleChartWidget extends Widget {
             size = Math.round(val / maxVal * bubbleWidth);
             h.push('<div class="VerticalChartCircle" style="width: ', bubbleWidthRatio, '%;">');
             h.push('<div style="background-color:', color, '; height: ', size, 'px; width: ', size, 'px;"><\/div>');
-            h.push('<div style="color: #000000;font-size: 10px;font-weight: bold;margin-top:35px;">', app.utils.formatIntForChart(Math.round(val)), '<\/div><\/div>');
+            h.push('<div style="color: #000000;font-size: 10px;font-weight: bold;margin-top:35px;">', Utils.formatIntForChart(Math.round(val)), '<\/div><\/div>');
         }
 
         divs.eq(1).html(h.join(''));

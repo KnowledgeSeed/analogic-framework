@@ -1,4 +1,4 @@
-/* global app, Chart */
+/* global app, Chart, Utils */
 
 'use strict';
 
@@ -65,9 +65,7 @@ class GaugeWidget extends Widget {
 
                 $('#fullScreenContent').append(chartDiv.wrap('<div style="position: relative; width: 70%; left: 15%;"><\/div>').parent());
 
-                $('#fullScreenOffBtn').on('click', () => {
-                    prevChartDiv.after(chartDiv);
-                });
+                $('#fullScreenOffBtn').on('click', () => prevChartDiv.after(chartDiv));
             });
 
             return false;
@@ -125,7 +123,7 @@ class GaugeWidget extends Widget {
 }
 ;
 
-Chart.defaults.gauge = app.utils.clone(Chart.defaults.doughnut, true);
+Chart.defaults.gauge = Utils.clone(Chart.defaults.doughnut, true);
 
 $.extend(Chart.defaults.gauge, {
     responsive: true,

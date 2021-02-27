@@ -1,4 +1,4 @@
-/* global app, Widget, Chart */
+/* global app, Widget, Chart, Utils */
 
 'use strict';
 class HistogramComboChartWidget extends Widget {
@@ -74,10 +74,9 @@ class HistogramComboChartWidget extends Widget {
 </div>`;
     }
 
-    initEventHandlers(section) {
-        const o = this.options, canvas = $('#' + o.id + 'Canvas');
+    initEventHandlers() {
+        const o = this.options, canvas = $('#' + o.id + 'Canvas'), ctx = canvas[0].getContext('2d');
 
-        const ctx = canvas[0].getContext('2d');
         this.chart = new Chart(ctx, this.getChartConfig());
 
         if (o.widgets) {
@@ -183,7 +182,7 @@ class HistogramComboChartWidget extends Widget {
                                 fontStyle: v.xAxesTicksFontStyle,
                                 fontColor: v.xAxesTicksFontColor,
                                 autoSkip: true,
-                                callback: v => app.utils.precisionRound(v, 1),
+                                callback: v => Utils.precisionRound(v, 1),
                                 minRotation: v.xAxesLabelRotation,
                                 maxRotation: v.xAxesLabelRotation,
                                 labelOffset: v.xAxesTicksOffset,
@@ -238,7 +237,7 @@ class HistogramComboChartWidget extends Widget {
                                 minRotation: v.yAxesLabelRotation,
                                 maxRotation: v.yAxesLabelRotation,
                                 autoSkip: true,
-                                callback: (v, i, all) => (!i && stepSize && all.length > stepSize + 1) ? '' : app.utils.precisionRound(v, 2)
+                                callback: (v, i, all) => (!i && stepSize && all.length > stepSize + 1) ? '' : Utils.precisionRound(v, 2)
                             },
                             scaleLabel: {
                                 display: v.yAxesLabelDisplay,
@@ -276,7 +275,7 @@ class HistogramComboChartWidget extends Widget {
                                 minRotation: v.yAxesLabelRotation,
                                 maxRotation: v.yAxesLabelRotation,
                                 autoSkip: true,
-                                callback: v => app.utils.precisionRound(v, 2)
+                                callback: v => Utils.precisionRound(v, 2)
                             }
                         }
                     ]

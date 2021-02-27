@@ -39,5 +39,9 @@ class ContainerWidget {
     render(withState, refresh, useDefaultData = false) {
         return this.c.render(withState, refresh, useDefaultData);
     }
+
+    addListeners() {
+
+    }
 }
 ;

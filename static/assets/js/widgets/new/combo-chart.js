@@ -1,13 +1,13 @@
-/* global app, Widget */
+/* global app, Utils, Widget */
 'use strict';
 class ComboChartWidget extends Widget {
     getHtml(widgets, d) {
-
         const o = this.options, f = 'imago, sans-serif', c = '#A6A7A7', b = '#000', e = 'bold';
+
         const defaultDataSet = [
-            {"type": "line", "legendLabel": "NPV", "borderColor": "#00965E", "backgroundColor": "#00965E", "pointRadius": 2, "borderWidth": 2, "fill": false, "yAxisID": "leftYAxes", "dataLabelVisible": false},
-            {"type": "bar", "legendLabel": "R&D", "backgroundColor": "#858686", "borderColor": "#858686", "borderWidth": 1, "stack": 1, "yAxisID": "leftYAxes", "dataLabelVisible": false},
-            {"type": "bar", "legendLabel": "Sales - Total", "backgroundColor": "#0066CC", "borderColor": "#0066CC", "borderWidth": 1, "stack": 2, "yAxisID": "leftYAxes", "dataLabelVisible": false}
+            {type: "line", legendLabel: "NPV", borderColor: "#00965E", backgroundColor: "#00965E", pointRadius: 2, borderWidth: 2, fill: false, yAxisID: "leftYAxes", dataLabelVisible: false},
+            {type: "bar", legendLabel: "R&D", backgroundColor: "#858686", borderColor: "#858686", borderWidth: 1, stack: 1, yAxisID: "leftYAxes", dataLabelVisible: false},
+            {type: "bar", legendLabel: "Sales - Total", backgroundColor: "#0066CC", borderColor: "#0066CC", borderWidth: 1, stack: 2, yAxisID: "leftYAxes", dataLabelVisible: false}
         ],
         defaultData = [
             [{label: '2019', value: '2019'}, {label: '2020', value: '2020'}, {label: '2021', value: '2021'}],
@@ -18,6 +18,7 @@ class ComboChartWidget extends Widget {
             ]
         ],
         data = d.data.length > 0 ? d.data : defaultData;
+
         const v = {
             data: data,
             datasets: this.getRealValue('datasets', d, defaultDataSet),
@@ -133,58 +134,59 @@ class ComboChartWidget extends Widget {
 </div>`;
     }
 
-    initEventHandlers(section) {
-        const canvas = $('#' + this.options.id + 'Canvas');
-
-        const ctx = canvas[0].getContext('2d');
-
-        const c = new Chart(ctx, ComboChartWidget.getChartConfig(this.value));
+    initEventHandlers() {
+        const canvas = $('#' + this.options.id + 'Canvas'), ctx = canvas[0].getContext('2d'), c = new Chart(ctx, ComboChartWidget.getChartConfig(this.value));
 
         canvas.parent().next().html(c.generateLegend()).on('click', '.ks-legend-item', e => {
-            let legend = $(e.target).closest('.ks-legend-item'), id = legend.data('id');
-            if (legend.hasClass('off')) {
-                legend.removeClass('off');
-            } else {
-                legend.addClass('off');
-            }
+            let legend = $(e.target).closest('.ks-legend-item'), id = legend.toggleClas('off').data('id');
+
             c.getDatasetMeta(id).hidden = !c.getDatasetMeta(id).hidden;
+
             c.update();
         });
     }
 
     static getChartConfig(v) {
         let data = v.data;
+
         for (let f = 0; f < v.datasets.length; ++f) {
             if (v.datasets[f].data) {
                 v.datasets[f].data = [];
             }
         }
-        let datasets = v.datasets, d = data[data.length - 1], i, j, existXLabels = data.length === 2, labels = existXLabels ? data[0].map(item => {
-            return item.label;
-        }) : [], s;
+
+        let ds, e, datasets = v.datasets, d = data[data.length - 1], i, j, existXLabels = data.length === 2, labels = existXLabels ? data[0].map(item => item.label) : [], s;
+
         for (j = 0; j < d.length; ++j) {
             for (i = 0; i < datasets.length; ++i) {
                 if (!datasets[i].data) {
                     datasets[i].data = [];
                 }
-                if (v.plot && datasets[i].type === 'line') {
-                    datasets[i].data.push(d[j][i]);
-                    datasets[i].xAxisID = 'lineAxisX';
+
+                ds = datasets[i];
+                e = d[j][i];
+
+                if (v.plot && ds.type === 'line') {
+                    ds.data.push(e);
+                    ds.xAxisID = 'lineAxisX';
                 } else {
-                    s = d[j][i].value === '' ? '0' : app.utils.parseNumber(d[j][i].value);
-                    datasets[i].data.push(s);
+                    s = e.value === '' ? '0' : Utils.parseNumber(e.value);
+                    ds.data.push(s);
                 }
+
                 if (v.customLabelsForYAxes) {
-                    if (!datasets[i].customLabels) {
-                        datasets[i].customLabels = [];
+                    if (!ds.customLabels) {
+                        ds.customLabels = [];
                     }
-                    datasets[i].customLabels.push(d[j][i].label);
+
+                    ds.customLabels.push(e.label);
                 }
             }
         }
+
         let xAxes = [], yAxes = [];
-        xAxes.push(
-        {
+
+        xAxes.push({
             display: v.xAxesDisplay,
             stacked: v.xAxesStacked,
             gridLines: {
@@ -208,12 +210,10 @@ class ComboChartWidget extends Widget {
                 labelOffset: v.xAxesTicksOffset,
                 padding: v.xAxesTicksPadding
             }
-        }
-        );
+        });
 
         if (v.plot) {
-            xAxes.push(
-            {
+            xAxes.push({
                 id: 'lineAxisX',
                 type: 'linear',
                 gridLines: {
@@ -234,7 +234,7 @@ class ComboChartWidget extends Widget {
                     minRotation: v.xAxesLabelRotation,
                     maxRotation: v.xAxesLabelRotation,
                     labelOffset: v.xAxesTicksOffset,
-                    padding: v.xAxesTicksPadding,
+                    padding: v.xAxesTicksPadding
                 },
 
                 scaleLabel: {
@@ -245,8 +245,7 @@ class ComboChartWidget extends Widget {
                     fontStyle: v.xAxesLabelFontStyle,
                     padding: v.xAxesLabelPadding
                 }
-            }
-            );
+            });
         }
 
         let leftYAxesTicks = {
@@ -260,8 +259,7 @@ class ComboChartWidget extends Widget {
             fontColor: v.leftYAxesTicksFontColor,
             minRotation: v.leftYAxesLabelRotation,
             maxRotation: v.leftYAxesLabelRotation,
-            autoSkip: true,
-
+            autoSkip: true
         };
 
         if (v.leftYAxesMax !== false) {
@@ -277,16 +275,13 @@ class ComboChartWidget extends Widget {
         }
 
         if (v.leftYAxesLabelConcat !== false) {
-            leftYAxesTicks.callback = function (value, index, values) {
-                return value + v.leftYAxesLabelConcat;
-            };
+            leftYAxesTicks.callback = (value, index, values) => value + v.leftYAxesLabelConcat;
         }
-        yAxes.push(
-        {
+
+        yAxes.push({
             id: 'leftYAxes',
             display: v.leftYAxesDisplay,
             stacked: v.leftYAxesStacked,
-
             gridLines: {
                 display: v.leftYAxesGridLinesDisplay,
                 drawOnChartArea: v.leftYAxesGridLinesDrawOnChartArea,
@@ -305,12 +300,9 @@ class ComboChartWidget extends Widget {
                 fontStyle: v.leftYAxesLabelFontStyle,
                 padding: v.leftYAxesLabelPadding
             }
-        }
-        );
+        });
 
-
-        yAxes.push(
-        {
+        yAxes.push({
             id: 'rightYAxes',
             display: v.rightYAxesDisplay,
             position: 'right',
@@ -336,7 +328,6 @@ class ComboChartWidget extends Widget {
                 minRotation: v.rightYAxesLabelRotation,
                 maxRotation: v.rightYAxesLabelRotation,
                 autoSkip: true
-
             },
             scaleLabel: {
                 labelString: v.rightYAxesLabel,
@@ -347,8 +338,8 @@ class ComboChartWidget extends Widget {
                 fontStyle: v.rightYAxesLabelFontStyle,
                 padding: v.rightYAxesLabelPadding
             }
-        }
-        );
+        });
+
         return {
             type: 'bar',
             data: {
@@ -359,7 +350,7 @@ class ComboChartWidget extends Widget {
                 dragData: v.draggable,
                 dragDataRound: 2,
                 onDragEnd: (e, datasetIndex, index, value) => {
-                    let el = $('<div></div>').data('id', v.id).data('action', 'moved').data('lineIndex', datasetIndex).data('pointIndex', index).data('value', value);
+                    let el = $('<div>').data('id', v.id).data('action', 'moved').data('lineIndex', datasetIndex).data('pointIndex', index).data('value', value);
                     Widget.doHandleSystemEvent(el, e);
                 },
                 scales: {
@@ -384,11 +375,13 @@ class ComboChartWidget extends Widget {
                                 color: v.yAxesTicksFontColor,
                                 style: v.yAxesTicksFontStyle,
                                 family: v.yAxesTicksFontFamily,
-                                lineHeight: 0,
+                                lineHeight: 0
                             };
+
                             if (v.datasets[c.datasetIndex].type === 'line') {
                                 t.lineHeight = 2;
                             }
+
                             return t;
                         },
                         padding: c => v.datasets[c.datasetIndex].type === 'line' ? {top: 3, left: 10, right: 10} : {top: 0, left: 0, right: 0},
@@ -396,6 +389,7 @@ class ComboChartWidget extends Widget {
                             if (v.customLabelsForYAxes) {
                                 return c.dataset.customLabels[c.dataIndex];
                             }
+
                             return 'object' === typeof p ? p.y : p[1];
                         }
                     }
@@ -411,59 +405,45 @@ class ComboChartWidget extends Widget {
                 legend: {
                     display: false
                 },
-                legendCallback: (chart) => {
+                legendCallback: chart => {
                     if (v.legendGroupByStack) {
+                        const groupBy = (xs, key) => {
+                            xs.reduce((rv, x) => {
+                                (rv[x[key]] = rv[x[key]] || []).push(x);
+                                return rv;
+                            }, {});
+                        };
+
                         let groupedByBars = groupBy(chart.data.datasets.filter(d => d.type === 'bar' || d.type === 'line'), 'stack'), /*lines = chart.data.datasets.filter(d => d.type === 'line'),*/ i, text = [], j = 0; //lines.length;
 
                         for (let [key, legends] of Object.entries(groupedByBars)) {
                             text.push('<div class="ks-legend-inner">');
                             for (i = 0; i < legends.length; ++i) {
-                                text.push(`<div data-id="${j}" class="ks-legend-item" style="order: ${legends.length - i};">
-						<div class="ks-legend-item-inner">
-							<div style="background-color: ${chart.data.datasets[j].backgroundColor};" class="ks-legend-icon"></div>
-							<div style="background-color: ${chart.data.datasets[j].backgroundColor};" class="ks-legend-label">${legends[i].legendLabel }</div>
-						</div>
-					</div>`);
+                                text.push(`<div data-id="${j}" class="ks-legend-item" style="order: ${legends.length - i};"><div class="ks-legend-item-inner"><div style="background-color: ${chart.data.datasets[j].backgroundColor};" class="ks-legend-icon"></div><div style="background-color: ${chart.data.datasets[j].backgroundColor};" class="ks-legend-label">${legends[i].legendLabel }</div></div></div>`);
                                 ++j;
                             }
                             text.push('</div>');
                         }
-//                        for (i = 0; i < lines.length; ++i) {
-//                            text.push('<div class="ks-legend-inner">');
-//                            text.push(`<div data-id="${i}" class="ks-legend-item">
-//						<div class="ks-legend-item-inner">
-//							<div style="background-color: ${chart.data.datasets[i].backgroundColor};" class="ks-legend-icon"></div>
-//							<div style="background-color: ${chart.data.datasets[i].backgroundColor};" class="ks-legend-label">${lines[i].legendLabel }</div>
-//						</div>
-//					</div>`);
-//                            text.push('</div>');
-//                        }
+
                         return text.join('');
                     } else {
-                        let text = [], i, lines = [];
-                        text.push('<div class="ks-legend-inner">');
+                        let text = ['<div class="ks-legend-inner">'], i, lines = [];
+
                         for (i = 0; i < chart.data.datasets.length; ++i) {//color vs background-color configba !!!!!
                             if (chart.data.datasets[i].type === 'line') {
-                                lines.push(`<div data-id="${i}" class="ks-legend-item">
-						<div class="ks-legend-item-inner">
-							<div style="color: ${chart.data.datasets[i].backgroundColor};" class="ks-legend-icon"></div>
-							<div style="color: ${chart.data.datasets[i].backgroundColor};"  class="ks-legend-label">${chart.data.datasets[i].legendLabel }</div>
-						</div>
-					</div>`);
+                                lines.push(`<div data-id="${i}" class="ks-legend-item"><div class="ks-legend-item-inner"><div style="color: ${chart.data.datasets[i].backgroundColor};" class="ks-legend-icon"></div><div style="color: ${chart.data.datasets[i].backgroundColor};"  class="ks-legend-label">${chart.data.datasets[i].legendLabel }</div></div></div>`);
                             } else {
-                                text.push(`<div data-id="${i}" class="ks-legend-item">
-						<div class="ks-legend-item-inner">
-							<div style="color: ${chart.data.datasets[i].backgroundColor};" class="ks-legend-icon"></div>
-							<div style="color: ${chart.data.datasets[i].backgroundColor};" class="ks-legend-label">${chart.data.datasets[i].legendLabel }</div>
-						</div>
-					</div>`);
+                                text.push(`<div data-id="${i}" class="ks-legend-item"><div class="ks-legend-item-inner"><div style="color: ${chart.data.datasets[i].backgroundColor};" class="ks-legend-icon"></div><div style="color: ${chart.data.datasets[i].backgroundColor};" class="ks-legend-label">${chart.data.datasets[i].legendLabel }</div></div></div>`);
                             }
                         }
+
                         for (i = 0; i < lines.length; ++i) {
                             text.push(lines[i]);
                         }
+
                         text.push('</div>');
-                        return text.join("");
+
+                        return text.join('');
                     }
                 },
                 layout: {
@@ -490,10 +470,12 @@ class ComboChartWidget extends Widget {
     }
 
     processData(data) {
-        let d = {data: []}, i;
-        for (i = 0; i < data.length; ++i) {
+        let d = {data: []}, i, len = data.length;
+
+        for (i = 0; i < len; ++i) {
             i < 2 ? d.data.push(data[i]) : d.datasets = data[i];
         }
+
         return d;
     }
 }

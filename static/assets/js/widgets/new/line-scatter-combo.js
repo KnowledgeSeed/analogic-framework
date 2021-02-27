@@ -1,4 +1,4 @@
-/* global app, Chart, Infinity, Widget */
+/* global app, Chart, Infinity, Utils, Widget */
 
 'use strict';
 class LineScatterComboWidget extends Widget {
@@ -139,7 +139,7 @@ class LineScatterComboWidget extends Widget {
                     showTooltip: v.tooltipsEnabled
                 },
                 onDragEnd: (e, datasetIndex, index, value) => {
-                    let el = $('<div></div>').data('id', v.id).data('action', 'moved').data('lineIndex', datasetIndex).data('pointIndex', index).data('value', value);
+                    let el = $('<div>').data('id', v.id).data('action', 'moved').data('lineIndex', datasetIndex).data('pointIndex', index).data('value', value);
                     Widget.doHandleSystemEvent(el, e);
                 },
                 responsiveAnimationDuration: 0,
@@ -190,7 +190,7 @@ class LineScatterComboWidget extends Widget {
                                 min: yMin,
                                 max: yMax,
                                 stepSize: (yMax - yMin) / 10,
-                                callback: v => app.utils.precisionRound(v, 1)
+                                callback: v => Utils.precisionRound(v, 1)
                             }
                         }
                     ]

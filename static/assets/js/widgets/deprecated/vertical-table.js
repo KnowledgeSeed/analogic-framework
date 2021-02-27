@@ -1,16 +1,19 @@
-/* global app, Widget */
+/* global app, Utils, Widget */
 
 'use strict';
 class VerticalTableWidget extends Widget {
 
     getHtml(widgets, data) {
         const o = this.options, title = o.title || '';
+
         let localColumnNum, localHeaderColumnList;
+
         if (data.cells.length > 0 && data.cells[0].columnNum) {
             localColumnNum = data.cells[0].columnNum;
         } else {
             localColumnNum = o.columnNum;
         }
+
         if (data.cells.length > 0 && data.cells[0].columnHeader) {
             localHeaderColumnList = [];
             for (let i = 0; i < localColumnNum; ++i) {
@@ -20,7 +23,6 @@ class VerticalTableWidget extends Widget {
             localHeaderColumnList = o.headerColumnList;
         }
 
-
         let header = '', rows = '', rowCnt = 0, colCnt = 0;
 
         for (let i = 0; i < data.cells.length; i++) {
@@ -28,11 +30,7 @@ class VerticalTableWidget extends Widget {
                 rows += '<tr>';
             }
 
-            let classes = app.utils.parseFormatStringToCSSClasses(data.cells[i].type);
-
-            if (colCnt == 0 && rowCnt == 1) {
-                let childFlag = 'data-child';
-            }
+            let classes = Utils.parseFormatStringToCSSClasses(data.cells[i].type);
 
             rows += `<td class="${classes}">${(data.cells[i].value || o.defaultValue) || ''}<\/td>`;
 
@@ -45,12 +43,11 @@ class VerticalTableWidget extends Widget {
             }
         }
 
-
         rows = '';
-        let parentFlags = Array(1000).fill(0); // TODO - 1000? --- ~ length / columnNum (? - az ures cellakat igy nem szamolja)
-        let childFlags = Array(1000).fill(0);
-        let childrenCnt;
-        let hasChildColumn = false;
+
+        let parentFlags = Array(1000).fill(0), childFlags = Array(1000).fill(0), childrenCnt, hasChildColumn = false;
+        ; // TODO - 1000? --- ~ length / columnNum (? - az ures cellakat igy nem szamolja)
+
         for (var i = 0; i < data.cells.length; i++) {
             if (data.cells[i].parentRow) {
                 childrenCnt = 0;
@@ -74,11 +71,13 @@ class VerticalTableWidget extends Widget {
         }
 
         let columnFlags = Array(localColumnNum).fill(0); // indicated the columns which contain child rowheaders
+
         if (hasChildColumn) {
             columnFlags[1] = 1; // TODO - support only one child column!
         }
 
         let tableMap = [];
+
         for (let i = 0; i < childFlags.length; i++) {
             let row;
             if (!childFlags[i] && !parentFlags[i]) { // normal row
@@ -92,19 +91,21 @@ class VerticalTableWidget extends Widget {
             tableMap.push(row);
         }
 
-        let cnt = 0;
-        let table = [];
+        let cnt = 0, table = [];
+
         for (let i = 0; i < tableMap.length; i++) {
             let row = [];
+
             for (let j = 0; j < tableMap[i].length; j++) {
                 if (data.cells[cnt]) {
                     if (!Number(tableMap[i][j])) {
                         let p = '';
+
                         if (parentFlags[i] && !j) {
                             p = ` data-parent="true" data-span="${parentFlags[i]}"  `;
                         }
 
-                        let classes = app.utils.parseFormatStringToCSSClasses(data.cells[cnt].type);
+                        let classes = Utils.parseFormatStringToCSSClasses(data.cells[cnt].type);
                         row.push(`<tr><td ${p} class="${classes}"><div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="${(data.cells[cnt].value || o.defaultValue) || '&nbsp;'}">${(data.cells[cnt].value || o.defaultValue) || '&nbsp;'}<\/div><\/td><\/tr>`);
                         cnt++;
                     } else {
@@ -112,17 +113,18 @@ class VerticalTableWidget extends Widget {
                     }
                 }
             }
+
             table.push(row);
         }
 
         rows += `<tr>`;
+
         for (let i = 0; i < table[0].length; i++) {
             rows += '<td style="padding:0;"><table class="nested-table">';
-            rows += table.map(function (value, index) {
-                return value[i] || '';
-            }).join('');
+            rows += table.map((value, index) => value[i] || '').join('');
             rows += '<\/table><\/td>';
         }
+
         rows += '<\/tr>';
 
         // column headers
@@ -135,7 +137,7 @@ class VerticalTableWidget extends Widget {
                 classes += (!i || columnFlags[i]) ? ' rowheader' : '';
                 cont = localHeaderColumnList[i].name || '&nbsp;';
                 if (localHeaderColumnList[i].type) {
-                    classes += ' ' + app.utils.parseFormatStringToCSSClasses(localHeaderColumnList[i].type);
+                    classes += ' ' + Utils.parseFormatStringToCSSClasses(localHeaderColumnList[i].type);
                 }
             }
 
@@ -148,48 +150,45 @@ class VerticalTableWidget extends Widget {
             zoomButtonsHtml = '<div class="widget-financial-block-buttons"><span class="icon-minimize"><\/span><span data-title="' + title + '" data-type="' + o.subType + '" class="icon-full-screen"><\/span><\/div>';
         }
 
-        const html =
-                `
-            <div class="row">
-                <div class="col">
-                    <div class="widget-financial-block">
-                        ${zoomButtonsHtml}
-                        <div class="widget-vertical-table col-${o.width}">
-                            ${o.titleVisible ? `<h3>${title}</h3>` : ''}
-                        	<table>
-                                <thead>${header}</thead>
-                        		<tbody>
-                                    ${rows}
-                        		</tbody>
-                        	</table>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-
-        return html;
+        return`
+<div class="row">
+    <div class="col">
+        <div class="widget-financial-block">
+            ${zoomButtonsHtml}
+            <div class="widget-vertical-table col-${o.width}">
+                ${o.titleVisible ? `<h3>${title}</h3>` : ''}
+                <table><thead>${header}</thead><tbody>${rows}</tbody></table>
+            </div>
+        </div>
+    </div>
+</div>`;
     }
 
     processData(data) {
         if (data.cells) { //dummy
             return data;
         }
+
         let columnNum = false;
         if (data.length > 0 && data[0].length > 0 && data[0][0].columnNum) {
             columnNum = data[0][0].columnNum;
         }
-        let t, v, cells = [];
+
+        let t, v, cells = [], k;
+
         for (v = 0; v < data.length; ++v) {
-            for (t = 0; t < data[v].length; ++t) {
+            k = data[v];
+            for (t = 0; t < k.length; ++t) {
                 if (columnNum !== false) {
                     if (t < columnNum) {
-                        cells.push(data[v][t]);
+                        cells.push(k[t]);
                     }
                 } else {
-                    cells.push(data[v][t]);
+                    cells.push(k[t]);
                 }
             }
         }
+
         return {cells: cells};
     }
 
@@ -201,14 +200,11 @@ class VerticalTableWidget extends Widget {
         }
 
         this.initShowInFullScreenEventHandler(section);
+
         $('.widget-vertical-table').each((i, lm) => {
             if ($(lm).closest('section').is(':visible')) {
-                let baseRowHeaderWidth = 170;
                 let w = 100 / ($(lm).width() / 170);
-
-                $(lm).find('th.rowheader').each((i, el) => {
-                    $(el).width(w + '%');
-                });
+                $(lm).find('th.rowheader').each((i, el) => $(el).width(w + '%'));
             }
         });
     }
@@ -240,17 +236,15 @@ class VerticalTableWidget extends Widget {
                 el = $(el);
                 let span = el.data('span');
                 if (span) {
-                    let t = el.parent('tr'),
-                            height = 0,
-                            td;
+                    let t = el.parent('tr'), height = 0, td;
 
                     for (let i = 0; i < span; i++) {
-                        td = t.find('td:first-child');
-                        td.css({display: '', height: ''});
+                        td = t.find('td:first-child').css({display: '', height: ''});
                         t = t.next();
                     }
 
                     t = el.parent('tr');
+
                     for (let i = 0; i < span; i++) {
                         td = t.find('td:first-child');
                         height += td.outerHeight();

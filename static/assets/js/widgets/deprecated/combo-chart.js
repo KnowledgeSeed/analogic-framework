@@ -1,11 +1,14 @@
-/* global app, Widget */
+/* global app, Utils, Widget */
 'use strict';
 class OldComboChartWidget extends Widget {
+
     getHtml(widgets, data) {
         const o = this.options;
+
         this.state = {data: data};
-        let w = o.width ? o.width : 425;
-        let h = o.height ? o.height : 400;
+
+        let w = o.width ? o.width : 425, h = o.height ? o.height : 400;
+
         return `
 <div class="row">
     <div class="col">
@@ -24,14 +27,14 @@ class OldComboChartWidget extends Widget {
     }
 
     initEventHandlers(section) {
-        const canvas = $('#' + this.options.id + 'Canvas');
-        const ctx = canvas[0].getContext('2d');
-        const c = new Chart(ctx, OldComboChartWidget.getChartConfig(this.options, this.state.data));
+        const canvas = $('#' + this.options.id + 'Canvas'), ctx = canvas[0].getContext('2d'), c = new Chart(ctx, OldComboChartWidget.getChartConfig(this.options, this.state.data));
+
         canvas.next().html(c.generateLegend()).on('click', 'span', e => {
             let legend = $(e.target), id = legend.data('id');
             c.getDatasetMeta(id).hidden = !c.getDatasetMeta(id).hidden;
             c.update();
         });
+
         this.initShowInFullScreenEventHandler(section, this.options);
     }
     initShowInFullScreenEventHandler(section, o) {
@@ -43,31 +46,39 @@ class OldComboChartWidget extends Widget {
                     prevChartDiv.after(chartDiv);
                 });
             });
+
             return false;
         });
     }
     static getChartConfig(config, data) {
         let yAxisStacked = config.yAxisStacked ? config.yAxisStacked : false, xAxisStacked = config.xAxisStacked ? config.xAxisStacked : true;
+
         for (let f = 0; f < config.datasets.length; ++f) {
             if (config.datasets[f].data) {
                 config.datasets[f].data = [];
             }
         }
+
         let datasets = config.datasets, d = data[1], i, j, labels = data[0].map(item => {
             return item.label;
         }), min = 0, s;
+
         for (j = 0; j < d.length; ++j) {
             for (i = 0; i < datasets.length; ++i) {
                 if (!datasets[i].data) {
                     datasets[i].data = [];
                 }
-                s = d[j][i].value === '' ? '0' : app.utils.parseNumber(d[j][i].value);
+
+                s = d[j][i].value === '' ? '0' : Utils.parseNumber(d[j][i].value);
+
                 if (s < min) {
                     min = s;
                 }
+
                 datasets[i].data.push(s);
             }
         }
+
         return {
             type: 'bar',
             data: {
@@ -90,8 +101,7 @@ class OldComboChartWidget extends Widget {
                                 fontSize: config.xAxesTicksFontSize ? config.xAxesTicksFontSize : 10,
                                 fontFamily: config.xAxesTicksFontFamily ? config.xAxesTicksFontFamily : 'imago, sans-serif',
                                 fontStyle: config.xAxesTicksFontStyle ? config.xAxesTicksFontStyle : 'bold',
-                                fontColor: config.xAxesTicksFontColor ? config.xAxesTicksFontColor : '#000',
-                                // padding: -140
+                                fontColor: config.xAxesTicksFontColor ? config.xAxesTicksFontColor : '#000'
                             }
                         }],
                     yAxes: [{
@@ -100,11 +110,9 @@ class OldComboChartWidget extends Widget {
                             gridLines: {
                                 display: typeof config.yAxesGridLinesDisplay === 'undefined' ? false : config.yAxesGridLinesDisplay,
                                 color: config.yAxesGridLinesColor ? config.yAxesGridLinesColor : '#A6A7A7',
-                                drawBorder: typeof config.yAxesGridLinesDisplay === 'undefined' ? true : config.yAxesGridLinesDisplay,
+                                drawBorder: typeof config.yAxesGridLinesDisplay === 'undefined' ? true : config.yAxesGridLinesDisplay
                             },
                             ticks: {
-//                                min: min,
-//                                suggestedMin: min,
                                 beginAtZero: typeof config.yAxesTicksBegintAtZero === 'undefined' ? false : config.yAxesTicksBegintAtZero,
                                 fontSize: config.yAxesTicksFontSize ? config.yAxesTicksFontSize : 10,
                                 fontFamily: config.yAxesTicksFontFamily ? config.yAxesTicksFontFamily : 'imago, sans-serif',
@@ -141,7 +149,7 @@ class OldComboChartWidget extends Widget {
                     for (i = chart.data.datasets.length - 1; i >= 0; --i) {
                         text.push('<span data-id="' + i + '" style="color: ' + chart.data.datasets[i].backgroundColor + ';">' + chart.data.datasets[i].label + '<\/span>');
                     }
-                    return text.join("");
+                    return text.join('');
                 },
                 layout: {
                     padding: {

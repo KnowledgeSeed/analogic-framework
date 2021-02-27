@@ -1,22 +1,23 @@
-/* global app, Widget */
+/* global app, Utils, Widget */
 
 'use strict';
 class VerticalBarChartWidget extends Widget {
 
     getHtml(widgets, data) {
         const o = this.options;
+
         this.state = {data: data};
+
         let h = this.getLabels(o.datasets, data[2]);
         let w = o.width ? Math.round((o.width / 100) * 12) : 6;
         let offset = o.offset ? Math.round((o.offset / 100) * 12) : 3;
+
         return `
 <div class="row">
     <div class="col">
         <div class="widget-financial-block">
             ${app.fn.getZoomButtonsHtml(this)}
-            <div class="widget-col-chart-info-holder clear">
-                ${h}
-            </div>
+            <div class="widget-col-chart-info-holder clear">${h}</div>
             <div class="row">
                 <div class="col-${w} offset-${offset}">
                     <div class="widget-col-chart-holder widget-financial-data-chart">
@@ -31,9 +32,7 @@ class VerticalBarChartWidget extends Widget {
     }
 
     initEventHandlers(section) {
-        const canvas = $('#' + this.options.id + 'Canvas');
-
-        const ctx = canvas[0].getContext('2d');
+        const canvas = $('#' + this.options.id + 'Canvas'), ctx = canvas[0].getContext('2d');
         const c = new Chart(ctx, VerticalBarChartWidget.getChartConfig(this.options, this.state.data));
 
         canvas.next().html(c.generateLegend()).on('click', 'span', e => {
@@ -54,9 +53,7 @@ class VerticalBarChartWidget extends Widget {
 
                 $('#fullScreenContent').append(chartDiv.wrap('<div style="position: relative; width: 70%; left: 15%;"><\/div>').parent());
 
-                $('#fullScreenOffBtn').on('click', () => {
-                    parentDiv.append(chartDiv);
-                });
+                $('#fullScreenOffBtn').on('click', () => parentDiv.append(chartDiv));
             });
 
             return false;
@@ -65,24 +62,27 @@ class VerticalBarChartWidget extends Widget {
 
     static getChartConfig(config, data) {
         let yAxis = config.displayYaxis ? config.displayYaxis : false, xAxis = config.displayXaxis ? config.displayXaxis : true;
-        for(let f = 0; f < config.datasets.length; ++f){
-            if(config.datasets[f].data){
+
+        for (let f = 0; f < config.datasets.length; ++f) {
+            if (config.datasets[f].data) {
                 config.datasets[f].data = [];
             }
         }
-        let datasets = config.datasets, d = data[1], i, j, labels = data[0].map(item => {
-            return window.parseInt(item.label);
-        }), s;
+
+        let ds, datasets = config.datasets, d = data[1], i, j, labels = data[0].map(item => window.parseInt(item.label)), s, len = datasets.length;
+
         for (j = 0; j < d.length; ++j) {
-            for (i = 0; i < datasets.length; ++i) {
-                if (!datasets[i].data) {
-                    datasets[i].data = [];
+            for (i = 0; i < len; ++i) {
+                ds = datasets[i];
+                if (!ds.data) {
+                    ds.data = [];
                 }
-                s = d[j][i].value === '' ? '0' : app.utils.parseNumber(d[j][i].value);
-                datasets[i].data.push(s);
-                datasets[i].label = data[2][i].label;
+                s = d[j][i].value === '' ? '0' : Utils.parseNumber(d[j][i].value);
+                ds.data.push(s);
+                ds.label = data[2][i].label;
             }
         }
+
         let chartConfig = {
             type: 'bar',
             data: {
@@ -151,7 +151,7 @@ class VerticalBarChartWidget extends Widget {
                     duration: 1,
                     onComplete: function () {
                         var chartInstance = this.chart,
-                                ctx = chartInstance.ctx;
+                        ctx = chartInstance.ctx;
                         ctx.textAlign = 'center';
                         ctx.fillStyle = "rgba(0, 0, 0, 1)";
                         ctx.textBaseline = 'bottom';
@@ -174,9 +174,7 @@ class VerticalBarChartWidget extends Widget {
                 legend: {
                     display: false
                 },
-                legendCallback: (chart) => {
-                    return "";
-                },
+                legendCallback: chart => '',
                 layout: {
                     padding: {
                         left: 0,
@@ -195,19 +193,18 @@ class VerticalBarChartWidget extends Widget {
                 bezierCurve: false
             }
         };
-        if(config.hideUpperDataText && config.hideUpperDataText === true){
+
+        if (config.hideUpperDataText && config.hideUpperDataText === true) {
             chartConfig.options.animation = {};
         }
+
         return chartConfig;
     }
 
     getLabels(colors, data) {
         let h = [], i;
         for (i = 0; i < data.length; ++i) {
-            h.push(` <div class="widget-col-chart-info">
-                    <h4>${data[i].label}</h4>
-                    <h5 ${ i < colors.length ? `style="color: ${colors[i].backgroundColor};"` : ''}>${data[i].value}</h5>
-                </div>`);
+            h.push(`<div class="widget-col-chart-info"><h4>${data[i].label}</h4><h5 ${ i < colors.length ? `style="color: ${colors[i].backgroundColor};"` : ''}>${data[i].value}</h5></div>`);
         }
         return h.join('');
     }

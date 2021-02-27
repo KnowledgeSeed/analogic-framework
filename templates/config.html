@@ -2,41 +2,7 @@
     /* global jQuery, _ */'use strict';
     let app = {};
     (($, _) => {
-        app = {
-            el: {body: $('body')},
-            cache: {},
-            doc: $(document).on('touchstart', () => app.prop.isTouched = true),
-            dummy: {},
-            eventMap: {},
-            fn: {},
-            id: 0,
-            initMap: {},
-            listeners: [],
-            prop: {isMobile: null, isTouched: false},
-            repository: {},
-            shoutWaiting: false,
-            symbol: {},
-            url: {},
-            user: {},
-            widgetConfig: {},
-            widgetValue: {
-                infoData: {}
-    //            ,rocheDraftTable: {
-    //                open: {
-    //                    name: 'User Day Data',
-    //                    version: 'Draft 1'
-    //                }
-    //            },
-    //            rocheActiveCasesTable: {
-    //                open: {
-    //                    name: 'Zsolt Demo Case'
-    //                    //name: 'Hospital Glucose Others (RDG)'
-    //                }
-    //            }
-            },
-            widgetState: {},
-            pageState: {current: '', previous: ''}
-        };
+        app = {fn: {}, id: 0, isMobile: null, isTouched: false, shoutWaiting: false, url: {}}
         app.customerAssetsFolder = '{{cnf.customerAssetsFolder}}';
         app.useShout = {% if cnf.useShout %}true{% else %}false{% endif %};
         app.host = '{{ cnf.host }}';

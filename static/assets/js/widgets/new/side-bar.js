@@ -1,4 +1,4 @@
-/* global app, Widget */
+/* global app, El, Widget */
 
 'use strict';
 
@@ -8,24 +8,22 @@ class SideBarWidget extends Widget {
         return '<div class="sidebar-holder tooltip-holder"><span class="icon-add"><\/span><div id="sideBarContent"><\/div><\/div>';
     }
 
-    initEventHandlers(section) {
-        app.el.sideBar = $('#' + app.SideBar);
+    initEventHandlers() {
+        El.sideBar = $('#' + app.SideBar);
 
-        app.el.sideBar.close = () => {
-            app.el.sideBar.hide();
-        };
+        El.sideBar.close = () => El.sideBar.hide();
 
-        app.el.sideBar.open = (classNames) => {
+        El.sideBar.open = classNames => {
             sideBarHolder.removeClass().addClass('sidebar-holder ' + (classNames || ''));
 
-            app.el.sideBar.show();
+            El.sideBar.show();
         };
 
-        app.el.sideBar.on(app.prop.clickEvent, '.icon-add', app.el.sideBar.close);
+        El.sideBar.on(app.clickEvent, '.icon-add', El.sideBar.close);
 
-        app.el.sideBarContent = $('#sideBarContent');
+        El.sideBarContent = $('#sideBarContent');
 
-        const sideBarHolder = app.el.sideBarContent.parent();
+        const sideBarHolder = El.sideBarContent.parent();
     }
 }
 ;

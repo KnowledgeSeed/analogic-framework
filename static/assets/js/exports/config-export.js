@@ -1,4 +1,4 @@
-/* global app */
+/* global app, Utils */
 
 'use strict';
 class ConfigExport extends Export {
@@ -39,7 +39,7 @@ class ConfigExport extends Export {
             if (v.length > 1) {
                 possibleAppKey = v[0].trim().replace('app.', '');
 
-                configValue = app.utils.getObjectValueByDotSeparatedKeys(app, possibleAppKey);
+                configValue = Utils.getObjectValueByDotSeparatedKeys(app, possibleAppKey);
 
                 v = typeof configValue;
 

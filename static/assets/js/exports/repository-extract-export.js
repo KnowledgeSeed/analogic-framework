@@ -1,4 +1,4 @@
-/* global app */
+/* global app, Repository, Repository, Utils */
 
 'use strict';
 class RepositoryExtractExport extends Export {
@@ -13,12 +13,12 @@ class RepositoryExtractExport extends Export {
     createDataToExport() {
         this.exportData = [];
         this.serverSideExportData = [];
-        this.newRepository = app.utils.clone(app.repository, true);
+        this.newRepository = Utils.clone(Repository, true);
 
         let widgetId, eventTypeConfigs, eventType, configs, order;
 
-        for (widgetId in app.repository) {
-            eventTypeConfigs = app.repository[widgetId];
+        for (widgetId in Repository) {
+            eventTypeConfigs = Repository[widgetId];
 
             order = 1;
 
@@ -67,7 +67,7 @@ class RepositoryExtractExport extends Export {
 
     processBody(widgetId, eventType, config, order) {
         let val = config.toString().replace(/(\r\n|\n|\r|\t)/gm, "").replace(/\s+/g, ' '),
-                variables = val.match(/\${[^}\s]+}/g), v, newVal = [], added = [], newVars = [];
+        variables = val.match(/\${[^}\s]+}/g), v, newVal = [], added = [], newVars = [];
         newVal.push('(db) => {');
         newVal.push('return {');
         for (v of variables) {
@@ -81,17 +81,17 @@ class RepositoryExtractExport extends Export {
         newVal.push(newVars.join(','));
         newVal.push('};');
         newVal.push('}');
-        val = app.utils.escapeText(val.replace('(db) => `', '').replace('`', ''));
+        val = Utils.escapeText(val.replace('(db) => `', '').replace('`', ''));
         let oo = (order + "").split(".");
         this.exportData.push([widgetId, eventType, order, 'body', newVal.join('')]);
         if (oo.length > 1) {
             this.serverSideExportData.push([widgetId + '_' + eventType + '_' + oo[1], val]);
             this.newRepository[widgetId][eventType][oo[1] - 1]['body'] = newVal.join('');
-        } else {            
+        } else {
             this.serverSideExportData.push([widgetId + '_' + eventType, val]);
             this.newRepository[widgetId][eventType]['body'] = newVal.join('');
         }
-        
+
     }
 
     processParsingControlConfig(widgetId, eventType, config, order) {
@@ -130,5 +130,3 @@ class RepositoryExtractExport extends Export {
     }
 }
 ;
-
-
