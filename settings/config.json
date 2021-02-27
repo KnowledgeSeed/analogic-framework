@@ -6,16 +6,12 @@
   "useShout": false,
   "host": "http://localhost:5000/",
   "subpath": "",
-  "tm1Server": "Analogic Portal",
-  "tm1ServerHost": "hq.coresystems.hu",
-  "cognosHost" : "https://hq.coresystems.hu:9610",
   "authenticationMode" : "LoginPool",
   "camNamespace" : "knowledgeseed",
   "noauthUser" : "sovegjarto.andras",
   "noauthPwd" : "",
   "sessionExpiresInMinutes" : 20,
-  "useCamNameSpaceForMobileView" : false,
-  "cognosAuthenticationBridge" : "https://hq.coresystems.hu:9610/ibmcognos/bi/v1?b_action=xts.run&m=portal/bridge.xts&c_env=portal/variables_TM1.xml&c_cmd=../tm1/web/tm1web.html&ps=https://hq.coresystems.hu:9610&pg=../adminportal/auth.jsp&host=hq.coresystems.hu&server=Analogic Portal",
+  "authenticationBridge" : "https://hq.coresystems.hu:9610/ibmcognos/bi/v1?b_action=xts.run&m=portal/bridge.xts&c_env=portal/variables_TM1.xml&c_cmd=../tm1/web/tm1web.html&ps=https://hq.coresystems.hu:9610&pg=../adminportal/auth.jsp&host=hq.coresystems.hu&server=Analogic Portal",
   "apiLogout" : "https://hq.coresystems.hu:5125/roche/adminportal/logout",
   "logout" : "https://hq.coresystems.hu:9610/ibmcognos/bi/v1?h_CAM_action=logoff&b_action=xts.run&m=portal/main.xts&m_redirect=https://hq.coresystems.hu:9610/adminportal/",
   "restRequestDebugFlag" : false,
@@ -43,7 +39,6 @@
     "additionalPostUrl2": "",
     "additionalPostBody2": "",
     "secret": "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==",
-    "authenticationBridge": "http://localhost/analogic/auth.aspx",
     "appHost": "https://hq.coresystems.hu:9610"
   }
   

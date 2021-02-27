@@ -84,7 +84,7 @@ class Base:
     def getConfig(self):
         config = self.cache.get(self.CONFIG)
         if config is None:
-            json_url = os.path.join(self.site_root, "static", "config.json")
+            json_url = os.path.join(self.site_root, "settings", "config.json")
             config = json.load(open(json_url))
             self.cache.set(self.CONFIG, config)
         return config
@@ -100,7 +100,7 @@ class Base:
     def getRepository(self):
         repository = self.cache.get('knowledge_seed_repository')
         if repository is None:
-            json_url = os.path.join(self.site_root, "static", "repository.json")
+            json_url = os.path.join(self.site_root, "settings", "repository.json")
             repository = json.load(open(json_url))
             self.cache.set('knowledge_seed_repository', repository)
         return repository

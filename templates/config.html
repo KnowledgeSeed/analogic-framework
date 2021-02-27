@@ -6,16 +6,12 @@
         app.customerAssetsFolder = '{{cnf.customerAssetsFolder}}';
         app.useShout = {% if cnf.useShout %}true{% else %}false{% endif %};
         app.host = '{{ cnf.host }}';
-        app.tm1Server = '{{ cnf.tm1Server }}';
-        app.tm1ServerHost = '{{ cnf.tm1ServerHost }}';
-        app.cognosHost = '{{ cnf.cognosHost }}';
         app.authenticationMode = '{{ cnf.authenticationMode }}';
         app.camNamespace = '{{ cnf.camNamespace }}';
         app.noauthUser = '{{ cnf.noauthUser }}';
         app.noauthPwd = '{{ cnf.noauthPwd }}';
         app.sessionExpiresInMinutes = {{ cnf.sessionExpiresInMinutes }};
-        app.useCamNameSpaceForMobileView = {% if cnf.useCamNameSpaceForMobileView %}true{% else %}false{% endif %};
-        app.url.cognosAuthenticationBridge = "{{ cnf.cognosAuthenticationBridge|safe }}";
+        app.url.authenticationBridge = "{{ cnf.authenticationBridge|safe }}";
         app.url.apiLogout = '{{ cnf.apiLogout }}';
         app.url.logout = '{{ cnf.logout }}';
         app.restRequestDebugFlag = {% if cnf.restRequestDebugFlag %}true{% else %}false{% endif %};

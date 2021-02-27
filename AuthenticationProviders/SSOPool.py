@@ -16,7 +16,7 @@ class SSOPool(Pool):
         decoded = self.decodeToken(sso_token)
 
         if decoded.get('msg') != '':
-            return make_response(redirect(cnf['sso']['authenticationBridge']))#TODO ez ajax híváskor történik, egy időben küldött több ajax híváskor több popup is feljön (biztos, hogy el akar navigálni..). Egyszer jöjjön csak fel.
+            return make_response(redirect(cnf['authenticationBridge']))#TODO ez ajax híváskor történik, egy időben küldött több ajax híváskor több popup is feljön (biztos, hogy el akar navigálni..). Egyszer jöjjön csak fel.
 
         authenticated = request.cookies.get('authenticated') is not None
         return render_template('index.html', authenticated=authenticated, cnf=cnf)

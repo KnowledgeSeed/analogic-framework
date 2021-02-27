@@ -31,9 +31,9 @@ Auth.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
         },
         statusCode: {
             401: function () {
-                if ('CAM' === app.authenticationMode || 'POOLSSO' === app.authenticationMode) {
+                if ('CAM' === app.authenticationMode || 'SSOPool' === app.authenticationMode) {
                     $.cookie("authenticated", 0);
-                    window.location.href = app.url.cognosAuthenticationBridge;
+                    window.location.href = app.url.authenticationBridge;
                 }
             }
         }
