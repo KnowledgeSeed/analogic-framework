@@ -3,7 +3,7 @@
 'use strict';
 
 const Loader = ($ => {
-    let ajaxCallNum = 0, timeoutId, e = $('<div style="position: fixed; z-index: 9999; display: none;" class="loader"><img src="static/assets/images/loading2.gif"><\/div>');
+    let ajaxCallNum = 0, timeoutId, e = $('<div style="position: fixed; z-index: 9999; display: none;" class="loader"><img src="' + app.assetsFolder + '/images/loading2.gif"><\/div>');
 
     return {
         start: incAjaxCallNum => {

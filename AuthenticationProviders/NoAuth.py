@@ -7,4 +7,5 @@ class NoAuth(Base):
         super().__init__(cache, site_root)
 
     def index(self):
-        return render_template('local.html')
+        cnf = self.getConfig()
+        return render_template('local.html', cnf=cnf)

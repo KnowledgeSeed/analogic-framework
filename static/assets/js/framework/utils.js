@@ -12,7 +12,7 @@ const Utils = {
 
         return e;
     },
-    cleanStr: s => this.replaceAll(s, {'ö': 'o', 'ü': 'u', 'ó': 'o', 'ő': 'o', 'ú': 'u', 'é': 'e', 'á': 'a', 'ű': 'u', 'í': 'i'}),
+    cleanStr: s => Utils.replaceAll(s, {'ö': 'o', 'ü': 'u', 'ó': 'o', 'ő': 'o', 'ú': 'u', 'é': 'e', 'á': 'a', 'ű': 'u', 'í': 'i'}),
     clone: (object, deep) => deep ? $.extend(true, {}, object) : $.extend({}, object),
     replaceAll: (s, m) => s.replace(RegExp(Object.keys(m).join('|'), 'gi'), r => m[r.toLowerCase()]),
     scrollTop: duration => $('html, body').animate({scrollTop: 0}, duration || 500),
@@ -63,9 +63,9 @@ const Utils = {
             return 'c-' + c + '-' + e;
         }).join(' ') : '';
     },
-    getToday: (delimiter = '.') => this.getFormattedDate(new Date(), delimiter),
+    getToday: (delimiter = '.') => Utils.getFormattedDate(new Date(), delimiter),
     getTimestamp(dateStr = '', forwardTime = false) {
-        const d = dateStr ? new Date(dateStr.replace(/\./g, '-')) : new Date(), o = forwardTime ? this.forwardTime(d) : this.rewindTime(d);
+        const d = dateStr ? new Date(dateStr.replace(/\./g, '-')) : new Date(), o = forwardTime ? Utils.forwardTime(d) : Utils.rewindTime(d);
 
         return o.getFullYear() + '-' + (o.getMonth() + 1).toString().padStart(2, 0) + '-' + o.getDate().toString().padStart(2, 0) + 'T' + o.getHours().toString().padStart(2, 0) + ':' + o.getMinutes().toString().padStart(2, 0) + ':' + o.getSeconds().toString().padStart(2, 0) + '.' + o.getMilliseconds().toString().padStart(3, 0) + 'Z';
     },
@@ -115,7 +115,7 @@ const Utils = {
         if (-1 === i || v) {
             return v;
         } else {
-            return this.getObjectValueByDotSeparatedKeys(o[dotSeparatedKeys.slice(0, i)], dotSeparatedKeys.slice(i + 1));
+            return Utils.getObjectValueByDotSeparatedKeys(o[dotSeparatedKeys.slice(0, i)], dotSeparatedKeys.slice(i + 1));
         }
     },
     adjustHeightsToMax(elements) {
@@ -176,3 +176,5 @@ const Utils = {
         });
     }
 };
+
+app.utils = Utils;

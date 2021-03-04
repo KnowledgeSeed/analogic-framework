@@ -3,6 +3,7 @@
     let app = {};
     (($, _) => {
         app = {fn: {}, id: 0, isMobile: null, isTouched: false, shoutWaiting: false, url: {}}
+        app.assetsFolder = '{{cnf.assetsFolder}}';
         app.customerAssetsFolder = '{{cnf.customerAssetsFolder}}';
         app.useShout = {% if cnf.useShout %}true{% else %}false{% endif %};
         app.host = '{{ cnf.host }}';

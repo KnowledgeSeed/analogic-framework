@@ -5,7 +5,7 @@ const Auth = {};
 
 Auth.loadDefault = arg => {
     return $.ajax({
-        url: 'assets/js/configs/default/' + arg + '.json',
+        url: app.assetsFolder + '/js/configs/default/' + arg + '.json',
         dataType: 'json',
         cache: false
     });
@@ -31,7 +31,7 @@ Auth.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
         },
         statusCode: {
             401: function () {
-                if ('CAM' === app.authenticationMode || 'SSOPool' === app.authenticationMode) {
+                if ('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode) {
                     $.cookie("authenticated", 0);
                     window.location.href = app.url.authenticationBridge;
                 }
@@ -41,7 +41,7 @@ Auth.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
 };
 
 Auth.handleSuccessLogin = () => {
-    if ('CAM' === app.authenticationMode && $.cookie('camPassport') !== '0') {
+    if ('Cam' === app.authenticationMode && $.cookie('camPassport') !== '0') {
         let date = new Date();
         date.setTime(date.getTime() + (app.sessionExpiresInMinutes * 60 * 1000));
         $.cookie("authenticated", 'authenticated', {expires: date});
@@ -63,11 +63,11 @@ Auth.getHeader = (contentType = 'application/json; charset=utf-8', accept = 'app
 
     headers['Access-Control-Allow-Origin'] = '*';
 
-    if ('NOAUTH' === app.authenticationMode) {
+    if ('NoAuth' === app.authenticationMode) {
         headers['Authorization'] = "CAMNamespace " + btoa(app.noauthUser + ":" + app.noauthPwd + ":" + app.camNamespace);
     }
 
-    if ('CAM' === app.authenticationMode && $.cookie('camPassport') !== '0') {
+    if ('Cam' === app.authenticationMode && $.cookie('camPassport') !== '0') {
         headers['Authorization'] = 'CAMPassport ' + $.cookie('camPassport');
     }
 
