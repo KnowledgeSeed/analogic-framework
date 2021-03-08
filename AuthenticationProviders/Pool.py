@@ -1,9 +1,9 @@
 import time
 import requests
+import datetime
 from flask import request, json
 from typing import Callable
 from AuthenticationProviders.Base import Base
-import datetime
 from TM1py.Services import TM1Service
 
 
@@ -83,4 +83,4 @@ class Pool(Base):
             #TODO master user password secure módon tárolásának kitalálása után implementálható
             #TM1Service(base_url=address, namespace=NAMESPACE, user=USER, password=PWD, ssl=SSL)
         else:
-            return TM1Service(base_url=cnf['pool']['target'], session_id=tm1_session_id)
+            return TM1Service(base_url=cnf['pool']['target'], session_id=tm1_session_id, ssl=False)

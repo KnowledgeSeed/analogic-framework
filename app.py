@@ -43,6 +43,11 @@ def upload():
     return provider.processFiles()
 
 
+@app.route('/export', methods=['GET'])
+def export():
+    return provider.export()
+
+
 @app.route('/pivottest')
 def pivottest():
     address = "https://hq.coresystems.hu:5125/analogicadminapi"

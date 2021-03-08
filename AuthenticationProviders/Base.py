@@ -1,21 +1,31 @@
+import mimetypes
 import os
 import shutil
-import sys
 import datetime
 
-from flask import json, request
+from flask import json, request, send_file
 from werkzeug.utils import secure_filename
+from Utils.ExcelExport import ExcelExport
 
 
 class Base:
     CONFIG = 'knowledge_seed_config'
     REPOSITORY = 'knowledge_seed_repository'
+    EXPORT_OBJECTS = 'knowledge_seed_export_objects'
     TM1SessionId = 'tm1_session_id'
     TM1SessionExpires = 'tm1_session_expires'
 
     def __init__(self, cache, site_root):
         self.cache = cache
         self.site_root = site_root
+
+    def export(self):
+        file_name = request.args.get('file_name', default='export.xlsx')
+        export_key = request.args.get('export_key', default='davidCustom')#TODO default törlése és hibakezelés none-ra
+        export_description = self.getExportDescription(export_key)
+        return send_file(ExcelExport().export(export_description, request, self.getTM1Service()),
+                         attachment_filename=file_name,
+                         as_attachment=True)
 
     def login(self):
         pass
@@ -79,6 +89,7 @@ class Base:
         self.cache.delete(self.REPOSITORY)
         self.cache.delete(self.TM1SessionId)
         self.cache.delete(self.TM1SessionExpires)
+        self.cache.delete(self.EXPORT_OBJECTS)
         return "OK"
 
     def getConfig(self):
@@ -110,16 +121,22 @@ class Base:
         mdx = repository[key]
         return mdx
 
+    def getExportDescription(self, key):
+        exports = self.cache.get(self.EXPORT_OBJECTS)
+        if exports is None:
+            json_url = os.path.join(self.site_root, "settings", "exports.json")
+            exports = json.load(open(json_url))
+            self.cache.set(self.EXPORT_OBJECTS, exports)
+        return exports[key]
+
     def addAuthenticatedCookie(self, response):
         cnf = self.getConfig()
-        #TODO secure, httpOnly!!!
+        # TODO secure, httpOnly!!!
         response.set_cookie('authenticated', 'authenticated', max_age=cnf['sessionExpiresInMinutes'] * 60)
         return response
 
     def getTM1SessionId(self):
         if self.cache.get(self.TM1SessionId) is None or (
-                    self.cache.get(self.TM1SessionExpires) is not None and datetime.datetime.now() >= self.cache.get(
-                self.TM1SessionExpires)):
+                self.cache.get(self.TM1SessionExpires) is not None and datetime.datetime.now() >= self.cache.get(self.TM1SessionExpires)):
             return None
         return self.cache.get(self.TM1SessionId)
-

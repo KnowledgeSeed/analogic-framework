@@ -1,0 +1,7 @@
+{
+  "davidCustom" : {
+    "namespace": "Utils.DavidCustomExport",
+    "class": "DavidCustomExport",
+    "method": "doExport"
+  }
+}
