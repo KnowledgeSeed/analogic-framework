@@ -1,0 +1,7 @@
+{
+  "davidCustom1" : {
+    "namespace": "Export.Custom",
+    "class": "Custom",
+    "method": "davidExport1"
+  }
+}

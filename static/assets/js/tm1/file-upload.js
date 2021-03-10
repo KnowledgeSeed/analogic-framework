@@ -1,7 +1,70 @@
 /* global app, El, Loader, QB, Repository, Utils, WidgetValue */
 
 FileUpload = {};
+
 FileUpload.uploadFile = (w, eventMapId, context) => {
+    const e = 'upload', r = Repository[w], v = WidgetValue[w];
+    let target = false, staging = false, uploadParams = {}, uploadRepoExist = r && r[e], subFolder = '';
+
+    if (uploadRepoExist) {
+        uploadParams = r[e](context);
+        if (uploadParams.target) {
+            target = uploadParams.target;
+        }
+        if (uploadParams.staging) {
+            staging = uploadParams.staging;
+        }
+    }
+
+    if (target === false && v.target) {
+        target = v.target;
+    }
+
+    if (staging === false && v.staging) {
+        staging = v.staging;
+    }
+
+    if (target === false) {
+        app.fn.showPopup('Please provide unc target path for uploading!');
+        El.body.triggerHandler(eventMapId + '.pathError');
+        return false;
+    }
+
+    if (uploadRepoExist) {
+        for (const [key, value] of Object.entries(uploadParams)) {
+            if (key !== 'staging' && key !== 'target') {
+                v.form.append(key, value);
+            }
+        }
+    }
+
+    v.form.append('target', target);
+    v.form.append('staging', staging === false ? '' : staging);
+    subFolder = staging === false ? '' : Utils.create_UUID();
+    v.form.append('subFolder', subFolder);
+
+    Loader.start();
+
+    FileUpload.uploadToServer(w).done(d => {
+        if (d === 'ok') {
+            El.body.triggerHandler(eventMapId + '.finished');
+            v.form = new FormData();
+            app.fn.showPopup(v.uploadSuccessMessage);
+        } else {
+            app.fn.showPopup(d);
+        }
+    }).fail(() => {
+        app.fn.showPopup('Upload failed');
+    }).always(() => {
+        v.form = new FormData();
+        Loader.stop();
+    });
+
+    return true;
+
+};
+
+/*FileUpload.uploadFile2 = (w, eventMapId, context) => {
     const e = 'upload', r = Repository[w], v = WidgetValue[w];
     let path = false, uploadParams = {}, uploadRepoExist = r && r[e], isTarget = true, subFolder = '';
 
@@ -62,7 +125,7 @@ FileUpload.uploadFile = (w, eventMapId, context) => {
     });
 
     return true;
-};
+};*/
 
 FileUpload.uploadToServer = widgetId => {
     return $.ajax({
@@ -87,7 +150,7 @@ FileUpload.uploadToServer = widgetId => {
         data: WidgetValue[widgetId].form
     });
 };
-
+/*
 FileUpload.preProcessUploadedFile = w => {
     let eventMapId = 'preProcessing.' + w;
 
@@ -161,4 +224,4 @@ FileUpload.postProcessUploadedFile = w => {
     });
 
     QB.writeData(eventMapId);
-};
+};*/

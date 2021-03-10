@@ -1,5 +1,5 @@
 from AuthenticationProviders.Pool import Pool
-from flask import session, redirect, url_for, request, render_template, make_response
+from flask import session, redirect, request, render_template, make_response
 
 
 class LoginPool(Pool):
@@ -19,6 +19,14 @@ class LoginPool(Pool):
         cnf = self.getConfig()
         if 'username' in session:
             return render_template('index.html', authenticated=True, cnf=cnf)
+        return redirect(self.getBaseUrl('login'))
+
+    def checkAppAuthenticated(self):
+        if 'username' in session:
+            return True
+        return False
+
+    def getAuthenticationResponse(self):
         return redirect(self.getBaseUrl('login'))
 
 

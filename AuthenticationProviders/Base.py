@@ -1,17 +1,16 @@
-import mimetypes
 import os
 import shutil
 import datetime
 
 from flask import json, request, send_file
 from werkzeug.utils import secure_filename
-from Utils.ExcelExport import ExcelExport
+from Core.ClassLoader import ClassLoader
 
 
 class Base:
     CONFIG = 'knowledge_seed_config'
     REPOSITORY = 'knowledge_seed_repository'
-    EXPORT_OBJECTS = 'knowledge_seed_export_objects'
+    CLASSES = 'knowledge_seed_classes'
     TM1SessionId = 'tm1_session_id'
     TM1SessionExpires = 'tm1_session_expires'
 
@@ -20,12 +19,24 @@ class Base:
         self.site_root = site_root
 
     def export(self):
+        if self.checkAppAuthenticated() is False:
+            return self.getAuthenticationResponse()
+
         file_name = request.args.get('file_name', default='export.xlsx')
-        export_key = request.args.get('export_key', default='davidCustom')#TODO default törlése és hibakezelés none-ra
-        export_description = self.getExportDescription(export_key)
-        return send_file(ExcelExport().export(export_description, request, self.getTM1Service()),
+        export_key = request.args.get('export_key')
+
+        if export_key is None:
+            return self.getNotFoundResponse()
+
+        export_description = self.getClassDescription(export_key)
+
+        if export_description is None:
+            return self.getNotFoundResponse()
+
+        return send_file(ClassLoader().call(export_description, request, self.getTM1Service()),
                          attachment_filename=file_name,
-                         as_attachment=True)
+                         as_attachment=True,
+                         cache_timeout=0)
 
     def login(self):
         pass
@@ -45,12 +56,23 @@ class Base:
     def getTM1Service(self):
         pass
 
+    def checkAppAuthenticated(self):
+        return True
+
+    def getAuthenticationResponse(self):
+        pass
+
+    def getNotFoundResponse(self):
+        return 'Not found', 401, {'Content-Type': 'application/json'}
+
     def processFiles(self):
         try:
-            if request.form.get('mode') == 'upload':
-                return self.upload()
-            else:
-                return self.move()
+            self.upload()
+            self.preProcess()
+            if request.form.get('staging') != '':
+                self.move()
+            self.postProcess()
+            return 'ok', 200, {'Content-Type': 'application/json'}
         except:
             print('Unexpected error:')
             return 'Unexpected error', 200, {'Content-Type': 'application/json'}
@@ -58,7 +80,10 @@ class Base:
     def upload(self):
 
         sub_folder = request.form.get('subFolder')
-        path = request.form.get('path')
+        path = request.form.get('staging')
+
+        if path == '':
+            path = request.form.get('target')
         target = path
 
         if sub_folder != "":
@@ -69,11 +94,12 @@ class Base:
             filename = secure_filename(f.filename)
             f.save(os.path.join(target, filename))
 
-        return 'ok', 200, {'Content-Type': 'application/json'}
+    def preProcess(self):
+        pass
 
     def move(self):
-        target_dir = request.form.get('path')
-        source_dir = request.form.get('source') + '\\' + request.form.get('subFolder')
+        target_dir = request.form.get('target')
+        source_dir = request.form.get('staging') + '\\' + request.form.get('subFolder')
 
         file_names = os.listdir(source_dir)
 
@@ -82,14 +108,15 @@ class Base:
 
         os.rmdir(source_dir)
 
-        return 'ok', 200, {'Content-Type': 'application/json'}
+    def postProcess(self):
+        pass
 
     def clearCache(self):
         self.cache.delete(self.CONFIG)
         self.cache.delete(self.REPOSITORY)
         self.cache.delete(self.TM1SessionId)
         self.cache.delete(self.TM1SessionExpires)
-        self.cache.delete(self.EXPORT_OBJECTS)
+        self.cache.delete(self.CLASSES)
         return "OK"
 
     def getConfig(self):
@@ -97,7 +124,7 @@ class Base:
         if config is None:
             json_url = os.path.join(self.site_root, "settings", "config.json")
             config = json.load(open(json_url))
-            self.cache.set(self.CONFIG, config)
+            self.cache.set(self.CONFIG, config, 0)
         return config
 
     def getParam(self, param_name):
@@ -113,7 +140,7 @@ class Base:
         if repository is None:
             json_url = os.path.join(self.site_root, "settings", "repository.json")
             repository = json.load(open(json_url))
-            self.cache.set('knowledge_seed_repository', repository)
+            self.cache.set('knowledge_seed_repository', repository, 0)
         return repository
 
     def getMDX(self, key):
@@ -121,13 +148,13 @@ class Base:
         mdx = repository[key]
         return mdx
 
-    def getExportDescription(self, key):
-        exports = self.cache.get(self.EXPORT_OBJECTS)
-        if exports is None:
-            json_url = os.path.join(self.site_root, "settings", "exports.json")
-            exports = json.load(open(json_url))
-            self.cache.set(self.EXPORT_OBJECTS, exports)
-        return exports[key]
+    def getClassDescription(self, key):
+        classes = self.cache.get(self.CLASSES)
+        if classes is None:
+            json_url = os.path.join(self.site_root, "settings", "classes.json")
+            classes = json.load(open(json_url))
+            self.cache.set(self.CLASSES, classes, 0)
+        return classes[key]
 
     def addAuthenticatedCookie(self, response):
         cnf = self.getConfig()
@@ -137,6 +164,7 @@ class Base:
 
     def getTM1SessionId(self):
         if self.cache.get(self.TM1SessionId) is None or (
-                self.cache.get(self.TM1SessionExpires) is not None and datetime.datetime.now() >= self.cache.get(self.TM1SessionExpires)):
+                self.cache.get(self.TM1SessionExpires) is not None and datetime.datetime.now() >= self.cache.get(
+            self.TM1SessionExpires)):
             return None
         return self.cache.get(self.TM1SessionId)

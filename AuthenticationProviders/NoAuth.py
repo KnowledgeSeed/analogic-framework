@@ -1,5 +1,6 @@
 from AuthenticationProviders.Base import Base
 from flask import render_template
+from TM1py.Services import TM1Service
 
 
 class NoAuth(Base):
@@ -9,3 +10,9 @@ class NoAuth(Base):
     def index(self):
         cnf = self.getConfig()
         return render_template('local.html', cnf=cnf)
+
+    def getTM1Service(self):
+        cnf = self.getConfig()
+
+        return TM1Service(base_url=cnf['tm1ApiHost'], namespace=cnf['camNamespace'], user=cnf['noauthUser'], password=['noauthPwd'], ssl=False)
+

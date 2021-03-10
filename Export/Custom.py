@@ -7,12 +7,12 @@ from TM1py.Utils.Utils import build_pandas_dataframe_from_cellset
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
 
-class DavidCustomExport:
+class Custom:
 
     def __init__(self):
         pass
 
-    def doExport(self, request, tm1_service):
+    def davidExport1(self, request, tm1_service):
         mdx = 'SELECT NON EMPTY TM1SubsetToSet([Period], "Years") ON COLUMNS, NON EMPTY TM1SubsetToSet([Deal Email Report Measure], "Default") ON ROWS FROM [Deal Email Report] WHERE ([Deal].[Deal_0001])'
         data = tm1_service.cubes.cells.execute_mdx(mdx)
         df = build_pandas_dataframe_from_cellset(data, multiindex=False)

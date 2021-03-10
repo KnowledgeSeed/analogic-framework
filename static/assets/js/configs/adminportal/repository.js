@@ -3,6 +3,14 @@ app.repository = {
     upload1: {
         upload: (db) => {
             return {
+                staging: '\\\\USER-PC\\staging',
+                target: '\\\\USER-PC\\ddd'
+            };
+        }
+    },
+    upload12: {
+        upload: (db) => {
+            return {
                 path: '\\\\USER-PC\\staging'
             };
         },

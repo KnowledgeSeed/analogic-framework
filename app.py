@@ -1,6 +1,6 @@
 import os
 import AuthenticationProviders.AuthenticationProviderFactory
-from flask import Flask, request
+from flask import Flask
 from TM1py.Services import TM1Service
 from flask_caching import Cache
 from AuthenticationProviders.Base import Base

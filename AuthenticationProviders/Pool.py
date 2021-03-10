@@ -62,12 +62,11 @@ class Pool(Base):
         response = requests.request(url=url, method=method, data=mdx, headers=headers, cookies=cookies, verify=False)
 
         if authorization_required:
-            self.cache.set(self.TM1SessionId, response.cookies.get('TM1SessionId'))
+            self.cache.set(self.TM1SessionId, response.cookies.get('TM1SessionId'), 0)
             expires = datetime.datetime.now() + datetime.timedelta(minutes=cnf['sessionExpiresInMinutes'] - 1)
-            self.cache.set(self.TM1SessionExpires, expires)
+            self.cache.set(self.TM1SessionExpires, expires, 0)
 
         duration: Callable[[], str] = lambda: "%.5fs" % (time.time() - start_time)
-        print(duration())
 
         return response.text, response.status_code, {'Content-Type': 'application/json'}
 
