@@ -8,28 +8,7 @@ app.repository = {
             };
         }
     },
-    upload12: {
-        upload: (db) => {
-            return {
-                path: '\\\\USER-PC\\staging'
-            };
-        },
-        preProcessing: {
-            execute: (db) => {
 
-            }
-        },
-        move: (db) => {
-            return {
-                path: '\\\\USER-PC\\ddd'
-            };
-        },
-        postProcessing: {
-            execute: (db) => {
-
-            }
-        }
-    },
     sandyDevSimulationEmployeePopUpEmployeeGridCell3_4DropBox: {
         init: {
             execute: (db) => {

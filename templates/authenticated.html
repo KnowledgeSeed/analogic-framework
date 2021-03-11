@@ -38,5 +38,18 @@
                 {% include 'deprecated.html' %}
             {%  endif %}
         {% endif %}
+        <script type="text/javascript">
+            {% for k, v in request.args.items() %}
+                {% if (k != 'page') %}
+                    WidgetValue['{{ k }}'] = '{{ v }}';
+                {% endif %}
+            {% endfor %}
+
+            $( document ).ready(function() {
+                {% if request.args.get('page') != None %}
+                    Render.showPage('{{ request.args.get('page') }}');
+                {% endif %}
+            });
+        </script>
     </body>
 </html>

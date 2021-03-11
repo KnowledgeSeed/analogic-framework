@@ -1,10 +1,13 @@
 import os
 import shutil
 import datetime
+import pandas as pd
 
+pd.set_option('display.float_format', lambda x: '%.3f' % x)
 from flask import json, request, send_file
 from werkzeug.utils import secure_filename
 from Core.ClassLoader import ClassLoader
+from TM1py.Utils.Utils import build_pandas_dataframe_from_cellset
 
 
 class Base:
@@ -95,7 +98,24 @@ class Base:
             f.save(os.path.join(target, filename))
 
     def preProcess(self):
-        pass
+        tm1_service = self.getTM1Service()
+        mdx = "SELECT " \
+              "{[zSYS Analogic UI FileUpload Preprocessing Setting Measure].[ExtensionCheck], " \
+              "[zSYS Analogic UI FileUpload Preprocessing Setting Measure].[ForcedTargetName]," \
+              "[zSYS Analogic UI FileUpload Preprocessing Setting Measure].[FileFormat]," \
+              "[zSYS Analogic UI FileUpload Preprocessing Setting Measure].[HeaderCheck]," \
+              "[zSYS Analogic UI FileUpload Preprocessing Setting Measure].[FileColumnDelimiter]," \
+              "[zSYS Analogic UI FileUpload Preprocessing Setting Measure].[FileQuoteCharacter]," \
+              "[zSYS Analogic UI FileUpload Preprocessing Setting Measure].[FileNoneEmptyCheck]," \
+              "[zSYS Analogic UI FileUpload Preprocessing Setting Measure].[ExpectedColumnNr]," \
+              "[zSYS Analogic UI FileUpload Preprocessing Setting Measure].[CharacterSetCheck]," \
+              "[zSYS Analogic UI FileUpload Preprocessing Setting Measure].[Backup Before Override]}" \
+              " on ROWS, " \
+              "{[zSYS Analogic UI FileUpload Processing Template].[Template2]}" \
+              " on COLUMNS" \
+              "  FROM [zSYS Analogic UI FileUpload Preprocessing Setting]"
+        data = tm1_service.cubes.cells.execute_mdx(mdx)
+        df = build_pandas_dataframe_from_cellset(data, multiindex=False)
 
     def move(self):
         target_dir = request.form.get('target')
