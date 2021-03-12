@@ -2,6 +2,7 @@ import os
 import shutil
 import datetime
 import pandas as pd
+import chardet
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 from flask import json, request, send_file
@@ -70,8 +71,11 @@ class Base:
 
     def processFiles(self):
         try:
-            self.upload()
-            self.preProcess()
+            target = self.upload()
+            pre_process_message = ''
+            preprocess_template = request.form.get('preProcessTemplate', default='')
+            if preprocess_template != '':
+                pre_process_message = self.preProcess(preprocess_template, target)
             if request.form.get('staging') != '':
                 self.move()
             self.postProcess()
@@ -96,8 +100,9 @@ class Base:
         for f in request.files.values():
             filename = secure_filename(f.filename)
             f.save(os.path.join(target, filename))
+        return target
 
-    def preProcess(self):
+    def preProcess(self, preprocess_template, target):
         tm1_service = self.getTM1Service()
         mdx = "SELECT " \
               "{[zSYS Analogic UI FileUpload Preprocessing Setting Measure].[ExtensionCheck], " \
@@ -111,11 +116,31 @@ class Base:
               "[zSYS Analogic UI FileUpload Preprocessing Setting Measure].[CharacterSetCheck]," \
               "[zSYS Analogic UI FileUpload Preprocessing Setting Measure].[Backup Before Override]}" \
               " on ROWS, " \
-              "{[zSYS Analogic UI FileUpload Processing Template].[Template2]}" \
+              "{[zSYS Analogic UI FileUpload Processing Template].[" + preprocess_template + "]}" \
               " on COLUMNS" \
               "  FROM [zSYS Analogic UI FileUpload Preprocessing Setting]"
         data = tm1_service.cubes.cells.execute_mdx(mdx)
         df = build_pandas_dataframe_from_cellset(data, multiindex=False)
+        rules = df.set_index('zSYS Analogic UI FileUpload Preprocessing Setting Measure').to_dict()['Values']
+        return self.preProcessValidate(rules, target)
+
+    def preProcessValidate(self, rules, source_dir):
+        file_names = os.listdir(source_dir)
+        message = ''
+
+        for file_name in file_names:
+            blob = open(os.path.join(source_dir, file_name), 'rb').read()
+            message += self.checkCharacterSet(blob, rules['CharacterSetCheck'], file_name)
+
+        return message
+
+    def checkCharacterSet(self, blob, expected, file_name):
+        result = chardet.detect(blob)
+        if result['encoding'] is None:
+            return ''
+        if result['encoding'].lower() != expected.lower():
+            return 'Expected character set for ' + file_name + ' ' + expected + ', got: ' + result['encoding']
+        return ''
 
     def move(self):
         target_dir = request.form.get('target')

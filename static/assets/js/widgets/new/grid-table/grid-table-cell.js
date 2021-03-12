@@ -14,7 +14,7 @@ class GridTableCellWidget extends Widget {
             width: this.getRealValue('width', data, 30)
         };
 
-        let mainDivStyle = this.getGeneralStyles(data);
+        let mainDivStyle = this.getGeneralStyles(data, {}, 'cell-');
 
         v.cellBackgroundColor && mainDivStyle.push(`background-color:${v.cellBackgroundColor};`);
 

@@ -290,13 +290,10 @@ class Widget {
         throw new Error('Don\'t change the "name" property on this object!');
     }
 
-    getRealValue(key, data = {}, defaultVal = '') {
-//        if ('undefined' !== typeof this.value[key]) {
-//            return this.value[key];
-//        }
+    getRealValue(key, data = {}, defaultVal = '', dataPrefix = '') {
 
-        if ('undefined' !== typeof data[key]) {
-            return data[key];
+        if ('undefined' !== typeof data[dataPrefix + key]) {
+            return data[dataPrefix + key];
         }
 
         if ('undefined' !== typeof this.options[key]) {
@@ -306,14 +303,14 @@ class Widget {
         return defaultVal;
     }
 
-    getGeneralStyles(data = {}, defaults = {}) {
-        return [...this.getWidthAndHeight(data, defaults), ...this.getPaddings(data, defaults), ...this.getMargins(data, defaults)];
+    getGeneralStyles(data = {}, defaults = {}, dataPrefix = '') {
+        return [...this.getWidthAndHeight(data, defaults, dataPrefix), ...this.getPaddings(data, defaults, dataPrefix), ...this.getMargins(data, defaults, dataPrefix)];
     }
 
-    getWidthAndHeight(data = {}, defaults = {}){
+    getWidthAndHeight(data = {}, defaults = {}, dataPrefix = ''){
         const s = [],
-        height = this.getRealValue('height', data, defaults.height),
-        width = this.getRealValue('width', data, defaults.width);
+        height = this.getRealValue('height', data, defaults.height, dataPrefix),
+        width = this.getRealValue('width', data, defaults.width, dataPrefix);
 
         height && s.push('height:', height, isNaN(height) ? ';' : 'px;');
         width && s.push('width:', width, isNaN(width) ? ';' : 'px;');
@@ -321,12 +318,12 @@ class Widget {
         return s;
     }
 
-    getPaddings(data = {}, defaults = {}){
+    getPaddings(data = {}, defaults = {}, dataPrefix = ''){
         const s = [],
-        paddingBottom = this.getRealValue('paddingBottom', data, defaults.paddingBottom),
-        paddingLeft = this.getRealValue('paddingLeft', data, defaults.paddingLeft),
-        paddingRight = this.getRealValue('paddingRight', data, defaults.paddingRight),
-        paddingTop = this.getRealValue('paddingTop', data, defaults.paddingTop);
+        paddingBottom = this.getRealValue('paddingBottom', data, defaults.paddingBottom, dataPrefix),
+        paddingLeft = this.getRealValue('paddingLeft', data, defaults.paddingLeft, dataPrefix),
+        paddingRight = this.getRealValue('paddingRight', data, defaults.paddingRight, dataPrefix),
+        paddingTop = this.getRealValue('paddingTop', data, defaults.paddingTop, dataPrefix);
 
         paddingTop && s.push('padding-top:', paddingTop, paddingTop !== 'auto' && !isNaN(paddingTop) ? 'px;' : ';');
         paddingLeft && s.push('padding-left:', paddingLeft, paddingLeft !== 'auto' && !isNaN(paddingLeft) ? 'px;' : ';');
@@ -336,13 +333,13 @@ class Widget {
         return s;
     }
 
-    getMargins(data = {}, defaults = {}){
+    getMargins(data = {}, defaults = {}, dataPrefix = ''){
         const s = [],
-        marginBottom = this.getRealValue('marginBottom', data, defaults.marginBottom),
-        marginLeft = this.getRealValue('marginLeft', data, defaults.marginLeft),
-        marginRight = this.getRealValue('marginRight', data, defaults.marginRight),
-        marginTop = this.getRealValue('marginTop', data, defaults.marginTop),
-        height = this.getRealValue('height', data, defaults.height);
+        marginBottom = this.getRealValue('marginBottom', data, defaults.marginBottom, dataPrefix),
+        marginLeft = this.getRealValue('marginLeft', data, defaults.marginLeft, dataPrefix),
+        marginRight = this.getRealValue('marginRight', data, defaults.marginRight, dataPrefix),
+        marginTop = this.getRealValue('marginTop', data, defaults.marginTop, dataPrefix),
+        height = this.getRealValue('height', data, defaults.height, dataPrefix);
 
         marginTop && s.push('margin-top:', marginTop, marginTop !== 'auto' && !isNaN(marginTop) ? 'px;' : ';');
         marginLeft && s.push('margin-left:', marginLeft, marginLeft !== 'auto' && !isNaN(marginLeft) ? 'px;' : ';');

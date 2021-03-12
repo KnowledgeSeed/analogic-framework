@@ -4,7 +4,8 @@ app.repository = {
         upload: (db) => {
             return {
                 staging: '\\\\USER-PC\\staging',
-                target: '\\\\USER-PC\\ddd'
+                target: '\\\\USER-PC\\ddd',
+                preProcessTemplate: 'Template1'
             };
         }
     },

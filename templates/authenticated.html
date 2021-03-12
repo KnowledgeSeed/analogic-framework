@@ -45,11 +45,10 @@
                 {% endif %}
             {% endfor %}
 
-            $( document ).ready(function() {
-                {% if request.args.get('page') != None %}
-                    Render.showPage('{{ request.args.get('page') }}');
-                {% endif %}
-            });
+            WidgetValue['redirect'] = null;
+            {% if request.args.get('page') != None %}
+                WidgetValue['redirect'] = '{{ request.args.get('page') }}';
+            {% endif %}
         </script>
     </body>
 </html>

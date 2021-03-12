@@ -26,7 +26,9 @@ let EventMap, Repository, WidgetConfig;
 
         initEvents();
 
-        Render.showPage(app.MainPage);
+        Render.showPage(WidgetValue['redirect'] !== null ? WidgetValue['redirect'] : app.MainPage);
+
+        WidgetValue['redirect'] = null;
     }
 
     function initEvents() {
