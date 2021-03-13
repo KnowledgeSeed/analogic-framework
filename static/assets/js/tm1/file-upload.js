@@ -51,7 +51,7 @@ FileUpload.uploadFile = (w, eventMapId, context) => {
             v.form = new FormData();
             app.fn.showPopup(v.uploadSuccessMessage);
         } else {
-            app.fn.showPopup(d);
+            app.fn.showPopup(d, 600);
         }
     }).fail(() => {
         app.fn.showPopup('Upload failed');

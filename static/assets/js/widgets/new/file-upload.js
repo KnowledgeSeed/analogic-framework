@@ -109,6 +109,10 @@ class FileUploadWidget extends Widget {
                 size += files[i].size;
             }
 
+            if (size === 0){
+                return;
+            }
+
             if (size / 1048576 <= m) {
                 v.fileNames = [];
 

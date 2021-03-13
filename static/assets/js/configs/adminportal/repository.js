@@ -5,7 +5,7 @@ app.repository = {
             return {
                 staging: '\\\\USER-PC\\staging',
                 target: '\\\\USER-PC\\ddd',
-                preProcessTemplate: 'Template1'
+                preProcessTemplate: v('preprocess.choose.value') === false ? 'Template1' : v('preprocess.choose.value')
             };
         }
     },

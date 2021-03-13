@@ -6,6 +6,14 @@ app.widgetConfig = {
                 type: PageWidget,
                 widgets: [
                     {
+                        id: 'preprocess',
+                        type: DropBoxWidget,
+                        title: 'Preprocess templates',
+                        items: [{name: 'Template1'}, {name: 'Template2'}, {name: 'Template3'},{name: 'Template4'}],
+                        skin: 'analogicdropbox',
+                        width: '25%'
+                    },
+                    {
                         id: 'upload1',
                         type: FileUploadWidget,
                         marginTop: 50,
@@ -17,6 +25,7 @@ app.widgetConfig = {
                         maxFileSize: 5,
                         progressVisible: true
                     },
+
 /*                    {
                         id: 'sandyDevSimulationEmployeePopUp',
                         type: ContainerWidget,

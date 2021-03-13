@@ -204,7 +204,7 @@ app.fn.goToUrlNewTab = url => {
     win.focus();
 };
 
-app.fn.showPopup = (c) => app.popup.show(c);
+app.fn.showPopup = (c, w = false) => app.popup.show(c, w);
 
 app.fn.changeSystemValue = arg => WidgetValue[arg[0]] = v(arg[1]) === 1;
 
