@@ -1,0 +1,19 @@
+upload_preprocess:
+  mdx: >
+    SELECT 
+    {[zSYS Analogic UI FileUpload Preprocessing Setting Measure].[ExtensionCheck],  
+    [zSYS Analogic UI FileUpload Preprocessing Setting Measure].[ForcedTargetName],
+    [zSYS Analogic UI FileUpload Preprocessing Setting Measure].[FileFormat],
+    [zSYS Analogic UI FileUpload Preprocessing Setting Measure].[HeaderCheck],
+    [zSYS Analogic UI FileUpload Preprocessing Setting Measure].[FileColumnDelimiter],
+    [zSYS Analogic UI FileUpload Preprocessing Setting Measure].[FileQuoteCharacter],
+    [zSYS Analogic UI FileUpload Preprocessing Setting Measure].[FileNoneEmptyCheck],
+    [zSYS Analogic UI FileUpload Preprocessing Setting Measure].[ExpectedColumnNr],
+    [zSYS Analogic UI FileUpload Preprocessing Setting Measure].[CharacterSetCheck],
+    [zSYS Analogic UI FileUpload Preprocessing Setting Measure].[Backup Before Override]}
+    on ROWS,
+    {[zSYS Analogic UI FileUpload Processing Template].[$preprocess_template]}
+    on COLUMNS
+    FROM [zSYS Analogic UI FileUpload Preprocessing Setting]
+  index: zSYS Analogic UI FileUpload Preprocessing Setting Measure
+  values: Values

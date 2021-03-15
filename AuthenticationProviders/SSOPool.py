@@ -11,7 +11,7 @@ class SSOPool(Pool):
         super().__init__(cache, site_root)
 
     def index(self):
-        cnf = self.getConfig()
+        cnf = self.setting.getConfig()
         sso_token = session.get('sso_token')
         decoded = self.decodeToken(sso_token)
 
@@ -22,7 +22,7 @@ class SSOPool(Pool):
         return render_template('index.html', authenticated=authenticated, cnf=cnf)
 
     def authsso(self):
-        cnf = self.getConfig()
+        cnf = self.setting.getConfig()
         sso_token = request.args.get('token')
 
         decoded = self.decodeToken(sso_token)
@@ -37,16 +37,13 @@ class SSOPool(Pool):
 
         session['sso_token'] = sso_token
 
-        # proxy workaround:
-        # resp = make_response(redirect(url_for('index')))
-        resp = make_response(redirect(self.getBaseUrl()))
-        # end proxy workaround
+        resp = make_response(redirect(self.setting.getBaseUrl()))
 
         return self.addAuthenticatedCookie(resp)
 
     def hasPoolUserAccess(self, user_name, token):
         has_access = True
-        cnf = self.getConfig()
+        cnf = self.setting.getConfig()
         sso_cnf = cnf['sso']
 
         headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
@@ -93,7 +90,7 @@ class SSOPool(Pool):
         if sso_token is None:
             return {'msg': 'sso token is null', 'token': ''}
 
-        cnf = self.getConfig()
+        cnf = self.setting.getConfig()
         secret = cnf['sso']['secret']
         msg = ''
         decoded_token = ''

@@ -1,6 +1,6 @@
 import os
 import AuthenticationProviders.AuthenticationProviderFactory
-from flask import Flask, request
+from flask import Flask
 from TM1py.Services import TM1Service
 from flask_caching import Cache
 from AuthenticationProviders.Base import Base
@@ -8,7 +8,7 @@ from AuthenticationProviders.Base import Base
 app = Flask(__name__)
 cache = Cache(app, config={'CACHE_TYPE': 'redis', 'CACHE_REDIS_URL': 'redis://localhost:6379/0'})
 site_root = os.path.realpath(os.path.dirname(__file__))
-config = Base(cache, site_root).getConfig()
+config = Base(cache, site_root).setting.getConfig()
 provider = AuthenticationProviders.AuthenticationProviderFactory.getProvider(config, cache, site_root)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
@@ -71,4 +71,4 @@ def pivottest():
 
 @app.route('/clearcache')
 def clearCache():
-    return provider.clearCache()
+    return provider.setting.clearCache()

@@ -7,19 +7,19 @@ class LoginPool(Pool):
         super().__init__(cache, site_root)
 
     def login(self):
-        cnf = self.getConfig()
+        cnf = self.setting.getConfig()
         if request.method == 'POST':
             if request.form['username'] == 'test' and request.form['password'] == 'test':
                 session['username'] = request.form['username']
-                resp = make_response(redirect(self.getBaseUrl()))
+                resp = make_response(redirect(self.setting.getBaseUrl()))
                 return self.addAuthenticatedCookie(resp)
         return render_template('login.html', cnf=cnf)
 
     def index(self):
-        cnf = self.getConfig()
+        cnf = self.setting.getConfig()
         if 'username' in session:
             return render_template('index.html', authenticated=True, cnf=cnf)
-        return redirect(self.getBaseUrl('login'))
+        return redirect(self.setting.getBaseUrl('login'))
 
     def checkAppAuthenticated(self):
         if 'username' in session:
@@ -27,7 +27,7 @@ class LoginPool(Pool):
         return False
 
     def getAuthenticationResponse(self):
-        return redirect(self.getBaseUrl('login'))
+        return redirect(self.setting.getBaseUrl('login'))
 
 
 

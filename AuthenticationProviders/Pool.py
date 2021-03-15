@@ -22,19 +22,18 @@ class Pool(Base):
 
     def pool(self, sub_path):
         #TODO multi pool user
-        start_time = time.time()
 
         if self.checkAppAuthenticated() is False:
             return self.getAuthenticationResponse()
 
-        cnf = self.getConfig()
+        cnf = self.setting.getConfig()
         pool_user = cnf['pool']['users'][0]
         target_url = cnf['pool']['target']
 
         mdx = request.data
         if request.args.get('server') is not None:
             body = json.loads(request.data)
-            mdx = self.getMDX(body['key'])
+            mdx = self.setting.getMDX(body['key'])
             for k in body:
                 mdx = mdx.replace('$' + k, body[k])
 
@@ -50,7 +49,7 @@ class Pool(Base):
                                    'Accept-Encoding': 'gzip, deflate, br'}
         cookies: dict[str, str] = {}
 
-        tm1_session_id = self.getTM1SessionId()
+        tm1_session_id = self.setting.getTM1SessionId()
 
         authorization_required = tm1_session_id is None
 
@@ -62,18 +61,14 @@ class Pool(Base):
         response = requests.request(url=url, method=method, data=mdx, headers=headers, cookies=cookies, verify=False)
 
         if authorization_required:
-            self.cache.set(self.TM1SessionId, response.cookies.get('TM1SessionId'), 0)
-            expires = datetime.datetime.now() + datetime.timedelta(minutes=cnf['sessionExpiresInMinutes'] - 1)
-            self.cache.set(self.TM1SessionExpires, expires, 0)
-
-        duration: Callable[[], str] = lambda: "%.5fs" % (time.time() - start_time)
+            self.setting.setTM1SessionId(response.cookies.get('TM1SessionId'))
 
         return response.text, response.status_code, {'Content-Type': 'application/json'}
 
     def getTM1Service(self):
-        cnf = self.getConfig()
+        cnf = self.setting.getConfig()
 
-        tm1_session_id = self.getTM1SessionId()
+        tm1_session_id = self.setting.getTM1SessionId()
 
         authorization_required = tm1_session_id is None
 
