@@ -138,7 +138,7 @@ class ComboChartWidget extends Widget {
         const canvas = $('#' + this.options.id + 'Canvas'), ctx = canvas[0].getContext('2d'), c = new Chart(ctx, ComboChartWidget.getChartConfig(this.value));
 
         canvas.parent().next().html(c.generateLegend()).on('click', '.ks-legend-item', e => {
-            let legend = $(e.target).closest('.ks-legend-item'), id = legend.toggleClas('off').data('id');
+            let legend = $(e.target).closest('.ks-legend-item'), id = legend.toggleClass('off').data('id');
 
             c.getDatasetMeta(id).hidden = !c.getDatasetMeta(id).hidden;
 
@@ -408,7 +408,7 @@ class ComboChartWidget extends Widget {
                 legendCallback: chart => {
                     if (v.legendGroupByStack) {
                         const groupBy = (xs, key) => {
-                            xs.reduce((rv, x) => {
+                            return xs.reduce((rv, x) => {
                                 (rv[x[key]] = rv[x[key]] || []).push(x);
                                 return rv;
                             }, {});

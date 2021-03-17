@@ -191,9 +191,12 @@ QB.writeData = eventMapId => {
 
     if (z.length > 2 && z[1] !== 'row') { //gridtable
         r = context[z[0]];
+
         r.row && delete r.row;
         r.column && delete r.column;
-        r = {...r, ...{row: z[1], column: z[2]}, ...context[w]};
+
+        context[z[0]] = {...r, ...{row: z[1], column: z[2]}, ...context[w]};
+
         w = z[0];
         isGridTable = true;
     }
@@ -247,7 +250,7 @@ QB.writeData = eventMapId => {
         g.execute(context);
         El.body.triggerHandler(eventMapId + '.finished');
     } else {
-        let c = r ? r.cellsetId ? r.cellsetId : '' : '', body = g.body(context), url = g.url({...r, ...{cellsetId: c}});
+        let c = r.cellsetId || '', body = g.body(context), url = g.url({...r, ...{cellsetId: c}});
 
         if (g.server) {
             let mm = QB.getServerSideUrlAndBody(url, body, w, e);
