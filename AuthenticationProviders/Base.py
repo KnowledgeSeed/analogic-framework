@@ -29,10 +29,23 @@ class Base:
         if export_description is None:
             return self.getNotFoundResponse()
 
-        return send_file(ClassLoader().call(export_description, request, self.getTM1Service()),
+        return send_file(ClassLoader().call(export_description, request, self.getTM1Service(), self.setting),
                          attachment_filename=file_name,
                          as_attachment=True,
                          cache_timeout=0)
+
+    def do(self):
+        if self.checkAppAuthenticated() is False:
+            return self.getAuthenticationResponse()
+
+        key = request.args.get('key')
+
+        if key is None:
+            return self.getNotFoundResponse()
+
+        description = self.getClassDescription(key)
+
+        return ClassLoader().call(description, request, self.getTM1Service(), self.setting)
 
     def login(self):
         pass
@@ -63,15 +76,25 @@ class Base:
 
     def processFiles(self):
         try:
-            target = self.upload_manager.upload()
+
+            target = request.form.get('target')
+            staging = request.form.get('staging')
+            sub_folder = request.form.get('subFolder')
             pre_process_message = ''
             result = 'ok'
+
+            upload_path = self.upload_manager.upload(target, staging, sub_folder, request.files)
+
             preprocess_template = request.form.get('preProcessTemplate', default='')
+
             if preprocess_template != '':
-                pre_process_message = self.upload_manager.preProcess(self.getTM1Service(), preprocess_template, target)
-            if request.form.get('staging') != '':
-                self.upload_manager.move()
+                pre_process_message = self.upload_manager.preProcess(self.getTM1Service(), preprocess_template, upload_path)
+
+            if staging != '':
+                self.upload_manager.move(target, staging, sub_folder)
+
             self.upload_manager.postProcess()
+
             if pre_process_message != '':
                 result = 'ERROR!<br/><br/>' + pre_process_message
             return result, 200, {'Content-Type': 'application/json'}

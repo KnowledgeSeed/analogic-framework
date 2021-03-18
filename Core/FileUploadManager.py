@@ -6,7 +6,6 @@ import magic
 import pathlib
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
-from flask import request
 from werkzeug.utils import secure_filename
 from TM1py.Utils.Utils import build_pandas_dataframe_from_cellset
 
@@ -16,48 +15,60 @@ class FileUploadManager:
     def __init__(self, setting):
         self.setting = setting
 
-    def upload(self):
+    def upload(self, target, staging, sub_folder, files):
 
-        sub_folder = request.form.get('subFolder')
-        path = request.form.get('staging')
-
-        if path == '':
-            path = request.form.get('target')
-        target = path
+        if staging == '':
+            path = staging
+        else:
+            path = target
 
         if sub_folder != "":
-            target = path + '\\' + sub_folder
-            os.mkdir(target)
+            path = os.path.join(path, sub_folder)
+            os.mkdir(path)
 
-        for f in request.files.values():
+        for f in files.values():
             filename = secure_filename(f.filename)
-            f.save(os.path.join(target, filename))
-        return target
+            f.save(os.path.join(path, filename))
+
+        return path
 
     def preProcess(self, tm1_service, preprocess_template, target):
+
         framework_mdx = self.setting.getFrameworkMdx('upload_preprocess')
         query = framework_mdx['mdx'].replace('$preprocess_template', preprocess_template)
+
         data = tm1_service.cubes.cells.execute_mdx(query)
+
         df = build_pandas_dataframe_from_cellset(data, multiindex=False)
         rules = df.set_index(framework_mdx['index']).to_dict()[framework_mdx['values']]
+
         return self.preProcessValidate(rules, target)
 
     def preProcessValidate(self, rules, source_dir):
         file_names = os.listdir(source_dir)
         message = ''
+        wrong_files = []
 
         for file_name in file_names:
-            blob = open(os.path.join(source_dir, file_name), 'rb').read()
+            file_path = os.path.join(source_dir, file_name)
+            blob = open(file_path, 'rb').read()
+            m = ''
             # if rules['CharacterSetCheck'] != '':
-            #    message += self.checkCharacterSet(blob, rules['CharacterSetCheck'], file_name)
-            # message += self.checkFileFormat(os.path.join(source_dir, file_name), rules['FileFormat'], file_name)
+            #    m += self.checkCharacterSet(blob, rules['CharacterSetCheck'], file_name)
+            # m += self.checkFileFormat(os.path.join(source_dir, file_name), rules['FileFormat'], file_name)
             if rules['ExtensionCheck'] == 'yes':
-                message += self.checkExtension(rules['FileFormat'], file_name)
+                m += self.checkExtension(rules['FileFormat'], file_name)
             if rules['FileNoneEmptyCheck'] == 'yes':
-                message += self.checkNoneEmpty(os.path.join(source_dir, file_name), file_name)
-            message += self.checkContent(os.path.join(source_dir, file_name), rules['ExpectedColumnNr'],
-                                         rules['FileColumnDelimiter'], rules['FileQuoteCharacter'],
-                                         rules['HeaderCheck'], file_name)
+                m += self.checkNoneEmpty(file_path, file_name)
+            m += self.checkContent(file_path, rules['ExpectedColumnNr'],
+                                   rules['FileColumnDelimiter'], rules['FileQuoteCharacter'],
+                                   rules['HeaderCheck'], file_name)
+            if m != '':
+                wrong_files.append(file_name)
+            message += m
+
+        for file_name in wrong_files:
+            os.remove(os.path.join(source_dir, file_name))
 
         return message
 
@@ -79,10 +90,10 @@ class FileUploadManager:
         return 'file: ' + file_name + ' is empty<br/>'
 
     def checkContent(self, path, expected_col, delimiter, quote, header, file_name):
-        count_quote = 0
-        count_delimiter = 0
-        first_line = ''
+
         result = ''
+        if delimiter.isnumeric():
+            delimiter = chr(int(delimiter))
 
         with open(path, "r") as f:
             count_delimiter = sum(line.count(delimiter) for line in f)
@@ -110,16 +121,19 @@ class FileUploadManager:
         return result
 
     def getErrorMessage(self, expected, got, file_name, sub_message):
+
         if expected is None or got is None:
             # Todo ilyenkor mit kell tenni?
             return ''
         if expected.lower() != got.lower():
-            return 'Expected ' + sub_message + ' for ' + file_name + ' is ' + expected + ' but got: ' + got + '<br/><br/>'
+            return 'Expected ' + sub_message + ' for ' + file_name + ' is ' + expected + ' but got: ' \
+                   + got + '<br/><br/>'
         return ''
 
-    def move(self):
-        target_dir = request.form.get('target')
-        source_dir = request.form.get('staging') + '\\' + request.form.get('subFolder')
+    def move(self, target, staging, sub_folder):
+
+        target_dir = target
+        source_dir = os.path.join(staging, sub_folder)
 
         file_names = os.listdir(source_dir)
 

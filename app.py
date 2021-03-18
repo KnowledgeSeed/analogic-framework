@@ -48,6 +48,11 @@ def export():
     return provider.export()
 
 
+@app.route('/do', methods=['GET', 'POST'])
+def do():
+    return provider.do()
+
+
 @app.route('/pivottest')
 def pivottest():
     address = "https://hq.coresystems.hu:5125/analogicadminapi"

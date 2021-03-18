@@ -64,7 +64,7 @@ Auth.getHeader = (contentType = 'application/json; charset=utf-8', accept = 'app
     headers['Access-Control-Allow-Origin'] = '*';
 
     if ('NoAuth' === app.authenticationMode) {
-        headers['Authorization'] = "CAMNamespace " + btoa(app.noauthUser + ":" + app.noauthPwd + ":" + app.camNamespace);
+        headers['Authorization'] = app.camNamespace;
     }
 
     if ('Cam' === app.authenticationMode && $.cookie('camPassport') !== '0') {

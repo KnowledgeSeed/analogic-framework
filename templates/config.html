@@ -8,9 +8,7 @@
         app.useShout = {% if cnf.useShout %}true{% else %}false{% endif %};
         app.host = '{{ cnf.host }}';
         app.authenticationMode = '{{ cnf.authenticationMode }}';
-        app.camNamespace = '{{ cnf.camNamespace }}';
-        app.noauthUser = '{{ cnf.noauthUser }}';
-        app.noauthPwd = '{{ cnf.noauthPwd }}';
+        app.camNamespace = '{{ cnf.noAuthLogin }}';
         app.sessionExpiresInMinutes = {{ cnf.sessionExpiresInMinutes }};
         app.url.authenticationBridge = "{{ cnf.authenticationBridge|safe }}";
         app.url.apiLogout = '{{ cnf.apiLogout }}';

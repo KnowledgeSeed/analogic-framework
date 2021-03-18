@@ -1,8 +1,5 @@
-import time
 import requests
-import datetime
 from flask import request, json
-from typing import Callable
 from AuthenticationProviders.Base import Base
 from TM1py.Services import TM1Service
 
@@ -26,9 +23,7 @@ class Pool(Base):
         if self.checkAppAuthenticated() is False:
             return self.getAuthenticationResponse()
 
-        cnf = self.setting.getConfig()
-        pool_user = cnf['pool']['users'][0]
-        target_url = cnf['pool']['target']
+        target_url = self.setting.getPoolTargetUrl()
 
         mdx = request.data
         if request.args.get('server') is not None:
@@ -54,7 +49,7 @@ class Pool(Base):
         authorization_required = tm1_session_id is None
 
         if authorization_required:
-            headers['Authorization'] = pool_user
+            headers['Authorization'] = self.setting.getPoolCamNamespace()
         else:
             cookies["TM1SessionId"] = tm1_session_id
 
@@ -66,15 +61,16 @@ class Pool(Base):
         return response.text, response.status_code, {'Content-Type': 'application/json'}
 
     def getTM1Service(self):
-        cnf = self.setting.getConfig()
 
         tm1_session_id = self.setting.getTM1SessionId()
 
         authorization_required = tm1_session_id is None
 
         if authorization_required:
-            print('Not implemented')
-            #TODO master user password secure módon tárolásának kitalálása után implementálható
-            #TM1Service(base_url=address, namespace=NAMESPACE, user=USER, password=PWD, ssl=SSL)
+            return TM1Service(base_url=self.setting.getPoolTargetUrl(),
+                              namespace=self.setting.getAppCamNamespace(),
+                              user=self.setting.getPoolUser(),
+                              password=self.setting.getPassword(),
+                              ssl=False)
         else:
-            return TM1Service(base_url=cnf['pool']['target'], session_id=tm1_session_id, ssl=False)
+            return TM1Service(base_url=self.setting.getPoolTargetUrl(), session_id=tm1_session_id, ssl=False)

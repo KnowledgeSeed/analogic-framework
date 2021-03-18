@@ -1,7 +1,12 @@
 {
   "davidCustom1" : {
-    "namespace": "Export.Custom",
-    "class": "Custom",
+    "namespace": "Custom.Export",
+    "class": "Export",
     "method": "davidExport1"
+  },
+  "cool" : {
+    "namespace": "Custom.BusinessLogic",
+    "class": "BusinessLogic",
+    "method": "doSomethingCool"
   }
 }

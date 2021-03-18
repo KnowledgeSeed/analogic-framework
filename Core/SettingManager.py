@@ -1,6 +1,8 @@
 import datetime
 import yaml
 import os
+import keyring
+import base64
 from flask import json
 
 
@@ -26,7 +28,12 @@ class SettingManager:
         return "OK"
 
     def getConfig(self):
-        return self.getJsonSetting(self.CONFIG, 'config')
+        cnf = self.getJsonSetting(self.CONFIG, 'config')
+        if cnf['authenticationMode'] == 'NoAuth':
+            cnf['noAuthLogin'] = self.getPoolCamNamespace()
+        else:
+            cnf['noAuthLogin'] = ''
+        return cnf
 
     def getParam(self, param_name):
         cnf = self.getConfig()
@@ -36,8 +43,11 @@ class SettingManager:
         cnf = self.getConfig()
         return cnf['host'] + cnf['subpath'] + '/' + route
 
-    def getRepository(self):
+    def getRepositoryOld(self):
         return self.getJsonSetting(self.REPOSITORY, 'repository')
+
+    def getRepository(self):
+        return self.getYamlSetting(self.REPOSITORY, 'repository')
 
     def getMDX(self, key):
         repository = self.getRepository()
@@ -77,6 +87,27 @@ class SettingManager:
     def getTM1SessionId(self):
         if self.cache.get(self.TM1SessionId) is None or (
                 self.cache.get(self.TM1SessionExpires) is not None and datetime.datetime.now() >= self.cache.get(
-            self.TM1SessionExpires)):
+                self.TM1SessionExpires)):
             return None
         return self.cache.get(self.TM1SessionId)
+
+    def getPassword(self):
+        return keyring.get_password(self.getAppCamNamespace(), self.getPoolUser())
+
+    def getPoolUser(self):
+        cnf = self.getConfig()
+        return cnf['pool']['users'][0]
+
+    def getPoolTargetUrl(self):
+        cnf = self.getConfig()
+        return cnf['pool']['target']
+
+    def getAppCamNamespace(self):
+        cnf = self.getConfig()
+        return cnf['camNamespace']
+
+    def getPoolCamNamespace(self):
+        password = self.getPassword()
+        user = self.getPoolUser()
+        namespace = self.getAppCamNamespace()
+        return 'CAMNamespace ' + base64.b64decode(user + ":" + password + ":" + namespace)

@@ -14,5 +14,10 @@ class NoAuth(Base):
     def getTM1Service(self):
         cnf = self.setting.getConfig()
 
-        return TM1Service(base_url=cnf['tm1ApiHost'], namespace=cnf['camNamespace'], user=cnf['noauthUser'], password=['noauthPwd'], ssl=False)
+        return TM1Service(
+            base_url=cnf['tm1ApiHost'],
+            namespace=self.setting.getAppCamNamespace(),
+            user=self.setting.getPoolUser(),
+            password=self.setting.getPassword(),
+            ssl=False)
 
