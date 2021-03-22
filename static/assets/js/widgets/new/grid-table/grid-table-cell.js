@@ -47,6 +47,7 @@ class GridTableCellWidget extends Widget {
         let widgetOptions, widgets = [];
 
         for (widgetOptions of o.widgets || []) {
+            childrenData['originalId'] = widgetOptions['id'];
             widgets.push(new widgetOptions.type({...widgetOptions, ...childrenData}));
         }
 

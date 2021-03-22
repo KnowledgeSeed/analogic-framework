@@ -39,7 +39,7 @@ class ToggleWidget extends Widget {
         }
 
         return `
-<div class="ks-toggle ${mainDivClass.join(' ')} ${v.groupId ? `ks-toggle-${v.groupId}` : ''} ${v.isGridTableHierarchyExpander ? 'ks-toggle-expander' : ''}" style="${mainDivStyle.join('')}" data-ordinal="${d.ordinal}" data-value="${v.value}" data-id="${o.id}" data-action="launch">
+<div class="ks-toggle ${mainDivClass.join(' ')} ${v.groupId ? `ks-toggle-${v.groupId}` : ''} ${v.isGridTableHierarchyExpander ? 'ks-toggle-expander' : ''}" style="${mainDivStyle.join('')}" data-ordinal="${d.ordinal}" data-value="${v.value}" data-id="${o.id}" data-action="switch">
     <div class="ks-toggle-inner ${v.editable === false ? 'readonly' : ''}">
         <div class="ks-toggle-icon ks-toggle-icon-on">${v.icon ? `<span class="${v.icon}"></span>` : ''}</div>
         <div class="ks-toggle-icon ks-toggle-icon-off">${v.iconOff ? `<span class="${v.iconOff}"></span>` : ''}</div>
@@ -72,7 +72,7 @@ class ToggleWidget extends Widget {
 
                     WidgetValue[o.groupId] = {ordinal: s.data('ordinal'), value: s.find('.ks-toggle-label-on').html()};
 
-                    Widget.executeEventMapActions('launch.' + o.groupId, {}, {});
+                    Widget.executeEventMapActions('switch.' + o.groupId, {}, {});
                 }
             } else {
                 s.toggleClass('ks-on', isActive).trigger('change', [isActive]);

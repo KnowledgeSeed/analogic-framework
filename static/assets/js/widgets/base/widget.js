@@ -90,7 +90,20 @@ class Widget {
             gs.push('display:none;');
         }
 
-        return `<section ${o.ordinal ? `data-ordinal="${o.ordinal}"` : ''} ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" style="${gs.join('')}" id="${o.id ? o.id : Utils.getRandomId()}">${this.getHtml(widgetHtmls, data, withState)}</section>`;
+        let originalId = false, write = 'on';
+        if(data && data.originalId){
+            originalId = data.originalId;
+        }
+
+        if(o.write){
+            write = o.write;
+        }
+
+        if(data && data.write){
+            write = data.write;
+        }
+
+        return `<section ${write === 'off' ? `data-write="off"` : ''} ${originalId !== false ? `data-originalId="${o.originalId}"` : ''} ${o.ordinal ? `data-ordinal="${o.ordinal}"` : ''} ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" style="${gs.join('')}" id="${o.id ? o.id : Utils.getRandomId()}">${this.getHtml(widgetHtmls, data, withState)}</section>`;
 
     }
 
@@ -214,7 +227,7 @@ class Widget {
     }
 
     static doHandleSystemEvent(element, event, updateValue = true) {
-        let a = element.data('action'), i = element.data('id');
+        let a = element.data('action'), i = element.data('id'), section = element.closest('section');
 
         const eventMapId = a + '.' + i;
 
@@ -224,28 +237,37 @@ class Widget {
             WidgetValue[i][a] = element.data();
         }
 
-        Widget.executeEventMapActions(eventMapId, event, element);
+        const write = section.data('write') !== 'off';
+
+        Widget.executeEventMapActions(eventMapId, event, element, write);
     }
 
     static doHandleGridTableSystemEvent(element, event, updateValue = true) {
-        let a = element.data('action'), i = element.data('id'), idParts = i.split('_');
+        let a = element.data('action'), i = element.data('id'), idParts = i.split('_'), section = element.closest('section');
 
-        const eventMapId = a + '.' + idParts[0] + '_row_' + idParts[2];
+        const eventMapId = a + '.' + idParts[0] + '_row_' + idParts[2], columnEventMapId = a + '.' + idParts[0] + '_' + idParts[1] + '_' + idParts[2] + '_' + section.data('originalid');
 
         El.body.triggerHandler(eventMapId + '.started');
+        El.body.triggerHandler(columnEventMapId + '.started');
 
         if (WidgetValue[i] && updateValue) {
             WidgetValue[i][a] = element.data();
         }
 
-        Widget.executeEventMapActions(eventMapId, event, element);
+        const write = section.data('write') !== 'off';
+
+        Widget.executeEventMapActions(eventMapId, event, element, write);
+        Widget.executeEventMapActions(columnEventMapId, event, element, write);
     }
 
-    static executeEventMapActions(eventMapId, event, element, ...args) {
+    static executeEventMapActions(eventMapId, event, element, write = true, ...args) {
         L(eventMapId, event, element, args);
 
         let actions = EventMap[eventMapId], a;
-        let writeSuccess = QB.writeData(eventMapId);
+        let writeSuccess = true;
+        if(write === true) {
+            writeSuccess = QB.writeData(eventMapId)
+        }
 
         if (writeSuccess && actions) {
             for (a of actions) {

@@ -25,7 +25,7 @@ app.repository = {
         }
     },
     sandyDevSimulationEmployeePopUpEmployeeGridCell55_4Textbox: {
-        init: {
+        launch: {
             execute: (db) => {
                 return {value: 'test'};
             }
@@ -175,8 +175,22 @@ WHERE
             }
         ],
     },
-
+    button1: {
+      launch: {
+          execute: (db, row, col) => {
+              console.log(row), console.log(col);
+              alert('button1');
+          }
+      }
+    },
     testGridTable: {
+        launch: {
+          execute: (db, row, col) => {
+              console.log(row);console.log(col);
+              console.log(Utils.getGridTableCurrentCell('testGridTable'));
+              alert('grid');
+          }
+        },
         init: {
             execute: (db) => {
                 return [

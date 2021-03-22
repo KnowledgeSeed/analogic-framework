@@ -151,7 +151,7 @@ QB.executeMDXs = (repositoryId, path) => {
 QB.executeMDX = (repositoryId, path) => {
     let r = Repository[repositoryId], p = r[path];
 
-    if ([path].execute) {
+    if (p.execute) {
         return QB.loadFromWidgetValue(p);
     }
 
@@ -197,7 +197,7 @@ QB.writeData = eventMapId => {
 
         context[z[0]] = {...r, ...{row: z[1], column: z[2]}, ...context[w]};
 
-        w = z[0];
+        w = z.length > 3 ? z[3] : z[0];
         isGridTable = true;
     }
 
@@ -208,6 +208,11 @@ QB.writeData = eventMapId => {
 
         return true;
     }
+
+    if(isGridTable && z.length > 3){
+        r.cellsetId = Repository[z[0]].cellsetId;
+    }
+
 
     if (g.validation) {
         let r = g.validation(WidgetValue);
@@ -247,10 +252,10 @@ QB.writeData = eventMapId => {
     }
 
     if (g.execute) {
-        g.execute(context);
+        isGridTable ? g.execute(context, z[1], z[2]) : g.execute(context);
         El.body.triggerHandler(eventMapId + '.finished');
     } else {
-        let c = r.cellsetId || '', body = g.body(context), url = g.url({...r, ...{cellsetId: c}});
+        let c = r.cellsetId || '', body = isGridTable ? g.body(context, z[1], z[2]) : g.body(context), url = isGridTable ?  g.url({...r, ...{cellsetId: c}}, z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
 
         if (g.server) {
             let mm = QB.getServerSideUrlAndBody(url, body, w, e);

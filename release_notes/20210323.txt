@@ -1,0 +1,10 @@
+ToggleWidget launch -> switch
+DatePickerWidget choose -> pick
+
+GridTable event
+
+widgetWriteEvent.gridTableID_currentRow_currentCol_widgetId -> repo widgetId : { widgetWriteId: { execute: (db, row, col) => {} }}
+
+widget parameter write: 'off' -> nem keres a repóban íráskor.
+
+Upload

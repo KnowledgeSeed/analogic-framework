@@ -103,7 +103,7 @@ class DatePickerWidget extends Widget {
 
             if (pickerHolder.is(':visible')) {
                 let element = $('<div>');
-                element.data({action: 'choose', id: id, value: $('#' + id + ' .ks-datepicker-input').val().slice(0, -1), ordinal: $('#' + id + ' .ks-datepicker').data('ordinal')});
+                element.data({action: 'pick', id: id, value: $('#' + id + ' .ks-datepicker-input').val().slice(0, -1), ordinal: $('#' + id + ' .ks-datepicker').data('ordinal')});
                 Widget.doHandleSystemEvent(element, e, true);
                 pickerHolder.slideUp(50);
             } else {
@@ -182,7 +182,7 @@ class DatePickerWidget extends Widget {
             if (e.which === 13) {
                 $(e.currentTarget).blur();
                 let element = $('<div>');
-                element.data({action: 'choose', id: id, value: $('#' + id + ' .ks-datepicker-input').val().slice(0, -1), ordinal: $('#' + id + ' .ks-datepicker').data('ordinal')});
+                element.data({action: 'pick', id: id, value: $('#' + id + ' .ks-datepicker-input').val().slice(0, -1), ordinal: $('#' + id + ' .ks-datepicker').data('ordinal')});
                 Widget.doHandleSystemEvent(element, e, true);
             }
         });
@@ -190,7 +190,7 @@ class DatePickerWidget extends Widget {
         const catcher = Doc.not(datePicker).on('click touch', e => {
             if (pickerHolder.is(':visible')) {
                 let element = $('<div>');
-                element.data({action: 'choose', id: id, value: $('#' + id + ' .ks-datepicker-input').val().slice(0, -1), ordinal: $('#' + id + ' .ks-datepicker').data('ordinal')});
+                element.data({action: 'pick', id: id, value: $('#' + id + ' .ks-datepicker-input').val().slice(0, -1), ordinal: $('#' + id + ' .ks-datepicker').data('ordinal')});
                 Widget.doHandleSystemEvent(element, e, true);
                 pickerHolder.slideUp(50);
             }

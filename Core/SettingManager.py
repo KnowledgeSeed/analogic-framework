@@ -110,4 +110,5 @@ class SettingManager:
         password = self.getPassword()
         user = self.getPoolUser()
         namespace = self.getAppCamNamespace()
-        return 'CAMNamespace ' + base64.b64decode(user + ":" + password + ":" + namespace)
+        s = user + ":" + password + ":" + namespace
+        return 'CAMNamespace ' + base64.b64encode(s.encode('utf-8')).decode("utf-8")

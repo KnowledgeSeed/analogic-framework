@@ -300,167 +300,179 @@ app.widgetConfig = {
                                                                         skin: 'telecomcancel',
                                                                     }
                                                                 ]}]}]}]}]}]},*/
-//                    {
-//                        id: 'dpick',
-//                        type: DatePickerWidget,
-//                        editable: true,
-//                        skin: 'monthpicker',
-//                        monthPicker: true,
-//                        width: 300
-//                    },
-//                    {
-//                        id: 'dklsk',
-//                        type: TextBoxWidget
-//                    },
-//                    {
-//                        id: 'testHt',
-//                        type: HorizontalTableWidget,
-//                        title: 'Admin Panel',
-//                        titleVisible: true,
-//                        columnNames: ["Measure", "Value"],
-//                        searchField: false,
-//                        checkbox: null,
-//                        width: '50%',
-//                        marginLeft: '30',
-//                        marginTop: '10',
-//                        skin: 'deepblue_ht',
-//                        widgets: []
-//                    },
-//                    {
-//                        id: 'modosdavidMainGridtable',
-//                        type: GridTableWidget,
-//                        title: '',
-//                        widgets: [
-//
-//                            {
-//                                id: 'modosdavidMainGridtableCell1',
-//                                type: GridTableCellWidget,
-//                                widgets: [
-//
-//                                    {
-//                                        id: 'modosdavidMainGridtableCell1DatePicker',
-//                                        type: DatePickerWidget,
-//                                        editable: true,
-//                                        skin: 'datepicker',
-//                                    }
-//                                ]}]},
-//
-//                    {
-//                        id: 'modosdavidTestLineArea',
-//                        type: LineAreaChartWidget,
-//                        width: '800',
-//                        height: '400',
-//                        listen: [{"event": "launch.modosdavidToggle.finished", "method": "refresh"}],
-//                        datasets: [{legendLabel: 'Test1Test1Test1Test1Test1', borderColor: '#00965E', borderWidth: 1, backgroundColor: '#00965E', fill: true, lineTension: 0.5, pointRadius: 0}, {legendLabel: 'Test2', borderWidth: 1, borderColor: '#858686', backgroundColor: '#858686', fill: true, lineTension: 0.5, pointRadius: 0}, {legendLabel: 'Test3', borderColor: '#0066CC', backgroundColor: '#0066CC', fill: true, lineTension: 0.5, pointRadius: 0}],
-//                        marginLeft: '50',
-//                        legendSkin: 'legend-2',
-//                        visible: true,
-//                        xAxisLabel: 'Test1',
-//                        yAxisLabel: 'Test2',
-//                        xAxesDisplay: true,
-//                        xAxesGridLinesDisplay: true,
-//                        xAxesGridLinesDrawBorder: true,
-//                        yAxesDisplay: true,
-//                        yAxesGridLinesDisplay: true,
-//                        xAxesTicksFontFamily: 'imago, sans-serif',
-//                        yAxesTicksFontFamily: 'imago, sans-serif',
-//                        xAxesLabelFontFamily: 'imago, sans-serif',
-//                        yAxesLabelFontFamily: 'imago, sans-serif',
-//                        tooltipsEnabled: true,
-//                        widgets: [
-//
-//                            {
-//                                id: 'modosdavidTestVerticalLine',
-//                                type: VerticalLineBoxWidget,
-//                            }
-//                        ]},
-//
-//                    {
-//                        id: 'testGridTable',
-//                        type: GridTableWidget,
-//                        title: '',
-//                        widgets: [
-//
-//                            {
-//                                id: 'testGridTableHeaderRow',
-//                                type: GridTableHeaderRowWidget,
-//                                widgets: [
-//
-//                                    {
-//                                        id: 'testGridTableHeaderCell_01',
-//                                        type: GridTableHeaderCellWidget,
-//                                        widgets: [
-//
-//                                            {
-//                                                id: 'testGridTableHeaderText_01',
-//                                                type: TextWidget,
-//                                                title: 'd',
-//                                            }
-//                                        ]},
-//
-//                                    {
-//                                        id: 'testGridTableHeaderCell_02',
-//                                        type: GridTableHeaderCellWidget,
-//                                        widgets: [
-//
-//                                            {
-//                                                id: 'testGridTableHeaderText_02',
-//                                                type: TextWidget,
-//                                                title: 'd2',
-//                                            }
-//                                        ]},
-//
-//                                    {
-//                                        id: 'testGridTableHeaderCell_03',
-//                                        type: GridTableHeaderCellWidget,
-//                                        widgets: [
-//
-//                                            {
-//                                                id: 'testGridTableHeaderText_03',
-//                                                type: TextWidget,
-//                                                title: 'd3',
-//                                            }
-//                                        ]}]},
-//
-//                            {
-//                                id: 'testGridTableCell_01',
-//                                type: GridTableCellWidget,
-//                                widgets: [
-//
-//                                    {
-//                                        id: 'testGridTableText_01',
-//                                        type: DatePickerWidget,
-//                                        title: 'Project Start',
-//                                        titleVisible: true,
-//                                        editable: true,
-//                                        monthPicker: false,
-//                                        marginTop: '10',
-//                                        skin: 'datepicker'
-//                                    }
-//                                ]},
-//
-//                            {
-//                                id: 'testGridTableCell_02',
-//                                type: GridTableCellWidget,
-//                                widgets: [
-//
-//                                    {
-//                                        id: 'testGridTableText_02',
-//                                        type: ToggleWidget
-//                                    }
-//                                ]},
-//
-//                            {
-//                                id: 'testGridTableCell_03',
-//                                type: GridTableCellWidget,
-//                                widgets: [
-//
-//                                    {
-//                                        id: 'testGridTableText_03',
-//                                        type: DropBoxWidget,
-//                                        items: [{name: 'ddd'}, {name: 'dd2'}],
-//                                        skin: 'deepblue_dropbox'
-//                                    }
-//                                ]}]},
+                    /*
+                                        {
+                                            id: 'dpick',
+                                            type: DatePickerWidget,
+                                            editable: true,
+                                            skin: 'monthpicker',
+                                            monthPicker: true,
+                                            width: 300
+                                        },
+                                        {
+                                            id: 'dklsk',
+                                            type: TextBoxWidget
+                                        },
+                                        {
+                                            id: 'testHt',
+                                            type: HorizontalTableWidget,
+                                            title: 'Admin Panel',
+                                            titleVisible: true,
+                                            columnNames: ["Measure", "Value"],
+                                            searchField: false,
+                                            checkbox: null,
+                                            width: '50%',
+                                            marginLeft: '30',
+                                            marginTop: '10',
+                                            skin: 'deepblue_ht',
+                                            widgets: []
+                                        },
+                                        {
+                                            id: 'modosdavidMainGridtable',
+                                            type: GridTableWidget,
+                                            title: '',
+                                            widgets: [
+
+                                                {
+                                                    id: 'modosdavidMainGridtableCell1',
+                                                    type: GridTableCellWidget,
+                                                    widgets: [
+
+                                                        {
+                                                            id: 'modosdavidMainGridtableCell1DatePicker',
+                                                            type: DatePickerWidget,
+                                                            editable: true,
+                                                            skin: 'datepicker',
+                                                        }
+                                                    ]}]},
+
+                                        {
+                                            id: 'modosdavidTestLineArea',
+                                            type: LineAreaChartWidget,
+                                            width: '800',
+                                            height: '400',
+                                            listen: [{"event": "launch.modosdavidToggle.finished", "method": "refresh"}],
+                                            datasets: [{legendLabel: 'Test1Test1Test1Test1Test1', borderColor: '#00965E', borderWidth: 1, backgroundColor: '#00965E', fill: true, lineTension: 0.5, pointRadius: 0}, {legendLabel: 'Test2', borderWidth: 1, borderColor: '#858686', backgroundColor: '#858686', fill: true, lineTension: 0.5, pointRadius: 0}, {legendLabel: 'Test3', borderColor: '#0066CC', backgroundColor: '#0066CC', fill: true, lineTension: 0.5, pointRadius: 0}],
+                                            marginLeft: '50',
+                                            legendSkin: 'legend-2',
+                                            visible: true,
+                                            xAxisLabel: 'Test1',
+                                            yAxisLabel: 'Test2',
+                                            xAxesDisplay: true,
+                                            xAxesGridLinesDisplay: true,
+                                            xAxesGridLinesDrawBorder: true,
+                                            yAxesDisplay: true,
+                                            yAxesGridLinesDisplay: true,
+                                            xAxesTicksFontFamily: 'imago, sans-serif',
+                                            yAxesTicksFontFamily: 'imago, sans-serif',
+                                            xAxesLabelFontFamily: 'imago, sans-serif',
+                                            yAxesLabelFontFamily: 'imago, sans-serif',
+                                            tooltipsEnabled: true,
+                                            widgets: [
+
+                                                {
+                                                    id: 'modosdavidTestVerticalLine',
+                                                    type: VerticalLineBoxWidget,
+                                                }
+                                            ]},*/
+
+                    {
+                        id: 'testGridTable',
+                        type: GridTableWidget,
+                        title: '',
+                        widgets: [
+
+                            {
+                                id: 'testGridTableHeaderRow',
+                                type: GridTableHeaderRowWidget,
+                                widgets: [
+
+                                    {
+                                        id: 'testGridTableHeaderCell_01',
+                                        type: GridTableHeaderCellWidget,
+                                        widgets: [
+
+                                            {
+                                                id: 'testGridTableHeaderText_01',
+                                                type: TextWidget,
+                                                title: 'd',
+                                            }
+                                        ]
+                                    },
+
+                                    {
+                                        id: 'testGridTableHeaderCell_02',
+                                        type: GridTableHeaderCellWidget,
+                                        widgets: [
+
+                                            {
+                                                id: 'testGridTableHeaderText_02',
+                                                type: TextWidget,
+                                                title: 'd2',
+                                            }
+                                        ]
+                                    },
+
+                                    {
+                                        id: 'testGridTableHeaderCell_03',
+                                        type: GridTableHeaderCellWidget,
+                                        widgets: [
+
+                                            {
+                                                id: 'testGridTableHeaderText_03',
+                                                type: TextWidget,
+                                                title: 'd3',
+                                            }
+                                        ]
+                                    }]
+                            },
+
+                            {
+                                id: 'testGridTableCell_01',
+                                type: GridTableCellWidget,
+                                widgets: [
+
+                                    {
+                                        id: 'button1',
+                                        type: ButtonWidget,
+                                        label: 'test1',
+                                        fontColor: 'white',
+                                        skin: 'deepblue_backbutton',
+                                    }
+                                ]
+                            },
+
+                            {
+                                id: 'testGridTableCell_02',
+                                type: GridTableCellWidget,
+                                widgets: [
+
+                                    {
+                                        id: 'button2',
+                                        type: ButtonWidget,
+                                        label: 'test2',
+                                        fontColor: 'white',
+                                        skin: 'deepblue_backbutton',
+                                        write: 'off'
+                                    }
+                                ]
+                            },
+
+                            {
+                                id: 'testGridTableCell_03',
+                                type: GridTableCellWidget,
+                                widgets: [
+
+                                    {
+                                        id: 'button3',
+                                        type: ButtonWidget,
+                                        label: 'test3',
+                                        fontColor: 'white',
+                                        skin: 'deepblue_backbutton',
+                                    }
+                                ]
+                            }]
+                    },
+
                 ]},
 };
