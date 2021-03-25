@@ -1,14 +1,14 @@
 {
+  "assetsFolder": "static/assets",
   "customerName": "Admin",
   "customerAssetsFolder" : "adminportal",
   "version" : "8",
+  "useMinifiedAssets": false,
   "useShout": false,
   "host": "https://hq.coresystems.hu:9610/",
   "subpath": "flask",
   "authenticationMode" : "SSOPool",
   "camNamespace" : "",
-  "noauthUser" : "",
-  "noauthPwd" : "",
   "sessionExpiresInMinutes" : 20,
   "authenticationBridge" : "https://hq.coresystems.hu:9610/flasksso/auth.aspx",
   "apiLogout" : "",
@@ -22,7 +22,7 @@
   "SideBar" : "adminPortalSideBar",
   "MainPage" : "adminPortalMain",
   "pool" : {
-    "users": ["CAMNamespace b3JhdmVjei50YW1hczpUb21pTmV3UGFzczEyMTIlOmtub3dsZWRnZXNlZWQ=", "CAMNamespace c292ZWdqYXJ0by5hbmRyYXM6U000REFzZGYxMjM0JTprbm93bGVkZ2VzZWVk"],
+    "users": ["oravecz.tamas"],
     "target" : "http://localhost:5280"
   },
   "sso": {
@@ -40,5 +40,4 @@
     "secret": "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==",
     "appHost": "https://hq.coresystems.hu:9610"
   }
-
 }

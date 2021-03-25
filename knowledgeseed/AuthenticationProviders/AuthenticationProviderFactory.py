@@ -1,8 +1,8 @@
-from AuthenticationProviders.LoginPool import LoginPool
-from AuthenticationProviders.NoAuth import NoAuth
-from AuthenticationProviders.NoAuthPool import NoAuthPool
-from AuthenticationProviders.Cam import Cam
-from AuthenticationProviders.SSOPool import SSOPool
+from knowledgeseed.AuthenticationProviders.LoginPool import LoginPool
+from knowledgeseed.AuthenticationProviders.NoAuth import NoAuth
+from knowledgeseed.AuthenticationProviders.NoAuthPool import NoAuthPool
+from knowledgeseed.AuthenticationProviders.Cam import Cam
+from knowledgeseed.AuthenticationProviders.SSOPool import SSOPool
 
 
 class AuthenticationProviderFactory:

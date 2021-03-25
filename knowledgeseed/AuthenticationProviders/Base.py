@@ -3,9 +3,9 @@ import sys
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 from flask import request, send_file
-from Core.ClassLoader import ClassLoader
-from Core.SettingManager import SettingManager
-from Core.FileUploadManager import FileUploadManager
+from knowledgeseed.Core.ClassLoader import ClassLoader
+from knowledgeseed.Core.SettingManager import SettingManager
+from knowledgeseed.Core.FileUploadManager import FileUploadManager
 
 
 class Base:

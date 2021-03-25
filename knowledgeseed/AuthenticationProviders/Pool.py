@@ -1,6 +1,6 @@
 import requests
 from flask import request, json
-from AuthenticationProviders.Base import Base
+from knowledgeseed.AuthenticationProviders.Base import Base
 from TM1py.Services import TM1Service
 
 

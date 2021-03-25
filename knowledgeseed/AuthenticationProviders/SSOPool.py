@@ -1,8 +1,8 @@
 import jwt
 import requests
 import base64
-from AuthenticationProviders.Pool import Pool
-from flask import render_template, request, session, make_response, redirect, url_for, Response
+from knowledgeseed.AuthenticationProviders.Pool import Pool
+from flask import render_template, request, session, make_response, redirect, Response
 
 
 # TODO lehet el lehetne redisben tárolni a jwt lejáratát, nem kéne minden request esetén decodelni

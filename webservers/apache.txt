@@ -1,0 +1,48 @@
+letölteni és installálni:
+https://visualstudio.microsoft.com/visual-cpp-build-tools/
+
+környezeti változó:
+set MOD_WSGI_APACHE_ROOTDIR=C:/Users/me/apache
+
+menj a virtual envedhez, aktiváld
+majd:
+
+pip install mod-wsgi
+
+aztán:
+
+mod_wsgi-express module-config
+
+ez kiír valami ilyesmit:
+LoadModule wsgi_module "c:/users/user/pycharmprojects/knowledgeseed/flaskproject/lib/site-packages/mod_wsgi/server/mod_wsgi.cp39-win_amd64.pyd"
+
+ezt kell betenni a httpd.conf-ba, ezzel együtt:
+
+LoadModule wsgi_module "c:/users/user/pycharmprojects/knowledgeseed/flaskproject/lib/site-packages/mod_wsgi/server/mod_wsgi.cp39-win_amd64.pyd"
+WSGIApplicationGroup %{GLOBAL}
+
+Add hozzá a következő virtualhostot igény szerint konfigurálva:
+
+<VirtualHost *>
+    WSGIScriptAlias / C:/Repos/flaskProject/app.wsgi
+	Alias /static/ C:/Repos/flaskProject/knowledgeseed/static/
+	Alias /templates/ C:/Repos/flaskProject/knowledgeseed/templates/
+	LogLevel debug
+	ErrorLog logs/knowledgeseed_error.log
+	CustomLog logs/knowledgeseed_custom.log combined
+    <Directory C:/Repos/flaskProject>
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+Editáld az app.wsgi fájlt, meg kell adni az alkalmazás elérési útját:
+
+sys.path.insert(0, 'C:\\Repos\\flaskProject')
+
+linkek:
+
+https://stackoverflow.com/questions/59801387/how-to-install-mod-wsgi-into-apache-on-windows
+https://github.com/GrahamDumpleton/mod_wsgi/issues/215
+https://github.com/GrahamDumpleton/mod_wsgi/issues/559
+https://github.com/GrahamDumpleton/mod_wsgi/issues/663
+https://dev.to/willmvs/flask-deployment-on-windows-139b

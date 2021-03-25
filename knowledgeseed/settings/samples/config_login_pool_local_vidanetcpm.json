@@ -1,7 +1,7 @@
 {
     "assetsFolder": "static/assets",
     "customerName": "Admin",
-    "customerAssetsFolder": "adminportal",
+    "customerAssetsFolder": "vidanetcpm",
     "version": "8",
     "useMinifiedAssets": false,
     "useShout": false,
@@ -9,8 +9,6 @@
     "subpath": "",
     "authenticationMode": "LoginPool",
     "camNamespace": "knowledgeseed",
-    "noauthUser": "sovegjarto.andras",
-    "noauthPwd": "",
     "sessionExpiresInMinutes": 20,
     "authenticationBridge": "https://hq.coresystems.hu:9610/ibmcognos/bi/v1?b_action=xts.run&m=portal/bridge.xts&c_env=portal/variables_TM1.xml&c_cmd=../tm1/web/tm1web.html&ps=https://hq.coresystems.hu:9610&pg=../adminportal/auth.jsp&host=hq.coresystems.hu&server=Analogic Portal",
     "apiLogout": "https://hq.coresystems.hu:5125/roche/adminportal/logout",
@@ -19,13 +17,13 @@
     "tm1ApiHost": "http://localhost:5000/pool",
     "tm1ApiSubPath": "/api/v1/",
     "tm1ExecuteMDX": "ExecuteMDX?",
-    "MDXUrl": "https://hq.coresystems.hu:5125/analogicadminapi/api/v1/ExecuteMDX?",
-    "defaultMDXQuery": "https://hq.coresystems.hu:5125/analogicadminapi/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value)",
-    "SideBar": "adminPortalSideBar",
-    "MainPage": "adminPortalMain",
+    "MDXUrl": "https://hq.coresystems.hu:5125/vidanetapi/api/v1/ExecuteMDX?",
+    "defaultMDXQuery": "https://hq.coresystems.hu:5125/vidanetapi/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value)",
+    "SideBar": "vidanetSideBar",
+    "MainPage": "vidanetMainPage",
     "pool": {
-        "users": ["CAMNamespace b3JhdmVjei50YW1hczpUb21pTmV3UGFzczEyMTIlOmtub3dsZWRnZXNlZWQ=", "CAMNamespace c292ZWdqYXJ0by5hbmRyYXM6U000REFzZGYxMjM0JTprbm93bGVkZ2VzZWVk"],
-        "target": "https://hq.coresystems.hu:5125/analogicadminapi"
+        "users": ["oravecz.tamas"],
+        "target": "https://hq.coresystems.hu:5125/vidanetapi"
     },
     "sso": {
         "userCAMNamespace": "CAMNamespace b3JhdmVjei50YW1hczpUb21pTmV3UGFzczEyMTIlOmtub3dsZWRnZXNlZWQ=",

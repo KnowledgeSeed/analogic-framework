@@ -1,4 +1,4 @@
-from AuthenticationProviders.Base import Base
+from knowledgeseed.AuthenticationProviders.Base import Base
 from flask import render_template
 from TM1py.Services import TM1Service
 

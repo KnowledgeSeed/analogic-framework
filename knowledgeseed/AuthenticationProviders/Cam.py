@@ -1,6 +1,5 @@
 import requests
-import datetime
-from AuthenticationProviders.Base import Base
+from knowledgeseed.AuthenticationProviders.Base import Base
 from flask import render_template, request, make_response, redirect
 from TM1py.Services import TM1Service
 

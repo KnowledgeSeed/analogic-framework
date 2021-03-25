@@ -1,4 +1,4 @@
-from AuthenticationProviders.Pool import Pool
+from knowledgeseed.AuthenticationProviders.Pool import Pool
 from flask import render_template
 
 
