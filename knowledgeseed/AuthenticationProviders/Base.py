@@ -10,8 +10,8 @@ from knowledgeseed.Core.FileUploadManager import FileUploadManager
 
 class Base:
 
-    def __init__(self, cache, site_root):
-        self.setting = SettingManager(cache, site_root)
+    def __init__(self, cache, site_root, instance='default'):
+        self.setting = SettingManager(cache, site_root, instance)
         self.upload_manager = FileUploadManager(self.setting)
 
     def export(self):

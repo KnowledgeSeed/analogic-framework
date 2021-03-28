@@ -2,7 +2,7 @@ import os
 import shutil
 import pandas as pd
 import chardet
-import magic
+#import magic
 import pathlib
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
@@ -76,9 +76,9 @@ class FileUploadManager:
         result = chardet.detect(blob)
         return self.getErrorMessage(expected, result['encoding'], file_name, 'character set')
 
-    def checkFileFormat(self, path, expected, file_name):
-        result = magic.from_file(path, mime=True)
-        return self.getErrorMessage(expected, result, file_name, 'file format')
+   # def checkFileFormat(self, path, expected, file_name):
+   #     result = magic.from_file(path, mime=True)
+   #     return self.getErrorMessage(expected, result, file_name, 'file format')
 
     def checkExtension(self, expected, file_name):
         file_extension = pathlib.Path(file_name).suffix

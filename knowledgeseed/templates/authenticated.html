@@ -12,10 +12,10 @@
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="theme-color" content="#ffffff">
         {% if (useMinifiedAssets)%}
-            <link href="{{cnf.assetsFolder}}/css/minified.css?v=<%=version%>" rel="stylesheet" type="text/css">
-            <link href="{{cnf.assetsFolder}}/skins/<%=customerAssetsFolder%>/css/minified.css?v=<%=version%>" rel="stylesheet" type="text/css">
+            <link href="{{cnf.assetsFolder}}/css/minified.css?v={{ cnf.version }}" rel="stylesheet" type="text/css">
+            <link href="{{cnf.assetsFolder}}/skins/{{ cnf.customerAssetsFolder }}/css/minified.css?v={{ cnf.version }}" rel="stylesheet" type="text/css">
             {%  if (customerAssetsFolder == "risksimulation") %}
-                <link href="{{cnf.assetsFolder}}/css/minified.style.css?v=<%=version%>" rel="stylesheet" type="text/css">
+                <link href="{{cnf.assetsFolder}}/css/minified.style.css?v={{ cnf.version }}" rel="stylesheet" type="text/css">
             {% endif %}
         {% else %}
             {%  if (cnf.customerAssetsFolder == "risksimulation") %} <!-- deprecated -->
@@ -26,12 +26,12 @@
     </head>
     <body>
         {% if (useMinifiedAssets)%}
-        <script type="text/javascript" src="assets/js/minified.js?v=<%=version%>"></script>
+        <script type="text/javascript" src="assets/js/minified.js?v={{ cnf.version }}"></script>
             {%  if (customerAssetsFolder == "risksimulation") %}
-                <script type="text/javascript" src="{{cnf.assetsFolder}}/js/minified_deprecated.js?v=<%=version%>"></script>
+                <script type="text/javascript" src="{{cnf.assetsFolder}}/js/minified_deprecated.js?v={{ cnf.version }}"></script>
             {% endif %}
-            <script type="text/javascript" src="assets/js/configs/<%=customerAssetsFolder%>/minified.js?v=<%=version%>" charset="UTF-8"></script>
-            <script type="text/javascript" src="assets/js/configs/<%=customerAssetsFolder%>/repository.js?v=<%=version%>" charset="UTF-8"></script>
+            <script type="text/javascript" src="assets/js/configs/{{ cnf.customerAssetsFolder }}/minified.js?v={{ cnf.version }}" charset="UTF-8"></script>
+            <script type="text/javascript" src="assets/js/configs/{{ cnf.customerConfigFolder }}/repository.js?v={{ cnf.version }}" charset="UTF-8"></script>
         {% else %}
             {% include 'javascripts.html' %}
             {%  if (cnf.customerAssetsFolder == "risksimulation") %}

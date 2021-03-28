@@ -5,8 +5,8 @@ from TM1py.Services import TM1Service
 
 
 class Cam(Base):
-    def __init__(self, cache, site_root):
-        super().__init__(cache, site_root)
+    def __init__(self, cache, site_root, instance='default'):
+        super().__init__(cache, site_root, instance)
 
     def index(self):
         authenticated = request.cookies.get('authenticated') is not None

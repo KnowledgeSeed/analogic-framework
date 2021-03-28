@@ -3,8 +3,8 @@ from flask import session, redirect, request, render_template, make_response
 
 
 class LoginPool(Pool):
-    def __init__(self, cache, site_root):
-        super().__init__(cache, site_root)
+    def __init__(self, cache, site_root, instance='default'):
+        super().__init__(cache, site_root, instance)
 
     def login(self):
         cnf = self.setting.getConfig()

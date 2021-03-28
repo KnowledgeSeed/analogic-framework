@@ -7,17 +7,17 @@ from flask import json
 
 
 class SettingManager:
-    CONFIG = 'knowledge_seed_config'
-    REPOSITORY = 'knowledge_seed_repository'
-    CLASSES = 'knowledge_seed_classes'
+    CONFIG = 'knowledgeseed_config'
+    REPOSITORY = 'knowledgeseed_repository'
+    CLASSES = 'knowledgeseed_classes'
     TM1SessionId = 'tm1_session_id'
     TM1SessionExpires = 'tm1_session_expires'
-    FRAMEWORK_MDX = 'knowledge_seed_framework_mdx'
-    INSTANCE = 'default_'
+    FRAMEWORK_MDX = 'knowledgeseed_framework_mdx'
 
-    def __init__(self, cache, site_root):
+    def __init__(self, cache, site_root, instance='default'):
         self.cache = cache
         self.site_root = site_root
+        self.instance = instance
 
     def clearCache(self):
         self.cache.delete(self.getConfigCacheKey())
@@ -29,7 +29,7 @@ class SettingManager:
         return "OK"
 
     def getInstance(self):
-        return self.INSTANCE
+        return self.instance
 
     def getConfigCacheKey(self):
         return self.getInstanceCacheKey(self.CONFIG)
@@ -50,7 +50,7 @@ class SettingManager:
         return self.getInstanceCacheKey(self.FRAMEWORK_MDX)
 
     def getInstanceCacheKey(self, key):
-        return self.getInstance() + key
+        return self.getInstance() + '_' + key
 
     def getConfig(self):
         cnf = self.getJsonSetting(self.getConfigCacheKey(), 'config')
@@ -66,7 +66,7 @@ class SettingManager:
 
     def getBaseUrl(self, route=''):
         cnf = self.getConfig()
-        return cnf['host'] + cnf['subpath'] + '/' + route
+        return os.path.join(cnf['host'], cnf['subpath'], self.instance, route)
 
     def getRepositoryOld(self):
         return self.getJsonSetting(self.getRepositoryCacheKey(), 'repository')
@@ -79,28 +79,34 @@ class SettingManager:
         mdx = repository[key]
         return mdx
 
-    def getJsonSetting(self, key, file_name):
+    def getJsonSetting(self, key, file_name, by_instance=True):
         setting = self.cache.get(key)
         if setting is None:
-            json_url = os.path.join(self.site_root, 'settings', file_name + '.json')
+            file_path = file_name
+            if by_instance:
+                file_path = os.path.join(self.instance, file_name)
+            json_url = os.path.join(self.site_root, 'settings', file_path + '.json')
             setting = json.load(open(json_url))
             self.cache.set(key, setting, 0)
         return setting
 
-    def getYamlSetting(self, key, file_name):
+    def getYamlSetting(self, key, file_name, by_instance=True):
         setting = self.cache.get(key)
         if setting is None:
-            with open(os.path.join(self.site_root, 'settings', file_name + '.yml')) as file:
+            file_path = file_name
+            if by_instance:
+                file_path = os.path.join(self.instance, file_name)
+            with open(os.path.join(self.site_root, 'settings', file_path + '.yml')) as file:
                 setting = yaml.load(file, Loader=yaml.FullLoader)
                 self.cache.set(key, setting, 0)
         return setting
 
     def getFrameworkMdx(self, key):
-        mdx = self.getYamlSetting(self.getFrameworkMdxCacheKey(), 'framework_mdx')
+        mdx = self.getYamlSetting(self.getFrameworkMdxCacheKey(), 'framework_mdx', False)
         return mdx[key]
 
     def getClassDescription(self, key):
-        classes = self.getJsonSetting(self.getClassesCacheKey(), 'classes')
+        classes = self.getJsonSetting(self.getClassesCacheKey(), 'classes', False)
         return classes[key]
 
     def setTM1SessionId(self, tm1_session_id):
@@ -112,7 +118,7 @@ class SettingManager:
     def getTM1SessionId(self):
         if self.cache.get(self.getTm1SessionIdCacheKey()) is None or (
                 self.cache.get(self.getTM1SessionExpiresCacheKey()) is not None and datetime.datetime.now() >= self.cache.get(
-                self.getTM1SessionExpiresCacheKey)):
+                self.getTM1SessionExpiresCacheKey())):
             return None
         return self.cache.get(self.getTm1SessionIdCacheKey())
 

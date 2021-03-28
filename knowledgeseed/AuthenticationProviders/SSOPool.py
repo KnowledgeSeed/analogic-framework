@@ -7,8 +7,8 @@ from flask import render_template, request, session, make_response, redirect, Re
 
 # TODO lehet el lehetne redisben tárolni a jwt lejáratát, nem kéne minden request esetén decodelni
 class SSOPool(Pool):
-    def __init__(self, cache, site_root):
-        super().__init__(cache, site_root)
+    def __init__(self, cache, site_root, instance='default'):
+        super().__init__(cache, site_root, instance)
 
     def index(self):
         cnf = self.setting.getConfig()
