@@ -2,11 +2,11 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-        <title>{{ cnf.customerName }}</title>
+        <title>{{ cnf.applicationName }}</title>
     </head>
     <body>
 
-        <script type="text/javascript" src="{{cnf.assetsFolder}}/js/lib/jquery/jquery-3.5.0.min.js"></script>
+        <script type="text/javascript" src="{{cnf.assetsUrl}}/js/lib/jquery/jquery-3.5.0.min.js"></script>
         {% include 'config.html' %}
         <script type="text/javascript">
             window.location.href = app.url.authenticationBridge;

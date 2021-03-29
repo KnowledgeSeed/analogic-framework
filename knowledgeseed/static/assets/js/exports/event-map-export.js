@@ -5,7 +5,7 @@ class EventMapExport extends Export {
 
     createDataToExport() {
         return $.ajax({
-            url: app.assetsFolder + '/js/configs/' + app.customerAssetsFolder + '/event-map.js',
+            url: app.assetsUrl + '/js/configs/' + app.applicationAssetsFolder + '/event-map.js',
             dataType: 'text',
             cache: false
         }).then((eventMapContent) => this.parseEventMapContent(eventMapContent));

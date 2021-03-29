@@ -3,23 +3,23 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ cnf.customerName }}</title>
-        <link rel="apple-touch-icon" sizes="180x180" href="{{cnf.assetsFolder}}/skins/{{cnf.customerAssetsFolder}}/favicon/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{cnf.assetsFolder}}/skins/{{cnf.customerAssetsFolder}}/favicon/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{cnf.assetsFolder}}/skins/{{cnf.customerAssetsFolder}}/favicon/favicon-16x16.png">
-        <link rel="manifest" href="{{cnf.assetsFolder}}/skins/{{cnf.customerAssetsFolder}}/favicon/site.webmanifest">
-        <link rel="mask-icon" href="{{cnf.assetsFolder}}/skins/{{cnf.customerAssetsFolder}}/favicon/safari-pinned-tab.svg" color="#0066b1">
+        <title>{{ cnf.applicationName }}</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="{{cnf.assetsUrl}}/skins/{{cnf.applicationAssetsFolder}}/favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{cnf.assetsUrl}}/skins/{{cnf.applicationAssetsFolder}}/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{cnf.assetsUrl}}/skins/{{cnf.applicationAssetsFolder}}/favicon/favicon-16x16.png">
+        <link rel="manifest" href="{{cnf.assetsUrl}}/skins/{{cnf.applicationAssetsFolder}}/favicon/site.webmanifest">
+        <link rel="mask-icon" href="{{cnf.assetsUrl}}/skins/{{cnf.applicationAssetsFolder}}/favicon/safari-pinned-tab.svg" color="#0066b1">
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="theme-color" content="#ffffff">
         {% if (useMinifiedAssets)%}
-            <link href="{{cnf.assetsFolder}}/css/minified.css?v={{ cnf.version }}" rel="stylesheet" type="text/css">
-            <link href="{{cnf.assetsFolder}}/skins/{{ cnf.customerAssetsFolder }}/css/minified.css?v={{ cnf.version }}" rel="stylesheet" type="text/css">
-            {%  if (customerAssetsFolder == "risksimulation") %}
-                <link href="{{cnf.assetsFolder}}/css/minified.style.css?v={{ cnf.version }}" rel="stylesheet" type="text/css">
+            <link href="{{cnf.assetsUrl}}/css/minified.css?v={{ cnf.version }}" rel="stylesheet" type="text/css">
+            <link href="{{cnf.assetsUrl}}/skins/{{ cnf.applicationAssetsFolder }}/css/minified.css?v={{ cnf.version }}" rel="stylesheet" type="text/css">
+            {%  if (applicationAssetsFolder == "risksimulation") %}
+                <link href="{{cnf.assetsUrl}}/css/minified.style.css?v={{ cnf.version }}" rel="stylesheet" type="text/css">
             {% endif %}
         {% else %}
-            {%  if (cnf.customerAssetsFolder == "risksimulation") %} <!-- deprecated -->
-                <link href="{{cnf.assetsFolder}}/css/style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
+            {%  if (cnf.applicationAssetsFolder == "risksimulation") %} <!-- deprecated -->
+                <link href="{{cnf.assetsUrl}}/css/style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
             {%  endif %}
             {% include 'css.html' %}
         {% endif %}
@@ -27,14 +27,14 @@
     <body>
         {% if (useMinifiedAssets)%}
         <script type="text/javascript" src="assets/js/minified.js?v={{ cnf.version }}"></script>
-            {%  if (customerAssetsFolder == "risksimulation") %}
-                <script type="text/javascript" src="{{cnf.assetsFolder}}/js/minified_deprecated.js?v={{ cnf.version }}"></script>
+            {%  if (applicationAssetsFolder == "risksimulation") %}
+                <script type="text/javascript" src="{{cnf.assetsUrl}}/js/minified_deprecated.js?v={{ cnf.version }}"></script>
             {% endif %}
-            <script type="text/javascript" src="assets/js/configs/{{ cnf.customerAssetsFolder }}/minified.js?v={{ cnf.version }}" charset="UTF-8"></script>
-            <script type="text/javascript" src="assets/js/configs/{{ cnf.customerConfigFolder }}/repository.js?v={{ cnf.version }}" charset="UTF-8"></script>
+            <script type="text/javascript" src="assets/js/configs/{{ cnf.applicationAssetsFolder }}/minified.js?v={{ cnf.version }}" charset="UTF-8"></script>
+            <script type="text/javascript" src="assets/js/configs/{{ cnf.applicationConfigFolder }}/repository.js?v={{ cnf.version }}" charset="UTF-8"></script>
         {% else %}
             {% include 'javascripts.html' %}
-            {%  if (cnf.customerAssetsFolder == "risksimulation") %}
+            {%  if (cnf.applicationAssetsFolder == "risksimulation") %}
                 {% include 'deprecated.html' %}
             {%  endif %}
         {% endif %}

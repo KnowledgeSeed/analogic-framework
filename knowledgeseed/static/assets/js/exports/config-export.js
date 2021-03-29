@@ -5,7 +5,7 @@ class ConfigExport extends Export {
 
     createDataToExport() {
         return $.ajax({
-            url: app.assetsFolder + '/js/configs/' + app.customerAssetsFolder + '/config.js',
+            url: app.assetsUrl + '/js/configs/' + app.applicationAssetsFolder + '/config.js',
             dataType: 'text',
             cache: false
         }).then((configContent) => this.parseConfigContent(configContent));

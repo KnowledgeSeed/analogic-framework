@@ -48,7 +48,7 @@ class SSOPool(Pool):
 
         headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
                                    'Accept-Encoding': 'gzip, deflate, br',
-                                   'Authorization': sso_cnf['userCAMNamespace']}
+                                   'Authorization': self.setting.getSsoCamNamespace()}
 
         resp = requests.post(url=sso_cnf['getUserUrl'],
                              json=sso_cnf['getUserBody'].replace('$username', user_name),

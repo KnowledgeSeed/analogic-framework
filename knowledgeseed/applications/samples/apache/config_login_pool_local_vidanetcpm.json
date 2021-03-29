@@ -1,7 +1,7 @@
 {
-    "assetsFolder": "static/assets",
-    "customerName": "Admin",
-    "customerAssetsFolder": "adminportal",
+    "assetsUrl": "static/assets",
+    "applicationName": "Admin",
+    "applicationAssetsFolder": "vidanetcpm",
     "version": "8",
     "useMinifiedAssets": false,
     "useShout": false,
@@ -17,13 +17,13 @@
     "tm1ApiHost": "http://localhost/pool",
     "tm1ApiSubPath": "/api/v1/",
     "tm1ExecuteMDX": "ExecuteMDX?",
-    "MDXUrl": "https://hq.coresystems.hu:5125/analogicadminapi/api/v1/ExecuteMDX?",
-    "defaultMDXQuery": "https://hq.coresystems.hu:5125/analogicadminapi/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value)",
-    "SideBar": "adminPortalSideBar",
-    "MainPage": "adminPortalMain",
+    "MDXUrl": "https://hq.coresystems.hu:5125/vidanetapi/api/v1/ExecuteMDX?",
+    "defaultMDXQuery": "https://hq.coresystems.hu:5125/vidanetapi/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value)",
+    "SideBar": "vidanetSideBar",
+    "MainPage": "vidanetMainPage",
     "pool": {
         "users": ["oravecz.tamas"],
-        "target": "https://hq.coresystems.hu:5125/analogicadminapi"
+        "target": "https://hq.coresystems.hu:5125/vidanetapi"
     },
     "sso": {
         "userCAMNamespace": "CAMNamespace b3JhdmVjei50YW1hczpUb21pTmV3UGFzczEyMTIlOmtub3dsZWRnZXNlZWQ=",

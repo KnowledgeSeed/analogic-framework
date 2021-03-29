@@ -320,34 +320,12 @@ class ScrollTableWidget extends Widget {
         }
 
         section.find('.ks-scrolltable-table-names').on('touchstart click', '.icon-comment-on', e => {
-            if (o.oldComment) {
-                const commentWidget = new CommentWidget({id: section.attr('id') + 'Comment'}), a = $(e.currentTarget);
-                WidgetValue[id].comment = {value: a.data('value')};
-
-                Render.renderWidget(null, El.sideBarContent, commentWidget);
-
-                El.sideBar.open('comment-holder');
-            } else {
-                delete WidgetValue[widgetId].commentEdit;
-
-                Widget.doHandleSystemEvent($(e.currentTarget).data({id: widgetId, action: 'commentShow'}));
-            }
-
+            delete WidgetValue[widgetId].commentEdit;
+            Widget.doHandleSystemEvent($(e.currentTarget).data({id: widgetId, action: 'commentShow'}));
             return false;
         }).on('touchstart click', '.icon-comment-off', e => {
-            if (o.oldComment) {
-                const a = $(e.currentTarget), commentFormWidget = new CommentFormWidget({id: section.attr('id') + 'Comment'});
-                WidgetValue[id].comment = {value: a.data('value')};
-
-                Render.renderWidget(null, El.sideBarContent, commentFormWidget);
-
-                El.sideBar.open('comment-holder');
-            } else {
-                delete WidgetValue[widgetId].commentShow;
-
-                Widget.doHandleSystemEvent($(e.currentTarget).data({id: widgetId, action: 'commentEdit'}));
-            }
-
+            delete WidgetValue[widgetId].commentShow;
+            Widget.doHandleSystemEvent($(e.currentTarget).data({id: widgetId, action: 'commentEdit'}));
             return false;
         }).on('touchstart click', '.open-arrow', e => {
             e.stopImmediatePropagation();

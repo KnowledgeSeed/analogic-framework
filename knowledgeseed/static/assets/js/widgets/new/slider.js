@@ -314,7 +314,7 @@ class SliderWidget extends Widget {
         minRange -= 100;
         maxRange += 100;
 
-        s.before('<img src="' + app.assetsFolder + '/images/triangle.png" class="ks-slider-triangle" width="16" height="8"><\/div>');
+        s.before('<img src="' + app.assetsUrl + '/images/triangle.png" class="ks-slider-triangle" width="16" height="8"><\/div>');
 
         let rulerNumLabelOffset = 5;
 

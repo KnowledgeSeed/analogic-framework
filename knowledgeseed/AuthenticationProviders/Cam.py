@@ -15,7 +15,8 @@ class Cam(Base):
     def auth(self):
         resp = make_response(redirect(self.setting.getBaseUrl()))
         resp.set_cookie('camPassport', request.form.get('c_pp'))
-        self.setTM1SessionIdForTM1Service(request.form.get('c_pp'))
+        #hq nem tudja backenden feloldani a hq.coresystems.hu-t
+        #self.setTM1SessionIdForTM1Service(request.form.get('c_pp'))
         return self.addAuthenticatedCookie(resp)
 
     def setTM1SessionIdForTM1Service(self, cam_passport):

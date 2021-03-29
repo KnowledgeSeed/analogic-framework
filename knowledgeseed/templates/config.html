@@ -3,12 +3,11 @@
     let app = {};
     (($, _) => {
         app = {fn: {}, id: 0, isMobile: null, isTouched: false, shoutWaiting: false, url: {}}
-        app.assetsFolder = '{{cnf.assetsFolder}}';
-        app.customerAssetsFolder = '{{cnf.customerAssetsFolder}}';
-        app.useShout = {% if cnf.useShout %}true{% else %}false{% endif %};
+        app.assetsUrl = '{{cnf.assetsUrl}}';
+        app.applicationAssetsFolder = '{{cnf.applicationAssetsFolder}}';
         app.host = '{{ cnf.host }}';
         app.authenticationMode = '{{ cnf.authenticationMode }}';
-        app.camNamespace = '{{ cnf.noAuthLogin }}';
+        app.devAuthLogin = '{{ cnf.devAuthLogin }}';
         app.sessionExpiresInMinutes = {{ cnf.sessionExpiresInMinutes }};
         app.url.authenticationBridge = "{{ cnf.authenticationBridge|safe }}";
         app.url.apiLogout = '{{ cnf.apiLogout }}';
@@ -22,7 +21,6 @@
         app.CellSetUrl = (cellsetId) => app.tm1ApiHost + app.tm1ApiSubPath + app.tm1CellsetId(cellsetId);
         app.defaultMDXQuery = '{{ cnf.defaultMDXQuery }}';
         app.defaultCellsetIdQuery = (cellsetId) => app.CellSetUrl(cellsetId) + '$expand=Cells($select=Ordinal,Value)';
-        app.SideBar = '{{ cnf.SideBar }}';
         app.MainPage = '{{ cnf.MainPage }}';
     })(jQuery);
 </script>

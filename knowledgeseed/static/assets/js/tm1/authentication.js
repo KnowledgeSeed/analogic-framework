@@ -5,7 +5,7 @@ const Auth = {};
 
 Auth.loadDefault = arg => {
     return $.ajax({
-        url: app.assetsFolder + '/js/configs/default/' + arg + '.json',
+        url: app.assetsUrl + '/js/configs/default/' + arg + '.json',
         dataType: 'json',
         cache: false
     });
@@ -63,8 +63,8 @@ Auth.getHeader = (contentType = 'application/json; charset=utf-8', accept = 'app
 
     headers['Access-Control-Allow-Origin'] = '*';
 
-    if ('NoAuth' === app.authenticationMode) {
-        headers['Authorization'] = app.camNamespace;
+    if ('DevAuth' === app.authenticationMode) {
+        headers['Authorization'] = app.devAuthLogin;
     }
 
     if ('Cam' === app.authenticationMode && $.cookie('camPassport') !== '0') {

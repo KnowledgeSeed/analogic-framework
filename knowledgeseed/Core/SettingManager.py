@@ -20,12 +20,13 @@ class SettingManager:
         self.instance = instance
 
     def clearCache(self):
-        self.cache.delete(self.getConfigCacheKey())
-        self.cache.delete(self.getRepositoryCacheKey())
-        self.cache.delete(self.getTm1SessionIdCacheKey())
-        self.cache.delete(self.getTM1SessionExpiresCacheKey())
-        self.cache.delete(self.getClassesCacheKey())
-        self.cache.delete(self.getFrameworkMdxCacheKey())
+        if self.cache is not None:
+            self.cache.delete(self.getConfigCacheKey())
+            self.cache.delete(self.getRepositoryCacheKey())
+            self.cache.delete(self.getTm1SessionIdCacheKey())
+            self.cache.delete(self.getTM1SessionExpiresCacheKey())
+            self.cache.delete(self.getClassesCacheKey())
+            self.cache.delete(self.getFrameworkMdxCacheKey())
         return "OK"
 
     def getInstance(self):
@@ -54,10 +55,10 @@ class SettingManager:
 
     def getConfig(self):
         cnf = self.getJsonSetting(self.getConfigCacheKey(), 'config')
-        if cnf['authenticationMode'] == 'NoAuth':
-            cnf['noAuthLogin'] = self.getPoolCamNamespace()
+        if cnf['authenticationMode'] == 'DevAuth':
+            cnf['devAuthLogin'] = self.getPoolCamNamespace()
         else:
-            cnf['noAuthLogin'] = ''
+            cnf['devAuthLogin'] = ''
         return cnf
 
     def getParam(self, param_name):
@@ -66,6 +67,8 @@ class SettingManager:
 
     def getBaseUrl(self, route=''):
         cnf = self.getConfig()
+        if self.instance == 'default':
+            return os.path.join(cnf['host'], cnf['subpath'], route)
         return os.path.join(cnf['host'], cnf['subpath'], self.instance, route)
 
     def getRepositoryOld(self):
@@ -80,25 +83,25 @@ class SettingManager:
         return mdx
 
     def getJsonSetting(self, key, file_name, by_instance=True):
-        setting = self.cache.get(key)
+        setting = self.cacheGet(key)
         if setting is None:
             file_path = file_name
             if by_instance:
                 file_path = os.path.join(self.instance, file_name)
-            json_url = os.path.join(self.site_root, 'settings', file_path + '.json')
+            json_url = os.path.join(self.site_root, 'applications', file_path + '.json')
             setting = json.load(open(json_url))
-            self.cache.set(key, setting, 0)
+            self.cacheSet(key, setting, 0)
         return setting
 
     def getYamlSetting(self, key, file_name, by_instance=True):
-        setting = self.cache.get(key)
+        setting = self.cacheGet(key)
         if setting is None:
             file_path = file_name
             if by_instance:
                 file_path = os.path.join(self.instance, file_name)
-            with open(os.path.join(self.site_root, 'settings', file_path + '.yml')) as file:
+            with open(os.path.join(self.site_root, 'applications', file_path + '.yml')) as file:
                 setting = yaml.load(file, Loader=yaml.FullLoader)
-                self.cache.set(key, setting, 0)
+                self.cacheSet(key, setting, 0)
         return setting
 
     def getFrameworkMdx(self, key):
@@ -111,16 +114,16 @@ class SettingManager:
 
     def setTM1SessionId(self, tm1_session_id):
         cnf = self.getConfig()
-        self.cache.set(self.getTm1SessionIdCacheKey(), tm1_session_id, 0)
+        self.cacheSet(self.getTm1SessionIdCacheKey(), tm1_session_id, 0)
         expires = datetime.datetime.now() + datetime.timedelta(minutes=cnf['sessionExpiresInMinutes'] - 1)
-        self.cache.set(self.getTM1SessionExpiresCacheKey(), expires, 0)
+        self.cacheSet(self.getTM1SessionExpiresCacheKey(), expires, 0)
 
     def getTM1SessionId(self):
-        if self.cache.get(self.getTm1SessionIdCacheKey()) is None or (
-                self.cache.get(self.getTM1SessionExpiresCacheKey()) is not None and datetime.datetime.now() >= self.cache.get(
+        if self.cacheGet(self.getTm1SessionIdCacheKey()) is None or (
+                self.cacheGet(self.getTM1SessionExpiresCacheKey()) is not None and datetime.datetime.now() >= self.cacheGet(
                 self.getTM1SessionExpiresCacheKey())):
             return None
-        return self.cache.get(self.getTm1SessionIdCacheKey())
+        return self.cacheGet(self.getTm1SessionIdCacheKey())
 
     def getPassword(self):
         return keyring.get_password(self.getAppCamNamespace(), self.getPoolUser())
@@ -143,3 +146,18 @@ class SettingManager:
         namespace = self.getAppCamNamespace()
         s = user + ":" + password + ":" + namespace
         return 'CAMNamespace ' + base64.b64encode(s.encode('utf-8')).decode("utf-8")
+
+    def getSsoCamNamespace(self):
+        cnf = self.getConfig()
+        password = keyring.get_password(cnf['sso']['admin'], cnf['sso']['adminNamespace'])
+        s = cnf['sso']['admin'] + ":" + password + ":" + cnf['sso']['adminNamespace']
+        return 'CAMNamespace ' + base64.b64encode(s.encode('utf-8')).decode("utf-8")
+
+    def cacheGet(self, key):
+        if self.cache is not None:
+            return self.cache.get(key)
+        return None
+
+    def cacheSet(self, key, value, expires=0):
+        if self.cache is not None:
+            self.cache.set(key, value, expires)

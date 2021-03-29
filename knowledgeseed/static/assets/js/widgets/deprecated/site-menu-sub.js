@@ -17,7 +17,7 @@ class SiteMenuSubWidget extends Widget {
 
     getMainHtml(logo, alt, icon, text, innerHtml) {
         return `
-<img class="roche-logo" src="${app.assetsFolder}/skins/${app.customerAssetsFolder}/images/${logo}" alt="${alt}">
+<img class="roche-logo" src="${app.assetsUrl}/skins/${app.applicationAssetsFolder}/images/${logo}" alt="${alt}">
 <div class="user-box noselect">
    <span class="${icon}"></span>
    ${text}
