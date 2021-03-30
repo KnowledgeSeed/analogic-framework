@@ -3,9 +3,9 @@ import sys
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 from flask import request, send_file
-from knowledgeseed.Core.ClassLoader import ClassLoader
-from knowledgeseed.Core.SettingManager import SettingManager
-from knowledgeseed.Core.FileUploadManager import FileUploadManager
+from DimensionFramework.Core.ClassLoader import ClassLoader
+from DimensionFramework.Core.SettingManager import SettingManager
+from DimensionFramework.Core.FileUploadManager import FileUploadManager
 
 
 class Base:
@@ -24,7 +24,7 @@ class Base:
         if export_key is None:
             return self.getNotFoundResponse()
 
-        export_description = self.getClassDescription(export_key)
+        export_description = self.getCustomObjectDescription(export_key)
 
         if export_description is None:
             return self.getNotFoundResponse()
@@ -43,7 +43,7 @@ class Base:
         if key is None:
             return self.getNotFoundResponse()
 
-        description = self.getClassDescription(key)
+        description = self.getCustomObjectDescription(key)
 
         return ClassLoader().call(description, request, self.getTM1Service(), self.setting)
 

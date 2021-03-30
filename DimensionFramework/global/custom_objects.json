@@ -1,11 +1,11 @@
 {
   "davidCustom1" : {
-    "namespace": "knowledgeseed.Custom.Export",
+    "namespace": "DimensionFramework.Custom.Export",
     "class": "Export",
     "method": "davidExport1"
   },
   "cool" : {
-    "namespace": "knowledgeseed.Custom.BusinessLogic",
+    "namespace": "DimensionFramework.Custom.BusinessLogic",
     "class": "BusinessLogic",
     "method": "doSomethingCool"
   }

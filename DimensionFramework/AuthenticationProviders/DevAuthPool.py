@@ -1,4 +1,4 @@
-from knowledgeseed.AuthenticationProviders.Pool import Pool
+from DimensionFramework.AuthenticationProviders.Pool import Pool
 from flask import render_template
 
 

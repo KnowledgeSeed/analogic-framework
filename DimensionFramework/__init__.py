@@ -2,8 +2,8 @@ import os
 import redis
 from flask import Flask
 from flask_caching import Cache
-import knowledgeseed.AuthenticationProviders.AuthenticationProviderFactory
-from knowledgeseed.AuthenticationProviders.Base import Base
+import DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory
+from DimensionFramework.AuthenticationProviders.Base import Base
 
 app = Flask(__name__)
 site_root = os.path.realpath(os.path.dirname(__file__))
@@ -68,8 +68,8 @@ def clearCache(instance):
 def getProvider(instance):
     cache = getCache()
     config = Base(cache, site_root, instance).setting.getConfig()
-    provider = knowledgeseed.AuthenticationProviders.AuthenticationProviderFactory.getProvider(config, cache, site_root,
-                                                                                               instance)
+    provider = DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory.getProvider(config, cache, site_root,
+                                                                                                    instance)
     return provider
 
 

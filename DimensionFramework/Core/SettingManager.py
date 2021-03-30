@@ -7,12 +7,12 @@ from flask import json
 
 
 class SettingManager:
-    CONFIG = 'knowledgeseed_config'
-    REPOSITORY = 'knowledgeseed_repository'
-    CLASSES = 'knowledgeseed_classes'
-    TM1SessionId = 'tm1_session_id'
-    TM1SessionExpires = 'tm1_session_expires'
-    FRAMEWORK_MDX = 'knowledgeseed_framework_mdx'
+    CONFIG = 'dimension_framework_config'
+    REPOSITORY = 'dimension_framework_repository'
+    CLASSES = 'dimension_framework_classes'
+    TM1SessionId = 'dimension_framework_tm1_session_id'
+    TM1SessionExpires = 'dimension_framework_tm1_session_expires'
+    FRAMEWORK_MDX = 'dimension_framework_mdx'
 
     def __init__(self, cache, site_root, instance='default'):
         self.cache = cache
@@ -82,34 +82,34 @@ class SettingManager:
         mdx = repository[key]
         return mdx
 
-    def getJsonSetting(self, key, file_name, by_instance=True):
+    def getJsonSetting(self, key, file_name, by_instance=True, folder='applications'):
         setting = self.cacheGet(key)
         if setting is None:
             file_path = file_name
             if by_instance:
                 file_path = os.path.join(self.instance, file_name)
-            json_url = os.path.join(self.site_root, 'applications', file_path + '.json')
+            json_url = os.path.join(self.site_root, folder, file_path + '.json')
             setting = json.load(open(json_url))
             self.cacheSet(key, setting, 0)
         return setting
 
-    def getYamlSetting(self, key, file_name, by_instance=True):
+    def getYamlSetting(self, key, file_name, by_instance=True, folder='applications'):
         setting = self.cacheGet(key)
         if setting is None:
             file_path = file_name
             if by_instance:
                 file_path = os.path.join(self.instance, file_name)
-            with open(os.path.join(self.site_root, 'applications', file_path + '.yml')) as file:
+            with open(os.path.join(self.site_root, folder, file_path + '.yml')) as file:
                 setting = yaml.load(file, Loader=yaml.FullLoader)
                 self.cacheSet(key, setting, 0)
         return setting
 
     def getFrameworkMdx(self, key):
-        mdx = self.getYamlSetting(self.getFrameworkMdxCacheKey(), 'framework_mdx', False)
+        mdx = self.getYamlSetting(self.getFrameworkMdxCacheKey(), 'mdx', False, 'global')
         return mdx[key]
 
-    def getClassDescription(self, key):
-        classes = self.getJsonSetting(self.getClassesCacheKey(), 'classes', False)
+    def getCustomObjectDescription(self, key):
+        classes = self.getJsonSetting(self.getClassesCacheKey(), 'custom_objects', False, 'global')
         return classes[key]
 
     def setTM1SessionId(self, tm1_session_id):
@@ -126,7 +126,7 @@ class SettingManager:
         return self.cacheGet(self.getTm1SessionIdCacheKey())
 
     def getPassword(self):
-        return keyring.get_password(self.getAppCamNamespace(), self.getPoolUser())
+        return keyring.get_password(self.getAppCamNamespace() + '/' + self.getPoolUser(), self.getPoolUser())
 
     def getPoolUser(self):
         cnf = self.getConfig()
@@ -149,7 +149,7 @@ class SettingManager:
 
     def getSsoCamNamespace(self):
         cnf = self.getConfig()
-        password = keyring.get_password(cnf['sso']['admin'], cnf['sso']['adminNamespace'])
+        password = keyring.get_password(cnf['sso']['adminNamespace'] + '/' + cnf['sso']['admin'], cnf['sso']['admin'])
         s = cnf['sso']['admin'] + ":" + password + ":" + cnf['sso']['adminNamespace']
         return 'CAMNamespace ' + base64.b64encode(s.encode('utf-8')).decode("utf-8")
 

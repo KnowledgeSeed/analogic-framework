@@ -1,6 +1,6 @@
 import requests
 from flask import request, json
-from knowledgeseed.AuthenticationProviders.Base import Base
+from DimensionFramework.AuthenticationProviders.Base import Base
 from TM1py.Services import TM1Service
 
 
@@ -32,7 +32,7 @@ class Pool(Base):
             for k in body:
                 mdx = mdx.replace('$' + k, body[k])
 
-        mdx = self.setCustomMDXData(mdx)
+            mdx = self.setCustomMDXData(mdx)
 
         url = target_url + "/" + sub_path + (
             "?" + request.query_string.decode('UTF-8') if len(

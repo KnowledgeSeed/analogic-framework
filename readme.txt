@@ -11,3 +11,5 @@ set FLASK_APP=app.py
 set FLASK_ENV=development
 
 flask run
+
+sc create redis-server binPath="c:\Program Files\redis-3.0\msvs\x64\Debug\redis-server.exe --service-run" DisplayName="Redis Server" start=auto

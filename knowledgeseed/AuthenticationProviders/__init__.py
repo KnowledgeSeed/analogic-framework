@@ -1,9 +1,0 @@
-from knowledgeseed.AuthenticationProviders.Base import Base
-from knowledgeseed.AuthenticationProviders.Pool import Pool
-from knowledgeseed.AuthenticationProviders.LoginPool import LoginPool
-from knowledgeseed.AuthenticationProviders.DevAuth import DevAuth
-from knowledgeseed.AuthenticationProviders.DevAuthPool import DevAuthPool
-from knowledgeseed.AuthenticationProviders.Cam import Cam
-from knowledgeseed.AuthenticationProviders.SSOPool import SSOPool
-from knowledgeseed.AuthenticationProviders.AuthenticationProviderFactory import AuthenticationProviderFactory
-

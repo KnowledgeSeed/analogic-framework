@@ -1,7 +1,7 @@
 import jwt
 import requests
 import base64
-from knowledgeseed.AuthenticationProviders.Pool import Pool
+from DimensionFramework.AuthenticationProviders.Pool import Pool
 from flask import render_template, request, session, make_response, redirect, Response
 
 
