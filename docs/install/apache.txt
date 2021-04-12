@@ -1,7 +1,9 @@
-letölteni és installálni:
+Ahhoz, hogy a mod-wsgi python modul-t buildelni tudjuk a következő tool-t kell telepíteni:
+
 https://visualstudio.microsoft.com/visual-cpp-build-tools/
 
-környezeti változó:
+Be kell állítani a környezeti változót az apachenak:
+
 set MOD_WSGI_APACHE_ROOTDIR=C:/Users/me/apache
 
 menj a virtual envedhez, aktiváld
@@ -34,15 +36,3 @@ Add hozzá a következő virtualhostot igény szerint konfigurálva:
         Require all granted
     </Directory>
 </VirtualHost>
-
-Editáld az app.wsgi fájlt, meg kell adni az alkalmazás elérési útját:
-
-sys.path.insert(0, 'C:\\Repos\\flaskProject')
-
-linkek:
-
-https://stackoverflow.com/questions/59801387/how-to-install-mod-wsgi-into-apache-on-windows
-https://github.com/GrahamDumpleton/mod_wsgi/issues/215
-https://github.com/GrahamDumpleton/mod_wsgi/issues/559
-https://github.com/GrahamDumpleton/mod_wsgi/issues/663
-https://dev.to/willmvs/flask-deployment-on-windows-139b

@@ -1,0 +1,11 @@
+requirements:
+waitress~=2.0.0
+pywin32
+
+add the following to the system path:
+C:\Users\user\PycharmProjects\knowledgeseed\flaskProject\Lib\site-packages\pywin32_system32
+
+cmd as administrator
+pyhton waitress_win_service.py install
+
+change service local system account to user

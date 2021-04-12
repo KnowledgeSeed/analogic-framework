@@ -25,14 +25,7 @@ class Pool(Base):
 
         target_url = self.setting.getPoolTargetUrl()
 
-        mdx = request.data
-        if request.args.get('server') is not None:
-            body = json.loads(request.data)
-            mdx = self.setting.getMDX(body['key'])
-            for k in body:
-                mdx = mdx.replace('$' + k, body[k])
-
-            mdx = self.setCustomMDXData(mdx)
+        mdx = self.getServerSideMDX()
 
         url = target_url + "/" + sub_path + (
             "?" + request.query_string.decode('UTF-8') if len(
@@ -44,6 +37,11 @@ class Pool(Base):
                                    'Accept-Encoding': 'gzip, deflate, br'}
         cookies: dict[str, str] = {}
 
+        response = self.doPoolRequest(url, method, mdx, headers, cookies)
+
+        return response.text, response.status_code, {'Content-Type': 'application/json'}
+
+    def doPoolRequest(self, url, method, mdx, headers, cookies):
         tm1_session_id = self.setting.getTM1SessionId()
 
         authorization_required = tm1_session_id is None
@@ -53,12 +51,18 @@ class Pool(Base):
         else:
             cookies["TM1SessionId"] = tm1_session_id
 
-        response = requests.request(url=url, method=method, data=mdx, headers=headers, cookies=cookies, verify=False)
+        response = requests.request(
+            url=url,
+            method=method,
+            data=mdx,
+            headers=headers,
+            cookies=cookies,
+            verify=False)
 
         if authorization_required:
             self.setting.setTM1SessionId(response.cookies.get('TM1SessionId'))
 
-        return response.text, response.status_code, {'Content-Type': 'application/json'}
+        return response
 
     def getTM1Service(self):
 

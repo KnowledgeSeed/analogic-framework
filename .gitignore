@@ -2,3 +2,6 @@ __pycache__
 .idea
 nbproject
 *.dist
+cache
+local
+waitress_cmd_local.py

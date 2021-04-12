@@ -2,7 +2,7 @@ import pandas as pd
 import sys
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
-from flask import request, send_file
+from flask import request, send_file, json, request
 from DimensionFramework.Core.ClassLoader import ClassLoader
 from DimensionFramework.Core.SettingManager import SettingManager
 from DimensionFramework.Core.FileUploadManager import FileUploadManager
@@ -46,6 +46,17 @@ class Base:
         description = self.getCustomObjectDescription(key)
 
         return ClassLoader().call(description, request, self.getTM1Service(), self.setting)
+
+    def getServerSideMDX(self):
+        mdx = request.data
+        if request.args.get('server') is not None:
+            body = json.loads(request.data)
+            mdx = self.setting.getMDX(body['key'])
+            for k in body:
+                mdx = mdx.replace('$' + k, body[k])
+
+            mdx = self.setCustomMDXData(mdx)
+        return mdx
 
     def login(self):
         pass

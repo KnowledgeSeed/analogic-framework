@@ -22,5 +22,6 @@
         app.defaultMDXQuery = '{{ cnf.defaultMDXQuery }}';
         app.defaultCellsetIdQuery = (cellsetId) => app.CellSetUrl(cellsetId) + '$expand=Cells($select=Ordinal,Value)';
         app.MainPage = '{{ cnf.MainPage }}';
+        app.handled401 = false;
     })(jQuery);
 </script>
