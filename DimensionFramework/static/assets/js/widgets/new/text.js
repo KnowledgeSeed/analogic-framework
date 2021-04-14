@@ -4,7 +4,7 @@
 
 class TextWidget extends Widget {
 
-    getHtml(widgets, d) {console.log(d);
+    getHtml(widgets, d) {
         const v = {
             body: this.getRealValue('body', d, false),
             bodyFontColor: this.getRealValue('bodyFontColor', d, false),
@@ -72,7 +72,6 @@ class TextWidget extends Widget {
                     c.html(r.val());
 
                     TextWidget.addEdit(section, o, amIOnGridTable);
-                    console.log('focusout');
                 });
                 if (amIOnGridTable === true) {
                     let gridId = r.data('id').split('_')[0];
@@ -97,7 +96,14 @@ class TextWidget extends Widget {
                         }
 
                         if(f.keyCode === 38 || f.keyCode === 40) {
-
+                            let sgi = r.data('id').split('_'), gridId = sgi[0], actRow = parseInt(sgi[1]), row = f.keyCode === 38 ? actRow === 0 ? -1 : actRow - 1 : actRow + 1, column = sgi[2];
+                            if(row === -1){
+                                return;
+                            }
+                            let nextElement = $('#' + gridId + '_' + row + '_' + column);
+                            if(nextElement.length && nextElement.is(':visible')){
+                                nextElement.find('.ks-text-title').click();
+                            }
                         }
                     });
                 }
