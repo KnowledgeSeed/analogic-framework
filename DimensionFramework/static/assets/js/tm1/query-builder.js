@@ -286,14 +286,15 @@ QB.getCellsetUrl = p => {
 };
 
 QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
-    let params = [], subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&' : '' : url + '?server=1';
+    let params = [], subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&server=1' : '' : url + '?server=1';
+    let newUrl = url.includes('pool') ? url : url.replace(app.tm1ApiHost, app.host + '/' + (app.subpath != '' ? app.subpath + '/' + app.instance : app.instance) + '/pool')
 
     for (const [key, value] of Object.entries(body)) {
         params.push(`"${key}": "${value}"`);
     }
     params.push(`"key" : "${repositoryId + "_" + path}"`);
 
-    return {url: url + subUrl, body: `{${params.join(',')}}`};
+    return {url: newUrl + subUrl, body: `{${params.join(',')}}`};
 };
 
 QB.getMDXUrl = p => {

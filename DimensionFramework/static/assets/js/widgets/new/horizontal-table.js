@@ -329,7 +329,6 @@ class HorizontalTableWidget extends Widget {
         c.html(`<input type="text" data-row="${c.data('row')}" data-col="${c.data('col')}" data-id="${s.prop('id')}" data-action="cellEdit" data-ordinal="${c.data('ordinal')}" class="widget-input edit-cell">`).promise().then(() => {
             let r = c.find('.edit-cell');
             r.val(vv).focus().select().on('keydown', f => {
-                ;
                 if (f.keyCode === 13) {
                     HorizontalTableWidget.addCellPressed(f, c);
                     r.data('value', Utils.escapeText(r.val()));

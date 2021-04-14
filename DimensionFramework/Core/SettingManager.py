@@ -90,6 +90,7 @@ class SettingManager:
                 file_path = os.path.join(self.instance, file_name)
             json_url = os.path.join(self.site_root, folder, file_path + '.json')
             setting = json.load(open(json_url))
+            setting['instance'] = self.instance
             self.cacheSet(key, setting, 0)
         return setting
 
@@ -112,18 +113,19 @@ class SettingManager:
         classes = self.getJsonSetting(self.getClassesCacheKey(), 'custom_objects', False, 'global')
         return classes[key]
 
-    def setTM1SessionId(self, tm1_session_id):
+    def setTM1SessionId(self, tm1_session_id, suffix=''):
         cnf = self.getConfig()
-        self.cacheSet(self.getTm1SessionIdCacheKey(), tm1_session_id, 0)
+        self.cacheSet(self.getTm1SessionIdCacheKey() + suffix, tm1_session_id, 0)
         expires = datetime.datetime.now() + datetime.timedelta(minutes=cnf['sessionExpiresInMinutes'] - 1)
-        self.cacheSet(self.getTM1SessionExpiresCacheKey(), expires, 0)
+        self.cacheSet(self.getTM1SessionExpiresCacheKey() + suffix, expires, 0)
 
-    def getTM1SessionId(self):
-        if self.cacheGet(self.getTm1SessionIdCacheKey()) is None or (
-                self.cacheGet(self.getTM1SessionExpiresCacheKey()) is not None and datetime.datetime.now() >= self.cacheGet(
-                self.getTM1SessionExpiresCacheKey())):
+    def getTM1SessionId(self, suffix=''):
+        tm1_session_id = self.cacheGet(self.getTm1SessionIdCacheKey() + suffix)
+        tm1_session_id_exp = self.cacheGet(self.getTM1SessionExpiresCacheKey() + suffix)
+        if tm1_session_id is None or (
+                tm1_session_id_exp is not None and datetime.datetime.now() >= tm1_session_id_exp):
             return None
-        return self.cacheGet(self.getTm1SessionIdCacheKey())
+        return tm1_session_id
 
     def getPassword(self):
         return keyring.get_password(self.getAppCamNamespace() + '/' + self.getPoolUser(), self.getPoolUser())

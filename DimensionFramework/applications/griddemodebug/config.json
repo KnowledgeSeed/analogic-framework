@@ -1,0 +1,27 @@
+{
+    "assetsUrl": "http://localhost:5000/static/assets",
+    "applicationName": "Admin",
+    "applicationAssetsFolder": "adminportal",
+    "applicationConfigFolder": "griddemo",
+    "version": "8",
+    "useMinifiedAssets": false,
+    "host": "http://localhost:5000/",
+    "subpath": "",
+    "authenticationMode": "LoginPool",
+    "camNamespace": "knowledgeseed",
+    "sessionExpiresInMinutes": 20,
+    "authenticationBridge": "",
+    "apiLogout": "",
+    "logout": "",
+    "restRequestDebugFlag": false,
+    "tm1ApiHost": "http://localhost:5000/griddemodebug/pool",
+    "tm1ApiSubPath": "/api/v1/",
+    "tm1ExecuteMDX": "ExecuteMDX?",
+    "MDXUrl": "https://hq.coresystems.hu:5125/rocheapi/api/v1/ExecuteMDX?",
+    "defaultMDXQuery": "https://hq.coresystems.hu:5125/rocheapi/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value)",
+    "MainPage": "gridTestPage",
+    "pool": {
+        "users": ["oravecz.tamas"],
+        "target": "https://hq.coresystems.hu:5125/rocheapi"
+    }
+}

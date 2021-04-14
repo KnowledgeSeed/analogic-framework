@@ -1,5 +1,46 @@
 /* global app */'use strict';
 app.repository = {
+       adminPortalUserGridButton2: {
+        init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
+                    type: 'POST',
+                    body: (db) => `{"MDX":"SELECT {[}Clients].[${db.activeUser}]} on ROWS, {[zSYS Analogic UI User Data Measure].[sValue]}*{[zSYS Analogic UI Widget].[adminPortalWidgetCatalogUserGridApplicationDropBox],[zSYS Analogic UI Widget].[adminPortalWidgetCatalogUserGridButton]} on COLUMNS  FROM [zSYS Analogic UI User Data]"}`,
+                    parsingControl: {
+                        type: 'object',
+                        query:
+                                {label: (r, x) => {
+                                        app.widgetValue['activeUserName'] = app.utils.toTitleCase(r.Cells[1].Value);
+                                        app.widgetValue['selectedApplication'] = r.Cells[0].Value;
+                                        return app.utils.toTitleCase(r.Cells[1].Value);
+                                    }}
+                    }
+
+                },
+    },
+    adminPortalUserGridButton:{
+        init:
+        {
+            url:  (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
+            type: 'POST',
+          server: true,
+                    body: (db) => {
+                        return {
+                            activeUser: db.activeUser
+                        };
+                    },
+            parsingControl: {
+                        type: 'object',
+                        query:
+                        {label: (r, x) => {
+                                        app.widgetValue['activeUserName'] = app.utils.toTitleCase(r.Cells[1].Value);
+                                        app.widgetValue['selectedApplication'] = r.Cells[0].Value;
+                                        app.widgetValue['defaultFilter'] ='[zSYS Analogic UI Widget Parameter].([zSYS Analogic WidgetParameters].[id],[zSYS Analogic UI Widget Parameter Measure].[value]) <> \\"\\"';
+                                        return app.utils.toTitleCase(r.Cells[1].Value);
+                                    }}
+	             }
+	             },
+    },
     upload1: {
         upload: (db) => {
             return {

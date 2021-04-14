@@ -53,9 +53,11 @@ class Base:
             body = json.loads(request.data)
             mdx = self.setting.getMDX(body['key'])
             for k in body:
-                mdx = mdx.replace('$' + k, body[k])
+                mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
 
             mdx = self.setCustomMDXData(mdx)
+            return mdx.encode('utf-8')
+
         return mdx
 
     def login(self):

@@ -4,7 +4,7 @@
 
 class TextWidget extends Widget {
 
-    getHtml(widgets, d) {
+    getHtml(widgets, d) {console.log(d);
         const v = {
             body: this.getRealValue('body', d, false),
             bodyFontColor: this.getRealValue('bodyFontColor', d, false),
@@ -38,7 +38,7 @@ class TextWidget extends Widget {
         return `
 <div class="ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}" style="${mainDivStyle.join('')}">
     <div class="ks-text-inner">
-        <div class="ks-text-title" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title ? v.title : ''}</div>
+        <div class="ks-text-title" data-editable="${v.editable ? '1' : '0'}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title ? v.title : ''}</div>
         <div class="ks-text-separator"></div>
         <div class="ks-text-body" style="${bodyStyles.join('')}">${v.body ? v.body : ''}</div>
     </div>
@@ -52,11 +52,11 @@ class TextWidget extends Widget {
         }
 
         if (this.value.editable) {
-            TextWidget.addEdit(section, o);
+            TextWidget.addEdit(section, o, this.amIOnAGridTable());
         }
     }
 
-    static addEdit(section, o) {
+    static addEdit(section, o, amIOnGridTable) {
         section.find('.ks-text-title').on('click', e => {
             let c = $(e.currentTarget);
             c.off('click');
@@ -71,8 +71,37 @@ class TextWidget extends Widget {
 
                     c.html(r.val());
 
-                    TextWidget.addEdit(section, o);
+                    TextWidget.addEdit(section, o, amIOnGridTable);
+                    console.log('focusout');
                 });
+                if (amIOnGridTable === true) {
+                    let gridId = r.data('id').split('_')[0];
+                    r.on('keydown', f => {
+
+                        if (f.keyCode === 39 || f.keyCode === 37) {
+                            let editables = $('#' + gridId).find('.ks-text-title[data-editable=1]').filter(':visible').sort(function (a, b) {
+                                return ($(b).data('ordinal')) < ($(a).data('ordinal')) ? 1 : -1;
+                            }), i = 0, j = -1, k = 0;
+                            while (i < editables.length && j === -1) {
+                                if ($(editables[i]).data('ordinal') === c.data('ordinal')) {
+                                    j = i;
+                                }
+                                ++i;
+                            }
+                            if ((j + 1) >= editables.length) {
+                                j = -1;
+                            }
+                            k = f.keyCode === 39 ? j + 1 : j === -1 ? editables.length - 1 : j - 1;console.log(k);
+
+                            $(editables[k]).click();
+                        }
+
+                        if(f.keyCode === 38 || f.keyCode === 40) {
+
+                        }
+                    });
+                }
+
             });
         });
     }

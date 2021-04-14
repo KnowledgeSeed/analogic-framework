@@ -1,18 +1,46 @@
 import sys
 import os
+import site
 
-root = os.path.realpath(os.path.dirname(__file__))
-sys.path.append(os.path.join(root, 'venv', 'Lib', 'site-packages'))
+project_name = "flaskapp"
+venv_folder_name = "venv"
 
-import win32serviceutil
+if sys.executable.lower().endswith("pythonservice.exe"):
+
+    service_directory = os.path.abspath(os.path.dirname(__file__))
+    project_directory = service_directory[:service_directory.find(project_name)+len(project_name)]
+
+    def file_path(x): return os.path.join(project_directory, x)
+    venv_base = file_path(venv_folder_name)
+    venv_scripts = os.path.join(venv_base, "Scripts")
+    venv_packages = os.path.join(venv_base, 'Lib', 'site-packages')
+
+    os.chdir(project_directory)
+    sys.path.append(".")
+    prev_sys_path = list(sys.path)
+
+    os.environ['PATH'] = venv_scripts + os.pathsep + os.environ['PATH']
+
+    site.addsitedir(venv_packages)
+    sys.real_prefix = sys.prefix
+    sys.prefix = venv_base
+
+    new_sys_path = []
+    for item in list(sys.path):
+        if item not in prev_sys_path:
+            new_sys_path.append(item)
+            sys.path.remove(item)
+    sys.path[:0] = new_sys_path
+
+from DimensionFramework import app as application
+from waitress import serve
 import win32service
 import win32event
 import servicemanager
 import socket
 import threading
 import ctypes
-from DimensionFramework import app as application
-from waitress import serve
+import win32serviceutil
 
 
 

@@ -6,6 +6,22 @@ app.widgetConfig = {
                 type: PageWidget,
                 widgets: [
                     {
+                        id:'adminPortalUserGridButton',
+                        type:ButtonWidget,
+                        label:'Oravecz Tamas',
+                        action:'',
+                        icon:'icon-profile',
+                        skin:'userpanel',
+                    },
+                    {
+                        id:'adminPortalUserGridButton2',
+                        type:ButtonWidget,
+                        label:'Oravecz Tamas',
+                        action:'',
+                        icon:'icon-profile',
+                        skin:'userpanel',
+                    },
+                    {
                         id: 'preprocess',
                         type: DropBoxWidget,
                         title: 'Preprocess templates',
