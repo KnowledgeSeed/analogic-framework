@@ -62,6 +62,41 @@ class TextWidget extends Widget {
         });
     }
 
+    static paste(r, f) {
+        let c = r.find('.ks-text-title'), gridId = r.attr('id').split('_')[0];
+        let editables = TextWidget.getEditables(gridId),
+            j = TextWidget.getCurrentIndex(editables, c);
+        if (j >= 0 && editables.length > 0) {
+            navigator.clipboard.readText().then(text => TextWidget.pasteData2(text, editables, j, f)).catch(err => L('Read from clipboard failed: ', err));
+        }
+    }
+
+    static pasteData2(text, editables, j, f) {
+        let e, rows = text.trim().split('\n'), cells = [], i, k, s, r;
+        if (rows.length === 0) {
+            return;
+        }
+
+        let editableRows = TextWidget.createEditableRows(editables, j);
+        for (i = 0; i < editableRows.length; ++i) {
+            if (rows.length <= i) {
+                break;
+            }
+            cells = rows[i].split('\t');
+            for (k = 0; k < editableRows[i].length; ++k) {
+                if (k >= cells.length) {
+                    break;
+                }
+                e = $(editableRows[i][k]);
+                s = e.closest('section').attr('id');
+                WidgetValue[s] = {value: Utils.escapeText(cells[k])};
+                r = $('<div>').data('id', s).data('action', 'write').data('ordinal', e.data('ordinal'));
+                Widget.doHandleSystemEvent(r, f);
+                e.html(cells[k]);
+            }
+        }
+    }
+
     static pasteData(text, editables, j, f, o, section) {
         let e, rows = text.trim().split('\n'), cells = [], i, k, s, r;
         if (rows.length === 0) {
@@ -126,19 +161,11 @@ class TextWidget extends Widget {
         let textTitle = section.find('.ks-text-title');
         if (amIOnGridTable === true) {
             textTitle.bind('contextmenu', e => {
-                let r = $('<div>').data('id', section.attr('id')).data('action', 'rightclick').data('ordinal', textTitle.data('ordinal'));
-                Widget.doHandleSystemEvent(r, e);
-                Widget.doHandleGridTableSystemEvent(r, e);
+                let r = textTitle.data('id', section.attr('id')).data('action', 'rightclick');
+                Widget.doHandleSystemEvent(textTitle, e);
+                Widget.doHandleGridTableSystemEvent(textTitle, e);
                 return false;
             });
-            /* textTitle.on('mousedown', e => {
-                 if (e.which === 3) {
-                     Utils.stopEvent(e);
-                     let r = $('<div>').data('id', section.attr('id')).data('action', 'rightclick').data('ordinal', textTitle.data('ordinal'));
-                     Widget.doHandleSystemEvent(r, e);
-                     return false;
-                 }
-             });*/
         }
         textTitle.on('click', e => {
             let c = $(e.currentTarget);

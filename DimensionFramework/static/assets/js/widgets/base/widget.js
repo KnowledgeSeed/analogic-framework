@@ -231,6 +231,10 @@ class Widget {
 
         const eventMapId = a + '.' + i;
 
+        if('rightclick' === a){
+            WidgetValue['rightclick'] = i;
+        }
+
         El.body.triggerHandler(eventMapId + '.started');
 
         if (WidgetValue[i] && updateValue) {

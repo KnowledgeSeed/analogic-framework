@@ -316,3 +316,7 @@ app.fn.toggleInfoWidget = arg => {
         }
     }
 };
+
+app.fn.pastToGridTableText = (argument, ev, element) => {
+  TextWidget.paste($('#' + WidgetValue['rightclick']), ev);
+};

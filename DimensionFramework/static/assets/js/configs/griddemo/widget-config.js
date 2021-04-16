@@ -17,6 +17,30 @@ app.widgetConfig = {
                     skin: 'template6'
                 },
                 {
+                        id: 'tempPopupForGridTable',
+                        type: ContainerWidget,
+                        anchorVisible: true,
+                        anchorOnClick: true,
+                        backdrop: false,
+                        visible: false,
+                        closeBtn: true,
+                        width: '160',
+                        bgScrollable: true,
+                        fixed: false,
+                        height: '130',
+                        behaviour: 'popup',
+                        position: 'right',
+                        widgets: [
+                            {
+                                id: 'paste',
+                                type: ButtonWidget,
+                                skin: 'analogicpopup',
+                                width: 130,
+                                label: 'Paste'
+                            }
+                        ]
+                },
+                {
                     type: GridWidget,
                     marginLeft: 180,
                     marginBottom: 20,
