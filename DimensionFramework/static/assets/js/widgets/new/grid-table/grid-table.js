@@ -9,11 +9,15 @@ class GridTableWidget extends Widget {
         const v = {
             borderBottom: this.getRealValue('borderBottom', d, true),
             borderTop: this.getRealValue('borderTop', d, true),
+            hideIfNoData: this.getRealValue('hideIfNoData', d, false),
             rowHeight: this.getRealValue('rowHeight', d, false),
             skin: this.getRealValue('skin', d, 'standard')
         };
 
         let mainDivStyle = this.getGeneralStyles(d);
+        if(v.hideIfNoData === true && (!d ||  d.length === 0)) {
+            mainDivStyle.push('display:none;');
+        }
 
         let r = [], c = [], tb, th, j = 0, col = o.widgets.filter(e => e.type.name !== 'GridTableHeaderRowWidget').length, hw = '';
 

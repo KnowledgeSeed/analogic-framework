@@ -28,6 +28,13 @@ QB.loadData = (argument, type, useDefaultData = false, path = 'init') => {
 
     //TODO remove, back compatibility
     if (r && r.state) {
+        if (r[conditionPath] && !r[conditionPath](WidgetValue)) {
+            if (r[defaultPath]) {
+                return QB.loadFromWidgetValue(r[defaultPath]);
+            }
+
+            return Auth.loadDefault(type);
+        }
         if (Array.isArray(r.state)) {
             return QB.loadFromWidgetValues(r.state);
         }

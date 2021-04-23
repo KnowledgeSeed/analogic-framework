@@ -1,0 +1,245 @@
+.ks-grid-table-deepblue_grid_horizontaltable .ks-grid-table-row {
+    height: 40px;
+}
+
+.ks-grid-table-deepblue_grid_horizontaltable .ks-grid-table-row.border-bottom {
+    border-bottom: 1px solid #dee1e5; 
+}
+
+.ks-grid-table-deepblue_grid_horizontaltable .ks-grid-table-row.border-top {
+    /*border-top: 1px solid #dee1e5;*/
+}
+
+.ks-grid-table-deepblue_grid_horizontaltable .ks-grid-table-cell {
+    padding: 0px;
+}
+
+.ks-grid-table-deepblue_grid_horizontaltable .ks-grid-table-cell.border-right {
+    border-right: 3px solid #f1f3f5;
+}
+
+.ks-grid-table-deepblue_grid_horizontaltable .ks-grid-table-cell.border-left {
+   /* border-left: 3px solid #f1f3f5;*/
+}
+
+.ks-grid-table-deepblue_grid_horizontaltable .ks-grid-table-cell:last-child {
+    border-left: 0;
+}
+
+.ks-grid-table-deepblue_grid_horizontaltable .ks-grid-table-head .ks-grid-table-cell-content {
+    font-size: 11px;
+    color: #747b85;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.ks-grid-table-deepblue_grid_horizontaltable .ks-grid-table-head .ks-pos-bottom-space-between.ks-grid-table-cell-content {
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+
+.ks-grid-table-grid_horizontaltable .ks-grid-table-row {
+    height: 40px;
+}
+
+.ks-grid-table-grid_horizontaltable .ks-grid-table-row.border-bottom {
+    border-bottom: 1px solid #dee1e5; 
+}
+
+.ks-grid-table-grid_horizontaltable .ks-grid-table-cell-content {
+    display: unset;
+}
+
+.ks-grid-table-grid_horizontaltable .ks-grid-table-row.border-top {
+    /*border-top: 1px solid #dee1e5;*/
+}
+
+.ks-grid-table-grid_horizontaltable .ks-grid-table-cell {
+    padding: 0px;
+}
+
+.ks-grid-table-grid_horizontaltable .ks-grid-table-cell.border-right {
+    border-right: 3px solid #f1f3f5;
+}
+
+.ks-grid-table-grid_horizontaltable .ks-grid-table-cell.border-left {
+   /* border-left: 3px solid #f1f3f5;*/
+}
+
+.ks-grid-table-grid_horizontaltable .ks-grid-table-cell:last-child {
+    border-left: 0;
+}
+
+.ks-grid-table-grid_horizontaltable .ks-grid-table-head .ks-grid-table-cell-content {
+    font-size: 14px;
+    color: #fff;
+    align-items: flex-end;
+    justify-content: left;
+}
+
+.ks-grid-table-grid_horizontaltable .ks-grid-table-head .ks-pos-bottom-space-between.ks-grid-table-cell-content {
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+
+/* Template-2 */
+
+.ks-grid-table-deepblue_grid_verticaltable .ks-grid-table {
+	border-top: 1px solid #000;
+}
+
+.ks-grid-table-deepblue_grid_verticaltable .ks-grid-table-row {
+	border-bottom: 1px solid #000;
+	border-left: 1px solid #000;
+	height: 40px;
+}
+
+.ks-grid-table-deepblue_grid_verticaltable .ks-grid-table-head {
+	background-color: #4c4c4c;
+}
+
+.ks-grid-table-deepblue_grid_verticaltable .ks-grid-table-cell {
+	border-right: 1px solid #000;
+	padding: 7px;
+}
+
+.ks-grid-table-deepblue_grid_verticaltable .ks-grid-table-head .ks-grid-table-cell {
+	color: #fff;
+}
+
+.ks-grid-table-deepblue_grid_verticaltable .ks-grid-table-cell {
+	color: #000;
+	font-size: 16px;
+	line-height: 16px;
+}
+
+
+/* Template-2 */
+
+.ks-grid-table-grid_verticaltable .ks-grid-table {
+	border-top: 1px solid #000;
+}
+
+.ks-grid-table-grid_verticaltable .ks-grid-table-row {
+	border-bottom: 1px solid #d8d9d9;
+	height: 40px;
+}
+
+.ks-grid-table-grid_verticaltable .ks-grid-table-head {
+	background-color: #fff;
+}
+
+.ks-grid-table-grid_verticaltable .ks-grid-table-cell {
+	padding: 7px;
+}
+
+.ks-grid-table-grid_verticaltable .ks-grid-table-head .ks-grid-table-cell {
+	color: #000;
+}
+
+.ks-grid-table-grid_verticaltable .ks-grid-table-cell {
+	color: #000;
+	font-size: 16px;
+	line-height: 16px;
+}
+
+
+
+/* Template 3 */
+
+.ks-grid-table-template3 .ks-grid-table-row {
+	border-bottom: 1px solid #e0e0e2;
+	height: 40px;
+}
+
+.ks-grid-table-template3 .ks-grid-table-head {
+	/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#62a5fa+0,ffffff+100 */
+	background: #62a5fa; /* Old browsers */
+	background: -moz-linear-gradient(top, #62a5fa 0%, #ffffff 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top, #62a5fa 0%,#ffffff 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom, #62a5fa 0%,#ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#62a5fa', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+}
+
+.ks-grid-table-template3 .ks-grid-table-head .ks-grid-table-row {
+	border-bottom: 0;
+}
+
+.ks-grid-table-template3 .ks-grid-table-cell {
+	padding: 7px;
+}
+
+.ks-grid-table-template3 .ks-grid-table-head .ks-grid-table-cell {
+	color: #fff;
+}
+
+.ks-grid-table-template3 .ks-grid-table-cell {
+	color: #000;
+	font-size: 16px;
+	line-height: 16px;
+}
+
+
+/* Template 4 */
+
+.ks-grid-table-template4 .ks-grid-table-row {
+	border-bottom: 1px dashed #d3d3d7;
+	border-left: 1px dotted #d3d3d7;
+	height: 40px;
+}
+
+.ks-grid-table-template4 .ks-grid-table-head .ks-grid-table-row {
+	border-bottom: 0;
+	border-left: 0;
+}
+
+.ks-grid-table-template4 .ks-grid-table-cell {
+	border-right: 1px dotted #d3d3d7;
+	padding: 7px;
+}
+
+.ks-grid-table-template4 .ks-grid-table-head .ks-grid-table-cell {
+	background-color: #006cf8;
+	border-right: 1px solid #fff;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	color: #fff;
+}
+
+.ks-grid-table-template4 .ks-grid-table-cell {
+	color: #000;
+	font-size: 16px;
+	line-height: 16px;
+}
+
+
+
+/* Template-5 */
+
+.ks-grid-table-template5 .ks-grid-table-row {
+	height: 40px;
+}
+
+.ks-grid-table-template5 .ks-grid-table-cell {
+	padding: 7px;
+}
+
+.ks-grid-table-template5 .ks-grid-table-head .ks-grid-table-cell {
+	color: #ff254d;
+}
+
+.ks-grid-table-template5 .ks-grid-table-cell {
+	color: #000;
+	font-size: 16px;
+	line-height: 16px;
+}
+
+.ks-grid-table-template5 .ks-grid-table-content .ks-grid-table-row:nth-child(2n+1) .ks-grid-table-cell:nth-child(2n) {
+	background-color: #ededf2;
+}
+
+.ks-grid-table-template5 .ks-grid-table-content .ks-grid-table-row:nth-child(2n) .ks-grid-table-cell:nth-child(2n+1) {
+	background-color: #ededf2;
+}

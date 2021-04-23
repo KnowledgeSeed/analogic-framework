@@ -1,0 +1,23 @@
+.ks-text {
+	display: block;
+}
+
+.ks-text-inner {
+	height: 100%;
+}
+
+.ks-text-title,
+.ks-text-separator,
+.ks-text-body {
+	display: none;
+}
+
+.ks-text.has-title .ks-text-title {
+	display: block;
+}
+.ks-text.has-separator .ks-text-separator {
+	display: block;
+}
+.ks-text.has-body .ks-text-body {
+	display: block;
+}

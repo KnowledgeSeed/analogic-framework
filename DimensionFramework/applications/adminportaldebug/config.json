@@ -22,7 +22,7 @@
     "MainPage": "adminPortalMain",
     "pool": {
         "users": ["oravecz.tamas"],
-        "target": "https://hq.coresystems.hu:5125/analogicadminapi"
+        "target": "https://dev.knowledgeseed.ch:5125/analogicadminapi"
     },
     "sso": {
         "admin": "oravecz.tamas",

@@ -1,0 +1,14 @@
+.ks-grid-cell-cellwhitebackground {
+    background-color: white;
+    box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.2), 0px 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.ks-grid-cell-box {
+    background-color: white;
+    border: 1px solid #b1b3b3;
+    border-radius: 5px;
+}
+
+.ks-grid-cell-celldynamicwidth .ks-grid-cell-content {
+	display: contents;
+}

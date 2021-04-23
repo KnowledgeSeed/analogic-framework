@@ -1,0 +1,38 @@
+.ks-grid-table-cell-standard section{
+    width: 100%;
+}
+
+.ks-grid-table-cell-simpanelstart .ks-grid-table-cell-content{
+    background-color: #fff;
+    border-left: 3px solid #dfecf8;
+    border-top: 3px solid #dfecf8;
+    border-bottom: 3px solid #dfecf8;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    height: 80px;
+    width:100%;
+}
+
+
+.ks-grid-table-cell-simpanel .ks-grid-table-cell-content{
+    background-color: #fff;
+    height: 80px;
+    width: 100%;
+    border-top: 3px solid #dfecf8;
+    border-bottom: 3px solid #dfecf8;
+}
+
+
+.ks-grid-table-cell-simpanelend .ks-grid-table-cell-content{
+    background-color: #fff;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    height: 80px;
+    width: 100%;
+    border-top: 3px solid #dfecf8;
+    border-bottom: 3px solid #dfecf8;
+    border-right: 3px solid #dfecf8;
+
+}
+
+

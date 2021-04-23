@@ -1,0 +1,10 @@
+.ks-grid-row-greybackground.ks-grid-row {
+    background-color: #ebecec;
+    padding: 20px;
+}
+
+.ks-grid-row-statusbar.ks-grid-row {
+    background-color: #2c2d2d;
+    border-top-right-radius: 5px;
+}
+

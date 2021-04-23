@@ -1,0 +1,30 @@
+.ks-container-deepblue_withborder.ks-container {
+    border-radius: 10px;
+    border: 1px solid #b1b3b3;
+}
+
+.ks-container-deepblue_sidemenu.ks-container {
+    background-color: transparent;
+    box-shadow: unset;
+}
+
+.ks-container-deepblue_sidemenu .ks-container-background {
+    padding: 0px;
+}
+
+.ks-container-deepblue_sidemenu .ks-container-content {
+    padding: 0px;
+}
+
+
+.ks-container-nopadding .ks-container-background {
+    padding: 0px;<
+}
+
+.ks-container-nopadding .ks-container-content {
+    padding: 0px;
+}
+
+.ks-container-nopadding.ks-container {
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.15), 0px 0px 0px rgba(0, 0, 0, 0.15);
+}
