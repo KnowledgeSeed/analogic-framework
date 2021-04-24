@@ -8,6 +8,7 @@ class GridTableHeaderCellWidget extends Widget {
             alignment: this.getRealValue('alignment', d, 'center-center'),
             borderLeft: this.getRealValue('borderLeft', d, true),
             borderRight: this.getRealValue('borderRight', d, true),
+            cellHeaderSkin: this.getRealValue('cellHeaderSkin', d, false),
             cellVisible: this.getRealValue('cellVisible', d, true),
             width: this.getRealValue('width', d, false)
         };
@@ -20,7 +21,7 @@ class GridTableHeaderCellWidget extends Widget {
             mainDivStyle.push('display:none;');
         }
 
-        return `<div class="ks-grid-table-cell ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}" style="${mainDivStyle.join('')}"><div class="ks-pos-${v.alignment} ks-grid-table-cell-content">${widgets.join('')}</div></div>`;
+        return `<div class="${v.cellHeaderSkin ? 'ks-grid-table-head-cell-' + v.cellHeaderSkin : ''}  ks-grid-table-cell ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}" style="${mainDivStyle.join('')}"><div class="ks-grid-table-head-cell-border-left"></div><div class="ks-pos-${v.alignment} ks-grid-table-cell-content">${widgets.join('')}</div></div>`;
     }
 
     render(withState, d, loadFunction = QB.loadData) {

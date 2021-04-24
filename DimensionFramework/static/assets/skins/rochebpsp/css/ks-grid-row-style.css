@@ -8,3 +8,10 @@
     border-top-right-radius: 5px;
 }
 
+/* ote */
+
+.ks-grid-row-bottomborder_bpsp.ks-grid-row {
+    border-bottom: 2px solid #D8D9D9;
+    padding-bottom: 1%;
+}
+

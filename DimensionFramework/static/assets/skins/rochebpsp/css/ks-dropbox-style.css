@@ -434,7 +434,6 @@
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-panel {
     width: 220px;
-    border: 1px solid #8d8d8d;
     border-radius: 5px;
     margin-top: 2px;
     padding: 2px;
@@ -475,6 +474,19 @@
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-panel-inner {
     background-color: #fff;
+    border-radius: 5px;
+}
+
+.ks-dropbox-simple_bold_bpsp .ks-dropbox-backdrop {
+    background-color: rgba(116, 123, 133, 0.75);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
 }
 
 /* simple_bpsp */
@@ -538,7 +550,6 @@
 
 .ks-dropbox-simple_bpsp .ks-dropbox-panel {
     width: 150px;
-    border: 1px solid #8d8d8d;
     border-radius: 5px;
     margin-top: 2px;
     padding: 2px;
@@ -579,6 +590,19 @@
 
 .ks-dropbox-simple_bpsp .ks-dropbox-panel-inner {
     background-color: #fff;
+        border-radius: 5px;
+}
+
+.ks-dropbox-simple_bpsp .ks-dropbox-backdrop {
+    background-color: rgba(116, 123, 133, 0.75);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
 }
 
 /* end ote */

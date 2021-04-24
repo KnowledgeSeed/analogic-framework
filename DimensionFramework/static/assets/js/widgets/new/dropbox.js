@@ -8,6 +8,7 @@ class DropBoxWidget extends Widget {
         const o = this.options;
 
         const v = {
+            backdrop: this.getRealValue('backdrop', d, false),
             editable: this.getRealValue('editable', d, true),
             placeHolder: this.getRealValue('placeHolder', d, ''),
             skin: this.getRealValue('skin', d, 'standard'),
@@ -66,6 +67,7 @@ class DropBoxWidget extends Widget {
         </div>
     </div>
     <div class="ks-dropbox-panel" style="display:none;">
+        ${v.backdrop ? '<div class="ks-dropbox-backdrop"><\/div>' : ''}
         <div class="ks-dropbox-panel-inner">${this.getItems(data, v)}</div>
     </div>
 </div>`;
