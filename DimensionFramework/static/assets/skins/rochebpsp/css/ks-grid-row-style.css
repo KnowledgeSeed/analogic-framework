@@ -8,10 +8,15 @@
     border-top-right-radius: 5px;
 }
 
+/* bottomborder Mody 04 20   */
+.ks-grid-row-bottomborder.ks-grid-row {
+	border-bottom: 2px solid #D8D9D9;
+	padding-bottom: 1%;
+}
+
 /* ote */
 
 .ks-grid-row-bottomborder_bpsp.ks-grid-row {
     border-bottom: 2px solid #D8D9D9;
     padding-bottom: 1%;
 }
-

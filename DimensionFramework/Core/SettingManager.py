@@ -89,7 +89,7 @@ class SettingManager:
             if by_instance:
                 file_path = os.path.join(self.instance, file_name)
             json_url = os.path.join(self.site_root, folder, file_path + '.json')
-            setting = json.load(open(json_url))
+            setting = json.load(open(json_url), encoding="utf-8")
             setting['instance'] = self.instance
             self.cacheSet(key, setting, 0)
         return setting
@@ -100,7 +100,7 @@ class SettingManager:
             file_path = file_name
             if by_instance:
                 file_path = os.path.join(self.instance, file_name)
-            with open(os.path.join(self.site_root, folder, file_path + '.yml')) as file:
+            with open(os.path.join(self.site_root, folder, file_path + '.yml'), encoding="utf-8") as file:
                 setting = yaml.load(file, Loader=yaml.FullLoader)
                 self.cacheSet(key, setting, 0)
         return setting

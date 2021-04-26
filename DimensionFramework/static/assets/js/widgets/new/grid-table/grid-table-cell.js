@@ -3,7 +3,7 @@
 'use strict';
 class GridTableCellWidget extends Widget {
 
-    getHtml(widgets, data, withState) {//console.log(data);
+    getHtml(widgets, data, withState) {
         const v = {
             alignment: this.getRealValue('alignment', data, 'center-center', ),
             borderLeft: this.getRealValue('borderLeft', data, true),
@@ -22,7 +22,7 @@ class GridTableCellWidget extends Widget {
         if (v.cellVisible === false) {
             mainDivStyle.push('display:none;');
         }
-console.log(v.cellSkin);
+
         return `<div class="ks-grid-table-cell ${v.cellSkin !== false ? 'ks-grid-table-cell-' + v.cellSkin : ''} ks-grid-table-cell-${v.skin} ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}" style="${mainDivStyle.join('')}"><div class="ks-grid-table-cell-border-left"></div><div class="ks-pos-${v.alignment} ks-grid-table-cell-content">${widgets.join('')}</div></div>`;
     }
 

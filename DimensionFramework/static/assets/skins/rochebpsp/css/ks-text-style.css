@@ -172,6 +172,27 @@
     font-weight: normal;
 }
 
+
+/* textrightborder     */
+.ks-text-textrightborder .ks-text-title {
+    border-right: 2px solid #D8D9D9;
+    font-weight: bold;
+    width: 160%
+}
+
+
+.ks-text-textrightborder .ks-text-body {
+    border-right: 2px solid #D8D9D9;
+    width: 160%
+}
+
+
+/* textnoborder  */
+.ks-text-textnoborder .ks-text-title {
+    font-weight: bold;
+}
+
+
 /* ote */
 /* popup_header */
 .ks-text-popup_header_bpsp {
@@ -223,5 +244,4 @@
 
 
 /* end ote */
-
 

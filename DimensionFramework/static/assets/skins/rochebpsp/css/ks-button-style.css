@@ -581,6 +581,43 @@
     padding-left: 5px;
 }
 
+
+
+/* rochemain menu icon */
+.ks-button-rochemain.ks-button {
+    height: 150px;
+    background-color: #0066cc;
+    border-radius: 30px;
+}
+
+.ks-button-rochemain .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-rochemain .ks-button-content {
+    height: 110%
+}
+
+/* gridtablehierarchy */
+
+.ks-button-gridtable_hierarchy_bpsp .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+/* back button rocheBPSP Mody 04 22 */
+
+.ks-button-backbuttonrocheBPSP.ks-button {
+    height: 40px;
+    width: 40px;
+}
+
+.ks-button-backbuttonrocheBPSP.ks-button-content {
+	color: #0066CC;
+	font-size: 40px;
+}
+
+
 /* ote start */
 
 
@@ -711,3 +748,8 @@
 }
 
 /* ote end */
+
+
+
+
+
