@@ -26,7 +26,6 @@ QB.loadData = (argument, type, useDefaultData = false, path = 'init') => {
         return QB.executeMDX(argument, path);
     }
 
-    //TODO remove, back compatibility
     if (r && r.state) {
         if (r[conditionPath] && !r[conditionPath](WidgetValue)) {
             if (r[defaultPath]) {

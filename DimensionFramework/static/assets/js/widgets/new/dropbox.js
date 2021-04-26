@@ -5,12 +5,14 @@
 class DropBoxWidget extends Widget {
 
     getHtml(widgets, d) {
+        console.log(d);
         const o = this.options;
 
         const v = {
             backdrop: this.getRealValue('backdrop', d, false),
             editable: this.getRealValue('editable', d, true),
             placeHolder: this.getRealValue('placeHolder', d, ''),
+            selectFirst: this.getRealValue('selectFirst', d, false),
             skin: this.getRealValue('skin', d, 'standard'),
             textAlignment: this.getRealValue('textAlignment', d, false),
             textFontColor: this.getRealValue('textFontColor', d, false),
@@ -25,10 +27,15 @@ class DropBoxWidget extends Widget {
 
         let data;
 
+
         if (Array.isArray(d) || (d.items && Array.isArray(d.items))) {
             data = d.items && Array.isArray(d.items) ? {...o, ...{items: d.items}} : {...o, ...{items: d}};
         } else {
             data = {...o, ...this.state};
+        }
+
+        if (v.selectFirst === true && $.grep(data.items, (item, i) => item.on).length === 0 && data.items.length > 0) {
+            data.items[0].on = true;
         }
 
         data.value = $.grep(data.items, (item, i) => item.on).map(item => item.name).join();
@@ -93,6 +100,10 @@ class DropBoxWidget extends Widget {
             return;
         }
 
+        section.find('.ks-dropbox-backdrop').on('click', (e) => {
+            itemHolder.slideUp(50);
+        });
+
         const dropbox = $('#' + id + ' .ks-dropbox-field-inner').on('click', (e) => {
             Doc.find(".ks-dropbox .ks-dropbox-panel").not(dropbox).each((i, el) => $(el).is(':visible') ? $(el).slideUp(50) : false);
 
@@ -131,7 +142,8 @@ class DropBoxWidget extends Widget {
                 itemHolder.slideUp(50);
             }
 
-            let v = $.grep(w.items, (item, i) => item.on).map(item => item.name).join(', '), searchText = $('#' + id + ' .search-text');
+            let v = $.grep(w.items, (item, i) => item.on).map(item => item.name).join(', '),
+                searchText = $('#' + id + ' .search-text');
 
             searchText.attr('placeholder', v).val('');
             section.find('.ks-dropbox-panel-item').show();
