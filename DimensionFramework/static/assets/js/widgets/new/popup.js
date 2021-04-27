@@ -71,6 +71,10 @@ ${v.backdrop ? '<div class="ks-container-backdrop" ' + b + '><\/div>' : ''}
         this.container = section.children().last();
         this.backdrop = this.container.prev();
 
+        if(this.backdrop) {
+            this.backdrop.on('click', () => this.close());
+        }
+
         section.on('open', () => this.open()).on('close', () => this.close());
 
         if (a) {

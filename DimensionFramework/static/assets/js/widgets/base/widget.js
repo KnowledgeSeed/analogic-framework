@@ -270,7 +270,7 @@ class Widget {
         let actions = EventMap[eventMapId], a;
         let writeSuccess = true;
         if(write === true) {
-            writeSuccess = QB.writeData(eventMapId)
+            writeSuccess = QB.writeData(eventMapId, event, element);
         }
 
         if (writeSuccess && actions) {

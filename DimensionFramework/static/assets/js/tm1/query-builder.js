@@ -188,8 +188,9 @@ QB.executeMDX = (repositoryId, path) => {
     });
 };
 
-QB.writeData = eventMapId => {
-    let s = eventMapId.split('.'), e = s[0], w = s[1], z = w.split('_'), context = WidgetValue, isGridTable = false, r, g;
+QB.writeData = (eventMapId, event, element) => {
+    let s = eventMapId.split('.'), e = s[0], w = s[1], z = w.split('_'), context = WidgetValue, isGridTable = false, r,
+        g;
 
     if (e === 'upload') {
         return FileUpload.uploadFile(w, eventMapId, context);
@@ -210,12 +211,11 @@ QB.writeData = eventMapId => {
     r = Repository[w], g = (r || {})[e];
 
     if (!g) {
-        El.body.triggerHandler(eventMapId + '.finished');
-
+        QB.executeEventMapAction(eventMapId + '.finished', event, element);
         return true;
     }
 
-    if(isGridTable && z.length > 3){
+    if (isGridTable && z.length > 3) {
         r.cellsetId = Repository[z[0]].cellsetId;
     }
 
@@ -259,9 +259,10 @@ QB.writeData = eventMapId => {
 
     if (g.execute) {
         isGridTable ? g.execute(context, z[1], z[2]) : g.execute(context);
-        El.body.triggerHandler(eventMapId + '.finished');
+        QB.executeEventMapAction(eventMapId + '.finished', event, element, {});
     } else {
-        let c = r.cellsetId || '', body = isGridTable ? g.body(context, z[1], z[2]) : g.body(context), url = isGridTable ?  g.url({...r, ...{cellsetId: c}}, z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
+        let c = r.cellsetId || '', body = isGridTable ? g.body(context, z[1], z[2]) : g.body(context),
+            url = isGridTable ? g.url({...r, ...{cellsetId: c}}, z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
 
         if (g.server) {
             let mm = QB.getServerSideUrlAndBody(url, body, w, e);
@@ -269,16 +270,26 @@ QB.writeData = eventMapId => {
             body = mm.body;
         }
 
-        Auth.getTm1AjaxRequest(app.tm1ApiHost + url, body, g.type).then(() => {
-            El.body.triggerHandler(eventMapId + '.finished');
+        Auth.getTm1AjaxRequest(app.tm1ApiHost + url, body, g.type).then((d) => {
+            QB.executeEventMapAction(eventMapId + '.finished', event, element, d);
         });
     }
 
     if (isGridTable) {
-        El.body.triggerHandler(e + '.' + w + '.finished');
+        QB.executeEventMapAction(e + '.' + w + '.finished', event, element, {});
     }
 
     return true;
+};
+
+QB.executeEventMapAction = (eventMapId, event, element, response) => {
+    El.body.triggerHandler(eventMapId);
+    let actions = EventMap[eventMapId], a;
+    if (actions) {
+        for (a of actions) {
+            a.action(a.argument, event, element, response);
+        }
+    }
 };
 
 QB.getUrl = p => p.cellsetId && !p.url ? QB.getCellsetUrl(p) : QB.getMDXUrl(p);
@@ -292,7 +303,8 @@ QB.getCellsetUrl = p => {
 };
 
 QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
-    let params = [], subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&server=1' : '' : url + '?server=1';
+    let params = [],
+        subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&server=1' : '' : url + '?server=1';
     let newUrl = url.includes('pool') ? url : url.replace(app.tm1ApiHost, app.host + '/' + (app.subpath != '' ? app.subpath + '/' + app.instance : app.instance) + '/pool')
 
     for (const [key, value] of Object.entries(body)) {
@@ -305,7 +317,10 @@ QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
 
 QB.getMDXUrl = p => {
     if (p.url) {
-        return {url: app.tm1ApiHost + (typeof p.url === 'function' ? p.url(WidgetValue) : p.url), type: p.type ? p.type : 'POST'};
+        return {
+            url: app.tm1ApiHost + (typeof p.url === 'function' ? p.url(WidgetValue) : p.url),
+            type: p.type ? p.type : 'POST'
+        };
     }
 
     if (p.query) {
@@ -326,7 +341,8 @@ QB.processResultAsObject = (valueQueries, data) => {
 };
 
 QB.processResultAsList = (valueQueries, data) => {
-    let i, result = [], k = data.count ? data.count : data.Cells ? data.Cells.length : data.value ? data.value.length : 0;
+    let i, result = [],
+        k = data.count ? data.count : data.Cells ? data.Cells.length : data.value ? data.value.length : 0;
 
     for (i = 0; i < k; ++i) {
         result[i] = valueQueries.query(data, i);
@@ -336,7 +352,9 @@ QB.processResultAsList = (valueQueries, data) => {
 };
 
 QB.processResult = (valueQueries, data) => {
-    let i = 0, v, row = [], result = [], k = data.count ? data.count : data.Cells ? data.Cells.length : data.value ? data.value.length : 0, q = valueQueries.length;
+    let i = 0, v, row = [], result = [],
+        k = data.count ? data.count : data.Cells ? data.Cells.length : data.value ? data.value.length : 0,
+        q = valueQueries.length;
 
     if (k % q !== 0) {
         L('Too many data!!');

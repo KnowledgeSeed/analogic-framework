@@ -8,3 +8,10 @@ widgetWriteEvent.gridTableID_currentRow_currentCol_widgetId -> repo widgetId : {
 widget parameter write: 'off' -> nem keres a repóban íráskor.
 
 Upload
+
+gridtablecell -> cellSkin
+gridtableheadercell -> cellHeaderSkin
+gridtable -> hideIfNoData
+
+dropbox -> backdrop, selectFirst
+

@@ -5,7 +5,6 @@
 class DropBoxWidget extends Widget {
 
     getHtml(widgets, d) {
-        console.log(d);
         const o = this.options;
 
         const v = {

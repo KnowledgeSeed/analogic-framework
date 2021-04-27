@@ -2,7 +2,7 @@
 
 FileUpload = {};
 
-FileUpload.uploadFile = (w, eventMapId, context) => {
+FileUpload.uploadFile = (w, eventMapId, context, event, element) => {
     const e = 'upload', r = Repository[w], v = WidgetValue[w];
     let target = false, staging = false, uploadParams = {}, uploadRepoExist = r && r[e], subFolder = '';
 
@@ -47,7 +47,7 @@ FileUpload.uploadFile = (w, eventMapId, context) => {
 
     FileUpload.uploadToServer(w).done(d => {
         if (d === 'ok') {
-            El.body.triggerHandler(eventMapId + '.finished');
+            QB.executeEventMapAction(eventMapId + '.finished', event, element, d);
             v.form = new FormData();
             app.fn.showPopup(v.uploadSuccessMessage);
         } else {

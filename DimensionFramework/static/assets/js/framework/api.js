@@ -320,3 +320,39 @@ app.fn.toggleInfoWidget = arg => {
 app.fn.pastToGridTableText = (argument, ev, element) => {
   TextWidget.paste($('#' + WidgetValue['rightclick']), ev);
 };
+
+app.fn.checkTIResponseStatus = (argument, ev, element, response) => {
+    if (!Array.isArray(argument) || argument.length < 2) {
+        alert('checkResponseStatus has 2 mandatory argument!');
+
+        return;
+    }
+
+    let f1 = false, f2 = false, f1args = [], f2args = [], i = 0, r;
+
+    while(i < argument.length){
+        if(typeof argument[i] === 'function'){
+            f1 === false ? f1 = argument[i] : f2 = argument[i];
+        } else {
+            f2 === false ? f1args.push(argument[i]) : f2args.push(argument[i]);
+        }
+        ++i;
+    }
+
+    if(f1 === false || f2 === false){
+        alert('checkResponseStatus has 2 mandatory function argument!');
+
+        return;
+    }
+
+    r = v('ProcessExecuteStatusCode', response);
+
+    if (r && r !== 'Aborted'){
+        f1args.length <= 1 ? f1args.length > 0 ? f1(f1args[0], ev, element) : f1('', ev, element) : f1(f1args, ev, element);
+    } else {
+        f2args.length <= 1 ? f2args.length > 0 ? f2(f2args[0], ev, element) : f2('', ev, element) : f2(f2args, ev, element);
+    }
+
+    console.log(argument);
+    console.log(response);
+};
