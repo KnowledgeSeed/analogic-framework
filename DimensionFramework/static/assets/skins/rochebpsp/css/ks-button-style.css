@@ -757,4 +757,23 @@
 
 
 
+/* rochemain settings icon Mody 04 27 */
+
+
+.ks-button-settings_bpsp.ks-button {
+    height: 70px;
+    background-color: #0066cc;
+    border-radius: 30px;
+}
+
+.ks-button-settings_bpsp .ks-button-icon {
+    color: white;
+    font-size: 50px;
+}
+
+.ks-button-settings_bpsp .ks-button-content {
+    height: 110%
+}
+
+
 
