@@ -605,18 +605,6 @@
     justify-content: flex-start !important;
 }
 
-/* back button rocheBPSP Mody 04 22 */
-
-.ks-button-backbuttonrocheBPSP.ks-button {
-    height: 40px;
-    width: 40px;
-}
-
-.ks-button-backbuttonrocheBPSP.ks-button-content {
-	color: #0066CC;
-	font-size: 40px;
-}
-
 
 /* ote start */
 
@@ -624,7 +612,12 @@
 .ks-button-gridtable_hierarchy_bpsp_L01{
     margin-left: 10px;
     width: 100%;
+
 }
+.ks-button-gridtable_hierarchy_bpsp_L01 .ks-button {
+    color: #001A33;
+}
+
 
 .ks-button-gridtable_hierarchy_bpsp_L01 .ks-button-content{
     justify-content: flex-start!important;
@@ -637,6 +630,10 @@
 .ks-button-gridtable_hierarchy_bpsp_L02{
     margin-left: 30px;
     width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_L02 .ks-button {
+    color: #001A33;
 }
 
 .ks-button-gridtable_hierarchy_bpsp_L02 .ks-button-label{
@@ -748,6 +745,14 @@
 }
 
 /* ote end */
+
+/* back button rocheBPSP Mody 04 22 */
+
+.ks-button-backbuttonrocheBPSP.ks-button {
+    color: #0066cc;
+    font-size: 20px;
+    font-weight: bold;
+}
 
 
 
