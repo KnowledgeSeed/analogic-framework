@@ -380,16 +380,18 @@
     line-height: 16px;
     margin-bottom: 5px;
     display: block;
+    overflow: auto;
 }
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-field {
-    border-radius: 5px;
     height: 40px;
+    overflow: auto;
+    border-radius: 10px;
 }
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-field:hover {
-	background-color: #bfd9f2;
-	border-radius: 7px;
+	background-color: #BFD9F2;
+	border-radius: 10px;
 }
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-input {
@@ -434,13 +436,14 @@
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-panel {
     width: 220px;
-    border-radius: 5px;
+    border-radius: 20px;
     margin-top: 2px;
     padding: 2px;
     left: 8px;
     right: 8px;
     background-color: #fff;
-    max-height: 600px;
+    max-height: 300px;
+    overflow: auto;
 }
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-panel-item {
@@ -454,7 +457,7 @@
 }
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-panel-item.on:hover {
-    background-color: #0066cc;
+    background-color: #bfd9f2;
 }
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-panel-item.on {
@@ -607,3 +610,4 @@
 }
 
 /* end ote */
+
