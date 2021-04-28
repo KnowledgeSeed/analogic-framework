@@ -392,6 +392,7 @@
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-field:hover {
 	background-color: #BFD9F2;
 	border-radius: 10px;
+
 }
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-input {
@@ -458,6 +459,7 @@
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-panel-item.on:hover {
     background-color: #bfd9f2;
+
 }
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-panel-item.on {
@@ -610,4 +612,5 @@
 }
 
 /* end ote */
+
 

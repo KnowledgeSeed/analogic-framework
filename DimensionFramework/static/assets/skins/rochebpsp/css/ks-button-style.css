@@ -61,9 +61,9 @@
     /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#0068f8+0,1913f7+100 */
     background: #0068f8; /* Old browsers */
     background: -moz-linear-gradient(top, #0068f8 0%, #1913f7 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, #0068f8 0%,#1913f7 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, #0068f8 0%,#1913f7 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0068f8', endColorstr='#1913f7',GradientType=0 ); /* IE6-9 */
+    background: -webkit-linear-gradient(top, #0068f8 0%, #1913f7 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, #0068f8 0%, #1913f7 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0068f8', endColorstr='#1913f7', GradientType=0); /* IE6-9 */
     height: 50px;
     box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.2), 0px 8px 12px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
@@ -186,6 +186,7 @@
     color: white;
     font-size: 70px;
 }
+
 /* deepblue_userpanelmain */
 
 .ks-button-deepblue_userpanelmain.ks-button {
@@ -221,7 +222,6 @@
 }
 
 
-
 .ks-button-userpanelmain.ks-button {
     height: 30px;
     padding: 1px;
@@ -253,6 +253,7 @@
     font-size: 16px;
     font-weight: 600;
 }
+
 /* deepblue_userpanelbutton */
 
 .ks-button-deepblue_userpanelbutton.ks-button {
@@ -294,9 +295,8 @@
 }
 
 .ks-button-deepblue_userpanelbutton .ks-button-content {
-    justify-content: unset!important;
+    justify-content: unset !important;
 }
-
 
 
 .ks-button-userpanelbutton.ks-button {
@@ -338,8 +338,9 @@
 }
 
 .ks-button-userpanelbutton .ks-button-content {
-    justify-content: unset!important;
+    justify-content: unset !important;
 }
+
 /* deepblue_backbutton */
 
 .ks-button-deepblue_backbutton.ks-button {
@@ -439,6 +440,7 @@
 .ks-button-blueicon .ks-button-icon {
     color: #0066cc;
 }
+
 /* deepblue_bluebgwhiteicon */
 
 .ks-button-deepblue_bluebgwhiteicon.ks-button {
@@ -514,7 +516,6 @@
 }
 
 
-
 .ks-button-sidemenu.ks-button {
     background-color: #d8d9d9;
     border-top-left-radius: 7px;
@@ -550,6 +551,7 @@
 .ks-button-sidemenu .ks-button-content {
     padding-left: 18px;
 }
+
 /* deepblue_blueicon */
 .ks-button-deepblue_blueicon.ks-button {
     color: #0066cc;
@@ -569,8 +571,9 @@
     border-top-right-radius: 5px;
     width: 100%;
     height: 40px;
-    padding:0px !important;
+    padding: 0px !important;
 }
+
 .ks-button-gridtableheader.ks-button-label {
     color: #fff;
     cursor: pointer;
@@ -580,7 +583,6 @@
     text-align: left;
     padding-left: 5px;
 }
-
 
 
 /* rochemain menu icon */
@@ -609,25 +611,28 @@
 /* ote start */
 
 
-.ks-button-gridtable_hierarchy_bpsp_L01{
+.ks-button-gridtable_hierarchy_bpsp_L01 {
     margin-left: 10px;
     width: 100%;
 
 }
-.ks-button-gridtable_hierarchy_bpsp_L01 .ks-button {
+
+.ks-button-gridtable_hierarchy_bpsp_L01 .ks-button-icon {
     color: #001A33;
+    font-size: 75%;
+    margin-top: 1%;
 }
 
 
-.ks-button-gridtable_hierarchy_bpsp_L01 .ks-button-content{
-    justify-content: flex-start!important;
+.ks-button-gridtable_hierarchy_bpsp_L01 .ks-button-content {
+    justify-content: flex-start !important;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L01 .ks-button-label{
+.ks-button-gridtable_hierarchy_bpsp_L01 .ks-button-label {
     padding-left: 4px;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L02{
+.ks-button-gridtable_hierarchy_bpsp_L02 {
     margin-left: 30px;
     width: 100%;
 }
@@ -636,112 +641,165 @@
     color: #001A33;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L02 .ks-button-label{
+.ks-button-gridtable_hierarchy_bpsp_L02 .ks-button-label {
     padding-left: 4px;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L02 .ks-button-content{
-    justify-content: flex-start!important;
+.ks-button-gridtable_hierarchy_bpsp_L02 .ks-button-content {
+    justify-content: flex-start !important;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L03{
+.ks-button-gridtable_hierarchy_bpsp_L02 .ks-button-icon {
+    color: #004C99;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_L03 {
     margin-left: 50px;
     width: 100%;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L03 .ks-button-label{
+.ks-button-gridtable_hierarchy_bpsp_L03 .ks-button-label {
     padding-left: 4px;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L03 .ks-button-content{
-    justify-content: flex-start!important;
+.ks-button-gridtable_hierarchy_bpsp_L03 .ks-button-content {
+    justify-content: flex-start !important;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L04{
+.ks-button-gridtable_hierarchy_bpsp_L03 .ks-button-icon {
+    color: #0066CC;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_L04 {
     margin-left: 70px;
     width: 100%;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L04 .ks-button-label{
+.ks-button-gridtable_hierarchy_bpsp_L04 .ks-button-label {
     padding-left: 4px;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L04 .ks-button-content{
-    justify-content: flex-start!important;
+.ks-button-gridtable_hierarchy_bpsp_L04 .ks-button-content {
+    justify-content: flex-start !important;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L05{
+.ks-button-gridtable_hierarchy_bpsp_L04 .ks-button-icon {
+    color: #408CD9;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_L05 {
     margin-left: 90px;
     width: 100%;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L05 .ks-button-label{
+.ks-button-gridtable_hierarchy_bpsp_L05 .ks-button-label {
     padding-left: 4px;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L05 .ks-button-content{
-    justify-content: flex-start!important;
+.ks-button-gridtable_hierarchy_bpsp_L05 .ks-button-content {
+    justify-content: flex-start !important;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L06{
+.ks-button-gridtable_hierarchy_bpsp_L05 .ks-button-icon {
+    color: #80B3E6;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_L06 {
     margin-left: 110px;
     width: 100%;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L06 .ks-button-label{
+.ks-button-gridtable_hierarchy_bpsp_L06 .ks-button-label {
     padding-left: 4px;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L06 .ks-button-content{
-    justify-content: flex-start!important;
+.ks-button-gridtable_hierarchy_bpsp_L06 .ks-button-content {
+    justify-content: flex-start !important;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L07{
+.ks-button-gridtable_hierarchy_bpsp_L06 .ks-button-icon {
+    color: #BFD9F2;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_L07 {
     margin-left: 130px;
     width: 100%;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L07 .ks-button-label{
+.ks-button-gridtable_hierarchy_bpsp_L07 .ks-button-label {
     padding-left: 4px;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L07 .ks-button-content{
-    justify-content: flex-start!important;
+.ks-button-gridtable_hierarchy_bpsp_L07 .ks-button-content {
+    justify-content: flex-start !important;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L08{
+.ks-button-gridtable_hierarchy_bpsp_L07.ks-button-icon {
+    color: #BFD9F2;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_L08 {
     margin-left: 150px;
     width: 100%;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L08 .ks-button-label{
+.ks-button-gridtable_hierarchy_bpsp_L08 .ks-button-label {
     padding-left: 4px;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L08 .ks-button-content{
-    justify-content: flex-start!important;
+.ks-button-gridtable_hierarchy_bpsp_L08 .ks-button-content {
+    justify-content: flex-start !important;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L09{
+.ks-button-gridtable_hierarchy_bpsp_L08 .ks-button-icon {
+    color: #BFD9F2;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_L09 {
     margin-left: 170px;
     width: 100%;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L09 .ks-button-label{
+.ks-button-gridtable_hierarchy_bpsp_L09 .ks-button-label {
     padding-left: 4px;
 }
 
-.ks-button-gridtable_hierarchy_bpsp_L09 .ks-button-content{
-    justify-content: flex-start!important;
+.ks-button-gridtable_hierarchy_bpsp_L09 .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_L09 .ks-button-icon {
+    color: #BFD9F2;
+    font-size: 75%;
+    margin-top: 1%;
 }
 
 /* blue_link_bpsp */
 
-.ks-button-blue_link_bpsp .ks-button-label{
+.ks-button-blue_link_bpsp .ks-button-label {
     color: #0066cc;
     font-size: 14px;
     font-weight: bold;
     padding-left: 3px;
+}
+
+.ks-button-blue_link_bpsp .ks-button-icon {
+    color: #0066cc;
+    padding-right: 5px;
 }
 
 /* ote end */
@@ -753,8 +811,6 @@
     font-size: 20px;
     font-weight: bold;
 }
-
-
 
 
 /* rochemain settings icon Mody 04 27 */
@@ -775,5 +831,17 @@
     height: 110%
 }
 
+/* chart icon in gridtable Mody 04 28  */
+.ks-button-chartGT_bpsp .ks-button-icon {
+    color: #0066cc;
+}
 
+/* comment of in gridtable Mody 04 28  */
+.ks-button-comment_Off_GT_bpsp .ks-button-icon {
+    color: #C5C6C6;
+}
+
+.ks-button-comment_Off_GT_bpsp .ks-button-content {
+    height: 110%
+}
 

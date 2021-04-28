@@ -1497,14 +1497,15 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPProductsGridTableYearlyCell-16',
                             type: GridTableCellWidget,
+                            alignment: 'center-center',
                             width: '2%',
                             widgets: [
 
                                 {
-                                    id: 'rocheBPSPProductsGridTableYearlyText-16',
-                                    type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
-                                    title: '',
+                                    id: 'rocheBPSPProductsGridTableYearlyButton-16',
+                                    type: ButtonWidget,
+                                    icon: 'icon-comment-off',
+                                    skin: 'comment_Off_GT_bpsp',
                                 }
                             ]
                         },
@@ -1512,14 +1513,15 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPProductsGridTableYearlyCell-17',
                             type: GridTableCellWidget,
+                            alignment: 'center-center',
                             width: '2%',
                             widgets: [
 
                                 {
-                                    id: 'rocheBPSPProductsGridTableYearlyText-17',
-                                    type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
-                                    title: '',
+                                    id: 'rocheBPSPProductsGridTableYearlyButton-17',
+                                    type: ButtonWidget,
+                                    icon: 'icon-chart',
+                                    skin: 'chartGT_bpsp',
                                 }
                             ]
                         }]
