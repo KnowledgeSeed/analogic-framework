@@ -10,7 +10,7 @@
 }
 
 .ks-grid-cell-celldynamicwidth .ks-grid-cell-content {
-	display: contents;
+    display: contents;
 }
 
 /* rightborder Mody 04 20   */
@@ -19,7 +19,6 @@
 .ks-grid-cell-rightborder {
     border-right: 1px solid #BFD9F2;
 }
-
 
 
 /* massagebordblue Mody 04 20   */
