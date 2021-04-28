@@ -15,3 +15,19 @@ gridtable -> hideIfNoData
 
 dropbox -> backdrop, selectFirst
 
+eventMap -> event.widgetid.(finished|started)
+
+ImageWidget -> skin
+
+Skins:
+
+ImageWidget :
+ warning_bpsp
+
+TextWidget:
+checkout_warning_bpsp
+checkout_warning_message_bpsp
+
+ButtonWidget:
+blue_bg_bpsp
+white_bg_bpsp
