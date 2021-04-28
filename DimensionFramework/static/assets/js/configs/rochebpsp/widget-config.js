@@ -6,7 +6,10 @@ app.widgetConfig = {
             id: 'rocheBPSPMain',
             type: PageWidget,
             widgets: [
-
+                {
+                    id: 'rocheBPSPMainApplicationInit',
+                    type: ShadowWidget
+                },
                 {
                     id: 'rocheBPSPMainGrid',
                     type: GridWidget,
@@ -978,6 +981,29 @@ app.widgetConfig = {
                 {
                     id: 'rocheBPSPProductsPageInit',
                     type: ShadowWidget
+                },
+                {
+                    id: 'rocheBPSPProductsCheckoutWarning',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: false,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: true,
+                    width: '330',
+                    bgScrollable: true,
+                    fixed: true,
+                    height: '460',
+                    behaviour: 'popup',
+                    position: 'center',
+                    widgets: [
+                        {
+                            id: 'rocheBPSPProductsCheckoutWarningText',
+                            type: TextWidget,
+                            skin: 'popup_header_bpsp',
+                            title: 'This section is being edited'
+                        }
+                    ]
                 },
                 {
                     id: 'rocheBPSPProductsColumnSelectorPopup',

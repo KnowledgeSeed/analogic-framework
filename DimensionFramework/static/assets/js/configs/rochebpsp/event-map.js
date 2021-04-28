@@ -74,10 +74,16 @@ app.eventMap = {
             argument: 'rocheBPSPProductsColumnSelectorPopup'
         }
     ],
+    'launch.rocheBPSPProductsCheckoutPopupCheckoutButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutPopup'
+        }
+    ],
     'launch.rocheBPSPProductsCheckoutPopupCheckoutButton.finished': [
         {
             action: app.fn.checkTIResponseStatus,
-            argument: [app.fn.openPage, 'rocheBPSPCustomers', app.fn.openPopup, 'rocheBPSPProductsColumnSelectorPopup']
+            argument: [app.fn.openPage, 'rocheBPSPCustomers', app.fn.openPopup, 'rocheBPSPProductsCheckoutWarning']
         }
     ],
     'launch.rocheBPSPProductsCheckoutPopupFocusButton.finished': [
