@@ -432,7 +432,7 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPMainGridRow6',
                             type: GridRowWidget,
-                            marginTop: '2%',
+                            marginTop: '1%',
                             height: '160',
                             widgets: [
 
@@ -858,18 +858,18 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsGridRow1Cell9',
                                     type: GridCellWidget,
-                                    alignment: 'bottom-right',
+                                    alignment: 'center-right',
                                     width: '18%',
                                     widgets: [
                                         {
                                             id: 'rocheBPSPProductsGridRow1Cell9Button',
                                             type: ButtonWidget,
-                                            label: '',
+                                            label: 'David Modos',
                                             backgroundColor: '#EBECEC',
-                                            width: '200',
+                                            action: '',
+                                            width: '100%',
                                             icon: 'icon-profile',
                                             skin: 'userpanelmain',
-                                            marginBottom: '10'
                                         }
                                     ]
                                 }]
@@ -990,7 +990,7 @@ app.widgetConfig = {
                     width: '330',
                     bgScrollable: true,
                     fixed: true,
-                    height: '460',
+                    height: '500',
                     behaviour: 'popup',
                     position: 'bottom',
                     offset: -160,

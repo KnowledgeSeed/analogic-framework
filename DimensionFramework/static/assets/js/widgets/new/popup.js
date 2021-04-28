@@ -59,7 +59,7 @@ class PopupWidget extends Widget {
 ${v.backdrop ? '<div class="ks-container-backdrop" ' + b + '><\/div>' : ''}
 <div class="ks-container-${v.skin} ks-container ${alignmentClass}" style="${s.join('')}">
     <div class="ks-container-background">
-        <div class="ks-container-content">${v.closeBtn ? '<div class="div-x" onclick="$(this).trigger(\'close\');"><span class="icon-x"><\/span><\/div>' : ''}${widgets.join('')}</div>
+        <div class="ks-container-content">${v.closeBtn ? '<div class="icon-icon-x" onclick="$(this).trigger(\'close\');"><span class="icon-x"><\/span><\/div>' : ''}${widgets.join('')}</div>
     </div>
 </div>`;
     }

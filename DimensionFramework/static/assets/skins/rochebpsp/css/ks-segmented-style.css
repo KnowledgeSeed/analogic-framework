@@ -17,8 +17,10 @@
 }
 
 
+
+/* Mody segmented  */
 .ks-segmented-segmented.ks-segmented {
-    border-radius: 7px;
+    border-radius: 10px;
     height: 40px;
 }
 
@@ -27,12 +29,17 @@
     color: #585959;
     font-size: 14px;
     font-weight: 600;
+    border-right: 1px solid #fff;
 }
 
 .ks-segmented-segmented .ks-segment.ks-on {
     background-color: #0066cc;
     color: #fff;
 }
+
+
+
+
 
 
 /* ote */
@@ -66,3 +73,12 @@
 }
 
 /* end ote */
+
+
+
+
+
+
+
+
+

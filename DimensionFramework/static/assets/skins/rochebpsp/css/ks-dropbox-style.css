@@ -390,7 +390,7 @@
 }
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-field:hover {
-	background-color: #BFD9F2;
+	background-color: rgba(220, 235, 250, 0.47);
 	border-radius: 10px;
 
 }
@@ -462,10 +462,6 @@
 
 }
 
-.ks-dropbox-simple_bold_bpsp .ks-dropbox-panel-item.on {
-    background-color: #0066cc;
-    color: #fff;
-}
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-panel-item.on .ks-dropbox-panel-item-text {
     color: #fff;
@@ -484,7 +480,7 @@
 }
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-backdrop {
-    background-color: rgba(116, 123, 133, 0.75);
+    background-color: rgba(116, 123, 133, 0.4);
     bottom: 0;
     left: 0;
     position: fixed;
@@ -511,7 +507,7 @@
 }
 
 .ks-dropbox-simple_bpsp .ks-dropbox-field:hover {
-	background-color: #bfd9f2;
+	background-color: rgba(220, 235, 250, 0.47);
 	border-radius: 7px;
 }
 
@@ -578,10 +574,7 @@
     background-color: #0066cc;
 }
 
-.ks-dropbox-simple_bpsp .ks-dropbox-panel-item.on {
-    background-color: #0066cc;
-    color: #fff;
-}
+
 
 .ks-dropbox-simple_bpsp .ks-dropbox-panel-item.on .ks-dropbox-panel-item-text {
     color: #fff;
