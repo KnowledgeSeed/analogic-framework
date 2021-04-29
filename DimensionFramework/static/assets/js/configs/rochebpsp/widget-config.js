@@ -984,7 +984,8 @@ app.widgetConfig = {
                             label: 'Cancel'
                         }
                     ]
-                },,
+                },
+
                 {
                     id: 'rocheBPSPProductsNoCheckoutPopup',
                     type: ContainerWidget,
