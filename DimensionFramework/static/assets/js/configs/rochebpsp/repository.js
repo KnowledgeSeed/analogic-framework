@@ -32,28 +32,87 @@ app.repository = {
         }
     },
 
+    rocheBPSPMainGreyGridTable: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => `{"MDX":"
+			SELECT 
+			{[Value Type].[Value Type].[String]} 
+			ON COLUMNS , 
+			{[Measures Control].[Measures Control].[BPSP NextGen system message Title],
+			[Measures Control].[Measures Control].[BPSP NextGen system message User],
+			[Measures Control].[Measures Control].[BPSP NextGen system message DateTime],
+			[Measures Control].[Measures Control].[BPSP NextGen system message]}
+			ON ROWS  FROM [Control] 
+            "}`,
+            parsingControl: {
+                type: 'matrix',
+                length: 1,
+                query: [
+                    (r, x) => {
+                        return {title: r.Cells[x].FormattedValue}
+                    }]
+            }
+        }
+    },
+
+
+    rocheBPSPMainBlueGridTable: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => `{"MDX":"
+            SELECT 
+            {[Companies].[Companies].[All Companies^1391]} 
+            PROPERTIES [Companies].[Companies].[Member description]  
+            ON COLUMNS , 
+            NON EMPTY 
+               {[Measures Company Information].[Measures Company Information].[Start page message Title],
+               [Measures Company Information].[Measures Company Information].[Start page message User],
+               [Measures Company Information].[Measures Company Information].[Start page message DateTime],
+               [Measures Company Information].[Measures Company Information].[Start page message]} 
+              PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON ROWS 
+            FROM [Company Information] 
+            WHERE 
+              (
+               [Versions].[Versions].[Live]
+              )
+            "}`,
+            parsingControl: {
+                type: 'matrix',
+                length: 1,
+                query: [
+                    (r, x) => {
+                        return {title: r.Cells[x].FormattedValue}
+                    }]
+            }
+        }
+    },
+
+
     rocheBPSPProductsCheckoutPopupFocusButton: {
         launch:
-                {
-                    url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
-                    type: 'POST',
-                    body: (db) => `{
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => `{
                         "Parameters": [
                         ]
                     }`
-                },
+            },
     },
 
     rocheBPSPProductsCheckoutPopupCheckoutButton: {
         launch:
-                {
-                    url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable Checkout by User')/tm1.ExecuteWithReturn`,
-                    type: 'POST',
-                    body: (db) => `{
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable Checkout by User')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => `{
                         "Parameters": [
                         ]
                     }`
-                },
+            },
     },
 
 
@@ -76,7 +135,7 @@ app.repository = {
     rocheBPSPProductsPageInit: {
         state:
             (db) => {
-            //temp:
+                //temp:
                 WidgetValue['systemValueGlobalStartingPlanYear'] = 2020;
                 WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';
                 WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';

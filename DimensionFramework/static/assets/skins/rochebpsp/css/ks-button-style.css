@@ -601,15 +601,15 @@
     height: 110%
 }
 
-.ks-button-rochemain:hover {background-color: #004C99}
-
-.ks-button-rochemain:active {
-  background-color: #004C99;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
+.ks-button-rochemain:hover {
+    background-color: #004C99
 }
 
-
+.ks-button-rochemain:active {
+    background-color: #004C99;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
 
 
 /* gridtablehierarchy */
@@ -821,7 +821,7 @@
     font-weight: bold;
 }
 
-.ks-button-blue_bg_bpsp .ks-button-inner{
+.ks-button-blue_bg_bpsp .ks-button-inner {
     background-color: #0066CC;
     border-radius: 3px;
 }
@@ -834,14 +834,6 @@
     color: #0066cc;
     font-size: 20px;
     font-weight: bold;
-}
-
-.ks-button-settings_bpsp:hover {background-color: #004C99}
-
-.ks-button-settings_bpsp:active {
-  background-color: #004C99;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
 }
 
 
@@ -863,14 +855,15 @@
     height: 110%
 }
 
-.ks-button-settings_bpsp:hover {background-color: #004C99}
-
-.ks-button-settings_bpsp:active {
-  background-color: #004C99;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
+.ks-button-settings_bpsp:hover {
+    background-color: #004C99
 }
 
+.ks-button-settings_bpsp:active {
+    background-color: #004C99;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
 
 
 /* chart icon in gridtable Mody 04 28  */
@@ -886,4 +879,60 @@
 .ks-button-comment_Off_GT_bpsp .ks-button-content {
     height: 110%
 }
+
+
+
+
+
+
+
+
+
+
+/* userpanelmain_bpsp */
+
+
+.ks-button-userpanelmain_bpsp.ks-button {
+    height: 30px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #ebecec;
+}
+
+.ks-button-userpanelmain_bpsp .ks-button-inner {
+    background-color: #ebecec;
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-userpanelmain_bpsp .ks-button-icon,
+.ks-button-userpanelmain .ks-button-icon img {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #585959;
+}
+
+.ks-button-userpanelmain_bpsp .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-userpanelmain_bpsp .ks-button-label {
+    color: #585959;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.ks-button-userpanelmain_bpsp:hover {
+    background-color: #212121
+}
+
+.ks-button-userpanelmain_bpsp:active {
+    background-color: #404040;
+    box-shadow: 0 5px #404040;
+    transform: translateY(4px);
+}
+
+
 
