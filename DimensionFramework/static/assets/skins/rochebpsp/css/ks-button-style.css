@@ -813,6 +813,19 @@
     padding-right: 5px;
 }
 
+/* blue_bg_bpsp */
+
+.ks-button-blue_bg_bpsp .ks-button-label {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.ks-button-blue_bg_bpsp .ks-button-inner{
+    background-color: #0066CC;
+    border-radius: 3px;
+}
+
 /* ote end */
 
 /* back button rocheBPSP Mody 04 22 */

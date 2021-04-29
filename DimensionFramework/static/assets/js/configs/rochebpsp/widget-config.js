@@ -6,7 +6,10 @@ app.widgetConfig = {
             id: 'rocheBPSPMain',
             type: PageWidget,
             widgets: [
-
+                {
+                    id: 'rocheBPSPMainApplicationInit',
+                    type: ShadowWidget
+                },
                 {
                     id: 'rocheBPSPMainGrid',
                     type: GridWidget,
@@ -978,6 +981,67 @@ app.widgetConfig = {
                 {
                     id: 'rocheBPSPProductsPageInit',
                     type: ShadowWidget
+                },
+                {
+                    id: 'rocheBPSPProductsCheckoutWarning',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: false,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: true,
+                    width: '300',
+                    bgScrollable: true,
+                    fixed: true,
+                    height: '300',
+                    behaviour: 'popup',
+                    position: 'center',
+                    widgets: [
+                        {
+                            id: 'rocheBPSPProductsCheckoutWarningLockIcon',
+                            type: ImageWidget,
+                            skin: 'warning_bpsp',
+                            icon: 'lock'
+                        },
+                        {
+                            id: 'rocheBPSPProductsCheckoutWarningText',
+                            type: TextWidget,
+                            skin: 'checkout_warning_bpsp',
+                            title: 'This section is being edited',
+                            titleAlignment: 'center'
+                        },
+                        {
+                            id: 'rocheBPSPProductsCheckoutWarningByUserText',
+                            type: TextWidget,
+                            marginTop: 10,
+                            skin: 'checkout_warning_bpsp',
+                            title: 'by<b>John Smith</b>since<b>2021.04.10 11:22</b>',
+                            titleAlignment: 'center',
+                            titleFontSize: 10
+                        },
+                        {
+                            id: 'rocheBPSPProductsCheckoutWarningMessageText',
+                            type: TextWidget,
+                            marginTop: 10,
+                            skin: 'checkout_warning_bpsp',
+                            title: 'You can checkout this section for editing after the',
+                            body: 'current editor checks it in againg',
+                            titleAlignment: 'center',
+                            titleFontSize: 10
+                        },
+                        {
+                            id: 'rocheBPSPProductsCheckoutWarningContactEditorButton',
+                            type: ButtonWidget,
+                            skin: 'blue_bg_bpsp',
+                            label: 'Contact Editor'
+                        },
+                        {
+                            id: 'rocheBPSPProductsCheckoutWarningCancel',
+                            type: ButtonWidget,
+                            skin: 'white_bg_bpsp',
+                            label: 'Cancel'
+                        }
+                    ]
                 },
                 {
                     id: 'rocheBPSPProductsColumnSelectorPopup',

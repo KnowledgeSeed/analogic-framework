@@ -194,6 +194,7 @@
 
 
 /* ote */
+
 /* popup_header */
 .ks-text-popup_header_bpsp {
     padding-bottom: 10px;
@@ -241,6 +242,40 @@
     font-size: 15px;
     font-color: #000000;
 }
+
+/* checkout_warning_bpsp */
+.ks-text-checkout_warning_bpsp {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #D8D9D9;
+}
+
+.ks-text-checkout_warning_bpsp .ks-text-title {
+    font-size: 16px;
+    font-family: imago;
+    letter-spacing: 0px;
+    color: #000000;
+    opacity: 1;
+}
+
+.ks-text-checkout_warning_bpsp .ks-text-title b {
+    margin-left: 2px;
+    margin-right: 2px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* checkout_warning_bpsp */
+.ks-text-checkout_warning_message_bpsp {
+    padding-bottom: 10px;
+}
+
+.ks-text-checkout_warning_message_bpsp .ks-text-title {
+    font-size: 16px;
+    font-family: Imago-Regular;
+    letter-spacing: 0px;
+    color: #858686;
+}
+
 
 
 /* end ote */
