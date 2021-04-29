@@ -18,7 +18,7 @@
 
 
 .ks-container-nopadding .ks-container-background {
-    padding: 0px;<
+    padding: 0px;
 }
 
 .ks-container-nopadding .ks-container-content {
@@ -27,4 +27,30 @@
 
 .ks-container-nopadding.ks-container {
     box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.15), 0px 0px 0px rgba(0, 0, 0, 0.15);
+}
+
+/* popup_bpsp */
+.ks-container-popup_bpsp.ks-container-backdrop {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.ks-container-popup_bpsp.ks-container {
+    border-radius: 7px;
+}
+
+.ks-container-popup_bpsp .ks-container-content {
+    padding: 0px;
+}
+
+/* checkout_popup_bpsp */
+.ks-container-checkout_popup_bpsp.ks-container-backdrop {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.ks-container-checkout_popup_bpsp.ks-container {
+    border-radius: 7px;
+}
+
+.ks-container-checkout_popup_bpsp .ks-container-content {
+    padding: 5px;
 }

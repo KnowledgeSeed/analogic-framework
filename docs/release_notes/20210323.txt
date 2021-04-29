@@ -25,9 +25,17 @@ ImageWidget :
  warning_bpsp
 
 TextWidget:
-checkout_warning_bpsp
-checkout_warning_message_bpsp
+ checkout_warning_bpsp
+ checkout_warning_message_bpsp
 
 ButtonWidget:
-blue_bg_bpsp
-white_bg_bpsp
+ blue_bg_bpsp
+ white_bg_bpsp
+ yellow_bg_bpsp
+ grey_bg_bpsp
+
+ L01 -> PL1,..., L06->PL6
+
+ContainerWidget:
+ popup_bpsp
+ checkout_popup_bpsp

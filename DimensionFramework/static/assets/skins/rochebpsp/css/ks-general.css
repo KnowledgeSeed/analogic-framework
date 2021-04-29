@@ -305,6 +305,13 @@
 .icon-icon-x:before {
   content: "\e907";
 }
+
+.icon-x:before {
+    content: "\e907";
+    float:right;
+    cursor: pointer;
+}
+
 .icon-arrow-down:before {
   content: "\e93a";
 }

@@ -941,39 +941,79 @@ app.widgetConfig = {
                 {
                     id: 'rocheBPSPProductsCheckoutPopup',
                     type: ContainerWidget,
-                    anchorVisible: true,
+                    anchorVisible: false,
                     anchorOnClick: true,
                     backdrop: true,
                     visible: false,
                     closeBtn: false,
-                    width: '160',
+                    skin: 'checkout_popup_bpsp',
+                    width: '220',
                     bgScrollable: true,
+                    fadingSpeed: 0,
                     fixed: false,
-                    height: '200',
+                    height: '165',
                     behaviour: 'popup',
                     position: 'right',
                     widgets: [
                         {
-                            id: 'rocheBPSPProductsCheckoutPopupFocusButton',
-                            type: ButtonWidget,
-                            skin: 'deepblue_bluebg',
-                            width: '130',
-                            label: 'Focus'
-                        },
-                        {
                             id: 'rocheBPSPProductsCheckoutPopupCheckoutButton',
                             type: ButtonWidget,
-                            skin: 'deepblue_bluebg',
-                            width: '130',
-                            marginTop: '20',
-                            label: 'Checkout'
+                            skin: 'yellow_bg_bpsp',
+                            label: 'Check Out',
+                            icon: 'icon-lock'
+                        },
+                        {
+                            id: 'rocheBPSPProductsCheckoutPopupFocusButton',
+                            type: ButtonWidget,
+                            skin: 'blue_bg_bpsp',
+                            marginTop: '10',
+                            label: 'Focus'
                         },
                         {
                             id: 'rocheBPSPProductsCheckoutPopupCancelButton',
                             type: ButtonWidget,
-                            skin: 'deepblue_bluebg',
-                            width: '130',
-                            marginTop: '20',
+                            skin: 'white_bg_bpsp',
+                            marginTop: '10',
+                            label: 'Cancel'
+                        }
+                    ]
+                },,
+                {
+                    id: 'rocheBPSPProductsNoCheckoutPopup',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: true,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    skin: 'checkout_popup_bpsp',
+                    width: '220',
+                    bgScrollable: true,
+                    fadingSpeed: 0,
+                    fixed: false,
+                    height: '165',
+                    behaviour: 'popup',
+                    position: 'right',
+                    widgets: [
+                        {
+                            id: 'rocheBPSPProductsCheckoutPopupNoCheckoutButton',
+                            type: ButtonWidget,
+                            skin: 'grey_bg_bpsp',
+                            label: 'Check Out',
+                            icon: 'icon-lock'
+                        },
+                        {
+                            id: 'rocheBPSPProductsNoCheckoutPopupFocusButton',
+                            type: ButtonWidget,
+                            skin: 'blue_bg_bpsp',
+                            marginTop: '10',
+                            label: 'Focus on this Block'
+                        },
+                        {
+                            id: 'rocheBPSPProductsNoCheckoutPopupCancelButton',
+                            type: ButtonWidget,
+                            skin: 'white_bg_bpsp',
+                            marginTop: '10',
                             label: 'Cancel'
                         }
                     ]
@@ -989,12 +1029,14 @@ app.widgetConfig = {
                     anchorOnClick: false,
                     backdrop: true,
                     visible: false,
-                    closeBtn: true,
-                    width: '300',
+                    closeBtn: false,
+                    width: '260',
                     bgScrollable: true,
+                    fadingSpeed: 0,
                     fixed: true,
-                    height: '300',
+                    height: '270',
                     behaviour: 'popup',
+                    skin: 'popup_bpsp ',
                     position: 'center',
                     widgets: [
                         {
@@ -1023,17 +1065,21 @@ app.widgetConfig = {
                             id: 'rocheBPSPProductsCheckoutWarningMessageText',
                             type: TextWidget,
                             marginTop: 10,
-                            skin: 'checkout_warning_bpsp',
+                            skin: 'checkout_warning_message_bpsp',
                             title: 'You can checkout this section for editing after the',
                             body: 'current editor checks it in againg',
                             titleAlignment: 'center',
-                            titleFontSize: 10
+                            titleFontSize: 10,
+                            bodyAlignment: 'center',
+                            bodyFontSize: 10,
+                            marginBottom: 10
                         },
                         {
                             id: 'rocheBPSPProductsCheckoutWarningContactEditorButton',
                             type: ButtonWidget,
                             skin: 'blue_bg_bpsp',
-                            label: 'Contact Editor'
+                            label: 'Contact Editor',
+                            marginBottom: 10
                         },
                         {
                             id: 'rocheBPSPProductsCheckoutWarningCancel',
@@ -1057,6 +1103,8 @@ app.widgetConfig = {
                     height: '500',
                     behaviour: 'popup',
                     position: 'bottom',
+                    skin: 'popup_bpsp ',
+                    fadingSpeed: 0,
                     offset: -160,
                     widgets: [
                         {

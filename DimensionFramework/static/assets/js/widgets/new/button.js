@@ -80,7 +80,7 @@ class ButtonWidget extends Widget {
         <div class="ks-button-content">
             <div class="ks-button-icon" style="${imgStyle.join('')}">${v.icon !== false ? `<span style="${imgStyle.join('')}" class="${v.icon}"></span>` : '' }</div>
             <div class="ks-button-divider" style="${dividerStyle.join('')}"></div>
-            <div class="ks-button-label" style="${labelStyle.join('')}">${v.label}</div>
+            <div class="ks-button-label" title="${v.label}" style="${labelStyle.join('')}">${v.label}</div>
         </div>
     </div>
 </a>`;

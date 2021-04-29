@@ -270,7 +270,14 @@
 }
 
 .ks-text-checkout_warning_message_bpsp .ks-text-title {
-    font-size: 16px;
+    font-size: 10px;
+    font-family: Imago-Regular;
+    letter-spacing: 0px;
+    color: #858686;
+}
+
+.ks-text-checkout_warning_message_bpsp .ks-text-body {
+    font-size: 10px;
     font-family: Imago-Regular;
     letter-spacing: 0px;
     color: #858686;

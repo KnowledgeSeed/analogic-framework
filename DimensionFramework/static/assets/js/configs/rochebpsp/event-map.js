@@ -86,10 +86,10 @@ app.eventMap = {
             argument: [app.fn.openPage, 'rocheBPSPCustomers', app.fn.openPopup, 'rocheBPSPProductsCheckoutWarning']
         }
     ],
-    'launch.rocheBPSPProductsCheckoutPopupFocusButton.finished': [
+    'launch.rocheBPSPProductsCheckoutWarningCancel': [
         {
-            action: app.fn.checkTIResponseStatus,
-            argument: [app.fn.openPage, 'rocheBPSPCustomers', app.fn.openPopup, 'rocheBPSPProductsColumnSelectorPopup']
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutWarning'
         }
     ]
 }; 
