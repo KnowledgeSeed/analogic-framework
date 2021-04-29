@@ -300,7 +300,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPMainGridRow3Cell5',
                                     type: GridCellWidget,
-                                    alignment: 'center-left',
+                                    alignment: 'top-left',
                                     width: '50%',
                                     skin: 'messagebordgrey',
                                     widgets: [
@@ -308,9 +308,10 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPMainGreyGridTable',
                                             type: GridTableWidget,
-                                            marginTop: '10',
+                                            marginTop: '15px',
+                                            marginLeft: '15px',
                                             hideIfNoData: true,
-                                            skin: '',
+                                            skin: 'messege_board_bpsp',
                                             listen: [],
                                             title: '',
                                             widgets: [
@@ -421,7 +422,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPMainGridRow5',
                             type: GridRowWidget,
                             marginTop: '0%',
-                            height: '200',
+                            height: '155px',
                             widgets: [
 
                                 {
@@ -435,7 +436,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPMainGridRow5Cell2',
                                     type: GridCellWidget,
-                                    alignment: 'center-left',
+                                    alignment: 'top-left',
                                     width: '50%',
                                     skin: 'messagebordblue',
                                     height: '100%',
@@ -444,9 +445,10 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPMainBlueGridTable',
                                             type: GridTableWidget,
-                                            marginTop: '1',
+                                            marginTop: '15px',
+                                            marginLeft: '15px',
                                             hideIfNoData: true,
-                                            skin: '',
+                                            skin: 'messege_board_bpsp',
                                             listen: [],
                                             title: '',
                                             widgets: [
