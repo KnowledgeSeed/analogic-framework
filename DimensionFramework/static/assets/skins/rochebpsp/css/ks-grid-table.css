@@ -1,72 +1,98 @@
 .ks-grid-table {
-	display: block;
+    display: block;
 }
 
 .ks-grid-table-inner {
-	height: 100%;
-	position: relative;
+    height: 100%;
+    position: relative;
 }
 
 .ks-grid-table-row {
-	display: flex;
+    display: flex;
 }
 
 .ks-grid-table-cell {
-	flex-grow: 1;
-	height: 100%;
-	position: relative;
+    flex-grow: 1;
+    height: 100%;
+    position: relative;
 }
 
 .ks-grid-table-cell-content {
-	display: flex;
-	height: 100%;
+    display: flex;
+    height: 100%;
 }
 
 .ks-pos-top-left.ks-grid-table-cell-content {
-	align-items: flex-start;
-	justify-content: flex-start;
+    align-items: flex-start;
+    justify-content: flex-start;
 }
+
 .ks-pos-center-left.ks-grid-table-cell-content {
-	align-items: center;
-	justify-content: flex-start;
+    align-items: center;
+    justify-content: flex-start;
 }
+
 .ks-pos-bottom-left.ks-grid-table-cell-content {
-	align-items: flex-end;
-	justify-content: flex-start;
+    align-items: flex-end;
+    justify-content: flex-start;
 }
+
 .ks-pos-top-center.ks-grid-table-cell-content {
-	align-items: flex-start;
-	justify-content: center;
+    align-items: flex-start;
+    justify-content: center;
 }
+
 .ks-pos-center-center.ks-grid-table-cell-content {
-	align-items: center;
-	justify-content: center;
+    align-items: center;
+    justify-content: center;
 }
+
 .ks-pos-bottom-center.ks-grid-table-cell-content {
-	align-items: flex-end;
-	justify-content: center;
+    align-items: flex-end;
+    justify-content: center;
 }
+
 .ks-pos-top-right.ks-grid-table-cell-content {
-	align-items: flex-start;
-	justify-content: flex-end;
+    align-items: flex-start;
+    justify-content: flex-end;
 }
+
 .ks-pos-center-right.ks-grid-table-cell-content {
-	align-items: center;
-	justify-content: flex-end;
+    align-items: center;
+    justify-content: flex-end;
 }
+
 .ks-pos-bottom-right.ks-grid-table-cell-content {
-	align-items: flex-end;
-	justify-content: flex-end;
+    align-items: flex-end;
+    justify-content: flex-end;
 }
+
 .ks-pos-top-space-between.ks-grid-table-cell-content {
-	align-items: flex-start;
-	justify-content: space-between;
+    align-items: flex-start;
+    justify-content: space-between;
 }
+
 .ks-pos-center-space-between.ks-grid-table-cell-content {
-	align-items: center;
-	justify-content: space-between;
+    align-items: center;
+    justify-content: space-between;
 }
+
 .ks-pos-bottom-space-between.ks-grid-table-cell-content {
-	align-items: flex-end;
-	justify-content: space-between;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+
+/* Mody messege bord style 04 29  */
+
+.ks-grid-table-messege_board_bpsp .ks-grid-table-row {
+
+}
+
+.ks-grid-table-messege_board_bpsp .ks-grid-table-cell {
+    padding: 3px;
+}
+
+.ks-grid-table-messege_board_bpsp .ks-grid-table-cell {
+
 }

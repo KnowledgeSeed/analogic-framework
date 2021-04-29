@@ -143,7 +143,7 @@ app.widgetConfig = {
                                             action: '',
                                             width: '100%',
                                             icon: 'icon-profile',
-                                            skin: 'userpanelmain',
+                                            skin: 'userpanelmain_bpsp',
                                         }
                                     ]
                                 }]
@@ -158,8 +158,7 @@ app.widgetConfig = {
 
                                 {
                                     id: 'rocheBPSPMainGridRow2Cell1',
-                                    type: GridCellWidget,
-                                    marginLeft: '10',
+                                    type: GridCellWidget, marginLeft: '10',
                                     alignment: 'center-left',
                                     width: '48%',
                                     widgets: [
@@ -301,17 +300,39 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPMainGridRow3Cell5',
                                     type: GridCellWidget,
+                                    alignment: 'top-left',
                                     width: '50%',
-                                    skin: 'massagebordblue',
+                                    skin: 'messagebordgrey',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPMainGridRow3Cell5Text',
-                                            type: TextWidget,
-                                            title: '2020 Roche valami',
-                                            body: 'valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami valami',
-                                            skin: 'text',
+                                            id: 'rocheBPSPMainGreyGridTable',
+                                            type: GridTableWidget,
+                                            marginTop: '15px',
+                                            marginLeft: '15px',
+                                            hideIfNoData: true,
+                                            skin: 'messege_board_bpsp',
+                                            listen: [],
+                                            title: '',
+                                            widgets: [
+                                                {
+                                                    id: 'rocheBPSPMainGreyGridTable-Cell-01',
+                                                    type: GridTableCellWidget,
+                                                    width: '20%',
+                                                    alignment: 'center-left',
+                                                    widgets: [
+
+                                                        {
+                                                            id: 'rocheBPSPMainGreyGridTable-Cell-01-Text',
+                                                            type: TextWidget,
+                                                            skin: '',
+                                                            title: '',
+                                                        }
+                                                    ]
+                                                },
+                                            ]
                                         }
+
                                     ]
                                 }]
                         },
@@ -401,7 +422,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPMainGridRow5',
                             type: GridRowWidget,
                             marginTop: '0%',
-                            height: '200',
+                            height: '155px',
                             widgets: [
 
                                 {
@@ -415,57 +436,43 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPMainGridRow5Cell2',
                                     type: GridCellWidget,
-                                    alignment: 'center-left',
+                                    alignment: 'top-left',
                                     width: '50%',
-                                    skin: 'massagebordblue',
+                                    skin: 'messagebordblue',
                                     height: '100%',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPMainGridRow5Cell2Text',
-                                            type: TextWidget,
-                                            title: '2021 Roche valami',
-                                            body: 'valami',
-                                            skin: 'text',
+                                            id: 'rocheBPSPMainBlueGridTable',
+                                            type: GridTableWidget,
+                                            marginTop: '15px',
+                                            marginLeft: '15px',
+                                            hideIfNoData: true,
+                                            skin: 'messege_board_bpsp',
+                                            listen: [],
+                                            title: '',
+                                            widgets: [
+                                                {
+                                                    id: 'rocheBPSPMainBlueGridTable-Cell-01',
+                                                    type: GridTableCellWidget,
+                                                    width: '20%',
+                                                    alignment: 'center-left',
+                                                    widgets: [
+
+                                                        {
+                                                            id: 'rocheBPSPMainBlueGridTable-Cell-01-Text',
+                                                            type: TextWidget,
+                                                            skin: '',
+                                                            title: '',
+                                                        }
+                                                    ]
+                                                },
+                                            ]
                                         }
                                     ]
                                 }]
                         },
-
-                        {
-                            id: 'rocheBPSPMainGridRow6',
-                            type: GridRowWidget,
-                            marginTop: '1%',
-                            height: '160',
-                            widgets: [
-
-                                {
-                                    id: 'rocheBPSPMainGridRow6Cell1',
-                                    type: GridCellWidget,
-                                    width: '48%',
-                                    widgets: []
-                                }
-                                ,
-
-                                {
-                                    id: 'rocheBPSPMainGridRow6Cell2',
-                                    type: GridCellWidget,
-                                    alignment: 'center-left',
-                                    width: '50%',
-                                    skin: 'massagebordgrey',
-                                    height: '100%',
-                                    widgets: [
-
-                                        {
-                                            id: 'rocheBPSPMainGridRow6Cell2Text',
-                                            type: TextWidget,
-                                            title: '2022 Roche valami',
-                                            body: 'valami',
-                                            skin: 'text',
-                                        }
-                                    ]
-                                }]
-                        }]
+                    ]
                 }]
         },
 
