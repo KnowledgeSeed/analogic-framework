@@ -457,7 +457,8 @@
     right: 8px;
     background-color: #fff;
     max-height: 300px;
-    overflow: auto;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-panel-item {
@@ -503,6 +504,17 @@
     width: 100%;
     z-index: -1;
 }
+
+.ks-dropbox-simple_bold_bpsp .ks-dropbox-panel-item.on {
+    background-color: #ffffff;
+}
+
+.ks-dropbox-simple_bold_bpsp .ks-dropbox-panel-item.on .ks-dropbox-panel-item-text {
+    color: #000000;
+    font-size: 14px;
+    font-weight: normal;
+}
+
 
 /* simple_bpsp */
 
@@ -622,76 +634,4 @@
 /* end ote */
 
 
-/*Other Cost Dropbox -  othercostdropbox  Mody*/
-.ks-dropbox-othercostdropbox .ks-dropbox-title {
-    font-size: 14px;
-    line-height: 16px;
-    margin-bottom: 5px;
-    padding-left: 10px;
-
-}
-
-.ks-dropbox-othercostdropbox .ks-dropbox-field {
-    border-radius: 10px;
-    height: 40px;
-}
-
-.ks-dropbox-othercostdropbox .ks-dropbox-input {
-    font-size: 16px;
-    font-weight: bold;
-    padding: 0 10px;
-    color: #2c2d2d;
-}
-
-.ks-dropbox-othercostdropbox .ks-dropbox-input::-webkit-input-placeholder {
-    color: #000000;
-}
-
-.ks-dropbox-othercostdropbox .ks-dropbox-input::-moz-placeholder {
-    color: #838388;
-}
-
-.ks-dropbox-othercostdropbox .ks-dropbox-icon:after {
-    border-top: 7px solid #1616af;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    overflow: auto;
-}
-
-.ks-dropbox-othercostdropbox .ks-dropbox-panel {
-    background-color: #fff;
-    border-radius: 5px;
-    margin-top: 2px;
-    padding: 2px;
-    box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.2), 0px 8px 12px rgba(0, 0, 0, 0.2);
-    overflow: auto;
-}
-
-.ks-dropbox-othercostdropbox .ks-dropbox-panel-item {
-    border-radius: 5px;
-    height: 50px;
-    padding: 0 10px;
-    overflow: auto;
-}
-
-.ks-dropbox-othercostdropbox .ks-dropbox-panel-item:hover {
-    background-color: #f1f3f5;
-}
-
-.ks-dropbox-othercostdropbox .ks-dropbox-panel-item.on .ks-dropbox-panel-item-text {
-    color: #070707;
-    font-size: 14px;
-    overflow: auto;
-}
-
-
-.ks-dropbox-othercostdropbox .ks-dropbox-panel-item-text {
-    color: #000000;
-    font-size: 14px;
-    overflow: auto;
-}
-
-.ks-dropbox-othercostdropbox .ks-dropbox-panel-item.on {
-    background-color: #7b0c0c;
-}
 

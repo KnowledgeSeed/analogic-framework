@@ -731,7 +731,7 @@ app.widgetConfig = {
                                             id: 'rocheBPSPProductsGridRow1Cell2DropBox',
                                             type: DropBoxWidget,
                                             width: '190',
-                                            skin: 'othercostdropbox',
+                                            skin: 'simple_bold_bpsp',
                                             marginBottom: 5,
                                             selectFirst: true,
                                             backdrop: true
