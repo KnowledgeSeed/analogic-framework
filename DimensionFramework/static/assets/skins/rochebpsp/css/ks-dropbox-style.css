@@ -691,7 +691,7 @@
     overflow: auto;
 }
 
-.ks-dropbox-othercostdropbox.ks-dropbox-panel-item.on {
+.ks-dropbox-othercostdropbox .ks-dropbox-panel-item.on {
     background-color: #7b0c0c;
 }
 
