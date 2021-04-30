@@ -775,7 +775,7 @@
 
 /* blue_bg_bpsp */
 
-.ks-button-blue_bg_bpsp{
+.ks-button-blue_bg_bpsp {
     display: flex;
     justify-content: center;
 
@@ -787,7 +787,7 @@
     font-weight: bold;
 }
 
-.ks-button-blue_bg_bpsp .ks-button-inner{
+.ks-button-blue_bg_bpsp .ks-button-inner {
     background-color: #0066CC;
     border-radius: 7px;
     height: 40px;
@@ -796,7 +796,7 @@
 
 /* white_bg_bpsp */
 
-.ks-button-white_bg_bpsp{
+.ks-button-white_bg_bpsp {
     display: flex;
     justify-content: center;
 
@@ -808,20 +808,20 @@
     font-weight: bold;
 }
 
-.ks-button-white_bg_bpsp .ks-button-inner{
+.ks-button-white_bg_bpsp .ks-button-inner {
     background-color: #ffffff;
     border-radius: 7px;
     height: 40px;
     width: 200px;
 }
 
-.ks-button-white_bg_bpsp .ks-button-inner:hover{
+.ks-button-white_bg_bpsp .ks-button-inner:hover {
     background-color: rgba(220, 235, 250, 0.47);
 }
 
 /* yellow_bg_bpsp */
 
-.ks-button-yellow_bg_bpsp{
+.ks-button-yellow_bg_bpsp {
     display: flex;
     justify-content: center;
 
@@ -833,7 +833,7 @@
     font-weight: bold;
 }
 
-.ks-button-yellow_bg_bpsp .ks-button-inner{
+.ks-button-yellow_bg_bpsp .ks-button-inner {
     background-color: #ED8B00;
     border-radius: 7px;
     height: 40px;
@@ -842,12 +842,12 @@
 
 .ks-button-yellow_bg_bpsp .ks-button-icon {
     color: #ffffff;
-    padding-right:10px;
+    padding-right: 10px;
 }
 
 /* grey_bg_bpsp */
 
-.ks-button-grey_bg_bpsp{
+.ks-button-grey_bg_bpsp {
     display: flex;
     justify-content: center;
 
@@ -859,7 +859,7 @@
     font-weight: bold;
 }
 
-.ks-button-grey_bg_bpsp .ks-button-inner{
+.ks-button-grey_bg_bpsp .ks-button-inner {
     background-color: #D8D9D9;
     border-radius: 7px;
     height: 40px;
@@ -868,9 +868,8 @@
 
 .ks-button-grey_bg_bpsp .ks-button-icon {
     color: #ffffff;
-    padding-right:10px;
+    padding-right: 10px;
 }
-
 
 
 /* ote end */
@@ -963,15 +962,38 @@
     font-weight: 600;
 }
 
-.ks-button-userpanelmain_bpsp:hover {
-    background-color: #212121
+/* */
+
+
+.ks-button-userpanelmain_bpsp.ks-button:hover {
+    height: 30px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #ebecec;
 }
 
-.ks-button-userpanelmain_bpsp:active {
-    background-color: #404040;
-    box-shadow: 0 5px #404040;
-    transform: translateY(4px);
+.ks-button-userpanelmain_bpsp .ks-button-inner:hover {
+    background-color: #ebecec;
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
 }
 
+.ks-button-userpanelmain_bpsp .ks-button-icon:hover,
+.ks-button-userpanelmain .ks-button-icon img:hover {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #171515;
+}
 
+.ks-button-userpanelmain_bpsp .ks-button-divider:hover {
+    width: 10px;
+}
+
+.ks-button-userpanelmain_bpsp .ks-button-label:hover {
+    color: #171515;
+    font-size: 16px;
+    font-weight: 600;
+}
 
