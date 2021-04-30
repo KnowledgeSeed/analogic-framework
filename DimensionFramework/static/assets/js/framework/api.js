@@ -324,7 +324,6 @@ app.fn.pastToGridTableText = (argument, ev, element) => {
 app.fn.checkTIResponseStatus = (argument, ev, element, response) => {
     if (!Array.isArray(argument) || argument.length < 2) {
         alert('checkResponseStatus has 2 mandatory argument!');
-
         return;
     }
 
@@ -352,7 +351,9 @@ app.fn.checkTIResponseStatus = (argument, ev, element, response) => {
     } else {
         f2args.length <= 1 ? f2args.length > 0 ? f2(f2args[0], ev, element) : f2('', ev, element) : f2(f2args, ev, element);
     }
-
-    console.log(argument);
-    console.log(response);
 };
+
+app.fn.customGridTablePopupLogic = (argument, ev, element) => {
+    console.log(element);
+    //rocheBPSPProductsCheckoutPopup
+}

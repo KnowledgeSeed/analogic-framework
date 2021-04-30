@@ -47,7 +47,6 @@ class GridTableWidget extends Widget {
 
             th = this.buildTableHeadHtml(this.buildTableHeaderRowHtml(c.join(''), v.rowHeight, v.borderTop, v.borderBottom));
         }
-
         return this.getWidgetHtml(this.buildTableHtml([th, tb].join(''), v.skin), o.title, mainDivStyle);
     }
 
@@ -157,7 +156,7 @@ class GridTableWidget extends Widget {
 //            }
 
             //  o.height = maxHeight;
-
+            //lassú:
             return $.when.apply($, deffered).then(function (...results) {
                 let widgetHtmls = [], r, first = true, headerRowWidgetHtml = false;
 
@@ -170,7 +169,6 @@ class GridTableWidget extends Widget {
                     first = false;
                 }
                 let visible = data && typeof data.visible !== 'undefined' ? data.visible : o.visible;
-
                 return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" ${visible === false ? 'style="display:none"' : '' } id="${o.id}">${instance.getHtml(widgetHtmls, headerRowWidgetHtml, processedData, withState)}</section>`;
             });
         });

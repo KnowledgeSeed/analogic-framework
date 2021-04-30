@@ -58,8 +58,8 @@ app.eventMap = {
     ],
     'launch.rocheBPSPProductsGridTableYearly_row_0': [
         {
-            action: app.fn.openPopup,
-            argument: 'rocheBPSPProductsCheckoutPopup'
+            action: app.fn.customGridTablePopupLogic,
+            argument: ''
         }
     ],
     'launch.rocheBPSPProductsCheckoutPopupCancelButton': [

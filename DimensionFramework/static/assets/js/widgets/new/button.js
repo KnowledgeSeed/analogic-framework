@@ -18,6 +18,7 @@ class ButtonWidget extends Widget {
             fontSize: this.getRealValue('fontSize', d, false),
             gradient: this.getRealValue('gradient', d, false),
             icon: this.getRealValue('icon', d, false),
+            iconColor: this.getRealValue('iconColor', d, false),
             iconHeight: this.getRealValue('iconHeight', d, false),
             iconPosition: this.getRealValue('iconPosition', d, 'left'),
             iconWidth: this.getRealValue('iconWidth', d, false),
@@ -73,6 +74,7 @@ class ButtonWidget extends Widget {
         /* override img tag style */
         v.iconWidth && imgStyle.push('width:', v.iconWidth, 'px;');
         v.iconHeight && imgStyle.push('height:', v.iconHeight, 'px;');
+        v.iconColor && imgStyle.push('color:', v.iconColor, ';');
 
         return `
 <a style="${aStyle.join('')}" ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''} ${v.url ? `target="_blank" href="${v.url}"` : `data-id="${o.id}" data-action="launch"`} class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">

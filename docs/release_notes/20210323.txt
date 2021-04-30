@@ -19,6 +19,8 @@ eventMap -> event.widgetid.(finished|started)
 
 ImageWidget -> skin
 
+ButtonWidget -> iconColor
+
 Skins:
 
 ImageWidget :
@@ -33,9 +35,19 @@ ButtonWidget:
  white_bg_bpsp
  yellow_bg_bpsp
  grey_bg_bpsp
+  gridtable_hierarchy_bpsp_PL1_locked
+  gridtable_hierarchy_bpsp_PL2_locked
+  gridtable_hierarchy_bpsp_PL3_locked
+ gridtable_hierarchy_bpsp_PL4_locked
+  gridtable_hierarchy_bpsp_PL5_locked
+ gridtable_hierarchy_bpsp_PL6_locked
+
 
  L01 -> PL1,..., L06->PL6
 
 ContainerWidget:
  popup_bpsp
  checkout_popup_bpsp
+
+GridTableCell:
+    locked

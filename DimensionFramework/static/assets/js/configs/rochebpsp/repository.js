@@ -185,105 +185,119 @@ app.repository = {
                 length: 10,
                 query: [
                     (r, x) => {
-                        return {
+                        let result;
+                        WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] =  Utils.parseNumber(r.Cells[x].FormattedValue) > 0 || r.Cells[x].Members[4].Attributes['Description'].indexOf('CS Coagulation')  !== -1 || r.Cells[x].Members[4].Attributes['Description'].indexOf('CS COAGULATION')  !== -1;
+                        if (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked']) {
+                            WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] = r.Cells[x].Members[4].Attributes['BPSP Budget Product Level - Name'].replace('PL', '') == '4';
+                        }
+                        WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'] = r.Cells[x].Members[4].Attributes['Description'].indexOf('CORE LAB')  !== -1;
+                        result = {
                             label: r.Cells[x].Members[4].Attributes['Description'],
-                            skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].Members[4].Attributes['BPSP Budget Product Level - Name'].replace('a', ''),
-                            cellSkin: Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ? 'locked' : '',
-                            cellVisible: true
+                            skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].Members[4].Attributes['BPSP Budget Product Level - Name'].replace('a', '') + (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? '_locked' : ''),
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
+                            cellVisible: true,
+                            icon: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
+                            isMainLocked: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'],
+                            isLocked: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'],
+                            isChildrenLocked: WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked']
                         };
+                        if (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked']) {
+                            result['iconColor'] = '#D12D4A';
+                        }
+                        return result;
                     },
                     (r, x) => {
                         return {
                             title: r.Cells[x].Members[4].Name,
-                            cellSkin: Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
                             cellVisible: true
                         };
                     },
                     (r, x) => {
                         return {
                             title: r.Cells[x].Members[4].Attributes['BPSP Budget Product Level - Name'].replace('PL', ''),
-                            cellSkin: Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
                             cellVisible: true
                         };
                     },
                     (r, x) => {
                         return {
                             title: r.Cells[x + 1].FormattedValue,
-                            cellSkin: Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ? 'locked' : 'readonly_bpsp',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true
                         };
                     },
                     (r, x) => {
                         return {
                             title: r.Cells[x + 2].FormattedValue,
-                            cellSkin: Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ? 'locked' : 'readonly_bpsp',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true
                         };
                     },
                     (r, x) => {
                         return {
                             title: r.Cells[x + 3].FormattedValue,
-                            cellSkin: Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ? 'locked' : 'readonly_bpsp',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true
                         };
                     },
                     (r, x) => {
                         return {
                             title: r.Cells[x + 4].FormattedValue,
-                            cellSkin: Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ? 'locked' : 'readonly_bpsp',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true
                         };
                     },
                     (r, x) => {
                         return {
                             title: r.Cells[x + 5].FormattedValue,
-                            cellSkin: Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ? 'locked' : 'readonly_bpsp',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true
                         };
                     },
                     (r, x) => {
                         return {
                             title: r.Cells[x + 6].FormattedValue,
-                            cellSkin: Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ? 'locked' : 'readonly_bpsp',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true
                         };
                     },
                     (r, x) => {
                         return {
                             title: 0,//??
-                            cellSkin: Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ? 'locked' : 'readonly_bpsp',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true
                         }
-                     },
+                    },
                     (r, x) => {
                         return {
                             title: r.Cells[x + 7].FormattedValue,
-                            cellSkin: Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ? 'locked' : 'readonly_bpsp',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true
                         };
                     },
                     (r, x) => {
                         return {
                             title: r.Cells[x + 8].FormattedValue,
-                            cellSkin: Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ? 'locked' : 'readonly_bpsp',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true
                         };
                     },
                     (r, x) => {
                         return {
                             title: r.Cells[x + 9].FormattedValue,
-                            cellSkin: Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ? 'locked' : 'readonly_bpsp',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true
                         };
                     },
                     (r, x) => {
                         return {
-                            cellSkin: Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ? 'locked' : 'unlocked',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
                         };
                     },
                     (r, x) => {
                         return {
-                            cellSkin: Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ? 'locked' : 'unlocked',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
                         };
                     }
                 ]
