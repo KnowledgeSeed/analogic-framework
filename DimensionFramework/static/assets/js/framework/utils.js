@@ -159,6 +159,12 @@ const Utils = {
 
         return s + (withSemicolon ? ';' : '');
     },
+    getGridTableId(cellId) {
+        if(cellId){
+            return cellId.split(',')[0];
+        }
+        return false;
+    },
     getGridTableCurrentCell(widgetId) {
         let a = v(widgetId + '.cellData', WidgetValue), b = v(widgetId + '.row', WidgetValue), c = v(widgetId + '.column', WidgetValue);
         if (a && b && c) {
