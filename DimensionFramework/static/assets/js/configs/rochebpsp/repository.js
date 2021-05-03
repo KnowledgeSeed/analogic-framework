@@ -150,13 +150,21 @@ app.repository = {
             return [];
         },
         init: {
-            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes))`,
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
             type: 'POST',
             body: (db) => `
             {
                 "MDX" : 
-                    "SELECT
-                   {([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag]),
+                    "WITH 
+                    MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[MyNewName] as [Products].[BPSP Budget].CurrentMember.Properties('Description')
+                    MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[MyNewCaption] as [Products].[BPSP Budget].CurrentMember.Name
+                    MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[MyNewLevel] as [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Product Level - Name')
+                    SELECT
+                   {
+                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[MyNewName]),
+                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[MyNewCaption]),
+                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[MyNewLevel]),
+                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag]),
                     ([Periods].[Periods].[2019],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Rexis Invoice]),
                     ([Periods].[Periods].[2020],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Rexis Invoice]),
                     ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Rexis Invoice]),
@@ -167,33 +175,32 @@ app.repository = {
                     ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Growth BW Invoice]),
                     ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Growth Final Sales Plan])
                     }
-                  PROPERTIES [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Caption] ,[Periods].[Periods].[Caption]  ON COLUMNS ,
+                    ON COLUMNS ,
                    {TM1SubsetToSet([Products].[BPSP Budget], \\"zSYS UI rocheBPSPProductsGridTable Rows - Budget\\")}
-                  PROPERTIES [Products].[BPSP Budget].[BPSP Budget Caption] ON ROWS
+                   ON ROWS
                 FROM [Sales Plan by Product]
                 WHERE
                   (
                    [Versions].[Versions].[Live],
                    [Companies].[Companies].[1391],
                    [Receivers].[Receivers].[PL],
-                   [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value]
-                  )"
+                   [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value])"
             }
        `,
             parsingControl: {
                 type: 'matrix',
-                length: 10,
+                length: 13,
                 query: [
                     (r, x) => {
                         let result;
-                        WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] =  Utils.parseNumber(r.Cells[x].FormattedValue) > 0 || r.Cells[x].Members[4].Attributes['Description'].indexOf('CS Coagulation')  !== -1 || r.Cells[x].Members[4].Attributes['Description'].indexOf('CS COAGULATION')  !== -1;
+                        WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] =  Utils.parseNumber(r.Cells[x+3].FormattedValue) > 0 || r.Cells[x].FormattedValue.indexOf('CS Coagulation')  !== -1 || r.Cells[x].FormattedValue.indexOf('CS COAGULATION')  !== -1;
                         if (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked']) {
-                            WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] = r.Cells[x].Members[4].Attributes['BPSP Budget Product Level - Name'].replace('PL', '') == '4';
+                            WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] = r.Cells[x+2].FormattedValue.replace('PL', '') == '4';
                         }
-                        WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'] = r.Cells[x].Members[4].Attributes['Description'].indexOf('CORE LAB')  !== -1;
+                        WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'] = r.Cells[x].FormattedValue.indexOf('CORE LAB')  !== -1;
                         result = {
-                            label: r.Cells[x].Members[4].Attributes['Description'],
-                            skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].Members[4].Attributes['BPSP Budget Product Level - Name'].replace('a', '') + (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? '_locked' : ''),
+                            label: r.Cells[x].FormattedValue,
+                            skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x+2].FormattedValue.replace('a', '') + (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? '_locked' : ''),
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
                             icon: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
@@ -208,36 +215,15 @@ app.repository = {
                     },
                     (r, x) => {
                         return {
-                            title: r.Cells[x].Members[4].Name,
+                            title: r.Cells[x+1].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
                             cellVisible: true
                         };
                     },
                     (r, x) => {
                         return {
-                            title: r.Cells[x].Members[4].Attributes['BPSP Budget Product Level - Name'].replace('PL', ''),
+                            title: r.Cells[x+2].FormattedValue.replace('PL', ''),
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
-                            cellVisible: true
-                        };
-                    },
-                    (r, x) => {
-                        return {
-                            title: r.Cells[x + 1].FormattedValue,
-                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
-                        };
-                    },
-                    (r, x) => {
-                        return {
-                            title: r.Cells[x + 2].FormattedValue,
-                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
-                        };
-                    },
-                    (r, x) => {
-                        return {
-                            title: r.Cells[x + 3].FormattedValue,
-                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true
                         };
                     },
@@ -264,13 +250,6 @@ app.repository = {
                     },
                     (r, x) => {
                         return {
-                            title: 0,//??
-                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
-                        }
-                    },
-                    (r, x) => {
-                        return {
                             title: r.Cells[x + 7].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true
@@ -286,6 +265,34 @@ app.repository = {
                     (r, x) => {
                         return {
                             title: r.Cells[x + 9].FormattedValue,
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellVisible: true
+                        };
+                    },
+                    (r, x) => {
+                        return {
+                            title: 0,//??
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellVisible: true
+                        }
+                    },
+                    (r, x) => {
+                        return {
+                            title: r.Cells[x + 10].FormattedValue,
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellVisible: true
+                        };
+                    },
+                    (r, x) => {
+                        return {
+                            title: r.Cells[x + 11].FormattedValue,
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellVisible: true
+                        };
+                    },
+                    (r, x) => {
+                        return {
+                            title: r.Cells[x + 12].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true
                         };
