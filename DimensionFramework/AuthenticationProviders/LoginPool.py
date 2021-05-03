@@ -29,6 +29,5 @@ class LoginPool(Pool):
     def getAuthenticationResponse(self):
         return redirect(self.setting.getBaseUrl('login'))
 
-
-
-
+    def extendLoginSession(self):
+        session.modified = True

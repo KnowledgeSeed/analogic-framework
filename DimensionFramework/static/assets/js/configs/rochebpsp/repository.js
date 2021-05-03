@@ -391,7 +391,7 @@ app.repository = {
 
     rocheBPSPProductsCheckoutGridTableYearly: {
         initCondition: (db) => {
-            return v('rocheBPSPProductsCheckoutColumnSelectorPopupDropBox') !== false;
+            return v('rocheBPSPProductsColumnSelectorPopupDropBox') !== false;
         },
         initDefault: (db) => {
             return [];
@@ -415,7 +415,7 @@ app.repository = {
                     ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Growth Final Sales Plan])
                     }
                   PROPERTIES [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Caption] ,[Periods].[Periods].[Caption]  ON COLUMNS ,
-                   {TM1SubsetToSet([Products].[BPSP Budget], \\"zSYS UI rocheBPSPProductsCheckoutGridTable Rows - Budget\\")}
+                   {TM1SubsetToSet([Products].[BPSP Budget], \\"zSYS UI rocheBPSPProductsGridTable Rows - Budget\\")}
                   PROPERTIES [Products].[BPSP Budget].[BPSP Budget Caption] ON ROWS
                 FROM [Sales Plan by Product]
                 WHERE
@@ -566,23 +566,7 @@ app.repository = {
         }
     },
     rocheBPSPProductsCheckoutGridRow1Cell9Button: {
-        init:
-            {
-                url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
-                type: 'POST',
-                body: (db) => `{"MDX":"SELECT ({[}Clients].[${db.activeUser}]}*{[zSYS Analogic User Parameter Measure].[FullName]})ON COLUMNS FROM [zSYS Analogic User Parameter]"}`,
-                parsingControl: {
-                    type: 'object',
-                    query:
-                        {
-                            label: (r, x) => {
-                                app.widgetValue['activeUserName'] = app.utils.toTitleCase(r.Cells[0].Value);
-                                return app.utils.toTitleCase(r.Cells[0].Value);
-                            }
-                        }
-                }
-
-            },
+        reference: 'rocheBPSPProductsGridRow1Cell9Button'
     },
 
     rocheBPSPProductsCheckoutGridRow1Cell2DropBox: {

@@ -283,6 +283,15 @@
     color: #858686;
 }
 
+/* ks-text-checkout_page_header_bpsp */
+
+.ks-text-checkout_page_header_bpsp .ks-text-title {
+    font-size: 36px;
+    color: #ED8B00;
+    font-family: imago-medium;
+    font-weight: bold;
+}
+
 
 
 /* end ote */

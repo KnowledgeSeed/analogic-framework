@@ -23,6 +23,8 @@ class Pool(Base):
         if self.checkAppAuthenticated() is False:
             return self.getAuthenticationResponse()
 
+        self.extendLoginSession()
+
         target_url = self.setting.getPoolTargetUrl()
 
         mdx = self.getServerSideMDX()
@@ -63,6 +65,9 @@ class Pool(Base):
             self.setting.setTM1SessionId(response.cookies.get('TM1SessionId'))
 
         return response
+
+    def extendLoginSession(self):
+        pass
 
     def getTM1Service(self):
 

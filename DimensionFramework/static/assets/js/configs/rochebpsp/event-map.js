@@ -92,10 +92,25 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutWarning'
         }
     ],
-    'launch.rocheBPSPProductsNoCheckoutPopupCancelButton' : [
+    'launch.rocheBPSPProductsNoCheckoutPopupCancelButton': [
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPProductsNoCheckoutPopup'
         }
+    ],
+
+    //rocheBPSPProductsCheckout
+    'launch.rocheBPSPProductsCheckoutGridRow2Cell1Button': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsCheckoutColumnSelectorPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutGridRow2Cell3Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPProducts'
+        }
     ]
+    //end rocheBPSPProductsCheckout
 }; 

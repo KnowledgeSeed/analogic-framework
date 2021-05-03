@@ -21,6 +21,8 @@ ImageWidget -> skin
 
 ButtonWidget -> iconColor
 
+framework -> repository reference
+
 Skins:
 
 ImageWidget :
@@ -29,6 +31,7 @@ ImageWidget :
 TextWidget:
  checkout_warning_bpsp
  checkout_warning_message_bpsp
+ checkout_page_header_bpsp
 
 ButtonWidget:
  blue_bg_bpsp

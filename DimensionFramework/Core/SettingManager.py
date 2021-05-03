@@ -71,9 +71,6 @@ class SettingManager:
             return os.path.join(cnf['host'], cnf['subpath'], route)
         return os.path.join(cnf['host'], cnf['subpath'], self.instance, route)
 
-    def getRepositoryOld(self):
-        return self.getJsonSetting(self.getRepositoryCacheKey(), 'repository')
-
     def getRepository(self):
         return self.getYamlSetting(self.getRepositoryCacheKey(), 'repository')
 
