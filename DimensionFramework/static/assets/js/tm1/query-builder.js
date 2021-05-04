@@ -161,9 +161,14 @@ QB.executeMDX = (repositoryId, path) => {
         return QB.loadFromWidgetValue(p);
     }
 
+    if (p.reference) {
+        r = Repository[p.ref];
+        p = r[path];
+    }
+
     let u = QB.getUrl(p), body = p.body(WidgetValue);
 
-    if (p.server) {
+    if (p.server) {//Todo ref!
         let mm = QB.getServerSideUrlAndBody(u.url, body, repositoryId, path);
         u.url = mm.url;
         body = mm.body;
@@ -172,7 +177,7 @@ QB.executeMDX = (repositoryId, path) => {
     return Auth.getTm1AjaxRequest(u.url, body, u.type, repositoryId).then((data) => {
         //save cellsetid
         r.cellsetId = data.ID;
-        let t = p.parsingControl;
+        let t =  p.parsingControl;
 
         if (t) {
             if (t.type === 'matrix') {

@@ -1692,7 +1692,7 @@ app.widgetConfig = {
                         }]
                 }]
         },
-        rocheBPSPProductsCheckout:
+    rocheBPSPProductsCheckout:
         {
             id: 'rocheBPSPProductsCheckout',
             type: PageWidget,
@@ -1727,9 +1727,12 @@ app.widgetConfig = {
                                             type: ButtonWidget,
                                             label: '',
                                             width: '50',
-                                            icon: 'icon-back-arrow',
+                                            icon: 'icon-lock',
                                             skin: 'backbuttonrocheBPSP',
-                                            height: '50'
+                                            height: '50',
+                                            iconColor: '#ED8B00',
+                                            paddingTop: 12,
+                                            borderWidth: false
                                         }
                                     ]
                                 },
@@ -1748,9 +1751,8 @@ app.widgetConfig = {
                                             type: TextWidget,
                                             title: 'Checked Out',
                                             width: '100%',
-                                            skin: 'text',
-                                            titleAlignment: 'center',
-                                            titleFontSize: 36,
+                                            skin: 'checkout_page_header_bpsp',
+                                            titleAlignment: 'center'
                                         }
                                     ]
                                 },
@@ -1929,7 +1931,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsCheckoutGridRow2Cell1',
                                     type: GridCellWidget,
                                     alignment: 'bottom-right',
-                                    width: '98%',
+                                    width: '89%',
                                     widgets: [
                                         {
                                             id: 'rocheBPSPProductsCheckoutGridRow2Cell1Button',
@@ -1940,41 +1942,45 @@ app.widgetConfig = {
                                             skin: 'blue_link_bpsp'
                                         }
                                     ]
-                                }
-                                /*   {
-                                       id: 'rocheBPSPProductsCheckoutGridRow2Cell1',
-                                       type: GridCellWidget,
-                                       alignment: 'bottom-right',
-                                       width: '14%',
-                                       widgets: [
+                                },
+                                {
+                                    id: 'rocheBPSPProductsCheckoutGridRow2Cell2',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-right',
+                                    width: '5%',
+                                    widgets: [
 
-                                           {
-                                               id: 'rocheBPSPProductsCheckoutGridRow2Cell1Button',
-                                               type: ButtonWidget,
-                                               label: 'Excel Template',
-                                               visible: false,
-                                               fontSize: 12,
-                                               fontColor: '#2A66C5',
-                                           }
-                                       ]
-                                   },
-                                   {
-                                       id: 'rocheBPSPProductsCheckoutGridRow2Cell2',
-                                       type: GridCellWidget,
-                                       alignment: 'bottom-center',
-                                       width: '5.5%',
-                                       widgets: [
+                                        {
+                                            id: 'rocheBPSPProductsCheckoutGridRow2Cell2Button',
+                                            type: ButtonWidget,
+                                            label: 'Clear all',
+                                            width: '100%',
+                                            icon: 'icon-columns',
+                                            skin: 'blue_link_bpsp',
+                                            fontColor: '#E40046',
+                                            iconColor: '#E40046'
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'rocheBPSPProductsCheckoutGridRow2Cell3',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-right',
+                                    width: '5%',
+                                    widgets: [
 
-                                           {
-                                               id: 'rocheBPSPProductsCheckoutGridRow2Cell2Button',
-                                               type: ButtonWidget,
-                                               label: 'Upload Excel',
-                                               fontSize: 12,
-                                               visible: false,
-                                               fontColor: '#2A66C5',
-                                           }
-                                       ]
-                                   },*/
+                                        {
+                                            id: 'rocheBPSPProductsCheckoutGridRow2Cell3Button',
+                                            type: ButtonWidget,
+                                            label: 'Check In',
+                                            width: '100%',
+                                            icon: 'icon-unlock',
+                                            skin: 'blue_link_bpsp',
+                                            fontColor: '#00965E',
+                                            iconColor: '#00965E'
+                                        }
+                                    ]
+                                },
                             ]
                         }
                     ]
