@@ -472,11 +472,11 @@
 }
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-panel-item:hover {
-    background-color: #bfd9f2;
+    background-color: rgba(191, 217, 242, 0.5);
 }
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-panel-item.on:hover {
-    background-color: #bfd9f2;
+    background-color: rgba(191, 217, 242, 0.5);
 
 }
 
@@ -528,22 +528,25 @@
 
 /* simple_bpsp */
 
+
 .ks-dropbox-simple_bpsp .ks-dropbox-title {
     font-size: 14px;
-    font-weight: bold;
     line-height: 16px;
     margin-bottom: 5px;
     display: block;
+    overflow: auto;
 }
 
 .ks-dropbox-simple_bpsp .ks-dropbox-field {
-    border-radius: 5px;
     height: 40px;
+    overflow: auto;
+    border-radius: 10px;
 }
 
 .ks-dropbox-simple_bpsp .ks-dropbox-field:hover {
     background-color: rgba(220, 235, 250, 0.47);
-    border-radius: 7px;
+    border-radius: 10px;
+
 }
 
 .ks-dropbox-simple_bpsp .ks-dropbox-input {
@@ -570,7 +573,7 @@
 }
 
 .ks-dropbox-simple_bpsp .ks-dropbox-icon {
-    border-radius: 4px;
+    border-radius: 10px;
     height: 40px;
     margin: 0 5px;
     width: 40px;
@@ -589,27 +592,35 @@
 }
 
 .ks-dropbox-simple_bpsp .ks-dropbox-panel {
-    width: 150px;
-    border-radius: 5px;
+    width: 220px;
+    border-radius: 10px;
     margin-top: 2px;
     padding: 2px;
     left: 8px;
     right: 8px;
     background-color: #fff;
+    max-height: 300px;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .ks-dropbox-simple_bpsp .ks-dropbox-panel-item {
-    border-radius: 4px;
+    border-radius: 10px;
     height: 40px;
     padding: 0 10px;
+    margin-left: 5%;
+    margin-bottom: 2%;
+    margin-right: 5%;
+    margin-top: 2%;
 }
 
 .ks-dropbox-simple_bpsp .ks-dropbox-panel-item:hover {
-    background-color: #bfd9f2;
+    background-color: rgba(191, 217, 242, 0.5);
 }
 
 .ks-dropbox-simple_bpsp .ks-dropbox-panel-item.on:hover {
-    background-color: #0066cc;
+    background-color: rgba(191, 217, 242, 0.5);
+
 }
 
 
@@ -626,7 +637,7 @@
 
 .ks-dropbox-simple_bpsp .ks-dropbox-panel-inner {
     background-color: #fff;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .ks-dropbox-simple_bpsp .ks-dropbox-backdrop {
@@ -639,6 +650,22 @@
     height: 100%;
     width: 100%;
     z-index: -1;
+}
+
+.ks-dropbox-simple_bpsp .ks-dropbox-panel-item.on {
+    background-color: #ffffff;
+}
+
+.ks-dropbox-simple_bpsp .ks-dropbox-panel-item.on .ks-dropbox-panel-item-text {
+    color: #000000;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.ks-dropbox-simple_bpsp .ks-dropbox-panel::-webkit-scrollbar {
+    display: none;
 }
 
 /* end ote */

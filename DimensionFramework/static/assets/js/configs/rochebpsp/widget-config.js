@@ -1931,7 +1931,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsCheckoutGridRow2Cell1',
                                     type: GridCellWidget,
                                     alignment: 'bottom-right',
-                                    width: '89%',
+                                    width: '86%',
                                     widgets: [
                                         {
                                             id: 'rocheBPSPProductsCheckoutGridRow2Cell1Button',
@@ -1946,8 +1946,8 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridRow2Cell2',
                                     type: GridCellWidget,
-                                    alignment: 'bottom-right',
-                                    width: '5%',
+                                    alignment: 'bottom-center',
+                                    width: '7%',
                                     widgets: [
 
                                         {
@@ -1965,8 +1965,8 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridRow2Cell3',
                                     type: GridCellWidget,
-                                    alignment: 'bottom-right',
-                                    width: '5%',
+                                    alignment: 'bottom-left',
+                                    width: '7%',
                                     widgets: [
 
                                         {
