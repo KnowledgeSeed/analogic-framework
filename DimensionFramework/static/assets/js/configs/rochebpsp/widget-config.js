@@ -1690,7 +1690,646 @@ app.widgetConfig = {
                                 }
                             ]
                         }]
-                }]
+                },
+                {
+                    id: 'rocheBPSPProductsGridTableMonthly',
+                    type: GridTableWidget,
+                    marginTop: '60',
+                    hideIfNoData: true,
+                    visible: false,
+                    skin: 'products_bpsp',
+                    listen: [
+                        {'event': 'bodyReady', 'method': 'refresh'}
+                    ],
+                    title: '',
+                    widgets: [
+
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyHeaderRow',
+                            type: GridTableHeaderRowWidget,
+                            height: '80',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-01',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '20%',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-01',
+                                            type: TextWidget,
+                                            title: '',
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-02',
+                                    type: GridTableHeaderCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '7%',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-02',
+                                            type: TextWidget,
+                                            body: 'Product Code',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-03',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '2%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-03',
+                                            type: TextWidget,
+                                            body: 'PL',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-04',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '7%',
+                                    alignment: 'bottom-left',
+                                    cellHeaderSkin: 'long_border_bpsp',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-04',
+                                            type: TextWidget,
+                                            title: '2021',
+                                            body: 'Final Plan',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-05',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '2%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-05',
+                                            type: TextWidget,
+                                            title: '',
+                                            body: '',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-06',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '5%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-06',
+                                            type: TextWidget,
+                                            title: '',
+                                            body: '01',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-07',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '5%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-07',
+                                            type: TextWidget,
+                                            body: '02',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-08',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '5%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-08',
+                                            type: TextWidget,
+                                            body: '03',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-09',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '5%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-09',
+                                            type: TextWidget,
+                                            body: '04',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-10',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '5%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-10',
+                                            type: TextWidget,
+                                            body: '05',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-11',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '5%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-11',
+                                            type: TextWidget,
+                                            body: '06',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-12',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '5%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-12',
+                                            type: TextWidget,
+                                            title: '',
+                                            body: '07',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-13',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '5%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-13',
+                                            type: TextWidget,
+                                            body: '08',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-14',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '5%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-14',
+                                            type: TextWidget,
+                                            body: '09',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-15',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '5%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-15',
+                                            type: TextWidget,
+                                            body: '10',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-16',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '5%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-16',
+                                            type: TextWidget,
+                                            body: '11',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-17',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '5%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-17',
+                                            type: TextWidget,
+                                            body: '12',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-18',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '2%',
+                                    alignment: 'bottom-left',
+                                    cellHeaderSkin: 'long_border_bpsp',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-18',
+                                            type: TextWidget,
+                                            title: '',
+                                        }
+                                    ]
+                                }]
+                        },
+
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-01',
+                            type: GridTableCellWidget,
+                            width: '20%',
+                            alignment: 'center-left',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyButton-01',
+                                    type: ButtonWidget,
+                                    icon: 'icon-badge',
+                                    skin: 'gridtablehierarchy_bpsp',
+                                    label: '',
+                                    action: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-02',
+                            type: GridTableCellWidget,
+                            width: '7%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyText-02',
+                                    type: TextWidget,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-03',
+                            type: GridTableCellWidget,
+                            width: '2%',
+                            alignment: 'center-center',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyText-03',
+                                    type: TextWidget,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-04',
+                            type: GridTableCellWidget,
+                            width: '7%',
+                            alignment: 'center-right',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyText-04',
+                                    type: TextWidget,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    paddingRight: 5,
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-05',
+                            type: GridTableCellWidget,
+                            alignment: 'center-center',
+                            width: '2%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyText-05',
+                                    type: TextWidget,
+                                    paddingRight: 5,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-06',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '5%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyText-06',
+                                    type: TextWidget,
+                                    paddingRight: 5,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-07',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '5%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyText-07',
+                                    type: TextWidget,
+                                    paddingRight: 5,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-08',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '5%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyText-08',
+                                    type: TextWidget,
+                                    paddingRight: 5,
+                                    title: '',
+                                    skin: 'products_gd_readonly_bpsp'
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-09',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '5%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyText-09',
+                                    type: TextWidget,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    paddingRight: 5,
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-10',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '5%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyText-10',
+                                    type: TextWidget,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    paddingRight: 5,
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-11',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '5%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyText-11',
+                                    type: TextWidget,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    paddingRight: 5,
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-12',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '5%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyText-12',
+                                    type: TextWidget,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    paddingRight: 5,
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-13',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '5%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyText-13',
+                                    type: TextWidget,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    paddingRight: 5,
+                                    title: '',
+                                }
+                            ]
+                        },
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-14',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '5%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyText-14',
+                                    type: TextWidget,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    paddingRight: 5,
+                                    title: '',
+                                }
+                            ]
+                        },
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-15',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '5%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyText-15',
+                                    type: TextWidget,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    paddingRight: 5,
+                                    title: '',
+                                }
+                            ]
+                        },
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-16',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '5%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyText-16',
+                                    type: TextWidget,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    paddingRight: 5,
+                                    title: '',
+                                }
+                            ]
+                        },
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-17',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '5%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyText-17',
+                                    type: TextWidget,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    paddingRight: 5,
+                                    title: '',
+                                }
+                            ]
+                        },
+                        {
+                            id: 'rocheBPSPProductsGridTableMonthlyCell-18',
+                            type: GridTableCellWidget,
+                            alignment: 'center-center',
+                            width: '2%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsGridTableMonthlyButton-18',
+                                    type: ButtonWidget,
+                                    icon: 'icon-comment-off',
+                                    skin: 'comment_Off_GT_bpsp',
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         },
     rocheBPSPProductsCheckout:
         {

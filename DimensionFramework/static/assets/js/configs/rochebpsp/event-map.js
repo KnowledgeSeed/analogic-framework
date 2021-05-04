@@ -98,6 +98,34 @@ app.eventMap = {
             argument: 'rocheBPSPProductsNoCheckoutPopup'
         }
     ],
+    'segmentedControlTab2.rocheBPSPProductsPerionUnitSegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductsGridTableYearly'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductsGridTableMonthly'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductsGridRow2Cell1Button'
+        }
+    ],
+    'segmentedControlTab1.rocheBPSPProductsPerionUnitSegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductsGridTableMonthly'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductsGridTableYearly'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductsGridRow2Cell1Button'
+        }
+    ],
 
     //rocheBPSPProductsCheckout
     'launch.rocheBPSPProductsCheckoutGridRow2Cell1Button': [
