@@ -48,10 +48,10 @@ app.repository = {
             "}`,
             parsingControl: {
                 type: 'matrix',
-                length: 1,
+                length: 4,
                 query: [
                     (r, x) => {
-                        return {title: r.Cells[x].FormattedValue}
+                        return {title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 5%;margin-top:3%;";  >' + r.Cells[x+1].FormattedValue +   '</div>' +  '<div style=\"font-size:10px;color:#B1B3B3;;margin-top:3%;\" >' + r.Cells[x+2].FormattedValue +   '</div>' , body: r.Cells[x+3].FormattedValue }
                     }]
             }
         }
@@ -81,10 +81,10 @@ app.repository = {
             "}`,
             parsingControl: {
                 type: 'matrix',
-                length: 1,
+                length: 4,
                 query: [
                     (r, x) => {
-                        return {title: r.Cells[x].FormattedValue}
+                        return {title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 5%;margin-top:3%;";  >' + r.Cells[x+1].FormattedValue +   '</div>' +  '<div style=\"font-size:10px;color:#408CD9;;margin-top:3%;\" >' + r.Cells[x+2].FormattedValue +   '</div>' , body: r.Cells[x+3].FormattedValue }
                     }]
             }
         }

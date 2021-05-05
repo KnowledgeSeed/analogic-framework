@@ -324,7 +324,7 @@ app.widgetConfig = {
                                                         {
                                                             id: 'rocheBPSPMainGreyGridTable-Cell-01-Text',
                                                             type: TextWidget,
-                                                            skin: '',
+                                                            skin: 'messageboard_text_bpsp',
                                                             title: '',
                                                         }
                                                     ]
@@ -339,7 +339,6 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPMainGridRow4',
                             type: GridRowWidget,
-                            marginTop: '0.5%',
                             width: '100%',
                             widgets: [
 
@@ -461,7 +460,7 @@ app.widgetConfig = {
                                                         {
                                                             id: 'rocheBPSPMainBlueGridTable-Cell-01-Text',
                                                             type: TextWidget,
-                                                            skin: '',
+                                                            skin: 'messageboard_text_bpsp',
                                                             title: '',
                                                         }
                                                     ]
