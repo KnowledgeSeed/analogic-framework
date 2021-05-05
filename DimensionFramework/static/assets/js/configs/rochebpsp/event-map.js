@@ -40,6 +40,10 @@ app.eventMap = {
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPMain'
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPProductsGridRow1Cell3DropBox']
         }
     ],
 
