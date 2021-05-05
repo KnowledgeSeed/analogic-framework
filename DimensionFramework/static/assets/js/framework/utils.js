@@ -172,6 +172,22 @@ const Utils = {
         }
         return false;
     },
+    getGridTableCurrentRow(widgetId) {
+        let a = v(widgetId + '.cellData', WidgetValue), b = v(widgetId + '.row', WidgetValue);
+        if (a && b) {
+            return a[b];
+        }
+        return false;
+    },
+    getGridTableCell(widgetId, columnIndex) {
+        let row = Utils.getGridTableCurrentRow(widgetId);
+        return row !== false ? row[columnIndex] : false;
+    },
+    getDropBoxSelectedItemAttribute(widgetId, attributeName) {
+        let selectedValue = WidgetValue[widgetId].value;
+        let item = WidgetValue[widgetId].items.find(e => e.name === selectedValue);
+        return item ? item[attributeName] : false;
+    },
     create_UUID() {
         let dt = new Date().getTime();
 

@@ -84,7 +84,7 @@ class Widget {
     }
 
     getMainHtmlElement(o, data, visible, widgetHtmls, withState) {
-        let gs = app.useDraggable ? this.getGeneralStyles(data) : [];
+        let gs = app.useDraggable ? this.getGeneralStyles(data) : [], html;
 
         if (visible === false) {
             gs.push('display:none;');
@@ -102,8 +102,9 @@ class Widget {
         if(data && data.write){
             write = data.write;
         }
-
-        return `<section ${write === 'off' ? `data-write="off"` : ''} ${originalId !== false ? `data-originalId="${o.originalId}"` : ''} ${o.ordinal ? `data-ordinal="${o.ordinal}"` : ''} ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" style="${gs.join('')}" id="${o.id ? o.id : Utils.getRandomId()}">${this.getHtml(widgetHtmls, data, withState)}</section>`;
+        html = this.getHtml(widgetHtmls, data, withState);
+        El.body.triggerHandler('init.' + o.id + '.finished');
+        return `<section ${write === 'off' ? `data-write="off"` : ''} ${originalId !== false ? `data-originalId="${o.originalId}"` : ''} ${o.ordinal ? `data-ordinal="${o.ordinal}"` : ''} ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" style="${gs.join('')}" id="${o.id ? o.id : Utils.getRandomId()}">${html}</section>`;
 
     }
 

@@ -181,14 +181,16 @@ QB.executeMDX = (repositoryId, path) => {
 
         if (t) {
             if (t.type === 'matrix') {
+                El.body.triggerHandler('processdata.' + repositoryId + '.finished');
                 return QB.processResult(t, data);
             } else if (t.type === 'list') {
+                El.body.triggerHandler('processdata.' + repositoryId + '.finished');
                 return QB.processResultAsList(t, data);
             } else {
+                El.body.triggerHandler('processdata.' + repositoryId + '.finished');
                 return QB.processResultAsObject(t.query, data);
             }
         }
-
         return data;
     });
 };

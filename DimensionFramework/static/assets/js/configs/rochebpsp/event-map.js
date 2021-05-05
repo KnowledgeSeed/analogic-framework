@@ -126,6 +126,12 @@ app.eventMap = {
             argument: 'rocheBPSPProductsGridRow2Cell1Button'
         }
     ],
+    'launch.rocheBPSPProductsCheckoutPopupFocusButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutPopup'
+        }
+    ],
 
     //rocheBPSPProductsCheckout
     'launch.rocheBPSPProductsCheckoutGridRow2Cell1Button': [

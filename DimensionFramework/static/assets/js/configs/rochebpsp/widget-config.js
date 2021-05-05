@@ -753,7 +753,14 @@ app.widgetConfig = {
                                             skin: 'simple_bpsp',
                                             marginBottom: 5,
                                             selectFirst: true,
-                                            backdrop: true
+                                            backdrop: true,
+                                            listen: [
+                                                {event: 'bodyReady', method: 'refresh'},
+                                                {
+                                                    event: 'choose.rocheBPSPProductsGridRow1Cell2DropBox.finished',
+                                                    method: 'refresh'
+                                                }
+                                            ]
                                         }
                                     ]
                                 },
@@ -1053,7 +1060,11 @@ app.widgetConfig = {
                 },
                 {
                     id: 'rocheBPSPProductsPageInit',
-                    type: ShadowWidget
+                    type: ShadowWidget,
+                    listen: [
+                        {event: 'bodyReady', method: 'refresh'},
+                        {event: 'choose.rocheBPSPProductsGridRow1Cell2DropBox.finished', method: 'refresh'}
+                    ]
                 },
                 {
                     id: 'rocheBPSPProductsCheckoutWarning',
@@ -1161,8 +1172,12 @@ app.widgetConfig = {
                     hideIfNoData: true,
                     skin: 'products_bpsp',
                     listen: [
-                        {'event': 'bodyReady', 'method': 'refresh'},
-                        {'event': 'choose.rocheBPSPProductsColumnSelectorPopupDropBox.finished', 'method': 'refresh'}
+                        {'event': 'bodyReady', 'method': 'refreshWithWaitingForEvent', parameters: ['init.rocheBPSPProductsGridRow1Cell3DropBox.finished']},
+                        {'event': 'choose.rocheBPSPProductsColumnSelectorPopupDropBox.finished', 'method': 'refresh'},
+                        {'event': 'choose.rocheBPSPProductsGridRow1Cell3DropBox.finished', 'method': 'refresh'},
+                        {'event': 'choose.rocheBPSPProductsGridRow1Cell2DropBox.finished', 'method': 'refreshWithWaitingForEvent', parameters: ['rendered.rocheBPSPProductsGridRow1Cell3DropBox']},
+                        {'event': 'launch.rocheBPSPProductsCheckoutPopupFocusButton.finished', 'method' : 'refresh'},
+                        {'event': 'launch.rocheBPSPProductsGridTableYearlyHeaderReturnFromFocus.finished', 'method': 'refresh'}
                     ],
                     title: '',
                     widgets: [
@@ -1177,12 +1192,21 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableYearlyHeaderCell-01',
                                     type: GridTableHeaderCellWidget,
                                     width: '20%',
+                                    alignment: 'bottom-left',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText-01',
-                                            type: TextWidget,
-                                            title: '',
+                                            id: 'rocheBPSPProductsGridTableYearlyHeaderFocusButton',
+                                            type: ButtonWidget,
+                                            label: 'Focus on Block',
+                                            skin: 'blue_link_bpsp'
+                                        },
+                                        {
+                                            id: 'rocheBPSPProductsGridTableYearlyHeaderReturnFromFocus',
+                                            type: ButtonWidget,
+                                            label: 'Return from Focus',
+                                            visible: false,
+                                            skin: 'blue_link_bpsp'
                                         }
                                     ]
                                 },
