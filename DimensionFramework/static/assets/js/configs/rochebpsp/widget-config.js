@@ -56,7 +56,7 @@ app.widgetConfig = {
                                     marginRight: '0',
                                     marginTop: '0',
                                     alignment: 'top-right',
-                                    width: '58%',
+                                    width: '50%',
                                     skin: 'rightborder',
                                     height: '0',
                                     widgets: [
@@ -129,16 +129,15 @@ app.widgetConfig = {
                                     type: GridCellWidget,
                                     marginLeft: '5',
                                     marginRight: '0',
-                                    marginTop: '2.5%',
+                                    marginTop: '1%',
                                     alignment: 'top-center',
-                                    width: '12%',
+                                    width: '20%',
                                     height: '0',
                                     widgets: [
 
                                         {
                                             id: 'rocheBPSPMainGridRow1Cell5Button',
                                             type: ButtonWidget,
-                                            label: 'David Modos',
                                             backgroundColor: '#EBECEC',
                                             action: '',
                                             width: '100%',
@@ -325,7 +324,7 @@ app.widgetConfig = {
                                                         {
                                                             id: 'rocheBPSPMainGreyGridTable-Cell-01-Text',
                                                             type: TextWidget,
-                                                            skin: '',
+                                                            skin: 'messageboard_text_bpsp',
                                                             title: '',
                                                         }
                                                     ]
@@ -340,7 +339,6 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPMainGridRow4',
                             type: GridRowWidget,
-                            marginTop: '0.5%',
                             width: '100%',
                             widgets: [
 
@@ -462,7 +460,7 @@ app.widgetConfig = {
                                                         {
                                                             id: 'rocheBPSPMainBlueGridTable-Cell-01-Text',
                                                             type: TextWidget,
-                                                            skin: '',
+                                                            skin: 'messageboard_text_bpsp',
                                                             title: '',
                                                         }
                                                     ]
@@ -544,7 +542,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPCustomersGridRow1CellKozepe',
                                     type: GridCellWidget,
                                     alignment: 'center-center',
-                                    width: '47%',
+                                    width: '39%',
                                     widgets: [
 
                                         {
@@ -635,21 +633,20 @@ app.widgetConfig = {
                                     type: GridCellWidget,
                                     marginLeft: '5',
                                     marginRight: '0',
-                                    marginTop: '2.5%',
+                                    marginTop: '1%',
                                     alignment: 'top-center',
-                                    width: '12%',
+                                    width: '20%',
                                     height: '0',
                                     widgets: [
 
                                         {
                                             id: 'rocheBPSPCustomersGridRow1Cell5Button',
                                             type: ButtonWidget,
-                                            label: 'David Modos',
                                             backgroundColor: '#EBECEC',
                                             action: '',
                                             width: '100%',
                                             icon: 'icon-profile',
-                                            skin: 'userpanelmain',
+                                            skin: 'userpanelmain_bpsp',
                                         }
                                     ]
                                 }]
@@ -2594,7 +2591,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsCheckoutGridRow2Cell1',
                                     type: GridCellWidget,
                                     alignment: 'bottom-right',
-                                    width: '89%',
+                                    width: '86%',
                                     widgets: [
                                         {
                                             id: 'rocheBPSPProductsCheckoutGridRow2Cell1Button',
@@ -2609,8 +2606,8 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridRow2Cell2',
                                     type: GridCellWidget,
-                                    alignment: 'bottom-right',
-                                    width: '5%',
+                                    alignment: 'bottom-center',
+                                    width: '7%',
                                     widgets: [
 
                                         {
@@ -2628,8 +2625,8 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridRow2Cell3',
                                     type: GridCellWidget,
-                                    alignment: 'bottom-right',
-                                    width: '5%',
+                                    alignment: 'bottom-left',
+                                    width: '7%',
                                     widgets: [
 
                                         {
@@ -3610,7 +3607,7 @@ app.widgetConfig = {
                                     marginTop: '0',
                                     marginBottom: '0',
                                     alignment: 'center-left',
-                                    width: '85%',
+                                    width: '78%',
                                     widgets: [
 
                                         {
@@ -3631,9 +3628,9 @@ app.widgetConfig = {
                                     type: GridCellWidget,
                                     marginLeft: '5',
                                     marginRight: '0',
-                                    marginTop: '2.5%',
+                                    marginTop: '1%',
                                     alignment: 'top-center',
-                                    width: '12%',
+                                    width: '20%',
                                     height: '0',
                                     widgets: [
 

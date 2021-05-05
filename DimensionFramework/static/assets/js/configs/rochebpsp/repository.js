@@ -49,10 +49,10 @@ app.repository = {
             "}`,
             parsingControl: {
                 type: 'matrix',
-                length: 1,
+                length: 4,
                 query: [
                     (r, x) => {
-                        return {title: r.Cells[x].FormattedValue}
+                        return {title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 5%;margin-top:3%;";  >' + r.Cells[x+1].FormattedValue +   '</div>' +  '<div style=\"font-size:10px;color:#B1B3B3;;margin-top:3%;\" >' + r.Cells[x+2].FormattedValue +   '</div>' , body: r.Cells[x+3].FormattedValue }
                     }]
             }
         }
@@ -82,10 +82,10 @@ app.repository = {
             "}`,
             parsingControl: {
                 type: 'matrix',
-                length: 1,
+                length: 4,
                 query: [
                     (r, x) => {
-                        return {title: r.Cells[x].FormattedValue}
+                        return {title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 5%;margin-top:3%;";  >' + r.Cells[x+1].FormattedValue +   '</div>' +  '<div style=\"font-size:10px;color:#408CD9;;margin-top:3%;\" >' + r.Cells[x+2].FormattedValue +   '</div>' , body: r.Cells[x+3].FormattedValue }
                     }]
             }
         }
@@ -731,7 +731,7 @@ app.repository = {
                         WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearIsChildrenLocked'] = r.Cells[x].Members[4].Attributes['Description'].indexOf('CORE LAB') !== -1;
                         result = {
                             label: r.Cells[x].Members[4].Attributes['Description'],
-                            skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].Members[4].Attributes['BPSP Budget Product Level - Name'].replace('a', '') + (WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? '_locked' : ''),
+                            skin: 'gridtable_checkout_hierarchy_bpsp_' + r.Cells[x].Members[4].Attributes['BPSP Budget Product Level - Name'].replace('a', '') + (WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? '_locked' : ''),
                             cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
                             icon: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
@@ -885,6 +885,74 @@ app.repository = {
             }
         }
     },
+
+    rocheBPSPMainGridRow1Cell5Button: {
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
+                type: 'POST',
+                body: (db) => `{"MDX":"SELECT ({[}Clients].[${db.activeUser}]}*{[zSYS Analogic User Parameter Measure].[FullName]})ON COLUMNS FROM [zSYS Analogic User Parameter]"}`,
+                parsingControl: {
+                    type: 'object',
+                    query:
+                        {
+                            label: (r, x) => {
+                                app.widgetValue['activeUserName'] = app.utils.toTitleCase(r.Cells[0].Value);
+                                return app.utils.toTitleCase(r.Cells[0].Value);
+                            }
+                        }
+                }
+
+            },
+    },
+
+        rocheBPSPCustomersGridRow1Cell5Button: {
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
+                type: 'POST',
+                body: (db) => `{"MDX":"SELECT ({[}Clients].[${db.activeUser}]}*{[zSYS Analogic User Parameter Measure].[FullName]})ON COLUMNS FROM [zSYS Analogic User Parameter]"}`,
+                parsingControl: {
+                    type: 'object',
+                    query:
+                        {
+                            label: (r, x) => {
+                                app.widgetValue['activeUserName'] = app.utils.toTitleCase(r.Cells[0].Value);
+                                return app.utils.toTitleCase(r.Cells[0].Value);
+                            }
+                        }
+                }
+
+            },
+    },
+
+
+
+        rocheBPSPSettingsGridRow1Cell5Button: {
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
+                type: 'POST',
+                body: (db) => `{"MDX":"SELECT ({[}Clients].[${db.activeUser}]}*{[zSYS Analogic User Parameter Measure].[FullName]})ON COLUMNS FROM [zSYS Analogic User Parameter]"}`,
+                parsingControl: {
+                    type: 'object',
+                    query:
+                        {
+                            label: (r, x) => {
+                                app.widgetValue['activeUserName'] = app.utils.toTitleCase(r.Cells[0].Value);
+                                return app.utils.toTitleCase(r.Cells[0].Value);
+                            }
+                        }
+                }
+
+            },
+    },
+
+
+
+
+
+
 
 
 };

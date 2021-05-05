@@ -298,3 +298,14 @@
 
 /* end ote */
 
+/* messageboard_text_bpsp   Mody 05 05  */
+.ks-text-messageboard_text_bpsp .ks-text-title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+
+.ks-text-messageboard_text_bpsp .ks-text-body {
+    margin-top: 10%;
+    font-size: 16px;
+}
