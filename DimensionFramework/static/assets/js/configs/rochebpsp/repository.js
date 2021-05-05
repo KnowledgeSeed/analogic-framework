@@ -2,34 +2,35 @@
 'use strict';
 app.repository = {
     rocheBPSPMainApplicationInit: {
-        state: (db) => {
-            WidgetValue['systemValueGlobalStartingPlanYear'] = 2020;
-            WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';
-            WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';
-        }
-    },
-    rocheBPSPProductsGridRow1Cell2DropBox: {
         init: {
-            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
             type: 'POST',
             body: (db) => `
-        {
-            "MDX" : "SELECT
-                {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Member description]}
-            ON COLUMNS ,
-                {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}
-             ON ROWS
-            FROM [}ElementAttributes_Companies]"}
-        }
-       `,
+            {
+            "MDX" : "SELECT 
+                        {[Value Type].[Value Type].[String]} 
+                    ON COLUMNS , 
+                        {[Measures Control].[Measures Control].[Current Year]} 
+                    ON ROWS 
+                    FROM [Control] 
+            "}`,
             parsingControl: {
-                type: 'list',
+                type: 'object',
                 query:
-                    (r, x) => {
-                        return {name: r.Cells[x].FormattedValue, on: false};
+                    {
+                        value: (r, x) => {
+                            WidgetValue['systemValueGlobalStartingPlanYear'] = r.Cells[0].FormattedValue;
+                            WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';
+                            return true;
+                        }
                     }
             }
-        }
+        },
+        /*   state: (db) => {
+
+               WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';
+               WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';
+           }*/
     },
 
     rocheBPSPMainGreyGridTable: {
@@ -100,12 +101,15 @@ app.repository = {
     rocheBPSPProductsCheckoutPopupFocusButton: {
         launch:
             {
-                url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
-                type: 'POST',
-                body: (db) => `{
-                        "Parameters": [
-                        ]
-                    }`
+                execute: (db) => {
+                    WidgetValue['systemValueFocusedProduct'] = Utils.getGridTableCell('rocheBPSPProductsGridTableYearly', 1).title;
+                }
+                /*  url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
+                  type: 'POST',
+                  body: (db) => `{
+                          "Parameters": [
+                          ]
+                      }`*/
             },
     },
 
@@ -121,23 +125,60 @@ app.repository = {
             },
     },
 
-
-    rocheBPSPProductsGridRow1Cell3DropBox: {
+    rocheBPSPProductsGridRow1Cell2DropBox: {
         init: {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
             type: 'POST',
             body: (db) => `
-        {
-            "MDX" : "
-SELECT 
-   {[}ElementAttributes_Receivers].[}ElementAttributes_Receivers].[Member description]} 
-  ON COLUMNS , 
-   {[Receivers].[Receivers].[All Receivers^AD],[Receivers].[Receivers].[All Receivers^AE],[Receivers].[Receivers].[All Receivers^AF],[Receivers].[Receivers].[AG],[Receivers].[Receivers].[All Receivers^AL],[Receivers].[Receivers].[All Receivers^AM],[Receivers].[Receivers].[All Receivers^AN],[Receivers].[Receivers].[All Receivers^AO],[Receivers].[Receivers].[All Receivers^AR],[Receivers].[Receivers].[AS],[Receivers].[Receivers].[All Receivers^AT],[Receivers].[Receivers].[All Receivers^AU],[Receivers].[Receivers].[All Receivers^AW],[Receivers].[Receivers].[All Receivers^AZ],[Receivers].[Receivers].[All Receivers^BA],[Receivers].[Receivers].[All Receivers^BB],[Receivers].[Receivers].[All Receivers^BD],[Receivers].[Receivers].[All Receivers^BE],[Receivers].[Receivers].[All Receivers^BF],[Receivers].[Receivers].[All Receivers^BG],[Receivers].[Receivers].[All Receivers^BH],[Receivers].[Receivers].[All Receivers^BI],[Receivers].[Receivers].[All Receivers^BJ],[Receivers].[Receivers].[All Receivers^BM],[Receivers].[Receivers].[BN],[Receivers].[Receivers].[All Receivers^BO],[Receivers].[Receivers].[BQ],[Receivers].[Receivers].[All Receivers^BR],[Receivers].[Receivers].[All Receivers^BS],[Receivers].[Receivers].[All Receivers^BT],[Receivers].[Receivers].[All Receivers^BW],[Receivers].[Receivers].[All Receivers^BY],[Receivers].[Receivers].[All Receivers^BZ],[Receivers].[Receivers].[C2],[Receivers].[Receivers].[C4],[Receivers].[Receivers].[All Receivers^CA],[Receivers].[Receivers].[All Receivers^CD],[Receivers].[Receivers].[All Receivers^CF],[Receivers].[Receivers].[All Receivers^CG],[Receivers].[Receivers].[All Receivers^CH],[Receivers].[Receivers].[All Receivers^CI],[Receivers].[Receivers].[All Receivers^CK],[Receivers].[Receivers].[All Receivers^CL],[Receivers].[Receivers].[All Receivers^CM],[Receivers].[Receivers].[All Receivers^CN],[Receivers].[Receivers].[All Receivers^CO],[Receivers].[Receivers].[CQ],[Receivers].[Receivers].[All Receivers^CR],[Receivers].[Receivers].[CS],[Receivers].[Receivers].[All Receivers^CU],[Receivers].[Receivers].[All Receivers^CV],[Receivers].[Receivers].[All Receivers^CW],[Receivers].[Receivers].[All Receivers^CY],[Receivers].[Receivers].[All Receivers^CZ],[Receivers].[Receivers].[All Receivers^DE],[Receivers].[Receivers].[All Receivers^DJ],[Receivers].[Receivers].[All Receivers^DK],[Receivers].[Receivers].[All Receivers^DM],[Receivers].[Receivers].[All Receivers^DO],[Receivers].[Receivers].[All Receivers^DZ],[Receivers].[Receivers].[All Receivers^E1],[Receivers].[Receivers].[All Receivers^E2],[Receivers].[Receivers].[EB],[Receivers].[Receivers].[All Receivers^EC],[Receivers].[Receivers].[All Receivers^EE],[Receivers].[Receivers].[All Receivers^EG],[Receivers].[Receivers].[All Receivers^EH],[Receivers].[Receivers].[All Receivers^ER],[Receivers].[Receivers].[All Receivers^ES],[Receivers].[Receivers].[All Receivers^ET],[Receivers].[Receivers].[EWBP],[Receivers].[Receivers].[All Receivers^FI],[Receivers].[Receivers].[All Receivers^FJ],[Receivers].[Receivers].[FM],[Receivers].[Receivers].[All Receivers^FO],[Receivers].[Receivers].[All Receivers^FR],[Receivers].[Receivers].[All Receivers^GA],[Receivers].[Receivers].[All Receivers^GB],[Receivers].[Receivers].[All Receivers^GD],[Receivers].[Receivers].[All Receivers^GE],[Receivers].[Receivers].[All Receivers^GF],[Receivers].[Receivers].[All Receivers^GH],[Receivers].[Receivers].[GI],[Receivers].[Receivers].[All Receivers^GL],[Receivers].[Receivers].[All Receivers^GM],[Receivers].[Receivers].[All Receivers^GN],[Receivers].[Receivers].[All Receivers^GP],[Receivers].[Receivers].[All Receivers^GQ],[Receivers].[Receivers].[All Receivers^GR],[Receivers].[Receivers].[All Receivers^GT],[Receivers].[Receivers].[All Receivers^GU],[Receivers].[Receivers].[All Receivers^GW],[Receivers].[Receivers].[All Receivers^GY],[Receivers].[Receivers].[All Receivers^HK],[Receivers].[Receivers].[All Receivers^HN],[Receivers].[Receivers].[All Receivers^HR],[Receivers].[Receivers].[All Receivers^HT],[Receivers].[Receivers].[All Receivers^HU],[Receivers].[Receivers].[All Receivers^ID],[Receivers].[Receivers].[All Receivers^IE],[Receivers].[Receivers].[All Receivers^IL],[Receivers].[Receivers].[All Receivers^IN],[Receivers].[Receivers].[All Receivers^IQ],[Receivers].[Receivers].[All Receivers^IR],[Receivers].[Receivers].[All Receivers^IS],[Receivers].[Receivers].[All Receivers^IT],[Receivers].[Receivers].[All Receivers^JM],[Receivers].[Receivers].[All Receivers^JO],[Receivers].[Receivers].[All Receivers^JP],[Receivers].[Receivers].[All Receivers^KE],[Receivers].[Receivers].[All Receivers^KG],[Receivers].[Receivers].[All Receivers^KH],[Receivers].[Receivers].[All Receivers^KI],[Receivers].[Receivers].[KM],[Receivers].[Receivers].[All Receivers^KN],[Receivers].[Receivers].[KP],[Receivers].[Receivers].[All Receivers^KR],[Receivers].[Receivers].[All Receivers^KW],[Receivers].[Receivers].[All Receivers^KY],[Receivers].[Receivers].[All Receivers^KZ],[Receivers].[Receivers].[All Receivers^LA],[Receivers].[Receivers].[All Receivers^LB],[Receivers].[Receivers].[All Receivers^LC],[Receivers].[Receivers].[LI],[Receivers].[Receivers].[All Receivers^LK],[Receivers].[Receivers].[All Receivers^LR],[Receivers].[Receivers].[All Receivers^LS],[Receivers].[Receivers].[All Receivers^LT],[Receivers].[Receivers].[All Receivers^LU],[Receivers].[Receivers].[All Receivers^LV],[Receivers].[Receivers].[All Receivers^LY],[Receivers].[Receivers].[All Receivers^M1],[Receivers].[Receivers].[M2],[Receivers].[Receivers].[M3],[Receivers].[Receivers].[M4],[Receivers].[Receivers].[All Receivers^MA],[Receivers].[Receivers].[All Receivers^MC],[Receivers].[Receivers].[All Receivers^MD],[Receivers].[Receivers].[All Receivers^ME],[Receivers].[Receivers].[All Receivers^MG],[Receivers].[Receivers].[All Receivers^MH],[Receivers].[Receivers].[All Receivers^MK],[Receivers].[Receivers].[All Receivers^ML],[Receivers].[Receivers].[All Receivers^MM],[Receivers].[Receivers].[All Receivers^MN],[Receivers].[Receivers].[All Receivers^MO],[Receivers].[Receivers].[All Receivers^MP],[Receivers].[Receivers].[All Receivers^MQ],[Receivers].[Receivers].[All Receivers^MR],[Receivers].[Receivers].[All Receivers^MT],[Receivers].[Receivers].[All Receivers^MU],[Receivers].[Receivers].[All Receivers^MV],[Receivers].[Receivers].[All Receivers^MW],[Receivers].[Receivers].[All Receivers^MX],[Receivers].[Receivers].[All Receivers^MY],[Receivers].[Receivers].[All Receivers^MZ],[Receivers].[Receivers].[All Receivers^NA],[Receivers].[Receivers].[All Receivers^NC],[Receivers].[Receivers].[All Receivers^NE],[Receivers].[Receivers].[All Receivers^NG],[Receivers].[Receivers].[All Receivers^NI],[Receivers].[Receivers].[All Receivers^NL],[Receivers].[Receivers].[All Receivers^NO],[Receivers].[Receivers].[All Receivers^NP],[Receivers].[Receivers].[All Receivers^NR],[Receivers].[Receivers].[All Receivers^NU],[Receivers].[Receivers].[All Receivers^NZ],[Receivers].[Receivers].[All Receivers^OM],[Receivers].[Receivers].[All Receivers^PA],[Receivers].[Receivers].[All Receivers^PE],[Receivers].[Receivers].[All Receivers^PF],[Receivers].[Receivers].[All Receivers^PG],[Receivers].[Receivers].[All Receivers^PH],[Receivers].[Receivers].[All Receivers^PK],[Receivers].[Receivers].[All Receivers^PL],[Receivers].[Receivers].[All Receivers^PM],[Receivers].[Receivers].[PR],[Receivers].[Receivers].[All Receivers^PS],[Receivers].[Receivers].[All Receivers^PT],[Receivers].[Receivers].[All Receivers^PW],[Receivers].[Receivers].[All Receivers^PY],[Receivers].[Receivers].[All Receivers^QA],[Receivers].[Receivers].[All Receivers^RE],[Receivers].[Receivers].[All Receivers^RO],[Receivers].[Receivers].[All Receivers^RS],[Receivers].[Receivers].[All Receivers^RU],[Receivers].[Receivers].[All Receivers^RW],[Receivers].[Receivers].[All Receivers^SA],[Receivers].[Receivers].[All Receivers^SB],[Receivers].[Receivers].[All Receivers^SC],[Receivers].[Receivers].[All Receivers^SD],[Receivers].[Receivers].[All Receivers^SE],[Receivers].[Receivers].[All Receivers^SG],[Receivers].[Receivers].[All Receivers^SI],[Receivers].[Receivers].[All Receivers^SK],[Receivers].[Receivers].[All Receivers^SL],[Receivers].[Receivers].[All Receivers^SM],[Receivers].[Receivers].[All Receivers^SN],[Receivers].[Receivers].[All Receivers^SO],[Receivers].[Receivers].[SQ],[Receivers].[Receivers].[All Receivers^SR],[Receivers].[Receivers].[All Receivers^SS],[Receivers].[Receivers].[All Receivers^ST],[Receivers].[Receivers].[All Receivers^SV],[Receivers].[Receivers].[All Receivers^SX],[Receivers].[Receivers].[All Receivers^SY],[Receivers].[Receivers].[All Receivers^SZ],[Receivers].[Receivers].[TC],[Receivers].[Receivers].[All Receivers^TD],[Receivers].[Receivers].[All Receivers^TG],[Receivers].[Receivers].[All Receivers^TH],[Receivers].[Receivers].[All Receivers^TJ],[Receivers].[Receivers].[TL],[Receivers].[Receivers].[All Receivers^TM],[Receivers].[Receivers].[All Receivers^TN],[Receivers].[Receivers].[All Receivers^TO],[Receivers].[Receivers].[All Receivers^TR],[Receivers].[Receivers].[All Receivers^TT],[Receivers].[Receivers].[All Receivers^TV],[Receivers].[Receivers].[All Receivers^TW],[Receivers].[Receivers].[All Receivers^TZ],[Receivers].[Receivers].[All Receivers^UA],[Receivers].[Receivers].[UB],[Receivers].[Receivers].[All Receivers^UG],[Receivers].[Receivers].[All Receivers^US],[Receivers].[Receivers].[USBP],[Receivers].[Receivers].[All Receivers^UY],[Receivers].[Receivers].[All Receivers^UZ],[Receivers].[Receivers].[All Receivers^VA],[Receivers].[Receivers].[All Receivers^VC],[Receivers].[Receivers].[All Receivers^VE],[Receivers].[Receivers].[VG],[Receivers].[Receivers].[All Receivers^VN],[Receivers].[Receivers].[All Receivers^VU],[Receivers].[Receivers].[All Receivers^WS],[Receivers].[Receivers].[X1],[Receivers].[Receivers].[All Receivers^X2],[Receivers].[Receivers].[X3],[Receivers].[Receivers].[All Receivers^XA],[Receivers].[Receivers].[XD],[Receivers].[Receivers].[All Receivers^XE],[Receivers].[Receivers].[All Receivers^XF],[Receivers].[Receivers].[All Receivers^XG],[Receivers].[Receivers].[All Receivers^XK],[Receivers].[Receivers].[XM],[Receivers].[Receivers].[XO],[Receivers].[Receivers].[All Receivers^XP],[Receivers].[Receivers].[XR],[Receivers].[Receivers].[XS],[Receivers].[Receivers].[All Receivers^XT],[Receivers].[Receivers].[All Receivers^XU],[Receivers].[Receivers].[XW],[Receivers].[Receivers].[All Receivers^XX],[Receivers].[Receivers].[All Receivers^XZ],[Receivers].[Receivers].[All Receivers^YE],[Receivers].[Receivers].[All Receivers^YT],[Receivers].[Receivers].[YU]} 
-  ON ROWS 
-FROM [}ElementAttributes_Receivers] 
-            "}
+            {
+            "MDX" : "SELECT 
+                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]} 
+                    ON COLUMNS , 
+                     {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}  
+                    ON ROWS 
+                    FROM [}ElementAttributes_Companies] 
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [];
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    'name': r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: false
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
         }
-       `,
+    },
+
+
+    rocheBPSPProductsGridRow1Cell3DropBox: {
+        initCondition: (db) => {
+            return v('rocheBPSPProductsGridRow1Cell2DropBox.value');
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT 
+                        {[}ElementAttributes_Receivers].[}ElementAttributes_Receivers].[Member description]} 
+                     ON COLUMNS , 
+                        {Tm1SubsetToset([Receivers].[Receivers],'zUI ${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')} Plan Receivers')}
+                     ON ROWS
+                    FROM [}ElementAttributes_Receivers] 
+
+            "}`,
             parsingControl: {
                 type: 'list',
                 query:
@@ -149,65 +190,124 @@ FROM [}ElementAttributes_Receivers]
     },
 
     rocheBPSPProductsPageInit: {
-        state:
-            (db) => {
-                //temp:
-                WidgetValue['systemValueGlobalStartingPlanYear'] = 2020;
-                WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';
-                WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';
-            },
-    },
-
-    rocheBPSPProductsGridTableYearly: {
         initCondition: (db) => {
-            return v('rocheBPSPProductsColumnSelectorPopupDropBox') !== false;
+            return v('rocheBPSPProductsGridRow1Cell2DropBox') !== false;
         },
         initDefault: (db) => {
             return [];
         },
         init: {
-            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes))`,
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT 
+                        {[Versions].[Versions].[Live]} 
+                    PROPERTIES [Versions].[Versions].[Caption]  ON COLUMNS , 
+                    NON EMPTY 
+                        {[Measures Company Information].[Measures Company Information].[Products Hierarchy]} 
+                        PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON ROWS 
+                    FROM [Company Information] 
+                WHERE 
+                (
+                    [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}]
+                )
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        value: (r, x) => {
+                            WidgetValue['systemValueGlobalStartingPlanYear'] = 2021;//temp
+                            WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';//temp
+                            WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = r.Cells[0].FormattedValue;
+                            WidgetValue['systemValueFocusedProduct'] = 'PL1';
+                            return true;
+                        }
+                    }
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderFocusButton: {
+        state: (db) => {
+            return {visible: db.systemValueFocusedProduct === 'PL1' };
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderReturnFromFocus: {
+        state: (db) => {
+            return {visible: db.systemValueFocusedProduct !== 'PL1' };
+        }, launch: {
+            execute: (db) => {
+                WidgetValue['systemValueFocusedProduct'] = 'PL1';
+            }
+        }
+    },
+
+
+    rocheBPSPProductsGridTableYearly: {
+        initCondition: (db) => {
+            return v('rocheBPSPProductsGridRow1Cell3DropBox.value') !== false;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
             type: 'POST',
             body: (db) => `
             {
                 "MDX" : 
-                    "SELECT
-                   {([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag]),
-                    ([Periods].[Periods].[2019],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Rexis Invoice]),
-                    ([Periods].[Periods].[2020],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Rexis Invoice]),
-                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Rexis Invoice]),
-                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Plan Reference]),
-                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Customer Sales Plan]),
-                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Marketing Sales Plan Adj]),
-                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan]),
-                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Growth BW Invoice]),
-                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Growth Final Sales Plan])
-                    }
-                  PROPERTIES [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Caption] ,[Periods].[Periods].[Caption]  ON COLUMNS ,
-                   {TM1SubsetToSet([Products].[BPSP Budget], \\"zSYS UI rocheBPSPProductsGridTable Rows - Budget\\")}
-                  PROPERTIES [Products].[BPSP Budget].[BPSP Budget Caption] ON ROWS
-                FROM [Sales Plan by Product]
-                WHERE
-                  (
-                   [Versions].[Versions].[Live],
-                   [Companies].[Companies].[1391],
-                   [Receivers].[Receivers].[PL],
-                   [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value]
-                  )"
+                    "With 
+                         Set DefaultProductRows AS
+                         {TM1DRILLDOWNMEMBER({[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[PL1]}, ALL, RECURSIVE )}
+                         Set FocusedOnProductRows AS
+                         {TM1DRILLDOWNMEMBER({[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[${db.systemValueFocusedProduct}]}, ALL, RECURSIVE )}
+                         MEMBER [Products].[BPSP Budget].[ProductIsFocused] AS 
+                         IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
+                         Set DefaultColumnSelection AS
+                    {StrToSet([Control].([Measures Control].[Measures Control].[UI ProuctsGridTable DefaultColumnsTuple Y0],[Value Type].[Value Type].[String]))}
+                         MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[DUMMY] as 1
+                         Set PaddingColumns AS
+                         {{TM1SubsetToSet([Periods].[Periods],'zUI Padding Years')}*{[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[DUMMY]}}
+                         Set ColumnSelectionByUser AS 
+                         Head(UNION({StrToSet('{'+[zSYS Analogic UI User Data].([}Clients].[}Clients].[${db.activeUser}],[zSYS Analogic UI Widget].[zSYS Analogic UI Widget].[rocheBPSPProductsGridTableYearly],[zSYS Analogic UI User Data Measure].[zSYS Analogic UI User Data Measure].[sColumnSelectorTuple])+'}')},{PaddingColumns},All),10)
+                         MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductName] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
+                         MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductCaption] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
+                         MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductLevel] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                         Set FixColumns AS
+                         {([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductName]),
+                         ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductCaption]),
+                         ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductLevel]),
+                         ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag])}
+                    SELECT 
+                      {HEAD(UNION(UNION({FixColumns},{ColumnSelectionByUser},All),{DefaultColumnSelection},All),14)}
+                      PROPERTIES [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Caption] ,[Periods].[Periods].[Caption]  ON COLUMNS , 
+                      {StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
+                      PROPERTIES [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption] ON ROWS 
+                    FROM [Sales Plan by Product] 
+                    WHERE 
+                      (
+                       [Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
+                       [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}],
+                       [Receivers].[Receivers].[${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}],
+                       [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value]
+                      )"
             }
        `,
             parsingControl: {
                 type: 'matrix',
-                length: 10,
+                length: 14,
                 query: [
                     (r, x) => {
                         let result;
-                        WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] =  /*Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ||*/ r.Cells[x].Members[4].Attributes['Description'].indexOf('CS Coagulation') !== -1 || r.Cells[x].Members[4].Attributes['Description'].indexOf('CS COAGULATION') !== -1;
-                        WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] = WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] && r.Cells[x].Members[4].Attributes['BPSP Budget Product Level - Name'].replace('PL', '') == '4';
-                        WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'] = r.Cells[x].Members[4].Attributes['Description'].indexOf('CORE LAB') !== -1;
+                        WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
+                        WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'];
+                        WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
                         result = {
-                            label: r.Cells[x].Members[4].Attributes['Description'],
-                            skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].Members[4].Attributes['BPSP Budget Product Level - Name'].replace('a', '') + (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? '_locked' : ''),
+                            label: r.Cells[x].FormattedValue,
+                            skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x + 2].FormattedValue.replace('a', '') + (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? '_locked' : ''),
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
                             icon: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
@@ -222,36 +322,15 @@ FROM [}ElementAttributes_Receivers]
                     },
                     (r, x) => {
                         return {
-                            title: r.Cells[x].Members[4].Name,
-                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
-                            cellVisible: true
-                        };
-                    },
-                    (r, x) => {
-                        return {
-                            title: r.Cells[x].Members[4].Attributes['BPSP Budget Product Level - Name'].replace('PL', ''),
-                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
-                            cellVisible: true
-                        };
-                    },
-                    (r, x) => {
-                        return {
                             title: r.Cells[x + 1].FormattedValue,
-                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
                             cellVisible: true
                         };
                     },
                     (r, x) => {
                         return {
-                            title: r.Cells[x + 2].FormattedValue,
-                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
-                        };
-                    },
-                    (r, x) => {
-                        return {
-                            title: r.Cells[x + 3].FormattedValue,
-                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            title: r.Cells[x + 2].FormattedValue.replace('PL', ''),
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
                             cellVisible: true
                         };
                     },
@@ -259,49 +338,70 @@ FROM [}ElementAttributes_Receivers]
                         return {
                             title: r.Cells[x + 4].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
+                            cellVisible: r.Cells[x + 4].Members[6].Name !== 'DUMMY'
                         };
                     },
                     (r, x) => {
                         return {
                             title: r.Cells[x + 5].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
+                            cellVisible: r.Cells[x + 5].Members[6].Name !== 'DUMMY'
                         };
                     },
                     (r, x) => {
                         return {
                             title: r.Cells[x + 6].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
+                            cellVisible: r.Cells[x + 6].Members[6].Name !== 'DUMMY'
                         };
-                    },
-                    (r, x) => {
-                        return {
-                            title: 0,//??
-                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
-                        }
                     },
                     (r, x) => {
                         return {
                             title: r.Cells[x + 7].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
+                            cellVisible: r.Cells[x + 7].Members[6].Name !== 'DUMMY'
                         };
                     },
                     (r, x) => {
                         return {
                             title: r.Cells[x + 8].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
+                            cellVisible: r.Cells[x + 8].Members[6].Name !== 'DUMMY'
                         };
                     },
                     (r, x) => {
                         return {
                             title: r.Cells[x + 9].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellVisible: r.Cells[x + 9].Members[6].Name !== 'DUMMY'
+                        };
+                    },
+                    (r, x) => {
+                        return {
+                            title: 'nincs',//??
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true
+                        }
+                    },
+                    (r, x) => {
+                        return {
+                            title: r.Cells[x + 10].FormattedValue,
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellVisible: r.Cells[x + 10].Members[6].Name !== 'DUMMY'
+                        };
+                    },
+                    (r, x) => {
+                        return {
+                            title: r.Cells[x + 11].FormattedValue,
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellVisible: r.Cells[x + 11].Members[6].Name !== 'DUMMY'
+                        };
+                    },
+                    (r, x) => {
+                        return {
+                            title: r.Cells[x + 12].FormattedValue,
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellVisible: r.Cells[x + 12].Members[6].Name !== 'DUMMY'
                         };
                     },
                     (r, x) => {
@@ -320,7 +420,7 @@ FROM [}ElementAttributes_Receivers]
     },
     rocheBPSPProductsGridTableMonthly: {
         initCondition: (db) => {
-            return v('rocheBPSPProductsColumnSelectorPopupDropBox') !== false;
+            return v('rocheBPSPProductsColumnSelectorPopupDropBox2') !== false;
         },
         initDefault: (db) => {
             return [];

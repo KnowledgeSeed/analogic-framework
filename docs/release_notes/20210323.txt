@@ -22,6 +22,8 @@ ImageWidget -> skin
 ButtonWidget -> iconColor
 
 framework -> repository reference
+processdate.widgetid.finished
+init.widgetid.finished
 
 Skins:
 
