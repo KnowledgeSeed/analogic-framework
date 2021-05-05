@@ -139,6 +139,29 @@ app.eventMap = {
             action: app.fn.openPage,
             argument: 'rocheBPSPProducts'
         }
-    ]
-    //end rocheBPSPProductsCheckout
+    ],
+    //end rocheBPSPProducts comment mody
+    'launch.rocheBPSPProductsGridTableYearly_row_13': [
+        {
+            action: app.fn.openPopup,
+            argument: ['rocheBPSPProductsCommentShow']
+        }
+    ],
+
+
+    'launch.rocheBPSPProductsCommentShowGridRow3Button': [
+        {
+            action: app.fn.openPopup,
+            argument: ['rocheBPSPProductsCommentEdit']
+        }
+    ],
+
+
+    'launch.rocheBPSPProductsCommentEditGridRow3Button': [
+        {
+            action: app.fn.openPopup,
+            argument: ['rocheBPSPProductsCommentShow']
+        }
+    ],
+
 }; 

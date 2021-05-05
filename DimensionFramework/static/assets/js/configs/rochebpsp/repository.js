@@ -51,7 +51,10 @@ app.repository = {
                 length: 4,
                 query: [
                     (r, x) => {
-                        return {title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 5%;margin-top:3%;";  >' + r.Cells[x+1].FormattedValue +   '</div>' +  '<div style=\"font-size:10px;color:#B1B3B3;;margin-top:3%;\" >' + r.Cells[x+2].FormattedValue +   '</div>' , body: r.Cells[x+3].FormattedValue }
+                        return {
+                            title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 5%;margin-top:3%;";  >' + r.Cells[x + 1].FormattedValue + '</div>' + '<div style=\"font-size:10px;color:#B1B3B3;;margin-top:3%;\" >' + r.Cells[x + 2].FormattedValue + '</div>',
+                            body: r.Cells[x + 3].FormattedValue
+                        }
                     }]
             }
         }
@@ -84,7 +87,10 @@ app.repository = {
                 length: 4,
                 query: [
                     (r, x) => {
-                        return {title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 5%;margin-top:3%;";  >' + r.Cells[x+1].FormattedValue +   '</div>' +  '<div style=\"font-size:10px;color:#408CD9;;margin-top:3%;\" >' + r.Cells[x+2].FormattedValue +   '</div>' , body: r.Cells[x+3].FormattedValue }
+                        return {
+                            title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 5%;margin-top:3%;";  >' + r.Cells[x + 1].FormattedValue + '</div>' + '<div style=\"font-size:10px;color:#408CD9;;margin-top:3%;\" >' + r.Cells[x + 2].FormattedValue + '</div>',
+                            body: r.Cells[x + 3].FormattedValue
+                        }
                     }]
             }
         }
@@ -806,7 +812,7 @@ FROM [}ElementAttributes_Receivers]
             },
     },
 
-        rocheBPSPCustomersGridRow1Cell5Button: {
+    rocheBPSPCustomersGridRow1Cell5Button: {
         init:
             {
                 url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
@@ -827,8 +833,7 @@ FROM [}ElementAttributes_Receivers]
     },
 
 
-
-        rocheBPSPSettingsGridRow1Cell5Button: {
+    rocheBPSPSettingsGridRow1Cell5Button: {
         init:
             {
                 url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
@@ -847,12 +852,6 @@ FROM [}ElementAttributes_Receivers]
 
             },
     },
-
-
-
-
-
-
 
 
 };

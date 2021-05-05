@@ -1688,6 +1688,131 @@ app.widgetConfig = {
                             ]
                         }]
                 },
+
+                {
+                    id: 'rocheBPSPProductsCommentShow',
+                    type: ContainerWidget,
+                    visible: false,
+                    width: '400',
+                    closeBtn: true,
+                    height: '100%',
+                    behaviour: 'popup',
+                    position: 'right',
+                    bgColor: '#fff',
+                    widgets: [
+
+                        {
+                            id: 'rocheBPSPProductsCommentShowGrid',
+                            type: GridWidget,
+                            marginLeft: '20',
+                            marginRight: '20',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsCommentShowGridRow1',
+                                    type: GridRowWidget,
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsCommentShowGridRow1Title',
+                                            type: ButtonWidget,
+                                            label: 'Comment Show',
+                                            action: '',
+                                            icon: 'icon-comment-off',
+                                            marginTop: '30',
+                                            marginBottom: '30',
+                                            fontBold: true,
+                                            fontSize: 24,
+                                            skin: 'commenttitle',
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'rocheBPSPProductsCommentShowGridRow3',
+                                    type: GridRowWidget,
+                                    alignment: 'left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsCommentShowGridRow3Button',
+                                            type: ButtonWidget,
+                                            label: 'EDIT',
+                                            action: '',
+                                            width: '100',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'simtype',
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+
+
+                {
+                    id: 'rocheBPSPProductsCommentEdit',
+                    type: ContainerWidget,
+                    visible: false,
+                    width: '400',
+                    closeBtn: true,
+                    height: '100%',
+                    behaviour: 'popup',
+                    position: 'right',
+                    bgColor: '#fff',
+                    widgets: [
+
+                        {
+                            id: 'rocheBPSPProductsCommentEditGrid',
+                            type: GridWidget,
+                            marginLeft: '20',
+                            marginRight: '20',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductsCommentEditGridRow1',
+                                    type: GridRowWidget,
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsCommentEditGridRow1Title',
+                                            type: ButtonWidget,
+                                            label: 'Comment Edit',
+                                            action: '',
+                                            icon: 'icon-comment-off',
+                                            marginTop: '30',
+                                            marginBottom: '30',
+                                            fontBold: true,
+                                            fontSize: 24,
+                                            skin: 'commenttitle',
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPProductsCommentEditGridRow3',
+                                    type: GridRowWidget,
+                                    alignment: 'left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsCommentEditGridRow3Button',
+                                            type: ButtonWidget,
+                                            label: 'SAVE',
+                                            action: '',
+                                            width: '100',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'simtype',
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+
                 {
                     id: 'rocheBPSPProductsGridTableMonthly',
                     type: GridTableWidget,
