@@ -231,13 +231,13 @@ app.repository = {
 
     rocheBPSPProductsGridTableYearlyHeaderFocusButton: {
         state: (db) => {
-            return {visible: db.systemValueFocusedProduct === 'PL1' };
+            return {visible: db.systemValueFocusedProduct === 'PL1'};
         }
     },
 
     rocheBPSPProductsGridTableYearlyHeaderReturnFromFocus: {
         state: (db) => {
-            return {visible: db.systemValueFocusedProduct !== 'PL1' };
+            return {visible: db.systemValueFocusedProduct !== 'PL1'};
         }, launch: {
             execute: (db) => {
                 WidgetValue['systemValueFocusedProduct'] = 'PL1';
@@ -245,6 +245,26 @@ app.repository = {
         }
     },
 
+    rocheBPSPProductsProductSelectorShortcutPopupGridTable: {
+        initCondition: (db) => {
+            return v('rocheBPSPProductsGridTableYearly.cellData') !== false;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        state: (db) => {
+            return db.rocheBPSPProductsGridTableYearly.cellData.filter(e => ['PL1', 'PL2', 'PL3'].includes(e[0].productLevel)).map(e => {return [{label: e[0].label, skin: e[0].skin, productCode: e[1].title}];});
+        }
+    },
+
+    rocheBPSPProductsProductSelectorShortcutPopupGridTableButton01: {
+        launch:
+            {
+                execute: (db) => {
+                    WidgetValue['systemValueFocusedProduct'] = Utils.getGridTableCell('rocheBPSPProductsProductSelectorShortcutPopupGridTable', 0).productCode;
+                }
+            },
+    },
 
     rocheBPSPProductsGridTableYearly: {
         initCondition: (db) => {
@@ -312,13 +332,14 @@ app.repository = {
                 length: 16,
                 query: [
                     (r, x) => {
-                        let result;
+                        let result, pl;
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'];
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
+                        pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x + 2].FormattedValue.replace('a', '') + (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? '_locked' : ''),
+                            skin: 'gridtable_hierarchy_bpsp_' + pl + (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? '_locked' : ''),
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
                             icon: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
@@ -326,7 +347,8 @@ app.repository = {
                             isLocked: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'],
                             isChildrenLocked: WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'],
                             checkoutUser: r.Cells[x + 4].FormattedValue,
-                            members: r.Cells[x].Members
+                            members: r.Cells[x].Members,
+                            productLevel: pl
                         };
                         if (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked']) {
                             result['iconColor'] = '#D12D4A';
@@ -447,7 +469,7 @@ app.repository = {
     },
     rocheBPSPProductsGridTableMonthly: {
         initCondition: (db) => {
-            return v('rocheBPSPProductsColumnSelectorPopupDropBox') !== false;
+            return v('rocheBPSPProductsColumnSelectorPopupDropBox2') !== false;
         },
         initDefault: (db) => {
             return [];

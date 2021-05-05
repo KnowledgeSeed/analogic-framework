@@ -136,6 +136,18 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutPopup'
         }
     ],
+    'launch.rocheBPSPProductsGridTableYearlyHeaderFocusButton' : [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsProductSelectorShortcutPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsProductSelectorShortcutPopupGridTable_row_0': [
+         {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsProductSelectorShortcutPopup'
+        }
+    ],
 
     //rocheBPSPProductsCheckout
     'launch.rocheBPSPProductsCheckoutGridRow2Cell1Button': [

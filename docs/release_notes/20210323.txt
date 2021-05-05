@@ -21,6 +21,8 @@ ImageWidget -> skin
 
 ButtonWidget -> iconColor
 
+ContainerWidget -> heightFixed
+
 framework -> repository reference
 processdate.widgetid.finished
 init.widgetid.finished

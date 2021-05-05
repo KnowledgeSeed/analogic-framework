@@ -169,7 +169,9 @@ class GridTableWidget extends Widget {
                     first = false;
                 }
                 let visible = data && typeof data.visible !== 'undefined' ? data.visible : o.visible;
-                return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" ${visible === false ? 'style="display:none"' : '' } id="${o.id}">${instance.getHtml(widgetHtmls, headerRowWidgetHtml, processedData, withState)}</section>`;
+                let ghtml = instance.getHtml(widgetHtmls, headerRowWidgetHtml, processedData, withState);
+                El.body.triggerHandler('init.' + o.id + '.finished');
+                return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" ${visible === false ? 'style="display:none"' : '' } id="${o.id}">${ghtml}</section>`;
             });
         });
     }

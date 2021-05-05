@@ -16,6 +16,7 @@ class PopupWidget extends Widget {
             bgScrollable: this.getRealValue('bgScrollable', d, true),
             closeBtn: this.getRealValue('closeBtn', d, false),
             fixed: this.getRealValue('fixed', d, true),
+            heightFixed: this.getRealValue('heightFixed', d, true),
             heightStr: Utils.getSize(this.getRealValue('height', d, 200)),
             offset: this.getRealValue('offset', d, 0),
             position: this.getRealValue('position', d, 'center'),
@@ -37,7 +38,11 @@ class PopupWidget extends Widget {
             s.push('position: absolute;');
         }
 
-        s.push('width:', w, ';height:', h, ';');
+        s.push('width:', w, ';');
+
+        if(v.heightFixed) {
+            s.push('height:', h, ';');
+        }
 
 
         if (v.anchor || v.anchorOnClick) {
