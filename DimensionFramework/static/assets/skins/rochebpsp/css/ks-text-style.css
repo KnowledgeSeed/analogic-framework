@@ -48,7 +48,7 @@
     height: 50px;
     padding: 10px 40px;
     border-radius: 25px;
-    display: table!important;
+    display: table !important;
     margin-left: auto;
     margin-right: auto;
 }
@@ -146,7 +146,6 @@
 }
 
 
-
 /* template11*/
 .ks-text-deepblue_title .ks-text-title {
     font-weight: normal;
@@ -239,7 +238,7 @@
 
 /* products_gd_readonly_bpsp */
 
-.ks-text-products_gd_readonly_bpsp  {
+.ks-text-products_gd_readonly_bpsp {
     font-family: Imago-Regular;
     font-size: 15px;
     font-color: #000000;
@@ -293,7 +292,6 @@
     font-family: imago-medium;
     font-weight: bold;
 }
-
 
 
 /* end ote */

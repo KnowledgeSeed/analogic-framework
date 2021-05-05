@@ -1279,8 +1279,6 @@
 }
 
 
-
-
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL1_locked {
     margin-left: 10px;
     width: 100%;
@@ -1418,4 +1416,32 @@
     color: #EFC1D1;
     font-size: 75%;
     margin-top: 1%;
+}
+
+/* comment title  */
+
+.ks-button-commenttitle .ks-button-icon {
+    font-size: 20px;
+    margin-right: 20px;
+}
+
+
+/* comment edit button */
+.ks-button-simtype.ks-button {
+    background-color: #0066CC;
+    height: 40px;
+    border-radius: 5px;
+    width: 250px;
+}
+
+.ks-button-simtype .ks-button-label {
+    color: #fff;
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.ks-button-simtype .ks-button-icon {
+    color: #fff;
+    font-size: 16px;
+    margin-right: 20px;
 }
