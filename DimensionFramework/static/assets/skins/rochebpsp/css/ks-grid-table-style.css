@@ -260,10 +260,6 @@
 	border-left: 0;
 }
 
-.ks-grid-table-products_bpsp .ks-grid-table-cell-content {
-	margin-left: 5px;
-}
-
 .ks-grid-table-products_bpsp .ks-grid-table-cell-border-left{
 	border-left: 1px dashed #b1b3b3;
   	position: absolute;
@@ -281,7 +277,6 @@
   	position: absolute;
   	top: 50%;
   	bottom: 0;
-	margin-right:7px;
 }
 
 
@@ -290,11 +285,17 @@
   	position: absolute;
   	top: 0%;
   	bottom: 0;
-	margin-right:7px;
+}
+
+.ks-grid-table-products_bpsp .ks-grid-table-head .ks-grid-table-head-cell-no_border_bpsp .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #b1b3b3;
+  	position: absolute;
+  	top: 100%;
+  	bottom: 0;
 }
 
 .ks-grid-table-products_bpsp .ks-grid-table-head .ks-grid-table-row {
-	height: 80px;
+	height: 90px;
 }
 
 .ks-grid-table-products_bpsp .ks-grid-table-cell {

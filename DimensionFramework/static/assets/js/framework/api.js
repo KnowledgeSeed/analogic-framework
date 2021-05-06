@@ -354,14 +354,12 @@ app.fn.checkTIResponseStatus = (argument, ev, element, response) => {
 };
 
 app.fn.conditionalGridTablePopup = (argument, ev, element) => {
-    if (!Array.isArray(argument) || argument.length < 4 || argument.length % 2 !== 0) {
-        alert('conditionalGridTablePopup has at least 4 (even number) mandatory argument!');
-        return;
-    }
-    let currentCell = Utils.getGridTableCurrentCell(element.data('id').split('_')[0]), i;
-    for(i = 0; i < argument.length; i = i + 2){
-        if((currentCell[argument[i]] && currentCell[argument[i]] === true) || argument[i] === 'else'){
-            app.fn.openPopup(argument[i + 1], ev, element);
+    let currentCell = Utils.getGridTableCurrentCell(element.data('id').split('_')[0]), i, j;
+    for(i = 0; i < argument.length; ++i){
+        if((currentCell[argument[i].conditionKey] && currentCell[argument[i].conditionKey] === true) || argument[i].conditionKey === 'else'){
+            for(j = 0; j < argument[i].actions.length;++j){
+                argument[i].actions[j].action(argument[i].actions[j].argument, ev, element);
+            }
             return;
         }
     }

@@ -44,7 +44,7 @@ class SegmentedControlWidget extends Widget {
             for (w of widgets) {
                 //childrenData = {width: 100 / o.widgets.length, id: o.id, position: i};
                 childrenData = {id: o.id, position: i};
-                deffered.push(w.embeddedRender(withState, childrenData));
+                deffered.push(w.embeddedRender(withState, {...childrenData, ...data[i]}));
 
                 ++i;
             }

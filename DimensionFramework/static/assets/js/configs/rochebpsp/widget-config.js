@@ -801,34 +801,30 @@ app.widgetConfig = {
                                                 {
                                                     id: 'rocheBPSPProductsYearSegmentedControlItem1',
                                                     type: SegmentedControlItemWidget,
-                                                    label: '2021',
                                                     action: 'segmentedControlTab1',
                                                     selected: true,
-                                                    value: '2021'
+                                                    value: 'Y0'
                                                 },
                                                 {
                                                     id: 'rocheBPSPProductsYearSegmentedControlItem2',
                                                     type: SegmentedControlItemWidget,
-                                                    label: '2022',
                                                     action: 'segmentedControlTab2',
                                                     selected: false,
-                                                    value: '2022'
+                                                    value: 'Y1'
                                                 },
                                                 {
                                                     id: 'rocheBPSPProductsYearSegmentedControlItem3',
                                                     type: SegmentedControlItemWidget,
-                                                    label: '2023',
                                                     action: 'segmentedControlTab3',
                                                     selected: false,
-                                                    value: '2023'
+                                                    value: 'Y2'
                                                 },
                                                 {
                                                     id: 'rocheBPSPProductsYearSegmentedControlItem4',
                                                     type: SegmentedControlItemWidget,
-                                                    label: '2024',
                                                     action: 'segmentedControlTab4',
                                                     selected: false,
-                                                    value: '2024'
+                                                    value: 'Y3'
                                                 }
                                             ]
                                         }]
@@ -906,7 +902,7 @@ app.widgetConfig = {
                                             label: 'Columns',
                                             width: '100%',
                                             icon: 'icon-columns',
-                                            skin: 'blue_link_bpsp'
+                                            skin: 'blue_link_columns_bpsp'
                                         }
                                     ]
                                 }
@@ -1034,8 +1030,8 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPProductsCheckoutPopupNoCheckoutWarningText3',
                             type: TextWidget,
-                            skin: 'checkout_warning_bpsp',
-                            title: '<b>CS COAGULATION</b>',
+                            skin: 'checkout_warning_message_bpsp',
+                            title: 'at least one child',
                             titleAlignment: 'center',
                             titleFontSize: 10
                         },
@@ -1098,7 +1094,6 @@ app.widgetConfig = {
                             type: TextWidget,
                             marginTop: 10,
                             skin: 'checkout_warning_bpsp',
-                            title: 'by<b>John Smith</b>since<b>2021.04.10 11:22</b>',
                             titleAlignment: 'center',
                             titleFontSize: 10
                         },
@@ -1108,7 +1103,7 @@ app.widgetConfig = {
                             marginTop: 10,
                             skin: 'checkout_warning_message_bpsp',
                             title: 'You can checkout this section for editing after the',
-                            body: 'current editor checks it in againg',
+                            body: 'current editor checks it in again',
                             titleAlignment: 'center',
                             titleFontSize: 10,
                             bodyAlignment: 'center',
@@ -1120,6 +1115,7 @@ app.widgetConfig = {
                             type: ButtonWidget,
                             skin: 'blue_bg_bpsp',
                             label: 'Contact Editor',
+                            url: 'https://www.google.hu',
                             marginBottom: 10
                         },
                         {
@@ -1184,6 +1180,9 @@ app.widgetConfig = {
                             id: 'rocheBPSPProductsProductSelectorShortcutPopupGridTable',
                             type: GridTableWidget,
                             title: '',
+                            marginTop: 5,
+                            marginBottom: 5,
+                            marginLeft: 5,
                             listen: [
                                 {'event' : 'init.rocheBPSPProductsGridTableYearly.finished', 'method': 'refresh'}
                             ],
@@ -1212,8 +1211,9 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPProductsProductSelectorShortcutPopupGridTableButton01',
                                             type: ButtonWidget,
-                                            icon: 'icon-badge',
+                                            height: 40,
                                             skin: 'gridtablehierarchy_bpsp',
+                                            borderWidth: 0,
                                             label: '',
                                             action: '',
                                         }
@@ -1233,21 +1233,22 @@ app.widgetConfig = {
                         {
                             'event': 'bodyReady',
                             'method': 'refreshWithWaitingForEvent',
-                            parameters: ['init.rocheBPSPProductsGridRow1Cell3DropBox.finished']
+                            'parameters': ['init.rocheBPSPProductsGridRow1Cell3DropBox.finished']
                         },
                         {'event': 'choose.rocheBPSPProductsColumnSelectorPopupDropBox.finished', 'method': 'refresh'},
                         {'event': 'choose.rocheBPSPProductsGridRow1Cell3DropBox.finished', 'method': 'refresh'},
                         {
                             'event': 'choose.rocheBPSPProductsGridRow1Cell2DropBox.finished',
                             'method': 'refreshWithWaitingForEvent',
-                            parameters: ['rendered.rocheBPSPProductsGridRow1Cell3DropBox']
+                            'parameters': ['rendered.rocheBPSPProductsGridRow1Cell3DropBox']
                         },
                         {'event': 'launch.rocheBPSPProductsCheckoutPopupFocusButton.finished', 'method': 'refresh'},
                         {
                             'event': 'launch.rocheBPSPProductsGridTableYearlyHeaderReturnFromFocus.finished',
                             'method': 'refresh'
                         },
-                        {'event': 'launch.rocheBPSPProductsProductSelectorShortcutPopupGridTableButton01.finished', 'method': 'refresh'}
+                        {'event': 'launch.rocheBPSPProductsProductSelectorShortcutPopupGridTableButton01.finished', 'method': 'refresh'},
+                        {'event': 'switch.rocheBPSPProductsYearSegmentedControl.finished', 'method' : 'refresh'}
                     ],
                     title: '',
                     widgets: [
@@ -1255,7 +1256,7 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPProductsGridTableYearlyHeaderRow',
                             type: GridTableHeaderRowWidget,
-                            height: '80',
+                            height: '90',
                             widgets: [
 
                                 {
@@ -1269,9 +1270,11 @@ app.widgetConfig = {
                                             id: 'rocheBPSPProductsGridTableYearlyHeaderFocusButton',
                                             type: ButtonWidget,
                                             label: 'Focus on Block',
-                                            skin: 'blue_link_bpsp',
+                                            skin: 'blue_link_icon_right_bpsp',
                                             icon: 'icon-arrow-right',
-                                            iconPosition: 'right'
+                                            iconPosition: 'right',
+                                            marginBottom: 8,
+                                            marginLeft: 10
                                         },
                                         {
                                             id: 'rocheBPSPProductsGridTableYearlyHeaderReturnFromFocus',
@@ -1279,7 +1282,9 @@ app.widgetConfig = {
                                             label: 'Return from Focus',
                                             visible: false,
                                             skin: 'blue_link_bpsp',
-                                            icon: 'icon-arrow-left'
+                                            icon: 'icon-arrow-left',
+                                            marginBottom: 8,
+                                            marginLeft: 10
                                         }
                                     ]
                                 },
@@ -1287,7 +1292,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsGridTableYearlyHeaderCell-02',
                                     type: GridTableHeaderCellWidget,
-                                    alignment: 'bottom-left',
+                                    alignment: 'bottom-center',
                                     width: '8%',
                                     widgets: [
 
@@ -1297,6 +1302,7 @@ app.widgetConfig = {
                                             body: 'Product Code',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -1306,7 +1312,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableYearlyHeaderCell-03',
                                     type: GridTableHeaderCellWidget,
                                     width: '2%',
-                                    alignment: 'bottom-left',
+                                    alignment: 'bottom-center',
                                     widgets: [
 
                                         {
@@ -1315,6 +1321,7 @@ app.widgetConfig = {
                                             body: 'PL',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -1335,6 +1342,8 @@ app.widgetConfig = {
                                             body: 'Actual',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -1355,6 +1364,8 @@ app.widgetConfig = {
                                             body: 'Actual',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -1375,6 +1386,8 @@ app.widgetConfig = {
                                             body: 'YTD Actuals',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -1392,6 +1405,8 @@ app.widgetConfig = {
                                             type: TextWidget,
                                             body: 'Previous Plan',
                                             skin: 'products_gd_header_bpsp',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             titleAlignment: 'start',
                                             bodyAlignment: 'start'
                                         }
@@ -1411,6 +1426,8 @@ app.widgetConfig = {
                                             body: 'Customer Plan Total',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -1428,6 +1445,8 @@ app.widgetConfig = {
                                             type: TextWidget,
                                             body: 'Marketing Adjustment',
                                             skin: 'products_gd_header_bpsp',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             titleAlignment: 'start',
                                             bodyAlignment: 'start'
                                         }
@@ -1446,6 +1465,8 @@ app.widgetConfig = {
                                             type: TextWidget,
                                             body: 'Total Plan',
                                             skin: 'products_gd_header_bpsp',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             titleAlignment: 'start',
                                             bodyAlignment: 'start'
                                         }
@@ -1464,6 +1485,8 @@ app.widgetConfig = {
                                             type: TextWidget,
                                             body: 'Final Plan',
                                             skin: 'products_gd_header_bpsp',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             titleAlignment: 'start',
                                             bodyAlignment: 'start'
                                         }
@@ -1484,6 +1507,8 @@ app.widgetConfig = {
                                             title: 'Growth rate',
                                             body: '2021 Actual / 2022 Plan',
                                             skin: 'products_gd_header_bpsp',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             titleAlignment: 'start',
                                             bodyAlignment: 'start'
                                         }
@@ -1502,6 +1527,8 @@ app.widgetConfig = {
                                             type: TextWidget,
                                             body: '2021 Plan / 2022 Plan',
                                             skin: 'products_gd_header_bpsp',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             titleAlignment: 'start',
                                             bodyAlignment: 'start'
                                         }
@@ -1513,6 +1540,7 @@ app.widgetConfig = {
                                     type: GridTableHeaderCellWidget,
                                     width: '2%',
                                     alignment: 'bottom-left',
+                                    cellHeaderSkin: 'long_border_bpsp',
                                     widgets: [
 
                                         {
@@ -1527,6 +1555,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableYearlyHeaderCell-15',
                                     type: GridTableHeaderCellWidget,
                                     width: '2%',
+                                    cellHeaderSkin: 'no_border_bpsp',
                                     widgets: [
 
                                         {
@@ -1597,7 +1626,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableYearlyText-04',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                 }
                             ]
@@ -1613,7 +1642,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsGridTableYearlyText-05',
                                     type: TextWidget,
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     skin: 'products_gd_readonly_bpsp',
                                     title: '',
                                 }
@@ -1630,7 +1659,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsGridTableYearlyText-06',
                                     type: TextWidget,
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     skin: 'products_gd_readonly_bpsp',
                                     title: '',
                                 }
@@ -1647,7 +1676,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsGridTableYearlyText-07',
                                     type: TextWidget,
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     skin: 'products_gd_readonly_bpsp',
                                     title: '',
                                 }
@@ -1664,7 +1693,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsGridTableYearlyText-08',
                                     type: TextWidget,
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                     skin: 'products_gd_readonly_bpsp'
                                 }
@@ -1682,7 +1711,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableYearlyText-09',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                 }
                             ]
@@ -1699,7 +1728,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableYearlyText-10',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                 }
                             ]
@@ -1716,7 +1745,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableYearlyText-11',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                 }
                             ]
@@ -1733,7 +1762,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableYearlyText-12',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                 }
                             ]
@@ -1750,7 +1779,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableYearlyText-13',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                 }
                             ]
@@ -2800,7 +2829,7 @@ app.widgetConfig = {
                                             label: 'Columns',
                                             width: '100%',
                                             icon: 'icon-columns',
-                                            skin: 'blue_link_bpsp'
+                                            skin: 'blue_link_columns_bpsp'
                                         }
                                     ]
                                 },
@@ -2932,8 +2961,8 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPProductsCheckoutCheckoutPopupNoCheckoutWarningText3',
                             type: TextWidget,
-                            skin: 'checkout_warning_bpsp',
-                            title: '<b>CS COAGULATION</b>',
+                            skin: 'checkout_warning_message_bpsp',
+                            title: 'at least one child',
                             titleAlignment: 'center',
                             titleFontSize: 10
                         },

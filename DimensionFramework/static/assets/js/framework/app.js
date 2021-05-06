@@ -25,7 +25,9 @@ let EventMap, Repository, WidgetConfig;
         app.id = Utils.getRandomId();
 
         initEvents();
-
+WidgetValue['systemValueGlobalStartingPlanYear'] = 2021;//temp
+WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';//temp
+WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] =  'Y0'; //temp
         Render.showPage(WidgetValue['redirect'] !== null ? WidgetValue['redirect'] : app.MainPage);
 
         WidgetValue['redirect'] = null;

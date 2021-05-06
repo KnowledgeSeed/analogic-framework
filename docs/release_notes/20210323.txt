@@ -49,6 +49,12 @@ ButtonWidget:
   gridtable_hierarchy_bpsp_PL5_locked
  gridtable_hierarchy_bpsp_PL6_locked
 
+ gridtable_hierarchy_shortcut_bpsp_PL1
+ gridtable_hierarchy_shortcut_bpsp_PL2
+ gridtable_hierarchy_shortcut_bpsp_PL3
+
+ blue_link_icon_right_bpsp
+
 
  L01 -> PL1,..., L06->PL6
 
@@ -58,3 +64,7 @@ ContainerWidget:
 
 GridTableCell:
     locked
+
+GridTableHeaderCell:
+  no_border_bpsp
+  long_border_bpsp
