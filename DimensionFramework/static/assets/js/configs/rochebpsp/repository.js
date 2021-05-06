@@ -21,6 +21,7 @@ app.repository = {
                         value: (r, x) => {
                             WidgetValue['systemValueGlobalStartingPlanYear'] = r.Cells[0].FormattedValue;
                             WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';
+                            WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = 'Y0';
                             return true;
                         }
                     }
@@ -113,6 +114,15 @@ app.repository = {
             },
     },
 
+    rocheBPSPProductsNoCheckoutPopupFocusButton: {
+        launch:
+            {
+                execute: (db) => {
+                    WidgetValue['systemValueFocusedProduct'] = Utils.getGridTableCell('rocheBPSPProductsGridTableYearly', 1).title;
+                }
+            }
+    },
+
     rocheBPSPProductsCheckoutPopupCheckoutButton: {
         launch:
             {
@@ -120,6 +130,11 @@ app.repository = {
                 type: 'POST',
                 body: (db) => `{
                         "Parameters": [
+                                {"Name": "pUserID", "Value": "${db.activeUserName}"},
+                                {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPProductsGridTableYearly', 1).title}"},
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
+                                {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}"},
+                                {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"}
                         ]
                     }`
             },
@@ -218,13 +233,29 @@ app.repository = {
                 query:
                     {
                         value: (r, x) => {
-                            WidgetValue['systemValueGlobalStartingPlanYear'] = 2021;//temp
-                            WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';//temp
                             WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = r.Cells[0].FormattedValue;
                             WidgetValue['systemValueFocusedProduct'] = 'PL1';
                             return true;
                         }
                     }
+            }
+        }
+    },
+
+    rocheBPSPProductsYearSegmentedControl: {
+        state: (db) => {
+            let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
+                sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
+            return [
+                {label: s, selected: 'Y0' === sr},
+                {label: ++s, selected: 'Y1' === sr},
+                {label: ++s, selected: 'Y2' === sr},
+                {label: ++s, selected: 'Y3' === sr},
+            ];
+        },
+        switch: {
+            execute: (db) => {
+                WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = v('rocheBPSPProductsYearSegmentedControl.value');
             }
         }
     },
@@ -254,7 +285,11 @@ app.repository = {
         },
         state: (db) => {
             return db.rocheBPSPProductsGridTableYearly.cellData.filter(e => ['PL1', 'PL2', 'PL3'].includes(e[0].productLevel)).map(e => {
-                return [{label: e[0].label, skin: e[0].skin, productCode: e[1].title}];
+                return [{
+                    label: e[0].label,
+                    skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].productLevel,
+                    productCode: e[1].title
+                }];
             });
         }
     },
@@ -268,9 +303,22 @@ app.repository = {
             },
     },
 
-    rocheBPSPProductsGridTableYearly: {
+    rocheBPSPProductsCheckoutWarningByUserText: {
         initCondition: (db) => {
-            return v('rocheBPSPProductsGridRow1Cell3DropBox.value') !== false;
+            return v('rocheBPSPProductsGridTableYearly.cellData') !== false;
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        state: (db) => {
+            let u = Utils.getGridTableCell('rocheBPSPProductsGridTableYearly', 0).checkoutUser;
+            return {title: `by<b>${u}</b>since<b>2021.04.10 11:22</b>`};
+        }
+    },
+
+    rocheBPSPProductsGridTableYearly: {
+        initCondition: (db) => {L(v('rocheBPSPProductsGridRow1Cell3DropBox.value.length'));
+            return v('rocheBPSPProductsGridRow1Cell3DropBox.value.length') !== false;
         },
         initDefault: (db) => {
             return [];
@@ -289,7 +337,7 @@ app.repository = {
                          MEMBER [Products].[BPSP Budget].[ProductIsFocused] AS 
                          IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
                          Set DefaultColumnSelection AS
-                         {StrToSet([Control].([Measures Control].[Measures Control].[UI ProuctsGridTable DefaultColumnsTuple Y0],[Value Type].[Value Type].[String]))}
+                         {StrToSet([Control].([Measures Control].[Measures Control].[UI ProuctsGridTable DefaultColumnsTuple ${db.systemValueGlobalSegmentedControlRelativeYear}],[Value Type].[Value Type].[String]))}
                          MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[DUMMY] as 1
                          Set PaddingColumns AS
                          {{TM1SubsetToSet([Periods].[Periods],'zUI Padding Years')}*{[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[DUMMY]}}
@@ -334,7 +382,7 @@ app.repository = {
                 length: 16,
                 query: [
                     (r, x) => {
-                        let result, pl;
+                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue;
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'];
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
@@ -346,11 +394,13 @@ app.repository = {
                             cellVisible: true,
                             icon: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
                             isMainLocked: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'],
+                            isLockedByMe: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] && WidgetValue.activeUserName.indexOf(checkoutUser) !== -1 && false,
                             isLocked: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'],
                             isChildrenLocked: WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'],
-                            checkoutUser: r.Cells[x + 4].FormattedValue,
+                            checkoutUser: checkoutUser,
                             members: r.Cells[x].Members,
-                            productLevel: pl
+                            productLevel: pl,
+                            hasComment: r.Cells[x + 15].FormattedValue !== ''
                         };
                         if (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked']) {
                             result['iconColor'] = '#D12D4A';
@@ -456,8 +506,9 @@ app.repository = {
                     (r, x) => {
                         return {
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
-                            dd: r.Cells[x + 15].FormattedValue,
-                            members: r.Cells[x + 15].Members //hascomment
+                            icon: r.Cells[x + 15].FormattedValue === '' ? 'icon-comment-off' : 'icon-comment-on',
+                            iconColor: r.Cells[x + 15].FormattedValue === '' ? '#C5C6C6' : '#0066cc',
+                            members: r.Cells[x + 15].Members
                         };
                     },
                     (r, x) => {
@@ -679,8 +730,8 @@ app.repository = {
                     query:
                         {
                             label: (r, x) => {
-                                app.widgetValue['activeUserName'] = app.utils.toTitleCase(r.Cells[0].Value);
-                                return app.utils.toTitleCase(r.Cells[0].Value);
+                                app.widgetValue['activeUserName'] = r.Cells[0].Value;
+                                return r.Cells[0].Value;
                             }
                         }
                 }

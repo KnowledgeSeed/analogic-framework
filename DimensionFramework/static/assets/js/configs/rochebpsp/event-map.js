@@ -63,7 +63,48 @@ app.eventMap = {
     'launch.rocheBPSPProductsGridTableYearly_row_0': [
         {
             action: app.fn.conditionalGridTablePopup,
-            argument: ['isChildrenLocked', 'rocheBPSPProductsNoCheckoutPopup', 'isLocked', 'rocheBPSPProductsCheckoutWarning', 'else', 'rocheBPSPProductsCheckoutPopup']
+            argument: [
+                {
+                    conditionKey: 'isChildrenLocked',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsNoCheckoutPopup'
+                        }
+                    ]
+                },
+                {
+                    conditionKey: 'isLockedByMe',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCheckoutPopup'
+                        }
+                    ]
+                },
+                {
+                    conditionKey: 'isLocked',
+                    actions: [
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutWarningByUserText'
+                        },
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCheckoutWarning'
+                        }
+                    ]
+                },
+                {
+                    conditionKey: 'else',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCheckoutPopup'
+                        }
+                    ]
+                }
+            ]
         }
     ],
     'launch.rocheBPSPProductsCheckoutPopupCancelButton': [
@@ -136,14 +177,14 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutPopup'
         }
     ],
-    'launch.rocheBPSPProductsGridTableYearlyHeaderFocusButton' : [
+    'launch.rocheBPSPProductsGridTableYearlyHeaderFocusButton': [
         {
             action: app.fn.openPopup,
             argument: 'rocheBPSPProductsProductSelectorShortcutPopup'
         }
     ],
     'launch.rocheBPSPProductsProductSelectorShortcutPopupGridTable_row_0': [
-         {
+        {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPProductsProductSelectorShortcutPopup'
         }
@@ -175,6 +216,11 @@ app.eventMap = {
         {
             action: app.fn.openPopup,
             argument: ['rocheBPSPProductsCommentEdit']
+        },
+
+        {
+            action: app.fn.togglePopup,
+            argument: ['rocheBPSPProductsCommentShow']
         }
     ],
 

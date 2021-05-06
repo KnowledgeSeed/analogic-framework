@@ -41,7 +41,7 @@ class ButtonWidget extends Widget {
 
         /* override a tag style */
         v.borderColor && aStyle.push('background-color:', v.borderColor, ';');
-        aStyle.push('padding:', v.borderWidth, 'px;');
+        v.borderWidth && aStyle.push('padding:', v.borderWidth, 'px;');
 
         /* overrid inner div style */
         if (v.cornerRadius) {
