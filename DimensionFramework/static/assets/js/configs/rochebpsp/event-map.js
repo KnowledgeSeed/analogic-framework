@@ -204,12 +204,6 @@ app.eventMap = {
         }
     ],
     //end rocheBPSPProducts comment mody
-    'launch.rocheBPSPProductsGridTableYearly_row_13': [
-        {
-            action: app.fn.openPopup,
-            argument: ['rocheBPSPProductsCommentShow']
-        }
-    ],
 
 
     'launch.rocheBPSPProductsCommentShowGridRow5Button': [
@@ -225,11 +219,46 @@ app.eventMap = {
     ],
 
 
-    'launch.rocheBPSPProductsCommentEditGridRow3Button': [
+    'launch.rocheBPSPProductsCommentEditGridRow4Button': [
         {
             action: app.fn.openPopup,
             argument: ['rocheBPSPProductsCommentShow']
+        },
+
+        {
+            action: app.fn.togglePopup,
+            argument: ['rocheBPSPProductsCommentEdit']
         }
     ],
 
-}; 
+
+    'launch.rocheBPSPProductsGridTableYearly_row_13': [
+        {
+            action: app.fn.conditionalGridTablePopup,
+            argument: [
+                {
+                    conditionKey: 'hasComment',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCommentShow'
+                        }
+                    ]
+                },
+
+
+                {
+                    conditionKey: 'else',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCommentEdit'
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+
+
+};

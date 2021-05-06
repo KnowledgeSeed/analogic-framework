@@ -1853,7 +1853,7 @@ app.widgetConfig = {
                                             action: '',
                                             icon: 'icon-comment-off',
                                             marginTop: '30',
-                                            marginBottom: '30',
+                                            marginBottom: '10',
                                             fontBold: true,
                                             fontSize: 24,
                                             skin: 'commenttitle',
@@ -1871,15 +1871,15 @@ app.widgetConfig = {
                                             id: 'rocheBPSPProductsCommentShowGridRow2Cell',
                                             type: GridCellWidget,
                                             alignment: 'top-left',
-                                            width: '50%',
+                                            width: '90%',
                                             skin: '',
                                             widgets: [
 
                                                 {
                                                     id: 'rocheBPSPProductsCommentShowGridTable',
                                                     type: GridTableWidget,
-                                                    marginTop: '15px',
-                                                    marginLeft: '15px',
+                                                    marginTop: '12px',
+                                                    marginLeft: '1px',
                                                     hideIfNoData: true,
                                                     skin: '',
                                                     listen: [],
@@ -1895,7 +1895,7 @@ app.widgetConfig = {
                                                                 {
                                                                     id: 'rocheBPSPProductsCommentShowGridTable-Cell-01-Text',
                                                                     type: TextWidget,
-                                                                    skin: 'messageboard_text_bpsp',
+                                                                    skin: '',
                                                                     title: '',
                                                                 }
                                                             ]
@@ -1917,13 +1917,12 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPProductsCommentShowGridRow3Button',
                                             type: ButtonWidget,
-                                            label: 'Source',
+                                            label: 'Source:',
                                             action: '',
                                             marginTop: '30',
-                                            marginBottom: '30',
                                             fontBold: true,
-                                            fontSize: 14,
-                                            skin: 'commenttitle',
+                                            fontSize: 16,
+                                            skin: '',
                                         }
                                     ]
                                 },
@@ -1938,15 +1937,14 @@ app.widgetConfig = {
                                             id: 'rocheBPSPProductsCommentShowGridRow4Cell',
                                             type: GridCellWidget,
                                             alignment: 'top-left',
-                                            width: '50%',
+                                            width: '90%',
                                             skin: '',
                                             widgets: [
 
                                                 {
                                                     id: 'rocheBPSPProductsCommentShowGridTableSource',
                                                     type: GridTableWidget,
-                                                    marginTop: '15px',
-                                                    marginLeft: '15px',
+                                                    marginLeft: '1px',
                                                     hideIfNoData: true,
                                                     skin: '',
                                                     listen: [],
@@ -1962,7 +1960,7 @@ app.widgetConfig = {
                                                                 {
                                                                     id: 'rocheBPSPProductsCommentShowGridTableSource-Cell-01-Text',
                                                                     type: TextWidget,
-                                                                    skin: 'messageboard_text_bpsp',
+                                                                    skin: '',
                                                                     title: '',
                                                                 }
                                                             ]
@@ -1985,10 +1983,10 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPProductsCommentShowGridRow5Button',
                                             type: ButtonWidget,
-                                            label: 'EDIT',
+                                            label: 'Edit',
                                             action: '',
                                             width: '100',
-                                            marginTop: '20',
+                                            marginTop: '30',
                                             marginBottom: '20',
                                             skin: 'simtype',
                                         }
@@ -2045,7 +2043,7 @@ app.widgetConfig = {
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsCommentEditGridRow2TextInput',
+                                            id: 'rocheBPSPProductsCommentEditGridRow2CommentInput',
                                             type: TextAreaWidget,
                                             title: 'Comment Text',
                                             listen: [{
@@ -2062,13 +2060,33 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCommentEditGridRow3',
                                     type: GridRowWidget,
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsCommentEditGridRow3TextInput',
+                                            type: TextAreaWidget,
+                                            title: 'Source Text',
+                                            listen: [{
+                                                "method": "refresh"
+                                            }],
+                                            marginBottom: '30',
+                                            width: '100%',
+                                            skin: 'commenttext'
+                                        }
+                                    ]
+                                },
+
+
+                                {
+                                    id: 'rocheBPSPProductsCommentEditGridRow4',
+                                    type: GridRowWidget,
                                     alignment: 'left',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsCommentEditGridRow3Button',
+                                            id: 'rocheBPSPProductsCommentEditGridRow4Button',
                                             type: ButtonWidget,
-                                            label: 'SAVE',
+                                            label: 'Save',
                                             action: '',
                                             width: '100',
                                             marginTop: '20',

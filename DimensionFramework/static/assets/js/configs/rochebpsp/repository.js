@@ -317,7 +317,8 @@ app.repository = {
     },
 
     rocheBPSPProductsGridTableYearly: {
-        initCondition: (db) => {L(v('rocheBPSPProductsGridRow1Cell3DropBox.value.length'));
+        initCondition: (db) => {
+            L(v('rocheBPSPProductsGridRow1Cell3DropBox.value.length'));
             return v('rocheBPSPProductsGridRow1Cell3DropBox.value.length') !== false;
         },
         initDefault: (db) => {
@@ -1118,7 +1119,7 @@ app.repository = {
                 query: [
                     (r, x) => {
                         return {
-                            title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 5%;margin-top:3%;";  >' + r.Cells[x + 1].FormattedValue + '</div>' + '<div style=\"font-size:10px;color:#408CD9;;margin-top:3%;\" >' + r.Cells[x + 2].FormattedValue + '</div>',
+                            title: r.Cells[x].FormattedValue + '<br/><div style=\"margin-top:20px; float: left; font-size: 10px;  ";  >' + 'Edited by ' + '</div>' + '<div style=\"font-size:12px; font-weight: bold; margin-top:18px; margin-left: 3px; float: left;";  >' + r.Cells[x + 1].FormattedValue + '</div>' + '<div style=\"font-size:10px;color:#B1B3B3;margin-top:20px;margin-left: 5px; float: left; \" >' + r.Cells[x + 2].FormattedValue + '</div>',
                         }
                     }
 
