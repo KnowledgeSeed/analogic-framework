@@ -54,6 +54,7 @@ ButtonWidget:
  gridtable_hierarchy_shortcut_bpsp_PL3
 
  blue_link_icon_right_bpsp
+ blue_link_columns_bpsp
 
 
  L01 -> PL1,..., L06->PL6
