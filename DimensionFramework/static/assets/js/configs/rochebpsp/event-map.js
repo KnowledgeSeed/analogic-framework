@@ -171,7 +171,7 @@ app.eventMap = {
     ],
 
 
-    'launch.rocheBPSPProductsCommentShowGridRow3Button': [
+    'launch.rocheBPSPProductsCommentShowGridRow5Button': [
         {
             action: app.fn.openPopup,
             argument: ['rocheBPSPProductsCommentEdit']
