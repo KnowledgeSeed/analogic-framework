@@ -60,6 +60,53 @@ app.eventMap = {
             argument: 'rocheBPSPMain'
         }
     ],
+    'launch.rocheBPSPProductsGridTableMonthly_row_0': [
+        {
+            action: app.fn.conditionalGridTablePopup,
+            argument: [
+                {
+                    conditionKey: 'isChildrenLocked',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsNoCheckoutPopup'
+                        }
+                    ]
+                },
+                {
+                    conditionKey: 'isLockedByMe',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCheckoutPopup'
+                        }
+                    ]
+                },
+                {
+                    conditionKey: 'isLocked',
+                    actions: [
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutWarningByUserText'
+                        },
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCheckoutWarning'
+                        }
+                    ]
+                },
+                {
+                    conditionKey: 'else',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCheckoutPopup'
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
     'launch.rocheBPSPProductsGridTableYearly_row_0': [
         {
             action: app.fn.conditionalGridTablePopup,
@@ -143,7 +190,7 @@ app.eventMap = {
             argument: 'rocheBPSPProductsNoCheckoutPopup'
         }
     ],
-    'segmentedControlTab2.rocheBPSPProductsPerionUnitSegmentedControl': [
+    'segmentedControlTab2.rocheBPSPProductsPeriodUnitSegmentedControl': [
         {
             action: app.fn.hideWidget,
             argument: 'rocheBPSPProductsGridTableYearly'
@@ -155,9 +202,13 @@ app.eventMap = {
         {
             action: app.fn.hideWidget,
             argument: 'rocheBPSPProductsGridRow2Cell1Button'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsGridTableMonthly'
         }
     ],
-    'segmentedControlTab1.rocheBPSPProductsPerionUnitSegmentedControl': [
+    'segmentedControlTab1.rocheBPSPProductsPeriodUnitSegmentedControl': [
         {
             action: app.fn.hideWidget,
             argument: 'rocheBPSPProductsGridTableMonthly'
@@ -169,6 +220,10 @@ app.eventMap = {
         {
             action: app.fn.showWidget,
             argument: 'rocheBPSPProductsGridRow2Cell1Button'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsGridTableYearly'
         }
     ],
     'launch.rocheBPSPProductsCheckoutPopupFocusButton': [
@@ -181,6 +236,20 @@ app.eventMap = {
         {
             action: app.fn.openPopup,
             argument: 'rocheBPSPProductsProductSelectorShortcutPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsProductSelectorShortcutPopupGridTable'
+        }
+    ],
+    'launch.rocheBPSPProductsGridTableMonthlyHeaderFocusButton': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsProductSelectorShortcutPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsProductSelectorShortcutPopupGridTable'
         }
     ],
     'launch.rocheBPSPProductsProductSelectorShortcutPopupGridTable_row_0': [

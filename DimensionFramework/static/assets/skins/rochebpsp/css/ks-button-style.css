@@ -988,6 +988,8 @@
 .ks-button-blue_link_bpsp .ks-button-icon {
     color: #0066cc;
     padding-right: 5px;
+    font-size: 12px;
+    margin-top: 2px;
 }
 
 /* blue_link_columns_bpsp */
@@ -1004,6 +1006,8 @@
 .ks-button-blue_link_columns_bpsp .ks-button-icon {
     color: #0066cc;
     padding-right: 5px;
+    font-size: 13px;
+    margin-top: 1px;
 }
 
 /* blue_link_icon_right_bpsp */
@@ -1019,6 +1023,8 @@
 .ks-button-blue_link_icon_right_bpsp .ks-button-icon {
     color: #0066cc;
     padding-left: 5px;
+    font-size: 12px;
+    margin-top: 2px;
 }
 
 /* blue_bg_bpsp */

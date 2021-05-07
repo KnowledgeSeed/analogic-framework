@@ -839,7 +839,7 @@ app.widgetConfig = {
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsPerionUnitSegmentedControl',
+                                            id: 'rocheBPSPProductsPeriodUnitSegmentedControl',
                                             type: SegmentedControlWidget,
                                             width: '60%',
                                             skin: 'without_bg_bpsp',
@@ -847,7 +847,7 @@ app.widgetConfig = {
                                             widgets: [
 
                                                 {
-                                                    id: 'rocheBPSPProductsPerionUnitSegmentedControlItem1',
+                                                    id: 'rocheBPSPProductsPeriodUnitSegmentedControlItem1',
                                                     type: SegmentedControlItemWidget,
                                                     label: 'Yearly',
                                                     action: 'segmentedControlTab1',
@@ -856,7 +856,7 @@ app.widgetConfig = {
                                                     skin: 'item_without_bg_bpsp'
                                                 },
                                                 {
-                                                    id: 'rocheBPSPProductsPerionUnitSegmentedControlItem2',
+                                                    id: 'rocheBPSPProductsPeriodUnitSegmentedControlItem2',
                                                     type: SegmentedControlItemWidget,
                                                     label: 'Monthly',
                                                     action: 'segmentedControlTab2',
@@ -1186,7 +1186,6 @@ app.widgetConfig = {
                             marginBottom: 5,
                             marginLeft: 5,
                             listen: [
-                                {'event': 'init.rocheBPSPProductsGridTableYearly.finished', 'method': 'refresh'}
                             ],
                             widgets: [
                                 {
@@ -2126,7 +2125,24 @@ app.widgetConfig = {
                     visible: false,
                     skin: 'products_bpsp',
                     listen: [
-                        {'event': 'bodyReady', 'method': 'refresh'}
+                        {
+                            'event': 'bodyReady',
+                            'method': 'refreshWithWaitingForEvent',
+                            'parameters': ['init.rocheBPSPProductsGridRow1Cell3DropBox.finished']
+                        },
+                        {'event': 'choose.rocheBPSPProductsGridRow1Cell3DropBox.finished', 'method': 'refresh'},
+                        {
+                            'event': 'choose.rocheBPSPProductsGridRow1Cell2DropBox.finished',
+                            'method': 'refreshWithWaitingForEvent',
+                            'parameters': ['rendered.rocheBPSPProductsGridRow1Cell3DropBox']
+                        },
+                        {'event': 'launch.rocheBPSPProductsCheckoutPopupFocusButton.finished', 'method': 'refresh'},
+                        {
+                            'event': 'launch.rocheBPSPProductsGridTableMonthlyHeaderReturnFromFocus.finished',
+                            'method': 'refresh'
+                        },
+                        {'event': 'launch.rocheBPSPProductsProductSelectorShortcutPopupGridTableButton01.finished', 'method': 'refresh'},
+                        {'event': 'switch.rocheBPSPProductsYearSegmentedControl.finished', 'method' : 'refresh'}
                     ],
                     title: '',
                     widgets: [
@@ -2134,19 +2150,35 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPProductsGridTableMonthlyHeaderRow',
                             type: GridTableHeaderRowWidget,
-                            height: '80',
+                            height: '90',
                             widgets: [
 
                                 {
                                     id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-01',
                                     type: GridTableHeaderCellWidget,
                                     width: '20%',
+                                    alignment: 'bottom-left',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderText-01',
-                                            type: TextWidget,
-                                            title: '',
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderFocusButton',
+                                            type: ButtonWidget,
+                                            label: 'Focus on Block',
+                                            skin: 'blue_link_icon_right_bpsp',
+                                            icon: 'icon-arrow-right',
+                                            iconPosition: 'right',
+                                            marginBottom: 8,
+                                            marginLeft: 10
+                                        },
+                                        {
+                                            id: 'rocheBPSPProductsGridTableMonthlyHeaderReturnFromFocus',
+                                            type: ButtonWidget,
+                                            label: 'Return from Focus',
+                                            visible: false,
+                                            skin: 'blue_link_bpsp',
+                                            icon: 'icon-arrow-left',
+                                            marginBottom: 8,
+                                            marginLeft: 10
                                         }
                                     ]
                                 },
@@ -2154,7 +2186,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-02',
                                     type: GridTableHeaderCellWidget,
-                                    alignment: 'bottom-left',
+                                    alignment: 'bottom-center',
                                     width: '7%',
                                     widgets: [
 
@@ -2163,6 +2195,7 @@ app.widgetConfig = {
                                             type: TextWidget,
                                             body: 'Product Code',
                                             skin: 'products_gd_header_bpsp',
+                                            marginBottom: 8,
                                             titleAlignment: 'start',
                                             bodyAlignment: 'start'
                                         }
@@ -2173,7 +2206,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableMonthlyHeaderCell-03',
                                     type: GridTableHeaderCellWidget,
                                     width: '2%',
-                                    alignment: 'bottom-left',
+                                    alignment: 'bottom-center',
                                     widgets: [
 
                                         {
@@ -2182,6 +2215,7 @@ app.widgetConfig = {
                                             body: 'PL',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -2202,6 +2236,8 @@ app.widgetConfig = {
                                             body: 'Final Plan',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -2240,6 +2276,8 @@ app.widgetConfig = {
                                             body: '01',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -2258,6 +2296,8 @@ app.widgetConfig = {
                                             body: '02',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -2276,6 +2316,8 @@ app.widgetConfig = {
                                             body: '03',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -2294,6 +2336,8 @@ app.widgetConfig = {
                                             body: '04',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -2312,6 +2356,8 @@ app.widgetConfig = {
                                             body: '05',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -2330,6 +2376,8 @@ app.widgetConfig = {
                                             body: '06',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -2349,6 +2397,8 @@ app.widgetConfig = {
                                             body: '07',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -2367,6 +2417,8 @@ app.widgetConfig = {
                                             body: '08',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -2384,6 +2436,8 @@ app.widgetConfig = {
                                             body: '09',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -2401,6 +2455,8 @@ app.widgetConfig = {
                                             body: '10',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -2418,6 +2474,8 @@ app.widgetConfig = {
                                             body: '11',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -2435,6 +2493,8 @@ app.widgetConfig = {
                                             body: '12',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
                                             bodyAlignment: 'start'
                                         }
                                     ]
@@ -2469,8 +2529,7 @@ app.widgetConfig = {
                                     type: ButtonWidget,
                                     icon: 'icon-badge',
                                     skin: 'gridtablehierarchy_bpsp',
-                                    label: '',
-                                    action: '',
+                                    label: ''
                                 }
                             ]
                         },
@@ -2533,7 +2592,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsGridTableMonthlyText-05',
                                     type: TextWidget,
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     skin: 'products_gd_readonly_bpsp',
                                     title: '',
                                 }
@@ -2550,7 +2609,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsGridTableMonthlyText-06',
                                     type: TextWidget,
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     skin: 'products_gd_readonly_bpsp',
                                     title: '',
                                 }
@@ -2567,7 +2626,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsGridTableMonthlyText-07',
                                     type: TextWidget,
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     skin: 'products_gd_readonly_bpsp',
                                     title: '',
                                 }
@@ -2584,7 +2643,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsGridTableMonthlyText-08',
                                     type: TextWidget,
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                     skin: 'products_gd_readonly_bpsp'
                                 }
@@ -2602,7 +2661,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableMonthlyText-09',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                 }
                             ]
@@ -2619,7 +2678,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableMonthlyText-10',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                 }
                             ]
@@ -2636,7 +2695,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableMonthlyText-11',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                 }
                             ]
@@ -2653,7 +2712,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableMonthlyText-12',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                 }
                             ]
@@ -2670,7 +2729,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableMonthlyText-13',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                 }
                             ]
@@ -2686,7 +2745,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableMonthlyText-14',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                 }
                             ]
@@ -2702,7 +2761,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableMonthlyText-15',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                 }
                             ]
@@ -2718,7 +2777,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableMonthlyText-16',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                 }
                             ]
@@ -2734,7 +2793,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsGridTableMonthlyText-17',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    paddingRight: 5,
+                                    paddingRight: 8,
                                     title: '',
                                 }
                             ]
@@ -2941,7 +3000,7 @@ app.widgetConfig = {
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsPerionUnitSegmentedControl',
+                                            id: 'rocheBPSPProductsPeriodUnitSegmentedControl',
                                             type: SegmentedControlWidget,
                                             width: '60%',
                                             skin: 'without_bg_bpsp',
@@ -2949,7 +3008,7 @@ app.widgetConfig = {
                                             widgets: [
 
                                                 {
-                                                    id: 'rocheBPSPProductsPerionUnitSegmentedControlItem1',
+                                                    id: 'rocheBPSPProductsPeriodUnitSegmentedControlItem1',
                                                     type: SegmentedControlItemWidget,
                                                     label: 'Yearly',
                                                     action: 'segmentedControlTab1',
@@ -2958,7 +3017,7 @@ app.widgetConfig = {
                                                     skin: 'item_without_bg_bpsp'
                                                 },
                                                 {
-                                                    id: 'rocheBPSPProductsPerionUnitSegmentedControlItem2',
+                                                    id: 'rocheBPSPProductsPeriodUnitSegmentedControlItem2',
                                                     type: SegmentedControlItemWidget,
                                                     label: 'Monthly',
                                                     action: 'segmentedControlTab2',
