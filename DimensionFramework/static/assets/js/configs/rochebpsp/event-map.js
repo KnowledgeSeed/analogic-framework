@@ -261,4 +261,13 @@ app.eventMap = {
     ],
 
 
+
+    'launch.rocheBPSPSettingsGridRow2Cell3Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPMaterial'
+        }
+    ],
+
+
 };
