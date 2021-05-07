@@ -356,7 +356,7 @@ app.repository = {
         },
         executeForText: (columnIndex) => {
             let cells = v('rocheBPSPProductsGridTableYearly.cellData'), cell = cells[0][columnIndex],
-                previousCell = cells[0][columnIndex--];
+                previousCell = cells[0][columnIndex-1];
             return {
                 title: cell.members[5].Name === previousCell.members[5].Name ? '' : cell.members[5].Name,
                 body: cell.members[6].Name
@@ -364,7 +364,8 @@ app.repository = {
         },
         executeForCell: (columnIndex) => {
             let cells = v('rocheBPSPProductsGridTableYearly.cellData'), cell = cells[0][columnIndex],
-                previousCell = cells[0][columnIndex--];
+                previousCell = cells[0][columnIndex-1];
+            L(cell, previousCell);
             return {
                 cellHeaderSkin: cell.members[5].Name === previousCell.members[5].Name ? '' : 'long_border_bpsp'
             };
@@ -380,7 +381,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForTextFirstCol(4);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForTextFirstCol(3);
             }
         }
     },
@@ -394,7 +395,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(5);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(4);
             }
         }
     },
@@ -408,7 +409,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(5);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(4);
             }
         }
     },
@@ -422,7 +423,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(6);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(5);
             }
         }
     },
@@ -436,7 +437,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(6);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(5);
             }
         }
     },
@@ -450,7 +451,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(7);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(6);
             }
         }
     },
@@ -464,7 +465,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(7);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(6);
             }
         }
     },
@@ -478,7 +479,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(8);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(7);
             }
         }
     },
@@ -492,7 +493,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(8);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(7);
             }
         }
     },
@@ -506,7 +507,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(9);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(8);
             }
         }
     },
@@ -520,7 +521,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(9);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(8);
             }
         }
     },
@@ -534,7 +535,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(10);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(9);
             }
         }
     },
@@ -548,7 +549,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(10);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(9);
             }
         }
     },
@@ -562,7 +563,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(11);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(10);
             }
         }
     },
@@ -576,7 +577,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(11);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(10);
             }
         }
     },
@@ -590,7 +591,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(12);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(11);
             }
         }
     },
@@ -604,7 +605,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(12);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(11);
             }
         }
     },
@@ -618,7 +619,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(13);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(12);
             }
         }
     },
@@ -632,7 +633,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(13);
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(12);
             }
         }
     },
