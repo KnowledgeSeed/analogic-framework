@@ -1551,40 +1551,6 @@ app.repository = {
     },
 
 
-    rocheBPSPMaterialGridRow1Cell2DropBox: {
-        init: {
-            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
-            type: 'POST',
-            body: (db) => `
-            {
-            "MDX" : "SELECT 
-                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]} 
-                    ON COLUMNS , 
-                     {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}  
-                    ON ROWS 
-                    FROM [}ElementAttributes_Companies] 
-            "}`,
-            parsingControl: {
-                type: 'object',
-                query:
-                    {
-                        items: (r, x) => {
-                            let result = [];
-                            for (let i = 0; i < r.Cells.length; i = i + 2) {
-                                result.push({
-                                    'name': r.Cells[i].FormattedValue,
-                                    key: r.Cells[i + 1].FormattedValue,
-                                    on: false
-                                });
-                            }
-                            return result;
-                        }
-                    }
-            }
-        }
-    },
-
-
     rocheBPSPMaterialGridRow1Cell3Button: {
         init:
             {
