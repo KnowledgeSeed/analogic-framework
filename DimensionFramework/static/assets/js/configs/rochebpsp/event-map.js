@@ -166,6 +166,12 @@ app.eventMap = {
             argument: 'rocheBPSPProductsColumnSelectorPopup'
         }
     ],
+    'launch.rocheBPSPProductsColumnSelectorCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsColumnSelectorPopup'
+        }
+    ],
     'launch.rocheBPSPProductsCheckoutPopupCheckoutButton': [
         {
             action: app.fn.togglePopup,

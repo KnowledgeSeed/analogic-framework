@@ -42,6 +42,12 @@
     padding: 0px;
 }
 
+.ks-container-popup_bpsp .div-x{
+    color: #0066CC;
+    font-size: 12px;
+    margin-right: 8px;
+}
+
 /* checkout_popup_bpsp */
 .ks-container-checkout_popup_bpsp.ks-container-backdrop {
     background-color: rgba(0, 0, 0, 0.15);

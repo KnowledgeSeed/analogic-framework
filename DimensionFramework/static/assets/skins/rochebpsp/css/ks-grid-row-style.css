@@ -16,6 +16,12 @@
 
 /* ote */
 
+.ks-grid-row-bottomborder_columnselector_bpsp.ks-grid-row {
+    border-bottom: 2px solid #D8D9D9;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
 .ks-grid-row-bottomborder_bpsp.ks-grid-row {
     border-bottom: 2px solid #D8D9D9;
     padding-bottom: 1%;

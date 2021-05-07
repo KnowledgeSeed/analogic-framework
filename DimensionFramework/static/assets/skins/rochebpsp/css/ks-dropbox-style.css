@@ -359,11 +359,11 @@
 }
 
 .ks-dropbox-column_selector_bpsp .ks-dropbox-panel-item:hover {
-    background-color: #bfd9f2;
+    background-color: rgba(220, 235, 250, 0.5);
 }
 
 .ks-dropbox-column_selector_bpsp .ks-dropbox-panel-item.on:hover {
-    background-color: #0066cc;
+    background-color: rgba(220, 235, 250, 0.5);
 }
 
 .ks-dropbox-column_selector_bpsp .ks-dropbox-panel-item-separator {
@@ -379,6 +379,14 @@
 .ks-dropbox-column_selector_bpsp .ks-dropbox-panel-item-icon,
 .ks-dropbox-column_selector_bpsp .ks-dropbox-panel-item-separator {
     display: block;
+}
+
+.ks-dropbox-column_selector_bpsp .ks-dropbox-panel{
+    position: unset;
+}
+
+.ks-dropbox-column_selector_bpsp .ks-dropbox-panel-inner{
+    width: 320px;
 }
 
 
