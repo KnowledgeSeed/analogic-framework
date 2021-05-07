@@ -233,7 +233,8 @@ app.repository = {
                 query:
                     {
                         value: (r, x) => {
-                            WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = r.Cells[0].FormattedValue;L(r.Cells[0].FormattedValue);
+                            WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = r.Cells[0].FormattedValue;
+                            L(r.Cells[0].FormattedValue);
                             WidgetValue['systemValueFocusedProduct'] = 'PL1';
                             WidgetValue['systemValueSegmentedControlPeriodUnit'] = 'Yearly';
                             return true;
@@ -262,11 +263,11 @@ app.repository = {
     },
 
     rocheBPSPProductsPeriodUnitSegmentedControl: {
-      switch: {
-          execute: (db) => {
-              WidgetValue['systemValueSegmentedControlPeriodUnit'] = v('rocheBPSPProductsPeriodUnitSegmentedControl.selected');
-          }
-      }
+        switch: {
+            execute: (db) => {
+                WidgetValue['systemValueSegmentedControlPeriodUnit'] = v('rocheBPSPProductsPeriodUnitSegmentedControl.selected');
+            }
+        }
     },
 
     rocheBPSPProductsGridTableYearlyHeaderFocusButton: {
@@ -285,7 +286,7 @@ app.repository = {
         }
     },
 
-     rocheBPSPProductsGridTableMonthlyHeaderFocusButton: {
+    rocheBPSPProductsGridTableMonthlyHeaderFocusButton: {
         state: (db) => {
             return {visible: db.systemValueFocusedProduct === 'PL1'};
         }
@@ -550,8 +551,10 @@ app.repository = {
         }
     },
     rocheBPSPProductsGridTableMonthly: {
-        initCondition: (db) => {L(v('rocheBPSPProductsGridRow1Cell3DropBox.value'));L(db.systemValueGlobalCompanyProductPlanVersion);
-            return v('rocheBPSPProductsGridRow1Cell3DropBox.value.length') !== false && WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Monthly' ;
+        initCondition: (db) => {
+            L(v('rocheBPSPProductsGridRow1Cell3DropBox.value'));
+            L(db.systemValueGlobalCompanyProductPlanVersion);
+            return v('rocheBPSPProductsGridRow1Cell3DropBox.value.length') !== false && WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Monthly';
         },
         initDefault: (db) => {
             return [];
@@ -618,7 +621,7 @@ app.repository = {
                 type: 'matrix',
                 length: 19,
                 query: [
-                     (r, x) => {
+                    (r, x) => {
                         let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue;
                         WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
                         WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsMainLocked'];
@@ -647,7 +650,7 @@ app.repository = {
                         return result;
                     },
                     (r, x) => {
-                        WidgetValue['systemValueMonthlyRelativeIndex']  = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
@@ -656,16 +659,16 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                       WidgetValue['systemValueMonthlyRelativeIndex']  = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex'] ].FormattedValue.replace('PL', ''),
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue.replace('PL', ''),
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
-                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex'] ].Members
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueMonthlyRelativeIndex']  = WidgetValue['systemValueMonthlyRelativeIndex'] + 3;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 3;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : 'readonly_bpsp',
@@ -681,7 +684,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueMonthlyRelativeIndex']  = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
@@ -690,7 +693,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueMonthlyRelativeIndex']  = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
@@ -699,7 +702,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueMonthlyRelativeIndex']  = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
@@ -708,7 +711,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueMonthlyRelativeIndex']  = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
@@ -717,7 +720,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueMonthlyRelativeIndex']  = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
@@ -726,7 +729,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueMonthlyRelativeIndex']  = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
@@ -735,7 +738,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueMonthlyRelativeIndex']  = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
@@ -744,7 +747,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueMonthlyRelativeIndex']  = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
@@ -753,7 +756,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueMonthlyRelativeIndex']  = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
@@ -762,7 +765,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueMonthlyRelativeIndex']  = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
@@ -771,7 +774,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueMonthlyRelativeIndex']  = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
@@ -780,7 +783,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueMonthlyRelativeIndex']  = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
@@ -789,12 +792,12 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueMonthlyRelativeIndex']  = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
-                            icon: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex'] ].FormattedValue === '' ? 'icon-comment-off' : 'icon-comment-on',
-                            iconColor: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex'] ].FormattedValue === '' ? '#C5C6C6' : '#0066cc',
-                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex'] ].Members
+                            icon: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue === '' ? 'icon-comment-off' : 'icon-comment-on',
+                            iconColor: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue === '' ? '#C5C6C6' : '#0066cc',
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
                     }
                 ]
@@ -1222,40 +1225,6 @@ app.repository = {
 
 
                 ]
-            }
-        }
-    },
-
-
-    rocheBPSPMaterialGridRow1Cell2DropBox: {
-        init: {
-            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
-            type: 'POST',
-            body: (db) => `
-            {
-            "MDX" : "SELECT 
-                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]} 
-                    ON COLUMNS , 
-                     {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}  
-                    ON ROWS 
-                    FROM [}ElementAttributes_Companies] 
-            "}`,
-            parsingControl: {
-                type: 'object',
-                query:
-                    {
-                        items: (r, x) => {
-                            let result = [];
-                            for (let i = 0; i < r.Cells.length; i = i + 2) {
-                                result.push({
-                                    'name': r.Cells[i].FormattedValue,
-                                    key: r.Cells[i + 1].FormattedValue,
-                                    on: false
-                                });
-                            }
-                            return result;
-                        }
-                    }
             }
         }
     },

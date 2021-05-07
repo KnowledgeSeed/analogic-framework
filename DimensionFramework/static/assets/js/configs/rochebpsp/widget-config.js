@@ -1185,8 +1185,7 @@ app.widgetConfig = {
                             marginTop: 5,
                             marginBottom: 5,
                             marginLeft: 5,
-                            listen: [
-                            ],
+                            listen: [],
                             widgets: [
                                 {
                                     id: 'rocheBPSPProductsProductSelectorShortcutPopupGridTableRow',
@@ -2141,8 +2140,11 @@ app.widgetConfig = {
                             'event': 'launch.rocheBPSPProductsGridTableMonthlyHeaderReturnFromFocus.finished',
                             'method': 'refresh'
                         },
-                        {'event': 'launch.rocheBPSPProductsProductSelectorShortcutPopupGridTableButton01.finished', 'method': 'refresh'},
-                        {'event': 'switch.rocheBPSPProductsYearSegmentedControl.finished', 'method' : 'refresh'}
+                        {
+                            'event': 'launch.rocheBPSPProductsProductSelectorShortcutPopupGridTableButton01.finished',
+                            'method': 'refresh'
+                        },
+                        {'event': 'switch.rocheBPSPProductsYearSegmentedControl.finished', 'method': 'refresh'}
                     ],
                     title: '',
                     widgets: [
@@ -4622,21 +4624,9 @@ app.widgetConfig = {
                                     marginRight: '0',
                                     marginTop: '0',
                                     alignment: 'top-right',
-                                    width: '8%',
+                                    width: '63%',
                                     height: '0',
-                                    widgets: [
-                                        {
-                                            id: 'rocheBPSPMaterialGridRow1Cell2Dropbox',
-                                            type: DropBoxWidget,
-                                            width: '190',
-                                            skin: 'simple_bold_bpsp',
-                                            marginBottom: 5,
-                                            selectFirst: true,
-                                            backdrop: true
-                                        }
-
-
-                                    ]
+                                    widgets: []
                                 },
 
 
