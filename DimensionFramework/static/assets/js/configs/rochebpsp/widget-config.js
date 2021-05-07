@@ -333,7 +333,8 @@ app.widgetConfig = {
                                         }
 
                                     ]
-                                }]
+                                }
+                            ]
                         },
 
                         {
@@ -1246,8 +1247,11 @@ app.widgetConfig = {
                             'event': 'launch.rocheBPSPProductsGridTableYearlyHeaderReturnFromFocus.finished',
                             'method': 'refresh'
                         },
-                        {'event': 'launch.rocheBPSPProductsProductSelectorShortcutPopupGridTableButton01.finished', 'method': 'refresh'},
-                        {'event': 'switch.rocheBPSPProductsYearSegmentedControl.finished', 'method' : 'refresh'}
+                        {
+                            'event': 'launch.rocheBPSPProductsProductSelectorShortcutPopupGridTableButton01.finished',
+                            'method': 'refresh'
+                        },
+                        {'event': 'switch.rocheBPSPProductsYearSegmentedControl.finished', 'method': 'refresh'}
                     ],
                     title: '',
                     widgets: [
@@ -1848,13 +1852,61 @@ app.widgetConfig = {
                                             action: '',
                                             icon: 'icon-comment-off',
                                             marginTop: '30',
-                                            marginBottom: '30',
+                                            marginBottom: '10',
                                             fontBold: true,
                                             fontSize: 24,
                                             skin: 'commenttitle',
                                         }
                                     ]
                                 },
+
+
+                                {
+                                    id: 'rocheBPSPProductsCommentShowGridRow2',
+                                    type: GridRowWidget,
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsCommentShowGridRow2Cell',
+                                            type: GridCellWidget,
+                                            alignment: 'top-left',
+                                            width: '90%',
+                                            skin: '',
+                                            widgets: [
+
+                                                {
+                                                    id: 'rocheBPSPProductsCommentShowGridTable',
+                                                    type: GridTableWidget,
+                                                    marginTop: '12px',
+                                                    marginLeft: '1px',
+                                                    hideIfNoData: true,
+                                                    skin: '',
+                                                    listen: [],
+                                                    title: '',
+                                                    widgets: [
+                                                        {
+                                                            id: 'rocheBPSPProductsCommentShowGridTable-Cell-01',
+                                                            type: GridTableCellWidget,
+                                                            width: '20%',
+                                                            alignment: 'center-left',
+                                                            widgets: [
+
+                                                                {
+                                                                    id: 'rocheBPSPProductsCommentShowGridTable-Cell-01-Text',
+                                                                    type: TextWidget,
+                                                                    skin: '',
+                                                                    title: '',
+                                                                }
+                                                            ]
+                                                        },
+                                                    ]
+                                                }
+
+                                            ]
+                                        }
+                                    ]
+                                },
+
                                 {
                                     id: 'rocheBPSPProductsCommentShowGridRow3',
                                     type: GridRowWidget,
@@ -1864,10 +1916,76 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPProductsCommentShowGridRow3Button',
                                             type: ButtonWidget,
-                                            label: 'EDIT',
+                                            label: 'Source:',
+                                            action: '',
+                                            marginTop: '30',
+                                            fontBold: true,
+                                            fontSize: 16,
+                                            skin: '',
+                                        }
+                                    ]
+                                },
+
+
+                                {
+                                    id: 'rocheBPSPProductsCommentShowGridRow4',
+                                    type: GridRowWidget,
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsCommentShowGridRow4Cell',
+                                            type: GridCellWidget,
+                                            alignment: 'top-left',
+                                            width: '90%',
+                                            skin: '',
+                                            widgets: [
+
+                                                {
+                                                    id: 'rocheBPSPProductsCommentShowGridTableSource',
+                                                    type: GridTableWidget,
+                                                    marginLeft: '1px',
+                                                    hideIfNoData: true,
+                                                    skin: '',
+                                                    listen: [],
+                                                    title: '',
+                                                    widgets: [
+                                                        {
+                                                            id: 'rocheBPSPProductsCommentShowGridTableSource-Cell-01',
+                                                            type: GridTableCellWidget,
+                                                            width: '20%',
+                                                            alignment: 'center-left',
+                                                            widgets: [
+
+                                                                {
+                                                                    id: 'rocheBPSPProductsCommentShowGridTableSource-Cell-01-Text',
+                                                                    type: TextWidget,
+                                                                    skin: '',
+                                                                    title: '',
+                                                                }
+                                                            ]
+                                                        },
+                                                    ]
+                                                }
+
+                                            ]
+                                        }
+                                    ]
+                                },
+
+
+                                {
+                                    id: 'rocheBPSPProductsCommentShowGridRow5',
+                                    type: GridRowWidget,
+                                    alignment: 'left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsCommentShowGridRow5Button',
+                                            type: ButtonWidget,
+                                            label: 'Edit',
                                             action: '',
                                             width: '100',
-                                            marginTop: '20',
+                                            marginTop: '30',
                                             marginBottom: '20',
                                             skin: 'simtype',
                                         }
@@ -1919,15 +2037,55 @@ app.widgetConfig = {
                                 },
 
                                 {
+                                    id: 'rocheBPSPProductsCommentEditGridRow2',
+                                    type: GridRowWidget,
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsCommentEditGridRow2CommentInput',
+                                            type: TextAreaWidget,
+                                            title: 'Comment Text',
+                                            listen: [{
+                                                "method": "refresh"
+                                            }],
+                                            marginBottom: '30',
+                                            width: '100%',
+                                            skin: 'commenttext'
+                                        }
+                                    ]
+                                },
+
+
+                                {
                                     id: 'rocheBPSPProductsCommentEditGridRow3',
+                                    type: GridRowWidget,
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductsCommentEditGridRow3TextInput',
+                                            type: TextAreaWidget,
+                                            title: 'Source Text',
+                                            listen: [{
+                                                "method": "refresh"
+                                            }],
+                                            marginBottom: '30',
+                                            width: '100%',
+                                            skin: 'commenttext'
+                                        }
+                                    ]
+                                },
+
+
+                                {
+                                    id: 'rocheBPSPProductsCommentEditGridRow4',
                                     type: GridRowWidget,
                                     alignment: 'left',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsCommentEditGridRow3Button',
+                                            id: 'rocheBPSPProductsCommentEditGridRow4Button',
                                             type: ButtonWidget,
-                                            label: 'SAVE',
+                                            label: 'Save',
                                             action: '',
                                             width: '100',
                                             marginTop: '20',
@@ -4254,4 +4412,4 @@ app.widgetConfig = {
                 }]
         },
 
-}; 
+};

@@ -345,7 +345,8 @@ app.repository = {
     },
 
     rocheBPSPProductsGridTableYearly: {
-        initCondition: (db) => {L(v('rocheBPSPProductsGridRow1Cell3DropBox.value.length'));
+        initCondition: (db) => {
+            L(v('rocheBPSPProductsGridRow1Cell3DropBox.value.length'));
             return v('rocheBPSPProductsGridRow1Cell3DropBox.value.length') !== false && WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly';
         },
         initDefault: (db) => {
@@ -428,7 +429,7 @@ app.repository = {
                             checkoutUser: checkoutUser,
                             members: r.Cells[x].Members,
                             productLevel: pl,
-                            hasComment: r.Cells[x + 15].FormattedValue === ''
+                            hasComment: r.Cells[x + 15].FormattedValue !== ''
                         };
                         if (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked']) {
                             result['iconColor'] = '#D12D4A';
@@ -1150,6 +1151,79 @@ app.repository = {
                 }
 
             },
+    },
+
+
+    rocheBPSPProductsCommentShowGridTable: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => `{"MDX":"
+			SELECT 
+            {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Comment]}
+            PROPERTIES  [Measures Sales Plan by Product]. [Measures Sales Plan by Product].[Caption]
+            ON COLUMNS , 
+            {[Products].[BPSP Budget].[P6]} PROPERTIES [Products].[BPSP Budget].[Caption]
+            ON ROWS 
+            FROM [Sales Plan by Product] 
+            WHERE 
+            ([Versions].[Versions].[Live],
+            [Companies].[Companies].[1391],
+            [Receivers].[Receivers].[PL],
+            [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
+            [Periods].[Periods].[2021])
+            "}`,
+            parsingControl: {
+                type: 'matrix',
+                length: 1,
+                query: [
+                    (r, x) => {
+                        return {
+                            title: r.Cells[x].FormattedValue,
+                        }
+                    }]
+            }
+        }
+    },
+
+
+    rocheBPSPProductsCommentShowGridTableSource: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => `{"MDX":"
+            SELECT 
+            {{[Measures Sales Plan by Product].[Measures Sales Plan by Product].[CommentSource]},
+            {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedBy]},
+            {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime]}}
+            
+            PROPERTIES  [Measures Sales Plan by Product]. [Measures Sales Plan by Product].[Caption]
+            ON COLUMNS , 
+            {[Products].[BPSP Budget].[P6]} 
+            PROPERTIES [Products].[BPSP Budget].[Caption] 
+            ON ROWS 
+            FROM [Sales Plan by Product] 
+            WHERE 
+            ([Versions].[Versions].[Live],
+            [Companies].[Companies].[1391],
+            [Receivers].[Receivers].[PL],
+            [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
+            [Periods].[Periods].[2021])
+            "}`,
+            parsingControl: {
+                type: 'matrix',
+                length: 3,
+                query: [
+                    (r, x) => {
+                        return {
+                            title: r.Cells[x].FormattedValue + '<br/><div style=\"margin-top:20px; float: left; font-size: 10px;  ";  >' + 'Edited by ' + '</div>' + '<div style=\"font-size:12px; font-weight: bold; margin-top:18px; margin-left: 3px; float: left;";  >' + r.Cells[x + 1].FormattedValue + '</div>' + '<div style=\"font-size:10px;color:#B1B3B3;margin-top:20px;margin-left: 5px; float: left; \" >' + r.Cells[x + 2].FormattedValue + '</div>',
+                        }
+                    }
+
+
+                ]
+            }
+        }
     },
 
 
