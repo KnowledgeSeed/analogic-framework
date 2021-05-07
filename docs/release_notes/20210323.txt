@@ -55,6 +55,9 @@ ButtonWidget:
 
  blue_link_icon_right_bpsp
  blue_link_columns_bpsp
+ blue_icon_bpsp
+ green_link_bpsp
+ red_link_bpsp
 
 
  L01 -> PL1,..., L06->PL6

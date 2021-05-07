@@ -345,6 +345,298 @@ app.repository = {
         }
     },
 
+    defaultFunctionsForGridTableYearylHeader: {
+        initCondition: () => {
+            let l = v('rocheBPSPProductsGridTableYearly.cellData.length');
+            return l !== false && l !== 0;
+        },
+        executeForTextFirstCol: (columnIndex) => {
+            let cell = v('rocheBPSPProductsGridTableYearly.cellData')[0][columnIndex];
+            return {title: cell.members[5].Name, body: cell.members[6].Name};
+        },
+        executeForText: (columnIndex) => {
+            let cells = v('rocheBPSPProductsGridTableYearly.cellData'), cell = cells[0][columnIndex],
+                previousCell = cells[0][columnIndex--];
+            return {
+                title: cell.members[5].Name === previousCell.members[5].Name ? '' : cell.members[5].Name,
+                body: cell.members[6].Name
+            };
+        },
+        executeForCell: (columnIndex) => {
+            let cells = v('rocheBPSPProductsGridTableYearly.cellData'), cell = cells[0][columnIndex],
+                previousCell = cells[0][columnIndex--];
+            return {
+                cellHeaderSkin: cell.members[5].Name === previousCell.members[5].Name ? '' : 'long_border_bpsp'
+            };
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderText04: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForTextFirstCol(4);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderCell05: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(5);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderText05: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(5);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderCell06: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(6);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderText06: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(6);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderCell07: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(7);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderText07: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(7);
+            }
+        }
+    },
+
+    'rocheBPSPProductsGridTableYearlyHeaderCell-08': {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(8);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderText08: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(8);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderCell09: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(9);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderText09: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(9);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderCell10: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(10);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderText10: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(10);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderCell11: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(11);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderText11: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(11);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderCell12: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(12);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderText12: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(12);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderCell13: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForCell(13);
+            }
+        }
+    },
+
+    rocheBPSPProductsGridTableYearlyHeaderText13: {
+        initCondition: (db) => {
+            return Repository['defaultFunctionsForGridTableYearylHeader'].initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForGridTableYearylHeader'].executeForText(13);
+            }
+        }
+    },
+
     rocheBPSPProductsGridTableYearly: {
         initCondition: (db) => {
             L(v('rocheBPSPProductsGridRow1Cell3DropBox.value.length'));
@@ -600,7 +892,7 @@ app.repository = {
                         -- query
                         SELECT 
                         --Columns
-                           {Union(Union(FixColumns,{TM1SubsetToSet([Periods].[Periods], \\"zUI Y1 Product Monthly Input\\")},All),{Comment},All)}
+                           {Union(Union(FixColumns,{TM1SubsetToSet([Periods].[Periods], \\"zUI ${db.systemValueGlobalSegmentedControlRelativeYear} Product Monthly Input\\")},All),{Comment},All)}
                            PROPERTIES [Periods].[Periods].[Caption]ON COLUMNS , 
                         -- rows
                           {StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
@@ -805,20 +1097,48 @@ app.repository = {
         }
     },
     rocheBPSPProductsColumnSelectorPopupDropBox: {
-        state: (db) => {
-            return [
-                {name: '2019 Actuals', on: 'true'},
-                {name: '2020 Actuals', on: 'true'},
-                {name: '2021 YTD Actuals', on: 'true'},
-                {name: '2021 Plan', on: 'true'},
-                {name: '2021 Customer Plan Total', on: 'true'},
-                {name: '2021 Marketing Adjustment', on: 'true'},
-                {name: '2021 Total Plan', on: 'true'},
-                {name: '2021 Final  Plan', on: 'true'},
-                {name: 'Growth rate:  2020 Actual / 2021 Plan', on: 'true'},
-                {name: 'Growth rate:  2021 Actual / 2022 Plan', on: 'true'},
-            ];
-        }
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
+                type: 'POST',
+                body: (db) => `{
+                    "MDX" : 
+                        "SELECT 
+                       {[}ElementAttributes_zSYS UI Columns Selector].[}ElementAttributes_zSYS UI Columns Selector].[Y0],[}ElementAttributes_zSYS UI Columns Selector].[}ElementAttributes_zSYS UI Columns Selector].[Caption]} 
+                      ON COLUMNS , 
+                       {TM1SubsetToSet([zSYS UI Columns Selector].[zSYS UI Columns Selector],\\"${db.systemValueGlobalSegmentedControlRelativeYear} selector\\")}  
+                      ON ROWS 
+                    FROM [}ElementAttributes_zSYS UI Columns Selector]"
+                } `,
+                parsingControl: {
+                    type: 'object',
+                    query:
+                        {
+                            items: (r, x) => {
+                                let i, res = [];
+                                for (i = 0; i < r.Cells.length; i = i + 2) {
+                                    res.push({name: r.Cells[i + 1].Value, on: r.Cells[i].Value == 1});
+                                }
+                                return res;
+                            }
+                        }
+                }
+
+            },
+        /*   state: (db) => {
+               return [
+                   {name: '2019 Actuals', on: 'true'},
+                   {name: '2020 Actuals', on: 'true'},
+                   {name: '2021 YTD Actuals', on: 'true'},
+                   {name: '2021 Plan', on: 'true'},
+                   {name: '2021 Customer Plan Total', on: 'true'},
+                   {name: '2021 Marketing Adjustment', on: 'true'},
+                   {name: '2021 Total Plan', on: 'true'},
+                   {name: '2021 Final  Plan', on: 'true'},
+                   {name: 'Growth rate:  2020 Actual / 2021 Plan', on: 'true'},
+                   {name: 'Growth rate:  2021 Actual / 2022 Plan', on: 'true'},
+               ];
+           }*/
     },
     rocheBPSPProductsGridRow1Cell9Button: {
         init:
