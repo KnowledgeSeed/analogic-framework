@@ -351,5 +351,20 @@ app.eventMap = {
         }
     ],
 
+        'launch.rocheBPSPAddMaterialGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPMaterial'
+        }
+    ],
+
+
+        'launch.rocheBPSPMaterialGridRow4Cell1Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPAddMaterial'
+        }
+    ],
+
 
 };

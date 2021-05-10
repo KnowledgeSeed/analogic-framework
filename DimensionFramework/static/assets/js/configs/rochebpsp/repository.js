@@ -356,7 +356,7 @@ app.repository = {
         },
         executeForText: (columnIndex) => {
             let cells = v('rocheBPSPProductsGridTableYearly.cellData'), cell = cells[0][columnIndex],
-                previousCell = cells[0][columnIndex-1];
+                previousCell = cells[0][columnIndex - 1];
             return {
                 title: cell.members[5].Name === previousCell.members[5].Name ? '' : cell.members[5].Name,
                 body: cell.members[6].Name
@@ -364,7 +364,7 @@ app.repository = {
         },
         executeForCell: (columnIndex) => {
             let cells = v('rocheBPSPProductsGridTableYearly.cellData'), cell = cells[0][columnIndex],
-                previousCell = cells[0][columnIndex-1];
+                previousCell = cells[0][columnIndex - 1];
             L(cell, previousCell);
             return {
                 cellHeaderSkin: cell.members[5].Name === previousCell.members[5].Name ? '' : 'long_border_bpsp'
@@ -1569,7 +1569,70 @@ app.repository = {
                 }
 
             },
+
     },
+
+
+    rocheBPSPMaterialGridRow1Cell2DropBox: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT 
+                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]} 
+                    ON COLUMNS , 
+                     {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}  
+                    ON ROWS 
+                    FROM [}ElementAttributes_Companies] 
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [];
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    'name': r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: false
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
+    },
+
+
+        rocheBPSPMaterialGridRow2Cell1SegmentedControl: {
+        state: (db) => {
+            let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
+                sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
+            return [
+                {label: 'By Product Group'},
+                {label: 'By IP Node'},
+            ];
+        },
+
+    },
+
+
+
+            rocheBPSPAddMaterialGridRow2Cell1SegmentedControl: {
+        state: (db) => {
+            let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
+                sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
+            return [
+                {label: 'Import List'},
+                {label: 'Search'},
+            ];
+        },
+
+    },
+
 
 
 };
