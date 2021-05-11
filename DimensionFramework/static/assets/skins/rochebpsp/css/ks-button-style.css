@@ -979,9 +979,8 @@
 
 .ks-button-blue_link_bpsp .ks-button-label {
     color: #0066cc;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: bold;
-    padding-left: 3px;
     font-family: 'imago';
 }
 
@@ -989,7 +988,24 @@
     color: #0066cc;
     padding-right: 5px;
     font-size: 12px;
-    margin-top: 2px;
+}
+
+
+/* red_link_x_bpsp */
+
+.ks-button-red_link_x_bpsp .ks-button-label {
+    color: #E40046;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'imago';
+}
+
+.ks-button-red_link_x_bpsp .ks-button-icon span{
+    color: white;
+    font-size: 11px;
+    margin-right:7px;
+    background-color: #E40046;
+    border: 1px solid #E40046;
 }
 
 /* blue_icon_bpsp */
@@ -1028,6 +1044,7 @@
     font-size: 10px;
 }
 
+
 /* green_link_bpsp */
 
 .ks-button-green_link_bpsp .ks-button-label {
@@ -1048,16 +1065,16 @@
 
 .ks-button-blue_link_columns_bpsp .ks-button-label {
     color: #0066cc;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: bold;
-    padding-left: 3px;
     font-family: 'imago';
+    margin-left: 5px;
     margin-bottom: 2px;
 }
 
 .ks-button-blue_link_columns_bpsp .ks-button-icon {
     color: #0066cc;
-    padding-right: 5px;
+    padding-right: 2px;
     font-size: 13px;
     margin-top: 1px;
 }
@@ -1197,6 +1214,10 @@
     color: #0066cc;
     font-size: 20px;
     font-weight: bold;
+}
+
+.ks-button-backbuttonrocheBPSP span {
+    font-size: 25px;
 }
 
 

@@ -285,8 +285,27 @@
 .ks-text-checkout_page_header_bpsp .ks-text-title {
     font-size: 36px;
     color: #ED8B00;
-    font-family: imago-medium;
+    font-family: imago;
     font-weight: bold;
+}
+
+/* simple_bold_bpsp */
+.ks-text-simple_bold_bpsp .ks-text-title {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+    overflow: auto;
+}
+
+/* simple_bpsp */
+.ks-text-simple_bpsp .ks-text-title {
+    font-size: 14px;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+    overflow: auto;
 }
 
 

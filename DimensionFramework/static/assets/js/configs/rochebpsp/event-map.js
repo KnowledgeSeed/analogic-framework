@@ -288,6 +288,58 @@ app.eventMap = {
             argument: 'rocheBPSPProducts'
         }
     ],
+    'segmentedControlTab2.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductsCheckoutGridTableYearly'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductsCheckoutGridTableMonthly'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductsCheckoutGridRow2Cell1Button'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductsCheckoutGridRow2Cell1aButton'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductsCheckoutGridRow2Cell1bButton'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutGridTableMonthly'
+        }
+    ],
+    'segmentedControlTab1.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductsCheckoutGridTableMonthly'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductsCheckoutGridTableYearly'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductsCheckoutGridRow2Cell1Button'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductsCheckoutGridRow2Cell1aButton'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductsCheckoutGridRow2Cell1bButton'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutGridTableYearly'
+        }
+    ],
     //end rocheBPSPProducts comment mody
 
 

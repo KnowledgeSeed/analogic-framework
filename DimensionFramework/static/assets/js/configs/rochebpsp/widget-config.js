@@ -908,40 +908,6 @@ app.widgetConfig = {
                                         }
                                     ]
                                 }
-                                /*   {
-                                       id: 'rocheBPSPProductsGridRow2Cell1',
-                                       type: GridCellWidget,
-                                       alignment: 'bottom-right',
-                                       width: '14%',
-                                       widgets: [
-
-                                           {
-                                               id: 'rocheBPSPProductsGridRow2Cell1Button',
-                                               type: ButtonWidget,
-                                               label: 'Excel Template',
-                                               visible: false,
-                                               fontSize: 12,
-                                               fontColor: '#2A66C5',
-                                           }
-                                       ]
-                                   },
-                                   {
-                                       id: 'rocheBPSPProductsGridRow2Cell2',
-                                       type: GridCellWidget,
-                                       alignment: 'bottom-center',
-                                       width: '5.5%',
-                                       widgets: [
-
-                                           {
-                                               id: 'rocheBPSPProductsGridRow2Cell2Button',
-                                               type: ButtonWidget,
-                                               label: 'Upload Excel',
-                                               fontSize: 12,
-                                               visible: false,
-                                               fontColor: '#2A66C5',
-                                           }
-                                       ]
-                                   },*/
                             ]
                         }
                     ]
@@ -2949,7 +2915,7 @@ app.widgetConfig = {
                                             skin: 'backbuttonrocheBPSP',
                                             height: '50',
                                             iconColor: '#ED8B00',
-                                            paddingTop: 12,
+                                            paddingTop: 5,
                                             borderWidth: false
                                         }
                                     ]
@@ -2978,17 +2944,17 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridRow1Cell2',
                                     type: GridCellWidget,
-                                    alignment: 'bottom-right',
+                                    alignment: 'center-right',
                                     width: '11%',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsCheckoutGridRow1Cell2CompanyTextBox',
-                                            type: TextBoxWidget,
+                                            id: 'rocheBPSPProductsCheckoutGridRow1Cell2CompanyText',
+                                            type: TextWidget,
                                             width: '190',
                                             skin: 'simple_bold_bpsp',
-                                            marginBottom: 5,
-                                            value: '6191 Roche Dia Denmark'
+                                            marginTop: 10,
+                                            title: '6191 Roche Dia Denmark'
                                         }
                                     ]
                                 },
@@ -2996,17 +2962,17 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridRow1Cell3',
                                     type: GridCellWidget,
-                                    alignment: 'bottom-center',
+                                    alignment: 'center-center',
                                     width: '8%',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsCheckoutGridRow1Cell3ReceiverTextBox',
-                                            type: TextBoxWidget,
+                                            id: 'rocheBPSPProductsCheckoutGridRow1Cell3ReceiverText',
+                                            type: TextWidget,
                                             width: '130',
                                             skin: 'simple_bpsp',
-                                            marginBottom: 5,
-                                            value: 'DK-Denmark'
+                                            marginTop: 10,
+                                            title: 'DK-Denmark'
                                         }
                                     ]
                                 },
@@ -3040,7 +3006,7 @@ app.widgetConfig = {
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsCheckoutYearSegmentedControl',
+                                            id: 'rocheBPSPProductsYearSegmentedControl',
                                             type: SegmentedControlWidget,
                                             width: '100%',
                                             skin: 'segmented',
@@ -3048,28 +3014,28 @@ app.widgetConfig = {
                                             widgets: [
 
                                                 {
-                                                    id: 'rocheBPSPProductsCheckoutYearSegmentedControlItem1',
+                                                    id: 'rocheBPSPProductsYearSegmentedControlItem1',
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab1',
                                                     selected: true,
                                                     value: 'Y0'
                                                 },
                                                 {
-                                                    id: 'rocheBPSPProductsCheckoutYearSegmentedControlItem2',
+                                                    id: 'rocheBPSPProductsYearSegmentedControlItem2',
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab2',
                                                     selected: false,
                                                     value: 'Y1'
                                                 },
                                                 {
-                                                    id: 'rocheBPSPProductsCheckoutYearSegmentedControlItem3',
+                                                    id: 'rocheBPSPProductsYearSegmentedControlItem3',
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab3',
                                                     selected: false,
                                                     value: 'Y2'
                                                 },
                                                 {
-                                                    id: 'rocheBPSPProductsCheckoutYearSegmentedControlItem4',
+                                                    id: 'rocheBPSPProductsYearSegmentedControlItem4',
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab4',
                                                     selected: false,
@@ -3140,6 +3106,7 @@ app.widgetConfig = {
                             marginTop: '1%',
                             width: '100%',
                             widgets: [
+
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridRow2Cell1',
                                     type: GridCellWidget,
@@ -3153,7 +3120,27 @@ app.widgetConfig = {
                                             width: '100%',
                                             icon: 'icon-columns',
                                             skin: 'blue_link_columns_bpsp'
+                                        },
+                                        {
+                                            id: 'rocheBPSPProductsCheckoutGridRow2Cell1aButton',
+                                            type: ButtonWidget,
+                                            label: 'Excel Template',
+                                            width: '100%',
+                                            icon: 'icon-doc-arrow-up',
+                                            visible: false,
+                                            skin: 'blue_link_columns_bpsp'
+                                        },
+                                        {
+                                            id: 'rocheBPSPProductsCheckoutGridRow2Cell1bButton',
+                                            type: ButtonWidget,
+                                            label: 'Upload excel',
+                                            visible: false,
+                                            width: '100%',
+                                            icon: 'icon-columns',
+                                            skin: 'blue_link_columns_bpsp',
+                                            marginLeft: 15
                                         }
+
                                     ]
                                 },
                                 {
@@ -3168,10 +3155,8 @@ app.widgetConfig = {
                                             type: ButtonWidget,
                                             label: 'Clear all',
                                             width: '100%',
-                                            icon: 'icon-columns',
-                                            skin: 'blue_link_bpsp',
-                                            fontColor: '#E40046',
-                                            iconColor: '#E40046'
+                                            icon: 'icon-x-rectangle',
+                                            skin: 'red_link_x_bpsp'
                                         }
                                     ]
                                 },
@@ -3328,6 +3313,7 @@ app.widgetConfig = {
                     hideIfNoData: true,
                     skin: 'products_bpsp',
                     listen: [
+                        {'event': 'switch.rocheBPSPProductsYearSegmentedControl.finished', 'method': 'refresh'}
                     ],
                     title: '',
                     widgets: [
@@ -4180,7 +4166,7 @@ app.widgetConfig = {
                     visible: false,
                     skin: 'products_bpsp',
                     listen: [
-
+                        {'event': 'switch.rocheBPSPProductsYearSegmentedControl.finished', 'method': 'refresh'}
                     ],
                     title: '',
                     widgets: [

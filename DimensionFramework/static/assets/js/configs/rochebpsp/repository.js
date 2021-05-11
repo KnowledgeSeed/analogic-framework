@@ -103,7 +103,7 @@ app.repository = {
         launch:
             {
                 execute: (db) => {
-                    WidgetValue['systemValueFocusedProduct'] = Utils.getGridTableCell( WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly', 1).title;
+                    WidgetValue['systemValueFocusedProduct'] = Utils.getGridTableCell(WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly', 1).title;
                 }
                 /*  url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
                   type: 'POST',
@@ -118,7 +118,7 @@ app.repository = {
         launch:
             {
                 execute: (db) => {
-                    WidgetValue['systemValueFocusedProduct'] = Utils.getGridTableCell( WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly', 1).title;
+                    WidgetValue['systemValueFocusedProduct'] = Utils.getGridTableCell(WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly', 1).title;
                 }
             }
     },
@@ -131,7 +131,7 @@ app.repository = {
                 body: (db) => `{
                         "Parameters": [
                                 {"Name": "pUserID", "Value": "${db.activeUserName}"},
-                                {"Name": "pProduct", "Value": "${Utils.setAndGetGridTableSystemValueByCurrentRow( WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly', 1, 'systemValueCheckoutProduct', 'title')}"},
+                                {"Name": "pProduct", "Value": "${Utils.setAndGetGridTableSystemValueByCurrentRow(WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly', 1, 'systemValueCheckoutProduct', 'title')}"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}"},
                                 {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"}
@@ -1046,18 +1046,6 @@ app.repository = {
     },
 
 //start product checkout
-    rocheBPSPProductsCheckoutYearSegmentedControl: {
-        state: (db) => {
-            let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
-                sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
-            return [
-                {label: s, selected: 'Y0' === sr},
-                {label: ++s, selected: 'Y1' === sr},
-                {label: ++s, selected: 'Y2' === sr},
-                {label: ++s, selected: 'Y3' === sr},
-            ];
-        }
-    },
 
     rocheBPSPProductsCheckoutPeriodUnitSegmentedControl: {
         switch: {
@@ -1277,29 +1265,19 @@ app.repository = {
                 length: 17,
                 query: [
                     (r, x) => {
-                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue;
-                        WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
-                        WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsMainLocked'];
-                        WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
+                        let result, pl;
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = x;
                         pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: 'gridtable_checkout_hierarchy_bpsp_' + pl + (WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? '_locked' : ''),
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : '',
+                            skin: 'gridtable_checkout_hierarchy_bpsp_' + pl,
                             cellVisible: true,
-                            icon: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
-                            isMainLocked: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsMainLocked'],
-                            isLockedByMe: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] && WidgetValue.activeUserName.indexOf(checkoutUser) !== -1,
-                            isLocked: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'],
-                            isChildrenLocked: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearIsChildrenLocked'],
-                            checkoutUser: checkoutUser,
-                            checkedOutAt: r.Cells[x + 5].FormattedValue,
+                            icon: 'icon-badge',
                             members: r.Cells[x].Members,
                             productLevel: pl,
                             hasComment: r.Cells[x + 16].FormattedValue !== ''
                         };
-                        if (WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsMainLocked']) {
+                        if (WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableYearlyIsMainLocked']) {
                             result['iconColor'] = '#D12D4A';
                         }
                         return result;
@@ -1308,8 +1286,8 @@ app.repository = {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
+                            cellSkin: '',
                             members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
@@ -1317,8 +1295,8 @@ app.repository = {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue.replace('PL', ''),
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
+                            cellSkin: '',
                             members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
@@ -1326,7 +1304,7 @@ app.repository = {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 4;
                         return {
                             title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellSkin: 'readonly_bpsp',
                             cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
                             members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
@@ -1335,7 +1313,7 @@ app.repository = {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellSkin: 'readonly_bpsp',
                             cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
                             members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
@@ -1344,7 +1322,7 @@ app.repository = {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellSkin: 'readonly_bpsp',
                             cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
                             members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
@@ -1353,7 +1331,7 @@ app.repository = {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellSkin: 'readonly_bpsp',
                             cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
                             members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
@@ -1362,7 +1340,7 @@ app.repository = {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellSkin: 'readonly_bpsp',
                             cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
                             members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
@@ -1371,7 +1349,7 @@ app.repository = {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellSkin: 'readonly_bpsp',
                             cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
                             members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
@@ -1380,7 +1358,7 @@ app.repository = {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellSkin: 'readonly_bpsp',
                             cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
                             members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
@@ -1389,7 +1367,7 @@ app.repository = {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellSkin: 'readonly_bpsp',
                             cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
                             members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
@@ -1398,7 +1376,7 @@ app.repository = {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellSkin: 'readonly_bpsp',
                             cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
                             members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
@@ -1407,7 +1385,7 @@ app.repository = {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellSkin: 'readonly_bpsp',
                             cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
                             members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
@@ -1416,7 +1394,7 @@ app.repository = {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         let cellValue = r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue;
                         return {
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : '',
+
                             icon: cellValue === '' ? 'icon-comment-off' : 'icon-comment-on',
                             iconColor: cellValue === '' ? '#C5C6C6' : '#0066cc',
                             members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members,
@@ -1424,9 +1402,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        return {
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : '',
-                        };
+                        return {};
                     }
                 ]
             }
@@ -1505,30 +1481,20 @@ app.repository = {
                 length: 20,
                 query: [
                     (r, x) => {
-                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue;
-                        WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
-                        WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsMainLocked'];
-                        WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
+                        let result, pl;
                         WidgetValue['systemValueMonthlyRelativeIndex'] = x;
 
                         pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: 'gridtable_hierarchy_bpsp_' + pl + (WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? '_locked' : ''),
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            skin: 'gridtable_checkout_hierarchy_bpsp_' + pl,
                             cellVisible: true,
-                            icon: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
-                            isMainLocked: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsMainLocked'],
-                            isLockedByMe: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] && WidgetValue.activeUserName.indexOf(checkoutUser) !== -1,
-                            isLocked: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'],
-                            isChildrenLocked: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearIsChildrenLocked'],
-                            checkoutUser: checkoutUser,
-                            checkedOutAt: r.Cells[x + 5].FormattedValue,
+                            icon: 'icon-badge',
                             members: r.Cells[x].Members,
                             productLevel: pl,
                             hasComment: r.Cells[x + 19].FormattedValue === ''
                         };
-                        if (WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsMainLocked']) {
+                        if (WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsMainLocked']) {
                             result['iconColor'] = '#D12D4A';
                         }
                         return result;
@@ -1537,7 +1503,7 @@ app.repository = {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
                             members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
@@ -1546,7 +1512,7 @@ app.repository = {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue.replace('PL', ''),
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
                             members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
@@ -1555,7 +1521,7 @@ app.repository = {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 4;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true,
                             members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
@@ -1563,7 +1529,7 @@ app.repository = {
                     (r, x) => {
                         return {
                             title: '||||',
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true
                         };
                     },
@@ -1571,8 +1537,10 @@ app.repository = {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
+                            editable: true,
+                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
                             members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
                     },
@@ -1580,8 +1548,10 @@ app.repository = {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
+                            editable: true,
+                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
                             members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
                     },
@@ -1589,8 +1559,10 @@ app.repository = {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
+                            editable: true,
+                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
                             members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
                     },
@@ -1598,8 +1570,10 @@ app.repository = {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
+                            editable: true,
+                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
                             members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
                     },
@@ -1607,8 +1581,10 @@ app.repository = {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
+                            editable: true,
+                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
                             members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
                     },
@@ -1616,8 +1592,10 @@ app.repository = {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
+                            editable: true,
+                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
                             members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
                     },
@@ -1625,8 +1603,10 @@ app.repository = {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
+                            editable: true,
+                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
                             members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
                     },
@@ -1634,8 +1614,10 @@ app.repository = {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
+                            editable: true,
+                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
                             members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
                     },
@@ -1643,8 +1625,10 @@ app.repository = {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
+                            editable: true,
+                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
                             members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
                     },
@@ -1652,8 +1636,10 @@ app.repository = {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
+                            editable: true,
+                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
                             members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
                     },
@@ -1661,8 +1647,10 @@ app.repository = {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
+                            editable: true,
+                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
                             members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
                     },
@@ -1670,15 +1658,17 @@ app.repository = {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
+                            editable: true,
+                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
                             members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
                         return {
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellSkin: WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
                             icon: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue === '' ? 'icon-comment-off' : 'icon-comment-on',
                             iconColor: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue === '' ? '#C5C6C6' : '#0066cc',
                             members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members

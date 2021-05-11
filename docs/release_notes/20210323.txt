@@ -36,6 +36,8 @@ TextWidget:
  checkout_warning_bpsp
  checkout_warning_message_bpsp
  checkout_page_header_bpsp
+ simple_bold_bpsp
+ simple_bpsp
 
 ButtonWidget:
  blue_bg_bpsp
@@ -58,6 +60,7 @@ ButtonWidget:
  blue_icon_bpsp
  green_link_bpsp
  red_link_bpsp
+ red_link_x_bpsp
 
 
  L01 -> PL1,..., L06->PL6

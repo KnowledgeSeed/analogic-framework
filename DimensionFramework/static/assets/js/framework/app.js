@@ -25,9 +25,17 @@ let EventMap, Repository, WidgetConfig;
         app.id = Utils.getRandomId();
 
         initEvents();
-WidgetValue['systemValueGlobalStartingPlanYear'] = 2021;//temp
-WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';//temp
-WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] =  'Y0'; //temp
+        WidgetValue['systemValueGlobalStartingPlanYear'] = 2021;//todo temp
+        WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';//todo temp
+        WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = 'Y0'; //todo temp
+        WidgetValue['systemValueCheckoutProduct'] = 'P6'; //todo temp
+        WidgetValue['systemValueSegmentedControlPeriodUnit'] = 'Yearly';
+        WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';//todo temp
+        WidgetValue['rocheBPSPProductsGridRow1Cell2DropBox'] = {
+            value: 'Roche Dia Brazil',
+            items: [{name: "Roche Dia Brazil", key: "1241", on: true}]
+        };//todo temp
+        WidgetValue['rocheBPSPProductsGridRow1Cell3DropBox'] = {value: 'BR Brazil'}; //todo temp
         Render.showPage(WidgetValue['redirect'] !== null ? WidgetValue['redirect'] : app.MainPage);
 
         WidgetValue['redirect'] = null;
