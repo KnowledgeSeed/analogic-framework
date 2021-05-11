@@ -607,8 +607,8 @@
 
 .ks-button-rochemain:active {
     background-color: #004C99;
-    box-shadow: 0 5px #666;
-    transform: translateY(4px);
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
 }
 
 
@@ -1052,7 +1052,7 @@
     font-weight: bold;
     padding-left: 3px;
     font-family: 'imago';
-    margin-bottom:2px;
+    margin-bottom: 2px;
 }
 
 .ks-button-blue_link_columns_bpsp .ks-button-icon {
@@ -1278,6 +1278,7 @@
     font-size: 16px;
     font-weight: 600;
 }
+
 
 /* */
 
@@ -1632,5 +1633,52 @@
 .ks-button-bold .ks-button-label {
     font-weight: bold;
 }
+
+/* material  button */
+.ks-button-material_bpsp.ks-button {
+    background-color: #0066CC;
+    height: 40px;
+    border-radius: 7px;
+    width: 130px;
+}
+
+.ks-button-material_bpsp .ks-button-label {
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 2px;
+    margin-left: 6px;
+}
+
+.ks-button-material_bpsp .ks-button-icon {
+    color: #fff;
+    font-size: 16px;
+    margin-right: 2px;
+    margin-left: 4px;
+}
+
+.ks-button-material_bpsp:hover {
+    background-color: #004C99
+}
+
+.ks-button-material_bpsp:active {
+    background-color: #004C99;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
