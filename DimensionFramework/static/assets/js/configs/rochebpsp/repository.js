@@ -1472,7 +1472,7 @@ app.repository = {
     },
 
 
-        rocheBPSPMaterialGridRow2Cell1SegmentedControl: {
+    rocheBPSPMaterialGridRow2Cell1SegmentedControl: {
         state: (db) => {
             let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
                 sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
@@ -1485,8 +1485,7 @@ app.repository = {
     },
 
 
-
-            rocheBPSPAddMaterialGridRow2Cell1SegmentedControl: {
+    rocheBPSPAddMaterialGridRow2Cell1SegmentedControl: {
         state: (db) => {
             let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
                 sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
@@ -1499,9 +1498,7 @@ app.repository = {
     },
 
 
-
-
-        rocheBPSPAddMaterialGridRow1Cell3Button: {
+    rocheBPSPAddMaterialGridRow1Cell3Button: {
         init:
             {
                 url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
@@ -1523,6 +1520,131 @@ app.repository = {
     },
 
 
+    rocheBPSPipPlanningGridRow1Cell9Button: {
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
+                type: 'POST',
+                body: (db) => `{"MDX":"SELECT ({[}Clients].[${db.activeUser}]}*{[zSYS Analogic User Parameter Measure].[FullName]})ON COLUMNS FROM [zSYS Analogic User Parameter]"}`,
+                parsingControl: {
+                    type: 'object',
+                    query:
+                        {
+                            label: (r, x) => {
+                                app.widgetValue['activeUserName'] = app.utils.toTitleCase(r.Cells[0].Value);
+                                return app.utils.toTitleCase(r.Cells[0].Value);
+                            }
+                        }
+                }
+
+            },
+
+    },
+
+
+    rocheBPSPipPlanningYearSegmentedControl: {
+        state: (db) => {
+            let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
+                sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
+            return [
+                {label: s, selected: 'Y0' === sr},
+                {label: ++s, selected: 'Y1' === sr},
+                {label: ++s, selected: 'Y2' === sr},
+                {label: ++s, selected: 'Y3' === sr},
+            ];
+        },
+    },
+
+
+    rocheBPSPipPlanningGridRow1Cell2DropBox: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT 
+                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]} 
+                    ON COLUMNS , 
+                     {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}  
+                    ON ROWS 
+                    FROM [}ElementAttributes_Companies] 
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [];
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    'name': r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: false
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
+    },
+
+
+    rocheBPSPipPlanningGridRow2Cell1SegmentedControl: {
+        state: (db) => {
+            let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
+                sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
+            return [
+                {label: 'Cash Sales'},
+                {label: 'Lease'},
+                {label: 'Return'},
+            ];
+        },
+
+    },
+
+
+    rocheBPSPipPlanningGridRow2Cell2SegmentedControl: {
+        state: (db) => {
+            let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
+                sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
+            return [
+                {label: 'New'},
+                {label: 'Used'},
+            ];
+        },
+
+    },
+
+    rocheBPSPipPlanningGridRow1Cell3DropBox: {
+        initCondition: (db) => {
+            return v('rocheBPSPipPlanningGridRow1Cell2DropBox.value');
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT 
+                        {[}ElementAttributes_Receivers].[}ElementAttributes_Receivers].[Member description]} 
+                     ON COLUMNS , 
+                        {Tm1SubsetToset([Receivers].[Receivers],'zUI ${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key')} Plan Receivers')}
+                     ON ROWS
+                    FROM [}ElementAttributes_Receivers] 
+
+            "}`,
+            parsingControl: {
+                type: 'list',
+                query:
+                    (r, x) => {
+                        return {name: r.Cells[x].FormattedValue, on: false};
+                    }
+            }
+        }
+    },
 
 
 };
