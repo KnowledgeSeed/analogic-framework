@@ -9,11 +9,14 @@ QB.loadData = (argument, type, useDefaultData = false, path = 'init') => {
     }
 
     let conditionPath = path + 'Condition', defaultPath = path + 'Default', r = Repository[argument];
+    if (r && r.reference) {
+        r = Repository[r.reference];
+    }
 
     if (r && r[path]) {
-        if (r[conditionPath] && !r[conditionPath](WidgetValue)) {
+        if (r[conditionPath] && !r[conditionPath](WidgetValue, argument)) {
             if (r[defaultPath]) {
-                return QB.loadFromWidgetValue(r[defaultPath]);
+                return QB.loadFromWidgetValue(r[defaultPath], argument);
             }
 
             return Auth.loadDefault(type);
@@ -29,16 +32,16 @@ QB.loadData = (argument, type, useDefaultData = false, path = 'init') => {
     if (r && r.state) {
         if (r[conditionPath] && !r[conditionPath](WidgetValue)) {
             if (r[defaultPath]) {
-                return QB.loadFromWidgetValue(r[defaultPath]);
+                return QB.loadFromWidgetValue(r[defaultPath], argument);
             }
 
             return Auth.loadDefault(type);
         }
         if (Array.isArray(r.state)) {
-            return QB.loadFromWidgetValues(r.state);
+            return QB.loadFromWidgetValues(r.state, argument);
         }
 
-        return QB.loadFromWidgetValue(r.state);
+        return QB.loadFromWidgetValue(r.state, argument);
     }
 
     return $.Deferred().resolve('');
@@ -71,19 +74,19 @@ QB.loadComment = repositoryId => {
     return $.Deferred().resolve('');
 };
 
-QB.loadFromWidgetValue = arg => {
+QB.loadFromWidgetValue = (arg, repositoryId) => {
     if (arg.execute) {
-        return $.Deferred().resolve(arg.execute(WidgetValue));
+        return $.Deferred().resolve(arg.execute(WidgetValue, repositoryId));
     }
 
-    return $.Deferred().resolve(arg(WidgetValue));//TODO remove, back compatibility
+    return $.Deferred().resolve(arg(WidgetValue, repositoryId));//TODO remove, back compatibility
 };
 
-QB.loadFromWidgetValues = arg => {
+QB.loadFromWidgetValues = (arg, repositoryId) => {
     let p, deffered = [];
 
     for (p of arg) {
-        deffered.push($.Deferred().resolve(p.execute(WidgetValue)));
+        deffered.push($.Deferred().resolve(p.execute(WidgetValue, repositoryId)));
     }
 
     return $.when.apply($, deffered).then(function (...results) {
@@ -157,16 +160,18 @@ QB.executeMDXs = (repositoryId, path) => {
 QB.executeMDX = (repositoryId, path) => {
     let r = Repository[repositoryId], p = r[path];
 
-    if (p.execute) {
-        return QB.loadFromWidgetValue(p);
-    }
-
-    if (p.reference) {
-        r = Repository[p.ref];
+    if (r.reference) {
+        r = Repository[r.reference];
         p = r[path];
     }
 
-    let u = QB.getUrl(p), body = p.body(WidgetValue);
+    if (p && p.execute) {
+        return QB.loadFromWidgetValue(p, repositoryId);
+    }
+
+
+
+    let u = QB.getUrl(p), body = p.body(WidgetValue, repositoryId);
 
     if (p.server) {//Todo ref!
         let mm = QB.getServerSideUrlAndBody(u.url, body, repositoryId, path);
