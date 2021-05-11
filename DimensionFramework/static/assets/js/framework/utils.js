@@ -183,6 +183,14 @@ const Utils = {
         let row = Utils.getGridTableCurrentRow(widgetId);
         return row !== false ? row[columnIndex] : false;
     },
+    setAndGetGridTableSystemValueByCurrentRow(widgetId, columnIndex, systemValue, cellProperty) {
+        let c = Utils.getGridTableCell(widgetId, columnIndex);
+        if(c !== false){
+            WidgetValue[systemValue] = c[cellProperty];
+            return c[cellProperty];
+        }
+        return false;
+    },
     getDropBoxSelectedItemAttribute(widgetId, attributeName) {
         let selectedValue = WidgetValue[widgetId].value;
         let item = WidgetValue[widgetId].items.find(e => e.name === selectedValue);
