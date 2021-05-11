@@ -307,7 +307,7 @@
 }
 .ks-textbox-searchbox .ks-textbox-icon::before{
     font-family: 'analogic' !important;
-    content: "\e933";
+    content: "\e934";
     color: #000;
     cursor: pointer;
     font-size: 20px;

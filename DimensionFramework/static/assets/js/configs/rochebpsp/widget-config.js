@@ -4226,7 +4226,7 @@ app.widgetConfig = {
                                             label: '',
                                             action: '',
                                             width: '145',
-                                            icon: 'icon-x-rectangle',
+                                            icon: 'icon-company-settings',
                                             fontColor: 'white',
                                             skin: 'rochemain',
                                             height: '145'
@@ -4251,7 +4251,7 @@ app.widgetConfig = {
                                             label: '',
                                             action: '',
                                             width: '145',
-                                            icon: 'icon-x-rectangle',
+                                            icon: 'icon-security-setup',
                                             fontColor: 'white',
                                             skin: 'rochemain',
                                             height: '145'
@@ -4276,7 +4276,7 @@ app.widgetConfig = {
                                             label: '',
                                             action: '',
                                             width: '145',
-                                            icon: 'icon-x-rectangle',
+                                            icon: 'icon-material-maintenance',
                                             fontColor: 'white',
                                             skin: 'rochemain',
                                             height: '145'
@@ -4869,7 +4869,7 @@ app.widgetConfig = {
                                             id: 'rocheBPSPMaterialGridRow4Cell2Button',
                                             type: ButtonWidget,
                                             label: 'Add Dummy',
-                                            icon: 'icon-plus-circle',
+                                            icon: 'icon-plus-circle-outline',
                                             action: '',
                                             width: '130',
                                             marginTop: '20',
