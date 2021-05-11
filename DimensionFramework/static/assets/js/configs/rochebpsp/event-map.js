@@ -60,6 +60,8 @@ app.eventMap = {
             argument: 'rocheBPSPMain'
         }
     ],
+
+    //start products
     'launch.rocheBPSPProductsGridTableMonthly_row_0': [
         {
             action: app.fn.conditionalGridTablePopup,
@@ -181,7 +183,7 @@ app.eventMap = {
     'launch.rocheBPSPProductsCheckoutPopupCheckoutButton.finished': [
         {
             action: app.fn.checkTIResponseStatus,
-            argument: [app.fn.openPage, 'rocheBPSPProductsCheckout', app.fn.openPage, 'rocheBPSPProductsCheckout']  //app.fn.openPopup, 'rocheBPSPProductsCheckoutWarning']
+            argument: [app.fn.openPage, 'rocheBPSPProductsCheckout', app.fn.openPopup, 'rocheBPSPProductsCheckoutWarning']
         }
     ],
     'launch.rocheBPSPProductsCheckoutWarningCancel': [
@@ -191,6 +193,12 @@ app.eventMap = {
         }
     ],
     'launch.rocheBPSPProductsNoCheckoutPopupCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsNoCheckoutPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsNoCheckoutPopupFocusButton': [
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPProductsNoCheckoutPopup'
@@ -264,6 +272,8 @@ app.eventMap = {
             argument: 'rocheBPSPProductsProductSelectorShortcutPopup'
         }
     ],
+
+    //end products
 
     //rocheBPSPProductsCheckout
     'launch.rocheBPSPProductsCheckoutGridRow2Cell1Button': [

@@ -103,7 +103,7 @@ app.repository = {
         launch:
             {
                 execute: (db) => {
-                    WidgetValue['systemValueFocusedProduct'] = Utils.getGridTableCell('rocheBPSPProductsGridTableYearly', 1).title;
+                    WidgetValue['systemValueFocusedProduct'] = Utils.getGridTableCell( WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly', 1).title;
                 }
                 /*  url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
                   type: 'POST',
@@ -118,7 +118,7 @@ app.repository = {
         launch:
             {
                 execute: (db) => {
-                    WidgetValue['systemValueFocusedProduct'] = Utils.getGridTableCell('rocheBPSPProductsGridTableYearly', 1).title;
+                    WidgetValue['systemValueFocusedProduct'] = Utils.getGridTableCell( WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly', 1).title;
                 }
             }
     },
@@ -131,7 +131,7 @@ app.repository = {
                 body: (db) => `{
                         "Parameters": [
                                 {"Name": "pUserID", "Value": "${db.activeUserName}"},
-                                {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPProductsGridTableYearly', 1).title}"},
+                                {"Name": "pProduct", "Value": "${Utils.setAndGetGridTableSystemValueByCurrentRow( WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly', 1, 'systemValueCheckoutProduct', 'title')}"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}"},
                                 {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"}
@@ -340,8 +340,8 @@ app.repository = {
         },
         state: (db) => {
             let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly',
-                u = Utils.getGridTableCell(g, 0).checkoutUser;
-            return {title: `by<b>${u}</b>since<b>2021.04.10 11:22</b>`};
+                c = Utils.getGridTableCell(g, 0), u = c.checkoutUser, d = c.checkedOutAt;
+            return {title: `by<b>${u}</b>since<b>${d}</b>`};
         }
     },
 
@@ -516,62 +516,63 @@ app.repository = {
             {
                 "MDX" : 
                     "With 
-                         Set DefaultProductRows AS
-                         {TM1DRILLDOWNMEMBER({[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[PL1]}, ALL, RECURSIVE )}
-                         Set FocusedOnProductRows AS
-                         {TM1DRILLDOWNMEMBER({[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[${db.systemValueFocusedProduct}]}, ALL, RECURSIVE )}
-                         MEMBER [Products].[BPSP Budget].[ProductIsFocused] AS 
-                         IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
-                         Set DefaultColumnSelection AS
-                         {StrToSet([Control].([Measures Control].[Measures Control].[UI ProuctsGridTable DefaultColumnsTuple ${db.systemValueGlobalSegmentedControlRelativeYear}],[Value Type].[Value Type].[String]))}
-                         MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[DUMMY] as 1
-                         Set PaddingColumns AS
-                         {{TM1SubsetToSet([Periods].[Periods],'zUI Padding Years')}*{[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[DUMMY]}}
-                        Set WidgetSettingByUser AS
-                        {StrToSet('{'+[zSYS Analogic UI User Data].([}Clients].[}Clients].[${db.activeUser}],[zSYS Analogic UI Widget].[zSYS Analogic UI Widget].[rocheBPSPProductsGridTableYearly],[zSYS Analogic UI User Data Measure].[zSYS Analogic UI User Data Measure].[sColumnSelectorTuple])+'}')}
-                        MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ColumnSelectionByUser] AS
-                        IIF(Count(WidgetSettingByUser)>0,'Head(UNION({WidgetSettingByUser},{PaddingColumns},All),10)','{}')
-                        Set ColumnSelectionByUser AS
-                        {StrToSet([LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ColumnSelectionByUser])}
-                         MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductName] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
-                         MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductCaption] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
-                         MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductLevel] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
-                         MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[HasComment] as
-                            [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Comment Flag])
-                         MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutUser] as
-                            [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedBy])
-                         Set FixColumns AS
-                         {([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductName]),
-                         ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductCaption]),
-                         ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductLevel]),
-                         ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag]),
-                         ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutUser])}
-                         Set Comment AS
-                            {([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[HasComment])}
-                    SELECT 
-                      {UNION(HEAD(UNION(UNION({FixColumns},{ColumnSelectionByUser},All),{DefaultColumnSelection},All),15),{Comment},All)}
-                      PROPERTIES [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Caption] ,[Periods].[Periods].[Caption]  ON COLUMNS , 
-                      {StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
-                      PROPERTIES [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption] ON ROWS 
-                    FROM [Sales Plan by Product] 
-                    WHERE 
-                      (
-                       [Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
-                       [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}],
-                       [Receivers].[Receivers].[${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}],
-                       [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value]
-                      )"
+                             Set DefaultProductRows AS
+                             {TM1DRILLDOWNMEMBER({[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[PL1]}, ALL, RECURSIVE )}
+                             Set FocusedOnProductRows AS
+                             {TM1DRILLDOWNMEMBER({[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[${db.systemValueFocusedProduct}]}, ALL, RECURSIVE )}
+                             MEMBER [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused] AS 
+                             IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
+                             MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[DUMMY] as 1
+                             Set PaddingColumns AS
+                             {{TM1SubsetToSet([Periods].[Periods],'zUI Padding Years')}*{[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[DUMMY]}}
+                             Set DefaultColumnSelection AS
+                             {HEAD(UNION({StrToSet([Control].([Measures Control].[Measures Control].[UI ProuctsGridTable DefaultColumnsTuple ${db.systemValueGlobalSegmentedControlRelativeYear}],[Value Type].[Value Type].[String]))},{PaddingColumns},All),10)}
+                             Set ColumnSelectionByUser AS 
+                             Head(UNION({StrToSet('{'+[zSYS Analogic UI User Data].([}Clients].[}Clients].[${db.activeUser}],[zSYS Analogic UI Widget].[zSYS Analogic UI Widget].[rocheBPSPProductsGridTableYearly],[zSYS Analogic UI User Data Measure].[zSYS Analogic UI User Data Measure].[sColumnSelectorTuple ${db.systemValueGlobalSegmentedControlRelativeYear}])+'}')},{PaddingColumns},All),10)
+                             MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductName] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
+                             MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductCaption] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
+                             MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductLevel] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                             MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[HasComment] as
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Comment Flag])
+                             MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutDateTime] as 
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime])
+                             MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutUser] as 
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedBy])
+                             Set FixColumns AS
+                             {([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductName]),
+                             ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductCaption]),
+                             ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductLevel]),
+                             ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag]),
+                             ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutUser]),
+                             ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutDateTime])}
+                             Set Comment AS
+                             {([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[HasComment])}
+                        SELECT 
+                          {UNION(HEAD(UNION(UNION({FixColumns},{ColumnSelectionByUser},All),{DefaultColumnSelection},All),16),{Comment},All)}
+                          PROPERTIES [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Caption] ,[Periods].[Periods].[Caption]  ON COLUMNS , 
+                          {StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
+                          PROPERTIES [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption] ON ROWS 
+                        FROM [Sales Plan by Product] 
+                        WHERE 
+                          (
+                           [Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
+                           [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}],
+                           [Receivers].[Receivers].[${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}],
+                           [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value]
+                          )
+                        "
             }
        `,
             parsingControl: {
                 type: 'matrix',
-                length: 16,
+                length: 17,
                 query: [
                     (r, x) => {
                         let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue;
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'];
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = x;
                         pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
@@ -584,9 +585,10 @@ app.repository = {
                             isLocked: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'],
                             isChildrenLocked: WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'],
                             checkoutUser: checkoutUser,
+                            checkedOutAt: r.Cells[x + 5].FormattedValue,
                             members: r.Cells[x].Members,
                             productLevel: pl,
-                            hasComment: r.Cells[x + 15].FormattedValue !== ''
+                            hasComment: r.Cells[x + 16].FormattedValue !== ''
                         };
                         if (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked']) {
                             result['iconColor'] = '#D12D4A';
@@ -594,108 +596,121 @@ app.repository = {
                         return result;
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 1].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
-                            members: r.Cells[x + 1].Members
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 2].FormattedValue.replace('PL', ''),
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue.replace('PL', ''),
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
-                            members: r.Cells[x + 2].Members
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 4;
                         return {
-                            title: r.Cells[x + 5].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: r.Cells[x + 5].Members[6].Name !== 'DUMMY',
-                            members: r.Cells[x + 5].Members
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 6].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: r.Cells[x + 6].Members[6].Name !== 'DUMMY',
-                            members: r.Cells[x + 6].Members
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 7].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: r.Cells[x + 7].Members[6].Name !== 'DUMMY',
-                            members: r.Cells[x + 7].Members
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 8].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: r.Cells[x + 8].Members[6].Name !== 'DUMMY',
-                            members: r.Cells[x + 8].Members
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 9].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: r.Cells[x + 9].Members[6].Name !== 'DUMMY',
-                            members: r.Cells[x + 9].Members
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 10].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: r.Cells[x + 10].Members[6].Name !== 'DUMMY',
-                            members: r.Cells[x + 10].Members
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 11].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: r.Cells[x + 11].Members[6].Name !== 'DUMMY',
-                            members: r.Cells[x + 11].Members
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 12].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: r.Cells[x + 12].Members[6].Name !== 'DUMMY',
-                            members: r.Cells[x + 12].Members
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 13].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: r.Cells[x + 13].Members[6].Name !== 'DUMMY',
-                            members: r.Cells[x + 13].Members
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 14].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: r.Cells[x + 14].Members[6].Name !== 'DUMMY',
-                            members: r.Cells[x + 14].Members
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
-                        let cellValue = r.Cells[x + 15].FormattedValue;
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
+                        let cellValue = r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue;
                         return {
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
                             icon: cellValue === '' ? 'icon-comment-off' : 'icon-comment-on',
                             iconColor: cellValue === '' ? '#C5C6C6' : '#0066cc',
-                            members: r.Cells[x + 15].Members,
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members,
                             hasComment: cellValue !== ''
                         };
                     },
@@ -746,13 +761,16 @@ app.repository = {
                                     [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Comment Flag])
                              MEMBER [Periods].[Periods].[zUI CheckOutUser] as 
                                     [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedBy])
+                             MEMBER [Periods].[Periods].[zUI CheckOutDateTime] as 
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime])
                         -- Create the first 5 column with information
                              Set FixColumns AS
                              {[Periods].[Periods].[ProductName],
                               [Periods].[Periods].[ProductCaption],
                               [Periods].[Periods].[ProductLevel],
                               [Periods].[Periods].[zUI CheckOutFlag],
-                              [Periods].[Periods].[zUI CheckOutUser]}
+                              [Periods].[Periods].[zUI CheckOutUser],
+                              [Periods].[Periods].[zUI CheckOutDateTime]}
                              Set Comment AS
                              {([Periods].[Periods].[HasComment])}
                         -- query
@@ -777,7 +795,7 @@ app.repository = {
        `,
             parsingControl: {
                 type: 'matrix',
-                length: 19,
+                length: 20,
                 query: [
                     (r, x) => {
                         let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue;
@@ -798,9 +816,10 @@ app.repository = {
                             isLocked: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'],
                             isChildrenLocked: WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'],
                             checkoutUser: checkoutUser,
+                            checkedOutAt: r.Cells[x + 5].FormattedValue,
                             members: r.Cells[x].Members,
                             productLevel: pl,
-                            hasComment: r.Cells[x + 18].FormattedValue === ''
+                            hasComment: r.Cells[x + 19].FormattedValue === ''
                         };
                         if (WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsMainLocked']) {
                             result['iconColor'] = '#D12D4A';
@@ -826,7 +845,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 3;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 4;
                         return {
                             title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : 'readonly_bpsp',
@@ -1026,113 +1045,259 @@ app.repository = {
             },
     },
 
-    rocheBPSPProductsCheckoutCheckoutPopupFocusButton: {
-        launch:
-            {
-                url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
-                type: 'POST',
-                body: (db) => `{
-                        "Parameters": [
-                        ]
-                    }`
-            },
+//start product checkout
+    rocheBPSPProductsCheckoutYearSegmentedControl: {
+        state: (db) => {
+            let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
+                sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
+            return [
+                {label: s, selected: 'Y0' === sr},
+                {label: ++s, selected: 'Y1' === sr},
+                {label: ++s, selected: 'Y2' === sr},
+                {label: ++s, selected: 'Y3' === sr},
+            ];
+        }
     },
 
-    rocheBPSPProductsCheckoutCheckoutPopupCheckoutButton: {
-        launch:
-            {
-                url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable Checkout by User')/tm1.ExecuteWithReturn`,
-                type: 'POST',
-                body: (db) => `{
-                        "Parameters": [
-                        ]
-                    }`
-            },
+    rocheBPSPProductsCheckoutPeriodUnitSegmentedControl: {
+        switch: {
+            execute: (db) => {
+                WidgetValue['systemValueSegmentedControlPeriodUnit'] = v('rocheBPSPProductsCheckoutPeriodUnitSegmentedControl.selected');
+            }
+        }
     },
 
 
-    rocheBPSPProductsCheckoutGridRow1Cell3DropBox: {
+    defaultFunctionsForCheckoutGridTableYearlyHeader: {
+        initCondition: () => {
+            let l = v('rocheBPSPProductsCheckoutGridTableYearly.cellData.length');
+            return l !== false && l !== 0;
+        },
+        executeForTextFirstCol: (columnIndex) => {
+            let cell = v('rocheBPSPProductsCheckoutGridTableYearly.cellData')[0][columnIndex];
+            return {title: cell.members[5].Name, body: cell.members[6].Name};
+        },
+        executeForText: (columnIndex) => {
+            let cells = v('rocheBPSPProductsCheckoutGridTableYearly.cellData'), cell = cells[0][columnIndex],
+                previousCell = cells[0][columnIndex - 1];
+            return {
+                title: cell.members[5].Name === previousCell.members[5].Name ? '' : cell.members[5].Name,
+                body: cell.members[6].Name
+            };
+        },
+        executeForCell: (columnIndex) => {
+            let cells = v('rocheBPSPProductsCheckoutGridTableYearly.cellData'), cell = cells[0][columnIndex],
+                previousCell = cells[0][columnIndex - 1];
+            return {
+                cellHeaderSkin: cell.members[5].Name === previousCell.members[5].Name ? '' : 'long_border_bpsp'
+            };
+        }
+    },
+
+    rocheBPSPProductsCheckoutForGridTableYearlyHeaderCellTemplate: {
+        initCondition: () => {
+            return Repository['defaultFunctionsForCheckoutGridTableYearlyHeader'].initCondition();
+        },
+        initDefault: () => {
+            return {};
+        },
+        init: {
+            execute: (db, widgetId) => {
+                let index = parseInt(widgetId.split('-')[1]);
+                return Repository['defaultFunctionsForCheckoutGridTableYearlyHeader'].executeForCell(index - 1);
+            }
+        }
+    },
+
+    rocheBPSPProductsCheckoutForGridTableYearlyHeaderTextTemplate: {
+        initCondition: () => {
+            return Repository['defaultFunctionsForCheckoutGridTableYearlyHeader'].initCondition();
+        },
+        initDefault: () => {
+            return {};
+        },
+        init: {
+            execute: (db, widgetId) => {
+                let index = parseInt(widgetId.split('-')[1]);
+                return Repository['defaultFunctionsForCheckoutGridTableYearlyHeader'].executeForText(index - 1);
+            }
+        }
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderText-04': {
         initCondition: (db) => {
-            return v('rocheBPSPProductsCheckoutGridRow1Cell2DropBox.value');
+            return Repository['defaultFunctionsForCheckoutGridTableYearlyHeader'].initCondition();
         },
         initDefault: (db) => {
-            return [];
+            return {};
         },
-        state:
-            (db) => {
-                return [{name: 'DK - Denmark', on: true}, {name: 'NL - Netherlands', on: false}, {
-                    name: 'BE - Belgium',
-                    on: false
-                }];
-            },
+        init: {
+            execute: (db) => {
+                return Repository['defaultFunctionsForCheckoutGridTableYearlyHeader'].executeForTextFirstCol(3);
+            }
+        }
     },
 
-    rocheBPSPProductsCheckoutPageInit: {
-        state:
-            (db) => {
-                //temp:
-                WidgetValue['systemValueGlobalStartingPlanYear'] = 2020;
-                WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';
-                WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';
-            },
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderCell-05': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderCellTemplate'
     },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderText-05': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderTextTemplate'
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderCell-06': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderCellTemplate'
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderText-06': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderTextTemplate'
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderCell-07': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderCellTemplate'
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderText-07': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderTextTemplate'
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderCell-08': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderCellTemplate'
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderText-08': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderTextTemplate'
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderCell-09': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderCellTemplate'
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderText-09': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderTextTemplate'
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderCell-10': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderCellTemplate'
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderText-10': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderTextTemplate'
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderCell-11': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderCellTemplate'
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderText-11': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderTextTemplate'
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderCell-12': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderCellTemplate'
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderText-12': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderTextTemplate'
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderCell-13': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderCellTemplate'
+    },
+
+    'rocheBPSPProductsCheckoutGridTableYearlyHeaderText-13': {
+        reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderTextTemplate'
+    },
+
 
     rocheBPSPProductsCheckoutGridTableYearly: {
         initCondition: (db) => {
-            return v('rocheBPSPProductsColumnSelectorPopupDropBox') !== false;
+            return WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly';
         },
         initDefault: (db) => {
             return [];
         },
         init: {
-            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes))`,
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
             type: 'POST',
             body: (db) => `
             {
                 "MDX" : 
-                    "SELECT
-                   {([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag]),
-                    ([Periods].[Periods].[2019],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Rexis Invoice]),
-                    ([Periods].[Periods].[2020],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Rexis Invoice]),
-                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Rexis Invoice]),
-                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Plan Reference]),
-                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Customer Sales Plan]),
-                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Marketing Sales Plan Adj]),
-                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan]),
-                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Growth BW Invoice]),
-                    ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Growth Final Sales Plan])
-                    }
-                  PROPERTIES [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Caption] ,[Periods].[Periods].[Caption]  ON COLUMNS ,
-                   {TM1SubsetToSet([Products].[BPSP Budget], \\"zSYS UI rocheBPSPProductsGridTable Rows - Budget\\")}
-                  PROPERTIES [Products].[BPSP Budget].[BPSP Budget Caption] ON ROWS
-                FROM [Sales Plan by Product]
-                WHERE
-                  (
-                   [Versions].[Versions].[Live],
-                   [Companies].[Companies].[1391],
-                   [Receivers].[Receivers].[PL],
-                   [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value]
-                  )"
+                    "With 
+                             Set DefaultProductRows AS
+                             {TM1DRILLDOWNMEMBER({[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[PL1]}, ALL, RECURSIVE )}
+                             Set FocusedOnProductRows AS
+                             {TM1DRILLDOWNMEMBER({[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[${db.systemValueCheckoutProduct}]}, ALL, RECURSIVE )}
+                             MEMBER [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused] AS 
+                             IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
+                             MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[DUMMY] as 1
+                             Set PaddingColumns AS
+                             {{TM1SubsetToSet([Periods].[Periods],'zUI Padding Years')}*{[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[DUMMY]}}
+                             Set DefaultColumnSelection AS
+                             {HEAD(UNION({StrToSet([Control].([Measures Control].[Measures Control].[UI ProuctsGridTable DefaultColumnsTuple ${db.systemValueGlobalSegmentedControlRelativeYear}],[Value Type].[Value Type].[String]))},{PaddingColumns},All),10)}
+                             Set ColumnSelectionByUser AS 
+                             Head(UNION({StrToSet('{'+[zSYS Analogic UI User Data].([}Clients].[}Clients].[${db.activeUser}],[zSYS Analogic UI Widget].[zSYS Analogic UI Widget].[rocheBPSPProductsGridTableYearly],[zSYS Analogic UI User Data Measure].[zSYS Analogic UI User Data Measure].[sColumnSelectorTuple ${db.systemValueGlobalSegmentedControlRelativeYear}])+'}')},{PaddingColumns},All),10)
+                             MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductName] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
+                             MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductCaption] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
+                             MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductLevel] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                             MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[HasComment] as
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Comment Flag])
+                             MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutDateTime] as 
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime])
+                             MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutUser] as 
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedBy])
+                             Set FixColumns AS
+                             {([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductName]),
+                             ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductCaption]),
+                             ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductLevel]),
+                             ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag]),
+                             ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutUser]),
+                             ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutDateTime])}
+                             Set Comment AS
+                             {([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[HasComment])}
+                        SELECT 
+                          {UNION(HEAD(UNION(UNION({FixColumns},{ColumnSelectionByUser},All),{DefaultColumnSelection},All),16),{Comment},All)}
+                          PROPERTIES [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Caption] ,[Periods].[Periods].[Caption]  ON COLUMNS , 
+                          {StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
+                          PROPERTIES [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption] ON ROWS 
+                        FROM [Sales Plan by Product] 
+                        WHERE 
+                          (
+                           [Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
+                           [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}],
+                           [Receivers].[Receivers].[${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}],
+                           [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value]
+                          )
+                        "
             }
        `,
             parsingControl: {
                 type: 'matrix',
-                length: 10,
+                length: 17,
                 query: [
                     (r, x) => {
-                        let result;
-                        WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] =  /*Utils.parseNumber(r.Cells[x].FormattedValue) > 0 ||*/ r.Cells[x].Members[4].Attributes['Description'].indexOf('CS Coagulation') !== -1 || r.Cells[x].Members[4].Attributes['Description'].indexOf('CS COAGULATION') !== -1;
-                        WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsMainLocked'] = WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] && r.Cells[x].Members[4].Attributes['BPSP Budget Product Level - Name'].replace('PL', '') == '4';
-                        WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearIsChildrenLocked'] = r.Cells[x].Members[4].Attributes['Description'].indexOf('CORE LAB') !== -1;
+                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue;
+                        WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
+                        WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsMainLocked'];
+                        WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = x;
+                        pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
-                            label: r.Cells[x].Members[4].Attributes['Description'],
-                            skin: 'gridtable_checkout_hierarchy_bpsp_' + r.Cells[x].Members[4].Attributes['BPSP Budget Product Level - Name'].replace('a', '') + (WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? '_locked' : ''),
+                            label: r.Cells[x].FormattedValue,
+                            skin: 'gridtable_checkout_hierarchy_bpsp_' + pl + (WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? '_locked' : ''),
                             cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
                             icon: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
                             isMainLocked: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsMainLocked'],
+                            isLockedByMe: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] && WidgetValue.activeUserName.indexOf(checkoutUser) !== -1,
                             isLocked: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'],
-                            isChildrenLocked: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearIsChildrenLocked']
+                            isChildrenLocked: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearIsChildrenLocked'],
+                            checkoutUser: checkoutUser,
+                            checkedOutAt: r.Cells[x + 5].FormattedValue,
+                            members: r.Cells[x].Members,
+                            productLevel: pl,
+                            hasComment: r.Cells[x + 16].FormattedValue !== ''
                         };
                         if (WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsMainLocked']) {
                             result['iconColor'] = '#D12D4A';
@@ -1140,92 +1305,122 @@ app.repository = {
                         return result;
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x].Members[4].Name,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : '',
-                            cellVisible: true
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x].Members[4].Attributes['BPSP Budget Product Level - Name'].replace('PL', ''),
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue.replace('PL', ''),
                             cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : '',
-                            cellVisible: true
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 4;
                         return {
-                            title: r.Cells[x + 1].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 2].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 3].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 4].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 5].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 6].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: 0,//??
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
-                        }
-                    },
-                    (r, x) => {
-                        return {
-                            title: r.Cells[x + 7].FormattedValue,
-                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 8].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
-                            title: r.Cells[x + 9].FormattedValue,
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
                     (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
+                        let cellValue = r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue;
                         return {
                             cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearlyIsLocked'] ? 'locked' : '',
+                            icon: cellValue === '' ? 'icon-comment-off' : 'icon-comment-on',
+                            iconColor: cellValue === '' ? '#C5C6C6' : '#0066cc',
+                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members,
+                            hasComment: cellValue !== ''
                         };
                     },
                     (r, x) => {
@@ -1237,49 +1432,297 @@ app.repository = {
             }
         }
     },
-    rocheBPSPProductsCheckoutColumnSelectorPopupDropBox: {
-        state: (db) => {
-            return [
-                {name: '2019 Actuals', on: 'true'},
-                {name: '2020 Actuals', on: 'true'},
-                {name: '2021 YTD Actuals', on: 'true'},
-                {name: '2021 Plan', on: 'true'},
-                {name: '2021 Customer Plan Total', on: 'true'},
-                {name: '2021 Marketing Adjustment', on: 'true'},
-                {name: '2021 Total Plan', on: 'true'},
-                {name: '2021 Final  Plan', on: 'true'},
-                {name: 'Growth rate:  2020 Actual / 2021 Plan', on: 'true'},
-                {name: 'Growth rate:  2021 Actual / 2022 Plan', on: 'true'},
-            ];
+    rocheBPSPProductsCheckoutGridTableMonthly: {
+        initCondition: (db) => {
+            return WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Monthly';
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+            type: 'POST',
+            body: (db) => `
+            {
+                "MDX" : 
+                    "With
+                        --Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion
+                             Set DefaultProductRows AS
+                             {TM1DRILLDOWNMEMBER({[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[PL1]}, ALL, RECURSIVE )}
+                        --Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion and systemValueGlobalCompanyFocusedElement
+                             Set FocusedOnProductRows AS
+                             {TM1DRILLDOWNMEMBER({[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[${db.systemValueCheckoutProduct}]}, ALL, RECURSIVE )}
+                        --Decide which rowSet to use
+                             MEMBER [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused] AS 
+                             IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
+                        -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
+                             MEMBER [Periods].[Periods].[ProductName] as 
+                                    [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
+                             MEMBER [Periods].[Periods].[ProductCaption] as 
+                                    [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
+                             MEMBER [Periods].[Periods].[ProductLevel] as 
+                                    [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                             MEMBER [Periods].[Periods].[zUI CheckOutFlag] as
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value])
+                             MEMBER [Periods].[Periods].[HasComment] as
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Comment Flag])
+                             MEMBER [Periods].[Periods].[zUI CheckOutUser] as 
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedBy])
+                             MEMBER [Periods].[Periods].[zUI CheckOutDateTime] as 
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime])
+                        -- Create the first 5 column with information
+                             Set FixColumns AS
+                             {[Periods].[Periods].[ProductName],
+                              [Periods].[Periods].[ProductCaption],
+                              [Periods].[Periods].[ProductLevel],
+                              [Periods].[Periods].[zUI CheckOutFlag],
+                              [Periods].[Periods].[zUI CheckOutUser],
+                              [Periods].[Periods].[zUI CheckOutDateTime]}
+                             Set Comment AS
+                             {([Periods].[Periods].[HasComment])}
+                        -- query
+                        SELECT 
+                        --Columns
+                           {Union(Union(FixColumns,{TM1SubsetToSet([Periods].[Periods], \\"zUI ${db.systemValueGlobalSegmentedControlRelativeYear} Product Monthly Input\\")},All),{Comment},All)}
+                           PROPERTIES [Periods].[Periods].[Caption]ON COLUMNS , 
+                        -- rows
+                          {StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
+                          PROPERTIES [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption] ON ROWS 
+                        FROM [Sales Plan by Product] 
+                        WHERE 
+                          (
+                           [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
+                       [Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
+                       [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}],
+                       [Receivers].[Receivers].[${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}],
+                           [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value]
+                          )
+                        "
+            }
+       `,
+            parsingControl: {
+                type: 'matrix',
+                length: 20,
+                query: [
+                    (r, x) => {
+                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue;
+                        WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
+                        WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsMainLocked'];
+                        WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = x;
+
+                        pl = r.Cells[x + 2].FormattedValue.replace('a', '');
+                        result = {
+                            label: r.Cells[x].FormattedValue,
+                            skin: 'gridtable_hierarchy_bpsp_' + pl + (WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? '_locked' : ''),
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellVisible: true,
+                            icon: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
+                            isMainLocked: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsMainLocked'],
+                            isLockedByMe: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] && WidgetValue.activeUserName.indexOf(checkoutUser) !== -1,
+                            isLocked: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'],
+                            isChildrenLocked: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableYearIsChildrenLocked'],
+                            checkoutUser: checkoutUser,
+                            checkedOutAt: r.Cells[x + 5].FormattedValue,
+                            members: r.Cells[x].Members,
+                            productLevel: pl,
+                            hasComment: r.Cells[x + 19].FormattedValue === ''
+                        };
+                        if (WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsMainLocked']) {
+                            result['iconColor'] = '#D12D4A';
+                        }
+                        return result;
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue.replace('PL', ''),
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 4;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        return {
+                            title: '||||',
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                            cellVisible: true
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            cellSkin: WidgetValue['systemValuerocheBPSPProductsCheckoutGridTableMonthlyIsLocked'] ? 'locked' : '',
+                            icon: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue === '' ? 'icon-comment-off' : 'icon-comment-on',
+                            iconColor: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue === '' ? '#C5C6C6' : '#0066cc',
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    }
+                ]
+            }
         }
+    },
+    rocheBPSPProductsCheckoutColumnSelectorPopupDropBox: {
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
+                type: 'POST',
+                body: (db) => `{
+                    "MDX" : 
+                        "SELECT 
+                       {[}ElementAttributes_zSYS UI Columns Selector].[}ElementAttributes_zSYS UI Columns Selector].[Y0],[}ElementAttributes_zSYS UI Columns Selector].[}ElementAttributes_zSYS UI Columns Selector].[Caption]} 
+                      ON COLUMNS , 
+                       {TM1SubsetToSet([zSYS UI Columns Selector].[zSYS UI Columns Selector],\\"${db.systemValueGlobalSegmentedControlRelativeYear} selector\\")}  
+                      ON ROWS 
+                    FROM [}ElementAttributes_zSYS UI Columns Selector]"
+                } `,
+                parsingControl: {
+                    type: 'object',
+                    query:
+                        {
+                            items: (r, x) => {
+                                let i, res = [];
+                                for (i = 0; i < r.Cells.length; i = i + 2) {
+                                    res.push({name: r.Cells[i + 1].Value, on: r.Cells[i].Value == 1});
+                                }
+                                return res;
+                            }
+                        }
+                }
+
+            },
     },
     rocheBPSPProductsCheckoutGridRow1Cell9Button: {
         reference: 'rocheBPSPProductsGridRow1Cell9Button'
     },
 
-    rocheBPSPProductsCheckoutGridRow1Cell2DropBox: {
-        init: {
-            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
-            type: 'POST',
-            body: (db) => `
-        {
-            "MDX" : "SELECT
-                {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Member description]}
-            ON COLUMNS ,
-                {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}
-             ON ROWS
-            FROM [}ElementAttributes_Companies]"}
-        }
-       `,
-            parsingControl: {
-                type: 'list',
-                query:
-                    (r, x) => {
-                        return {name: r.Cells[x].FormattedValue, on: false};
-                    }
-            }
-        }
-    },
+    //end product checkout
 
     rocheBPSPMainGridRow1Cell5Button: {
         init:
@@ -1472,7 +1915,7 @@ app.repository = {
     },
 
 
-        rocheBPSPMaterialGridRow2Cell1SegmentedControl: {
+    rocheBPSPMaterialGridRow2Cell1SegmentedControl: {
         state: (db) => {
             let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
                 sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
@@ -1485,8 +1928,7 @@ app.repository = {
     },
 
 
-
-            rocheBPSPAddMaterialGridRow2Cell1SegmentedControl: {
+    rocheBPSPAddMaterialGridRow2Cell1SegmentedControl: {
         state: (db) => {
             let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
                 sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
@@ -1497,7 +1939,6 @@ app.repository = {
         },
 
     },
-
 
 
 };
