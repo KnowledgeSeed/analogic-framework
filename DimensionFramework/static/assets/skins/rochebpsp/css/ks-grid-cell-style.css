@@ -36,3 +36,11 @@
     border: 1px solid rgba(235, 236, 236, 0.7);
     border-radius: 5px;
 }
+
+/* blue backgorund color cell Mody 05 11    */
+
+.ks-grid-cell-blue_bg_bpsp:hover {
+    background-color: rgba(220, 235, 250, 0.5);
+    padding: 10px;
+    border-radius: 8px;
+}

@@ -300,10 +300,6 @@ app.eventMap = {
             argument: ['rocheBPSPProductsCommentShow']
         },
 
-        {
-            action: app.fn.togglePopup,
-            argument: ['rocheBPSPProductsCommentEdit']
-        }
     ],
 
 
@@ -351,7 +347,7 @@ app.eventMap = {
         }
     ],
 
-        'launch.rocheBPSPAddMaterialGridRow1Cell0Button': [
+    'launch.rocheBPSPAddMaterialGridRow1Cell0Button': [
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPMaterial'
@@ -359,7 +355,7 @@ app.eventMap = {
     ],
 
 
-        'launch.rocheBPSPMaterialGridRow4Cell1Button': [
+    'launch.rocheBPSPMaterialGridRow4Cell1Button': [
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPAddMaterial'

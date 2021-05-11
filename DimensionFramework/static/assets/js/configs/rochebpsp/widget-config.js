@@ -5009,7 +5009,6 @@ app.widgetConfig = {
                             id: 'rocheBPSPAddMaterialGridRow2',
                             type: GridRowWidget,
                             marginTop: '2%',
-                            marginBottom: '1%',
                             width: '100%',
                             skin: 'bottomborder',
                             widgets: [
@@ -5050,6 +5049,67 @@ app.widgetConfig = {
                                             ]
 
                                         },
+                                    ]
+                                },
+
+
+                            ]
+                        },
+
+
+                        {
+                            id: 'rocheBPSPAddMaterialGridRow3',
+                            type: GridRowWidget,
+                            marginTop: '2%',
+                            marginBottom: '1%',
+                            width: '100%',
+                            widgets: [
+
+
+                                {
+                                    id: 'rocheBPSPAddMaterialGridRow3Cell1',
+                                    type: GridCellWidget,
+                                    marginLeft: '20px',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    alignment: 'center-left',
+                                    width: '8%',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPAddMaterialGridRow3Cell1Button',
+                                            type: ButtonWidget,
+                                            action: '',
+                                            width: '100%',
+                                            label: 'Import CSV',
+                                            icon: 'icon-doc-arrow-down',
+                                            skin: 'blue_link_columns_bpsp',
+                                        }
+
+                                    ]
+                                },
+
+
+                                {
+                                    id: 'rocheBPSPAddMaterialGridRow3Cell2',
+                                    type: GridCellWidget,
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    alignment: 'center-left',
+                                    width: '10%',
+                                    skin: 'blue_bg_bpsp',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPAddMaterialGridRow3Cell2Button',
+                                            type: ButtonWidget,
+                                            action: '',
+                                            width: '100%',
+                                            label: 'Paste from Clipboard',
+                                            icon: 'icon-pasteboard',
+                                            skin: 'blue_link_columns_bpsp',
+                                        }
+
                                     ]
                                 },
 

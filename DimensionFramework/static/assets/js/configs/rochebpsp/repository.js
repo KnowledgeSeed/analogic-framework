@@ -1635,4 +1635,29 @@ app.repository = {
 
 
 
+
+        rocheBPSPAddMaterialGridRow1Cell3Button: {
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
+                type: 'POST',
+                body: (db) => `{"MDX":"SELECT ({[}Clients].[${db.activeUser}]}*{[zSYS Analogic User Parameter Measure].[FullName]})ON COLUMNS FROM [zSYS Analogic User Parameter]"}`,
+                parsingControl: {
+                    type: 'object',
+                    query:
+                        {
+                            label: (r, x) => {
+                                app.widgetValue['activeUserName'] = app.utils.toTitleCase(r.Cells[0].Value);
+                                return app.utils.toTitleCase(r.Cells[0].Value);
+                            }
+                        }
+                }
+
+            },
+
+    },
+
+
+
+
 };
