@@ -15,20 +15,6 @@ app.eventMap = {
         }
     ],
 
-    'launch.rocheBPSPMainGridRow3Cell3Button': [
-        {
-            action: app.fn.openPage,
-            argument: 'rocheBPSPReports'
-        }
-    ],
-
-    'launch.rocheBPSPMainGridRow3Cell4Button': [
-        {
-            action: app.fn.openPage,
-            argument: 'rocheBPSPSettings'
-        }
-    ],
-
     'launch.rocheBPSPCustomersGridRow1Cell0Button': [
         {
             action: app.fn.openPage,
@@ -44,13 +30,6 @@ app.eventMap = {
         {
             action: app.fn.removeWidgetValues,
             argument: ['rocheBPSPProductsGridRow1Cell3DropBox']
-        }
-    ],
-
-    'launch.rocheBPSPReportsGridRow1Cell0Button': [
-        {
-            action: app.fn.openPage,
-            argument: 'rocheBPSPMain'
         }
     ],
 
@@ -362,10 +341,6 @@ app.eventMap = {
             argument: ['rocheBPSPProductsCommentShow']
         },
 
-        {
-            action: app.fn.togglePopup,
-            argument: ['rocheBPSPProductsCommentEdit']
-        }
     ],
 
 
@@ -413,7 +388,7 @@ app.eventMap = {
         }
     ],
 
-        'launch.rocheBPSPAddMaterialGridRow1Cell0Button': [
+    'launch.rocheBPSPAddMaterialGridRow1Cell0Button': [
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPMaterial'
@@ -421,10 +396,33 @@ app.eventMap = {
     ],
 
 
-        'launch.rocheBPSPMaterialGridRow4Cell1Button': [
+    'launch.rocheBPSPMaterialGridRow4Cell1Button': [
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPAddMaterial'
+        }
+    ],
+
+
+    'launch.rocheBPSPMainGridRow3Cell3Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPipPlanning'
+        }
+    ],
+
+    'launch.rocheBPSPipPlanningGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPMain'
+        }
+    ],
+
+
+    'launch.rocheBPSPMainGridRow5Cell1Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPSettings'
         }
     ],
 
