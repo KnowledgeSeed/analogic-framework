@@ -72,3 +72,6 @@ GridTableCell:
 GridTableHeaderCell:
   no_border_bpsp
   long_border_bpsp
+
+
+  widgetId probléma: widgetId-08 -> repoban csak 'widgetid-08'

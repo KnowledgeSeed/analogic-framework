@@ -1420,7 +1420,7 @@ app.widgetConfig = {
                                 },
 
                                 {
-                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell04',
+                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell-04',
                                     type: GridTableHeaderCellWidget,
                                     width: '8%',
                                     alignment: 'bottom-left',
@@ -1428,7 +1428,7 @@ app.widgetConfig = {
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText04',
+                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText-04',
                                             type: TextWidget,
                                             title: '',
                                             body: '',
@@ -1442,7 +1442,7 @@ app.widgetConfig = {
                                 },
 
                                 {
-                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell05',
+                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell-05',
                                     type: GridTableHeaderCellWidget,
                                     width: '8%',
                                     alignment: 'bottom-left',
@@ -1450,7 +1450,7 @@ app.widgetConfig = {
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText05',
+                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText-05',
                                             type: TextWidget,
                                             title: '',
                                             body: '',
@@ -1464,7 +1464,7 @@ app.widgetConfig = {
                                 },
 
                                 {
-                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell06',
+                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell-06',
                                     type: GridTableHeaderCellWidget,
                                     width: '8%',
                                     alignment: 'bottom-left',
@@ -1472,7 +1472,7 @@ app.widgetConfig = {
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText06',
+                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText-06',
                                             type: TextWidget,
                                             title: '',
                                             body: '',
@@ -1486,14 +1486,14 @@ app.widgetConfig = {
                                 },
 
                                 {
-                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell07',
+                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell-07',
                                     type: GridTableHeaderCellWidget,
                                     width: '8%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText07',
+                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText-07',
                                             type: TextWidget,
                                             body: '',
                                             skin: 'products_gd_header_bpsp',
@@ -1513,7 +1513,7 @@ app.widgetConfig = {
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText08',
+                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText-08',
                                             type: TextWidget,
                                             body: '',
                                             skin: 'products_gd_header_bpsp',
@@ -1526,14 +1526,14 @@ app.widgetConfig = {
                                 },
 
                                 {
-                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell09',
+                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell-09',
                                     type: GridTableHeaderCellWidget,
                                     width: '8%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText09',
+                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText-09',
                                             type: TextWidget,
                                             body: '',
                                             skin: 'products_gd_header_bpsp',
@@ -1546,14 +1546,14 @@ app.widgetConfig = {
                                 },
 
                                 {
-                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell10',
+                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell-10',
                                     type: GridTableHeaderCellWidget,
                                     width: '8%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText10',
+                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText-10',
                                             type: TextWidget,
                                             body: '',
                                             skin: 'products_gd_header_bpsp',
@@ -1566,14 +1566,14 @@ app.widgetConfig = {
                                 },
 
                                 {
-                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell11',
+                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell-11',
                                     type: GridTableHeaderCellWidget,
                                     width: '7%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText11',
+                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText-11',
                                             type: TextWidget,
                                             body: '',
                                             skin: 'products_gd_header_bpsp',
@@ -1586,7 +1586,7 @@ app.widgetConfig = {
                                 },
 
                                 {
-                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell12',
+                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell-12',
                                     type: GridTableHeaderCellWidget,
                                     width: '5%',
                                     alignment: 'bottom-left',
@@ -1594,7 +1594,7 @@ app.widgetConfig = {
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText12',
+                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText-12',
                                             type: TextWidget,
                                             title: '',
                                             body: '',
@@ -1608,14 +1608,14 @@ app.widgetConfig = {
                                 },
 
                                 {
-                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell13',
+                                    id: 'rocheBPSPProductsGridTableYearlyHeaderCell-13',
                                     type: GridTableHeaderCellWidget,
                                     width: '5%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText13',
+                                            id: 'rocheBPSPProductsGridTableYearlyHeaderText-13',
                                             type: TextWidget,
                                             body: '',
                                             skin: 'products_gd_header_bpsp',
