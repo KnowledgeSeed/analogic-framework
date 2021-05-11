@@ -380,7 +380,7 @@ app.repository = {
         },
         init: {
             execute: (db, widgetId) => {
-                let index = parseInt(widgetId.split('-')[1]);console.log(widgetId, index-1);
+                let index = parseInt(widgetId.split('-')[1]);
                 return Repository['defaultFunctionsForGridTableYearlyHeader'].executeForCell(index - 1);
             }
         }
@@ -690,11 +690,13 @@ app.repository = {
                         };
                     },
                     (r, x) => {
+                        let cellValue = r.Cells[x + 15].FormattedValue;
                         return {
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
-                            icon: r.Cells[x + 15].FormattedValue === '' ? 'icon-comment-off' : 'icon-comment-on',
-                            iconColor: r.Cells[x + 15].FormattedValue === '' ? '#C5C6C6' : '#0066cc',
-                            members: r.Cells[x + 15].Members
+                            icon: cellValue === '' ? 'icon-comment-off' : 'icon-comment-on',
+                            iconColor: cellValue === '' ? '#C5C6C6' : '#0066cc',
+                            members: r.Cells[x + 15].Members,
+                            hasComment: cellValue !== ''
                         };
                     },
                     (r, x) => {
