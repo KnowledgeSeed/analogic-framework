@@ -319,7 +319,13 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutGridTableYearly'
         }
     ],
-    //end rocheBPSPProducts comment mody
+    'launch.rocheBPSPProductsCheckoutGridTableMonthlyHeaderButton-05': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsCheckoutDistributionPopup'
+        }
+    ],
+    //end rocheBPSPProductsCheckout comment mody
 
 
     'launch.rocheBPSPProductsCommentShowGridRow5Button': [

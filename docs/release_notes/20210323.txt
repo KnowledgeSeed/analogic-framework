@@ -19,12 +19,16 @@ eventMap -> event.widgetid.(finished|started)
 
 ImageWidget -> skin
 
-ButtonWidget -> iconColor
+ButtonWidget -> iconColor, iconFontSize
 
 ContainerWidget -> heightFixed
 
+TextWidget -> icon, iconPosition, iconHeight, iconWidth, iconColor
+
+Widget -> applyMeasuresToSection
+
 framework -> repository reference
-processdate.widgetid.finished
+processdata.widgetid.finished
 init.widgetid.finished
 
 Skins:
@@ -38,6 +42,10 @@ TextWidget:
  checkout_page_header_bpsp
  simple_bold_bpsp
  simple_bpsp
+ products_gd_readonly_with_icon_bpsp
+ products_gd_distribution_icon_bpsp
+ monthly_right_bpsp
+ monthly_center_bpsp
 
 ButtonWidget:
  blue_bg_bpsp
@@ -51,6 +59,7 @@ ButtonWidget:
   gridtable_hierarchy_bpsp_PL5_locked
  gridtable_hierarchy_bpsp_PL6_locked
 
+
  gridtable_hierarchy_shortcut_bpsp_PL1
  gridtable_hierarchy_shortcut_bpsp_PL2
  gridtable_hierarchy_shortcut_bpsp_PL3
@@ -61,6 +70,7 @@ ButtonWidget:
  green_link_bpsp
  red_link_bpsp
  red_link_x_bpsp
+ distribution_bpsp
 
 
  L01 -> PL1,..., L06->PL6

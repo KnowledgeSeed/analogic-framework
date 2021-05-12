@@ -5,6 +5,7 @@
 class TextWidget extends Widget {
 
     getHtml(widgets, d) {
+        const o = this.options;
         const v = {
             body: this.getRealValue('body', d, false),
             bodyFontColor: this.getRealValue('bodyFontColor', d, false),
@@ -12,16 +13,22 @@ class TextWidget extends Widget {
             bodyAlignment: this.getRealValue('bodyAlignment', d, false),
             draggable: this.getRealValue('draggable', d, false),
             editable: this.getRealValue('editable', d, false),
+            icon: this.getRealValue('icon', d, false),
+            iconColor: this.getRealValue('iconColor', d, false),
+            iconHeight: this.getRealValue('iconHeight', d, false),
+            iconPosition: this.getRealValue('iconPosition', d, 'right'),
+            iconWidth: this.getRealValue('iconWidth', d, false),
             skin: this.getRealValue('skin', d, 'template1'),
             title: this.getRealValue('title', d, false),
             titleFontColor: this.getRealValue('titleFontColor', d, false),
             titleFontSize: this.getRealValue('titleFontSize', d, false),
             titleAlignment: this.getRealValue('titleAlignment', d, false),
-            ordinal: typeof d.ordinal !== 'undefined' ? d.ordinal : ''
+            ordinal: typeof d.ordinal !== 'undefined' ? d.ordinal : '',
         };
         this.value = {value: v.title, editable: v.editable};
 
-        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], bodyStyles = [];
+        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], bodyStyles = [],
+            iconStyles = [];
 
         (v.title || v.editable) && mainDivClass.push('has-title');
         v.body && mainDivClass.push('has-body');
@@ -35,9 +42,15 @@ class TextWidget extends Widget {
         v.bodyFontColor && bodyStyles.push(`color:${v.bodyFontColor};`);
         v.bodyFontSize && bodyStyles.push(`font-size:${v.bodyFontSize}px;`);
 
+        v.iconWidth && iconStyles.push('width:', v.iconWidth, 'px;');
+        v.iconHeight && iconStyles.push('height:', v.iconHeight, 'px;');
+        v.iconColor && iconStyles.push('color:', v.iconColor, ';');
+        v.iconPosition === 'left' ? mainDivClass.push('pos-icon-left') : mainDivClass.push('pos-icon-right');
+
         return `
 <div class="ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}" style="${mainDivStyle.join('')}">
     <div class="ks-text-inner">
+        ${v.icon !== false ? `<div class="ks-text-icon" data-id="${o.id}" data-action="perform" data-ordinal="${v.ordinal}"><span class="${v.icon}"></span></div>` : ''}
         <div class="ks-text-title" data-editable="${v.editable ? '1' : '0'}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title ? v.title : ''}</div>
         <div class="ks-text-separator"></div>
         <div class="ks-text-body" style="${bodyStyles.join('')}">${v.body ? v.body : ''}</div>
@@ -54,7 +67,18 @@ class TextWidget extends Widget {
         if (this.value.editable) {
             TextWidget.addEdit(section, o, this.amIOnAGridTable());
         }
+
+        section.find('.ks-text-icon').on('click', (e) => {
+            let s = $(e.currentTarget);
+
+            Widget.doHandleSystemEvent(s, e);
+
+            if (this.amIOnAGridTable()) {
+                Widget.doHandleGridTableSystemEvent(s, e);
+            }
+        });
     }
+
 
     static getEditables(gridId) {
         return $('#' + gridId).find('.ks-text-title[data-editable=1]').filter(':visible').sort(function (a, b) {
@@ -98,7 +122,7 @@ class TextWidget extends Widget {
     }
 
     static pasteData(text, editables, j, f, o, section) {
-        let e, rows = text.trim().split('\n'), cells = [], i, k, s, r;
+        let e, rows = text.trim().split('\n'), cells = [], i, k, s, r, sc;
         if (rows.length === 0) {
             return;
         }
@@ -114,13 +138,21 @@ class TextWidget extends Widget {
                     break;
                 }
                 e = $(editableRows[i][k]);
-                s = e.closest('section').attr('id');
+                sc = e.closest('section');
+                s = sc.attr('id');
                 WidgetValue[s] = {value: Utils.escapeText(cells[k])};
                 r = $('<div>').data('id', s).data('action', 'write').data('ordinal', e.data('ordinal'));
+                let ic = sc.find('.ks-text-icon');
+                if (ic.is(':visible')) {
+                    Widget.doHandleSystemEvent(ic, f);
+                    Widget.doHandleGridTableSystemEvent(ic, f);
+                }
                 Widget.doHandleSystemEvent(r, f);
+                Widget.doHandleGridTableSystemEvent(r, f);
                 e.html(cells[k]);
             }
         }
+        section.find('.ks-text').removeClass('ks-on');
         TextWidget.addEdit(section, o, true);
     }
 
@@ -168,19 +200,27 @@ class TextWidget extends Widget {
             });
         }
         textTitle.on('click', e => {
-            let c = $(e.currentTarget);
+            let c = $(e.currentTarget), ksText = section.find('.ks-text');
             c.off('click');
-
+            ksText.addClass('ks-on');
             c.html(`<input class="ks-text-title-input" data-id="${o.id}" data-action="write" data-ordinal="${c.data('ordinal')}" type="text" value="${c.text()}"/>`).promise().then(() => {
                 let r = c.find('.ks-text-title-input').focus().select().on('focusout', f => {
                     r.off('focusout').data('value', Utils.escapeText(r.val()));
 
                     WidgetValue[r.data('id')] = {value: Utils.escapeText(r.val())};
+                    let ic = section.find('.ks-text-icon');
+                    if (ic.is(':visible')) {
+                        Widget.doHandleSystemEvent(ic, f);
+
+                        if (amIOnGridTable) {
+                            Widget.doHandleGridTableSystemEvent(ic, f);
+                        }
+                    }
 
                     Widget.doHandleSystemEvent(r, f);
 
                     c.html(r.val());
-
+                    ksText.removeClass('ks-on');
                     TextWidget.addEdit(section, o, amIOnGridTable);
                 });
                 if (amIOnGridTable === true) {

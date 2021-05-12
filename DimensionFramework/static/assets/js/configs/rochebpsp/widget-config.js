@@ -3208,7 +3208,7 @@ app.widgetConfig = {
                                             type: ButtonWidget,
                                             label: 'Clear all',
                                             width: '100%',
-                                            icon: 'icon-x-rectangle',
+                                            icon: 'icon-x-square-outline',
                                             skin: 'red_link_x_bpsp'
                                         }
                                     ]
@@ -3690,7 +3690,6 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableYearlyText-02',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
                                     title: '',
                                 }
                             ]
@@ -3705,7 +3704,6 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableYearlyText-03',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
                                     title: '',
                                 }
                             ]
@@ -3721,7 +3719,6 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableYearlyText-04',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
                                     title: '',
                                 }
@@ -3739,7 +3736,6 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsCheckoutGridTableYearlyText-05',
                                     type: TextWidget,
                                     paddingRight: 8,
-                                    skin: 'products_gd_readonly_bpsp',
                                     title: '',
                                 }
                             ]
@@ -3756,7 +3752,6 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsCheckoutGridTableYearlyText-06',
                                     type: TextWidget,
                                     paddingRight: 8,
-                                    skin: 'products_gd_readonly_bpsp',
                                     title: '',
                                 }
                             ]
@@ -3773,7 +3768,6 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsCheckoutGridTableYearlyText-07',
                                     type: TextWidget,
                                     paddingRight: 8,
-                                    skin: 'products_gd_readonly_bpsp',
                                     title: '',
                                 }
                             ]
@@ -3790,8 +3784,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsCheckoutGridTableYearlyText-08',
                                     type: TextWidget,
                                     paddingRight: 8,
-                                    title: '',
-                                    skin: 'products_gd_readonly_bpsp'
+                                    title: ''
                                 }
                             ]
                         },
@@ -3806,7 +3799,6 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableYearlyText-09',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
                                     title: '',
                                 }
@@ -3823,7 +3815,6 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableYearlyText-10',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
                                     title: '',
                                 }
@@ -3840,7 +3831,6 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableYearlyText-11',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
                                     title: '',
                                 }
@@ -3857,7 +3847,6 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableYearlyText-12',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
                                     title: '',
                                 }
@@ -3874,7 +3863,6 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableYearlyText-13',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
                                     title: '',
                                 }
@@ -4210,6 +4198,45 @@ app.widgetConfig = {
                 },
 
                 {
+                    id: 'rocheBPSPProductsCheckoutDistributionPopup',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: true,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    skin: 'checkout_popup_bpsp',
+                    width: '230',
+                    bgScrollable: true,
+                    fadingSpeed: 0,
+                    fixed: false,
+                    height: '100',
+                    behaviour: 'popup',
+                    position: 'right',
+                    widgets: [
+                        {
+                            id: 'rocheBPSPProductsCheckoutDistributionPopupLastYearButton',
+                            type: ButtonWidget,
+                            height: 40,
+                            icon: 'icon-distribution-variable',
+                            skin: 'distribution_bpsp',
+                            borderWidth: 0,
+                            label: 'By Last Years Actuals',
+                            iconFontSize: 15
+                        },
+                        {
+                            id: 'rocheBPSPProductsCheckoutDistributionPopupLinearSplitButton',
+                            type: ButtonWidget,
+                            height: 40,
+                            icon: 'icon-distribution-equal',
+                            skin: 'distribution_bpsp',
+                            borderWidth: 0,
+                            label: 'Linear Split',
+                        }
+                    ]
+                },
+
+                {
                     id: 'rocheBPSPProductsCheckoutGridTableMonthly',
                     type: GridTableWidget,
                     marginTop: '60',
@@ -4300,17 +4327,15 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsCheckoutGridTableMonthlyHeaderCell-05',
                                     type: GridTableHeaderCellWidget,
                                     width: '2%',
-                                    alignment: 'bottom-left',
+                                    alignment: 'bottom-center',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsCheckoutGridTableMonthlyHeaderText-05',
-                                            type: TextWidget,
-                                            title: '',
-                                            body: '',
-                                            skin: 'products_gd_header_bpsp',
-                                            titleAlignment: 'start',
-                                            bodyAlignment: 'start'
+                                            id: 'rocheBPSPProductsCheckoutGridTableMonthlyHeaderButton-05',
+                                            type: ButtonWidget,
+                                            icon: 'icon-dots-horizontal',
+                                            marginBottom: 8,
+                                            iconFontSize: 3
                                         }
                                     ]
                                 },
@@ -4645,8 +4670,6 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableMonthlyText-05',
                                     type: TextWidget,
-                                    paddingRight: 8,
-                                    skin: 'products_gd_readonly_bpsp',
                                     title: '',
                                 }
                             ]
@@ -4663,7 +4686,10 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsCheckoutGridTableMonthlyText-06',
                                     type: TextWidget,
                                     paddingRight: 8,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    width: '100%',
+                                    height: '100%',
+                                    icon: 'icon-cloud-arrow-up',
+                                    applyMeasuresToSection: true,
                                     title: '',
                                 }
                             ]
@@ -4680,7 +4706,10 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsCheckoutGridTableMonthlyText-07',
                                     type: TextWidget,
                                     paddingRight: 8,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    width: '100%',
+                                    height: '100%',
+                                    icon: 'icon-cloud-arrow-up',
+                                    applyMeasuresToSection: true,
                                     title: '',
                                 }
                             ]
@@ -4697,8 +4726,11 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsCheckoutGridTableMonthlyText-08',
                                     type: TextWidget,
                                     paddingRight: 8,
-                                    title: '',
-                                    skin: 'products_gd_readonly_bpsp'
+                                    width: '100%',
+                                    height: '100%',
+                                    icon: 'icon-cloud-arrow-up',
+                                    applyMeasuresToSection: true,
+                                    title: ''
                                 }
                             ]
                         },
@@ -4713,7 +4745,10 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableMonthlyText-09',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    width: '100%',
+                                    height: '100%',
+                                    applyMeasuresToSection: true,
+                                    icon: 'icon-cloud-arrow-up',
                                     paddingRight: 8,
                                     title: '',
                                 }
@@ -4730,7 +4765,10 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableMonthlyText-10',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    width: '100%',
+                                    height: '100%',
+                                    applyMeasuresToSection: true,
+                                    icon: 'icon-cloud-arrow-up',
                                     paddingRight: 8,
                                     title: '',
                                 }
@@ -4747,7 +4785,10 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableMonthlyText-11',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    width: '100%',
+                                    height: '100%',
+                                    applyMeasuresToSection: true,
+                                    icon: 'icon-cloud-arrow-up',
                                     paddingRight: 8,
                                     title: '',
                                 }
@@ -4764,7 +4805,10 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableMonthlyText-12',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    width: '100%',
+                                    height: '100%',
+                                    applyMeasuresToSection: true,
+                                    icon: 'icon-cloud-arrow-up',
                                     paddingRight: 8,
                                     title: '',
                                 }
@@ -4781,7 +4825,10 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableMonthlyText-13',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    width: '100%',
+                                    height: '100%',
+                                    applyMeasuresToSection: true,
+                                    icon: 'icon-cloud-arrow-up',
                                     paddingRight: 8,
                                     title: '',
                                 }
@@ -4797,7 +4844,10 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableMonthlyText-14',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    width: '100%',
+                                    height: '100%',
+                                    applyMeasuresToSection: true,
+                                    icon: 'icon-cloud-arrow-up',
                                     paddingRight: 8,
                                     title: '',
                                 }
@@ -4813,7 +4863,10 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableMonthlyText-15',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    width: '100%',
+                                    height: '100%',
+                                    applyMeasuresToSection: true,
+                                    icon: 'icon-cloud-arrow-up',
                                     paddingRight: 8,
                                     title: '',
                                 }
@@ -4829,7 +4882,10 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableMonthlyText-16',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    width: '100%',
+                                    height: '100%',
+                                    applyMeasuresToSection: true,
+                                    icon: 'icon-cloud-arrow-up',
                                     paddingRight: 8,
                                     title: '',
                                 }
@@ -4845,7 +4901,10 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridTableMonthlyText-17',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    width: '100%',
+                                    height: '100%',
+                                    applyMeasuresToSection: true,
+                                    icon: 'icon-cloud-arrow-up',
                                     paddingRight: 8,
                                     title: '',
                                 }
