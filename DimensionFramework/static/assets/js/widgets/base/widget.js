@@ -84,7 +84,11 @@ class Widget {
     }
 
     getMainHtmlElement(o, data, visible, widgetHtmls, withState) {
-        let gs = app.useDraggable ? this.getGeneralStyles(data) : [], html;
+        let gs = [], html;
+
+        if(o.applyMeasuresToSection === true) {
+            gs = this.getWidthAndHeight(data);
+        }
 
         if (visible === false) {
             gs.push('display:none;');
@@ -387,6 +391,18 @@ class Widget {
         }
 
         width && s.push('width:', width, isNaN(width) ? ';' : 'px;');
+
+        return s;
+    }
+
+    getHeightForSection(data = {}, defaults = {}){
+        const s = [], height = this.getRealValue('height', data, defaults.height);
+
+        if (!isNaN(height)) {
+            return [];
+        }
+
+        height && s.push('height:', height, isNaN(height) ? ';' : 'px;');
 
         return s;
     }

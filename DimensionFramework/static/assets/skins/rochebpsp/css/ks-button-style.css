@@ -1001,11 +1001,9 @@
 }
 
 .ks-button-red_link_x_bpsp .ks-button-icon span{
-    color: white;
+    color: #E40046;
     font-size: 11px;
     margin-right:7px;
-    background-color: #E40046;
-    border: 1px solid #E40046;
 }
 
 /* blue_icon_bpsp */
@@ -1204,6 +1202,28 @@
     color: #ffffff;
     padding-right: 10px;
 }
+
+/* distribution_bpsp */
+
+.ks-button-distribution_bpsp {
+    padding: 8px;
+}
+.ks-button-distribution_bpsp .ks-button-content{
+    justify-content: flex-start!important;
+}
+
+.ks-button-distribution_bpsp .ks-button-icon {
+    margin-right: 8px;
+    font-size: 10px;
+    margin-top: 6px;
+}
+
+.ks-button-distribution_bpsp:hover{
+    background-color: rgba(220, 235, 250, 0.47);
+    border-radius: 8px;
+}
+
+
 
 
 /* ote end */
