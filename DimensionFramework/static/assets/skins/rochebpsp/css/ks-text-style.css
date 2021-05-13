@@ -315,6 +315,35 @@
     cursor: pointer;
 }
 
+/* products_gd_writeable_with_icon_bpsp */
+
+.ks-text-products_gd_writeable_with_icon_bpsp {
+    font-family: Imago-Regular;
+    font-size: 15px;
+    font-color: #000000;
+}
+
+.ks-text-products_gd_writeable_with_icon_bpsp .ks-text-inner{
+    display: flex;
+}
+
+.ks-text-products_gd_writeable_with_icon_bpsp .ks-text-icon{
+    margin-left: 12px;
+    color: #D8D9D9;
+    cursor: pointer;
+}
+
+/* edit_distribution_value */
+.ks-text-edit_distribution_value .ks-text-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* edit_distribution_value_text */
+.ks-text-edit_distribution_value_text .ks-text-title {
+    font-size: 10px;
+}
+
 /* checkout_warning_bpsp */
 .ks-text-checkout_warning_bpsp {
     padding-bottom: 10px;

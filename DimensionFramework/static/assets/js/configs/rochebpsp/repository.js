@@ -1198,7 +1198,70 @@ app.repository = {
         reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderTextTemplate'
     },
 
+    rocheBPSPProductsCheckoutDistributionEditPopupGridTable: {
+        initCondition: (db) => {
+            return v('rocheBPSPProductsCheckoutGridTableYearly.cellData') !== false;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            execute: (db) => {
+                let thirdCell = Utils.getGridTableCell('rocheBPSPProductsCheckoutGridTableYearly', 2), result = [], i;
+                let yearlyCells = v('rocheBPSPProductsCheckoutGridTableYearly.cellData'), pl;
+                i = v('rocheBPSPProductsCheckoutGridTableYearly.row');
+                pl = parseInt(thirdCell.title);
+                result.push([yearlyCells[i][0], yearlyCells[i][2]]);
+                ++i;
+                while (i < yearlyCells.length && parseInt(yearlyCells[i][2].title) > pl) {
+                    result.push([yearlyCells[i][0], yearlyCells[i][2]]);
+                    ++i;
+                }
 
+                let firstValue = 5000000, otherValue = Math.round(firstValue / (result.length - 1)),
+                    percent = Math.round((otherValue / firstValue) * 100);
+                result[0].push({
+                    value: 1
+                });
+                result[0].push({
+                    title: firstValue,
+                    cellSkin: 'readonly_bpsp'
+                });
+                result[0].push({
+                    title: '100 %',
+                    cellSkin: 'readonly_bpsp'
+
+                });
+                result[0].push({
+                    title: '+ 500.000',
+                    cellSkin: 'readonly_bpsp',
+                    titleFontColor: '#A86B24'
+                });
+                result[0].push({
+                    visible: true
+                });
+                for (i = 1; i < result.length; ++i) {
+                    result[i].push({
+                        value: 0
+                    });
+                    result[i].push({
+                        title: otherValue
+                    });
+                    result[i].push({
+                        title: percent + ' %'
+                    });
+                    result[i].push({
+                        title: 'color test',
+                        cellSkin: 'readonly_bpsp'
+                    });
+                    result[i].push({
+                        visible: false
+                    });
+                }
+                return result;
+            }
+        }
+    },
     rocheBPSPProductsCheckoutGridTableYearly: {
         initCondition: (db) => {
             return WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly';
@@ -1315,9 +1378,11 @@ app.repository = {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                            cellSkin: 'readonly_bpsp',
-                            skin: 'products_gd_readonly_with_icon_bpsp',
-                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            cellSkin: '',
+                            icon: 'icon-dots-vertical',
+                            distributionEdit: true,
+                            skin: 'products_gd_writeable_with_icon_bpsp',
+                            cellVisible: true,//r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
                             members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
@@ -3186,7 +3251,7 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
+                    [
                         {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
 
                         {title: '1', editable: false},
@@ -3200,7 +3265,7 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
+                    [
                         {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
 
                         {title: '1', editable: false},
@@ -3214,7 +3279,7 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
+                    [
                         {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
 
                         {title: '1', editable: false},
@@ -3229,7 +3294,7 @@ app.repository = {
                     ],
 
 
-                                        [
+                    [
                         {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
 
                         {title: '1', editable: false},
@@ -3243,7 +3308,7 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
+                    [
                         {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
 
                         {title: '1', editable: false},
@@ -3257,7 +3322,7 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
+                    [
                         {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
 
                         {title: '1', editable: false},
@@ -3271,7 +3336,7 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
+                    [
                         {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
 
                         {title: '1', editable: false},
@@ -3285,7 +3350,7 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
+                    [
                         {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
 
                         {title: '1', editable: false},
@@ -3299,7 +3364,7 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
+                    [
                         {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
 
                         {title: '1', editable: false},
@@ -3313,7 +3378,7 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
+                    [
                         {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
 
                         {title: '1', editable: false},
@@ -3327,7 +3392,7 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
+                    [
                         {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
 
                         {title: '1', editable: false},
@@ -3341,7 +3406,7 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
+                    [
                         {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
 
                         {title: '1', editable: false},

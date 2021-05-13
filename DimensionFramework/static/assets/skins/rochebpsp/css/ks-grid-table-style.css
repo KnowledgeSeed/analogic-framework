@@ -304,4 +304,36 @@
 	line-height: 16px;
 }
 
+/* edit_distribution_bpsp */
+
+.ks-grid-table-edit_distribution_bpsp .ks-grid-table-row {
+	border-bottom: 1px solid #d8d9d9;
+	height: 40px;
+}
+
+.ks-grid-table-edit_distribution_bpsp4 .ks-grid-table-head .ks-grid-table-row {
+	border-bottom: 0;
+	border-left: 0;
+}
+
+.ks-grid-table-edit_distribution_bpsp .ks-grid-table-cell-border-left{
+	border-left: 1px dashed #b1b3b3;
+  	position: absolute;
+  	height: 100%;
+	margin-right:7px;
+}
+
+.ks-grid-table-edit_distribution_bpsp .ks-grid-table-head .ks-grid-table-cell {
+	border-right:unset;
+	color: #000000;
+}
+
+
+
+.ks-grid-table-edit_distribution_bpsp .ks-grid-table-cell {
+	color: #000;
+	font-size: 16px;
+	line-height: 16px;
+}
+
 /* end ote */

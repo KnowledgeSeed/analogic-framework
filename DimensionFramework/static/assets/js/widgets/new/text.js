@@ -10,6 +10,7 @@ class TextWidget extends Widget {
             body: this.getRealValue('body', d, false),
             bodyFontColor: this.getRealValue('bodyFontColor', d, false),
             bodyFontSize: this.getRealValue('bodyFontSize', d, false),
+            bodyFontWeight: this.getRealValue('bodyFontWeight', d, false),
             bodyAlignment: this.getRealValue('bodyAlignment', d, false),
             draggable: this.getRealValue('draggable', d, false),
             editable: this.getRealValue('editable', d, false),
@@ -22,6 +23,7 @@ class TextWidget extends Widget {
             title: this.getRealValue('title', d, false),
             titleFontColor: this.getRealValue('titleFontColor', d, false),
             titleFontSize: this.getRealValue('titleFontSize', d, false),
+            titleFontWeight: this.getRealValue('titleFontWeight', d, false),
             titleAlignment: this.getRealValue('titleAlignment', d, false),
             ordinal: typeof d.ordinal !== 'undefined' ? d.ordinal : '',
         };
@@ -36,11 +38,13 @@ class TextWidget extends Widget {
         v.titleAlignment && titleStyles.push(`display: flex;padding-left: 0px;justify-content: ${v.titleAlignment === 'start' || v.titleAlignment === 'end' ? `flex-${v.titleAlignment}` : v.titleAlignment};`);
         v.titleFontColor && titleStyles.push(`color:${v.titleFontColor};`);
         v.titleFontSize && titleStyles.push(`font-size:${v.titleFontSize}px;`);
+        v.titleFontWeight && titleStyles.push(`font-weight:${v.titleFontWeight};`);
         v.editable && (v.title === false || v.title === '') && titleStyles.push('height: 20px;');
 
         v.bodyAlignment && bodyStyles.push(`display: flex;padding-left: 0px;justify-content: ${v.bodyAlignment === 'start' || v.bodyAlignment === 'end' ? `flex-${v.bodyAlignment}` : v.bodyAlignment};`);
         v.bodyFontColor && bodyStyles.push(`color:${v.bodyFontColor};`);
         v.bodyFontSize && bodyStyles.push(`font-size:${v.bodyFontSize}px;`);
+        v.bodyFontWeight && bodyStyles.push(`font-weight:${v.bodyFontWeight};`);
 
         v.iconWidth && iconStyles.push('width:', v.iconWidth, 'px;');
         v.iconHeight && iconStyles.push('height:', v.iconHeight, 'px;');

@@ -1241,6 +1241,12 @@
     border-radius: 8px;
 }
 
+/* split_down_bpsp */
+
+.ks-button-split_down_bpsp .ks-button-label {
+    margin-left:5px;
+}
+
 
 
 
