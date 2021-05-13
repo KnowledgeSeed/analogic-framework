@@ -23,13 +23,15 @@ ButtonWidget -> iconColor, iconFontSize
 
 ContainerWidget -> heightFixed
 
-TextWidget -> icon, iconPosition, iconHeight, iconWidth, iconColor
+TextWidget -> icon, iconPosition, iconHeight, iconWidth, iconColor, perform event
 
 Widget -> applyMeasuresToSection
 
 framework -> repository reference
 processdata.widgetid.finished
 init.widgetid.finished
+
+event.gridtablewidgetId pl. perform.rocheBPSPProductsCheckoutGridTableYearly
 
 Skins:
 
@@ -71,6 +73,7 @@ ButtonWidget:
  red_link_bpsp
  red_link_x_bpsp
  distribution_bpsp
+ blue_button_bpsp
 
 
  L01 -> PL1,..., L06->PL6

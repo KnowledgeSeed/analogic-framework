@@ -39,7 +39,7 @@
 
 	"defaultMDXQuery" : "https://dev.knowledgeseed.ch:5125/rochebpspapi/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value)",
 
-	"MainPage" : "rocheBPSPMain",
+	"MainPage" : "rocheBPSPProductsCheckout",
     "pool": {
         "users": ["oravecz.tamas"],
         "target": "https://dev.knowledgeseed.ch:5125/rochebpspapi"

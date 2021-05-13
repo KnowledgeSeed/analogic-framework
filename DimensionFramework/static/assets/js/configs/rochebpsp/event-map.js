@@ -325,6 +325,12 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutDistributionPopup'
         }
     ],
+    'perform.rocheBPSPProductsCheckoutGridTableYearly': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsCheckoutCopyMergePopup'
+        }
+    ],
     //end rocheBPSPProductsCheckout comment mody
 
 

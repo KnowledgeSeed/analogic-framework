@@ -267,6 +267,7 @@ class Widget {
 
         const write = section.data('write') !== 'off';
 
+        Widget.executeEventMapActions(a + '.' + idParts[0], event, element, write);
         Widget.executeEventMapActions(eventMapId, event, element, write);
         Widget.executeEventMapActions(columnEventMapId, event, element, write);
     }

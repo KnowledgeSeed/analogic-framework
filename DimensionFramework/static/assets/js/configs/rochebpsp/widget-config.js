@@ -3360,6 +3360,70 @@ app.widgetConfig = {
                     ]
                 },
                 {
+                    id: 'rocheBPSPProductsCheckoutCopyMergePopup',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: true,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    skin: 'checkout_popup_bpsp',
+                    width: '290',
+                    bgScrollable: true,
+                    fadingSpeed: 0,
+                    fixed: false,
+                    height: '260',
+                    behaviour: 'popup',
+                    position: 'right',
+                    widgets: [
+                        {
+                            id: 'rocheBPSPProductsCheckoutCopyMergePopupGrid',
+                            type: GridWidget,
+                            marginTop: 10,
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPProductsCheckoutCopyMergePopupGridRow',
+                                    type: GridRowWidget,
+                                    skin: 'bottomborder_bpsp',
+                                    paddingBottom: 20,
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPProductsCheckoutCopyMergePopupCopyButton',
+                                            type: ButtonWidget,
+                                            height: 40,
+                                            width: 120,
+                                            marginLeft: 10,
+                                            skin: 'blue_button_bpsp',
+                                            borderWidth: 0,
+                                            label: 'Copy'
+                                        },
+                                        {
+                                            id: 'rocheBPSPProductsCheckoutCopyMergePopupMergeButton',
+                                            type: ButtonWidget,
+                                            height: 40,
+                                            width: 120,
+                                            marginLeft: 10,
+                                            skin: 'blue_button_bpsp',
+                                            borderWidth: 0,
+                                            label: 'Merge',
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'rocheBPSPProductsCheckoutCopyMergePopupSlider',
+                            type: SliderWidget,
+                            width: 270,
+                            buttonsVisible: false,
+                            minRange: -100,
+                            maxRange: 100,
+                            unit: '%'
+
+                        }
+                    ]
+                },
+                {
                     id: 'rocheBPSPProductsCheckoutGridTableYearly',
                     type: GridTableWidget,
                     marginTop: '60',
