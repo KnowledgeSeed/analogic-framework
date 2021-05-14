@@ -5637,7 +5637,9 @@ app.widgetConfig = {
                     width: '100%',
                     hideIfNoData: true,
                     skin: 'products_bpsp',
-                    listen: [],
+                    listen: [
+                        {'event': 'switch.rocheBPSPipPlanningYearSegmentedControl.finished', 'method': 'refresh'},
+                    ],
                     title: '',
                     widgets: [
 
@@ -5664,6 +5666,17 @@ app.widgetConfig = {
                                             marginBottom: 8,
                                             marginLeft: 10
                                         },
+
+                                        {
+                                            id: 'rocheBPSPipPlanningGridTableMonthlyHeaderReturnFromFocus',
+                                            type: ButtonWidget,
+                                            label: 'Return from Focus',
+                                            visible: false,
+                                            skin: 'blue_link_bpsp',
+                                            icon: 'icon-arrow-left',
+                                            marginBottom: 8,
+                                            marginLeft: 10
+                                        }
                                     ]
                                 },
 
@@ -7243,448 +7256,447 @@ app.widgetConfig = {
                 },
 
                 {
-                                    id: 'rocheBPSPMaterialGridTable',
-                                    type: GridTableWidget,
-                                    marginTop: '60',
-                                    hideIfNoData: true,
-                                    skin: 'products_bpsp',
-                                    listen: [],
-                                    width: '100%',
-                                    title: '',
-                                    widgets: [
-
-                                        {
-                                            id: 'rocheBPSPMaterialGridTableHeaderRow',
-                                            type: GridTableHeaderRowWidget,
-                                            height: '90',
-                                            width: '100%',
-                                            widgets: [
-
-                                                {
-                                                    id: 'rocheBPSPMaterialGridTableHeaderCell-01',
-                                                    type: GridTableHeaderCellWidget,
-                                                    width: '25%',
-                                                    alignment: 'bottom-left',
-                                                    widgets: [
-                                                        {
-                                                            id: 'rocheBPSPMaterialGridTableHeaderFocusButton',
-                                                            type: ButtonWidget,
-                                                            label: 'Profit center name',
-                                                            skin: 'products_gd_header_bpsp',
-                                                            iconPosition: 'right',
-                                                            marginBottom: 8,
-                                                            marginLeft: 10
-                                                        },
-                                                    ]
-                                                },
-
-                                                {
-                                                    id: 'rocheBPSPMaterialGridTableHeaderCell-02',
-                                                    type: GridTableHeaderCellWidget,
-                                                    alignment: 'bottom-center',
-                                                    width: '8%',
-                                                    widgets: [
-
-                                                        {
-                                                            id: 'rocheBPSPMaterialGridTableHeaderText-02',
-                                                            type: TextWidget,
-                                                            body: 'Level',
-                                                            skin: 'products_gd_header_bpsp',
-                                                            titleAlignment: 'start',
-                                                            marginBottom: 8,
-                                                            bodyAlignment: 'start'
-                                                        }
-                                                    ]
-                                                },
-
-                                                {
-                                                    id: 'rocheBPSPMaterialGridTableHeaderCell-03',
-                                                    type: GridTableHeaderCellWidget,
-                                                    width: '13%',
-                                                    alignment: 'bottom-center',
-                                                    widgets: [
-
-                                                        {
-                                                            id: 'rocheBPSPMaterialGridTableHeaderText-03',
-                                                            type: TextWidget,
-                                                            body: 'Profit Center Number',
-                                                            skin: 'products_gd_header_bpsp',
-                                                            titleAlignment: 'start',
-                                                            marginBottom: 8,
-                                                            bodyAlignment: 'start'
-                                                        }
-                                                    ]
-                                                },
-
-                                                {
-                                                    id: 'rocheBPSPMaterialGridTableHeaderCell-4',
-                                                    type: GridTableHeaderCellWidget,
-                                                    width: '3%',
-                                                    alignment: 'bottom-left',
-                                                    cellHeaderSkin: 'long_border_bpsp',
-                                                    widgets: [
-
-                                                        {
-                                                            id: 'rocheBPSPMaterialGridTableHeaderText-04',
-                                                            type: TextWidget,
-                                                            body: 'Profit Center Number',
-                                                            skin: 'products_gd_header_bpsp',
-                                                            titleAlignment: 'start',
-                                                            marginBottom: 8,
-                                                            bodyAlignment: 'start'
-                                                        }
-                                                    ]
-                                                },
-
-                                                {
-                                                    id: 'rocheBPSPMaterialGridTableHeaderCell-5',
-                                                    type: GridTableHeaderCellWidget,
-                                                    width: '3%',
-                                                    alignment: 'bottom-left',
-                                                    cellHeaderSkin: 'long_border_bpsp',
-                                                    widgets: [
-
-                                                        {
-                                                            id: 'rocheBPSPMaterialGridTableHeaderText-5',
-                                                            type: TextWidget,
-                                                            title: '',
-                                                        }
-                                                    ]
-                                                },
-
-                                                {
-                                                    id: 'rocheBPSPMaterialGridTableHeaderCell-6',
-                                                    type: GridTableHeaderCellWidget,
-                                                    width: '3%',
-                                                    cellHeaderSkin: 'no_border_bpsp',
-                                                    widgets: [
-
-                                                        {
-                                                            id: 'rocheBPSPMaterialGridTableHeaderText-6',
-                                                            type: TextWidget,
-                                                            title: '',
-                                                        }
-                                                    ]
-                                                }]
-                                        },
-
-                                        {
-                                            id: 'rocheBPSPMaterialGridTableCell-01',
-                                            type: GridTableCellWidget,
-                                            width: '25%',
-                                            alignment: 'center-left',
-                                            widgets: [
-
-                                                {
-                                                    id: 'rocheBPSPMaterialGridTableButton-01',
-                                                    type: ButtonWidget,
-                                                    icon: 'icon-badge',
-                                                    skin: 'gridtablehierarchy_bpsp',
-                                                    label: '',
-                                                    action: '',
-                                                }
-                                            ]
-                                        },
-
-                                        {
-                                            id: 'rocheBPSPMaterialGridTableCell-02',
-                                            type: GridTableCellWidget,
-                                            width: '8%',
-                                            widgets: [
-
-                                                {
-                                                    id: 'rocheBPSPMaterialGridTableText-02',
-                                                    type: TextWidget,
-                                                    skin: 'products_gd_readonly_bpsp',
-                                                    title: '',
-                                                }
-                                            ]
-                                        },
-
-                                        {
-                                            id: 'rocheBPSPMaterialGridTableCell-03',
-                                            type: GridTableCellWidget,
-                                            width: '13%',
-                                            widgets: [
-
-                                                {
-                                                    id: 'rocheBPSPMaterialGridTableText-03',
-                                                    type: TextWidget,
-                                                    skin: 'products_gd_readonly_bpsp',
-                                                    title: '',
-                                                }
-                                            ]
-                                        },
-
-                                        {
-                                            id: 'rocheBPSPMaterialGridTableCell-4',
-                                            type: GridTableCellWidget,
-                                            alignment: 'center-center',
-                                            width: '3%',
-                                            widgets: [
-
-                                                {
-                                                    id: 'rocheBPSPMaterialGridTableButton-4',
-                                                    type: ButtonWidget,
-                                                    icon: 'icon-comment-off',
-                                                    skin: 'comment_Off_GT_bpsp',
-                                                }
-                                            ]
-                                        },
-
-                                        {
-                                                    id: 'rocheBPSPMaterialGridTableCell-5',
-                                                    type: GridTableCellWidget,
-                                                    alignment: 'center-center',
-                                                    width: '3%',
-                                                    widgets: [
-
-                                                        {
-                                                            id: 'rocheBPSPMaterialGridTableButton-5',
-                                                            type: ButtonWidget,
-                                                            icon: 'icon-comment-off',
-                                                            skin: 'comment_Off_GT_bpsp',
-                                                        }
-                                                    ]
-                                                },
-
-                                        {
-                                                    id: 'rocheBPSPMaterialGridTableCell-6',
-                                                    type: GridTableCellWidget,
-                                                    alignment: 'center-center',
-                                                    width: '3%',
-                                                    widgets: [
-
-                                                        {
-                                                            id: 'rocheBPSPMaterialGridTableButton-6',
-                                                            type: ButtonWidget,
-                                                            icon: 'icon-chart',
-                                                            skin: 'chartGT_bpsp',
-                                                        }
-                                                    ]
-                                                }
-                                                ]
-                                        },
-                                    ]
-                        },
-
-
-    rocheBPSPAddMaterial:
-        {id: 'rocheBPSPAddMaterial',
-        type: PageWidget,
-        widgets: [
-        {
-            id: 'rocheBPSPAddMaterialGrid',
-            type: GridWidget,
-            width: '100%',
-            widgets: [
-
-                {
-                    id: 'rocheBPSPAddMaterialGridRow1',
-                    type: GridRowWidget,
-                    marginTop: '1%',
+                    id: 'rocheBPSPMaterialGridTable',
+                    type: GridTableWidget,
+                    marginTop: '60',
+                    hideIfNoData: true,
+                    skin: 'products_bpsp',
+                    listen: [],
                     width: '100%',
-                    skin: 'bottomborder',
+                    title: '',
                     widgets: [
 
                         {
-                            id: 'rocheBPSPAddMaterialGridRow1Cell0',
-                            type: GridCellWidget,
+                            id: 'rocheBPSPMaterialGridTableHeaderRow',
+                            type: GridTableHeaderRowWidget,
+                            height: '90',
+                            width: '100%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPMaterialGridTableHeaderCell-01',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '25%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPMaterialGridTableHeaderFocusButton',
+                                            type: ButtonWidget,
+                                            label: 'Profit center name',
+                                            skin: 'products_gd_header_bpsp',
+                                            iconPosition: 'right',
+                                            marginBottom: 8,
+                                            marginLeft: 10
+                                        },
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPMaterialGridTableHeaderCell-02',
+                                    type: GridTableHeaderCellWidget,
+                                    alignment: 'bottom-center',
+                                    width: '8%',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPMaterialGridTableHeaderText-02',
+                                            type: TextWidget,
+                                            body: 'Level',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPMaterialGridTableHeaderCell-03',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '13%',
+                                    alignment: 'bottom-center',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPMaterialGridTableHeaderText-03',
+                                            type: TextWidget,
+                                            body: 'Profit Center Number',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPMaterialGridTableHeaderCell-4',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '3%',
+                                    alignment: 'bottom-left',
+                                    cellHeaderSkin: 'long_border_bpsp',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPMaterialGridTableHeaderText-04',
+                                            type: TextWidget,
+                                            body: 'Profit Center Number',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPMaterialGridTableHeaderCell-5',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '3%',
+                                    alignment: 'bottom-left',
+                                    cellHeaderSkin: 'long_border_bpsp',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPMaterialGridTableHeaderText-5',
+                                            type: TextWidget,
+                                            title: '',
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPMaterialGridTableHeaderCell-6',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '3%',
+                                    cellHeaderSkin: 'no_border_bpsp',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPMaterialGridTableHeaderText-6',
+                                            type: TextWidget,
+                                            title: '',
+                                        }
+                                    ]
+                                }]
+                        },
+
+                        {
+                            id: 'rocheBPSPMaterialGridTableCell-01',
+                            type: GridTableCellWidget,
+                            width: '25%',
+                            alignment: 'center-left',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPMaterialGridTableButton-01',
+                                    type: ButtonWidget,
+                                    icon: 'icon-badge',
+                                    skin: 'gridtablehierarchy_bpsp',
+                                    label: '',
+                                    action: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPMaterialGridTableCell-02',
+                            type: GridTableCellWidget,
+                            width: '8%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPMaterialGridTableText-02',
+                                    type: TextWidget,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPMaterialGridTableCell-03',
+                            type: GridTableCellWidget,
+                            width: '13%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPMaterialGridTableText-03',
+                                    type: TextWidget,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPMaterialGridTableCell-4',
+                            type: GridTableCellWidget,
+                            alignment: 'center-center',
                             width: '3%',
                             widgets: [
 
                                 {
-                                    id: 'rocheBPSPAddMaterialGridRow1Cell0Button',
+                                    id: 'rocheBPSPMaterialGridTableButton-4',
                                     type: ButtonWidget,
-                                    label: '',
-                                    action: '',
-                                    width: '50',
-                                    icon: 'icon-back-arrow',
-                                    skin: 'backbuttonrocheBPSP',
-                                    height: '50',
+                                    icon: 'icon-comment-off',
+                                    skin: 'comment_Off_GT_bpsp',
                                 }
                             ]
                         },
 
                         {
-                            id: 'rocheBPSPAddMaterialGridRow1Cell1',
-                            type: GridCellWidget,
-                            marginLeft: '10',
-                            marginTop: '0',
-                            marginBottom: '0',
-                            alignment: 'center-left',
-                            width: '16%',
+                            id: 'rocheBPSPMaterialGridTableCell-5',
+                            type: GridTableCellWidget,
+                            alignment: 'center-center',
+                            width: '3%',
                             widgets: [
 
                                 {
-                                    id: 'rocheBPSPAddMaterialGridRow1Cell1Text',
-                                    type: TextWidget,
-                                    title: 'Add Material',
-                                    width: '100%',
-                                    skin: 'menu',
-                                    titleAlignment: 'start',
-                                    titleFontSize: 36,
+                                    id: 'rocheBPSPMaterialGridTableButton-5',
+                                    type: ButtonWidget,
+                                    icon: 'icon-comment-off',
+                                    skin: 'comment_Off_GT_bpsp',
                                 }
                             ]
                         },
 
-
                         {
-                            id: 'rocheBPSPAddMaterialGridRow1Cell2',
-                            type: GridCellWidget,
-                            marginLeft: '1',
-                            marginRight: '0',
-                            marginTop: '0',
-                            alignment: 'top-center',
-                            width: '63%',
-                            height: '0',
-                            widgets: []
-                        },
-
-
-                        {
-                            id: 'rocheBPSPAddMaterialGridRow1Cell3',
-                            type: GridCellWidget,
-                            alignment: 'center-right',
-                            width: '18%',
+                            id: 'rocheBPSPMaterialGridTableCell-6',
+                            type: GridTableCellWidget,
+                            alignment: 'center-center',
+                            width: '3%',
                             widgets: [
+
                                 {
-                                    id: 'rocheBPSPAddMaterialGridRow1Cell3Button',
+                                    id: 'rocheBPSPMaterialGridTableButton-6',
                                     type: ButtonWidget,
-                                    backgroundColor: '#EBECEC',
-                                    action: '',
-                                    width: '100%',
-                                    icon: 'icon-profile',
-                                    skin: 'userpanelmain',
+                                    icon: 'icon-chart',
+                                    skin: 'chartGT_bpsp',
                                 }
                             ]
                         }
-
-
                     ]
                 },
+            ]
+        },
 
 
+    rocheBPSPAddMaterial:
+        {
+            id: 'rocheBPSPAddMaterial',
+            type: PageWidget,
+            widgets: [
                 {
-                    id: 'rocheBPSPAddMaterialGridRow2',
-                    type: GridRowWidget,
-                    marginTop: '1.5%',
+                    id: 'rocheBPSPAddMaterialGrid',
+                    type: GridWidget,
                     width: '100%',
-                    skin: 'bottomborder',
                     widgets: [
 
-
                         {
-                            id: 'rocheBPSPAddMaterialGridRow2Cell1',
-                            type: GridCellWidget,
-                            marginLeft: '20px',
-                            marginTop: '0',
-                            marginBottom: '0',
-                            alignment: 'center-left',
-                            width: '16%',
+                            id: 'rocheBPSPAddMaterialGridRow1',
+                            type: GridRowWidget,
+                            marginTop: '1%',
+                            width: '100%',
+                            skin: 'bottomborder',
                             widgets: [
 
                                 {
-                                    id: 'rocheBPSPAddMaterialGridRow2Cell1SegmentedControl',
-                                    type: SegmentedControlWidget,
-                                    width: '100%',
-                                    skin: 'segmented',
-                                    marginBottom: 5,
+                                    id: 'rocheBPSPAddMaterialGridRow1Cell0',
+                                    type: GridCellWidget,
+                                    width: '3%',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPAddMaterialGridRow2Cell1SegmentedControlItem1',
-                                            type: SegmentedControlItemWidget,
-                                            action: 'segmentedControlTab1',
-                                            selected: true,
-                                            value: 'ImportList'
-                                        },
-                                        {
-                                            id: 'rocheBPSPAddMaterialGridRow2Cell1SegmentedControlItem2',
-                                            type: SegmentedControlItemWidget,
-                                            action: 'segmentedControlTab2',
-                                            selected: false,
-                                            value: 'Search'
+                                            id: 'rocheBPSPAddMaterialGridRow1Cell0Button',
+                                            type: ButtonWidget,
+                                            label: '',
+                                            action: '',
+                                            width: '50',
+                                            icon: 'icon-back-arrow',
+                                            skin: 'backbuttonrocheBPSP',
+                                            height: '50',
                                         }
                                     ]
-
                                 },
+
+                                {
+                                    id: 'rocheBPSPAddMaterialGridRow1Cell1',
+                                    type: GridCellWidget,
+                                    marginLeft: '10',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    alignment: 'center-left',
+                                    width: '16%',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPAddMaterialGridRow1Cell1Text',
+                                            type: TextWidget,
+                                            title: 'Add Material',
+                                            width: '100%',
+                                            skin: 'menu',
+                                            titleAlignment: 'start',
+                                            titleFontSize: 36,
+                                        }
+                                    ]
+                                },
+
+
+                                {
+                                    id: 'rocheBPSPAddMaterialGridRow1Cell2',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginRight: '0',
+                                    marginTop: '0',
+                                    alignment: 'top-center',
+                                    width: '63%',
+                                    height: '0',
+                                    widgets: []
+                                },
+
+
+                                {
+                                    id: 'rocheBPSPAddMaterialGridRow1Cell3',
+                                    type: GridCellWidget,
+                                    alignment: 'center-right',
+                                    width: '18%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPAddMaterialGridRow1Cell3Button',
+                                            type: ButtonWidget,
+                                            backgroundColor: '#EBECEC',
+                                            action: '',
+                                            width: '100%',
+                                            icon: 'icon-profile',
+                                            skin: 'userpanelmain',
+                                        }
+                                    ]
+                                }
+
+
+                            ]
+                        },
+
+
+                        {
+                            id: 'rocheBPSPAddMaterialGridRow2',
+                            type: GridRowWidget,
+                            marginTop: '1.5%',
+                            width: '100%',
+                            skin: 'bottomborder',
+                            widgets: [
+
+
+                                {
+                                    id: 'rocheBPSPAddMaterialGridRow2Cell1',
+                                    type: GridCellWidget,
+                                    marginLeft: '20px',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    alignment: 'center-left',
+                                    width: '16%',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPAddMaterialGridRow2Cell1SegmentedControl',
+                                            type: SegmentedControlWidget,
+                                            width: '100%',
+                                            skin: 'segmented',
+                                            marginBottom: 5,
+                                            widgets: [
+
+                                                {
+                                                    id: 'rocheBPSPAddMaterialGridRow2Cell1SegmentedControlItem1',
+                                                    type: SegmentedControlItemWidget,
+                                                    action: 'segmentedControlTab1',
+                                                    selected: true,
+                                                    value: 'ImportList'
+                                                },
+                                                {
+                                                    id: 'rocheBPSPAddMaterialGridRow2Cell1SegmentedControlItem2',
+                                                    type: SegmentedControlItemWidget,
+                                                    action: 'segmentedControlTab2',
+                                                    selected: false,
+                                                    value: 'Search'
+                                                }
+                                            ]
+
+                                        },
+                                    ]
+                                },
+
+
+                            ]
+                        },
+
+
+                        {
+                            id: 'rocheBPSPAddMaterialGridRow3',
+                            type: GridRowWidget,
+                            marginTop: '1.5%',
+                            marginBottom: '1%',
+                            width: '100%',
+                            widgets: [
+
+
+                                {
+                                    id: 'rocheBPSPAddMaterialGridRow3Cell1',
+                                    type: GridCellWidget,
+                                    marginLeft: '20px',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    alignment: 'center-left',
+                                    width: '8%',
+
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPAddMaterialGridRow3Cell1Button',
+                                            type: ButtonWidget,
+                                            action: '',
+                                            width: '140',
+                                            height: '40px',
+                                            label: 'Import CSV',
+                                            icon: 'icon-doc-arrow-down',
+                                            skin: 'blue_link_columns_bpsp',
+                                        }
+
+                                    ]
+                                },
+
+
+                                {
+                                    id: 'rocheBPSPAddMaterialGridRow3Cell2',
+                                    type: GridCellWidget,
+                                    marginLeft: '15px',
+                                    alignment: 'center-left',
+                                    width: '10%',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPAddMaterialGridRow3Cell2Button',
+                                            type: ButtonWidget,
+                                            action: '',
+                                            width: '200px',
+                                            height: '40px',
+                                            label: 'Paste from Clipboard',
+                                            icon: 'icon-pasteboard',
+                                            skin: 'blue_link_columns_bpsp',
+                                        }
+
+                                    ]
+                                },
+
+
                             ]
                         },
 
 
                     ]
-                },
-
-
-                {
-                    id: 'rocheBPSPAddMaterialGridRow3',
-                    type: GridRowWidget,
-                    marginTop: '1.5%',
-                    marginBottom: '1%',
-                    width: '100%',
-                    widgets: [
-
-
-                        {
-                            id: 'rocheBPSPAddMaterialGridRow3Cell1',
-                            type: GridCellWidget,
-                            marginLeft: '20px',
-                            marginTop: '0',
-                            marginBottom: '0',
-                            alignment: 'center-left',
-                            width: '8%',
-
-                            widgets: [
-
-                                {
-                                    id: 'rocheBPSPAddMaterialGridRow3Cell1Button',
-                                    type: ButtonWidget,
-                                    action: '',
-                                    width: '140',
-                                    height: '40px',
-                                    label: 'Import CSV',
-                                    icon: 'icon-doc-arrow-down',
-                                    skin: 'blue_link_columns_bpsp',
-                                }
-
-                            ]
-                        },
-
-
-                        {
-                            id: 'rocheBPSPAddMaterialGridRow3Cell2',
-                            type: GridCellWidget,
-                            marginLeft: '15px',
-                            alignment: 'center-left',
-                            width: '10%',
-                            widgets: [
-
-                                {
-                                    id: 'rocheBPSPAddMaterialGridRow3Cell2Button',
-                                    type: ButtonWidget,
-                                    action: '',
-                                    width: '200px',
-                                    height: '40px',
-                                    label: 'Paste from Clipboard',
-                                    icon: 'icon-pasteboard',
-                                    skin: 'blue_link_columns_bpsp',
-                                }
-
-                            ]
-                        },
-
-
-                    ]
-                },
-
-
+                }
             ]
-        }
-    ]
-}
-,
-
+        },
 
 }
 ;
