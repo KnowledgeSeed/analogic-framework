@@ -145,6 +145,10 @@ app.eventMap = {
         {
             action: app.fn.openPopup,
             argument: 'rocheBPSPProductsColumnSelectorPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsColumnSelectorPopupDropBox'
         }
     ],
     'launch.rocheBPSPProductsColumnSelectorCancelButton': [
@@ -251,13 +255,53 @@ app.eventMap = {
             argument: 'rocheBPSPProductsProductSelectorShortcutPopup'
         }
     ],
+    'launch.rocheBPSPProductsCommentEditGridXButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCommentEdit'
+        }
+    ],
+    'launch.rocheBPSPProductsColumnSelectorRestoreButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsColumnSelectorPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsColumnSelectorUpdateButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsColumnSelectorPopup'
+        }
+    ],
 
     //end products
 
     //rocheBPSPProductsCheckout
+    'launch.rocheBPSPProductsCheckoutColumnSelectorCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutColumnSelectorPopup'
+        }
+    ],
     'launch.rocheBPSPProductsCheckoutGridRow2Cell1Button': [
         {
             action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsCheckoutColumnSelectorPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutColumnSelectorPopupDropBox'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutColumnSelectorRestoreButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutColumnSelectorPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutColumnSelectorUpdateButton': [
+        {
+            action: app.fn.togglePopup,
             argument: 'rocheBPSPProductsCheckoutColumnSelectorPopup'
         }
     ],
@@ -382,10 +426,10 @@ app.eventMap = {
     ],
 
 
-    'launch.rocheBPSPProductsCommentEditGridRow4Button': [
+    'launch.rocheBPSPProductsCommentEditControlPanelCancelButton': [
         {
-            action: app.fn.openPopup,
-            argument: ['rocheBPSPProductsCommentShow']
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCommentEdit'
         },
 
     ],
@@ -398,6 +442,14 @@ app.eventMap = {
                 {
                     conditionKey: 'hasComment',
                     actions: [
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCommentShowGridTable'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCommentShowGridTableSource'
+                        },
                         {
                             action: app.fn.openPopup,
                             argument: 'rocheBPSPProductsCommentShow'

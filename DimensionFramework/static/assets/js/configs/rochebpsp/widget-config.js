@@ -1257,10 +1257,7 @@ app.widgetConfig = {
                                                     id: 'rocheBPSPProductsColumnSelectorPopupDropBox',
                                                     type: DropBoxWidget,
                                                     multiSelect: true,
-                                                    skin: 'column_selector_bpsp',
-                                                    listen: [
-                                                        {event: '', method: 'refresh'}
-                                                    ]
+                                                    skin: 'column_selector_bpsp'
                                                 }
                                             ]
                                         }
@@ -1364,7 +1361,8 @@ app.widgetConfig = {
                             'method': 'refresh'
                         },
                         {'event': 'switch.rocheBPSPProductsYearSegmentedControl.finished', 'method': 'refresh'},
-                        {'event': 'launch.rocheBPSPProductsColumnSelectorUpdateButton.finished', 'method' : 'refresh'}
+                        {'event': 'launch.rocheBPSPProductsColumnSelectorUpdateButton.finished', 'method': 'refresh'},
+                        {'event': 'launch.rocheBPSPProductsColumnSelectorRestoreButton.finished', 'method': 'refresh'}
                     ],
                     title: '',
                     widgets: [
@@ -1938,7 +1936,7 @@ app.widgetConfig = {
                     id: 'rocheBPSPProductsCommentShow',
                     type: ContainerWidget,
                     visible: false,
-                    width: '400',
+                    width: '360',
                     closeBtn: true,
                     height: '100%',
                     behaviour: 'popup',
@@ -2114,8 +2112,8 @@ app.widgetConfig = {
                     id: 'rocheBPSPProductsCommentEdit',
                     type: ContainerWidget,
                     visible: false,
-                    width: '400',
-                    closeBtn: true,
+                    width: '360',
+                    closeBtn: false,
                     height: '100%',
                     behaviour: 'popup',
                     position: 'right',
@@ -2125,26 +2123,35 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPProductsCommentEditGrid',
                             type: GridWidget,
-                            marginLeft: '20',
-                            marginRight: '20',
+                            marginLeft: '10',
+                            marginRight: '10',
                             widgets: [
 
                                 {
                                     id: 'rocheBPSPProductsCommentEditGridRow1',
                                     type: GridRowWidget,
+                                    marginBottom: '20',
                                     widgets: [
 
                                         {
                                             id: 'rocheBPSPProductsCommentEditGridRow1Title',
                                             type: ButtonWidget,
                                             label: 'Comment Edit',
-                                            action: '',
                                             icon: 'icon-comment-off',
-                                            marginTop: '30',
-                                            marginBottom: '30',
+                                            marginTop: '15',
                                             fontBold: true,
                                             fontSize: 24,
                                             skin: 'commenttitle',
+                                        },
+                                        {
+                                            id: 'rocheBPSPProductsCommentEditGridXButton',
+                                            type: ButtonWidget,
+                                            icon: 'icon-x',
+                                            iconFontSize: '15',
+                                            marginTop: '19',
+                                            marginLeft: '100',
+                                            borderWidth: 0,
+                                            skin: 'blue_icon_bpsp'
                                         }
                                     ]
                                 },
@@ -2187,42 +2194,32 @@ app.widgetConfig = {
                                         }
                                     ]
                                 },
-
-
+                            ]
+                        },
+                        {
+                            id: 'rocheBPSPProductsCommentEditControlPanel',
+                            type: PanelWidget,
+                            skin: 'horizontal_align_center',
+                            marginTop: 30,
+                            marginBottom: 30,
+                            widgets: [
                                 {
-                                    id: 'rocheBPSPProductsCommentEditGridRow4',
-                                    type: GridRowWidget,
-                                    alignment: 'left',
-                                    widgets: [
-
-                                        {
-                                            id: 'rocheBPSPProductsCommentEditGridRow4Button',
-                                            type: ButtonWidget,
-                                            label: 'Save',
-                                            action: '',
-                                            width: '100',
-                                            marginTop: '20',
-                                            marginBottom: '20',
-                                            skin: 'simtype',
-                                        },
-
-                                        {
-                                            id: 'rocheBPSPProductsCommentEditGridRow4Button',
-                                            type: ButtonWidget,
-                                            label: 'Cancel',
-                                            action: '',
-                                            width: '100',
-                                            marginTop: '32',
-                                            marginBottom: '20',
-                                            marginLeft: '120',
-                                            fontBold: 'True',
-                                            fontSize: '16px',
-                                            fontColor: '#0066CC',
-                                            skin: '',
-                                        }
-
-
-                                    ]
+                                    id: 'rocheBPSPProductsCommentEditControlPanelSaveButton',
+                                    type: ButtonWidget,
+                                    height: 40,
+                                    width: 100,
+                                    skin: 'blue_button_bpsp',
+                                    borderWidth: 0,
+                                    label: 'Save'
+                                },
+                                {
+                                    id: 'rocheBPSPProductsCommentEditControlPanelCancelButton',
+                                    type: ButtonWidget,
+                                    width: 100,
+                                    height: 40,
+                                    marginLeft: 15,
+                                    skin: 'white_bg_bpsp',
+                                    label: 'Cancel'
                                 }
                             ]
                         }
@@ -3780,7 +3777,9 @@ app.widgetConfig = {
                     hideIfNoData: true,
                     skin: 'products_bpsp',
                     listen: [
-                        {'event': 'switch.rocheBPSPProductsYearSegmentedControl.finished', 'method': 'refresh'}
+                        {'event': 'switch.rocheBPSPProductsYearSegmentedControl.finished', 'method': 'refresh'},
+                        {'event': 'launch.rocheBPSPProductsCheckoutColumnSelectorUpdateButton.finished', 'method': 'refresh'},
+                        {'event': 'launch.rocheBPSPProductsCheckoutColumnSelectorRestoreButton.finished', 'method': 'refresh'}
                     ],
                     title: '',
                     widgets: [

@@ -328,7 +328,8 @@
 }
 
 .ks-text-products_gd_writeable_with_icon_bpsp .ks-text-icon{
-    margin-left: 12px;
+    padding-left: 16px;
+    padding-right: 16px;
     color: #D8D9D9;
     cursor: pointer;
 }
