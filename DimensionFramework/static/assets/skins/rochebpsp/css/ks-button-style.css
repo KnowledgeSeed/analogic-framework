@@ -1018,10 +1018,10 @@
     font-family: 'imago';
 }
 
-.ks-button-red_link_x_bpsp .ks-button-icon span{
+.ks-button-red_link_x_bpsp .ks-button-icon span {
     color: #E40046;
     font-size: 11px;
-    margin-right:7px;
+    margin-right: 7px;
 }
 
 /* blue_icon_bpsp */
@@ -1226,8 +1226,9 @@
 .ks-button-distribution_bpsp {
     padding: 8px;
 }
-.ks-button-distribution_bpsp .ks-button-content{
-    justify-content: flex-start!important;
+
+.ks-button-distribution_bpsp .ks-button-content {
+    justify-content: flex-start !important;
 }
 
 .ks-button-distribution_bpsp .ks-button-icon {
@@ -1236,7 +1237,7 @@
     margin-top: 6px;
 }
 
-.ks-button-distribution_bpsp:hover{
+.ks-button-distribution_bpsp:hover {
     background-color: rgba(220, 235, 250, 0.47);
     border-radius: 8px;
 }
@@ -1244,10 +1245,8 @@
 /* split_down_bpsp */
 
 .ks-button-split_down_bpsp .ks-button-label {
-    margin-left:5px;
+    margin-left: 5px;
 }
-
-
 
 
 /* ote end */

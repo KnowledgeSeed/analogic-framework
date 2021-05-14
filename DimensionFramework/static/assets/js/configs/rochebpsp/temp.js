@@ -1,7 +1,7 @@
 /* global app */
 'use strict';
 app.repository = {
-       rocheBPSPProductsCheckoutCheckoutPopupFocusButton: {
+    rocheBPSPProductsCheckoutCheckoutPopupFocusButton: {
         launch:
             {
                 url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable CheckIn by User')/tm1.ExecuteWithReturn`,

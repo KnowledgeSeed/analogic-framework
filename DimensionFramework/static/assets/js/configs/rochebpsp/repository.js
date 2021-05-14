@@ -276,18 +276,18 @@ app.repository = {
                 WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = v('rocheBPSPProductsYearSegmentedControl.selected');
             }
             //write back
-          /*  url: (db) => `/api/v1/Processes('MODULE - UI - Products Columns Selection Update by User Selection')/tm1.ExecuteWithReturn`,
-            type: 'POST',
-            body: (db) => {
-                WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = v('rocheBPSPProductsYearSegmentedControl.value');
-                WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = v('rocheBPSPProductsYearSegmentedControl.selected');
-                return `{
-                        "Parameters": [
-                                {"Name": "pUserID", "Value": "${db.activeUserName}"},
-                                {"Name": "pSelectedColumns", "Value": "${v('rocheBPSPProductsColumnSelectorPopupDropBox.value')}"},
-                        ]
-                    }`
-            }*/
+            /*  url: (db) => `/api/v1/Processes('MODULE - UI - Products Columns Selection Update by User Selection')/tm1.ExecuteWithReturn`,
+              type: 'POST',
+              body: (db) => {
+                  WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = v('rocheBPSPProductsYearSegmentedControl.value');
+                  WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = v('rocheBPSPProductsYearSegmentedControl.selected');
+                  return `{
+                          "Parameters": [
+                                  {"Name": "pUserID", "Value": "${db.activeUserName}"},
+                                  {"Name": "pSelectedColumns", "Value": "${v('rocheBPSPProductsColumnSelectorPopupDropBox.value')}"},
+                          ]
+                      }`
+              }*/
         }
     },
 
