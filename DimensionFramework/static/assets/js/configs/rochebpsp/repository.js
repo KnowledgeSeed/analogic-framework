@@ -2092,6 +2092,12 @@ app.repository = {
                 ];
             }
         },
+        switch: {
+            execute: (db) => {
+                WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = v('rocheBPSPipPlanningYearSegmentedControl.value');
+                WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = v('rocheBPSPipPlanningYearSegmentedControl.selected');
+            }
+        }
     },
 
 
@@ -2189,1058 +2195,185 @@ app.repository = {
         }
     },
 
-    rocheBPSPipPlanningGridTableMonthly: {
-        initDefault: (db) => {
-            return [];
+
+    rocheBPSPipPlanningGridTableMonthly:
+        {
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => `{"MDX":"
+With
+--Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion
+     Set DefaultProductRows AS
+     {TM1DRILLDOWNMEMBER({[Materials].[BPSP Budget].[PL1]}, ALL, RECURSIVE )}
+--Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion and systemValueGlobalCompanyFocusedElement
+     Set FocusedOnProductRows AS
+     {TM1DRILLDOWNMEMBER({[Materials].[BPSP Budget].[PL1]}, ALL, RECURSIVE )}
+--Decide which rowSet to use
+     MEMBER [Materials].[BPSP Budget].[ProductIsFocused] AS 
+     IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
+-- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
+     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialName] as 
+            [Materials].[BPSP Budget].CurrentMember.Properties('BPSP Budget Caption')
+     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialCode] as 
+            [Materials].[BPSP Budget].CurrentMember.Properties('BPSP Actual Caption')
+     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialLevel] as 
+            [Materials].[BPSP Budget].CurrentMember.Properties('BPSP Budget IP Caption')
+     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS] as 
+            [Materials].[BPSP Budget].CurrentMember.Properties('IP DIS Relevant Budget')
+     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment] as
+            [Sales Plan IP].([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan],[Measures Sales Plan IP].[Measures Sales Plan IP].[Comment Flag])
+     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutUser] as 
+            [Sales Plan IP].([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI Checkout Flag],[Measures Sales Plan IP].[Measures Sales Plan IP].[EditedBy])
+     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutDateTime] as 
+            [Sales Plan IP].([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI Checkout Flag],[Measures Sales Plan IP].[Measures Sales Plan IP].[EditedDateTime])
+-- Create the first 5 column with information
+     Set FixColumns AS
+     {([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialName]),
+      ([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialLevel]),
+      ([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialCode]),
+      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutFlag]),
+      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutUser]),
+      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutDateTime])}
+     Set FinalColumns AS
+     {([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS]),
+      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment])}
+-- column Tuple Create
+     Set ColumnSelection As
+        {([Periods].[Periods].[2020],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity]),
+         ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[BW T3]),
+         ([Periods].[Periods].[202101],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+         ([Periods].[Periods].[202102],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+         ([Periods].[Periods].[202103],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+         ([Periods].[Periods].[202104],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+         ([Periods].[Periods].[202105],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+         ([Periods].[Periods].[202106],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+         ([Periods].[Periods].[202107],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+         ([Periods].[Periods].[202108],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+         ([Periods].[Periods].[202109],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+         ([Periods].[Periods].[202110],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+         ([Periods].[Periods].[202111],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+         ([Periods].[Periods].[202112],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+         ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Variance Final Plan vs Total Customer]),
+          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Variance Final Plan vs T3])}
+SELECT 
+--columns
+     Union(Union({FixColumns},{ColumnSelection},All),{FinalColumns},All)
+  ON COLUMNS , 
+-- rows
+  {StrToSet([Materials].[BPSP Budget].[ProductIsFocused])} ON ROWS 
+FROM [Sales Plan IP] 
+WHERE 
+  (
+   [Versions].[Versions].[Live],
+   [Measures Sales Plan IP].[Measures Sales Plan IP].[Value],
+   [Receivers].[Receivers].[All Receivers],
+   [Companies].[Companies].[All Companies Active],
+   [Contract Types].[Contract Types].[Cash Sales],
+   [Instrument Types].[Instrument Types].[New]
+  )
+            "}`,
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 24,
+                        query: [
+
+                            (r, x) => {
+                                return {label: r.Cells[x].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 1].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 2].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 3].FormattedValue}
+                            },
+                            (r, x) => {
+                                return {title: r.Cells[x + 4].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 5].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 6].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 7].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 8].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 9].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 10].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 11].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 12].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 13].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 14].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 15].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 16].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 17].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 18].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 19].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 20].FormattedValue}
+                            },
+
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 21].FormattedValue}
+                            },
+
+
+                        ]
+                    }
+
+                },
         },
-        init: {
-            execute: (db) => {
-                return [
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
-                        {title: '1', editable: false},
-                        {title: 'PL1', editable: false},
-                        {
-                            title: '140.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '150.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '1.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '1.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '1.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '1.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '1.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '1.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '1.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '1.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '1.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '1.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '1.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '1.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '160.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '- 15.300',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '230',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {title: 'com', editable: false},
-                        {title: 'rep', editable: false}
-                    ],
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L02'},
-                        {title: '2', editable: false},
-                        {title: 'PL2', editable: false},
-                        {
-                            title: '70.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '8.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '500.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '500.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '500.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '500.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '1.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '500.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '500.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '500.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '500.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '500.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '500.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '500.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '10.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '- 2.300',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '140',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {title: 'com', editable: false},
-                        {title: 'rep', editable: false}
-                    ],
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L02'},
-                        {title: '2A', editable: false},
-                        {title: 'PL2', editable: false},
-                        {
-                            title: '45.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '50.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '160.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '- 15.300',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '230',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {title: 'com', editable: false},
-                        {title: 'rep', editable: false}
-                    ],
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L03'},
-                        {title: '3', editable: false},
-                        {title: 'PL3', editable: false},
-                        {
-                            title: '18.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '20.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '160.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '- 150',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '20',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {title: 'com', editable: false},
-                        {title: 'rep', editable: false}
-                    ],
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L04'},
-                        {title: '4', editable: false},
-                        {title: 'P6', editable: false},
-                        {
-                            title: '14.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '15.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '160.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '- 15.300',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '230',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {title: 'com', editable: false},
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L05'},
-                        {title: 'IP Node', editable: false},
-                        {title: '154', editable: false},
-                        {
-                            title: '8.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '8.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '100.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '8.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '- 15',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '0',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {title: 'com', editable: false},
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L06'},
-                        {title: '8', editable: false},
-                        {title: '12345678', editable: false},
-                        {
-                            title: '3.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '3.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '3.500.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '- 6',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '1',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {title: 'com', editable: false},
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L06'},
-                        {title: '8', editable: false},
-                        {title: '12345678', editable: false},
-                        {
-                            title: '3.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '3.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '3.500.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '- 6',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '1',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {title: 'com', editable: false},
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L06'},
-                        {title: '8', editable: false},
-                        {title: '12345678', editable: false},
-                        {
-                            title: '3.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '3.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '3.500.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '- 6',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '1',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {title: 'com', editable: false},
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L06'},
-                        {title: '8', editable: false},
-                        {title: '12345678', editable: false},
-                        {
-                            title: '3.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '3.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '3.500.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '- 6',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '1',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {title: 'com', editable: false},
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L06'},
-                        {title: '8', editable: false},
-                        {title: '12345678', editable: false},
-                        {
-                            title: '3.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '3.000.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '5.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '3.500.000',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {
-                            title: '- 6',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-
-                        {
-                            title: '1',
-                            editable: false,
-                            cellSkin: 'readonly_bpsp'
-                        },
-                        {title: 'com', editable: false},
-                        {title: 'rep', editable: false}
-                    ],
-
-                ];
-            },
-        }
-    },
 
 
     rocheBPSPMaterialGridTable: {
@@ -3251,7 +2384,7 @@ app.repository = {
             execute: (db) => {
                 return [
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL1'},
 
                         {title: '1', editable: false},
 
@@ -3265,7 +2398,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL2'},
 
                         {title: '1', editable: false},
 
@@ -3279,7 +2412,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL2'},
 
                         {title: '1', editable: false},
 
@@ -3293,7 +2426,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL3'},
 
                         {title: '1', editable: false},
 
@@ -3308,7 +2441,7 @@ app.repository = {
 
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL4'},
 
                         {title: '1', editable: false},
 
@@ -3322,7 +2455,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL5'},
 
                         {title: '1', editable: false},
 
@@ -3336,7 +2469,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
 
                         {title: '1', editable: false},
 
@@ -3350,7 +2483,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
 
                         {title: '1', editable: false},
 
@@ -3364,7 +2497,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
 
                         {title: '1', editable: false},
 
@@ -3378,7 +2511,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
 
                         {title: '1', editable: false},
 
@@ -3392,7 +2525,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
 
                         {title: '1', editable: false},
 
@@ -3406,7 +2539,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
 
                         {title: '1', editable: false},
 
@@ -3420,7 +2553,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
 
                         {title: '1', editable: false},
 
