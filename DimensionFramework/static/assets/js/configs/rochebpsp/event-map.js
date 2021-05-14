@@ -325,6 +325,47 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutDistributionPopup'
         }
     ],
+    'perform.rocheBPSPProductsCheckoutGridTableYearly': [
+        {
+            action: app.fn.conditionalGridTablePopup,
+            argument: [
+                {
+                    conditionKey: 'distributionEdit',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCheckoutDistributionEditPopup'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutDistributionEditPopupGridTable'
+                        }
+                    ]
+                },
+                {
+                    conditionKey: 'else',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCheckoutCopyMergePopup'
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutCopyMergePopupCancel': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutCopyMergePopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutDistributionEditPopupControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutDistributionEditPopup'
+        }
+    ],
     //end rocheBPSPProductsCheckout comment mody
 
 

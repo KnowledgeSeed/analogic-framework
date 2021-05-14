@@ -1,1 +1,6 @@
+/* horizontal_align_center */
 
+.ks-panel-horizontal_align_center{
+    display: flex;
+    justify-content: center;
+}

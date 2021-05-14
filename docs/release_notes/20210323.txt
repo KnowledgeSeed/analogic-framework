@@ -23,13 +23,17 @@ ButtonWidget -> iconColor, iconFontSize
 
 ContainerWidget -> heightFixed
 
-TextWidget -> icon, iconPosition, iconHeight, iconWidth, iconColor
+TextWidget -> icon, iconPosition, iconHeight, iconWidth, iconColor, perform event, bodyFontWeight, titleFontWeight
+
+PanelWidget -> skin
 
 Widget -> applyMeasuresToSection
 
 framework -> repository reference
 processdata.widgetid.finished
 init.widgetid.finished
+
+event.gridtablewidgetId pl. perform.rocheBPSPProductsCheckoutGridTableYearly
 
 Skins:
 
@@ -43,9 +47,11 @@ TextWidget:
  simple_bold_bpsp
  simple_bpsp
  products_gd_readonly_with_icon_bpsp
+ products_gd_writeable_with_icon_bpsp
  products_gd_distribution_icon_bpsp
  monthly_right_bpsp
  monthly_center_bpsp
+ edit_distribution_value
 
 ButtonWidget:
  blue_bg_bpsp
@@ -71,6 +77,8 @@ ButtonWidget:
  red_link_bpsp
  red_link_x_bpsp
  distribution_bpsp
+ blue_button_bpsp
+ split_down_bpsp
 
 
  L01 -> PL1,..., L06->PL6
@@ -81,10 +89,21 @@ ContainerWidget:
 
 GridTableCell:
     locked
+    gridtable_checkout_hierarchy_bpsp_PL1, ..., gridtable_checkout_hierarchy_bpsp_PL6
+    gridtable_hierarchy_bpsp_PL1, ..., gridtable_hierarchy_bpsp_PL6
 
 GridTableHeaderCell:
   no_border_bpsp
   long_border_bpsp
+
+PanelWidget:
+  horizontal_align_center
+
+ToggleWidget:
+    lock_unlock_bpsp
+
+GridTableWidget:
+    edit_distribution_bpsp
 
 
   widgetId probléma: widgetId-08 -> repoban csak 'widgetid-08'

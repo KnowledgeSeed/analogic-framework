@@ -28,7 +28,9 @@ let EventMap, Repository, WidgetConfig;
         WidgetValue['systemValueGlobalStartingPlanYear'] = 2021;//todo temp
         WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';//todo temp
         WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = 'Y0'; //todo temp
-   /*     WidgetValue['systemValueCheckoutProduct'] = 'P6'; //todo temp
+   //     WidgetValue['activeUserName'] = 'Knowledgeseed/Oravecz Tamás'; //todo temp
+   //     WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = 2021;//temp
+  /*      WidgetValue['systemValueCheckoutProduct'] = 'P6'; //todo temp
         WidgetValue['systemValueSegmentedControlPeriodUnit'] = 'Yearly';
         WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';//todo temp
         WidgetValue['rocheBPSPProductsGridRow1Cell2DropBox'] = {

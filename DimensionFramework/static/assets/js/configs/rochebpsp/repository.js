@@ -2,36 +2,49 @@
 'use strict';
 app.repository = {
     rocheBPSPMainApplicationInit: {
-        init: {
-            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
-            type: 'POST',
-            body: (db) => `
+        init: [
             {
-            "MDX" : "SELECT 
-                        {[Value Type].[Value Type].[String]} 
-                    ON COLUMNS , 
-                        {[Measures Control].[Measures Control].[Current Year]} 
-                    ON ROWS 
-                    FROM [Control] 
-            "}`,
-            parsingControl: {
-                type: 'object',
-                query:
-                    {
-                        value: (r, x) => {
-                            WidgetValue['systemValueGlobalStartingPlanYear'] = r.Cells[0].FormattedValue;
-                            WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';
-                            WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = 'Y0';
-                            return true;
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
+                type: 'POST',
+                body: (db) => `{"MDX":"SELECT ({[}Clients].[${db.activeUser}]}*{[zSYS Analogic User Parameter Measure].[FullName]})ON COLUMNS FROM [zSYS Analogic User Parameter]"}`,
+                parsingControl: {
+                    type: 'object',
+                    query:
+                        {
+                            label: (r, x) => {
+                                app.widgetValue['activeUserName'] = r.Cells[0].Value;
+                                return r.Cells[0].Value;
+                            }
                         }
-                    }
+                }
+            },
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+                type: 'POST',
+                body: (db) => `
+            {
+                    "MDX" : "SELECT 
+                                {[Value Type].[Value Type].[String]} 
+                            ON COLUMNS , 
+                                {[Measures Control].[Measures Control].[Current Year]} 
+                            ON ROWS 
+                            FROM [Control] 
+                    "}`,
+                parsingControl: {
+                    type: 'object',
+                    query:
+                        {
+                            value: (r, x) => {
+                                WidgetValue['systemValueGlobalStartingPlanYear'] = r.Cells[0].FormattedValue;
+                                WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';
+                                WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = 'Y0';
+                                WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = WidgetValue['systemValueGlobalStartingPlanYear'];
+                                return true;
+                            }
+                        }
+                }
             }
-        },
-        /*   state: (db) => {
-
-               WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';
-               WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';
-           }*/
+        ]
     },
 
     rocheBPSPMainGreyGridTable: {
@@ -245,20 +258,36 @@ app.repository = {
     },
 
     rocheBPSPProductsYearSegmentedControl: {
-        state: (db) => {
-            let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
-                sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
-            return [
-                {label: s, selected: 'Y0' === sr},
-                {label: ++s, selected: 'Y1' === sr},
-                {label: ++s, selected: 'Y2' === sr},
-                {label: ++s, selected: 'Y3' === sr},
-            ];
+        init: {
+            execute: (db) => {
+                let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
+                    sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
+                return [
+                    {label: s, selected: 'Y0' === sr},
+                    {label: ++s, selected: 'Y1' === sr},
+                    {label: ++s, selected: 'Y2' === sr},
+                    {label: ++s, selected: 'Y3' === sr},
+                ];
+            }
         },
         switch: {
             execute: (db) => {
                 WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = v('rocheBPSPProductsYearSegmentedControl.value');
+                WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = v('rocheBPSPProductsYearSegmentedControl.selected');
             }
+            //write back
+          /*  url: (db) => `/api/v1/Processes('MODULE - UI - Products Columns Selection Update by User Selection')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => {
+                WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = v('rocheBPSPProductsYearSegmentedControl.value');
+                WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = v('rocheBPSPProductsYearSegmentedControl.selected');
+                return `{
+                        "Parameters": [
+                                {"Name": "pUserID", "Value": "${db.activeUserName}"},
+                                {"Name": "pSelectedColumns", "Value": "${v('rocheBPSPProductsColumnSelectorPopupDropBox.value')}"},
+                        ]
+                    }`
+            }*/
         }
     },
 
@@ -271,15 +300,20 @@ app.repository = {
     },
 
     rocheBPSPProductsGridTableYearlyHeaderFocusButton: {
-        state: (db) => {
-            return {visible: db.systemValueFocusedProduct === 'PL1'};
+        init: {
+            execute: (db) => {
+                return {visible: db.systemValueFocusedProduct === 'PL1'};
+            }
         }
     },
 
     rocheBPSPProductsGridTableYearlyHeaderReturnFromFocus: {
-        state: (db) => {
-            return {visible: db.systemValueFocusedProduct !== 'PL1'};
-        }, launch: {
+        init: {
+            execute: (db) => {
+                return {visible: db.systemValueFocusedProduct !== 'PL1'};
+            }
+        },
+        launch: {
             execute: (db) => {
                 WidgetValue['systemValueFocusedProduct'] = 'PL1';
             }
@@ -287,14 +321,18 @@ app.repository = {
     },
 
     rocheBPSPProductsGridTableMonthlyHeaderFocusButton: {
-        state: (db) => {
-            return {visible: db.systemValueFocusedProduct === 'PL1'};
+        init: {
+            execute: (db) => {
+                return {visible: db.systemValueFocusedProduct === 'PL1'};
+            }
         }
     },
 
     rocheBPSPProductsGridTableMonthlyHeaderReturnFromFocus: {
-        state: (db) => {
-            return {visible: db.systemValueFocusedProduct !== 'PL1'};
+        init: {
+            execute: (db) => {
+                return {visible: db.systemValueFocusedProduct !== 'PL1'};
+            }
         }, launch: {
             execute: (db) => {
                 WidgetValue['systemValueFocusedProduct'] = 'PL1';
@@ -310,15 +348,17 @@ app.repository = {
         initDefault: (db) => {
             return [];
         },
-        state: (db) => {
-            let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly';
-            return v(g + '.cellData').filter(e => ['PL1', 'PL2', 'PL3'].includes(e[0].productLevel)).map(e => {
-                return [{
-                    label: e[0].label,
-                    skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].productLevel,
-                    productCode: e[1].title
-                }];
-            });
+        init: {
+            execute: (db) => {
+                let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly';
+                return v(g + '.cellData').filter(e => ['PL1', 'PL2', 'PL3'].includes(e[0].productLevel)).map(e => {
+                    return [{
+                        label: e[0].label,
+                        skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].productLevel,
+                        productCode: e[1].title
+                    }];
+                });
+            }
         }
     },
 
@@ -338,10 +378,12 @@ app.repository = {
         initDefault: (db) => {
             return {};
         },
-        state: (db) => {
-            let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly',
-                c = Utils.getGridTableCell(g, 0), u = c.checkoutUser, d = c.checkedOutAt;
-            return {title: `by<b>${u}</b>since<b>${d}</b>`};
+        init: {
+            execute: (db) => {
+                let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly',
+                    c = Utils.getGridTableCell(g, 0), u = c.checkoutUser, d = c.checkedOutAt;
+                return {title: `by<b>${u}</b>since<b>${d}</b>`};
+            }
         }
     },
 
@@ -981,6 +1023,47 @@ app.repository = {
             }
         }
     },
+    rocheBPSPProductsColumnSelectorUpdateButton: {
+        launch: {
+
+            url: (db) => `/api/v1/Processes('MODULE - UI - Products Columns Selection Update by User Selection')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => `{
+                        "Parameters": [
+                                {"Name": "pUserID", "Value": "${db.activeUserName}"},
+                                {"Name": "pSelectedColumns", "Value": "${v('rocheBPSPProductsColumnSelectorPopupDropBox.value')}"},
+                        ]
+                    }`
+        }
+    },
+    rocheBPSPProductsCheckoutColumnSelectorUpdateButton: {
+        launch: {
+
+            url: (db) => `/api/v1/Processes('MODULE - UI - Products Columns Selection Update by User Selection')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => `{
+                        "Parameters": [
+                                {"Name": "pUserID", "Value": "${db.activeUserName}"},
+                                {"Name": "pSelectedColumns", "Value": "${v('rocheBPSPProductsCheckoutColumnSelectorPopupDropBox.value')}"},
+                        ]
+                    }`
+        }
+    },
+    rocheBPSPProductsColumnSelectorRestoreButton: {
+        launch: {
+
+            url: (db) => `/api/v1/Processes('MODULE - UI - Products Columns Selection Update by User Selection')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => `{
+                        "Parameters": [
+                                {"Name": "pUserID", "Value": "${db.activeUserName}"},
+                        ]
+                    }`
+        }
+    },
+    rocheBPSPProductsCheckoutColumnSelectorRestoreButton: {
+        reference: 'rocheBPSPProductsColumnSelectorRestoreButton'
+    },
     rocheBPSPProductsColumnSelectorPopupDropBox: {
         init:
             {
@@ -988,12 +1071,25 @@ app.repository = {
                 type: 'POST',
                 body: (db) => `{
                     "MDX" : 
-                        "SELECT 
-                       {[}ElementAttributes_zSYS UI Columns Selector].[}ElementAttributes_zSYS UI Columns Selector].[Y0],[}ElementAttributes_zSYS UI Columns Selector].[}ElementAttributes_zSYS UI Columns Selector].[Caption]} 
-                      ON COLUMNS , 
-                       {TM1SubsetToSet([zSYS UI Columns Selector].[zSYS UI Columns Selector],\\"${db.systemValueGlobalSegmentedControlRelativeYear} selector\\")}  
-                      ON ROWS 
-                    FROM [}ElementAttributes_zSYS UI Columns Selector]"
+                        "With
+                          Set DefaultRowSelection As
+                             {TM1SubsetToSet([zSYS UI Columns Selector].[zSYS UI Columns Selector],\\"${db.systemValueGlobalSegmentedControlRelativeYear} selector\\")}
+                          Set UserSpecificSelection As
+                             {StrToSet('{'+[zSYS Analogic UI User Data].([}Clients].[}Clients].[${db.activeUserName}],
+                                  [zSYS Analogic UI Widget].[zSYS Analogic UI Widget].[rocheBPSPProductsColumnSelectorPopupDropBox],
+                                  [zSYS Analogic UI User Data Measure].[zSYS Analogic UI User Data Measure].[sValue])+'}')}
+                          Member [}ElementAttributes_zSYS UI Columns Selector].[}ElementAttributes_zSYS UI Columns Selector].[Flag] As
+                             IIF(Count({UserSpecificSelection})=0,[}ElementAttributes_zSYS UI Columns Selector].[}ElementAttributes_zSYS UI Columns Selector].[Y0],
+                              IIF(Count(Intersect({[zSYS UI Columns Selector].CurrentMember},{UserSpecificSelection}))>0,
+                                1,0))
+                        SELECT 
+                           {[}ElementAttributes_zSYS UI Columns Selector].[}ElementAttributes_zSYS UI Columns Selector].[Flag],
+                            [}ElementAttributes_zSYS UI Columns Selector].[}ElementAttributes_zSYS UI Columns Selector].[Caption]} 
+                          ON COLUMNS , 
+                             {DefaultRowSelection}
+                          ON ROWS 
+                        FROM [}ElementAttributes_zSYS UI Columns Selector] 
+                        "
                 } `,
                 parsingControl: {
                     type: 'object',
@@ -1026,23 +1122,11 @@ app.repository = {
            }*/
     },
     rocheBPSPProductsGridRow1Cell9Button: {
-        init:
-            {
-                url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
-                type: 'POST',
-                body: (db) => `{"MDX":"SELECT ({[}Clients].[${db.activeUser}]}*{[zSYS Analogic User Parameter Measure].[FullName]})ON COLUMNS FROM [zSYS Analogic User Parameter]"}`,
-                parsingControl: {
-                    type: 'object',
-                    query:
-                        {
-                            label: (r, x) => {
-                                app.widgetValue['activeUserName'] = r.Cells[0].Value;
-                                return r.Cells[0].Value;
-                            }
-                        }
-                }
-
-            },
+        init: {
+            execute: (db) => {
+                return {label: WidgetValue['activeUserName']};
+            }
+        },
     },
 
 //start product checkout
@@ -1198,7 +1282,70 @@ app.repository = {
         reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderTextTemplate'
     },
 
+    rocheBPSPProductsCheckoutDistributionEditPopupGridTable: {
+        initCondition: (db) => {
+            return v('rocheBPSPProductsCheckoutGridTableYearly.cellData') !== false;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            execute: (db) => {
+                let thirdCell = Utils.getGridTableCell('rocheBPSPProductsCheckoutGridTableYearly', 2), result = [], i;
+                let yearlyCells = v('rocheBPSPProductsCheckoutGridTableYearly.cellData'), pl;
+                i = v('rocheBPSPProductsCheckoutGridTableYearly.row');
+                pl = parseInt(thirdCell.title);
+                result.push([yearlyCells[i][0], yearlyCells[i][2]]);
+                ++i;
+                while (i < yearlyCells.length && parseInt(yearlyCells[i][2].title) > pl) {
+                    result.push([yearlyCells[i][0], yearlyCells[i][2]]);
+                    ++i;
+                }
 
+                let firstValue = 5000000, otherValue = Math.round(firstValue / (result.length - 1)),
+                    percent = Math.round((otherValue / firstValue) * 100);
+                result[0].push({
+                    value: 1
+                });
+                result[0].push({
+                    title: firstValue,
+                    cellSkin: 'readonly_bpsp'
+                });
+                result[0].push({
+                    title: '100 %',
+                    cellSkin: 'readonly_bpsp'
+
+                });
+                result[0].push({
+                    title: '+ 500.000',
+                    cellSkin: 'readonly_bpsp',
+                    titleFontColor: '#A86B24'
+                });
+                result[0].push({
+                    visible: true
+                });
+                for (i = 1; i < result.length; ++i) {
+                    result[i].push({
+                        value: 0
+                    });
+                    result[i].push({
+                        title: otherValue
+                    });
+                    result[i].push({
+                        title: percent + ' %'
+                    });
+                    result[i].push({
+                        title: 'color test',
+                        cellSkin: 'readonly_bpsp'
+                    });
+                    result[i].push({
+                        visible: false
+                    });
+                }
+                return result;
+            }
+        }
+    },
     rocheBPSPProductsCheckoutGridTableYearly: {
         initCondition: (db) => {
             return WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly';
@@ -1315,9 +1462,11 @@ app.repository = {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return {
                             title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                            cellSkin: 'readonly_bpsp',
-                            skin: 'products_gd_readonly_with_icon_bpsp',
-                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                            cellSkin: '',
+                            icon: 'icon-dots-vertical',
+                            distributionEdit: true,
+                            skin: 'products_gd_writeable_with_icon_bpsp',
+                            cellVisible: true,//r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
                             members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
                         };
                     },
@@ -1748,64 +1897,28 @@ app.repository = {
     //end product checkout
 
     rocheBPSPMainGridRow1Cell5Button: {
-        init:
-            {
-                url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
-                type: 'POST',
-                body: (db) => `{"MDX":"SELECT ({[}Clients].[${db.activeUser}]}*{[zSYS Analogic User Parameter Measure].[FullName]})ON COLUMNS FROM [zSYS Analogic User Parameter]"}`,
-                parsingControl: {
-                    type: 'object',
-                    query:
-                        {
-                            label: (r, x) => {
-                                app.widgetValue['activeUserName'] = app.utils.toTitleCase(r.Cells[0].Value);
-                                return app.utils.toTitleCase(r.Cells[0].Value);
-                            }
-                        }
-                }
-
-            },
+        init: {
+            execute: (db) => {
+                return {label: WidgetValue['activeUserName']};
+            }
+        }
     },
 
     rocheBPSPCustomersGridRow1Cell5Button: {
-        init:
-            {
-                url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
-                type: 'POST',
-                body: (db) => `{"MDX":"SELECT ({[}Clients].[${db.activeUser}]}*{[zSYS Analogic User Parameter Measure].[FullName]})ON COLUMNS FROM [zSYS Analogic User Parameter]"}`,
-                parsingControl: {
-                    type: 'object',
-                    query:
-                        {
-                            label: (r, x) => {
-                                app.widgetValue['activeUserName'] = app.utils.toTitleCase(r.Cells[0].Value);
-                                return app.utils.toTitleCase(r.Cells[0].Value);
-                            }
-                        }
-                }
-
-            },
+        init: {
+            execute: (db) => {
+                return {label: WidgetValue['activeUserName']};
+            }
+        }
     },
 
 
     rocheBPSPSettingsGridRow1Cell5Button: {
-        init:
-            {
-                url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
-                type: 'POST',
-                body: (db) => `{"MDX":"SELECT ({[}Clients].[${db.activeUser}]}*{[zSYS Analogic User Parameter Measure].[FullName]})ON COLUMNS FROM [zSYS Analogic User Parameter]"}`,
-                parsingControl: {
-                    type: 'object',
-                    query:
-                        {
-                            label: (r, x) => {
-                                app.widgetValue['activeUserName'] = app.utils.toTitleCase(r.Cells[0].Value);
-                                return app.utils.toTitleCase(r.Cells[0].Value);
-                            }
-                        }
-                }
-
-            },
+        init: {
+            execute: (db) => {
+                return {label: WidgetValue['activeUserName']};
+            }
+        }
     },
 
 
@@ -1883,24 +1996,11 @@ app.repository = {
 
 
     rocheBPSPMaterialGridRow1Cell3Button: {
-        init:
-            {
-                url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
-                type: 'POST',
-                body: (db) => `{"MDX":"SELECT ({[}Clients].[${db.activeUser}]}*{[zSYS Analogic User Parameter Measure].[FullName]})ON COLUMNS FROM [zSYS Analogic User Parameter]"}`,
-                parsingControl: {
-                    type: 'object',
-                    query:
-                        {
-                            label: (r, x) => {
-                                app.widgetValue['activeUserName'] = app.utils.toTitleCase(r.Cells[0].Value);
-                                return app.utils.toTitleCase(r.Cells[0].Value);
-                            }
-                        }
-                }
-
-            },
-
+        init: {
+            execute: (db) => {
+                return {label: WidgetValue['activeUserName']};
+            }
+        }
     },
 
 
@@ -1939,85 +2039,65 @@ app.repository = {
 
 
     rocheBPSPMaterialGridRow2Cell1SegmentedControl: {
-        state: (db) => {
-            let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
-                sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
-            return [
-                {label: 'By Product Group'},
-                {label: 'By IP Node'},
-            ];
+        init: {
+            execute: (db) => {
+                let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
+                    sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
+                return [
+                    {label: 'By Product Group'},
+                    {label: 'By IP Node'},
+                ];
+            }
         },
 
     },
 
 
     rocheBPSPAddMaterialGridRow2Cell1SegmentedControl: {
-        state: (db) => {
-            let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
-                sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
-            return [
-                {label: 'Import List'},
-                {label: 'Search'},
-            ];
+        init: {
+            execute: (db) => {
+                let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
+                    sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
+                return [
+                    {label: 'Import List'},
+                    {label: 'Search'},
+                ];
+            }
         },
 
     },
 
 
     rocheBPSPAddMaterialGridRow1Cell3Button: {
-        init:
-            {
-                url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
-                type: 'POST',
-                body: (db) => `{"MDX":"SELECT ({[}Clients].[${db.activeUser}]}*{[zSYS Analogic User Parameter Measure].[FullName]})ON COLUMNS FROM [zSYS Analogic User Parameter]"}`,
-                parsingControl: {
-                    type: 'object',
-                    query:
-                        {
-                            label: (r, x) => {
-                                app.widgetValue['activeUserName'] = app.utils.toTitleCase(r.Cells[0].Value);
-                                return app.utils.toTitleCase(r.Cells[0].Value);
-                            }
-                        }
-                }
-
-            },
-
+        init: {
+            execute: (db) => {
+                return {label: WidgetValue['activeUserName']};
+            }
+        }
     },
 
 
     rocheBPSPipPlanningGridRow1Cell9Button: {
-        init:
-            {
-                url: (db) => `/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name))),Cells($select=Ordinal,Value)`,
-                type: 'POST',
-                body: (db) => `{"MDX":"SELECT ({[}Clients].[${db.activeUser}]}*{[zSYS Analogic User Parameter Measure].[FullName]})ON COLUMNS FROM [zSYS Analogic User Parameter]"}`,
-                parsingControl: {
-                    type: 'object',
-                    query:
-                        {
-                            label: (r, x) => {
-                                app.widgetValue['activeUserName'] = app.utils.toTitleCase(r.Cells[0].Value);
-                                return app.utils.toTitleCase(r.Cells[0].Value);
-                            }
-                        }
-                }
-
-            },
-
+        init: {
+            execute: (db) => {
+                return {label: WidgetValue['activeUserName']};
+            }
+        }
     },
 
 
     rocheBPSPipPlanningYearSegmentedControl: {
-        state: (db) => {
-            let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
-                sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
-            return [
-                {label: s, selected: 'Y0' === sr},
-                {label: ++s, selected: 'Y1' === sr},
-                {label: ++s, selected: 'Y2' === sr},
-                {label: ++s, selected: 'Y3' === sr},
-            ];
+        init: {
+            execute: (db) => {
+                let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
+                    sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
+                return [
+                    {label: s, selected: 'Y0' === sr},
+                    {label: ++s, selected: 'Y1' === sr},
+                    {label: ++s, selected: 'Y2' === sr},
+                    {label: ++s, selected: 'Y3' === sr},
+                ];
+            }
         },
     },
 
@@ -2057,27 +2137,31 @@ app.repository = {
 
 
     rocheBPSPipPlanningGridRow2Cell1SegmentedControl: {
-        state: (db) => {
-            let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
-                sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
-            return [
-                {label: 'Cash Sales'},
-                {label: 'Lease'},
-                {label: 'Return'},
-            ];
+        init: {
+            execute: (db) => {
+                let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
+                    sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
+                return [
+                    {label: 'Cash Sales'},
+                    {label: 'Lease'},
+                    {label: 'Return'},
+                ];
+            }
         },
 
     },
 
 
     rocheBPSPipPlanningGridRow2Cell2SegmentedControl: {
-        state: (db) => {
-            let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
-                sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
-            return [
-                {label: 'New'},
-                {label: 'Used'},
-            ];
+        init: {
+            execute: (db) => {
+                let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
+                    sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
+                return [
+                    {label: 'New'},
+                    {label: 'Used'},
+                ];
+            }
         },
 
     },
@@ -2116,8 +2200,8 @@ app.repository = {
         initDefault: (db) => {
             return [];
         },
-        state:
-            (db) => {
+        init: {
+            execute: (db) => {
                 return [
                     [
                         {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL1'},
@@ -3161,7 +3245,8 @@ app.repository = {
                     ],
 
                 ];
-            }
+            },
+        }
     },
 
 
@@ -3169,8 +3254,8 @@ app.repository = {
         initDefault: (db) => {
             return [];
         },
-        state:
-            (db) => {
+        init: {
+            execute: (db) => {
                 return [
                     [
                         {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL1'},
@@ -3357,6 +3442,7 @@ app.repository = {
 
                 ];
             }
+        }
     },
 
 };

@@ -974,6 +974,24 @@
     text-overflow: ellipsis;
 }
 
+/* blue_button_bpsp */
+.ks-button-blue_button_bpsp.ks-button {
+    background-color: #0066cc;
+    border-radius: 8px;
+}
+
+.ks-button-blue_button_bpsp .ks-button-label {
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: imago;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+}
+
 
 /* blue_link_bpsp */
 
@@ -1221,6 +1239,12 @@
 .ks-button-distribution_bpsp:hover{
     background-color: rgba(220, 235, 250, 0.47);
     border-radius: 8px;
+}
+
+/* split_down_bpsp */
+
+.ks-button-split_down_bpsp .ks-button-label {
+    margin-left:5px;
 }
 
 

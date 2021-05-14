@@ -28,7 +28,7 @@ class SliderWidget extends Widget {
         v.value = Utils.parseNumber(v.value); //temp!!!!!!
 
         this.value = v;
-
+;
         return `
 <div data-id="${this.options.id}" class="ks-slider ks-slider-${v.skin}" style="${this.getGeneralStyles(d).join('')}">
     <div class="ks-slider-touch" style="display: none;">
