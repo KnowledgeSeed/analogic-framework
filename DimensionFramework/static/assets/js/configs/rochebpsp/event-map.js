@@ -347,6 +347,10 @@ app.eventMap = {
             argument: ['rocheBPSPProductsCommentShow']
         },
 
+        {
+            action: app.fn.togglePopup,
+            argument: ['rocheBPSPProductsCommentEdit']
+        }
     ],
 
 

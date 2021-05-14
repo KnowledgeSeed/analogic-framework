@@ -2120,7 +2120,7 @@ app.repository = {
             (db) => {
                 return [
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL1'},
                         {title: '1', editable: false},
                         {title: 'PL1', editable: false},
                         {
@@ -2214,7 +2214,7 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L02'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL2'},
                         {title: '2', editable: false},
                         {title: 'PL2', editable: false},
                         {
@@ -2308,7 +2308,7 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L02'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL2'},
                         {title: '2A', editable: false},
                         {title: 'PL2', editable: false},
                         {
@@ -2402,7 +2402,7 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L03'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL3'},
                         {title: '3', editable: false},
                         {title: 'PL3', editable: false},
                         {
@@ -2496,7 +2496,7 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L04'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL4'},
                         {title: '4', editable: false},
                         {title: 'P6', editable: false},
                         {
@@ -2591,7 +2591,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L05'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL5'},
                         {title: 'IP Node', editable: false},
                         {title: '154', editable: false},
                         {
@@ -2686,7 +2686,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L06'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
                         {title: '8', editable: false},
                         {title: '12345678', editable: false},
                         {
@@ -2781,7 +2781,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L06'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
                         {title: '8', editable: false},
                         {title: '12345678', editable: false},
                         {
@@ -2876,7 +2876,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L06'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
                         {title: '8', editable: false},
                         {title: '12345678', editable: false},
                         {
@@ -2971,7 +2971,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L06'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
                         {title: '8', editable: false},
                         {title: '12345678', editable: false},
                         {
@@ -3066,7 +3066,7 @@ app.repository = {
                     ],
 
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L06'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
                         {title: '8', editable: false},
                         {title: '12345678', editable: false},
                         {
@@ -3173,7 +3173,7 @@ app.repository = {
             (db) => {
                 return [
                     [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL1'},
 
                         {title: '1', editable: false},
 
@@ -3186,8 +3186,8 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL2'},
 
                         {title: '1', editable: false},
 
@@ -3200,8 +3200,8 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL2'},
 
                         {title: '1', editable: false},
 
@@ -3214,8 +3214,8 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL3'},
 
                         {title: '1', editable: false},
 
@@ -3229,8 +3229,8 @@ app.repository = {
                     ],
 
 
-                                        [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL4'},
 
                         {title: '1', editable: false},
 
@@ -3243,8 +3243,8 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL5'},
 
                         {title: '1', editable: false},
 
@@ -3257,8 +3257,8 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
 
                         {title: '1', editable: false},
 
@@ -3271,8 +3271,8 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
 
                         {title: '1', editable: false},
 
@@ -3285,8 +3285,8 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
 
                         {title: '1', editable: false},
 
@@ -3299,8 +3299,8 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
 
                         {title: '1', editable: false},
 
@@ -3313,8 +3313,8 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
 
                         {title: '1', editable: false},
 
@@ -3327,8 +3327,8 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
 
                         {title: '1', editable: false},
 
@@ -3341,8 +3341,8 @@ app.repository = {
                         {title: 'rep', editable: false}
                     ],
 
-                                        [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_L01'},
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
 
                         {title: '1', editable: false},
 
