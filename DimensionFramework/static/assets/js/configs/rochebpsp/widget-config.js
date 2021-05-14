@@ -1257,7 +1257,10 @@ app.widgetConfig = {
                                                     id: 'rocheBPSPProductsColumnSelectorPopupDropBox',
                                                     type: DropBoxWidget,
                                                     multiSelect: true,
-                                                    skin: 'column_selector_bpsp'
+                                                    skin: 'column_selector_bpsp',
+                                                    listen: [
+                                                        {event: '', method: 'refresh'}
+                                                    ]
                                                 }
                                             ]
                                         }
@@ -1360,7 +1363,8 @@ app.widgetConfig = {
                             'event': 'launch.rocheBPSPProductsProductSelectorShortcutPopupGridTableButton01.finished',
                             'method': 'refresh'
                         },
-                        {'event': 'switch.rocheBPSPProductsYearSegmentedControl.finished', 'method': 'refresh'}
+                        {'event': 'switch.rocheBPSPProductsYearSegmentedControl.finished', 'method': 'refresh'},
+                        {'event': 'launch.rocheBPSPProductsColumnSelectorUpdateButton.finished', 'method' : 'refresh'}
                     ],
                     title: '',
                     widgets: [
