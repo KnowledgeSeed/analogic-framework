@@ -11,6 +11,13 @@ app.widgetConfig = {
                     type: ShadowWidget
                 },
                 {
+                    id: 'rocheBPSPMainApplicationInit2',
+                    type: ShadowWidget,
+                    listen:[
+                        {'event': 'bodyReady', 'method' : 'refresh'}
+                    ]
+                },
+                {
                     id: 'rocheBPSPMainGrid',
                     type: GridWidget,
                     marginLeft: '10',

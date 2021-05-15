@@ -22,7 +22,7 @@ app.repository = {
                 url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
                 type: 'POST',
                 body: (db) => `
-            {
+                   {
                     "MDX" : "SELECT 
                                 {[Value Type].[Value Type].[String]} 
                             ON COLUMNS , 
@@ -37,14 +37,53 @@ app.repository = {
                             value: (r, x) => {
                                 WidgetValue['systemValueGlobalStartingPlanYear'] = r.Cells[0].FormattedValue;
                                 WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';
-                                WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = 'Y0';
-                                WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = WidgetValue['systemValueGlobalStartingPlanYear'];
                                 return true;
                             }
                         }
                 }
             }
         ]
+    },
+
+    rocheBPSPMainApplicationInit2: {
+        initCondition: (db) => {
+            return db.systemValueGlobalStartingPlanYear ? true : false;
+        },
+        initDefault: (db) => {
+            return '';
+        },
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+                type: 'POST',
+                body: (db) => `
+                   {
+                    "MDX" : "SELECT 
+                            {[zSYS Analogic UI User Data Measure].[zSYS Analogic UI User Data Measure].[sValue]} 
+                              ON COLUMNS , 
+                               {[zSYS Analogic UI Widget].[zSYS Analogic UI Widget].[rocheBPSPProductsYearSegmentedControl]} 
+                              ON ROWS 
+                            FROM [zSYS Analogic UI User Data] 
+                            WHERE 
+                              (
+                               [}Clients].[}Clients].[${db.activeUser}]
+                              ) 
+                    "}`,
+                parsingControl: {
+                    type: 'object',
+                    query:
+                        {
+                            value: (r, x) => {
+                                WidgetValue['systemValueGlobalSegmentedControlCellsetId'] = r.ID;
+                                WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = r.Cells[0].FormattedValue;//Y0, Y1, Y2, Y3
+                                let l = parseInt(WidgetValue['systemValueGlobalSegmentedControlRelativeYear'].replace('Y', ''));
+                                WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']) + l;
+                                return true;
+                            }
+                        }
+                }
+            }
+
     },
 
     rocheBPSPMainGreyGridTable: {
@@ -118,12 +157,6 @@ app.repository = {
                 execute: (db) => {
                     WidgetValue['systemValueFocusedProduct'] = Utils.getGridTableCell(WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly', 1).title;
                 }
-                /*  url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
-                  type: 'POST',
-                  body: (db) => `{
-                          "Parameters": [
-                          ]
-                      }`*/
             },
     },
 
@@ -271,23 +304,13 @@ app.repository = {
             }
         },
         switch: {
-            execute: (db) => {
+            url: (db) => `/api/v1/Cellsets('${WidgetValue.systemValueGlobalSegmentedControlCellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db) => {
                 WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = v('rocheBPSPProductsYearSegmentedControl.value');
                 WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = v('rocheBPSPProductsYearSegmentedControl.selected');
+                return `{"Ordinal": 0,"Value": \"${db.systemValueGlobalSegmentedControlRelativeYear}\"}`
             }
-            //write back
-            /*  url: (db) => `/api/v1/Processes('MODULE - UI - Products Columns Selection Update by User Selection')/tm1.ExecuteWithReturn`,
-              type: 'POST',
-              body: (db) => {
-                  WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = v('rocheBPSPProductsYearSegmentedControl.value');
-                  WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = v('rocheBPSPProductsYearSegmentedControl.selected');
-                  return `{
-                          "Parameters": [
-                                  {"Name": "pUserID", "Value": "${db.activeUserName}"},
-                                  {"Name": "pSelectedColumns", "Value": "${v('rocheBPSPProductsColumnSelectorPopupDropBox.value')}"},
-                          ]
-                      }`
-              }*/
         }
     },
 
@@ -1036,7 +1059,14 @@ app.repository = {
         }
     },
     rocheBPSPProductsColumnSelectorUpdateButton: {
+
         launch: {
+            validation: (db) => {
+                return {
+                    success: v('rocheBPSPProductsColumnSelectorPopupDropBox.value').split(',').length <= 10,
+                    message: 'The max number of columns allowed is 10. Please deselect some columns.'
+                };
+            },
             url: (db) => `/api/v1/Processes('MODULE - UI - Products Columns Selection Update by User Selection')/tm1.ExecuteWithReturn`,
             type: 'POST',
             body: (db) => `{
@@ -1049,6 +1079,12 @@ app.repository = {
     },
     rocheBPSPProductsCheckoutColumnSelectorUpdateButton: {
         launch: {
+            validation: (db) => {
+                return {
+                    success: v('rocheBPSPProductsCheckoutColumnSelectorPopupDropBox.value').split(',').length <= 10,
+                    message: 'The max number of columns allowed is 10. Please deselect some columns.'
+                };
+            },
             url: (db) => `/api/v1/Processes('MODULE - UI - Products Columns Selection Update by User Selection')/tm1.ExecuteWithReturn`,
             type: 'POST',
             body: (db) => `{
@@ -1355,23 +1391,40 @@ app.repository = {
             }
         }
     },
+    rocheBPSPProductsCheckoutGridRow2Cell3Button: {
+        launch:
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => `{
+                        "Parameters": [
+                                {"Name": "pUserID", "Value": "${db.activeUserName}"},
+                                {"Name": "pProduct", "Value": "${Utils.setAndGetGridTableSystemValueByCurrentRow(WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly', 1, 'systemValueCheckoutProduct', 'title')}"},
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
+                                {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}"},
+                                {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"}
+                        ]
+                    }`
+            },
+    },
     rocheBPSPProductsCheckoutGridTableYearlyFunction: {
         getCell: (index, r) => {
-            let uiIndex = index + 10, uiValue = parseInt(r.Cells[uiIndex].FormattedValue), skin, cellSkin = '', icon = '', distributionEdit = false;
-            if(uiValue === 1){
+            let uiIndex = index + 10, uiValue = parseInt(r.Cells[uiIndex].FormattedValue), skin, cellSkin = '',
+                icon = '', distributionEdit = false;
+            if (uiValue === 1) {
                 skin = 'products_gd_readonly_with_icon_bpsp';
                 cellSkin = 'readonly_bpsp';
                 icon = 'icon-copy';
             }
-            if(uiValue === 0){
+            if (uiValue === 0) {
                 cellSkin = 'readonly_bpsp';
             }
-            if((uiValue === 2 || uiValue === 3) && r.Cells[index].Members[6].Name !== 'Final Sales Plan') {
+            if ((uiValue === 2 || uiValue === 3) && r.Cells[index].Members[6].Name !== 'Final Sales Plan') {
                 skin = 'products_gd_readonly_with_icon_bpsp';
                 cellSkin = 'readonly_bpsp';
                 icon = 'icon-copy';
             }
-            if(uiValue === 2 && r.Cells[index].Members[6].Name !== 'Final Sales Plan' ){
+            if (uiValue === 2 && r.Cells[index].Members[6].Name !== 'Final Sales Plan') {
                 skin = 'products_gd_writeable_with_icon_bpsp';
                 cellSkin = '';
                 icon = 'icon-dots-vertical';
@@ -1385,7 +1438,7 @@ app.repository = {
                 cellVisible: r.Cells[index].Members[6].Name !== 'DUMMY',
                 members: r.Cells[index].Members
             };
-            if(icon !== ''){
+            if (icon !== '') {
                 result['icon'] = icon;
             }
             return result;
@@ -1501,28 +1554,28 @@ app.repository = {
                     (r, x) => {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 4;
                         return Repository.rocheBPSPProductsCheckoutGridTableYearlyFunction.getCell(WidgetValue['systemValueProductsYearlyRelativeIndex'], r);
-                      /*  let uiIndex = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 11;
-                        return {
-                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                            cellSkin: 'readonly_bpsp',
-                            skin: 'products_gd_readonly_with_icon_bpsp',
-                            icon: 'icon-copy',
-                            cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
-                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
-                        };*/
+                        /*  let uiIndex = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 11;
+                          return {
+                              title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
+                              cellSkin: 'readonly_bpsp',
+                              skin: 'products_gd_readonly_with_icon_bpsp',
+                              icon: 'icon-copy',
+                              cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                              members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
+                          };*/
                     },
                     (r, x) => {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return Repository.rocheBPSPProductsCheckoutGridTableYearlyFunction.getCell(WidgetValue['systemValueProductsYearlyRelativeIndex'], r);
-                      /*  return {
-                            title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                            cellSkin: '',
-                            icon: 'icon-dots-vertical',
-                            distributionEdit: true,
-                            skin: 'products_gd_writeable_with_icon_bpsp',
-                            cellVisible: true,//r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
-                            members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
-                        };*/
+                        /*  return {
+                              title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
+                              cellSkin: '',
+                              icon: 'icon-dots-vertical',
+                              distributionEdit: true,
+                              skin: 'products_gd_writeable_with_icon_bpsp',
+                              cellVisible: true,//r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
+                              members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
+                          };*/
                     },
                     (r, x) => {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
