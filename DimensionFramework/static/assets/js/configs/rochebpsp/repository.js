@@ -76,7 +76,7 @@ app.repository = {
                             value: (r, x) => {
                                 WidgetValue['systemValueGlobalSegmentedControlCellsetId'] = r.ID;
                                 WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = r.Cells[0].FormattedValue;//Y0, Y1, Y2, Y3
-                                if(WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] === null || WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] === ''){
+                                if (WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] === null || WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] === '') {
                                     WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = 'Y0';
                                 }
                                 let l = parseInt(WidgetValue['systemValueGlobalSegmentedControlRelativeYear'].replace('Y', ''));
@@ -1348,7 +1348,7 @@ app.repository = {
 
     rocheBPSPProductsCheckoutDistributionEditPopupGridTable: {
         initCondition: (db) => {
-            return v('rocheBPSPProductsCheckoutGridTableYearly.cellData.lenght') !== false &&  v('rocheBPSPProductsCheckoutGridTableYearly.cellData.lenght') !== 0;
+            return v('rocheBPSPProductsCheckoutGridTableYearly.cellData.lenght') !== false && v('rocheBPSPProductsCheckoutGridTableYearly.cellData.lenght') !== 0;
         },
         initDefault: (db) => {
             return [];
@@ -1629,9 +1629,7 @@ app.repository = {
         }
     },
     rocheBPSPProductsCheckoutGridRow2Cell1aButton: {
-        launch: {
-
-        }
+        launch: {}
     },
     rocheBPSPProductsCheckoutGridTableMonthly: {
         initCondition: (db) => {
@@ -2205,7 +2203,15 @@ app.repository = {
                     {label: 'Return'},
                 ];
             }
+
         },
+
+        switch: {
+            execute: (db) => {
+                WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = v('rocheBPSPipPlanningYearSegmentedControl.value');
+            }
+        }
+
 
     },
 
@@ -2257,21 +2263,30 @@ app.repository = {
 
     rocheBPSPipPlanningGridTableMonthly:
         {
+
             init:
                 {
                     url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
                     type: 'POST',
                     body: (db) => `{"MDX":"
+
 With
 --Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion
      Set DefaultProductRows AS
-     {TM1DRILLDOWNMEMBER({[Materials].[BPSP Budget].[PL1]}, ALL, RECURSIVE )}
+      {TM1SubsetToSet([Materials].[BPSP Budget IP],'1391')}
+--     {TM1DRILLDOWNMEMBER({[Materials].[BPSP Budget IP].[IPL1]}, ALL, RECURSIVE )}
 --Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion and systemValueGlobalCompanyFocusedElement
-     Set FocusedOnProductRows AS
-     {TM1DRILLDOWNMEMBER({[Materials].[BPSP Budget].[PL1]}, ALL, RECURSIVE )}
+     Set FocusedOnProductRows AS 
+      {Intersect({TM1DRILLDOWNMEMBER({[Materials].[BPSP Budget IP].[IPL1]}, ALL, RECURSIVE )},{DefaultProductRows})}
 --Decide which rowSet to use
      MEMBER [Materials].[BPSP Budget].[ProductIsFocused] AS 
      IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
+-- Decide 1st column element
+     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn] As
+     IIF('2020'='2020', '([Periods].[Periods].[2020],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])',
+                        '([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan])')
+     Set FirstColumn As
+     {StrToSet('{'+[LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn]+'}')}
 -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialName] as 
             [Materials].[BPSP Budget].CurrentMember.Properties('BPSP Budget Caption')
@@ -2280,7 +2295,7 @@ With
      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialLevel] as 
             [Materials].[BPSP Budget].CurrentMember.Properties('BPSP Budget IP Caption')
      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS] as 
-            [Materials].[BPSP Budget].CurrentMember.Properties('IP DIS Relevant Budget')
+            [Materials].[BPSP Budget].CurrentMember.Properties('IP DIS Relevant')
      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment] as
             [Sales Plan IP].([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan],[Measures Sales Plan IP].[Measures Sales Plan IP].[Comment Flag])
      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutUser] as 
@@ -2289,9 +2304,9 @@ With
             [Sales Plan IP].([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI Checkout Flag],[Measures Sales Plan IP].[Measures Sales Plan IP].[EditedDateTime])
 -- Create the first 5 column with information
      Set FixColumns AS
-     {([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialName]),
-      ([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialLevel]),
-      ([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialCode]),
+     {([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialName]),
+      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialLevel]),
+      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialCode]),
       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutFlag]),
       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutUser]),
       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutDateTime])}
@@ -2300,8 +2315,8 @@ With
       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment])}
 -- column Tuple Create
      Set ColumnSelection As
-        {([Periods].[Periods].[2020],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity]),
-         ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[BW T3]),
+        Union({FirstColumn},
+        {([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Last Submitted Plan]),
          ([Periods].[Periods].[202101],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
          ([Periods].[Periods].[202102],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
          ([Periods].[Periods].[202103],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
@@ -2315,10 +2330,9 @@ With
          ([Periods].[Periods].[202111],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
          ([Periods].[Periods].[202112],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Variance Final Plan vs Total Customer]),
-          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Variance Final Plan vs T3])}
+          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Variance Final vs Last Submitted Plan]),
+          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Variance Final vs Last Submitted Plan])},All)
 SELECT 
---columns
      Union(Union({FixColumns},{ColumnSelection},All),{FinalColumns},All)
   ON COLUMNS , 
 -- rows
@@ -2333,14 +2347,15 @@ WHERE
    [Contract Types].[Contract Types].[Cash Sales],
    [Instrument Types].[Instrument Types].[New]
   )
+
             "}`,
                     parsingControl: {
                         type: 'matrix',
-                        length: 24,
+                        length: 25,
                         query: [
 
                             (r, x) => {
-                                return {label: r.Cells[x].FormattedValue}
+                                return {label: r.Cells[x].FormattedValue, skin: 'gridtable_hierarchy_bpsp_PL1'}
                             },
 
                             (r, x) => {
@@ -2352,30 +2367,14 @@ WHERE
                             },
 
                             (r, x) => {
-                                return {title: r.Cells[x + 3].FormattedValue}
-                            },
-                            (r, x) => {
-                                return {title: r.Cells[x + 4].FormattedValue}
-                            },
-
-                            (r, x) => {
-                                return {title: r.Cells[x + 5].FormattedValue}
-                            },
-
-                            (r, x) => {
                                 return {title: r.Cells[x + 6].FormattedValue}
                             },
-
                             (r, x) => {
                                 return {title: r.Cells[x + 7].FormattedValue}
                             },
 
                             (r, x) => {
                                 return {title: r.Cells[x + 8].FormattedValue}
-                            },
-
-                            (r, x) => {
-                                return {title: r.Cells[x + 9].FormattedValue}
                             },
 
                             (r, x) => {
@@ -2422,9 +2421,25 @@ WHERE
                                 return {title: r.Cells[x + 20].FormattedValue}
                             },
 
+                            (r, x) => {
+                                return {title: r.Cells[x + 21].FormattedValue}
+                            },
 
                             (r, x) => {
                                 return {title: r.Cells[x + 21].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 22].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 23].FormattedValue}
+                            },
+
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 24].FormattedValue}
                             },
 
 
@@ -2435,199 +2450,62 @@ WHERE
         },
 
 
-    rocheBPSPMaterialGridTable: {
-        initDefault: (db) => {
-            return [];
+    rocheBPSPMaterialGridTable:
+        {
+
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => `{"MDX":"
+
+SELECT 
+
+   {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP Budget Name],[}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name],[}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element]} 
+  ON COLUMNS , 
+   {TM1SubsetToSet([Materials].[BPSP Budget],'1391 MM')} 
+  ON ROWS 
+FROM [}ElementAttributes_Materials] 
+
+            "}`,
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 3,
+                        query: [
+
+                            (r, x) => {
+                                return {
+                                    label: r.Cells[x].FormattedValue,
+                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x + 1].FormattedValue.replace('a', '')
+                                }
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 1].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 2].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {}
+                            },
+
+                            (r, x) => {
+                                return {}
+                            },
+
+                            (r, x) => {
+                                return {}
+                            },
+
+
+                        ]
+                    }
+
+                },
         },
-        init: {
-            execute: (db) => {
-                return [
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL1'},
 
-                        {title: '1', editable: false},
-
-                        {title: 'PL1', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL2'},
-
-                        {title: '1', editable: false},
-
-                        {title: 'PL1', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL2'},
-
-                        {title: '1', editable: false},
-
-                        {title: 'PL1', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL3'},
-
-                        {title: '1', editable: false},
-
-                        {title: 'PL1', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'rep', editable: false}
-                    ],
-
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL4'},
-
-                        {title: '1', editable: false},
-
-                        {title: 'PL1', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL5'},
-
-                        {title: '1', editable: false},
-
-                        {title: 'PL1', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
-
-                        {title: '1', editable: false},
-
-                        {title: 'PL1', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
-
-                        {title: '1', editable: false},
-
-                        {title: 'PL1', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
-
-                        {title: '1', editable: false},
-
-                        {title: 'PL1', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
-
-                        {title: '1', editable: false},
-
-                        {title: 'PL1', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
-
-                        {title: '1', editable: false},
-
-                        {title: 'PL1', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
-
-                        {title: '1', editable: false},
-
-                        {title: 'PL1', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'rep', editable: false}
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_bpsp_PL6'},
-
-                        {title: '1', editable: false},
-
-                        {title: 'PL1', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'com', editable: false},
-
-                        {title: 'rep', editable: false}
-                    ],
-
-                ];
-            }
-        }
-    },
 
 };

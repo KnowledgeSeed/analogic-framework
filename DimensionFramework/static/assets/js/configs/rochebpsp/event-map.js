@@ -518,6 +518,10 @@ app.eventMap = {
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPMain'
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPipPlanningGridRow1Cell3DropBox']
         }
     ],
 
@@ -526,6 +530,27 @@ app.eventMap = {
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPSettings'
+        }
+    ],
+
+    'launch.rocheBPSPipPlanningGridRow2Cell1SegmentedControlItem1': [
+        {
+            action: app.fn.addSystemValue,
+            argument: ['dynamicValue', 'Cash Sales']
+        }
+    ],
+
+    'launch.rocheBPSPipPlanningGridRow2Cell1SegmentedControlItem2': [
+        {
+            action: app.fn.addSystemValue,
+            argument: ['dynamicValue', 'Lease']
+        }
+    ],
+
+    'launch.rocheBPSPipPlanningGridRow2Cell1SegmentedControlItem3': [
+        {
+            action: app.fn.addSystemValue,
+            argument: ['dynamicValue', 'Return']
         }
     ],
 
