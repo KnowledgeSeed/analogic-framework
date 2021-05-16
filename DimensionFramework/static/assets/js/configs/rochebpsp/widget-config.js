@@ -3014,8 +3014,7 @@ app.widgetConfig = {
                                             type: TextWidget,
                                             width: '190',
                                             skin: 'simple_bold_bpsp',
-                                            marginTop: 10,
-                                            title: '6191 Roche Dia Denmark'
+                                            marginTop: 10
                                         }
                                     ]
                                 },
@@ -3032,8 +3031,7 @@ app.widgetConfig = {
                                             type: TextWidget,
                                             width: '130',
                                             skin: 'simple_bpsp',
-                                            marginTop: 10,
-                                            title: 'DK-Denmark'
+                                            marginTop: 10
                                         }
                                     ]
                                 },
@@ -3189,6 +3187,7 @@ app.widgetConfig = {
                                             width: '100%',
                                             icon: 'icon-doc-arrow-up',
                                             visible: false,
+                                            url: 'export?export_key=rocheMonthly',
                                             skin: 'blue_link_columns_bpsp'
                                         },
                                         {

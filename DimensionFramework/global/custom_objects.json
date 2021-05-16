@@ -4,6 +4,11 @@
     "class": "Export",
     "method": "davidExport1"
   },
+  "rocheMonthly" : {
+    "namespace": "DimensionFramework.Custom.Export",
+    "class": "Export",
+    "method": "rocheMonthly"
+  },
   "cool" : {
     "namespace": "DimensionFramework.Custom.BusinessLogic",
     "class": "BusinessLogic",

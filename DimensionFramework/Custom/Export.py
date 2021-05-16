@@ -12,6 +12,16 @@ class Export:
     def __init__(self):
         pass
 
+    def rocheMonthly(self, request, tm1_service, setting):
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        worksheet = workbook.add_worksheet()
+
+        workbook.close()
+        output.seek(0)
+        return output
+
+
     def davidExport1(self, request, tm1_service, setting):
         mdx = 'SELECT NON EMPTY TM1SubsetToSet([Period], "Years") ON COLUMNS, NON EMPTY TM1SubsetToSet([Deal Email Report Measure], "Default") ON ROWS FROM [Deal Email Report] WHERE ([Deal].[Deal_0001])'
         data = tm1_service.cubes.cells.execute_mdx(mdx)

@@ -24,7 +24,7 @@ class Base:
         if export_key is None:
             return self.getNotFoundResponse()
 
-        export_description = self.getCustomObjectDescription(export_key)
+        export_description = self.setting.getCustomObjectDescription(export_key)
 
         if export_description is None:
             return self.getNotFoundResponse()

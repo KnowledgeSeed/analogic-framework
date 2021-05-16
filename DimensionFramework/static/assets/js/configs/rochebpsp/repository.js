@@ -76,6 +76,9 @@ app.repository = {
                             value: (r, x) => {
                                 WidgetValue['systemValueGlobalSegmentedControlCellsetId'] = r.ID;
                                 WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = r.Cells[0].FormattedValue;//Y0, Y1, Y2, Y3
+                                if(WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] === null || WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] === ''){
+                                    WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = 'Y0';
+                                }
                                 let l = parseInt(WidgetValue['systemValueGlobalSegmentedControlRelativeYear'].replace('Y', ''));
                                 WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']) + l;
                                 return true;
@@ -853,7 +856,7 @@ app.repository = {
                         -- query
                         SELECT 
                         --Columns
-                           {Union(Union(FixColumns,{TM1SubsetToSet([Periods].[Periods], \\"zUI ${db.systemValueGlobalSegmentedControlRelativeYear} Product Monthly Input\\")},All),{Comment},All)}
+                           {Union(Union(FixColumns,{DRILLDOWNMEMBER({[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]},{[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]})},All),{Comment},All)}
                            PROPERTIES [Periods].[Periods].[Caption]ON COLUMNS , 
                         -- rows
                           {StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
@@ -862,9 +865,9 @@ app.repository = {
                         WHERE 
                           (
                            [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
-                       [Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
-                       [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}],
-                       [Receivers].[Receivers].[${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}],
+                           [Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
+                           [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}],
+                           [Receivers].[Receivers].[${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}],
                            [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value]
                           )
                         "
@@ -1097,7 +1100,7 @@ app.repository = {
     },
     rocheBPSPProductsColumnSelectorRestoreButton: {
         launch: {
-            url: (db) => `/api/v1/Processes('MODULE - UI - Products Columns Selection Update by User Selection')/tm1.ExecuteWithReturn`,
+            url: (db) => `/api/v1/Processes('MODULE - UI - Products Columns Selection Restore Default')/tm1.ExecuteWithReturn`,
             type: 'POST',
             body: (db) => `{
                         "Parameters": [
@@ -1124,7 +1127,7 @@ app.repository = {
                                   [zSYS Analogic UI Widget].[zSYS Analogic UI Widget].[rocheBPSPProductsColumnSelectorPopupDropBox],
                                   [zSYS Analogic UI User Data Measure].[zSYS Analogic UI User Data Measure].[sValue])+'}')}
                           Member [}ElementAttributes_zSYS UI Columns Selector].[}ElementAttributes_zSYS UI Columns Selector].[Flag] As
-                             IIF(Count({UserSpecificSelection})=0,[}ElementAttributes_zSYS UI Columns Selector].[}ElementAttributes_zSYS UI Columns Selector].[Y0],
+                             IIF(Count({UserSpecificSelection})=0,[}ElementAttributes_zSYS UI Columns Selector].[}ElementAttributes_zSYS UI Columns Selector].[${db.systemValueGlobalSegmentedControlRelativeYear}],
                               IIF(Count(Intersect({[zSYS UI Columns Selector].CurrentMember},{UserSpecificSelection}))>0,
                                 1,0))
                         SELECT 
@@ -1180,6 +1183,22 @@ app.repository = {
         switch: {
             execute: (db) => {
                 WidgetValue['systemValueSegmentedControlPeriodUnit'] = v('rocheBPSPProductsCheckoutPeriodUnitSegmentedControl.selected');
+            }
+        }
+    },
+
+    rocheBPSPProductsCheckoutGridRow1Cell2CompanyText: {
+        init: {
+            execute: (db) => {
+                return {title: v('rocheBPSPProductsGridRow1Cell2DropBox.value')};
+            }
+        }
+    },
+
+    rocheBPSPProductsCheckoutGridRow1Cell3ReceiverText: {
+        init: {
+            execute: (db) => {
+                return {title: v('rocheBPSPProductsGridRow1Cell3DropBox.value')};
             }
         }
     },
@@ -1329,7 +1348,7 @@ app.repository = {
 
     rocheBPSPProductsCheckoutDistributionEditPopupGridTable: {
         initCondition: (db) => {
-            return v('rocheBPSPProductsCheckoutGridTableYearly.cellData') !== false;
+            return v('rocheBPSPProductsCheckoutGridTableYearly.cellData.lenght') !== false &&  v('rocheBPSPProductsCheckoutGridTableYearly.cellData.lenght') !== 0;
         },
         initDefault: (db) => {
             return [];
@@ -1554,28 +1573,10 @@ app.repository = {
                     (r, x) => {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 4;
                         return Repository.rocheBPSPProductsCheckoutGridTableYearlyFunction.getCell(WidgetValue['systemValueProductsYearlyRelativeIndex'], r);
-                        /*  let uiIndex = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 11;
-                          return {
-                              title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                              cellSkin: 'readonly_bpsp',
-                              skin: 'products_gd_readonly_with_icon_bpsp',
-                              icon: 'icon-copy',
-                              cellVisible: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
-                              members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
-                          };*/
                     },
                     (r, x) => {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
                         return Repository.rocheBPSPProductsCheckoutGridTableYearlyFunction.getCell(WidgetValue['systemValueProductsYearlyRelativeIndex'], r);
-                        /*  return {
-                              title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
-                              cellSkin: '',
-                              icon: 'icon-dots-vertical',
-                              distributionEdit: true,
-                              skin: 'products_gd_writeable_with_icon_bpsp',
-                              cellVisible: true,//r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members[6].Name !== 'DUMMY',
-                              members: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].Members
-                          };*/
                     },
                     (r, x) => {
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 1;
@@ -1625,6 +1626,11 @@ app.repository = {
                     }
                 ]
             }
+        }
+    },
+    rocheBPSPProductsCheckoutGridRow2Cell1aButton: {
+        launch: {
+
         }
     },
     rocheBPSPProductsCheckoutGridTableMonthly: {
@@ -1678,7 +1684,7 @@ app.repository = {
                         -- query
                         SELECT 
                         --Columns
-                           {Union(Union(FixColumns,{TM1SubsetToSet([Periods].[Periods], \\"zUI ${db.systemValueGlobalSegmentedControlRelativeYear} Product Monthly Input\\")},All),{Comment},All)}
+                           {Union(Union(FixColumns,{DRILLDOWNMEMBER({[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]},{[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]})},All),{Comment},All)}
                            PROPERTIES [Periods].[Periods].[Caption]ON COLUMNS , 
                         -- rows
                           {StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
