@@ -1,7 +1,7 @@
 {
 	"assetsUrl" : "http://localhost:5000/static/assets",
 
-	"applicationName" : "rochebpsp",
+	"applicationName" : "Roche BPSP",
 
 	"applicationAssetsFolder" : "rochebpsp",
 
@@ -31,6 +31,8 @@
 
 	"tm1ApiHost" : "http://localhost:5000/rochebpspdebug/pool",
 
+	"tm1ApiHostBackend" : "https://dev.knowledgeseed.ch:5125/rochebpspapi",
+
 	"tm1ApiSubPath" : "/api/v1/",
 
 	"tm1ExecuteMDX" : "ExecuteMDX?",
@@ -39,7 +41,7 @@
 
 	"defaultMDXQuery" : "https://dev.knowledgeseed.ch:5125/rochebpspapi/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value)",
 
-	"MainPage" : "rocheBPSPMain",
+	"MainPage" : "rocheBPSPProducts",
     "pool": {
         "users": ["oravecz.tamas"],
         "target": "https://dev.knowledgeseed.ch:5125/rochebpspapi"

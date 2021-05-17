@@ -1286,7 +1286,7 @@ app.widgetConfig = {
                     closeBtn: false,
                     width: '320',
                     heightFixed: false,
-                    bgScrollable: false,
+                    bgScrollable: true,
                     fixed: false,
                     behaviour: 'popup',
                     position: 'bottom',
@@ -2712,7 +2712,6 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsGridTableMonthlyText-05',
                                     type: TextWidget,
-                                    paddingRight: 8,
                                     skin: 'products_gd_readonly_bpsp',
                                     title: '',
                                 }
@@ -3187,7 +3186,6 @@ app.widgetConfig = {
                                             width: '100%',
                                             icon: 'icon-doc-arrow-up',
                                             visible: false,
-                                            url: 'export?export_key=rocheMonthly',
                                             skin: 'blue_link_columns_bpsp'
                                         },
                                         {

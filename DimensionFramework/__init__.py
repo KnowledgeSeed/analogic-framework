@@ -49,8 +49,8 @@ def upload(instance):
     return getProvider(instance).processFiles()
 
 
-@app.route('/export', defaults={'instance': 'default'}, methods=['GET'])
-@app.route('/<path:instance>/export', methods=['GET'])
+@app.route('/export', defaults={'instance': 'default'}, methods=['GET', 'POST'])
+@app.route('/<path:instance>/export', methods=['GET', 'POST'])
 def export(instance):
     return getProvider(instance).export()
 

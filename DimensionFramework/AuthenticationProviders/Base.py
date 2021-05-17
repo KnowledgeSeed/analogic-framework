@@ -32,7 +32,8 @@ class Base:
         return send_file(ClassLoader().call(export_description, request, self.getTM1Service(), self.setting),
                          attachment_filename=file_name,
                          as_attachment=True,
-                         cache_timeout=0)
+                         cache_timeout=0,
+                         mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
     def do(self):
         if self.checkAppAuthenticated() is False:
@@ -85,7 +86,7 @@ class Base:
         pass
 
     def getNotFoundResponse(self):
-        return 'Not found', 401, {'Content-Type': 'application/json'}
+        return 'Not found', 404, {'Content-Type': 'application/json'}
 
     def processFiles(self):
         try:

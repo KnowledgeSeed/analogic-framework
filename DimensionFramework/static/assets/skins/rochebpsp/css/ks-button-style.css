@@ -917,7 +917,7 @@
     padding-left: 4px;
     font-size: 16px;
     color: #000000;
-    font-family: Imago-Regular;
+    font-family: Imago;
 }
 
 /* PL2 */
@@ -940,7 +940,7 @@
     padding-left: 4px;
     font-size: 16px;
     color: #000000;
-    font-family: Imago-Regular;
+    font-family: Imago;
 }
 
 /* PL3 */
@@ -967,7 +967,7 @@
     padding-left: 4px;
     font-size: 16px;
     color: #000000;
-    font-family: Imago-Regular;
+    font-family: Imago;
     width: 250px;
     white-space: nowrap;
     overflow: hidden;

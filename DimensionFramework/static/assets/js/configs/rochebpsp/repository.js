@@ -935,9 +935,10 @@ app.repository = {
                     },
                     (r, x) => {
                         return {
-                            title: '||||',
+                            icon: x < 40 ? 'icon-distribution-equal' : 'icon-distribution-manual',
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                            cellVisible: true
+                            cellVisible: true,
+                            skin: 'products_gd_distribution_icon_bpsp'
                         };
                     },
                     (r, x) => {
@@ -1154,20 +1155,6 @@ app.repository = {
                 }
 
             },
-        /*   state: (db) => {
-               return [
-                   {name: '2019 Actuals', on: 'true'},
-                   {name: '2020 Actuals', on: 'true'},
-                   {name: '2021 YTD Actuals', on: 'true'},
-                   {name: '2021 Plan', on: 'true'},
-                   {name: '2021 Customer Plan Total', on: 'true'},
-                   {name: '2021 Marketing Adjustment', on: 'true'},
-                   {name: '2021 Total Plan', on: 'true'},
-                   {name: '2021 Final  Plan', on: 'true'},
-                   {name: 'Growth rate:  2020 Actual / 2021 Plan', on: 'true'},
-                   {name: 'Growth rate:  2021 Actual / 2022 Plan', on: 'true'},
-               ];
-           }*/
     },
     rocheBPSPProductsGridRow1Cell9Button: {
         init: {
@@ -1418,7 +1405,7 @@ app.repository = {
                 body: (db) => `{
                         "Parameters": [
                                 {"Name": "pUserID", "Value": "${db.activeUserName}"},
-                                {"Name": "pProduct", "Value": "${Utils.setAndGetGridTableSystemValueByCurrentRow(WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly', 1, 'systemValueCheckoutProduct', 'title')}"},
+                                {"Name": "pProduct", "Value": "${WidgetValue['systemValueCheckoutProduct']}"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}"},
                                 {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"}
@@ -1630,7 +1617,23 @@ app.repository = {
     },
     rocheBPSPProductsCheckoutGridRow2Cell1aButton: {
         launch: {
-
+            download: (db) => {
+                let y1 = parseInt(db.systemValueGlobalStartingPlanYear);
+                return {
+                    url: 'export?export_key=rocheMonthly',
+                    activeUserName: db.activeUserName,
+                    companyVersion: db.systemValueGlobalCompanyVersion, //Live
+                    productPlanVersion: db.systemValueGlobalCompanyProductPlanVersion, //Budget
+                    company: Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key'),
+                    receiver: v('rocheBPSPProductsGridRow1Cell3DropBox.value'),
+                    product: db.systemValueCheckoutProduct,
+                    year1: y1,
+                    year2: y1 + 1,
+                    year3: y1 + 2,
+                    year4: y1 + 3,
+                    key: 'exportMonthly'
+                };
+            }
         }
     },
     rocheBPSPProductsCheckoutGridTableMonthly: {
@@ -1685,7 +1688,7 @@ app.repository = {
                         SELECT 
                         --Columns
                            {Union(Union(FixColumns,{DRILLDOWNMEMBER({[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]},{[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]})},All),{Comment},All)}
-                           PROPERTIES [Periods].[Periods].[Caption]ON COLUMNS , 
+                           PROPERTIES [Periods].[Periods].[Caption] ON COLUMNS , 
                         -- rows
                           {StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
                           PROPERTIES [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption] ON ROWS 

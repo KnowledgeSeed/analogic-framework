@@ -170,7 +170,6 @@ QB.executeMDX = (repositoryId, path) => {
     }
 
 
-
     let u = QB.getUrl(p), body = p.body(WidgetValue, repositoryId);
 
     if (p.server) {//Todo ref!
@@ -182,7 +181,7 @@ QB.executeMDX = (repositoryId, path) => {
     return Auth.getTm1AjaxRequest(u.url, body, u.type, repositoryId).then((data) => {
         //save cellsetid
         r.cellsetId = data.ID;
-        let t =  p.parsingControl;
+        let t = p.parsingControl;
 
         if (t) {
             if (t.type === 'matrix') {
@@ -207,6 +206,7 @@ QB.writeData = (eventMapId, event, element) => {
     if (e === 'upload') {
         return FileUpload.uploadFile(w, eventMapId, context);
     }
+
 
     if (z.length > 2 && z[1] !== 'row') { //gridtable
         r = context[z[0]];
@@ -273,10 +273,14 @@ QB.writeData = (eventMapId, event, element) => {
         isGridTable ? g.execute(context, z[1], z[2]) : g.execute(context);
         QB.executeEventMapAction(eventMapId + '.finished', event, element, {});
     } else {
+        if (g.download && (typeof g.download === 'function')) {
+            return Server.download(g.download(context));
+        }
         let c = r.cellsetId || '', body = isGridTable ? g.body(context, z[1], z[2]) : g.body(context),
             url = isGridTable ? g.url({...r, ...{cellsetId: c}}, z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
 
         if (g.server) {
+
             let mm = QB.getServerSideUrlAndBody(url, body, w, e);
             url = mm.url;
             body = mm.body;
