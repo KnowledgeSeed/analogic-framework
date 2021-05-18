@@ -362,7 +362,7 @@
 .ks-text-checkout_warning_bpsp .ks-text-title b {
     margin-left: 2px;
     margin-right: 2px;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: bold;
 }
 
@@ -373,14 +373,14 @@
 
 .ks-text-checkout_warning_message_bpsp .ks-text-title {
     font-size: 10px;
-    font-family: Imago-Regular;
+    font-family: Imago;
     letter-spacing: 0px;
     color: #858686;
 }
 
 .ks-text-checkout_warning_message_bpsp .ks-text-body {
     font-size: 10px;
-    font-family: Imago-Regular;
+    font-family: Imago;
     letter-spacing: 0px;
     color: #858686;
 }

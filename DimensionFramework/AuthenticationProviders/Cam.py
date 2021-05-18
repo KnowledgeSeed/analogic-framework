@@ -29,9 +29,10 @@ class Cam(Pool):
 
         headers['Authorization'] = 'CAMPassport ' + cam_passport
 
-        #hq nem tudja backenden feloldani a hq.coresystems.hu-t
-        #response = requests.request(url=cnf['tm1ApiHost'] + cnf['tm1ApiSubPath'] + 'ActiveUser', method='GET', headers=headers, cookies=cookies, verify=False)
-        response = requests.request(url='http://localhost:5280' + cnf['tm1ApiSubPath'] + 'ActiveUser', method='GET',
+        # hq nem tudja backenden feloldani a hq.coresystems.hu-t
+        # response = requests.request(url=cnf['tm1ApiHost'] + cnf['tm1ApiSubPath'] + 'ActiveUser', method='GET', headers=headers, cookies=cookies, verify=False)
+        response = requests.request(url=cnf['tm1ApiHostBackend'] + cnf['tm1ApiSubPath'] + 'ActiveUser',
+                                    method='GET',
                                     headers=headers, cookies=cookies, verify=False)
         json_object = response.json()
         cam_name = json_object['Name']
@@ -53,9 +54,16 @@ class Cam(Pool):
 
         return response
 
+    def checkAppAuthenticated(self):
+        return self.setting.getTM1SessionId(session['cam_name']) is not None
+
+    def getAuthenticationResponse(self):
+        return 'Authentication required', 401, {'Content-Type': 'application/json'}
+
     def getTM1Service(self):
-        cnf = self.setting.getConfig()
+        return None
+    #   cnf = self.setting.getConfig()todo resolve dns problem
 
-        tm1_session_id = self.setting.getTM1SessionId(session['cam_name'])
+    #   tm1_session_id = self.setting.getTM1SessionId(session['cam_name'])
 
-        return TM1Service(base_url=cnf['tm1ApiHost'], session_id=tm1_session_id, ssl=False)
+    #   return TM1Service(base_url=cnf['tm1ApiHost'], session_id=tm1_session_id, ssl=False)

@@ -503,6 +503,11 @@
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-panel-inner {
     background-color: #fff;
     border-radius: 10px;
+    padding-top: 8px;
+}
+
+.ks-dropbox-simple_bold_bpsp .ks-dropbox-panel-inner:last-child {
+    padding-bottom: 8px;
 }
 
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-backdrop {
@@ -647,6 +652,11 @@
 .ks-dropbox-simple_bpsp .ks-dropbox-panel-inner {
     background-color: #fff;
     border-radius: 10px;
+    padding-top: 8px;
+}
+
+.ks-dropbox-simple_bpsp .ks-dropbox-panel-inner:last-child {
+    padding-bottom: 8px;
 }
 
 .ks-dropbox-simple_bpsp .ks-dropbox-backdrop {

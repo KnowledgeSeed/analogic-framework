@@ -247,6 +247,13 @@
 
 /* products_bpsp */
 
+.ks-grid-table-products_bpsp .ks-grid-table-head {
+    position: sticky;
+    background-color: white;
+    top: 0;
+    z-index: 2;
+}
+
 .ks-grid-table-products_bpsp .ks-grid-table-row {
     border-bottom: 1px solid #d8d9d9;
     border-left: 1px solid #D8D9D9;

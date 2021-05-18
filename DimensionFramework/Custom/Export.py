@@ -1,8 +1,10 @@
-import xlsxwriter
+﻿import xlsxwriter
 import numpy as np
 import pandas as pd
 import io
 from TM1py.Utils.Utils import build_pandas_dataframe_from_cellset
+import requests
+from flask import session
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
@@ -17,10 +19,115 @@ class Export:
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         worksheet = workbook.add_worksheet()
 
+        mdx = setting.getMDX(request.args['key'])
+        for k in request.args:
+            mdx = mdx.replace('$' + k, request.args[k].replace('"', '\\"'))
+
+        mdx = '{"MDX"  :"' + mdx + '"}'
+        #     data = tm1_service.cells.execute_mdx(mdx)
+
+        user = request.args['activeUserName']
+        company = request.args['company']
+        receiver = request.args['receiver']
+
+        font_size = 12
+
+        worksheet.write(0, 0, user)
+        worksheet.write(0, 1, company)
+        worksheet.write(0, 2, receiver)
+
+        bold = workbook.add_format({'bold': True})
+        bold.set_font_name('Imago')
+        bold.set_font_size(font_size)
+
+        worksheet.write(1, 3, request.args['year1'], bold)
+        worksheet.write(1, 16, request.args['year2'], bold)
+        worksheet.write(1, 29, request.args['year3'], bold)
+        worksheet.write(1, 42, request.args['year4'], bold)
+
+        worksheet.write(2, 1, 'Product Code', bold)
+        worksheet.write(2, 2, 'PL', bold)
+        worksheet.write(2, 3, 'Final Plan', bold)
+
+        i = 1
+        j = 4
+        while i <= 12:
+            worksheet.write(2, j, str(i).zfill(2), bold)
+            worksheet.write(2, j + 13, str(i).zfill(2), bold)
+            worksheet.write(2, j + 26, str(i).zfill(2), bold)
+            worksheet.write(2, j + 39, str(i).zfill(2), bold)
+            j = j + 1
+            i = i + 1
+
+        worksheet.write(2, 16, 'Final Plan', bold)
+        worksheet.write(2, 29, 'Final Plan', bold)
+        worksheet.write(2, 42, 'Final Plan', bold)
+
+        # temp
+        headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
+                                   'Accept-Encoding': 'gzip, deflate, br'}
+        tm1_session_id = setting.getTM1SessionId(session.get('cam_name', ''))
+
+        cookies: dict[str, str] = {"TM1SessionId": tm1_session_id}
+
+        cnf = setting.getConfig()
+
+        target_url = cnf['tm1ApiHostBackend']
+
+        response = requests.request(
+            url=target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue, Consolidated, RuleDerived, Updateable)',
+            method='POST',
+            data=mdx,
+            headers=headers,
+            cookies=cookies,
+            verify=False)
+
+        d = response.json()
+
+        simple = workbook.add_format()
+        simple.set_font_name('Imago')
+        simple.set_font_size(font_size)
+
+        read_only = workbook.add_format()
+        read_only.set_bg_color('#ebecec')
+        read_only.set_font_name('Imago')
+        read_only.set_font_size(font_size)
+
+        l = len(d['Cells'])
+        i = 0
+        r = 2
+        c = 0
+        while i < l:
+            if i % 55 == 0:
+                r = r + 1
+                c = 0
+                pl = int(d['Cells'][i + 2]['FormattedValue'].replace('PL', '').replace('a', ''))
+                cf = workbook.add_format()
+                cf.set_indent(pl)
+                cf.set_font_name('Imago')
+                cf.set_font_size(font_size)
+                cf.set_bg_color('#ebecec')
+                worksheet.write(r, c, d['Cells'][i]['FormattedValue'], cf)
+                c = c + 1
+                i = i + 1
+                worksheet.write(r, c, d['Cells'][i]['FormattedValue'], read_only)
+                c = c + 1
+                i = i + 1
+                worksheet.write(r, c, pl, read_only)
+            else:
+                if d['Cells'][i]['Consolidated'] == False and d['Cells'][i]['RuleDerived'] == False:
+                    worksheet.write(r, c, d['Cells'][i]['FormattedValue'], simple)
+                else:
+                    worksheet.write(r, c, d['Cells'][i]['FormattedValue'], read_only)
+
+            i = i + 1
+            c = c + 1
+
+        # temp
+
         workbook.close()
         output.seek(0)
         return output
-
 
     def davidExport1(self, request, tm1_service, setting):
         mdx = 'SELECT NON EMPTY TM1SubsetToSet([Period], "Years") ON COLUMNS, NON EMPTY TM1SubsetToSet([Deal Email Report Measure], "Default") ON ROWS FROM [Deal Email Report] WHERE ([Deal].[Deal_0001])'
