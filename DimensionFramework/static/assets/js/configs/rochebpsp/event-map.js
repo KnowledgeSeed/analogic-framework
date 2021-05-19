@@ -727,12 +727,12 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutUploadPopup'
         }
     ],
-  /*  'launch.rocheBPSPProductsCheckoutGridTableMonthlyHeaderButton-05': [
-        {
-            action: app.fn.openPopup,
-            argument: 'rocheBPSPProductsCheckoutDistributionPopup'
-        }
-    ],*/
+    /*  'launch.rocheBPSPProductsCheckoutGridTableMonthlyHeaderButton-05': [
+          {
+              action: app.fn.openPopup,
+              argument: 'rocheBPSPProductsCheckoutDistributionPopup'
+          }
+      ],*/
     'perform.rocheBPSPProductsCheckoutGridTableMonthly_row_4': [
         {
             action: app.fn.openPopup,
@@ -861,8 +861,7 @@ app.eventMap = {
     ],
 
 
-
-        'launch.rocheBPSPipPlanningGridTableMonthlyHeaderFocusButton': [
+    'launch.rocheBPSPipPlanningGridTableMonthlyHeaderFocusButton': [
         {
             action: app.fn.openPopup,
             argument: 'rocheBPSPipPlanningMaterialSelectorShortcutPopup'

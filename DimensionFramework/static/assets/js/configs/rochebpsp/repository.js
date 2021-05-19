@@ -2871,18 +2871,22 @@ FROM [}ElementAttributes_Materials]
                             (r, x) => {
                                 return {
                                     icon: r.Cells[x + 3].FormattedValue === '1,00' ? 'icon-plus-circle-outline' : '',
+                                    cellSkin: r.Cells[x + 3].FormattedValue === '1,00' ? '' : 'readonly_bpsp',
                                 }
                             },
 
                             (r, x) => {
                                 return {
                                     icon: r.Cells[x + 4].FormattedValue === '1,00' ? 'icon-trash' : '',
+
+                                    cellSkin: r.Cells[x + 4].FormattedValue === '1,00' ? '' : 'readonly_bpsp',
                                 }
                             },
 
                             (r, x) => {
                                 return {
                                     icon: r.Cells[x + 5].FormattedValue === '1,00' ? 'icon-arrow-right1' : '',
+                                    cellSkin: r.Cells[x + 5].FormattedValue === '1,00' ? '' : 'readonly_bpsp',
                                 }
                             },
 
@@ -2907,7 +2911,7 @@ SELECT
    {
     [Measures Material Import by Company].[Measures Material Import by Company].[Materials],
     [Measures Material Import by Company].[Measures Material Import by Company].[Medium Name],
-         [Measures Material Import by Company].[Measures Material Import by Company].[Selected for Basket],
+    [Measures Material Import by Company].[Measures Material Import by Company].[Selected for Basket],
     [Measures Material Import by Company].[Measures Material Import by Company].[Material Type - Key],
     [Measures Material Import by Company].[Measures Material Import by Company].[Material Status - Key],
     [Measures Material Import by Company].[Measures Material Import by Company].[Material Category - Key],
