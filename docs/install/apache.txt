@@ -1,3 +1,5 @@
+Apache: httpd-2.4.46-win64-VS16.zip
+
 Ahhoz, hogy a mod-wsgi python modul-t buildelni tudjuk a következő tool-t kell telepíteni:
 
 https://visualstudio.microsoft.com/visual-cpp-build-tools/

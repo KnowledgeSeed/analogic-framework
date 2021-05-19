@@ -25,5 +25,8 @@ Listeners.handle = ev => {
         $('#' + ev.data.options.id).show();
     } else if ('hide' === m) {
         $('#' + ev.data.options.id).hide();
+    } else if('refreshWithTimeout' === m) {
+        let seconds = ev.data.parameters[0];
+        setTimeout(function(){ Render.renderWidget(ev); }, seconds);
     }
 };

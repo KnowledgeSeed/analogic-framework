@@ -23,7 +23,7 @@ ButtonWidget -> iconColor, iconFontSize
 
 ContainerWidget -> heightFixed
 
-TextWidget -> icon, iconPosition, iconHeight, iconWidth, iconColor, perform event, bodyFontWeight, titleFontWeight
+TextWidget -> icon, iconPosition, iconHeight, iconWidth, iconColor, perform event, bodyFontWeight, titleFontWeight, performable, paste event
 
 PanelWidget -> skin
 
@@ -34,6 +34,8 @@ processdata.widgetid.finished
 init.widgetid.finished
 
 event.gridtablewidgetId pl. perform.rocheBPSPProductsCheckoutGridTableYearly
+
+listeners: refreshWithTimeout
 
 Skins:
 

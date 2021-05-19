@@ -270,13 +270,13 @@ QB.writeData = (eventMapId, event, element) => {
     }
 
     if (g.execute) {
-        isGridTable ? g.execute(context, z[1], z[2]) : g.execute(context);
+        isGridTable ? g.execute(context, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.execute(context);
         QB.executeEventMapAction(eventMapId + '.finished', event, element, {});
     } else {
         if (g.download && (typeof g.download === 'function')) {
             return Server.download(g.download(context));
         }
-        let c = r.cellsetId || '', body = isGridTable ? g.body(context, z[1], z[2]) : g.body(context),
+        let c = r.cellsetId || '', body = isGridTable ? g.body(context,v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.body(context),
             url = isGridTable ? g.url({...r, ...{cellsetId: c}}, z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
 
         if (g.server) {

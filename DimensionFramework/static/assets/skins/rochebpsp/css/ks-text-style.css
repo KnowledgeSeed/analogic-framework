@@ -247,8 +247,37 @@
     justify-content: flex-end;
 }
 
+.ks-text-monthly_right_bpsp .ks-text-inner .ks-text-title {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .ks-text-monthly_right_bpsp .ks-text-icon{
     display: none;
+}
+
+.ks-text-monthly_right_bpsp.ks-on {
+    border: 2px solid #2A66C5;
+}
+
+.ks-text-monthly_right_bpsp.ks-on .ks-text-icon{
+    display: block;
+    color: #2A66C5;
+    font-size: 12px;
+    cursor:pointer;
+}
+
+.ks-text-monthly_right_bpsp .ks-text-title-input {
+    width: 100%;
+    height: 100%;
+    border: 0px none;
+    text-align: center;
+    color: #2A66C5;
+    font-family: imago;
+    font-size: 16px;
 }
 
 /* monthly_center_bpsp */

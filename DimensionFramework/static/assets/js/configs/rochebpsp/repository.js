@@ -417,6 +417,11 @@ app.repository = {
             let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly',
                 l = v(g + '.cellData.length');
             return l !== false && l !== 0;
+        },
+        initConditionDependingOnCheckoutYearlyMonthly: (db) => {
+            let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsCheckoutGridTableYearly' : 'rocheBPSPProductsCheckoutGridTableMonthly',
+                l = v(g + '.cellData.length');
+            return l !== false && l !== 0;
         }
     },
 
@@ -575,7 +580,76 @@ app.repository = {
             }
         }
     },
-
+    rocheBPSPProductsInfoPopupText2: {
+        initCondition: (db) => {
+            return v('rocheBPSPProductsGridRow1Cell2DropBox.value.length') !== false;
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+              {"MDX":
+                "SELECT 
+                    {[Versions].[Versions].[Live]} 
+                    PROPERTIES [Versions].[Versions].[Caption]  ON COLUMNS , 
+                    {[Measures Company Information].[Measures Company Information].[Current Planning Event]} 
+                    PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON ROWS 
+                FROM [Company Information] 
+                WHERE 
+                  (
+                   [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}]
+                  )"}
+            `,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        title: (r, x) => {
+                            return '<li>' + r.Cells[0].FormattedValue + '</li>';
+                        }
+                    }
+            }
+        }
+    },
+    rocheBPSPProductsInfoPopupText1: {
+        initCondition: (db) => {
+            return v('rocheBPSPProductsGridRow1Cell2DropBox.value.length') !== false;
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+                    {"MDX":
+                    "SELECT 
+                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Currency - Key]} 
+                    ON COLUMNS , 
+                        {[Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}]} 
+                    ON ROWS 
+                    FROM [}ElementAttributes_Companies] "}
+            `,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        title: (r, x) => {
+                            return '<li>' + r.Cells[0].FormattedValue + '</li>';
+                        }
+                    }
+            }
+        }
+    },
+    rocheBPSPProductsCheckoutInfoPopupText1: {
+        reference: 'rocheBPSPProductsInfoPopupText1'
+    },
+    rocheBPSPProductsCheckoutInfoPopupText2: {
+        reference: 'rocheBPSPProductsInfoPopupText2'
+    },
     rocheBPSPProductsGridTableYearly: {
         initCondition: (db) => {
             L(v('rocheBPSPProductsGridRow1Cell3DropBox.value.length'));
@@ -1636,7 +1710,80 @@ app.repository = {
             }
         }
     },
+    rocheBPSPProductsCheckoutGridTableMonthlyFunctions: {
+        getCell: (index, r) => {
+            let c = r.Cells[index], editable = c.Consolidated === false && c.RuleDerived === false,
+                performable = c.Consolidated === true && c.RuleDerived === false;
+
+            let result = {
+                title: c.FormattedValue,
+                cellSkin: editable ? '' : 'readonly_bpsp',
+                skin: editable ? 'monthly_center_bpsp' : 'monthly_right_bpsp',
+                cellVisible: true,
+                editable: editable,
+                ordinal: c.Ordinal,
+                members: c.Members,
+                performable: performable
+                //titleFontColor: x < 40 ? '#000000' : '#A05EB5', manual
+            };
+            if (performable) {
+                result['icon'] = 'icon-cloud-arrow-up';
+            }
+            return result;
+        }
+    },
+    rocheBPSPProductsCheckoutUploadPopupPlDropbox: {
+        initCondition: (db) => {
+            let l = v('rocheBPSPProductsCheckoutGridTableMonthly.cellData.length');
+            return l !== false && l !== 0;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            execute: (db) => {
+                return v('rocheBPSPProductsCheckoutGridTableMonthly.cellData').map(function (e) {
+                    return {name: 'PL' + e[2].title, key: e[2].title, on: false}
+                }).reduce((acc, current) => {
+                    const x = acc.find(item => item.name === current.name);
+                    if (!x) {
+                        return acc.concat([current]);
+                    } else {
+                        return acc;
+                    }
+                }, []);
+            }
+        }
+    },
     rocheBPSPProductsCheckoutGridTableMonthly: {
+        perform: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db, cell, widgetValue) => {
+                return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
+            }
+        },
+        pastelast: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db, cell, widgetValue) => {
+                return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
+            }
+        },
+        paste: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db, cell, widgetValue) => {
+                return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
+            }
+        },
+        write: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db, cell, widgetValue) => {
+                return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
+            }
+        },
         initCondition: (db) => {
             return WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Monthly';
         },
@@ -1644,7 +1791,7 @@ app.repository = {
             return [];
         },
         init: {
-            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Consolidated,RuleDerived,Updateable;$expand=Members($select=Name))`,
             type: 'POST',
             body: (db) => `
             {
@@ -1722,9 +1869,6 @@ app.repository = {
                             productLevel: pl,
                             hasComment: r.Cells[x + 19].FormattedValue === ''
                         };
-                        if (WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableMonthlyIsMainLocked']) {
-                            result['iconColor'] = '#D12D4A';
-                        }
                         return result;
                     },
                     (r, x) => {
@@ -1755,7 +1899,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        return {
+                        return {//a 0-s az equal spread, az 1es a split by last actuls a 2 a manual es a 4 mixed (ez lesz abban az esetben ha egy Cs elem alatt tobb fele is van) a mixed ikonja siman egy potty lesz
                             icon: x < 40 ? 'icon-distribution-equal' : 'icon-distribution-manual',
                             cellSkin: '',
                             cellVisible: true,
@@ -1764,156 +1908,51 @@ app.repository = {
                     },
                     (r, x) => {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
-                        return {
-                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: 'readonly_bpsp',
-                            skin: 'monthly_right_bpsp',
-                            cellVisible: true,
-                            editable: false,
-                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
-                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
-                        };
+                        return Repository.rocheBPSPProductsCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
                     },
                     (r, x) => {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
-                        return {
-                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: 'readonly_bpsp',
-                            cellVisible: true,
-                            editable: false,
-                            skin: 'monthly_right_bpsp',
-                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
-                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
-                        };
+                        return Repository.rocheBPSPProductsCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
                     },
                     (r, x) => {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
-                        return {
-                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: 'readonly_bpsp',
-                            cellVisible: true,
-                            editable: false,
-                            skin: 'monthly_right_bpsp',
-                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
-                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
-                        };
+                        return Repository.rocheBPSPProductsCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
                     },
                     (r, x) => {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
-                        return {
-                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: '',
-                            cellVisible: true,
-                            editable: true,
-                            titleFontColor: x < 40 ? '#000000' : '#A05EB5',
-                            skin: 'monthly_center_bpsp',
-                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
-                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
-                        };
+                        return Repository.rocheBPSPProductsCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
                     },
                     (r, x) => {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
-                        return {
-                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: '',
-                            cellVisible: true,
-                            editable: true,
-                            titleFontColor: x < 40 ? '#000000' : '#A05EB5',
-                            skin: 'monthly_center_bpsp',
-                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
-                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
-                        };
+                        return Repository.rocheBPSPProductsCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
                     },
                     (r, x) => {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
-                        return {
-                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: '',
-                            cellVisible: true,
-                            editable: true,
-                            titleFontColor: x < 40 ? '#000000' : '#A05EB5',
-                            skin: 'monthly_center_bpsp',
-                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
-                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
-                        };
+                        return Repository.rocheBPSPProductsCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
                     },
                     (r, x) => {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
-                        return {
-                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: '',
-                            cellVisible: true,
-                            editable: true,
-                            skin: 'monthly_center_bpsp',
-                            titleFontColor: x < 40 ? '#000000' : '#A05EB5',
-                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
-                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
-                        };
+                        return Repository.rocheBPSPProductsCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
                     },
                     (r, x) => {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
-                        return {
-                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: '',
-                            cellVisible: true,
-                            editable: true,
-                            skin: 'monthly_center_bpsp',
-                            titleFontColor: x < 40 ? '#000000' : '#A05EB5',
-                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
-                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
-                        };
+                        return Repository.rocheBPSPProductsCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
                     },
                     (r, x) => {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
-                        return {
-                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: '',
-                            cellVisible: true,
-                            editable: true,
-                            skin: 'monthly_center_bpsp',
-                            titleFontColor: x < 40 ? '#000000' : '#A05EB5',
-                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
-                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
-                        };
+                        return Repository.rocheBPSPProductsCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
                     },
                     (r, x) => {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
-                        return {
-                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: '',
-                            cellVisible: true,
-                            editable: true,
-                            skin: 'monthly_center_bpsp',
-                            titleFontColor: x < 40 ? '#000000' : '#A05EB5',
-                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
-                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
-                        };
+                        return Repository.rocheBPSPProductsCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
                     },
                     (r, x) => {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
-                        return {
-                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: '',
-                            cellVisible: true,
-                            editable: true,
-                            skin: 'monthly_center_bpsp',
-                            titleFontColor: x < 40 ? '#000000' : '#A05EB5',
-                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
-                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
-                        };
+                        return Repository.rocheBPSPProductsCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
                     },
                     (r, x) => {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
-                        return {
-                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
-                            cellSkin: '',
-                            cellVisible: true,
-                            editable: true,
-                            skin: 'monthly_center_bpsp',
-                            titleFontColor: x < 40 ? '#000000' : '#A05EB5',
-                            ordinal: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Ordinal,
-                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
-                        };
+                        return Repository.rocheBPSPProductsCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
                     },
                     (r, x) => {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
@@ -1921,7 +1960,8 @@ app.repository = {
                             cellSkin: '',
                             icon: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue === '' ? 'icon-comment-off' : 'icon-comment-on',
                             iconColor: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue === '' ? '#C5C6C6' : '#0066cc',
-                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members,
+                            hasComment: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue !== ''
                         };
                     }
                 ]
@@ -1933,6 +1973,199 @@ app.repository = {
     },
     rocheBPSPProductsCheckoutGridRow1Cell9Button: {
         reference: 'rocheBPSPProductsGridRow1Cell9Button'
+    },
+
+    rocheBPSPProductsCheckoutCommentShowGridTable: {
+        initCondition: (db) => {
+            return Repository.templateFunctions.initConditionDependingOnCheckoutYearlyMonthly(db);
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => {
+                let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsCheckoutGridTableYearly' : 'rocheBPSPProductsCheckoutGridTableMonthly';
+                let productCode = Utils.getGridTableCell(g, 1).title;
+                return `{"MDX":"
+                    SELECT 
+                    {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Comment]}
+                    PROPERTIES  [Measures Sales Plan by Product]. [Measures Sales Plan by Product].[Caption]
+                    ON COLUMNS , 
+                    {[Products].[BPSP Budget].[${productCode}]} PROPERTIES [Products].[BPSP Budget].[Caption]
+                    ON ROWS 
+                    FROM [Sales Plan by Product] 
+                    WHERE 
+                    ([Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
+                    [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}],
+                    [Receivers].[Receivers].[${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}],
+                    [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
+                    [Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}])
+            "}`
+            },
+            parsingControl: {
+                type: 'matrix',
+                length: 1,
+                query: [
+                    (r, x) => {
+                        return {
+                            title: r.Cells[x].FormattedValue,
+                        }
+                    }]
+            }
+        }
+    },
+
+
+    rocheBPSPProductsCheckoutCommentShowGridTableSource: {
+        initCondition: (db) => {
+            return Repository.templateFunctions.initConditionDependingOnCheckoutYearlyMonthly(db);
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => {
+                let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsCheckoutGridTableYearly' : 'rocheBPSPProductsCheckoutGridTableMonthly';
+                let productCode = Utils.getGridTableCell(g, 1).title;
+                return `{"MDX":"
+                        SELECT 
+                            {{[Measures Sales Plan by Product].[Measures Sales Plan by Product].[CommentSource]},
+                            {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedBy]},
+                            {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime]}}
+                            
+                            PROPERTIES  [Measures Sales Plan by Product]. [Measures Sales Plan by Product].[Caption]
+                        ON COLUMNS , 
+                            {[Products].[BPSP Budget].[${productCode}]} 
+                            PROPERTIES [Products].[BPSP Budget].[Caption] 
+                        ON ROWS 
+                        FROM [Sales Plan by Product] 
+                        WHERE 
+                            ([Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
+                            [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}],
+                            [Receivers].[Receivers].[${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}],
+                            [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
+                            [Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}])
+            "}`
+            },
+            parsingControl: {
+                type: 'matrix',
+                length: 3,
+                query: [
+                    (r, x) => {
+                        return {
+                            title: r.Cells[x].FormattedValue + '<br/><div style=\"margin-top:20px; float: left; font-size: 10px;  ";  >' + 'Edited by ' + '</div>' + '<div style=\"font-size:12px; font-weight: bold; margin-top:18px; margin-left: 3px; float: left;";  >' + r.Cells[x + 1].FormattedValue + '</div>' + '<div style=\"font-size:10px;color:#B1B3B3;margin-top:20px;margin-left: 5px; float: left; \" >' + r.Cells[x + 2].FormattedValue + '</div>',
+                        }
+                    }
+
+
+                ]
+            }
+        }
+    },
+    rocheBPSPProductsCheckoutCommentEditGridRow2CommentInput: {
+        init: {
+            execute: (db) => {
+                let l = v('rocheBPSPProductsCheckoutCommentShowGridTable.cellData.length'), r = {value: ''};
+                if (l !== false && l !== 0) {
+                    r.value = v('rocheBPSPProductsCheckoutCommentShowGridTable.cellData')[0][0].title;
+                }
+                return r;
+            }
+        }
+    },
+    rocheBPSPProductsCheckoutCommentEditGridRow3TextInput: {
+        init: {
+            execute: (db) => {
+                let l = v('rocheBPSPProductsCheckoutCommentShowGridTableSource.cellData.length'), r = {value: ''};
+                if (l !== false && l !== 0) {
+                    r.value = v('rocheBPSPProductsCheckoutCommentShowGridTableSource.cellData')[0][0].title.split('<br/>')[0];
+                }
+                return r;
+            }
+        }
+    },
+
+    rocheBPSPProductsCheckoutCommentEditControlPanelSaveButton: {
+        launch: {
+            url: (db) => `/api/v1/Cubes('Sales Plan by Product')/tm1.Update`,
+            type: 'POST',
+            body: (db) => {
+                let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsCheckoutGridTableYearly' : 'rocheBPSPProductsCheckoutGridTableMonthly';
+                let productCode = Utils.getGridTableCell(g, 1).title;
+                return `
+                [
+                    {
+                        "Cells": [
+                            {
+                                "Tuple@odata.bind": [
+                                    "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                    "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueGlobalSegmentedControlRelativeYearValue}')",
+                                    "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}')",
+                                    "Dimensions('Products')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                    "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}')",
+                                    "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('Final Sales Plan')",
+                                    "Dimensions('Measures Sales Plan by Product')/Hierarchies('Measures Sales Plan by Product')/Elements('EditedDateTime')"
+                                ]
+                            },
+                        ],
+                         "Value": "${Utils.getFormattedDate(new Date(), '.', true)}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                   "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                   "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueGlobalSegmentedControlRelativeYearValue}')",
+                                   "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}')",
+                                   "Dimensions('Products')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                   "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}')",
+                                   "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('Final Sales Plan')",
+                                   "Dimensions('Measures Sales Plan by Product')/Hierarchies('Measures Sales Plan by Product')/Elements('EditedBy')"
+                               ]
+                            },
+                        ],
+                        "Value": "${WidgetValue['activeUserName']}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                   "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                   "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueGlobalSegmentedControlRelativeYearValue}')",
+                                   "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}')",
+                                   "Dimensions('Products')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                   "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}')",
+                                   "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('Final Sales Plan')",
+                                   "Dimensions('Measures Sales Plan by Product')/Hierarchies('Measures Sales Plan by Product')/Elements('CommentSource')"
+                               ]
+                            },
+                        ],
+                        "Value": "${v('rocheBPSPProductsCheckoutCommentEditGridRow3TextInput.value')}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                   "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                   "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueGlobalSegmentedControlRelativeYearValue}')",
+                                   "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}')",
+                                   "Dimensions('Products')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                   "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}')",
+                                   "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('Final Sales Plan')",
+                                   "Dimensions('Measures Sales Plan by Product')/Hierarchies('Measures Sales Plan by Product')/Elements('Comment')"
+                               ]
+                            },
+                        ],
+                        "Value": "${v('rocheBPSPProductsCheckoutCommentEditGridRow2CommentInput.value')}"
+                    }
+                ]
+                `;
+            }
+        }
     },
 
     //end product checkout
@@ -1960,10 +2193,6 @@ app.repository = {
                 return {label: WidgetValue['activeUserName']};
             }
         }
-    },
-
-    rocheBPSPProductsCommentEditControlPanelSaveButton: {
-        launch: {}
     },
 
 
@@ -2011,28 +2240,38 @@ app.repository = {
 
 
     rocheBPSPProductsCommentShowGridTableSource: {
+        initCondition: (db) => {
+            return Repository.templateFunctions.initConditionDependingOnYearlyMonthly(db);
+        },
+        initDefault: (db) => {
+            return [];
+        },
         init: {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
             type: 'POST',
-            body: (db) => `{"MDX":"
-            SELECT 
-            {{[Measures Sales Plan by Product].[Measures Sales Plan by Product].[CommentSource]},
-            {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedBy]},
-            {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime]}}
-            
-            PROPERTIES  [Measures Sales Plan by Product]. [Measures Sales Plan by Product].[Caption]
-            ON COLUMNS , 
-            {[Products].[BPSP Budget].[P6]} 
-            PROPERTIES [Products].[BPSP Budget].[Caption] 
-            ON ROWS 
-            FROM [Sales Plan by Product] 
-            WHERE 
-            ([Versions].[Versions].[Live],
-            [Companies].[Companies].[1391],
-            [Receivers].[Receivers].[PL],
-            [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
-            [Periods].[Periods].[2021])
-            "}`,
+            body: (db) => {
+                let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly';
+                let productCode = Utils.getGridTableCell(g, 1).title;
+                return `{"MDX":"
+                        SELECT 
+                            {{[Measures Sales Plan by Product].[Measures Sales Plan by Product].[CommentSource]},
+                            {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedBy]},
+                            {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime]}}
+                            
+                            PROPERTIES  [Measures Sales Plan by Product]. [Measures Sales Plan by Product].[Caption]
+                        ON COLUMNS , 
+                            {[Products].[BPSP Budget].[${productCode}]} 
+                            PROPERTIES [Products].[BPSP Budget].[Caption] 
+                        ON ROWS 
+                        FROM [Sales Plan by Product] 
+                        WHERE 
+                            ([Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
+                            [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}],
+                            [Receivers].[Receivers].[${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}],
+                            [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
+                            [Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}])
+            "}`
+            },
             parsingControl: {
                 type: 'matrix',
                 length: 3,
@@ -2045,6 +2284,107 @@ app.repository = {
 
 
                 ]
+            }
+        }
+    },
+    rocheBPSPProductsCommentEditGridRow2CommentInput: {
+        init: {
+            execute: (db) => {
+                let l = v('rocheBPSPProductsCommentShowGridTable.cellData.length'), r = {value: ''};
+                if (l !== false && l !== 0) {
+                    r.value = v('rocheBPSPProductsCommentShowGridTable.cellData')[0][0].title;
+                }
+                return r;
+            }
+        }
+    },
+    rocheBPSPProductsCommentEditGridRow3TextInput: {
+        init: {
+            execute: (db) => {
+                let l = v('rocheBPSPProductsCommentShowGridTableSource.cellData.length'), r = {value: ''};
+                if (l !== false && l !== 0) {
+                    r.value = v('rocheBPSPProductsCommentShowGridTableSource.cellData')[0][0].title.split('<br/>')[0];
+                }
+                return r;
+            }
+        }
+    },
+
+    rocheBPSPProductsCommentEditControlPanelSaveButton: {
+        launch: {
+            url: (db) => `/api/v1/Cubes('Sales Plan by Product')/tm1.Update`,
+            type: 'POST',
+            body: (db) => {
+                let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly';
+                let productCode = Utils.getGridTableCell(g, 1).title;
+                return `
+                [
+                    {
+                        "Cells": [
+                            {
+                                "Tuple@odata.bind": [
+                                    "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                    "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueGlobalSegmentedControlRelativeYearValue}')",
+                                    "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}')",
+                                    "Dimensions('Products')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                    "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}')",
+                                    "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('Final Sales Plan')",
+                                    "Dimensions('Measures Sales Plan by Product')/Hierarchies('Measures Sales Plan by Product')/Elements('EditedDateTime')"
+                                ]
+                            },
+                        ],
+                         "Value": "${Utils.getFormattedDate(new Date(), '.', true)}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                   "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                   "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueGlobalSegmentedControlRelativeYearValue}')",
+                                   "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}')",
+                                   "Dimensions('Products')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                   "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}')",
+                                   "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('Final Sales Plan')",
+                                   "Dimensions('Measures Sales Plan by Product')/Hierarchies('Measures Sales Plan by Product')/Elements('EditedBy')"
+                               ]
+                            },
+                        ],
+                        "Value": "${WidgetValue['activeUserName']}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                   "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                   "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueGlobalSegmentedControlRelativeYearValue}')",
+                                   "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}')",
+                                   "Dimensions('Products')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                   "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}')",
+                                   "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('Final Sales Plan')",
+                                   "Dimensions('Measures Sales Plan by Product')/Hierarchies('Measures Sales Plan by Product')/Elements('CommentSource')"
+                               ]
+                            },
+                        ],
+                        "Value": "${v('rocheBPSPProductsCommentEditGridRow3TextInput.value')}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                   "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                   "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueGlobalSegmentedControlRelativeYearValue}')",
+                                   "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}')",
+                                   "Dimensions('Products')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                   "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}')",
+                                   "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('Final Sales Plan')",
+                                   "Dimensions('Measures Sales Plan by Product')/Hierarchies('Measures Sales Plan by Product')/Elements('Comment')"
+                               ]
+                            },
+                        ],
+                        "Value": "${v('rocheBPSPProductsCommentEditGridRow2CommentInput.value')}"
+                    }
+                ]
+                `;
             }
         }
     },

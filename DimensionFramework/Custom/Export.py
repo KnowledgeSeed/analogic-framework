@@ -92,6 +92,7 @@ class Export:
         read_only.set_bg_color('#ebecec')
         read_only.set_font_name('Imago')
         read_only.set_font_size(font_size)
+        read_only.set_locked(True)
 
         l = len(d['Cells'])
         i = 0

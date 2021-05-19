@@ -255,12 +255,6 @@ app.eventMap = {
             argument: 'rocheBPSPProductsProductSelectorShortcutPopup'
         }
     ],
-    'launch.rocheBPSPProductsCommentEditGridXButton': [
-        {
-            action: app.fn.togglePopup,
-            argument: 'rocheBPSPProductsCommentEdit'
-        }
-    ],
     'launch.rocheBPSPProductsColumnSelectorRestoreButton': [
         {
             action: app.fn.togglePopup,
@@ -273,10 +267,364 @@ app.eventMap = {
             argument: 'rocheBPSPProductsColumnSelectorPopup'
         }
     ],
+    'launch.rocheBPSPProductsCommentShowGridRow5Button': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsCommentEdit'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCommentEditGridRow2CommentInput'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCommentEditGridRow3TextInput'
+        },
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCommentShow'
+        }
+    ],
+
+
+    'launch.rocheBPSPProductsCommentEditControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: ['rocheBPSPProductsCommentEdit']
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPProductsCommentShowGridTable', 'rocheBPSPProductsCommentShowGridTableSource']
+        }
+    ],
+
+    'launch.rocheBPSPProductsGridTableMonthly_row_17': [
+        {
+            action: app.fn.conditionalGridTablePopup,
+            argument: [
+                {
+                    conditionKey: 'hasComment',
+                    actions: [
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCommentShowGridTable'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCommentShowGridTableSource'
+                        },
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCommentShow'
+                        }
+                    ]
+                },
+
+
+                {
+                    conditionKey: 'else',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCommentEdit'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCommentEditGridRow2CommentInput'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCommentEditGridRow3TextInput'
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+
+
+    'launch.rocheBPSPProductsGridTableYearly_row_13': [
+        {
+            action: app.fn.conditionalGridTablePopup,
+            argument: [
+                {
+                    conditionKey: 'hasComment',
+                    actions: [
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCommentShowGridTable'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCommentShowGridTableSource'
+                        },
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCommentShow'
+                        }
+                    ]
+                },
+
+
+                {
+                    conditionKey: 'else',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCommentEdit'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCommentEditGridRow2CommentInput'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCommentEditGridRow3TextInput'
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    'launch.rocheBPSPProductsCommentEditGridXButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCommentEdit'
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPProductsCommentShowGridTable', 'rocheBPSPProductsCommentShowGridTableSource']
+        }
+    ],
+    'launch.rocheBPSPProductsCommentShowGridXButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCommentShow'
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPProductsCommentShowGridTable', 'rocheBPSPProductsCommentShowGridTableSource']
+        }
+    ],
+    'launch.rocheBPSPProductsCommentEditControlPanelSaveButton.finished': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCommentEdit'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsCommentShow'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCommentShowGridTable'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCommentShowGridTableSource'
+        }
+    ],
+    'launch.rocheBPSPProductsGridRow1Cell4Button': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsInfoPopupText1'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsInfoPopupText2'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsInfoPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsInfoPopupCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsInfoPopup'
+        }
+    ],
 
     //end products
 
     //rocheBPSPProductsCheckout
+    'launch.rocheBPSPProductsCheckoutGridRow1Cell4Button': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutInfoPopupText1'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutInfoPopupText2'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsCheckoutInfoPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutInfoPopupCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutInfoPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutCommentShowGridRow5Button': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsCheckoutCommentEdit'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutCommentEditGridRow2CommentInput'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutCommentEditGridRow3TextInput'
+        },
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutCommentShow'
+        }
+    ],
+
+
+    'launch.rocheBPSPProductsCheckoutCommentEditControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: ['rocheBPSPProductsCheckoutCommentEdit']
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPProductsCheckoutCommentShowGridTable', 'rocheBPSPProductsCheckoutCommentShowGridTableSource']
+        }
+    ],
+
+    'launch.rocheBPSPProductsCheckoutGridTableMonthly_row_17': [
+        {
+            action: app.fn.conditionalGridTablePopup,
+            argument: [
+                {
+                    conditionKey: 'hasComment',
+                    actions: [
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutCommentShowGridTable'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutCommentShowGridTableSource'
+                        },
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCheckoutCommentShow'
+                        }
+                    ]
+                },
+
+
+                {
+                    conditionKey: 'else',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCheckoutCommentEdit'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutCommentEditGridRow2CommentInput'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutCommentEditGridRow3TextInput'
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+
+
+    'launch.rocheBPSPProductsCheckoutGridTableYearly_row_13': [
+        {
+            action: app.fn.conditionalGridTablePopup,
+            argument: [
+                {
+                    conditionKey: 'hasComment',
+                    actions: [
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutCommentShowGridTable'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutCommentShowGridTableSource'
+                        },
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCheckoutCommentShow'
+                        }
+                    ]
+                },
+
+
+                {
+                    conditionKey: 'else',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCheckoutCommentEdit'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutCommentEditGridRow2CommentInput'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutCommentEditGridRow3TextInput'
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutCommentEditGridXButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutCommentEdit'
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPProductsCheckoutCommentShowGridTable', 'rocheBPSPProductsCheckoutCommentShowGridTableSource']
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutCommentShowGridXButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutCommentShow'
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPProductsCheckoutCommentShowGridTable', 'rocheBPSPProductsCheckoutCommentShowGridTableSource']
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutCommentEditControlPanelSaveButton.finished': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutCommentEdit'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsCheckoutCommentShow'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutCommentShowGridTable'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutCommentShowGridTableSource'
+        }
+    ],
     'launch.rocheBPSPProductsCheckoutColumnSelectorCancelButton': [
         {
             action: app.fn.togglePopup,
@@ -363,7 +711,29 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutGridTableYearly'
         }
     ],
-    'launch.rocheBPSPProductsCheckoutGridTableMonthlyHeaderButton-05': [
+    'launch.rocheBPSPProductsCheckoutGridRow2Cell1bButton': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsCheckoutUploadPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutUploadPopupPlDropbox'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutUploadPopupCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutUploadPopup'
+        }
+    ],
+  /*  'launch.rocheBPSPProductsCheckoutGridTableMonthlyHeaderButton-05': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsCheckoutDistributionPopup'
+        }
+    ],*/
+    'perform.rocheBPSPProductsCheckoutGridTableMonthly_row_4': [
         {
             action: app.fn.openPopup,
             argument: 'rocheBPSPProductsCheckoutDistributionPopup'
@@ -411,70 +781,6 @@ app.eventMap = {
         }
     ],
     //end rocheBPSPProductsCheckout comment mody
-
-
-    'launch.rocheBPSPProductsCommentShowGridRow5Button': [
-        {
-            action: app.fn.openPopup,
-            argument: ['rocheBPSPProductsCommentEdit']
-        },
-
-        {
-            action: app.fn.togglePopup,
-            argument: ['rocheBPSPProductsCommentShow']
-        }
-    ],
-
-
-    'launch.rocheBPSPProductsCommentEditControlPanelCancelButton': [
-        {
-            action: app.fn.togglePopup,
-            argument: 'rocheBPSPProductsCommentEdit'
-        },
-
-        {
-            action: app.fn.togglePopup,
-            argument: ['rocheBPSPProductsCommentEdit']
-        }
-    ],
-
-
-    'launch.rocheBPSPProductsGridTableYearly_row_13': [
-        {
-            action: app.fn.conditionalGridTablePopup,
-            argument: [
-                {
-                    conditionKey: 'hasComment',
-                    actions: [
-                        {
-                            action: app.fn.forceRefresh,
-                            argument: 'rocheBPSPProductsCommentShowGridTable'
-                        },
-                        {
-                            action: app.fn.forceRefresh,
-                            argument: 'rocheBPSPProductsCommentShowGridTableSource'
-                        },
-                        {
-                            action: app.fn.openPopup,
-                            argument: 'rocheBPSPProductsCommentShow'
-                        }
-                    ]
-                },
-
-
-                {
-                    conditionKey: 'else',
-                    actions: [
-                        {
-                            action: app.fn.openPopup,
-                            argument: 'rocheBPSPProductsCommentEdit'
-                        }
-                    ]
-                }
-            ]
-        }
-    ],
-
 
     'launch.rocheBPSPSettingsGridRow2Cell3Button': [
         {
