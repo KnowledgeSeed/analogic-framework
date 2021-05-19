@@ -224,17 +224,17 @@ class TextWidget extends Widget {
             });
         }
         textTitle.on('click', e => {
-            let c = $(e.currentTarget), ksText = section.find('.ks-text'), editable = textTitle.data('editable') == 1;
+            let c = $(e.currentTarget), ksText = section.find('.ks-text'), editable = textTitle.data('editable') == 1, originalValue = c.text();
             c.off('click');
             ksText.addClass('ks-on');
-            c.html(`<input class="ks-text-title-input" data-id="${o.id}" data-action="write" data-ordinal="${c.data('ordinal')}" type="text" value="${c.text()}"/>`).promise().then(() => {
+            c.html(`<input class="ks-text-title-input" data-id="${o.id}" data-action="write" data-ordinal="${c.data('ordinal')}" type="text" value="${originalValue}"/>`).promise().then(() => {
                 let r = c.find('.ks-text-title-input').focus().select().on('focusout', f => {
                     let val =  Utils.escapeText(r.val());
                     r.off('focusout').data('value', val);
 
                     WidgetValue[r.data('id')] = {value: val};
                     let ic = section.find('.ks-text-icon');
-                    if (ic.is(':visible')) {
+                    if (ic.is(':visible') && originalValue !== val) {
                         ic.data('value', val);
                         Widget.doHandleSystemEvent(ic, f);
 
@@ -242,7 +242,7 @@ class TextWidget extends Widget {
                             Widget.doHandleGridTableSystemEvent(ic, f);
                         }
                     }
-                    if(editable) {
+                    if(editable && originalValue !== val) {
                         if (amIOnGridTable) {
                             Widget.doHandleGridTableSystemEvent(r, f);
                         }

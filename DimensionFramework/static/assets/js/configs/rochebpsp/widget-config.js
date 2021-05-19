@@ -3866,6 +3866,16 @@ app.widgetConfig = {
                             marginTop: 15,
                             skin: 'edit_distribution_bpsp',
                             title: '',
+                            listen: [
+                                {
+                                    'event': 'write.rocheBPSPProductsCheckoutDistributionEditPopupGridTable.finished',
+                                    'method' : 'refresh'
+                                },
+                                {
+                                    'event': 'switch.rocheBPSPProductsCheckoutDistributionEditPopupGridTable.finished',
+                                    'method' : 'refresh'
+                                }
+                            ],
                             widgets: [
                                 {
                                     id: 'rocheBPSPProductsCheckoutDistributionEditPopupGridTableHeaderRow',
@@ -3999,8 +4009,7 @@ app.widgetConfig = {
                                             type: ButtonWidget,
                                             icon: 'icon-badge',
                                             skin: 'gridtablehierarchy_bpsp',
-                                            label: '',
-                                            action: '',
+                                            label: ''
                                         }
                                     ]
                                 },
@@ -5302,7 +5311,8 @@ app.widgetConfig = {
                                             type: ButtonWidget,
                                             icon: 'icon-dots-horizontal',
                                             marginBottom: 8,
-                                            iconFontSize: 3
+                                            iconFontSize: 3,
+                                            visible: false
                                         }
                                     ]
                                 },
@@ -5633,12 +5643,11 @@ app.widgetConfig = {
                             alignment: 'center-center',
                             width: '2%',
                             widgets: [
-
                                 {
-                                    id: 'rocheBPSPProductsCheckoutGridTableMonthlyText-05',
-                                    type: TextWidget,
-                                    title: '',
+                                    id: 'rocheBPSPProductsCheckoutGridTableMonthlyTButton-05',
+                                    type: ButtonWidget
                                 }
+
                             ]
                         },
 
