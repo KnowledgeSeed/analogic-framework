@@ -1783,7 +1783,7 @@
 
 /* red_link_bpsp */
 
-.ks-button-red_link_bpsp .ks-button-label {
+/*.ks-button-red_link_bpsp .ks-button-label {
     color: #E40046;
     font-size: 14px;
     font-weight: bold;
@@ -1803,12 +1803,12 @@
     background-color: rgba(228, 0, 70, 0.1);
     padding: 20px;
     border-radius: 5px;
-}
+}*/
 
 
 /* green_link_bpsp */
 
-.ks-button-green_link_bpsp .ks-button-label {
+/*.ks-button-green_link_bpsp .ks-button-label {
     color: #00965E;
     font-size: 14px;
     font-weight: bold;
@@ -1828,7 +1828,7 @@
     background-color: rgba(0, 150, 94, 0.1);
     padding: 20px;
     border-radius: 5px;
-}
+}*/
 
 
 

@@ -1605,12 +1605,14 @@ app.repository = {
             };
             if (icon !== '') {
                 result['icon'] = icon;
-                result['performable'] = true;
+
             }
             if (applyMeasuresToSection) {
                 result['applyMeasuresToSection'] = true;
                 result['width'] = '100%';
                 result['height'] = '100%';
+                result['performable'] = true;
+                result['paddingRight'] = 18;
             }
             return result;
         }

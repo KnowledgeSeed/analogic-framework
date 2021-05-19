@@ -3869,11 +3869,11 @@ app.widgetConfig = {
                             listen: [
                                 {
                                     'event': 'write.rocheBPSPProductsCheckoutDistributionEditPopupGridTable.finished',
-                                    'method' : 'refresh'
+                                    'method': 'refresh'
                                 },
                                 {
                                     'event': 'switch.rocheBPSPProductsCheckoutDistributionEditPopupGridTable.finished',
-                                    'method' : 'refresh'
+                                    'method': 'refresh'
                                 }
                             ],
                             widgets: [
@@ -4198,12 +4198,67 @@ app.widgetConfig = {
                             ]
                         },
                         {
+                            id: 'rocheBPSPProductsCheckoutCopyMergePanel1',
+                            type: PanelWidget,
+                            skin: 'horizontal_align_right',
+                            marginTop: 20,
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPProductsCheckoutCopyMergeTextBox',
+                                    type: TextBoxWidget,
+                                    skin: 'copy_bpsp',
+                                    width: 80,
+                                    height: 40,
+                                    marginRight: 20
+                                },
+                                {
+                                    id: 'rocheBPSPProductsCheckoutCopyMergeBackButton',
+                                    type: ButtonWidget,
+                                    icon: 'icon-arrow-return',
+                                    iconColor: '#0066CC',
+                                    iconFontSize: 17,
+                                    marginTop: 14,
+                                    marginRight: 55
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPProductsCheckoutCopyMergePanel',
+                            type: PanelWidget,
+                            skin: 'horizontal_align_center',
+                            marginBottom: -17,
+                            marginTop: 10,
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPProductsCheckoutCopyMergePanelText1',
+                                    type: TextWidget,
+                                    titleFontSize: 10,
+                                    titleFontColor: '#B1B3B3',
+                                    title: '- 100 %',
+                                    marginRight: 190
+                                },
+                                {
+                                    id: 'rocheBPSPProductsCheckoutCopyMergePanelText2',
+                                    type: TextWidget,
+                                    titleFontSize: 10,
+                                    titleFontColor: '#B1B3B3',
+                                    title: '+ 100 %'
+                                },
+                            ]
+                        },
+                        {
                             id: 'rocheBPSPProductsCheckoutCopyMergePopupSlider',
                             type: SliderWidget,
                             width: 270,
                             buttonsVisible: false,
+                            trackFillStartValue: -100,
                             minRange: -100,
                             maxRange: 100,
+                            marginTop: 10,
+                            marginBottom: 10,
+                            updateableWidgetId: 'rocheBPSPProductsCheckoutCopyMergeTextBox',
+                            skin: 'copy_bpsp',
                             unit: '%'
 
                         },

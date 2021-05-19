@@ -762,6 +762,10 @@ app.eventMap = {
                         {
                             action: app.fn.openPopup,
                             argument: 'rocheBPSPProductsCheckoutCopyMergePopup'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutCopyMergePopupSlider'
                         }
                     ]
                 }
