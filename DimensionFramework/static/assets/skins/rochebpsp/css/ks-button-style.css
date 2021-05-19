@@ -896,8 +896,6 @@
 }
 
 
-
-
 .ks-button-gridtable_hierarchy_bpsp_PL7 {
     margin-left: 110px;
     width: 100%;
@@ -922,7 +920,6 @@
 }
 
 
-
 .ks-button-gridtable_hierarchy_bpsp_PL8 {
     margin-left: 110px;
     width: 100%;
@@ -945,8 +942,6 @@
     font-size: 75%;
     margin-top: 1%;
 }
-
-
 
 
 /* shortcut */
@@ -1786,8 +1781,54 @@
 }
 
 
+/* red_link_bpsp */
+
+.ks-button-red_link_bpsp .ks-button-label {
+    color: #E40046;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'imago';
+    margin-left: 5px;
+    margin-bottom: 2px;
+}
+
+.ks-button-red_link_bpsp .ks-button-icon {
+    color: #E40046;
+    padding-right: 2px;
+    font-size: 13px;
+    margin-top: 1px;
+}
+
+.ks-button-red_link_bpsp:hover {
+    background-color: rgba(228, 0, 70, 0.1);
+    padding: 20px;
+    border-radius: 5px;
+}
 
 
+/* green_link_bpsp */
+
+.ks-button-green_link_bpsp .ks-button-label {
+    color: #00965E;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'imago';
+    margin-left: 5px;
+    margin-bottom: 2px;
+}
+
+.ks-button-green_link_bpsp .ks-button-icon {
+    color: #00965E;
+    padding-right: 2px;
+    font-size: 13px;
+    margin-top: 1px;
+}
+
+.ks-button-green_link_bpsp:hover {
+    background-color: rgba(0, 150, 94, 0.1);
+    padding: 20px;
+    border-radius: 5px;
+}
 
 
 
