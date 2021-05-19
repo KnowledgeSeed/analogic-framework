@@ -1136,25 +1136,26 @@ app.repository = {
             }
         }
     },
-    rocheBPSPProductsColumnSelectorUpdateButton: {
+    rocheBPSPProductsColumnSelectorUpdateButton:
+        {
 
-        launch: {
-            validation: (db) => {
-                return {
-                    success: v('rocheBPSPProductsColumnSelectorPopupDropBox.value').split(',').length <= 10,
-                    message: 'The max number of columns allowed is 10. Please deselect some columns.'
-                };
-            },
-            url: (db) => `/api/v1/Processes('MODULE - UI - Products Columns Selection Update by User Selection')/tm1.ExecuteWithReturn`,
-            type: 'POST',
-            body: (db) => `{
+            launch: {
+                validation: (db) => {
+                    return {
+                        success: v('rocheBPSPProductsColumnSelectorPopupDropBox.value').split(',').length <= 10,
+                        message: 'The max number of columns allowed is 10. Please deselect some columns.'
+                    };
+                },
+                url: (db) => `/api/v1/Processes('MODULE - UI - Products Columns Selection Update by User Selection')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => `{
                         "Parameters": [
                                 {"Name": "pUserID", "Value": "${db.activeUserName}"},
                                 {"Name": "pSelectedColumns", "Value": "${v('rocheBPSPProductsColumnSelectorPopupDropBox.value')}"},
                         ]
                     }`
-        }
-    },
+            }
+        },
     rocheBPSPProductsCheckoutColumnSelectorUpdateButton: {
         launch: {
             validation: (db) => {
@@ -2615,6 +2616,7 @@ app.repository = {
                     type: 'POST',
                     body: (db) => `{"MDX":"
 
+                
 With
 --Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion
      Set DefaultProductRows AS
@@ -2624,7 +2626,7 @@ With
      Set FocusedOnProductRows AS 
       {Intersect({TM1DRILLDOWNMEMBER({[Materials].[BPSP Budget IP].[IPL1]}, ALL, RECURSIVE )},{DefaultProductRows})}
 --Decide which rowSet to use
-     MEMBER [Materials].[BPSP Budget].[ProductIsFocused] AS 
+     MEMBER [Materials].[BPSP Budget IP].[ProductIsFocused] AS 
      IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
 -- Decide 1st column element
      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn] As
@@ -2634,13 +2636,13 @@ With
      {StrToSet('{'+[LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn]+'}')}
 -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialName] as 
-            [Materials].[BPSP Budget].CurrentMember.Properties('BPSP Budget Caption')
+            [Materials].[BPSP Budget IP].CurrentMember.Properties('BPSP Budget IP Caption')
      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialCode] as 
-            [Materials].[BPSP Budget].CurrentMember.Properties('BPSP Actual Caption')
+            [Materials].[BPSP Budget IP].CurrentMember.Properties('Element')
      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialLevel] as 
-            [Materials].[BPSP Budget].CurrentMember.Properties('BPSP Budget IP Caption')
+            [Materials].[BPSP Budget IP].CurrentMember.Properties('Product Level - Name')
      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS] as 
-            [Materials].[BPSP Budget].CurrentMember.Properties('IP DIS Relevant')
+            [Materials].[BPSP Budget IP].CurrentMember.Properties('IP DIS Relevant Flag Budget')
      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment] as
             [Sales Plan IP].([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan],[Measures Sales Plan IP].[Measures Sales Plan IP].[Comment Flag])
      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutUser] as 
@@ -2661,7 +2663,7 @@ With
 -- column Tuple Create
      Set ColumnSelection As
         Union({FirstColumn},
-        {([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Last Submitted Plan]),
+        {([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Last Submitted Plan]),
          ([Periods].[Periods].[202101],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
          ([Periods].[Periods].[202102],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
          ([Periods].[Periods].[202103],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
@@ -2675,13 +2677,14 @@ With
          ([Periods].[Periods].[202111],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
          ([Periods].[Periods].[202112],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Variance Final vs Last Submitted Plan]),
-          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Variance Final vs Last Submitted Plan])},All)
+          --([Periods].[Periods].[2021 - 2020],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+          ([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+          ([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Variance Final vs Last Submitted Plan])},All)
 SELECT 
      Union(Union({FixColumns},{ColumnSelection},All),{FinalColumns},All)
   ON COLUMNS , 
 -- rows
-  {StrToSet([Materials].[BPSP Budget].[ProductIsFocused])} ON ROWS 
+  {StrToSet([Materials].[BPSP Budget IP].[ProductIsFocused])} ON ROWS 
 FROM [Sales Plan IP] 
 WHERE 
   (
@@ -2693,6 +2696,7 @@ WHERE
    [Instrument Types].[Instrument Types].[New]
   )
 
+
             "}`,
                     parsingControl: {
                         type: 'matrix',
@@ -2700,7 +2704,10 @@ WHERE
                         query: [
 
                             (r, x) => {
-                                return {label: r.Cells[x].FormattedValue, skin: 'gridtable_hierarchy_bpsp_PL1'}
+                                return {
+                                    label: r.Cells[x].FormattedValue,
+                                    skin: r.Cells[x + 1].FormattedValue === 'IP Node' ? 'gridtable_hierarchy_bpsp_PL6' : 'gridtable_hierarchy_bpsp_' + r.Cells[x + 1].FormattedValue.replace('a', ''),
+                                }
                             },
 
                             (r, x) => {
@@ -2720,6 +2727,10 @@ WHERE
 
                             (r, x) => {
                                 return {title: r.Cells[x + 8].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 9].FormattedValue}
                             },
 
                             (r, x) => {
@@ -2771,20 +2782,19 @@ WHERE
                             },
 
                             (r, x) => {
-                                return {title: r.Cells[x + 21].FormattedValue}
-                            },
-
-                            (r, x) => {
                                 return {title: r.Cells[x + 22].FormattedValue}
                             },
 
                             (r, x) => {
-                                return {title: r.Cells[x + 23].FormattedValue}
+                                return {
+                                    icon: r.Cells[x + 23].FormattedValue === '' ? 'icon-x' : 'icon-check',
+                                }
                             },
 
-
                             (r, x) => {
-                                return {title: r.Cells[x + 24].FormattedValue}
+                                return {
+                                    icon: r.Cells[x + 24].FormattedValue === '' ? 'icon-comment-off' : 'icon-comment-on',
+                                }
                             },
 
 
@@ -2804,19 +2814,44 @@ WHERE
                     type: 'POST',
                     body: (db) => `{"MDX":"
 
-SELECT 
 
-   {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP Budget Name],[}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name],[}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element]} 
+With 
+-- IP Node then add dummy flag
+Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag] As
+IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL6',1,0)
+-- IP Node and has no pland Data then deletable
+Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag] As
+IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
+    [Material Information by Company].([ Companies].[ Companies].[1391],
+    [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) = 0,1,0)
+-- IP Node and has pland Data then go to plan
+Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag] As
+IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
+    [Material Information by Company].([ Companies].[ Companies].[1391],
+    [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) <> 0,1,0)
+SELECT 
+   {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP Budget Name],
+    [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name],
+     [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element],
+     [}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag],
+     [}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag],
+     [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag]} 
   ON COLUMNS , 
    {TM1SubsetToSet([Materials].[BPSP Budget],'1391 MM')} 
   ON ROWS 
 FROM [}ElementAttributes_Materials] 
 
+
+
             "}`,
                     parsingControl: {
                         type: 'matrix',
-                        length: 3,
+                        length: 6,
                         query: [
+
+                            (r, x) => {
+                                return {}
+                            },
 
                             (r, x) => {
                                 return {
@@ -2834,11 +2869,286 @@ FROM [}ElementAttributes_Materials]
                             },
 
                             (r, x) => {
-                                return {}
+                                return {
+                                    icon: r.Cells[x + 3].FormattedValue === '1,00' ? 'icon-plus-circle-outline' : '',
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    icon: r.Cells[x + 4].FormattedValue === '1,00' ? 'icon-trash' : '',
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    icon: r.Cells[x + 5].FormattedValue === '1,00' ? 'icon-arrow-right1' : '',
+                                }
+                            },
+
+
+                        ]
+                    }
+
+                },
+        },
+
+
+    rocheBPSPMaterialsAddMaterialPasteFromClipboard:
+        {
+
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => `{"MDX":"
+
+SELECT 
+   {
+    [Measures Material Import by Company].[Measures Material Import by Company].[Materials],
+    [Measures Material Import by Company].[Measures Material Import by Company].[Medium Name],
+         [Measures Material Import by Company].[Measures Material Import by Company].[Selected for Basket],
+    [Measures Material Import by Company].[Measures Material Import by Company].[Material Type - Key],
+    [Measures Material Import by Company].[Measures Material Import by Company].[Material Status - Key],
+    [Measures Material Import by Company].[Measures Material Import by Company].[Material Category - Key],
+    [Measures Material Import by Company].[Measures Material Import by Company].[Status Message]
+
+   } 
+  ON COLUMNS , 
+  NON EMPTY  {TM1FILTERBYLEVEL({[Items].[Items].Members}, 0)} 
+  ON ROWS 
+FROM [Material Import by Company] 
+WHERE 
+  (
+   [Companies].[Companies].[1391]
+  )
+
+            "}`,
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 7,
+                        query: [
+
+                            (r, x) => {
+                                return {title: r.Cells[x].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 1].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 2].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 3].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 4].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 5].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 6].FormattedValue}
                             },
 
                             (r, x) => {
                                 return {}
+                            },
+
+
+                        ]
+                    }
+
+                },
+        },
+
+
+    rocheBPSPipPlanningMaterialSelectorShortcutPopupGridTable: {
+        initDefault: (db) => {
+            return [];
+        },
+        state:
+            (db) => {
+                return [
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_shortcut_bpsp_PL1'},
+
+
+                    ],
+
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_shortcut_bpsp_PL2'},
+
+
+                    ],
+
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_shortcut_bpsp_PL3'},
+
+
+                    ],
+
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_shortcut_bpsp_PL3'},
+
+
+                    ],
+
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_shortcut_bpsp_PL2'},
+
+
+                    ],
+
+                    [
+                        {label: 'Profit center name', skin: 'gridtable_hierarchy_shortcut_bpsp_PL3'},
+
+
+                    ],
+                ];
+            }
+    },
+
+
+    RocheBPSPMaterialsAddMaterialSearch:
+        {
+
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => `{"MDX":"
+
+                
+With 
+Member [Measures Material Information by Company].[Measures Material Information by Company].[ID] As
+   [Materials].[Materials].CurrentMember.Properties('Element')
+Member [Measures Material Information by Company].[Measures Material Information by Company].[Description] As
+   [Materials].[Materials].CurrentMember.Properties('Medium Name')   
+Member [Measures Material Information by Company].[Measures Material Information by Company].[Status] As
+   [Materials].[Materials].CurrentMember.Properties('Material Status - Key')
+Member [Measures Material Information by Company].[Measures Material Information by Company].[Instrument Category] As
+   [Materials].[Materials].CurrentMember.Properties('Material Category - Key')
+Member [Measures Material Information by Company].[Measures Material Information by Company].[Current Profit Center] As
+   [Materials].[Materials].CurrentMember.Properties('Profit Center Actual - Key')
+Member [Measures Material Information by Company].[Measures Material Information by Company].[Budget Profit Center] As
+   [Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key')
+Member [Measures Material Information by Company].[Measures Material Information by Company].[Product Type] As
+   [Materials].[Materials].CurrentMember.Properties('Material Type - Key')
+Member [Measures Material Information by Company].[Measures Material Information by Company].[Current IP Node] As
+   [Materials].[Materials].CurrentMember.Properties('IP Profit Center Actual - Key')
+Member [Measures Material Information by Company].[Measures Material Information by Company].[Budget IP Node] As
+   [Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key')
+Member [Measures Material Information by Company].[Measures Material Information by Company].[IP Reporting Relevant] As
+   [Materials].[Materials].CurrentMember.Properties('IP DIS Relevant Flag')
+Set ColumnSelection As
+  {
+   [Measures Material Information by Company].[Measures Material Information by Company].[Shopping Basket],
+   [Measures Material Information by Company].[Measures Material Information by Company].[ID],
+   [Measures Material Information by Company].[Measures Material Information by Company].[Description],
+   [Measures Material Information by Company].[Measures Material Information by Company].[Status],
+   [Measures Material Information by Company].[Measures Material Information by Company].[Instrument Category],
+   [Measures Material Information by Company].[Measures Material Information by Company].[Current Profit Center],
+   [Measures Material Information by Company].[Measures Material Information by Company].[Budget Profit Center],
+   [Measures Material Information by Company].[Measures Material Information by Company].[Product Type],
+   [Measures Material Information by Company].[Measures Material Information by Company].[Current IP Node],
+   [Measures Material Information by Company].[Measures Material Information by Company].[Budget IP Node],
+   [Measures Material Information by Company].[Measures Material Information by Company].[Last Modified],
+   [Measures Material Information by Company].[Measures Material Information by Company].[IP Reporting Relevant],
+   [Measures Material Information by Company].[Measures Material Information by Company].[Status Message]
+  }
+SELECT 
+   {ColumnSelection} 
+   PROPERTIES [Measures Material Information by Company].[Measures Material Information by Company].[Caption]  ON COLUMNS ,
+   {Subset({
+    FILTER({
+ FILTER({
+FILTER({
+ FILTER({
+TM1FILTERBYLEVEL({
+FILTER({[Materials].[Materials].Members}, 
+        [Materials].[Materials].CurrentMember.Properties('IP Active Flag') = '1')
+                 }, 0)
+          --Dropbox with Category
+          }, [Materials].[Materials].CurrentMember.Properties('Material Category - Key') = 'CC')
+ -- Instr search
+ }, InStr([Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key') ,'458360')<>0)
+}, InStr([Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key'), '297')<>0)
+       }, InStr([Materials].[Materials].CurrentMember.Properties('Element'), '48' ) <> 0 AND
+          InStr([Materials].[Materials].CurrentMember.Properties('Medium Name'), '' ) <> 0 )},1,100)}  
+   PROPERTIES [Materials].[Materials].[Caption]  ON ROWS 
+FROM [Material Information by Company] 
+WHERE 
+  (
+   [Companies].[Companies].[1391]
+  )
+
+
+
+            "}`,
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 13,
+                        query: [
+
+
+                            (r, x) => {
+                                return {}
+                            },
+
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 1].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 2].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 3].FormattedValue}
+                            },
+
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 4].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 5].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 6].FormattedValue}
+                            },
+                            (r, x) => {
+                                return {title: r.Cells[x + 7].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 8].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 9].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 10].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {icon: r.Cells[x + 11].FormattedValue === '' ? 'icon-x' : 'icon-check',}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 12].FormattedValue}
                             },
 
                             (r, x) => {

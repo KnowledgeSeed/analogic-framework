@@ -861,4 +861,17 @@ app.eventMap = {
     ],
 
 
+
+        'launch.rocheBPSPipPlanningGridTableMonthlyHeaderFocusButton': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPipPlanningMaterialSelectorShortcutPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPipPlanningMaterialSelectorShortcutPopupGridTable'
+        }
+    ],
+
+
 };
