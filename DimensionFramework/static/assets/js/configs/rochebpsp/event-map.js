@@ -899,4 +899,66 @@ app.eventMap = {
     ],
 
 
+    'segmentedControlTab1.rocheBPSPAddMaterialGridRow2Cell1SegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'RocheBPSPMaterialsAddMaterialClipboard'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPAddMaterialGridRow4'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPAddMaterialGridRow3'
+        },
+    ],
+
+
+    'segmentedControlTab2.rocheBPSPAddMaterialGridRow2Cell1SegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'RocheBPSPMaterialsAddMaterialClipboard'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPAddMaterialGridRow3'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPAddMaterialGridRow4'
+        },
+    ],
+
+    'segmentedControlTab1.rocheBPSPMaterialGridRow2Cell1SegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'RocheBPSPMaterial_IPNode_GridTable'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPMaterialGridTable'
+        }
+    ],
+
+    'segmentedControlTab2.rocheBPSPMaterialGridRow2Cell1SegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPMaterialGridTable'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'RocheBPSPMaterial_IPNode_GridTable'
+        }
+    ],
+
+
 };
