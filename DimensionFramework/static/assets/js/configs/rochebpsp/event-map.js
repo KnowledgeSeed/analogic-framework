@@ -739,6 +739,12 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutDistributionPopup'
         }
     ],
+    'launch.rocheBPSPProductsCheckoutCopyMergeBackButton': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutCopyMergePopupSlider'
+        }
+    ],
     'perform.rocheBPSPProductsCheckoutGridTableYearly': [
         {
             action: app.fn.conditionalGridTablePopup,

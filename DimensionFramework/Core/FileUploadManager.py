@@ -17,7 +17,7 @@ class FileUploadManager:
 
     def upload(self, target, staging, sub_folder, files):
 
-        if staging == '':
+        if staging != '':
             path = staging
         else:
             path = target
@@ -27,8 +27,14 @@ class FileUploadManager:
             os.mkdir(path)
 
         for f in files.values():
-            filename = secure_filename(f.filename)
-            f.save(os.path.join(path, filename))
+            file_name = secure_filename(f.filename)
+            file_path = os.path.join(path, file_name)
+            f.save(file_path)
+            file_extension = pathlib.Path(file_name).suffix
+            if file_extension == '.xlsx' or file_extension == '.xls':
+                xlsx = pd.read_excel(file_path)
+                xlsx.to_csv(file_path.replace('xlsx', 'csv'), encoding='utf-8', index=False)
+                os.remove(file_path)
 
         return path
 

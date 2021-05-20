@@ -44,7 +44,7 @@ class Base:
         if key is None:
             return self.getNotFoundResponse()
 
-        description = self.getCustomObjectDescription(key)
+        description = self.setting.getCustomObjectDescription(key)
 
         return ClassLoader().call(description, request, self.getTM1Service(), self.setting)
 
@@ -96,8 +96,18 @@ class Base:
             sub_folder = request.form.get('subFolder')
             pre_process_message = ''
             result = 'ok'
+            validation_key = request.form.get('validation', '')
 
             upload_path = self.upload_manager.upload(target, staging, sub_folder, request.files)
+
+            if validation_key != '':
+                description = self.setting.getCustomObjectDescription(validation_key)
+
+                validation_message = ClassLoader().call(description, request, self.getTM1Service(), self.setting, path=upload_path)
+
+                if validation_message != '':
+                    result = 'ERROR!<br/><br/>' + validation_message
+                    return result, 200, {'Content-Type': 'application/json'}
 
             preprocess_template = request.form.get('preProcessTemplate', default='')
 
@@ -114,6 +124,7 @@ class Base:
             return result, 200, {'Content-Type': 'application/json'}
         except:
             print('Unexpected error:', sys.exc_info()[0])
+            print('Unexpected error:', sys.exc_info()[1])
             return 'Unexpected error', 200, {'Content-Type': 'application/json'}
 
     def addAuthenticatedCookie(self, response):

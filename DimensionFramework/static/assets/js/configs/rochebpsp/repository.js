@@ -1573,23 +1573,29 @@ app.repository = {
             if (uiValue === 0) {
                 cellSkin = 'readonly_bpsp';
             }
-            if ((uiValue === 2 || uiValue === 3) && r.Cells[index].Members[6].Name !== 'Final Sales Plan') {
+            if ((uiValue === 2 || uiValue === 3)
+                && (r.Cells[index].Members[6].Name == 'Final Sales Plan'
+                    && r.Cells[index].Members[5].Name != WidgetValue.systemValueGlobalSegmentedControlRelativeYearValue)) {
+
                 skin = 'products_gd_readonly_with_icon_bpsp';
                 cellSkin = 'readonly_bpsp';
                 icon = 'icon-copy';
                 copyMerge = true;
             }
-            if ((uiValue === 2 || uiValue === 3) && r.Cells[index].Members[6].Name === 'Final Sales Plan') {
+            if ((uiValue === 2 || uiValue === 3)
+                && r.Cells[index].Members[6].Name === 'Final Sales Plan'
+                && r.Cells[index].Members[5].Name == WidgetValue.systemValueGlobalSegmentedControlRelativeYearValue) {
+
                 skin = 'products_gd_writeable_with_icon_bpsp';
                 cellSkin = '';
+                applyMeasuresToSection = true;
+                performWrite = true;
                 if (uiValue === 2) {
                     icon = 'icon-dots-vertical';
                     distributionEdit = true;
                 } else {
                     icon = 'icon-cloud-arrow-up';
                     skin = 'monthly_right_bpsp';
-                    applyMeasuresToSection = true;
-                    performWrite = true;
                 }
             }
             let result = {
@@ -1612,9 +1618,55 @@ app.repository = {
                 result['width'] = '100%';
                 result['height'] = '100%';
                 result['performable'] = true;
-                result['paddingRight'] = 18;
+                if (uiValue === 3) {
+                    result['paddingRight'] = 18;
+                }
             }
             return result;
+        }
+    },
+    rocheBPSPProductsCheckoutCopyMergePopupSlider: {
+        initCondition: (db) => {
+            let l = v('rocheBPSPProductsCheckoutGridTableYearly.cellData.length');
+            return l != false && l != 0;
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            { "MDX" :
+                "SELECT 
+                   {[Versions].[Versions].[Live]} 
+                   PROPERTIES [Versions].[Versions].[Caption]  ON COLUMNS , 
+                   {[Measures Sales Parameters by Products Flat].[Measures Sales Parameters by Products Flat].[Growth rate for Products Copy Minimum],
+                    [Measures Sales Parameters by Products Flat].[Measures Sales Parameters by Products Flat].[Growth rate for Products Copy Maximum],
+                [Measures Sales Parameters by Products Flat].[Measures Sales Parameters by Products Flat].[Growth rate for Products Copy]} 
+                  ON ROWS 
+                FROM [Sales Parameters by Products Flat] 
+                WHERE 
+                  (
+                   [Years].[Years].[${WidgetValue.systemValueGlobalSegmentedControlRelativeYearValue}],
+                   [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}],
+                   [Receivers].[Receivers].[${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}],
+                   [Products Flat].[Products Flat].[${Utils.getGridTableCell('rocheBPSPProductsCheckoutGridTableYearly', 1).title}]
+                  )
+                  "}
+           `,
+            parsingControl: {
+                    type: 'object',
+                    query:
+                        {
+                            value: (r, x) => {
+                                return Utils.parseNumber(r.Cells[2].FormattedValue) * 100;
+                            },
+                            originalValue: (r, x) => {
+                                return Utils.parseNumber(r.Cells[2].FormattedValue) * 100;
+                            }
+                        }
+                }
         }
     },
     rocheBPSPProductsCheckoutGridTableYearly: {
@@ -1804,6 +1856,8 @@ app.repository = {
                     company: Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key'),
                     receiver: v('rocheBPSPProductsGridRow1Cell3DropBox.value'),
                     product: db.systemValueCheckoutProduct,
+                    globalVersion: WidgetValue.systemValueGlobalCompanyVersion,
+                    version: WidgetValue.systemValueGlobalCompanyProductPlanVersion,
                     year1: y1,
                     year2: y1 + 1,
                     year3: y1 + 2,
@@ -1856,6 +1910,24 @@ app.repository = {
                     }
                 }, []);
             }
+        }
+    },
+    rocheBPSPProductsCheckoutUploadPopupUpload: {
+        upload: (db) => {
+            return {
+                staging: app.defaultUploadStagingFolder,
+                target: app.defaultUploadTargetFolder,
+                productLevel: v('rocheBPSPProductsCheckoutUploadPopupPlDropbox.value'),
+                validation: 'validateExcelImport',
+                validationUser: db.activeUserName,
+                validationCompany: Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key'),
+                validationReceiver: v('rocheBPSPProductsGridRow1Cell3DropBox.value'),
+                validationGlobalVersion: WidgetValue.systemValueGlobalCompanyVersion,
+                validationVersion: WidgetValue.systemValueGlobalCompanyProductPlanVersion,
+                validationProduct: WidgetValue.systemValueCheckoutProduct,
+                validationMessage: 'First row of excel does not match'
+                //      preProcessTemplate: v('preprocess.choose.value') === false ? 'Template1' : v('preprocess.choose.value')
+            };
         }
     },
     rocheBPSPProductsCheckoutGridTableMonthly: {

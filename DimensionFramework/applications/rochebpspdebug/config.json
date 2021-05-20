@@ -41,7 +41,11 @@
 
 	"defaultMDXQuery" : "https://dev.knowledgeseed.ch:5125/rochebpspapi/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value)",
 
-	"MainPage" : "rocheBPSPProductsCheckout",
+	"defaultUploadTargetFolder" : "\\\\\\\\USER-PC\\\\ddd",
+
+	"defaultUploadStagingFolder" : "\\\\\\\\USER-PC\\\\staging",
+
+	"MainPage" : "rocheBPSPMain",
     "pool": {
         "users": ["oravecz.tamas"],
         "target": "https://dev.knowledgeseed.ch:5125/rochebpspapi"
