@@ -1781,9 +1781,9 @@
 }
 
 
-/* red_link_bpsp */
+/* clear_material   */
 
-.ks-button-red_link_bpsp .ks-button-label {
+.ks-button-clear_material_bpsp .ks-button-label {
     color: #E40046;
     font-size: 14px;
     font-weight: bold;
@@ -1792,23 +1792,23 @@
     margin-bottom: 2px;
 }
 
-.ks-button-red_link_bpsp .ks-button-icon {
+.ks-button-clear_material_bpsp .ks-button-icon {
     color: #E40046;
     padding-right: 2px;
     font-size: 13px;
     margin-top: 1px;
 }
 
-.ks-button-red_link_bpsp:hover {
+.ks-button-clear_material_bpsp:hover {
     background-color: rgba(228, 0, 70, 0.1);
     padding: 20px;
     border-radius: 5px;
 }
 
 
-/* green_link_bpsp */
+/* addmaterial_bpsp  */
 
-.ks-button-green_link_bpsp .ks-button-label {
+.ks-button-addmaterial_bpsp .ks-button-label {
     color: #00965E;
     font-size: 14px;
     font-weight: bold;
@@ -1817,18 +1817,21 @@
     margin-bottom: 2px;
 }
 
-.ks-button-green_link_bpsp .ks-button-icon {
+.ks-button-addmaterial_bpsp .ks-button-icon {
     color: #00965E;
     padding-right: 2px;
     font-size: 13px;
     margin-top: 1px;
 }
 
-.ks-button-green_link_bpsp:hover {
+.ks-button-addmaterial_bpsp:hover {
     background-color: rgba(0, 150, 94, 0.1);
     padding: 20px;
     border-radius: 5px;
 }
+
+
+
 
 
 

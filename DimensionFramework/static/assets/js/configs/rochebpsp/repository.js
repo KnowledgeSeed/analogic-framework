@@ -2898,7 +2898,7 @@ FROM [}ElementAttributes_Materials]
         },
 
 
-    rocheBPSPMaterialsAddMaterialPasteFromClipboard:
+    RocheBPSPMaterial_IPNode_GridTable:
         {
 
             init:
@@ -2907,34 +2907,50 @@ FROM [}ElementAttributes_Materials]
                     type: 'POST',
                     body: (db) => `{"MDX":"
 
-SELECT 
-   {
-    [Measures Material Import by Company].[Measures Material Import by Company].[Materials],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Medium Name],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Selected for Basket],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Material Type - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Material Status - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Material Category - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Status Message]
 
-   } 
+With 
+-- IP Node then add dummy flag
+Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag] As
+IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='IP Node',1,0)
+-- IP Node and has no pland Data then deletable
+Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag] As
+IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
+    [Material Information by Company].([ Companies].[ Companies].[1391],
+    [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) = 0,1,0)
+-- IP Node and has pland Data then go to plan
+Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag] As
+IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
+    [Material Information by Company].([ Companies].[ Companies].[1391],
+    [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) <> 0,1,0)
+SELECT 
+   {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP Budget IP Name],
+   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name],
+   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element],
+   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag],
+   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag],
+   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag]} 
   ON COLUMNS , 
-  NON EMPTY  {TM1FILTERBYLEVEL({[Items].[Items].Members}, 0)} 
-  ON ROWS 
-FROM [Material Import by Company] 
-WHERE 
-  (
-   [Companies].[Companies].[1391]
-  )
+   {TM1SubsetToSet([Materials].[BPSP Budget IP], '1391 MM')}  
+   PROPERTIES [Materials].[BPSP Budget IP].[Caption]  ON ROWS 
+FROM [}ElementAttributes_Materials] 
+
+
 
             "}`,
                     parsingControl: {
                         type: 'matrix',
-                        length: 7,
+                        length: 6,
                         query: [
 
                             (r, x) => {
-                                return {title: r.Cells[x].FormattedValue}
+                                return {}
+                            },
+
+                            (r, x) => {
+                                return {
+                                    label: r.Cells[x].FormattedValue,
+                                    skin: r.Cells[x + 1].FormattedValue === 'IP Node' ? 'gridtable_hierarchy_bpsp_PL6' : 'gridtable_hierarchy_bpsp_' + r.Cells[x + 1].FormattedValue.replace('a', '')
+                                }
                             },
 
                             (r, x) => {
@@ -2946,23 +2962,25 @@ WHERE
                             },
 
                             (r, x) => {
-                                return {title: r.Cells[x + 3].FormattedValue}
+                                return {
+                                    icon: r.Cells[x + 3].FormattedValue === '1,00' ? 'icon-plus-circle-outline' : '',
+                                    cellSkin: r.Cells[x + 3].FormattedValue === '1,00' ? '' : 'readonly_bpsp',
+                                }
                             },
 
                             (r, x) => {
-                                return {title: r.Cells[x + 4].FormattedValue}
+                                return {
+                                    icon: r.Cells[x + 4].FormattedValue === '1,00' ? 'icon-trash' : '',
+
+                                    cellSkin: r.Cells[x + 4].FormattedValue === '1,00' ? '' : 'readonly_bpsp',
+                                }
                             },
 
                             (r, x) => {
-                                return {title: r.Cells[x + 5].FormattedValue}
-                            },
-
-                            (r, x) => {
-                                return {title: r.Cells[x + 6].FormattedValue}
-                            },
-
-                            (r, x) => {
-                                return {}
+                                return {
+                                    icon: r.Cells[x + 5].FormattedValue === '1,00' ? 'icon-arrow-right1' : '',
+                                    cellSkin: r.Cells[x + 5].FormattedValue === '1,00' ? '' : 'readonly_bpsp',
+                                }
                             },
 
 
@@ -3157,6 +3175,131 @@ WHERE
 
                             (r, x) => {
                                 return {}
+                            },
+
+
+                        ]
+                    }
+
+                },
+        },
+
+
+    RocheBPSPMaterialsAddMaterialClipboard:
+        {
+
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => `{"MDX":"
+
+                
+SELECT 
+   {[Measures Material Import by Company].[Measures Material Import by Company].[Selected for Basket],
+    [Measures Material Import by Company].[Measures Material Import by Company].[Materials],
+    [Measures Material Import by Company].[Measures Material Import by Company].[Medium Name],
+    [Measures Material Import by Company].[Measures Material Import by Company].[Material Type - Key],
+    [Measures Material Import by Company].[Measures Material Import by Company].[Material Status - Key],
+    [Measures Material Import by Company].[Measures Material Import by Company].[Material Category - Key],
+    [Measures Material Import by Company].[Measures Material Import by Company].[Profit Center Current - Key],
+    [Measures Material Import by Company].[Measures Material Import by Company].[Profit Center Budget - Key],
+    [Measures Material Import by Company].[Measures Material Import by Company].[IP Profit Center Current - Key],
+    [Measures Material Import by Company].[Measures Material Import by Company].[IP Profit Center Budget - Key],
+    [Measures Material Import by Company].[Measures Material Import by Company].[Status Message]} 
+  ON COLUMNS , 
+  NON EMPTY  {TM1FILTERBYLEVEL({[Items].[Items].Members}, 0)} 
+  ON ROWS 
+FROM [Material Import by Company] 
+WHERE 
+  (
+   [Companies].[Companies].[1391]
+  )
+
+
+
+            "}`,
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 11,
+                        query: [
+
+
+                            (r, x) => {
+                                return {
+                                    cellSkin: r.Cells[x + 10].FormattedValue === '' ? '' : 'locked',
+                                }
+                            },
+
+
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x + 1].FormattedValue,
+                                    cellSkin: r.Cells[x + 10].FormattedValue === '' ? '' : 'locked',
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x + 2].FormattedValue,
+                                    cellSkin: r.Cells[x + 10].FormattedValue === '' ? '' : 'locked',
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x + 3].FormattedValue,
+                                    cellSkin: r.Cells[x + 10].FormattedValue === '' ? '' : 'locked',
+                                }
+                            },
+
+
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x + 4].FormattedValue,
+                                    cellSkin: r.Cells[x + 10].FormattedValue === '' ? '' : 'locked',
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x + 5].FormattedValue,
+                                    cellSkin: r.Cells[x + 10].FormattedValue === '' ? '' : 'locked',
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x + 6].FormattedValue,
+                                    cellSkin: r.Cells[x + 10].FormattedValue === '' ? '' : 'locked',
+                                }
+                            },
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x + 7].FormattedValue,
+                                    cellSkin: r.Cells[x + 10].FormattedValue === '' ? '' : 'locked',
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x + 8].FormattedValue,
+                                    cellSkin: r.Cells[x + 10].FormattedValue === '' ? '' : 'locked',
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x + 9].FormattedValue,
+                                    cellSkin: r.Cells[x + 10].FormattedValue === '' ? '' : 'locked',
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x + 10].FormattedValue,
+                                    cellSkin: r.Cells[x + 10].FormattedValue === '' ? '' : 'locked'
+                                }
                             },
 
 
