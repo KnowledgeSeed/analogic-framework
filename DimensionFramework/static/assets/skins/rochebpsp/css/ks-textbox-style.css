@@ -388,3 +388,25 @@
     font-size: 20px;
 
 }
+
+/* copy_bpsp */
+.ks-textbox-copy_bpsp .ks-textbox-title {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+
+.ks-textbox-copy_bpsp .ks-textbox-field {
+    background-color: #fff;
+    border: 1px solid #b1b3b3;
+    border-radius: 7px;
+    height: 40px;
+}
+
+.ks-textbox-copy_bpsp input {
+    text-align: center;
+    font-size: 16px;
+}

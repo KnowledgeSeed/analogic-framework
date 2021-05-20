@@ -1408,67 +1408,138 @@ app.repository = {
         reference: 'rocheBPSPProductsCheckoutForGridTableYearlyHeaderTextTemplate'
     },
 
+    rocheBPSPProductsCheckoutDistributionEditPopupGridTableFunctions: {
+        getCell: (index, r) => {
+            let c = r.Cells[index], editable = c.Consolidated === false && c.RuleDerived === false,
+                performable = c.Consolidated === true && c.RuleDerived === false;
+
+            let result = {
+                title: c.FormattedValue,
+                cellSkin: editable ? '' : 'readonly_bpsp',
+                skin: editable ? 'monthly_center_bpsp' : 'monthly_right_bpsp',
+                cellVisible: true,
+                editable: editable,
+                ordinal: c.Ordinal,
+                members: c.Members,
+                performable: performable,
+                applyMeasuresToSection: true,
+                width: '100%',
+                height: '100%'
+            };
+            if (performable) {
+                result['icon'] = 'icon-cloud-arrow-up';
+            }
+            return result;
+        }
+    },
+
     rocheBPSPProductsCheckoutDistributionEditPopupGridTable: {
         initCondition: (db) => {
-            return v('rocheBPSPProductsCheckoutGridTableYearly.cellData.lenght') !== false && v('rocheBPSPProductsCheckoutGridTableYearly.cellData.lenght') !== 0;
+            return v('rocheBPSPProductsCheckoutGridTableYearly.cellData.length') !== false && v('rocheBPSPProductsCheckoutGridTableYearly.cellData.length') !== 0;
         },
         initDefault: (db) => {
             return [];
         },
+        write: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db, cell, widgetValue) => {
+                return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
+            }
+        },
+        switch: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db, cell, widgetValue) => {
+                return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
+            }
+        },
         init: {
-            execute: (db) => {
-                let thirdCell = Utils.getGridTableCell('rocheBPSPProductsCheckoutGridTableYearly', 2), result = [], i;
-                let yearlyCells = v('rocheBPSPProductsCheckoutGridTableYearly.cellData'), pl;
-                i = v('rocheBPSPProductsCheckoutGridTableYearly.row');
-                pl = parseInt(thirdCell.title);
-                result.push([yearlyCells[i][0], yearlyCells[i][2]]);
-                ++i;
-                while (i < yearlyCells.length && parseInt(yearlyCells[i][2].title) > pl) {
-                    result.push([yearlyCells[i][0], yearlyCells[i][2]]);
-                    ++i;
-                }
-
-                let firstValue = 5000000, otherValue = Math.round(firstValue / (result.length - 1)),
-                    percent = Math.round((otherValue / firstValue) * 100);
-                result[0].push({
-                    value: 1
-                });
-                result[0].push({
-                    title: firstValue,
-                    cellSkin: 'readonly_bpsp'
-                });
-                result[0].push({
-                    title: '100 %',
-                    cellSkin: 'readonly_bpsp'
-
-                });
-                result[0].push({
-                    title: '+ 500.000',
-                    cellSkin: 'readonly_bpsp',
-                    titleFontColor: '#A86B24'
-                });
-                result[0].push({
-                    visible: true
-                });
-                for (i = 1; i < result.length; ++i) {
-                    result[i].push({
-                        value: 0
-                    });
-                    result[i].push({
-                        title: otherValue
-                    });
-                    result[i].push({
-                        title: percent + ' %'
-                    });
-                    result[i].push({
-                        title: 'color test',
-                        cellSkin: 'readonly_bpsp'
-                    });
-                    result[i].push({
-                        visible: false
-                    });
-                }
-                return result;
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Updateable,RuleDerived,Consolidated)`,
+            type: 'POST',
+            body: (db) => {
+                let productCode = Utils.getGridTableCell('rocheBPSPProductsCheckoutGridTableYearly', 1).title;
+                return `
+                {"MDX" :"With
+                       Member [LineItems Sales Plan by Product Flat].[LineItems Sales Plan by Product Flat].[ProductName] As
+                            [Products Flat].[Products Flat].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption]
+                       Member [LineItems Sales Plan by Product Flat].[LineItems Sales Plan by Product Flat].[ProductLevel] As
+                         [Products Flat].[Products Flat].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name]
+                    SELECT
+                       {[LineItems Sales Plan by Product Flat].[LineItems Sales Plan by Product Flat].[ProductName],
+                        [LineItems Sales Plan by Product Flat].[LineItems Sales Plan by Product Flat].[ProductLevel],
+                        [LineItems Sales Plan by Product Flat].[LineItems Sales Plan by Product Flat].[UI Lock],
+                        [LineItems Sales Plan by Product Flat].[LineItems Sales Plan by Product Flat].[Final Sales Plan],
+                        [LineItems Sales Plan by Product Flat].[LineItems Sales Plan by Product Flat].[Split],
+                        [LineItems Sales Plan by Product Flat].[LineItems Sales Plan by Product Flat].[Difference]}
+                       PROPERTIES [LineItems Sales Plan by Product Flat].[LineItems Sales Plan by Product Flat].[Caption]  ON COLUMNS ,
+                       UNION({[Products Flat].[Products Flat].[${productCode}]},
+                       {TM1FILTERBYLEVEL({DRILLDOWNMEMBER({[Products Flat].[Products Flat].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} ${productCode}]}, {[Products Flat].[Products Flat].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} ${productCode}]})},0)},All)
+                       PROPERTIES [Products Flat].[Products Flat].[Caption]  ON ROWS
+                    FROM [Sales Plan by Product Flat]
+                    WHERE
+                      (
+                       [Versions].[Versions].[${v('systemValueGlobalCompanyVersion')}],
+                       [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}],
+                       [Receivers].[Receivers].[${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}],
+                       [Measures Sales Plan by Product Flat].[Measures Sales Plan by Product Flat].[Value],
+                       [Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}12]
+                      )"}`
+            },
+            parsingControl: {
+                type: 'matrix',
+                length: 6,
+                query: [
+                    (r, x) => {
+                        let result, pl;
+                        WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex'] = x;
+                        pl = r.Cells[x + 1].FormattedValue.replace('a', '');
+                        result = {
+                            label: r.Cells[x].FormattedValue,
+                            skin: 'gridtable_checkout_hierarchy_bpsp_' + pl,
+                            cellVisible: true,
+                            icon: 'icon-badge',
+                            productLevel: pl
+                        };
+                        return result;
+                    },
+                    (r, x) => {
+                        WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex'] = WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex']].FormattedValue.replace('PL', ''),
+                            cellVisible: true,
+                            cellSkin: ''
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex'] = WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex'] + 1;
+                        return {
+                            value: parseInt(r.Cells[WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex']].FormattedValue) === 0 ? 0 : 1,
+                            ordinal: r.Cells[WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex']].Ordinal
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex'] = WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex'] + 1;
+                        return Repository.rocheBPSPProductsCheckoutDistributionEditPopupGridTableFunctions.getCell(WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex'] = WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex'] + 1;
+                        return Repository.rocheBPSPProductsCheckoutDistributionEditPopupGridTableFunctions.getCell(WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex'] = WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex'] + 1;
+                        let s = Repository.rocheBPSPProductsCheckoutDistributionEditPopupGridTableFunctions.getCell(WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex'], r);
+                        if (parseInt(s.title) > 0) {
+                            s['titleFontColor'] = '#A86B24';
+                        }
+                        return s;
+                    },
+                    (r, x) => {
+                        return {
+                            visible: x === 0
+                        };
+                    }
+                ]
             }
         }
     },
@@ -1491,11 +1562,13 @@ app.repository = {
     rocheBPSPProductsCheckoutGridTableYearlyFunction: {
         getCell: (index, r) => {
             let uiIndex = index + 10, uiValue = parseInt(r.Cells[uiIndex].FormattedValue), skin, cellSkin = '',
-                icon = '', distributionEdit = false;
+                applyMeasuresToSection = false,
+                icon = '', distributionEdit = false, copyMerge = false, performWrite = false;
             if (uiValue === 1) {
                 skin = 'products_gd_readonly_with_icon_bpsp';
                 cellSkin = 'readonly_bpsp';
                 icon = 'icon-copy';
+                copyMerge = true;
             }
             if (uiValue === 0) {
                 cellSkin = 'readonly_bpsp';
@@ -1504,28 +1577,57 @@ app.repository = {
                 skin = 'products_gd_readonly_with_icon_bpsp';
                 cellSkin = 'readonly_bpsp';
                 icon = 'icon-copy';
+                copyMerge = true;
             }
-            if (uiValue === 2 && r.Cells[index].Members[6].Name !== 'Final Sales Plan') {
+            if ((uiValue === 2 || uiValue === 3) && r.Cells[index].Members[6].Name === 'Final Sales Plan') {
                 skin = 'products_gd_writeable_with_icon_bpsp';
                 cellSkin = '';
-                icon = 'icon-dots-vertical';
-                distributionEdit = true;
+                if (uiValue === 2) {
+                    icon = 'icon-dots-vertical';
+                    distributionEdit = true;
+                } else {
+                    icon = 'icon-cloud-arrow-up';
+                    skin = 'monthly_right_bpsp';
+                    applyMeasuresToSection = true;
+                    performWrite = true;
+                }
             }
             let result = {
                 title: r.Cells[index].FormattedValue,
                 cellSkin: cellSkin,
                 distributionEdit: distributionEdit,
+                copyMerge: copyMerge,
+                performWrite: performWrite,
+                ordinal: r.Cells[index].Ordinal,
                 skin: skin,
                 cellVisible: r.Cells[index].Members[6].Name !== 'DUMMY',
                 members: r.Cells[index].Members
             };
             if (icon !== '') {
                 result['icon'] = icon;
+
+            }
+            if (applyMeasuresToSection) {
+                result['applyMeasuresToSection'] = true;
+                result['width'] = '100%';
+                result['height'] = '100%';
+                result['performable'] = true;
+                result['paddingRight'] = 18;
             }
             return result;
         }
     },
     rocheBPSPProductsCheckoutGridTableYearly: {
+        perform: {
+            validation: (db, cell, widgetValue) => {
+                return {success: cell.distributionEdit === false && cell.copyMerge === false};
+            },
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db, cell, widgetValue) => {
+                return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
+            }
+        },
         initCondition: (db) => {
             return WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly';
         },
@@ -1533,7 +1635,7 @@ app.repository = {
             return [];
         },
         init: {
-            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Updateable,RuleDerived,Consolidated;$expand=Members($select=Name))`,
             type: 'POST',
             body: (db) => `
             {
@@ -1900,12 +2002,16 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        return {//a 0-s az equal spread, az 1es a split by last actuls a 2 a manual es a 4 mixed (ez lesz abban az esetben ha egy Cs elem alatt tobb fele is van) a mixed ikonja siman egy potty lesz
+                        let cell = {//a 0-s az equal spread, az 1es a split by last actuls a 2 a manual es a 4 mixed (ez lesz abban az esetben ha egy Cs elem alatt tobb fele is van) a mixed ikonja siman egy potty lesz
                             icon: x < 40 ? 'icon-distribution-equal' : 'icon-distribution-manual',
                             cellSkin: '',
                             cellVisible: true,
                             skin: 'products_gd_distribution_icon_bpsp'
                         };
+                        if (cell.icon === 'icon-distribution-equal') {
+                            cell.iconFontSize = 11;
+                        }
+                        return cell;
                     },
                     (r, x) => {
                         WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;

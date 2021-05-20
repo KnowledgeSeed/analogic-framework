@@ -233,7 +233,7 @@ QB.writeData = (eventMapId, event, element) => {
 
 
     if (g.validation) {
-        let r = g.validation(WidgetValue);
+        let r = isGridTable ? g.validation(WidgetValue, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.validation(WidgetValue);
 
         if (!r.success) {
             if (r.widget) {
@@ -250,7 +250,9 @@ QB.writeData = (eventMapId, event, element) => {
                 let secondary = $('#' + r.widget).find('.ks-textbox-title-secondary');
                 secondary.html(r.message);
             } else {
-                app.popup.show(r.message);
+                if(r.message) {
+                    app.popup.show(r.message);
+                }
             }
 
             return false;

@@ -247,7 +247,7 @@
     justify-content: flex-end;
 }
 
-.ks-text-monthly_right_bpsp .ks-text-inner .ks-text-title {
+.ks-text-monthly_right_bpsp.ks-on .ks-text-inner .ks-text-title {
     width: 100%;
     height: 100%;
     display: flex;
@@ -357,8 +357,8 @@
 }
 
 .ks-text-products_gd_writeable_with_icon_bpsp .ks-text-icon{
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 8px;
+    padding-right: 8px;
     color: #D8D9D9;
     cursor: pointer;
 }

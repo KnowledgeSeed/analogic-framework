@@ -19,6 +19,7 @@ class SliderWidget extends Widget {
             ordinal: d.ordinal,
             valueDivider: this.getRealValue('valueDivider', d, 1),
             unit: this.getRealValue('unit', d, ''),
+            updateableWidgetId: this.getRealValue('updateableWidgetId', d, false),
             css: {
                 tooltip: {'font-size': this.getRealValue('trackValueFontSize', d), color: this.getRealValue('trackValueFontColor', d)},
                 tooltipHover: {'font-size': this.getRealValue('trackValueMagnifierLabelFontSize', d), color: this.getRealValue('trackValueMagnifierLabelFontColor', d)}
@@ -162,7 +163,7 @@ class SliderWidget extends Widget {
         SliderWidget.slidersByIds[id] = slider;
 
         const min = Math.abs(d.minRange), max = Math.abs(d.maxRange), width = widgetDiv.width(), totalRange = min + max;
-        const offset = width * (min - max) / totalRange / 2;
+        const offset = width * (Math.abs(min - max)) / totalRange / 2;
 
         sliderDiv.find('.ks-slider-track-zero-indicator').css('left', width / 2 + offset);
 
@@ -171,9 +172,15 @@ class SliderWidget extends Widget {
 
         widgetDiv.find('.noUi-connects').append(trackFill).promise().then(() => {
             trackFillColor = trackFill.css('background-color');
-
+            let updateableInput;
+            if(d.updateableWidgetId){
+                    updateableInput = $('#' + d.updateableWidgetId).find('input');
+            }
             slider.on('update', (positions) => {
                 adjustTrackFill(positions[0]);
+                if(updateableInput){
+                    updateableInput.val(positions[0] + ' ' + d.unit);
+                }
             });
         });
 

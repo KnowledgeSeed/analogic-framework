@@ -37,8 +37,8 @@ let EventMap, Repository, WidgetConfig;
         WidgetValue['rocheBPSPProductsGridRow1Cell2DropBox'] = {
             value: 'Roche Dia Brazil',
             items: [{name: "Roche Dia Brazil", key: "1241", on: true}]
-        };//todo temp*/
-        WidgetValue['rocheBPSPProductsGridRow1Cell3DropBox'] = {value: 'BR Brazil'}; //todo temp
+        };//todo temp
+        WidgetValue['rocheBPSPProductsGridRow1Cell3DropBox'] = {value: 'BR Brazil'};*/
         Render.showPage(WidgetValue['redirect'] !== null ? WidgetValue['redirect'] : app.MainPage);
 
         WidgetValue['redirect'] = null;

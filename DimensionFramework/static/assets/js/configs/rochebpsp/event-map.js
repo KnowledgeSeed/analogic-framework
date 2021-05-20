@@ -733,7 +733,7 @@ app.eventMap = {
               argument: 'rocheBPSPProductsCheckoutDistributionPopup'
           }
       ],*/
-    'perform.rocheBPSPProductsCheckoutGridTableMonthly_row_4': [
+    'launch.rocheBPSPProductsCheckoutGridTableMonthly_row_4': [
         {
             action: app.fn.openPopup,
             argument: 'rocheBPSPProductsCheckoutDistributionPopup'
@@ -757,11 +757,31 @@ app.eventMap = {
                     ]
                 },
                 {
-                    conditionKey: 'else',
+                    conditionKey: 'copyMerge',
                     actions: [
                         {
                             action: app.fn.openPopup,
                             argument: 'rocheBPSPProductsCheckoutCopyMergePopup'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutCopyMergePopupSlider'
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    'perform.rocheBPSPProductsCheckoutGridTableYearly.finished': [
+        {
+            action: app.fn.conditionalGridTablePopup,
+            argument: [
+                {
+                    conditionKey: 'performWrite',
+                    actions: [
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutGridTableYearly'
                         }
                     ]
                 }
