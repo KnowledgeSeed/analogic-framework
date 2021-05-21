@@ -4160,7 +4160,7 @@ app.widgetConfig = {
                     fixed: false,
                     height: '260',
                     behaviour: 'popup',
-                    position: 'right',
+                    positionAndCalculateBestSpace: 'right',
                     widgets: [
                         {
                             id: 'rocheBPSPProductsCheckoutCopyMergePopupGrid',
