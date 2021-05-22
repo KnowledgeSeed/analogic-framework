@@ -3356,7 +3356,42 @@ WHERE
 
                 },
         },
-
+    rocheBPSPAddMaterialGridRow3Cell2Button: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `{"MDX":"
+                SELECT 
+                    {[Measures Material Import by Company].[Measures Material Import by Company].[Materials]} 
+                ON COLUMNS , 
+                    {TM1FILTERBYLEVEL({[Items].[Items].Members}, 0)} 
+                ON ROWS 
+                FROM [Material Import by Company] 
+                WHERE 
+                (
+                    [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}]
+                )
+            "}`,
+            parsingControl: {
+                type: 'object',
+                    query:
+                        {
+                            cells: (r, x) => {
+                                return r.Cells;
+                            }
+                        }
+            }
+        },
+        launchpaste: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db) => {
+                let values = Utils.getCellsByColumnsFromClipboard('rocheBPSPAddMaterialGridRow3Cell2Button', 0);
+                let existingValues = v('rocheBPSPAddMaterialGridRow3Cell2Button.data.cells');
+                return `[${Utils.getOrdinalValuePairsAndEmptyFilledValues(values, existingValues)}]`;
+            }
+        }
+    },
 
     RocheBPSPMaterialsAddMaterialClipboard:
         {
@@ -3366,30 +3401,26 @@ WHERE
                     url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
                     type: 'POST',
                     body: (db) => `{"MDX":"
-
-                
-SELECT 
-   {[Measures Material Import by Company].[Measures Material Import by Company].[Selected for Basket],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Materials],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Medium Name],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Material Type - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Material Status - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Material Category - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Profit Center Current - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Profit Center Budget - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[IP Profit Center Current - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[IP Profit Center Budget - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Status Message]} 
-  ON COLUMNS , 
-  NON EMPTY  {TM1FILTERBYLEVEL({[Items].[Items].Members}, 0)} 
-  ON ROWS 
-FROM [Material Import by Company] 
-WHERE 
-  (
-   [Companies].[Companies].[1391]
-  )
-
-
+                                SELECT 
+                                   {[Measures Material Import by Company].[Measures Material Import by Company].[Selected for Basket],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[Materials],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[Medium Name],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[Material Type - Key],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[Material Status - Key],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[Material Category - Key],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[Profit Center Current - Key],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[Profit Center Budget - Key],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[IP Profit Center Current - Key],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[IP Profit Center Budget - Key],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[Status Message]} 
+                                  ON COLUMNS , 
+                                  NON EMPTY  {TM1FILTERBYLEVEL({[Items].[Items].Members}, 0)} 
+                                  ON ROWS 
+                                FROM [Material Import by Company] 
+                                WHERE 
+                                  (
+                                   [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}]
+                                  )
 
             "}`,
                     parsingControl: {

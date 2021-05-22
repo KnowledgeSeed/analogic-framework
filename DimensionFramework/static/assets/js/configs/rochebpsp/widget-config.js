@@ -8606,9 +8606,16 @@ app.widgetConfig = {
                                             action: '',
                                             width: '200px',
                                             height: '40px',
+                                            paste: true,
                                             label: 'Paste from Clipboard',
                                             icon: 'icon-pasteboard',
                                             skin: 'blue_link_columns_bpsp',
+                                            listen: [
+                                                {
+                                                    'event': 'launchpaste.rocheBPSPAddMaterialGridRow3Cell2Button.finished',
+                                                    'method': 'refresh'
+                                                }
+                                            ]
                                         }
 
                                     ]
@@ -8788,7 +8795,12 @@ app.widgetConfig = {
                     hideIfNoData: true,
                     visible: true,
                     skin: 'products_bpsp',
-                    listen: [],
+                    listen: [
+                        {
+                            'event': 'launchpaste.rocheBPSPAddMaterialGridRow3Cell2Button.finished',
+                            'method': 'refresh'
+                        }
+                    ],
                     width: '100%',
                     title: '',
                     widgets: [

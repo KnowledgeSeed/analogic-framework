@@ -196,6 +196,42 @@ const Utils = {
         let item = WidgetValue[widgetId].items.find(e => e.name === selectedValue);
         return item ? item[attributeName] : false;
     },
+    getCellsFromClipboard(widgetId) {
+        let text = v(widgetId + '.clipboard');
+        if(text === false){
+            return [];
+        }
+        let rows = text.trim().split('\n'), result = [], i, k;
+        for(i = 0; i < rows.length; ++i){
+            result.push(rows[i].split('\t'));
+        }
+        return result;
+    },
+    getOrdinalValuePairsAndEmptyFilledValues(values, existingValues) {
+       let template = (ordinal, value) => `{"Ordinal": ${ordinal},"Value": \"${value}\"}`, result = [], i = 0;
+       while( i < existingValues.length ){
+           if( i < values.length ){
+               result.push(template(existingValues[i].Ordinal, values[i]));
+           } else {
+               if(existingValues[i].FormattedValue !== ""){
+                   result.push(template(existingValues[i].Ordinal, ""));
+               }else{
+                   i = existingValues.length;
+               }
+           }
+           ++i;
+       }
+        return result.join(',');
+    },
+    getCellsByColumnsFromClipboard(widgetId, columnIndex) {
+        let cells = Utils.getCellsFromClipboard(widgetId), result = [], i = 0;
+        for(i = 0; i < cells.length; ++i){
+            if ( cells[i].length > columnIndex){
+                result.push(cells[i][columnIndex]);
+            }
+        }
+        return result;
+    },
     create_UUID() {
         let dt = new Date().getTime();
 
