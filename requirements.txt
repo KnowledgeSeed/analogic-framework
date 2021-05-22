@@ -17,3 +17,5 @@ python-magic-bin==0.4.14
 PyYaml==5.4.1
 keyring==23.0.0
 cheroot~=8.5.2
+xlrd==2.0.1
+openpyxl==3.0.7

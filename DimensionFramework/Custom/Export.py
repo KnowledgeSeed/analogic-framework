@@ -29,12 +29,19 @@ class Export:
         user = request.args['activeUserName']
         company = request.args['company']
         receiver = request.args['receiver']
+        global_version = request.args['globalVersion']
+        version = request.args['version']
+        product = request.args['product']
 
         font_size = 12
+        worksheet.protect('ADSBP')
 
         worksheet.write(0, 0, user)
         worksheet.write(0, 1, company)
         worksheet.write(0, 2, receiver)
+        worksheet.write(0, 3, global_version)
+        worksheet.write(0, 4, version)
+        worksheet.write(0, 5, product)
 
         bold = workbook.add_format({'bold': True})
         bold.set_font_name('Imago')
@@ -84,7 +91,7 @@ class Export:
 
         d = response.json()
 
-        simple = workbook.add_format()
+        simple = workbook.add_format({'locked': False})
         simple.set_font_name('Imago')
         simple.set_font_size(font_size)
 
@@ -92,7 +99,6 @@ class Export:
         read_only.set_bg_color('#ebecec')
         read_only.set_font_name('Imago')
         read_only.set_font_size(font_size)
-        read_only.set_locked(True)
 
         l = len(d['Cells'])
         i = 0

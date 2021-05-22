@@ -39,6 +39,8 @@ listeners: refreshWithTimeout
 
 Slider -> updateableWidgetId
 
+PopupWidget -> positionAndCalculateBestSpace
+
 Skins:
 
 ImageWidget :

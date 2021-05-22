@@ -354,6 +354,28 @@
 
 .ks-text-products_gd_writeable_with_icon_bpsp .ks-text-inner{
     display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.ks-text-products_gd_writeable_with_icon_bpsp.ks-on {
+    border: 2px solid #2A66C5;
+}
+
+.ks-text-products_gd_writeable_with_icon_bpsp.ks-on .ks-text-icon{
+    color: #2A66C5;
+    font-size: 12px;
+    cursor:pointer;
+}
+
+.ks-text-products_gd_writeable_with_icon_bpsp .ks-text-title-input {
+    width: 100%;
+    height: 100%;
+    border: 0px none;
+    text-align: center;
+    color: #2A66C5;
+    font-family: imago;
+    font-size: 16px;
 }
 
 .ks-text-products_gd_writeable_with_icon_bpsp .ks-text-icon{
@@ -361,6 +383,10 @@
     padding-right: 8px;
     color: #D8D9D9;
     cursor: pointer;
+}
+
+.ks-text-products_gd_writeable_with_icon_bpsp.ks-on .icon-dots-vertical::before {
+    content: "\e9f7";
 }
 
 /* edit_distribution_value */

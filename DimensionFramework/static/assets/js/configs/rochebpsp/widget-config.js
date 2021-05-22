@@ -4160,7 +4160,7 @@ app.widgetConfig = {
                     fixed: false,
                     height: '260',
                     behaviour: 'popup',
-                    position: 'right',
+                    positionAndCalculateBestSpace: 'right',
                     widgets: [
                         {
                             id: 'rocheBPSPProductsCheckoutCopyMergePopupGrid',
@@ -5132,7 +5132,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     skin: 'checkout_popup_bpsp',
-                    width: '230',
+                    width: '260',
                     bgScrollable: true,
                     fadingSpeed: 0,
                     fixed: false,
@@ -5147,7 +5147,7 @@ app.widgetConfig = {
                             icon: 'icon-distribution-variable',
                             skin: 'distribution_bpsp',
                             borderWidth: 0,
-                            label: 'By Last Years Actuals',
+                            label: 'Proportional by Previous Year',
                             iconFontSize: 15
                         },
                         {
@@ -5157,7 +5157,7 @@ app.widgetConfig = {
                             icon: 'icon-distribution-equal',
                             skin: 'distribution_bpsp',
                             borderWidth: 0,
-                            label: 'Linear Split',
+                            label: 'Equal split',
                         }
                     ]
                 },
@@ -5244,7 +5244,7 @@ app.widgetConfig = {
                             fontColor: 'white',
                             skin: 'deepblue_backbutton',
                             maxFileSize: 5,
-                            progressVisible: true
+                            progressVisible: false
                         }
 
                     ]

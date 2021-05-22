@@ -20,11 +20,16 @@ class PopupWidget extends Widget {
             heightStr: Utils.getSize(this.getRealValue('height', d, 200)),
             offset: this.getRealValue('offset', d, 0),
             position: this.getRealValue('position', d, 'center'),
+            positionAndCalculateBestSpace: this.getRealValue('positionAndCalculateBestSpace', d, false),
             skin: this.getRealValue('skin', d, 'standard'),
             fadingSpeed: this.getRealValue('fadingSpeed', d, 300),
             visible: this.getRealValue('visible', d, true),
             widthStr: Utils.getSize(this.getRealValue('width', d, 400))
         };
+
+        if(v.positionAndCalculateBestSpace){
+            v.position = false;
+        }
 
         const s = [], w = v.widthStr, h = v.heightStr, isVertical = ('top' === v.position || 'bottom' === v.position);
 
@@ -153,7 +158,17 @@ ${v.backdrop ? `<div class="ks-container-${v.skin} ks-container-backdrop"  ${b}>
             bestSpace = v.position;
         } else {
             const spaces = [['left', rect.x - popupWidth], ['right', winWidth - rect.right - popupWidth], ['top', rect.y - popupHeight], ['bottom', winHeight - rect.bottom - popupHeight]].sort((a, b) => a[1] < b[1]);
-            bestSpace = spaces[0][0];
+
+            if(v.positionAndCalculateBestSpace) {
+                const space = spaces.filter(a => a[0] === v.positionAndCalculateBestSpace);
+                if(v.positionAndCalculateBestSpace === 'right' && space[0][1] < 0){
+                    bestSpace = "left";
+                }else {
+                    bestSpace = space[0][0];
+                }
+            }else {
+                bestSpace = spaces[0][0];
+            }
         }
 
         if (v.anchorVisible) {

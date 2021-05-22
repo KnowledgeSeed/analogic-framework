@@ -9,6 +9,11 @@
     "class": "Export",
     "method": "rocheMonthly"
   },
+  "validateExcelImport" : {
+    "namespace": "DimensionFramework.Custom.Validation",
+    "class": "Validation",
+    "method": "validateExcelImport"
+  },
   "cool" : {
     "namespace": "DimensionFramework.Custom.BusinessLogic",
     "class": "BusinessLogic",
