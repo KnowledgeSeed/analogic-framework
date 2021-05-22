@@ -109,7 +109,7 @@ app.repository = {
                 query: [
                     (r, x) => {
                         return {
-                            title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 5%;margin-top:3%;";  >' + r.Cells[x + 1].FormattedValue + '</div>' + '<div style=\"font-size:10px;color:#B1B3B3;;margin-top:3%;\" >' + r.Cells[x + 2].FormattedValue + '</div>',
+                            title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 5%;margin-top:1%;";  >' + r.Cells[x + 1].FormattedValue + '</div>' + '<div style=\"font-size:10px;color:#B1B3B3;;margin-top:1%;\" >' + r.Cells[x + 2].FormattedValue + '</div>',
                             body: r.Cells[x + 3].FormattedValue
                         }
                     }]
@@ -2723,6 +2723,7 @@ app.repository = {
                     body: (db) => `{"MDX":"
 
                 
+
 With
 --Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion
      Set DefaultProductRows AS
@@ -2769,7 +2770,7 @@ With
 -- column Tuple Create
      Set ColumnSelection As
         Union({FirstColumn},
-        {([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Last Submitted Plan]),
+        {([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Last Submitted Plan]),
          ([Periods].[Periods].[202101],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
          ([Periods].[Periods].[202102],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
          ([Periods].[Periods].[202103],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
@@ -2784,8 +2785,8 @@ With
          ([Periods].[Periods].[202112],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
           --([Periods].[Periods].[2021 - 2020],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-          ([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-          ([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Variance Final vs Last Submitted Plan])},All)
+          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Variance Final vs Last Submitted Plan])},All)
 SELECT 
      Union(Union({FixColumns},{ColumnSelection},All),{FinalColumns},All)
   ON COLUMNS , 
@@ -2955,9 +2956,6 @@ FROM [}ElementAttributes_Materials]
                         length: 6,
                         query: [
 
-                            (r, x) => {
-                                return {}
-                            },
 
                             (r, x) => {
                                 return {
@@ -3048,9 +3046,6 @@ FROM [}ElementAttributes_Materials]
                         length: 6,
                         query: [
 
-                            (r, x) => {
-                                return {}
-                            },
 
                             (r, x) => {
                                 return {
@@ -3414,6 +3409,35 @@ WHERE
 
                 },
         },
+
+
+    rocheBPSPAddMaterialGridRow4Cell3Dropbox: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "
+
+                SELECT
+                   {[}ElementAttributes_zSYS UI Material Category].[}ElementAttributes_zSYS UI Material Category].[Caption]}
+                  ON COLUMNS ,
+                   {[zSYS UI Material Category].[zSYS UI Material Category].Members}
+                  ON ROWS
+                FROM [}ElementAttributes_zSYS UI Material Category]
+
+
+
+            "}`,
+            parsingControl: {
+                type: 'list',
+                query:
+                    (r, x) => {
+                        return {name: r.Cells[x].FormattedValue, on: false};
+                    }
+            }
+        }
+    },
 
 
 };
