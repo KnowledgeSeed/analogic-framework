@@ -6331,8 +6331,12 @@ app.widgetConfig = {
 
                         {
                             'event': 'bodyReady',
-                            'method': 'refreshWithWaitingForEvent',
-                            'parameters': ['init.rocheBPSPipPlanningGridRow1Cell3DropBox.finished']
+                            'method': 'refreshWithWaitingForEvents',
+                            'parameters': [
+                                'rendered.rocheBPSPipPlanningGridRow1Cell3DropBox',
+                                'init.rocheBPSPipPlanningGridRow2Cell1SegmentedControl.finished',
+                                'init.rocheBPSPipPlanningGridRow2Cell2SegmentedControl.finished'
+                            ]
                         },
                         {'event': 'choose.rocheBPSPipPlanningGridRow1Cell3DropBox.finished', 'method': 'refresh'},
                         {

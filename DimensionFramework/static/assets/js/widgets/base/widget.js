@@ -107,7 +107,7 @@ class Widget {
             write = data.write;
         }
         html = this.getHtml(widgetHtmls, data, withState);
-        El.body.triggerHandler('init.' + o.id + '.finished');
+
         //TODO title ote
         //return `<section ${write === 'off' ? `data-write="off"` : ''} ${originalId !== false ? `data-originalId="${o.originalId}"` : ''} ${o.ordinal ? `data-ordinal="${o.ordinal}"` : ''} ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" style="${gs.join('')}" id="${o.id ? o.id : Utils.getRandomId()}">${html}</section>`;
         return `<section ${write === 'off' ? `data-write="off"` : ''} ${originalId !== false ? `data-originalId="${o.originalId}"` : ''} ${o.ordinal ? `data-ordinal="${o.ordinal}"` : ''} ${o.margin ? 'class="wrapper"' : ''} style="${gs.join('')}" id="${o.id ? o.id : Utils.getRandomId()}">${html}</section>`;
@@ -194,6 +194,21 @@ class Widget {
         for (w of widgets) {
             w.addListeners();
         }
+    }
+
+    initFinished() {
+        const o = this.options;
+
+        let widgetOptions, widgets = [], w;
+
+        for (widgetOptions of o.widgets || []) {
+            widgets.push(new widgetOptions.type(widgetOptions));
+        }
+
+        for (w of widgets) {
+            w.initFinished();
+        }
+        El.body.triggerHandler('init.' + o.id + '.finished');
     }
 
     initEvents(withState) {

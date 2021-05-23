@@ -20,6 +20,10 @@ class ContainerWidget {
         this.c.initEvents(withState);
     }
 
+    initFinished() {
+        this.c.initFinished();
+    }
+
     initEventHandlers(s) {
         this.c.initEventHandlers(s);
     }

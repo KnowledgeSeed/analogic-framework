@@ -52,6 +52,7 @@ class Render {
                             El.body.on(i.eventName, {options: i.options, method: i.method, parameters: i.parameters}, i.handler);
                         }
                         El.body.trigger('bodyReady');
+                        widget.initFinished();
                     } else {
                         El.body.trigger('rendered.' + widgetId);
                     }

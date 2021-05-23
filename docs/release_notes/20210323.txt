@@ -35,7 +35,7 @@ init.widgetid.finished
 
 event.gridtablewidgetId pl. perform.rocheBPSPProductsCheckoutGridTableYearly
 
-listeners: refreshWithTimeout
+listeners: refreshWithTimeout, refreshWithWaitingForEvents
 
 Slider -> updateableWidgetId
 
