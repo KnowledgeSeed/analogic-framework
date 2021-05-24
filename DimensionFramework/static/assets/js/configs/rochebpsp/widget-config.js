@@ -6331,8 +6331,12 @@ app.widgetConfig = {
 
                         {
                             'event': 'bodyReady',
-                            'method': 'refreshWithWaitingForEvent',
-                            'parameters': ['init.rocheBPSPipPlanningGridRow1Cell3DropBox.finished']
+                            'method': 'refreshWithWaitingForEvents',
+                            'parameters': [
+                                'rendered.rocheBPSPipPlanningGridRow1Cell3DropBox',
+                                'init.rocheBPSPipPlanningGridRow2Cell1SegmentedControl.finished',
+                                'init.rocheBPSPipPlanningGridRow2Cell2SegmentedControl.finished'
+                            ]
                         },
                         {'event': 'choose.rocheBPSPipPlanningGridRow1Cell3DropBox.finished', 'method': 'refresh'},
                         {
@@ -8827,9 +8831,16 @@ app.widgetConfig = {
                                             action: '',
                                             width: '200px',
                                             height: '40px',
+                                            paste: true,
                                             label: 'Paste from Clipboard',
                                             icon: 'icon-pasteboard',
                                             skin: 'blue_link_columns_bpsp',
+                                            listen: [
+                                                {
+                                                    'event': 'launchpaste.rocheBPSPAddMaterialGridRow3Cell2Button.finished',
+                                                    'method': 'refresh'
+                                                }
+                                            ]
                                         }
 
                                     ]
@@ -9008,7 +9019,12 @@ app.widgetConfig = {
                     hideIfNoData: true,
                     visible: true,
                     skin: 'products_bpsp',
-                    listen: [],
+                    listen: [
+                        {
+                            'event': 'launchpaste.rocheBPSPAddMaterialGridRow3Cell2Button.finished',
+                            'method': 'refresh'
+                        }
+                    ],
                     width: '100%',
                     title: '',
                     widgets: [

@@ -2718,8 +2718,6 @@ WHERE
     rocheBPSPipPlanningGridRow2Cell1SegmentedControl: {
         init: {
             execute: (db) => {
-                let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
-                    sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
                 return [
                     {label: 'Cash Sales'},
                     {label: 'Lease'},
@@ -2727,23 +2725,13 @@ WHERE
                 ];
             }
 
-        },
-
-        switch: {
-            execute: (db) => {
-                WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = v('rocheBPSPipPlanningYearSegmentedControl.value');
-            }
         }
-
-
     },
 
 
     rocheBPSPipPlanningGridRow2Cell2SegmentedControl: {
         init: {
             execute: (db) => {
-                let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
-                    sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'];
                 return [
                     {label: 'New'},
                     {label: 'Used'},
@@ -2786,95 +2774,98 @@ WHERE
 
     rocheBPSPipPlanningGridTableMonthly:
         {
-
+            initCondition: (db) => {
+                let b = v('rocheBPSPipPlanningGridRow1Cell3DropBox.value.length') !== false &&
+                    v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected') !== false &&
+                    v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected') !== false;
+                return b;
+            },
+            initDefault: (db) => {
+                return [];
+            },
             init:
                 {
                     url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
                     type: 'POST',
                     body: (db) => `{"MDX":"
-
-                
-
-With
---Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion
-     Set DefaultProductRows AS
-      {TM1SubsetToSet([Materials].[BPSP Budget IP],'1391')}
---     {TM1DRILLDOWNMEMBER({[Materials].[BPSP Budget IP].[IPL1]}, ALL, RECURSIVE )}
---Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion and systemValueGlobalCompanyFocusedElement
-     Set FocusedOnProductRows AS 
-      {Intersect({TM1DRILLDOWNMEMBER({[Materials].[BPSP Budget IP].[IPL1]}, ALL, RECURSIVE )},{DefaultProductRows})}
---Decide which rowSet to use
-     MEMBER [Materials].[BPSP Budget IP].[ProductIsFocused] AS 
-     IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
--- Decide 1st column element
-     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn] As
-     IIF('2020'='2020', '([Periods].[Periods].[2020],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])',
-                        '([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan])')
-     Set FirstColumn As
-     {StrToSet('{'+[LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn]+'}')}
--- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
-     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialName] as 
-            [Materials].[BPSP Budget IP].CurrentMember.Properties('BPSP Budget IP Caption')
-     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialCode] as 
-            [Materials].[BPSP Budget IP].CurrentMember.Properties('Element')
-     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialLevel] as 
-            [Materials].[BPSP Budget IP].CurrentMember.Properties('Product Level - Name')
-     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS] as 
-            [Materials].[BPSP Budget IP].CurrentMember.Properties('IP DIS Relevant Flag Budget')
-     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment] as
-            [Sales Plan IP].([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan],[Measures Sales Plan IP].[Measures Sales Plan IP].[Comment Flag])
-     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutUser] as 
-            [Sales Plan IP].([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI Checkout Flag],[Measures Sales Plan IP].[Measures Sales Plan IP].[EditedBy])
-     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutDateTime] as 
-            [Sales Plan IP].([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI Checkout Flag],[Measures Sales Plan IP].[Measures Sales Plan IP].[EditedDateTime])
--- Create the first 5 column with information
-     Set FixColumns AS
-     {([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialName]),
-      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialLevel]),
-      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialCode]),
-      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutFlag]),
-      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutUser]),
-      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutDateTime])}
-     Set FinalColumns AS
-     {([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS]),
-      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment])}
--- column Tuple Create
-     Set ColumnSelection As
-        Union({FirstColumn},
-        {([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Last Submitted Plan]),
-         ([Periods].[Periods].[202101],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-         ([Periods].[Periods].[202102],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-         ([Periods].[Periods].[202103],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-         ([Periods].[Periods].[202104],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-         ([Periods].[Periods].[202105],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-         ([Periods].[Periods].[202106],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-         ([Periods].[Periods].[202107],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-         ([Periods].[Periods].[202108],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-         ([Periods].[Periods].[202109],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-         ([Periods].[Periods].[202110],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-         ([Periods].[Periods].[202111],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-         ([Periods].[Periods].[202112],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-         ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-          --([Periods].[Periods].[2021 - 2020],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
-          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Variance Final vs Last Submitted Plan])},All)
-SELECT 
-     Union(Union({FixColumns},{ColumnSelection},All),{FinalColumns},All)
-  ON COLUMNS , 
--- rows
-  {StrToSet([Materials].[BPSP Budget IP].[ProductIsFocused])} ON ROWS 
-FROM [Sales Plan IP] 
-WHERE 
-  (
-   [Versions].[Versions].[Live],
-   [Measures Sales Plan IP].[Measures Sales Plan IP].[Value],
-   [Receivers].[Receivers].[All Receivers],
-   [Companies].[Companies].[All Companies Active],
-   [Contract Types].[Contract Types].[Cash Sales],
-   [Instrument Types].[Instrument Types].[New]
-  )
-
-
+                                With
+                                --Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion
+                                     Set DefaultProductRows AS
+                                      {TM1SubsetToSet([Materials].[BPSP Budget IP],'1391')}
+                                --     {TM1DRILLDOWNMEMBER({[Materials].[BPSP Budget IP].[IPL1]}, ALL, RECURSIVE )}
+                                --Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion and systemValueGlobalCompanyFocusedElement
+                                     Set FocusedOnProductRows AS 
+                                      {Intersect({TM1DRILLDOWNMEMBER({[Materials].[BPSP Budget IP].[IPL1]}, ALL, RECURSIVE )},{DefaultProductRows})}
+                                --Decide which rowSet to use
+                                     MEMBER [Materials].[BPSP Budget IP].[ProductIsFocused] AS 
+                                     IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
+                                -- Decide 1st column element
+                                     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn] As
+                                     IIF('2020'='2020', '([Periods].[Periods].[2020],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])',
+                                                        '([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan])')
+                                     Set FirstColumn As
+                                     {StrToSet('{'+[LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn]+'}')}
+                                -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
+                                     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialName] as 
+                                            [Materials].[BPSP Budget IP].CurrentMember.Properties('BPSP Budget IP Caption')
+                                     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialCode] as 
+                                            [Materials].[BPSP Budget IP].CurrentMember.Properties('Element')
+                                     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialLevel] as 
+                                            [Materials].[BPSP Budget IP].CurrentMember.Properties('Product Level - Name')
+                                     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS] as 
+                                            [Materials].[BPSP Budget IP].CurrentMember.Properties('IP DIS Relevant Flag Budget')
+                                     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment] as
+                                            [Sales Plan IP].([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan],[Measures Sales Plan IP].[Measures Sales Plan IP].[Comment Flag])
+                                     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutUser] as 
+                                            [Sales Plan IP].([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI Checkout Flag],[Measures Sales Plan IP].[Measures Sales Plan IP].[EditedBy])
+                                     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutDateTime] as 
+                                            [Sales Plan IP].([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI Checkout Flag],[Measures Sales Plan IP].[Measures Sales Plan IP].[EditedDateTime])
+                                -- Create the first 5 column with information
+                                     Set FixColumns AS
+                                     {([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialName]),
+                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialLevel]),
+                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialCode]),
+                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutFlag]),
+                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutUser]),
+                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutDateTime])}
+                                     Set FinalColumns AS
+                                     {([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS]),
+                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment])}
+                                -- column Tuple Create
+                                     Set ColumnSelection As
+                                        Union({FirstColumn},
+                                        {([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Last Submitted Plan]),
+                                         ([Periods].[Periods].[202101],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+                                         ([Periods].[Periods].[202102],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+                                         ([Periods].[Periods].[202103],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+                                         ([Periods].[Periods].[202104],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+                                         ([Periods].[Periods].[202105],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+                                         ([Periods].[Periods].[202106],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+                                         ([Periods].[Periods].[202107],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+                                         ([Periods].[Periods].[202108],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+                                         ([Periods].[Periods].[202109],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+                                         ([Periods].[Periods].[202110],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+                                         ([Periods].[Periods].[202111],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+                                         ([Periods].[Periods].[202112],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+                                         ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+                                          --([Periods].[Periods].[2021 - 2020],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+                                          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
+                                          ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Variance Final vs Last Submitted Plan])},All)
+                                SELECT 
+                                     Union(Union({FixColumns},{ColumnSelection},All),{FinalColumns},All)
+                                  ON COLUMNS , 
+                                -- rows
+                                  {StrToSet([Materials].[BPSP Budget IP].[ProductIsFocused])} ON ROWS 
+                                FROM [Sales Plan IP] 
+                                WHERE 
+                                  (
+                                   [Versions].[Versions].[Live],
+                                   [Measures Sales Plan IP].[Measures Sales Plan IP].[Value],
+                                   [Receivers].[Receivers].[All Receivers],
+                                   [Companies].[Companies].[All Companies Active],
+                                   [Contract Types].[Contract Types].[Cash Sales],
+                                   [Instrument Types].[Instrument Types].[New]
+                                  )
             "}`,
                     parsingControl: {
                         type: 'matrix',
@@ -3355,7 +3346,42 @@ WHERE
 
                 },
         },
-
+    rocheBPSPAddMaterialGridRow3Cell2Button: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `{"MDX":"
+                SELECT 
+                    {[Measures Material Import by Company].[Measures Material Import by Company].[Materials]} 
+                ON COLUMNS , 
+                    {TM1FILTERBYLEVEL({[Items].[Items].Members}, 0)} 
+                ON ROWS 
+                FROM [Material Import by Company] 
+                WHERE 
+                (
+                    [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}]
+                )
+            "}`,
+            parsingControl: {
+                type: 'object',
+                    query:
+                        {
+                            cells: (r, x) => {
+                                return r.Cells;
+                            }
+                        }
+            }
+        },
+        launchpaste: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db) => {
+                let values = Utils.getCellsByColumnsFromClipboard('rocheBPSPAddMaterialGridRow3Cell2Button', 0);
+                let existingValues = v('rocheBPSPAddMaterialGridRow3Cell2Button.data.cells');
+                return `[${Utils.getOrdinalValuePairsAndEmptyFilledValues(values, existingValues)}]`;
+            }
+        }
+    },
 
     RocheBPSPMaterialsAddMaterialClipboard:
         {
@@ -3365,30 +3391,26 @@ WHERE
                     url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
                     type: 'POST',
                     body: (db) => `{"MDX":"
-
-                
-SELECT 
-   {[Measures Material Import by Company].[Measures Material Import by Company].[Selected for Basket],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Materials],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Medium Name],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Material Type - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Material Status - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Material Category - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Profit Center Current - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Profit Center Budget - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[IP Profit Center Current - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[IP Profit Center Budget - Key],
-    [Measures Material Import by Company].[Measures Material Import by Company].[Status Message]} 
-  ON COLUMNS , 
-  NON EMPTY  {TM1FILTERBYLEVEL({[Items].[Items].Members}, 0)} 
-  ON ROWS 
-FROM [Material Import by Company] 
-WHERE 
-  (
-   [Companies].[Companies].[1391]
-  )
-
-
+                                SELECT 
+                                   {[Measures Material Import by Company].[Measures Material Import by Company].[Selected for Basket],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[Materials],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[Medium Name],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[Material Type - Key],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[Material Status - Key],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[Material Category - Key],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[Profit Center Current - Key],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[Profit Center Budget - Key],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[IP Profit Center Current - Key],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[IP Profit Center Budget - Key],
+                                    [Measures Material Import by Company].[Measures Material Import by Company].[Status Message]} 
+                                  ON COLUMNS , 
+                                  NON EMPTY  {TM1FILTERBYLEVEL({[Items].[Items].Members}, 0)} 
+                                  ON ROWS 
+                                FROM [Material Import by Company] 
+                                WHERE 
+                                  (
+                                   [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}]
+                                  )
 
             "}`,
                     parsingControl: {

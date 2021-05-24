@@ -170,7 +170,6 @@ class GridTableWidget extends Widget {
                 }
                 let visible = data && typeof data.visible !== 'undefined' ? data.visible : o.visible;
                 let ghtml = instance.getHtml(widgetHtmls, headerRowWidgetHtml, processedData, withState);
-                El.body.triggerHandler('init.' + o.id + '.finished');
                 return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" ${visible === false ? 'style="display:none"' : '' } id="${o.id}">${ghtml}</section>`;
             });
         });

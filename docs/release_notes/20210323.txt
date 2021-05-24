@@ -19,7 +19,7 @@ eventMap -> event.widgetid.(finished|started)
 
 ImageWidget -> skin
 
-ButtonWidget -> iconColor, iconFontSize
+ButtonWidget -> iconColor, iconFontSize, paste
 
 ContainerWidget -> heightFixed
 
@@ -35,7 +35,7 @@ init.widgetid.finished
 
 event.gridtablewidgetId pl. perform.rocheBPSPProductsCheckoutGridTableYearly
 
-listeners: refreshWithTimeout
+listeners: refreshWithTimeout, refreshWithWaitingForEvents
 
 Slider -> updateableWidgetId
 

@@ -25,11 +25,13 @@ class ButtonWidget extends Widget {
             iconWidth: this.getRealValue('iconWidth', d, false),
             isInfo: this.getRealValue('isInfo', d, false),
             label: this.getRealValue('label', d, ''),
+            paste: this.getRealValue('paste', d, false),
             skin: this.getRealValue('skin', d, 'standard'),
             url: this.getRealValue('url', d, false)
         };
 
-        let aClass = [], aStyle = this.getGeneralStyles(d), innerStyle = [], labelStyle = [], dividerStyle = [], imgStyle = [];
+        let aClass = [], aStyle = this.getGeneralStyles(d), innerStyle = [], labelStyle = [], dividerStyle = [],
+            imgStyle = [];
 
         /* Override css */
 
@@ -77,12 +79,13 @@ class ButtonWidget extends Widget {
         v.iconHeight && imgStyle.push('height:', v.iconHeight, 'px;');
         v.iconColor && imgStyle.push('color:', v.iconColor, ';');
         v.iconFontSize && imgStyle.push('font-size:', v.iconFontSize, 'px;');
+        this.value = {data: d, paste: v.paste};
 
         return `
-<a style="${aStyle.join('')}" ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''} ${v.url ? `target="_blank" href="${v.url}"` : `data-id="${o.id}" data-action="launch"`} class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
+<a style="${aStyle.join('')}" ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''} ${v.url ? `target="_blank" href="${v.url}"` : `data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}"`} class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
     <div class="ks-button-inner" style="${innerStyle.join('')}">
         <div class="ks-button-content">
-            <div class="ks-button-icon" style="${imgStyle.join('')}">${v.icon !== false ? `<span style="${imgStyle.join('')}" class="${v.icon}"></span>` : '' }</div>
+            <div class="ks-button-icon" style="${imgStyle.join('')}">${v.icon !== false ? `<span style="${imgStyle.join('')}" class="${v.icon}"></span>` : ''}</div>
             <div class="ks-button-divider" style="${dividerStyle.join('')}"></div>
             <div class="ks-button-label" title="${v.label}" style="${labelStyle.join('')}">${v.label}</div>
         </div>
@@ -91,14 +94,25 @@ class ButtonWidget extends Widget {
     }
 
     initEventHandlers(section) {
+        let v = this.value;
         if (!section.find('a').data('confirmmessage')) {
             return section.find('a').on('click', (e) => {
                 let s = $(e.currentTarget);
+                if (v.paste) {
+                    navigator.clipboard.readText().then(text => {
+                        v['clipboard'] = text;
+                        Widget.doHandleSystemEvent(s, e);
 
-                Widget.doHandleSystemEvent(s, e);
+                        if (this.amIOnAGridTable()) {
+                            Widget.doHandleGridTableSystemEvent(s, e);
+                        }
+                    }).catch(err => L('Read from clipboard failed: ', err));
+                } else {
+                    Widget.doHandleSystemEvent(s, e);
 
-                if (this.amIOnAGridTable()) {
-                    Widget.doHandleGridTableSystemEvent(s, e);
+                    if (this.amIOnAGridTable()) {
+                        Widget.doHandleGridTableSystemEvent(s, e);
+                    }
                 }
             });
         }

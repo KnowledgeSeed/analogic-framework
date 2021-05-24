@@ -7,8 +7,21 @@ class SegmentedControlWidget extends Widget {
         const v = {
             skin: this.getRealValue('skin', d, 'standard')
         };
+        const o = this.options;
 
-        this.value = {};
+        let vv = d ? d : o.widgets.map(e => {return {value: e.value, selected: e.selected, label: e.label}});
+
+        let selected = false, i;
+        for(i = 0; i < vv.length; ++i){
+            if(vv[i].selected){
+                selected = {selected: vv[i].label, value: vv[i].value};
+            }
+        }
+        if(selected === false){
+            selected = {selected: vv[0].label, value: vv[0].value};
+        }
+
+        this.value = selected;
 
         return `<div class="ks-segmented ks-segmented-${v.skin}"  style="${this.getGeneralStyles(d).join('')}"><div class="ks-segmented-inner">${widgets.join('')}</div></div>`;
     }
@@ -57,7 +70,6 @@ class SegmentedControlWidget extends Widget {
                 }
 
                 let visible = data && typeof data.visible !== 'undefined' ? data.visible : o.visible;
-
                 return `<section title="${o.title || ''}" ${visible === false ? 'style="display:none"' : 'style="display:contents;"' } id="${o.id}">${instance.getHtml(widgetHtmls, instance.processData(data), withState)}</section>`;
             });
         });

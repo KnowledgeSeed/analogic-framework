@@ -28,5 +28,21 @@ Listeners.handle = ev => {
     } else if('refreshWithTimeout' === m) {
         let seconds = ev.data.parameters[0];
         setTimeout(function(){ Render.renderWidget(ev); }, seconds);
+    }  else if ('refreshWithWaitingForEvents' === m) {
+        let events = ev.data.parameters;
+        let widgetId = ev.data.options.id, i;
+        WidgetValue[widgetId + 'eventsfired'] = events.map((e) => {return {name: e, fired: false};});
+        for(i = 0; i < events.length; ++i) {
+            const eventName = events[i];
+            El.body.on(eventName, () => {
+                El.body.off(eventName);
+                let index = WidgetValue[widgetId + 'eventsfired'].findIndex(e => e.name === eventName);
+                WidgetValue[widgetId + 'eventsfired'][index].fired = true;
+                let c = WidgetValue[widgetId + 'eventsfired'].filter(d => d.fired === false).length;
+                if(c === 0) {
+                    app.fn.forceRefresh(widgetId);
+                }
+            });
+        }
     }
 };
