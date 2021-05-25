@@ -4,7 +4,7 @@ const Listeners = [];
 
 Listeners.handle = ev => {
     const m = ev.data.method;
-
+console.log(m);
     if ('refresh' === m) {
         Render.renderWidget(ev);
     } else if ('refreshWithoutLoader' === m) {

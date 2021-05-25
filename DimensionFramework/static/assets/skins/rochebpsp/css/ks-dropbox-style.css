@@ -687,6 +687,156 @@
     display: none;
 }
 
+/* simple_bold_with_border_bpsp */
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-title {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+    overflow: auto;
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-field {
+    height: 40px;
+    overflow: auto;
+    border-radius: 10px;
+    border: 1px solid #7f7f7f;
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-field:hover {
+    background-color: rgba(220, 235, 250, 0.47);
+    border-radius: 10px;
+
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-input {
+    color: #000;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-input::-webkit-input-placeholder {
+    color: #000000;
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-input::-moz-placeholder {
+    color: #000000;
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-input:-ms-input-placeholder {
+    color: #000000;
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-input:-moz-placeholder {
+    color: #000000;
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-icon {
+    border-radius: 10px;
+    height: 40px;
+    margin: 0 5px;
+    width: 40px;
+    display: block;
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-icon:after {
+    border-top: 5px solid #000;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    content: "";
+    margin-top: -2.5px;
+    position: absolute;
+    right: 14px;
+    top: 50%;
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-panel {
+    width: 220px;
+    border-radius: 10px;
+    margin-top: 2px;
+    padding: 2px;
+    left: 8px;
+    right: 8px;
+    background-color: #fff;
+    max-height: 300px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-panel-item {
+    border-radius: 10px;
+    height: 40px;
+    padding: 0 10px;
+    margin-left: 5%;
+    margin-bottom: 2%;
+    margin-right: 5%;
+    margin-top: 2%;
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-panel-item:hover {
+    background-color: rgba(191, 217, 242, 0.5);
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-panel-item.on:hover {
+    background-color: rgba(191, 217, 242, 0.5);
+
+}
+
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-panel-item.on .ks-dropbox-panel-item-text {
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-panel-item-text {
+    color: #000;
+    font-size: 14px;
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-panel-inner {
+    background-color: #fff;
+    border-radius: 10px;
+    padding-top: 8px;
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-panel-inner:last-child {
+    padding-bottom: 8px;
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-backdrop {
+    background-color: rgba(0, 0, 0, 0.15);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-panel-item.on {
+    background-color: #ffffff;
+
+}
+
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-panel-item.on .ks-dropbox-panel-item-text {
+    color: #000000;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.ks-dropbox-simple_bold_with_border_bpsp .ks-dropbox-panel::-webkit-scrollbar {
+    display: none;
+}
+
 /* end ote */
 
 

@@ -2900,7 +2900,7 @@ WHERE
                         length: 25,
                         query: [
                             (r, x) => {
-                            WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'] = x;
+                                WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'] = x;
                                 return {
                                     label: r.Cells[x].FormattedValue,
                                     skin: r.Cells[x + 1].FormattedValue === 'IP Node' ? 'gridtable_hierarchy_bpsp_PL6' : 'gridtable_hierarchy_bpsp_' + r.Cells[x + 1].FormattedValue.replace('a', ''),
@@ -3202,82 +3202,99 @@ FROM [}ElementAttributes_Materials]
         }
     },
 
+    RocheBPSPMaterialsAddMaterialSearchSelectAll: {
+        init: {
+            execute: (db) => {
+                return {
+                    value: v('RocheBPSPMaterialsAddMaterialSearchSelectAll.switch.value')
+                }
+            }
+        }
+    },
 
     RocheBPSPMaterialsAddMaterialSearch:
         {
-
+            refresh_col_0: {
+                execute: (db) => {
+                    return {value: v('RocheBPSPMaterialsAddMaterialSearchSelectAll.switch.value')};
+                }
+            },
+            initCondition: (db) => {L('ddd');
+                let l = v('rocheBPSPAddMaterialGridRow4Cell1Search.value') != '' ||
+                    v('rocheBPSPAddMaterialGridRow4Cell2Search.value') != '' || v('rocheBPSPAddMaterialGridRow4Cell3Dropbox.value') != ''
+                || v('rocheBPSPAddMaterialGridRow4Cell4Search.value') != '' || v('rocheBPSPAddMaterialGridRow4Cell5Search.value')  != '';
+                return l;
+            },
+            initDefault: (db) => {
+                return [];
+            },
             init:
                 {
                     url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
                     type: 'POST',
                     body: (db) => `{"MDX":"
-
-                
-With 
-Member [Measures Material Information by Company].[Measures Material Information by Company].[ID] As
-   [Materials].[Materials].CurrentMember.Properties('Element')
-Member [Measures Material Information by Company].[Measures Material Information by Company].[Description] As
-   [Materials].[Materials].CurrentMember.Properties('Medium Name')   
-Member [Measures Material Information by Company].[Measures Material Information by Company].[Status] As
-   [Materials].[Materials].CurrentMember.Properties('Material Status - Key')
-Member [Measures Material Information by Company].[Measures Material Information by Company].[Instrument Category] As
-   [Materials].[Materials].CurrentMember.Properties('Material Category - Key')
-Member [Measures Material Information by Company].[Measures Material Information by Company].[Current Profit Center] As
-   [Materials].[Materials].CurrentMember.Properties('Profit Center Actual - Key')
-Member [Measures Material Information by Company].[Measures Material Information by Company].[Budget Profit Center] As
-   [Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key')
-Member [Measures Material Information by Company].[Measures Material Information by Company].[Product Type] As
-   [Materials].[Materials].CurrentMember.Properties('Material Type - Key')
-Member [Measures Material Information by Company].[Measures Material Information by Company].[Current IP Node] As
-   [Materials].[Materials].CurrentMember.Properties('IP Profit Center Actual - Key')
-Member [Measures Material Information by Company].[Measures Material Information by Company].[Budget IP Node] As
-   [Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key')
-Member [Measures Material Information by Company].[Measures Material Information by Company].[IP Reporting Relevant] As
-   [Materials].[Materials].CurrentMember.Properties('IP DIS Relevant Flag')
-Set ColumnSelection As
-  {
-   [Measures Material Information by Company].[Measures Material Information by Company].[Shopping Basket],
-   [Measures Material Information by Company].[Measures Material Information by Company].[ID],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Description],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Status],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Instrument Category],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Current Profit Center],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Budget Profit Center],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Product Type],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Current IP Node],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Budget IP Node],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Last Modified],
-   [Measures Material Information by Company].[Measures Material Information by Company].[IP Reporting Relevant],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Status Message]
-  }
-SELECT 
-   {ColumnSelection} 
-   PROPERTIES [Measures Material Information by Company].[Measures Material Information by Company].[Caption]  ON COLUMNS ,
-   {Subset({
-    FILTER({
- FILTER({
-FILTER({
- FILTER({
-TM1FILTERBYLEVEL({
-FILTER({[Materials].[Materials].Members}, 
-        [Materials].[Materials].CurrentMember.Properties('IP Active Flag') = '1')
-                 }, 0)
-          --Dropbox with Category
-          }, [Materials].[Materials].CurrentMember.Properties('Material Category - Key') = 'CC')
- -- Instr search
- }, InStr([Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key') ,'458360')<>0)
-}, InStr([Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key'), '297')<>0)
-       }, InStr([Materials].[Materials].CurrentMember.Properties('Element'), '48' ) <> 0 AND
-          InStr([Materials].[Materials].CurrentMember.Properties('Medium Name'), '' ) <> 0 )},1,100)}  
-   PROPERTIES [Materials].[Materials].[Caption]  ON ROWS 
-FROM [Material Information by Company] 
-WHERE 
-  (
-   [Companies].[Companies].[1391]
-  )
-
-
-
+                                        With 
+                                        Member [Measures Material Information by Company].[Measures Material Information by Company].[ID] As
+                                           [Materials].[Materials].CurrentMember.Properties('Element')
+                                        Member [Measures Material Information by Company].[Measures Material Information by Company].[Description] As
+                                           [Materials].[Materials].CurrentMember.Properties('Medium Name')   
+                                        Member [Measures Material Information by Company].[Measures Material Information by Company].[Status] As
+                                           [Materials].[Materials].CurrentMember.Properties('Material Status - Key')
+                                        Member [Measures Material Information by Company].[Measures Material Information by Company].[Instrument Category] As
+                                           [Materials].[Materials].CurrentMember.Properties('Material Category - Key')
+                                        Member [Measures Material Information by Company].[Measures Material Information by Company].[Current Profit Center] As
+                                           [Materials].[Materials].CurrentMember.Properties('Profit Center Actual - Key')
+                                        Member [Measures Material Information by Company].[Measures Material Information by Company].[Budget Profit Center] As
+                                           [Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key')
+                                        Member [Measures Material Information by Company].[Measures Material Information by Company].[Product Type] As
+                                           [Materials].[Materials].CurrentMember.Properties('Material Type - Key')
+                                        Member [Measures Material Information by Company].[Measures Material Information by Company].[Current IP Node] As
+                                           [Materials].[Materials].CurrentMember.Properties('IP Profit Center Actual - Key')
+                                        Member [Measures Material Information by Company].[Measures Material Information by Company].[Budget IP Node] As
+                                           [Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key')
+                                        Member [Measures Material Information by Company].[Measures Material Information by Company].[IP Reporting Relevant] As
+                                           [Materials].[Materials].CurrentMember.Properties('IP DIS Relevant Flag')
+                                        Set ColumnSelection As
+                                          {
+                                           [Measures Material Information by Company].[Measures Material Information by Company].[Shopping Basket],
+                                           [Measures Material Information by Company].[Measures Material Information by Company].[ID],
+                                           [Measures Material Information by Company].[Measures Material Information by Company].[Description],
+                                           [Measures Material Information by Company].[Measures Material Information by Company].[Status],
+                                           [Measures Material Information by Company].[Measures Material Information by Company].[Instrument Category],
+                                           [Measures Material Information by Company].[Measures Material Information by Company].[Current Profit Center],
+                                           [Measures Material Information by Company].[Measures Material Information by Company].[Budget Profit Center],
+                                           [Measures Material Information by Company].[Measures Material Information by Company].[Product Type],
+                                           [Measures Material Information by Company].[Measures Material Information by Company].[Current IP Node],
+                                           [Measures Material Information by Company].[Measures Material Information by Company].[Budget IP Node],
+                                           [Measures Material Information by Company].[Measures Material Information by Company].[Last Modified],
+                                           [Measures Material Information by Company].[Measures Material Information by Company].[IP Reporting Relevant],
+                                           [Measures Material Information by Company].[Measures Material Information by Company].[Status Message]
+                                          }
+                                        SELECT 
+                                           {ColumnSelection} 
+                                           PROPERTIES [Measures Material Information by Company].[Measures Material Information by Company].[Caption]  ON COLUMNS ,
+                                           {Subset({
+                                            FILTER({
+                                         FILTER({
+                                        FILTER({
+                                         FILTER({
+                                        TM1FILTERBYLEVEL({
+                                        FILTER({[Materials].[Materials].Members}, 
+                                                [Materials].[Materials].CurrentMember.Properties('IP Active Flag') = '1')
+                                                         }, 0)
+                                                  --Dropbox with Category
+                                                  }, [Materials].[Materials].CurrentMember.Properties('Material Category - Key') = 'CC')
+                                         -- Instr search
+                                         }, InStr([Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key') ,'458360')<>0)
+                                        }, InStr([Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key'), '297')<>0)
+                                               }, InStr([Materials].[Materials].CurrentMember.Properties('Element'), '48' ) <> 0 AND
+                                                  InStr([Materials].[Materials].CurrentMember.Properties('Medium Name'), '' ) <> 0 )},1,100)}  
+                                           PROPERTIES [Materials].[Materials].[Caption]  ON ROWS 
+                                        FROM [Material Information by Company] 
+                                        WHERE 
+                                          (
+                                           [Companies].[Companies].[1391]
+                                          )
             "}`,
                     parsingControl: {
                         type: 'matrix',
@@ -3385,9 +3402,23 @@ WHERE
         }
     },
 
+    RocheBPSPMaterialsAddMaterialClipboardSelectAll: {
+        init: {
+            execute: (db) => {
+                return {
+                    value: v('RocheBPSPMaterialsAddMaterialClipboardSelectAll.switch.value')
+                }
+            }
+        }
+    },
+
     RocheBPSPMaterialsAddMaterialClipboard:
         {
-
+            refresh_col_0: {
+                execute: (db) => {
+                    return {value: v('RocheBPSPMaterialsAddMaterialClipboardSelectAll.switch.value')};
+                }
+            },
             init:
                 {
                     url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
@@ -3423,6 +3454,7 @@ WHERE
 
                             (r, x) => {
                                 return {
+                                    value: v('RocheBPSPMaterialsAddMaterialClipboardSelectAll.switch.value'),
                                     cellSkin: r.Cells[x + 10].FormattedValue === '' ? '' : 'locked',
                                 }
                             },
@@ -3561,8 +3593,6 @@ FROM [}ElementAttributes_Materials]
             }
         }
     },
-
-
 
 
     rocheBPSPMaterialAddDummyPopupGridRow5Cell1Dropbox: {
