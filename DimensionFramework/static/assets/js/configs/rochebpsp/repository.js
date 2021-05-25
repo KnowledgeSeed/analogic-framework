@@ -113,7 +113,7 @@ app.repository = {
                 query: [
                     (r, x) => {
                         return {
-                            title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 5%;margin-top:1%;";  >' + r.Cells[x + 1].FormattedValue + '</div>' + '<div style=\"font-size:10px;color:#B1B3B3;;margin-top:1%;\" >' + r.Cells[x + 2].FormattedValue + '</div>',
+                            title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 1%;margin-top: 0.5%;";  >' + r.Cells[x + 1].FormattedValue + '</div>' + '<div style=\"font-size:10px;color:#B1B3B3;margin-top: 0.5%;\" >' + r.Cells[x + 2].FormattedValue + '</div>',
                             body: r.Cells[x + 3].FormattedValue
                         }
                     }]
@@ -124,33 +124,32 @@ app.repository = {
 
     rocheBPSPMainBlueGridTable: {
         init: {
-            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption,Attributes/Memberdescription))`,
             type: 'POST',
             body: (db) => `{"MDX":"
-            SELECT 
-            {[Companies].[Companies].[All Companies^1391]} 
-            PROPERTIES [Companies].[Companies].[Member description]  
-            ON COLUMNS , 
-            NON EMPTY 
-               {[Measures Company Information].[Measures Company Information].[Start page message Title],
-               [Measures Company Information].[Measures Company Information].[Start page message User],
-               [Measures Company Information].[Measures Company Information].[Start page message DateTime],
-               [Measures Company Information].[Measures Company Information].[Start page message]} 
-              PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON ROWS 
-            FROM [Company Information] 
-            WHERE 
-              (
-               [Versions].[Versions].[Live]
-              )
+SELECT 
+   {[Measures Company Information].[Measures Company Information].[Start page message Title],
+    [Measures Company Information].[Measures Company Information].[Start page message],
+    [Measures Company Information].[Measures Company Information].[Start page message DateTime]
+   } 
+  PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON COLUMNS , 
+  NON EMPTY 
+   {[Companies].[Companies].[All Companies^1391]} 
+  PROPERTIES [Companies].[Companies].[Member description]  ON ROWS 
+FROM [Company Information] 
+WHERE 
+  (
+   [Versions].[Versions].[Live]
+  )
             "}`,
             parsingControl: {
                 type: 'matrix',
-                length: 4,
+                length: 3,
                 query: [
                     (r, x) => {
                         return {
-                            title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 5%;margin-top:3%;";  >' + r.Cells[x + 1].FormattedValue + '</div>' + '<div style=\"font-size:10px;color:#408CD9;;margin-top:3%;\" >' + r.Cells[x + 2].FormattedValue + '</div>',
-                            body: r.Cells[x + 3].FormattedValue
+                            title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 1%;margin-top:0.5%;";  >' + r.Cells[x].Members[1].Attributes.Caption + '</div>' + '<div style=\"font-size:10px;color:#408CD9;;margin-top:0.5%;\" >' + r.Cells[x + 2].FormattedValue + '</div>',
+                            body: r.Cells[x + 1].FormattedValue
                         }
                     }]
             }
@@ -3080,7 +3079,7 @@ FROM [}ElementAttributes_Materials]
 
                             (r, x) => {
                                 return {
-                                    icon: r.Cells[x + 5].FormattedValue === '1,00' ? 'icon-arrow-right1' : '',
+                                    icon: r.Cells[x + 5].FormattedValue === '1,00' ? 'icon-copy' : '',
                                     cellSkin: r.Cells[x + 5].FormattedValue === '1,00' ? '' : 'readonly_bpsp',
                                 }
                             },
@@ -3170,7 +3169,7 @@ FROM [}ElementAttributes_Materials]
 
                             (r, x) => {
                                 return {
-                                    icon: r.Cells[x + 5].FormattedValue === '1,00' ? 'icon-arrow-right1' : '',
+                                    icon: r.Cells[x + 5].FormattedValue === '1,00' ? 'icon-copy' : '',
                                     cellSkin: r.Cells[x + 5].FormattedValue === '1,00' ? '' : 'readonly_bpsp',
                                 }
                             },
@@ -3525,6 +3524,64 @@ WHERE
 
 
             "}`,
+            parsingControl: {
+                type: 'list',
+                query:
+                    (r, x) => {
+                        return {name: r.Cells[x].FormattedValue, on: false};
+                    }
+            }
+        }
+    },
+
+
+    rocheBPSPMaterialAddDummyPopupGridRow4Cell1Dropbox: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT
+   {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP Budget IP Caption]}
+  ON COLUMNS ,
+   {Filter(
+      {TM1SubsetToSet([Materials].[BPSP Budget IP], '1391 MM')},
+    [Materials].[BPSP Budget IP].CurrentMember.Properties('Product Level - Name') = 'IP Node')}
+  ON ROWS
+FROM [}ElementAttributes_Materials]
+
+
+            "}`,
+            parsingControl: {
+                type: 'list',
+                query:
+                    (r, x) => {
+                        return {name: r.Cells[x].FormattedValue, on: false};
+                    }
+            }
+        }
+    },
+
+
+
+
+    rocheBPSPMaterialAddDummyPopupGridRow5Cell1Dropbox: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+ {
+"MDX" :"
+
+SELECT
+   {[}ElementAttributes_zSYS UI Material Category].[}ElementAttributes_zSYS UI Material Category].[Caption]}
+  ON COLUMNS ,
+   {[zSYS UI Material Category].[zSYS UI Material Category].Members}
+  ON ROWS
+FROM [}ElementAttributes_zSYS UI Material Category]
+
+                     "}
+ `,
             parsingControl: {
                 type: 'list',
                 query:
