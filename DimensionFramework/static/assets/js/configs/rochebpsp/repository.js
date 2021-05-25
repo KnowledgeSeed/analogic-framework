@@ -3002,6 +3002,46 @@ app.repository = {
         },
 
 
+    rocheBPSPMaterialPageInit: {
+        initCondition: (db) => {
+            return v('rocheBPSPMaterialGridRow1Cell2DropBox') !== false;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT 
+                        {[Versions].[Versions].[Live]} 
+                    PROPERTIES [Versions].[Versions].[Caption]  ON COLUMNS , 
+                    NON EMPTY 
+                        {[Measures Company Information].[Measures Company Information].[Products Hierarchy]} 
+                        PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON ROWS 
+                    FROM [Company Information] 
+                WHERE 
+                (
+                    [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}]
+                )
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        value: (r, x) => {
+                            WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = r.Cells[0].FormattedValue;
+                            L(r.Cells[0].FormattedValue);
+                            return true;
+                        }
+                    }
+            }
+        }
+    },
+
+
+
     rocheBPSPMaterialGridTable:
         {
 
@@ -3034,7 +3074,7 @@ app.repository = {
                                          [}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag],
                                          [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag]} 
                                       ON COLUMNS , 
-                                       {TM1SubsetToSet([Materials].[BPSP Budget],'1391 MM')} 
+                                       {TM1SubsetToSet([Materials].[BPSP Budget],'1391 MM')}  
                                       ON ROWS 
                                     FROM [}ElementAttributes_Materials] 
 
@@ -3219,10 +3259,11 @@ app.repository = {
                     return {value: v('RocheBPSPMaterialsAddMaterialSearchSelectAll.switch.value')};
                 }
             },
-            initCondition: (db) => {L('ddd');
+            initCondition: (db) => {
+                L('ddd');
                 let l = v('rocheBPSPAddMaterialGridRow4Cell1Search.value') != '' ||
                     v('rocheBPSPAddMaterialGridRow4Cell2Search.value') != '' || v('rocheBPSPAddMaterialGridRow4Cell3Dropbox.value') != ''
-                || v('rocheBPSPAddMaterialGridRow4Cell4Search.value') != '' || v('rocheBPSPAddMaterialGridRow4Cell5Search.value')  != '';
+                    || v('rocheBPSPAddMaterialGridRow4Cell4Search.value') != '' || v('rocheBPSPAddMaterialGridRow4Cell5Search.value') != '';
                 return l;
             },
             initDefault: (db) => {
@@ -3619,7 +3660,7 @@ app.repository = {
         }
     },
 
-
+/*
     rocheBPSPMaterialMoveDataPopupGridRow2Cell1Dropbox: {
         init: {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
@@ -3628,13 +3669,17 @@ app.repository = {
                         {
                     "MDX" :"
                             SELECT 
+                               --{[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP Caption]} 
                                {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP Budget IP Caption]} 
                               ON COLUMNS , 
                                {Filter(
+                                  --{TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')}, 
                                   {TM1SubsetToSet([Materials].[BPSP Budget IP], '1391 MM')}, 
+                                --[Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].CurrentMember.Properties('Product Level - Name') = 'PL8')} 
                                 [Materials].[BPSP Budget IP].CurrentMember.Properties('Product Level - Name') = 'PL8')} 
                               ON ROWS 
-                            FROM [}ElementAttributes_Materials] 
+                            FROM [}ElementAttributes_Materials]
+
 
                      "}`,
             parsingControl: {
@@ -3646,6 +3691,8 @@ app.repository = {
             }
         }
     },
+
+ */
 
 
 };

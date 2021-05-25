@@ -45,7 +45,7 @@
 
 	"defaultUploadStagingFolder" : "\\\\\\\\USER-PC\\\\staging",
 
-	"MainPage" : "rocheBPSPMaterial",
+	"MainPage" : "rocheBPSPMain",
     "pool": {
         "users": ["oravecz.tamas"],
         "target": "https://dev.knowledgeseed.ch:5125/rochebpspapi"
