@@ -37,6 +37,10 @@ app.repository = {
                             value: (r, x) => {
                                 WidgetValue['systemValueGlobalStartingPlanYear'] = r.Cells[0].FormattedValue;
                                 WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';
+                                WidgetValue['systemValueFocusedProductDefault'] = 'PL1';
+                                WidgetValue['systemValueFocusedProduct'] = WidgetValue['systemValueFocusedProductDefault'];
+                                WidgetValue['systemValueIpPlanningFocusedProductDefault'] = 'IPL1';
+                                WidgetValue['systemValueIpPlanningFocusedProduct'] = WidgetValue['systemValueIpPlanningFocusedProductDefault'];
                                 return true;
                             }
                         }
@@ -284,7 +288,6 @@ app.repository = {
                         value: (r, x) => {
                             WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = r.Cells[0].FormattedValue;
                             L(r.Cells[0].FormattedValue);
-                            WidgetValue['systemValueFocusedProduct'] = 'PL1';
                             WidgetValue['systemValueSegmentedControlPeriodUnit'] = 'Yearly';
                             return true;
                         }
@@ -328,7 +331,7 @@ app.repository = {
     rocheBPSPProductsGridTableYearlyHeaderFocusButton: {
         init: {
             execute: (db) => {
-                return {visible: db.systemValueFocusedProduct === 'PL1'};
+                return {visible: db.systemValueFocusedProduct === db.systemValueFocusedProductDefault};
             }
         }
     },
@@ -336,12 +339,12 @@ app.repository = {
     rocheBPSPProductsGridTableYearlyHeaderReturnFromFocus: {
         init: {
             execute: (db) => {
-                return {visible: db.systemValueFocusedProduct !== 'PL1'};
+                return {visible: db.systemValueFocusedProduct !== db.systemValueFocusedProductDefault};
             }
         },
         launch: {
             execute: (db) => {
-                WidgetValue['systemValueFocusedProduct'] = 'PL1';
+                WidgetValue['systemValueFocusedProduct'] = db.systemValueFocusedProductDefault;
             }
         }
     },
@@ -349,7 +352,7 @@ app.repository = {
     rocheBPSPProductsGridTableMonthlyHeaderFocusButton: {
         init: {
             execute: (db) => {
-                return {visible: db.systemValueFocusedProduct === 'PL1'};
+                return {visible: db.systemValueFocusedProduct === db.systemValueFocusedProductDefault};
             }
         }
     },
@@ -357,11 +360,11 @@ app.repository = {
     rocheBPSPProductsGridTableMonthlyHeaderReturnFromFocus: {
         init: {
             execute: (db) => {
-                return {visible: db.systemValueFocusedProduct !== 'PL1'};
+                return {visible: db.systemValueFocusedProduct !== db.systemValueFocusedProductDefault};
             }
         }, launch: {
             execute: (db) => {
-                WidgetValue['systemValueFocusedProduct'] = 'PL1';
+                WidgetValue['systemValueFocusedProduct'] = db.systemValueFocusedProductDefault;
             }
         }
     },
@@ -1656,17 +1659,17 @@ app.repository = {
                   "}
            `,
             parsingControl: {
-                    type: 'object',
-                    query:
-                        {
-                            value: (r, x) => {
-                                return Utils.parseNumber(r.Cells[2].FormattedValue) * 100;
-                            },
-                            originalValue: (r, x) => {
-                                return Utils.parseNumber(r.Cells[2].FormattedValue) * 100;
-                            }
+                type: 'object',
+                query:
+                    {
+                        value: (r, x) => {
+                            return Utils.parseNumber(r.Cells[2].FormattedValue) * 100;
+                        },
+                        originalValue: (r, x) => {
+                            return Utils.parseNumber(r.Cells[2].FormattedValue) * 100;
                         }
-                }
+                    }
+            }
         }
     },
     rocheBPSPProductsCheckoutGridTableYearly: {
@@ -2772,6 +2775,28 @@ app.repository = {
         }
     },
 
+    rocheBPSPipPlanningGridTableMonthlyHeaderFocusButton:
+        {
+            init: {
+                execute: (db) => {
+                    return {visible: db.systemValueIpPlanningFocusedProduct === db.systemValueIpPlanningFocusedProductDefault};
+                }
+            }
+        },
+    rocheBPSPipPlanningGridTableMonthlyHeaderReturnFromFocus:
+        {
+            init: {
+                execute: (db) => {
+                    return {visible: db.syssystemValueIpPlanningFocusedProducttemValueFocusedProduct !== db.systemValueIpPlanningFocusedProductDefault};
+                }
+            },
+            launch: {
+                execute: (db) => {
+                    WidgetValue['systemValueIpPlanningFocusedProduct'] = db.systemValueIpPlanningFocusedProductDefault;
+                }
+            }
+        },
+
 
     rocheBPSPipPlanningGridTableMonthly:
         {
@@ -2867,13 +2892,16 @@ app.repository = {
                                    [Contract Types].[Contract Types].[Cash Sales],
                                    [Instrument Types].[Instrument Types].[New]
                                   )
-            "}`,
+                    "}`,
+                    getCell: (r, x, inc) => {
+
+                    },
                     parsingControl: {
                         type: 'matrix',
                         length: 25,
                         query: [
-
                             (r, x) => {
+                            WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'] = x;
                                 return {
                                     label: r.Cells[x].FormattedValue,
                                     skin: r.Cells[x + 1].FormattedValue === 'IP Node' ? 'gridtable_hierarchy_bpsp_PL6' : 'gridtable_hierarchy_bpsp_' + r.Cells[x + 1].FormattedValue.replace('a', ''),
@@ -3156,49 +3184,23 @@ FROM [}ElementAttributes_Materials]
 
 
     rocheBPSPipPlanningMaterialSelectorShortcutPopupGridTable: {
+        initCondition: (db) => {
+            return Utils.isGridTableLoaded('rocheBPSPipPlanningGridTableMonthly')
+        },
         initDefault: (db) => {
             return [];
         },
-        state:
-            (db) => {
-                return [
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_shortcut_bpsp_PL1'},
-
-
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_shortcut_bpsp_PL2'},
-
-
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_shortcut_bpsp_PL3'},
-
-
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_shortcut_bpsp_PL3'},
-
-
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_shortcut_bpsp_PL2'},
-
-
-                    ],
-
-                    [
-                        {label: 'Profit center name', skin: 'gridtable_hierarchy_shortcut_bpsp_PL3'},
-
-
-                    ],
-                ];
+        init: {
+            execute: (db) => {
+                return v('rocheBPSPipPlanningGridTableMonthly.cellData').filter(e => ['PL1', 'PL2', 'PL3'].includes(e[0].productLevel)).map(e => {
+                    return [{
+                        label: e[0].label,
+                        skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].productLevel,
+                        productCode: e[1].title
+                    }];
+                });
             }
+        }
     },
 
 
@@ -3365,12 +3367,12 @@ WHERE
             "}`,
             parsingControl: {
                 type: 'object',
-                    query:
-                        {
-                            cells: (r, x) => {
-                                return r.Cells;
-                            }
+                query:
+                    {
+                        cells: (r, x) => {
+                            return r.Cells;
                         }
+                    }
             }
         },
         launchpaste: {

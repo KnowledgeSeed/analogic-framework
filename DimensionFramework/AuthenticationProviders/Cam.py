@@ -55,7 +55,7 @@ class Cam(Pool):
         return response
 
     def checkAppAuthenticated(self):
-        return self.setting.getTM1SessionId(session['cam_name']) is not None
+        return session.get('cam_name', '') != '' and self.setting.getTM1SessionId(session.get('cam_name')) is not None
 
     def getAuthenticationResponse(self):
         return 'Authentication required', 401, {'Content-Type': 'application/json'}

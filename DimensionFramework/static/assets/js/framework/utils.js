@@ -2,7 +2,8 @@
 
 'use strict';
 
-const L = console.log, v = (path, obj = WidgetValue) => path.split(".").reduce((o, key) => o && o[key] ? o[key] : false, obj);
+const L = console.log,
+    v = (path, obj = WidgetValue) => path.split(".").reduce((o, key) => o && o[key] ? o[key] : false, obj);
 
 const Utils = {
     sleep: ms => new Promise(resolve => setTimeout(resolve, ms)),
@@ -12,7 +13,17 @@ const Utils = {
 
         return e;
     },
-    cleanStr: s => Utils.replaceAll(s, {'ö': 'o', 'ü': 'u', 'ó': 'o', 'ő': 'o', 'ú': 'u', 'é': 'e', 'á': 'a', 'ű': 'u', 'í': 'i'}),
+    cleanStr: s => Utils.replaceAll(s, {
+        'ö': 'o',
+        'ü': 'u',
+        'ó': 'o',
+        'ő': 'o',
+        'ú': 'u',
+        'é': 'e',
+        'á': 'a',
+        'ű': 'u',
+        'í': 'i'
+    }),
     clone: (object, deep) => deep ? $.extend(true, {}, object) : $.extend({}, object),
     replaceAll: (s, m) => s.replace(RegExp(Object.keys(m).join('|'), 'gi'), r => m[r.toLowerCase()]),
     scrollTop: duration => $('html, body').animate({scrollTop: 0}, duration || 500),
@@ -65,7 +76,8 @@ const Utils = {
     },
     getToday: (delimiter = '.') => Utils.getFormattedDate(new Date(), delimiter),
     getTimestamp(dateStr = '', forwardTime = false) {
-        const d = dateStr ? new Date(dateStr.replace(/\./g, '-')) : new Date(), o = forwardTime ? Utils.forwardTime(d) : Utils.rewindTime(d);
+        const d = dateStr ? new Date(dateStr.replace(/\./g, '-')) : new Date(),
+            o = forwardTime ? Utils.forwardTime(d) : Utils.rewindTime(d);
 
         return o.getFullYear() + '-' + (o.getMonth() + 1).toString().padStart(2, 0) + '-' + o.getDate().toString().padStart(2, 0) + 'T' + o.getHours().toString().padStart(2, 0) + ':' + o.getMinutes().toString().padStart(2, 0) + ':' + o.getSeconds().toString().padStart(2, 0) + '.' + o.getMilliseconds().toString().padStart(3, 0) + 'Z';
     },
@@ -160,13 +172,14 @@ const Utils = {
         return s + (withSemicolon ? ';' : '');
     },
     getGridTableId(cellId) {
-        if(cellId){
+        if (cellId) {
             return cellId.split(',')[0];
         }
         return false;
     },
     getGridTableCurrentCell(widgetId) {
-        let a = v(widgetId + '.cellData', WidgetValue), b = v(widgetId + '.row', WidgetValue), c = v(widgetId + '.column', WidgetValue);
+        let a = v(widgetId + '.cellData', WidgetValue), b = v(widgetId + '.row', WidgetValue),
+            c = v(widgetId + '.column', WidgetValue);
         if (a && b && c) {
             return a[b][c];
         }
@@ -185,7 +198,7 @@ const Utils = {
     },
     setAndGetGridTableSystemValueByCurrentRow(widgetId, columnIndex, systemValue, cellProperty) {
         let c = Utils.getGridTableCell(widgetId, columnIndex);
-        if(c !== false){
+        if (c !== false) {
             WidgetValue[systemValue] = c[cellProperty];
             return c[cellProperty];
         }
@@ -198,35 +211,39 @@ const Utils = {
     },
     getCellsFromClipboard(widgetId) {
         let text = v(widgetId + '.clipboard');
-        if(text === false){
+        if (text === false) {
             return [];
         }
         let rows = text.trim().split('\n'), result = [], i, k;
-        for(i = 0; i < rows.length; ++i){
+        for (i = 0; i < rows.length; ++i) {
             result.push(rows[i].split('\t'));
         }
         return result;
     },
     getOrdinalValuePairsAndEmptyFilledValues(values, existingValues) {
-       let template = (ordinal, value) => `{"Ordinal": ${ordinal},"Value": \"${value}\"}`, result = [], i = 0;
-       while( i < existingValues.length ){
-           if( i < values.length ){
-               result.push(template(existingValues[i].Ordinal, values[i]));
-           } else {
-               if(existingValues[i].FormattedValue !== ""){
-                   result.push(template(existingValues[i].Ordinal, ""));
-               }else{
-                   i = existingValues.length;
-               }
-           }
-           ++i;
-       }
+        let template = (ordinal, value) => `{"Ordinal": ${ordinal},"Value": \"${value}\"}`, result = [], i = 0;
+        while (i < existingValues.length) {
+            if (i < values.length) {
+                result.push(template(existingValues[i].Ordinal, values[i]));
+            } else {
+                if (existingValues[i].FormattedValue !== "") {
+                    result.push(template(existingValues[i].Ordinal, ""));
+                } else {
+                    i = existingValues.length;
+                }
+            }
+            ++i;
+        }
         return result.join(',');
+    },
+    isGridTableLoaded(widgetId) {
+        let l = v(widgetId + '.cellData.length');
+        return l !== false && l !== 0;
     },
     getCellsByColumnsFromClipboard(widgetId, columnIndex) {
         let cells = Utils.getCellsFromClipboard(widgetId), result = [], i = 0;
-        for(i = 0; i < cells.length; ++i){
-            if ( cells[i].length > columnIndex){
+        for (i = 0; i < cells.length; ++i) {
+            if (cells[i].length > columnIndex) {
                 result.push(cells[i][columnIndex]);
             }
         }
