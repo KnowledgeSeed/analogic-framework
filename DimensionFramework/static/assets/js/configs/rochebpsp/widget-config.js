@@ -7962,7 +7962,8 @@ app.widgetConfig = {
                                             id: 'rocheBPSPMaterialGridRow4Cell3Button',
                                             type: ButtonWidget,
                                             label: 'Move data',
-                                            icon: '',
+                                            icon: 'icon-arrow-right11',
+                                            iconPosition: 'right',
                                             action: '',
                                             width: '130',
                                             marginTop: '20',
@@ -8005,15 +8006,18 @@ app.widgetConfig = {
                                     width: '50%',
                                     alignment: 'bottom-left',
                                     widgets: [
+
                                         {
-                                            id: 'rocheBPSPMaterialGridTableHeaderFocusButton',
-                                            type: ButtonWidget,
-                                            label: 'Profit center name',
+                                            id: 'rocheBPSPMaterialGridTableHeaderCell1Text',
+                                            type: TextWidget,
+                                            width: '100%',
+                                            body: 'Profit center name',
                                             skin: 'products_gd_header_bpsp',
-                                            iconPosition: 'right',
+                                            titleAlignment: 'start',
                                             marginBottom: 8,
-                                            marginLeft: 10
-                                        },
+                                            marginLeft: '10%',
+                                            bodyAlignment: 'start'
+                                        }
                                     ]
                                 },
 
@@ -8049,8 +8053,9 @@ app.widgetConfig = {
                                             body: 'Profit Center Number',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
+                                            marginLeft: '10%',
                                             marginBottom: 8,
-                                            bodyAlignment: 'start'
+                                            bodyAlignment: 'center'
                                         }
                                     ]
                                 },
@@ -8137,6 +8142,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPMaterialGridTableText-02',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
+                                    marginLeft: '35%',
                                     title: '',
                                 }
                             ]
@@ -8153,11 +8159,11 @@ app.widgetConfig = {
                                     id: 'rocheBPSPMaterialGridTableText-03',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
+                                    marginLeft: '8%',
                                     title: '',
                                 }
                             ]
                         },
-
                         {
                             id: 'rocheBPSPMaterialGridTableCell-4',
                             type: GridTableCellWidget,
@@ -8234,13 +8240,15 @@ app.widgetConfig = {
                                     alignment: 'bottom-left',
                                     widgets: [
                                         {
-                                            id: 'RocheBPSPMaterial_IPNode_GridTableHeaderFocusButton',
-                                            type: ButtonWidget,
-                                            label: 'Profit center name',
+                                            id: 'RocheBPSPMaterial_IPNode_GridTableHeaderCell1Text',
+                                            type: TextWidget,
+                                            width: '100%',
+                                            body: 'Profit center name',
                                             skin: 'products_gd_header_bpsp',
-                                            iconPosition: 'right',
+                                            titleAlignment: 'start',
                                             marginBottom: 8,
-                                            marginLeft: 10
+                                            marginLeft: '10%',
+                                            bodyAlignment: 'start'
                                         },
                                     ]
                                 },
@@ -8275,6 +8283,7 @@ app.widgetConfig = {
                                             id: 'RocheBPSPMaterial_IPNode_GridTableHeaderText-03',
                                             type: TextWidget,
                                             body: 'Profit Center Number',
+                                            marginLeft: '10%',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
                                             marginBottom: 8,
@@ -8365,6 +8374,7 @@ app.widgetConfig = {
                                     id: 'RocheBPSPMaterial_IPNode_GridTableText-02',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
+                                    marginLeft: '12%',
                                     title: '',
                                 }
                             ]
@@ -8381,6 +8391,7 @@ app.widgetConfig = {
                                     id: 'RocheBPSPMaterial_IPNode_GridTableText-03',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
+                                    marginLeft: '6%',
                                     title: '',
                                 }
                             ]
@@ -8439,7 +8450,7 @@ app.widgetConfig = {
                     id: 'rocheBPSPMaterialAddDummyPopup',
                     type: ContainerWidget,
                     anchorVisible: false,
-                    anchorOnClick: true,
+                    anchorOnClick: false,
                     backdrop: true,
                     visible: false,
                     closeBtn: false,
@@ -8571,9 +8582,9 @@ app.widgetConfig = {
                                                 {
                                                     id: 'rocheBPSPMaterialAddDummyPopupGridRow4Cell1Dropbox',
                                                     type: DropBoxWidget,
-                                                    width: '100%',
+                                                    width: '350px',
                                                     title: 'IP Node',
-                                                    skin: 'simple_bpsp',
+                                                    skin: 'add_dummy_bpsp',
                                                     marginBottom: 5,
                                                     selectFirst: true,
                                                     backdrop: true
@@ -8604,9 +8615,9 @@ app.widgetConfig = {
                                                 {
                                                     id: 'rocheBPSPMaterialAddDummyPopupGridRow5Cell1Dropbox',
                                                     type: DropBoxWidget,
-                                                    width: '100%',
+                                                    width: '350px',
                                                     title: 'Material Category',
-                                                    skin: 'simple_bpsp',
+                                                    skin: 'add_dummy_bpsp',
                                                     marginBottom: 5,
                                                     selectFirst: true,
                                                     backdrop: true
@@ -8638,6 +8649,132 @@ app.widgetConfig = {
                                         },
                                         {
                                             id: 'rocheBPSPMaterialAddDummyPopupControlPanelCancelButton',
+                                            type: ButtonWidget,
+                                            width: 100,
+                                            height: 40,
+                                            marginLeft: 15,
+                                            skin: 'white_bg_bpsp',
+                                            label: 'Cancel'
+                                        }
+                                    ]
+                                }
+
+
+                            ]
+                        },
+
+                    ]
+                },
+
+                {
+                    id: 'rocheBPSPMaterialMoveDataPopup',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: false,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    width: '400',
+                    heiht: '800',
+                    bgScrollable: true,
+                    fixed: true,
+                    heightFixed: false,
+                    behaviour: 'popup',
+                    position: 'top',
+                    skin: '',
+                    fadingSpeed: 0,
+                    offset: 260,
+                    widgets: [
+                        {
+                            id: 'rocheBPSPMaterialMoveDataPopupGrid',
+                            type: GridWidget,
+                            width: 350,
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPMaterialMoveDataPopupGridRow1',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    marginTop: '4%',
+                                    paddingBottom: 10,
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPMaterialMoveDataPopupGridRow1Cell1',
+                                            type: GridCellWidget,
+                                            width: '100%',
+                                            alignment: 'center-center',
+                                            widgets: [
+                                                {
+                                                    id: 'rocheBPSPMaterialMoveDataPopupGridRow1Cell1Text',
+                                                    type: TextWidget,
+                                                    paddingRight: 1,
+                                                    fontBold: true,
+                                                    fontSize: 30,
+                                                    skin: 'messageboard_text_bpsp',
+                                                    title: 'Move data'
+                                                },
+                                            ]
+                                        }
+                                        ,
+
+                                    ]
+                                },
+
+
+                                {
+                                    id: 'rocheBPSPMaterialMoveDataPopupGridRow2',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    paddingTop: 10,
+                                    paddingBottom: 10,
+                                    marginTop: '7%',
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPMaterialMoveDataPopupGridRow2Cell1',
+                                            type: GridCellWidget,
+                                            width: '100%',
+                                            alignment: 'center-left',
+                                            widgets: [
+
+                                                {
+                                                    id: 'rocheBPSPMaterialMoveDataPopupGridRow2Cell1Dropbox',
+                                                    type: DropBoxWidget,
+                                                    width: '350px',
+                                                    title: 'Target Material',
+                                                    skin: 'add_dummy_bpsp',
+                                                    marginBottom: 5,
+                                                    selectFirst: true,
+                                                    backdrop: true
+                                                }
+
+
+                                            ]
+                                        }
+                                        ,
+
+                                    ]
+                                },
+
+
+                                {
+                                    id: 'rocheBPSPMaterialMoveDataPopupControlPanel',
+                                    type: PanelWidget,
+                                    skin: 'horizontal_align_center',
+                                    marginTop: '11%',
+                                    marginBottom: 30,
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPMaterialMoveDataPopupControlPanelAddButton',
+                                            type: ButtonWidget,
+                                            height: 40,
+                                            width: 100,
+                                            skin: 'blue_button_bpsp',
+                                            borderWidth: 0,
+                                            label: 'Copy'
+                                        },
+                                        {
+                                            id: 'rocheBPSPMaterialMoveDataPopupControlPanelCancelButton',
                                             type: ButtonWidget,
                                             width: 100,
                                             height: 40,

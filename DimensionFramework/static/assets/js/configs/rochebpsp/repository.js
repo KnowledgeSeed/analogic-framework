@@ -123,20 +123,20 @@ app.repository = {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption,Attributes/Memberdescription))`,
             type: 'POST',
             body: (db) => `{"MDX":"
-SELECT 
-   {[Measures Company Information].[Measures Company Information].[Start page message Title],
-    [Measures Company Information].[Measures Company Information].[Start page message],
-    [Measures Company Information].[Measures Company Information].[Start page message DateTime]
-   } 
-  PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON COLUMNS , 
-  NON EMPTY 
-   {[Companies].[Companies].[All Companies^1391]} 
-  PROPERTIES [Companies].[Companies].[Member description]  ON ROWS 
-FROM [Company Information] 
-WHERE 
-  (
-   [Versions].[Versions].[Live]
-  )
+                SELECT 
+                    {[Measures Company Information].[Measures Company Information].[Start page message Title],
+                     [Measures Company Information].[Measures Company Information].[Start page message],
+                     [Measures Company Information].[Measures Company Information].[Start page message DateTime]
+                             } 
+                        PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON COLUMNS , 
+                         NON EMPTY 
+                       {[Companies].[Companies].[All Companies^1391]} 
+                      PROPERTIES [Companies].[Companies].[Member description]  ON ROWS 
+                    FROM [Company Information] 
+                    WHERE 
+                      (
+                       [Versions].[Versions].[Live]
+                      )
             "}`,
             parsingControl: {
                 type: 'matrix',
@@ -2983,32 +2983,32 @@ WHERE
                     type: 'POST',
                     body: (db) => `{"MDX":"
 
-
-With 
--- IP Node then add dummy flag
-Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag] As
-IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL6',1,0)
--- IP Node and has no pland Data then deletable
-Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag] As
-IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
-    [Material Information by Company].([ Companies].[ Companies].[1391],
-    [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) = 0,1,0)
--- IP Node and has pland Data then go to plan
-Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag] As
-IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
-    [Material Information by Company].([ Companies].[ Companies].[1391],
-    [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) <> 0,1,0)
-SELECT 
-   {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP Budget Name],
-    [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name],
-     [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element],
-     [}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag],
-     [}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag],
-     [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag]} 
-  ON COLUMNS , 
-   {TM1SubsetToSet([Materials].[BPSP Budget],'1391 MM')} 
-  ON ROWS 
-FROM [}ElementAttributes_Materials] 
+                                    
+                                    With 
+                                    -- IP Node then add dummy flag
+                                    Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag] As
+                                    IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL6',1,0)
+                                    -- IP Node and has no pland Data then deletable
+                                    Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag] As
+                                    IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
+                                        [Material Information by Company].([ Companies].[ Companies].[1391],
+                                        [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) = 0,1,0)
+                                    -- IP Node and has pland Data then go to plan
+                                    Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag] As
+                                    IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
+                                        [Material Information by Company].([ Companies].[ Companies].[1391],
+                                        [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) <> 0,1,0)
+                                    SELECT 
+                                       {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP Budget Name],
+                                        [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name],
+                                         [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element],
+                                         [}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag],
+                                         [}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag],
+                                         [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag]} 
+                                      ON COLUMNS , 
+                                       {TM1SubsetToSet([Materials].[BPSP Budget],'1391 MM')} 
+                                      ON ROWS 
+                                    FROM [}ElementAttributes_Materials] 
 
 
 
@@ -3073,32 +3073,32 @@ FROM [}ElementAttributes_Materials]
                     type: 'POST',
                     body: (db) => `{"MDX":"
 
-
-With 
--- IP Node then add dummy flag
-Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag] As
-IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='IP Node',1,0)
--- IP Node and has no pland Data then deletable
-Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag] As
-IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
-    [Material Information by Company].([ Companies].[ Companies].[1391],
-    [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) = 0,1,0)
--- IP Node and has pland Data then go to plan
-Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag] As
-IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
-    [Material Information by Company].([ Companies].[ Companies].[1391],
-    [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) <> 0,1,0)
-SELECT 
-   {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP Budget IP Name],
-   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name],
-   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element],
-   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag],
-   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag],
-   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag]} 
-  ON COLUMNS , 
-   {TM1SubsetToSet([Materials].[BPSP Budget IP], '1391 MM')}  
-   PROPERTIES [Materials].[BPSP Budget IP].[Caption]  ON ROWS 
-FROM [}ElementAttributes_Materials] 
+                                        
+                                        With 
+                                        -- IP Node then add dummy flag
+                                        Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag] As
+                                        IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='IP Node',1,0)
+                                        -- IP Node and has no pland Data then deletable
+                                        Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag] As
+                                        IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
+                                            [Material Information by Company].([ Companies].[ Companies].[1391],
+                                            [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) = 0,1,0)
+                                        -- IP Node and has pland Data then go to plan
+                                        Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag] As
+                                        IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
+                                            [Material Information by Company].([ Companies].[ Companies].[1391],
+                                            [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) <> 0,1,0)
+                                        SELECT 
+                                           {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP Budget IP Name],
+                                           [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name],
+                                           [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element],
+                                           [}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag],
+                                           [}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag],
+                                           [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag]} 
+                                          ON COLUMNS , 
+                                           {TM1SubsetToSet([Materials].[BPSP Budget IP], '1391 MM')}  
+                                           PROPERTIES [Materials].[BPSP Budget IP].[Caption]  ON ROWS 
+                                        FROM [}ElementAttributes_Materials] 
 
 
 
@@ -3210,69 +3210,69 @@ FROM [}ElementAttributes_Materials]
                     type: 'POST',
                     body: (db) => `{"MDX":"
 
-                
-With 
-Member [Measures Material Information by Company].[Measures Material Information by Company].[ID] As
-   [Materials].[Materials].CurrentMember.Properties('Element')
-Member [Measures Material Information by Company].[Measures Material Information by Company].[Description] As
-   [Materials].[Materials].CurrentMember.Properties('Medium Name')   
-Member [Measures Material Information by Company].[Measures Material Information by Company].[Status] As
-   [Materials].[Materials].CurrentMember.Properties('Material Status - Key')
-Member [Measures Material Information by Company].[Measures Material Information by Company].[Instrument Category] As
-   [Materials].[Materials].CurrentMember.Properties('Material Category - Key')
-Member [Measures Material Information by Company].[Measures Material Information by Company].[Current Profit Center] As
-   [Materials].[Materials].CurrentMember.Properties('Profit Center Actual - Key')
-Member [Measures Material Information by Company].[Measures Material Information by Company].[Budget Profit Center] As
-   [Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key')
-Member [Measures Material Information by Company].[Measures Material Information by Company].[Product Type] As
-   [Materials].[Materials].CurrentMember.Properties('Material Type - Key')
-Member [Measures Material Information by Company].[Measures Material Information by Company].[Current IP Node] As
-   [Materials].[Materials].CurrentMember.Properties('IP Profit Center Actual - Key')
-Member [Measures Material Information by Company].[Measures Material Information by Company].[Budget IP Node] As
-   [Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key')
-Member [Measures Material Information by Company].[Measures Material Information by Company].[IP Reporting Relevant] As
-   [Materials].[Materials].CurrentMember.Properties('IP DIS Relevant Flag')
-Set ColumnSelection As
-  {
-   [Measures Material Information by Company].[Measures Material Information by Company].[Shopping Basket],
-   [Measures Material Information by Company].[Measures Material Information by Company].[ID],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Description],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Status],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Instrument Category],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Current Profit Center],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Budget Profit Center],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Product Type],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Current IP Node],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Budget IP Node],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Last Modified],
-   [Measures Material Information by Company].[Measures Material Information by Company].[IP Reporting Relevant],
-   [Measures Material Information by Company].[Measures Material Information by Company].[Status Message]
-  }
-SELECT 
-   {ColumnSelection} 
-   PROPERTIES [Measures Material Information by Company].[Measures Material Information by Company].[Caption]  ON COLUMNS ,
-   {Subset({
-    FILTER({
- FILTER({
-FILTER({
- FILTER({
-TM1FILTERBYLEVEL({
-FILTER({[Materials].[Materials].Members}, 
-        [Materials].[Materials].CurrentMember.Properties('IP Active Flag') = '1')
-                 }, 0)
-          --Dropbox with Category
-          }, [Materials].[Materials].CurrentMember.Properties('Material Category - Key') = 'CC')
- -- Instr search
- }, InStr([Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key') ,'458360')<>0)
-}, InStr([Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key'), '297')<>0)
-       }, InStr([Materials].[Materials].CurrentMember.Properties('Element'), '48' ) <> 0 AND
-          InStr([Materials].[Materials].CurrentMember.Properties('Medium Name'), '' ) <> 0 )},1,100)}  
-   PROPERTIES [Materials].[Materials].[Caption]  ON ROWS 
-FROM [Material Information by Company] 
-WHERE 
-  (
-   [Companies].[Companies].[1391]
-  )
+                                                
+                                With 
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[ID] As
+                                   [Materials].[Materials].CurrentMember.Properties('Element')
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[Description] As
+                                   [Materials].[Materials].CurrentMember.Properties('Medium Name')   
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[Status] As
+                                   [Materials].[Materials].CurrentMember.Properties('Material Status - Key')
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[Instrument Category] As
+                                   [Materials].[Materials].CurrentMember.Properties('Material Category - Key')
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[Current Profit Center] As
+                                   [Materials].[Materials].CurrentMember.Properties('Profit Center Actual - Key')
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[Budget Profit Center] As
+                                   [Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key')
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[Product Type] As
+                                   [Materials].[Materials].CurrentMember.Properties('Material Type - Key')
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[Current IP Node] As
+                                   [Materials].[Materials].CurrentMember.Properties('IP Profit Center Actual - Key')
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[Budget IP Node] As
+                                   [Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key')
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[IP Reporting Relevant] As
+                                   [Materials].[Materials].CurrentMember.Properties('IP DIS Relevant Flag')
+                                Set ColumnSelection As
+                                  {
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Shopping Basket],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[ID],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Description],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Status],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Instrument Category],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Current Profit Center],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Budget Profit Center],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Product Type],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Current IP Node],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Budget IP Node],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Last Modified],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[IP Reporting Relevant],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Status Message]
+                                  }
+                                SELECT 
+                                   {ColumnSelection} 
+                                   PROPERTIES [Measures Material Information by Company].[Measures Material Information by Company].[Caption]  ON COLUMNS ,
+                                   {Subset({
+                                    FILTER({
+                                 FILTER({
+                                FILTER({
+                                 FILTER({
+                                TM1FILTERBYLEVEL({
+                                FILTER({[Materials].[Materials].Members}, 
+                                        [Materials].[Materials].CurrentMember.Properties('IP Active Flag') = '1')
+                                                 }, 0)
+                                          --Dropbox with Category
+                                          }, [Materials].[Materials].CurrentMember.Properties('Material Category - Key') = 'CC')
+                                 -- Instr search
+                                 }, InStr([Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key') ,'458360')<>0)
+                                }, InStr([Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key'), '297')<>0)
+                                       }, InStr([Materials].[Materials].CurrentMember.Properties('Element'), '48' ) <> 0 AND
+                                          InStr([Materials].[Materials].CurrentMember.Properties('Medium Name'), '' ) <> 0 )},1,100)}  
+                                   PROPERTIES [Materials].[Materials].[Caption]  ON ROWS 
+                                FROM [Material Information by Company] 
+                                WHERE 
+                                  (
+                                   [Companies].[Companies].[1391]
+                                  )
 
 
 
@@ -3364,12 +3364,12 @@ WHERE
             "}`,
             parsingControl: {
                 type: 'object',
-                    query:
-                        {
-                            cells: (r, x) => {
-                                return r.Cells;
-                            }
+                query:
+                    {
+                        cells: (r, x) => {
+                            return r.Cells;
                         }
+                    }
             }
         },
         launchpaste: {
@@ -3512,12 +3512,12 @@ WHERE
             {
             "MDX" : "
 
-                SELECT
-                   {[}ElementAttributes_zSYS UI Material Category].[}ElementAttributes_zSYS UI Material Category].[Caption]}
-                  ON COLUMNS ,
-                   {[zSYS UI Material Category].[zSYS UI Material Category].Members}
-                  ON ROWS
-                FROM [}ElementAttributes_zSYS UI Material Category]
+                        SELECT
+                           {[}ElementAttributes_zSYS UI Material Category].[}ElementAttributes_zSYS UI Material Category].[Caption]}
+                          ON COLUMNS ,
+                           {[zSYS UI Material Category].[zSYS UI Material Category].Members}
+                          ON ROWS
+                        FROM [}ElementAttributes_zSYS UI Material Category]
 
 
 
@@ -3539,14 +3539,14 @@ WHERE
             type: 'POST',
             body: (db) => `
             {
-            "MDX" : "SELECT
-   {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP Budget IP Caption]}
-  ON COLUMNS ,
-   {Filter(
-      {TM1SubsetToSet([Materials].[BPSP Budget IP], '1391 MM')},
-    [Materials].[BPSP Budget IP].CurrentMember.Properties('Product Level - Name') = 'IP Node')}
-  ON ROWS
-FROM [}ElementAttributes_Materials]
+                            "MDX" : "SELECT
+                   {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP Budget IP Caption]}
+                  ON COLUMNS ,
+                   {Filter(
+                      {TM1SubsetToSet([Materials].[BPSP Budget IP], '1391 MM')},
+                    [Materials].[BPSP Budget IP].CurrentMember.Properties('Product Level - Name') = 'IP Node')}
+                  ON ROWS
+                FROM [}ElementAttributes_Materials]
 
 
             "}`,
@@ -3561,25 +3561,48 @@ FROM [}ElementAttributes_Materials]
     },
 
 
-
-
     rocheBPSPMaterialAddDummyPopupGridRow5Cell1Dropbox: {
         init: {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
             type: 'POST',
             body: (db) => `
- {
-"MDX" :"
+                        {
+                    "MDX" :"
+                    SELECT
+                       {[}ElementAttributes_zSYS UI Material Category].[}ElementAttributes_zSYS UI Material Category].[Caption]}
+                      ON COLUMNS ,
+                       {[zSYS UI Material Category].[zSYS UI Material Category].Members}
+                      ON ROWS
+                    FROM [}ElementAttributes_zSYS UI Material Category]
+                     "}`,
+            parsingControl: {
+                type: 'list',
+                query:
+                    (r, x) => {
+                        return {name: r.Cells[x].FormattedValue, on: false};
+                    }
+            }
+        }
+    },
 
-SELECT
-   {[}ElementAttributes_zSYS UI Material Category].[}ElementAttributes_zSYS UI Material Category].[Caption]}
-  ON COLUMNS ,
-   {[zSYS UI Material Category].[zSYS UI Material Category].Members}
-  ON ROWS
-FROM [}ElementAttributes_zSYS UI Material Category]
 
-                     "}
- `,
+    rocheBPSPMaterialMoveDataPopupGridRow2Cell1Dropbox: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+                        {
+                    "MDX" :"
+                            SELECT 
+                               {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP Budget IP Caption]} 
+                              ON COLUMNS , 
+                               {Filter(
+                                  {TM1SubsetToSet([Materials].[BPSP Budget IP], '1391 MM')}, 
+                                [Materials].[BPSP Budget IP].CurrentMember.Properties('Product Level - Name') = 'PL8')} 
+                              ON ROWS 
+                            FROM [}ElementAttributes_Materials] 
+
+                     "}`,
             parsingControl: {
                 type: 'list',
                 query:

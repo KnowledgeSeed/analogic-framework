@@ -974,4 +974,32 @@ app.eventMap = {
     ],
 
 
+    'launch.rocheBPSPMaterialGridRow4Cell3Button': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPMaterialMoveDataPopup'
+        },
+    ],
+    'launch.rocheBPSPMaterialMoveDataPopupControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialMoveDataPopup'
+        }
+    ],
+
+    'launch.rocheBPSPMaterialMoveDataPopupControlPanelAddButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialMoveDataPopup'
+        }
+    ],
+
+
+    'launch.rocheBPSPMaterialAddDummyPopupControlPanelAddButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialAddDummyPopup'
+        }
+    ],
+
 };
