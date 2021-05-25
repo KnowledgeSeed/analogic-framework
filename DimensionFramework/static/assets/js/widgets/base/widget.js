@@ -137,7 +137,7 @@ class Widget {
 
         if (o.depends) {//grid
             const f = o.id.split('_'), a = f[0], b = f[1];
-console.log(o.depends);
+
             for (let l of o.depends) {
                 Listeners.push({
                     options: o,
@@ -149,7 +149,7 @@ console.log(o.depends);
             }
         }
 
-        Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
+       // Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
 
         //rekurzív renderelés, adatbetöltéssel
 

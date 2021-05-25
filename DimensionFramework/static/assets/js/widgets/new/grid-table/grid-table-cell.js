@@ -64,7 +64,7 @@ class GridTableCellWidget extends Widget {
             }
         }
 
-        Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
+      //  Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
 
         return QB.loadData(o.id, instance.name).then(function (data) {
             let deffered = [], w;

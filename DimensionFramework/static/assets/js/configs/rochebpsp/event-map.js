@@ -815,7 +815,6 @@ app.eventMap = {
         }
     ],
 
-
     'launch.rocheBPSPMaterialGridRow1Cell0Button': [
         {
             action: app.fn.openPage,
@@ -915,6 +914,10 @@ app.eventMap = {
             action: app.fn.showWidget,
             argument: 'rocheBPSPAddMaterialGridRow3'
         },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPMateralsAddMaterialSearchPagerPanel'
+        }
     ],
 
 
@@ -935,6 +938,10 @@ app.eventMap = {
             action: app.fn.showWidget,
             argument: 'rocheBPSPAddMaterialGridRow4'
         },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPMateralsAddMaterialSearchPagerPanel'
+        }
     ],
 
     'segmentedControlTab1.rocheBPSPMaterialGridRow2Cell1SegmentedControl': [
@@ -1000,5 +1007,29 @@ app.eventMap = {
             argument: 'rocheBPSPMaterialAddDummyPopup'
         }
     ],
+    'launch.rocheBPSPMateralsAddMaterialSearchPagerPreviousButton' : [
+        {
+            action: app.fn.decreasePage,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        }
+    ],
+    'launch.rocheBPSPMateralsAddMaterialSearchPagerNextButton' : [
+        {
+            action: app.fn.increasePage,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        }
+    ],
+    'launch.rocheBPSPMateralsAddMaterialSearchPagerFirstPageButton' : [
+        {
+            action: app.fn.jumpToFirstPage,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        }
+    ],
+    'launch.rocheBPSPMateralsAddMaterialSearchPagerLastPageButton' : [
+        {
+            action: app.fn.jumpToLastPage,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        }
+    ]
 
 };

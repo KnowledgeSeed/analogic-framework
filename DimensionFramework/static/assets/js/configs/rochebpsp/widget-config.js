@@ -8871,7 +8871,14 @@ app.widgetConfig = {
                                     alignment: 'top-center',
                                     width: '63%',
                                     height: '0',
-                                    widgets: []
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPAddMaterialCompanyInfo',
+                                            type: TextWidget,
+                                            marginTop: 10,
+                                            skin: 'simple_bold_bpsp'
+                                        }
+                                    ]
                                 },
 
 
@@ -9057,7 +9064,7 @@ app.widgetConfig = {
                                             width: '190',
                                             marginRight: 5,
                                             skin: 'simple_bold_with_border_bpsp',
-                                          //  selectFirst: true,
+                                            //  selectFirst: true,
                                             backdrop: true
                                         }
 
@@ -9112,8 +9119,7 @@ app.widgetConfig = {
                                     type: GridCellWidget,
                                     alignment: 'bottom-right',
                                     width: '25%',
-                                    widgets: [
-                                    ]
+                                    widgets: []
                                 },
 
                                 {
@@ -9405,7 +9411,7 @@ app.widgetConfig = {
                                     width: '100%',
                                     iconOff: 'icon-check-off',
                                     icon: 'icon-check-on',
-                                    depends: [{'event':'switch.RocheBPSPMaterialsAddMaterialClipboardSelectAll.finished'}],
+                                    depends: [{'event': 'switch.RocheBPSPMaterialsAddMaterialClipboardSelectAll.finished'}],
                                     value: 0,
                                     skin: 'row_selector_bpsp'
                                 }
@@ -9592,24 +9598,24 @@ app.widgetConfig = {
                     skin: 'products_bpsp',
                     listen: [
                         {
-                            'event' : 'write.rocheBPSPAddMaterialGridRow4Cell1Search.finished',
-                            'method' : 'refresh'
+                            'event': 'writeEnd.rocheBPSPAddMaterialGridRow4Cell1Search.finished',
+                            'method': 'refresh'
                         },
                         {
-                            'event' : 'write.rocheBPSPAddMaterialGridRow4Cell2Search.finished',
-                            'method' : 'refresh'
+                            'event': 'writeEnd.rocheBPSPAddMaterialGridRow4Cell2Search.finished',
+                            'method': 'refresh'
                         },
                         {
-                            'event' : 'choose.rocheBPSPAddMaterialGridRow4Cell3Dropbox.finished',
-                            'method' : 'refresh'
+                            'event': 'choose.rocheBPSPAddMaterialGridRow4Cell3Dropbox.finished',
+                            'method': 'refresh'
                         },
                         {
-                            'event' : 'write.rocheBPSPAddMaterialGridRow4Cell4Search.finished',
-                            'method' : 'refresh'
+                            'event': 'writeEnd.rocheBPSPAddMaterialGridRow4Cell4Search.finished',
+                            'method': 'refresh'
                         },
                         {
-                            'event' : 'write.rocheBPSPAddMaterialGridRow4Cell5Search.finished',
-                            'method' : 'refresh'
+                            'event': 'writeEnd.rocheBPSPAddMaterialGridRow4Cell5Search.finished',
+                            'method': 'refresh'
                         }
                     ],
                     width: '100%',
@@ -9921,7 +9927,7 @@ app.widgetConfig = {
                                     icon: 'icon-check-on',
                                     value: 0,
                                     skin: 'row_selector_bpsp',
-                                    depends: [{'event':'switch.RocheBPSPMaterialsAddMaterialSearchSelectAll.finished'}]
+                                    depends: [{'event': 'switch.RocheBPSPMaterialsAddMaterialSearchSelectAll.finished'}]
                                 }
                             ]
                         },
@@ -10154,6 +10160,173 @@ app.widgetConfig = {
 
                     ]
                 },
+                {
+                    id: 'rocheBPSPMateralsAddMaterialSearchPagerPanel',
+                    type: PanelWidget,
+                    width: '100%',
+                    marginTop: 30,
+                    skin: 'horizontal_align_center',
+                    widgets: [
+                        {
+                            id: 'rocheBPSPMateralsAddMaterialSearchPagerPanel2',
+                            type: PanelWidget,
+                            skin: 'horizontal_align_right',
+                            width: 100,
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPMateralsAddMaterialSearchPagerFirstPageButton',
+                                    type: ButtonWidget,
+                                    iconColor: '#0066CC',
+                                    iconFontSize: 17,
+                                    marginLeft: 10,
+                                    icon: 'icon-double-chevron-back',
+                                    listen: [
+                                        {
+                                            'event': 'rendered.RocheBPSPMaterialsAddMaterialSearch',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerPreviousButton.finished',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerFirstPageButton.finished',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerNextButton.finished',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerLastPageButton.finished',
+                                            'method': 'refresh'
+                                        }
+                                    ],
+                                },
+                                {
+                                    id: 'rocheBPSPMateralsAddMaterialSearchPagerPreviousButton',
+                                    type: ButtonWidget,
+                                    iconColor: '#0066CC',
+                                    iconFontSize: 17,
+                                    marginLeft: 10,
+                                    icon: 'icon-chevron-back',
+                                    listen: [
+                                        {
+                                            'event': 'rendered.RocheBPSPMaterialsAddMaterialSearch',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerPreviousButton.finished',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerFirstPageButton.finished',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerNextButton.finished',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerLastPageButton.finished',
+                                            'method': 'refresh'
+                                        }
+                                    ],
+                                },
+                                {
+                                    id: 'rocheBPSPMateralsAddMaterialSearchPagerInfoText',
+                                    type: TextWidget,
+                                    titleFontColor: '#0066CC',
+                                    marginLeft: 10,
+                                    marginTop: 1,
+                                    titleFontSize: 14,
+                                    listen: [
+                                        {
+                                            'event': 'rendered.RocheBPSPMaterialsAddMaterialSearch',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerPreviousButton.finished',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerFirstPageButton.finished',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerNextButton.finished',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerLastPageButton.finished',
+                                            'method': 'refresh'
+                                        }
+                                    ],
+                                },
+                                {
+                                    id: 'rocheBPSPMateralsAddMaterialSearchPagerNextButton',
+                                    type: ButtonWidget,
+                                    iconColor: '#0066CC',
+                                    iconFontSize: 17,
+                                    marginLeft: 10,
+                                    icon: 'icon-chevron-forward',
+                                    listen: [
+                                        {
+                                            'event': 'rendered.RocheBPSPMaterialsAddMaterialSearch',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerPreviousButton.finished',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerFirstPageButton.finished',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerNextButton.finished',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerLastPageButton.finished',
+                                            'method': 'refresh'
+                                        }
+                                    ],
+                                },
+                                {
+                                    id: 'rocheBPSPMateralsAddMaterialSearchPagerLastPageButton',
+                                    type: ButtonWidget,
+                                    iconColor: '#0066CC',
+                                    iconFontSize: 17,
+                                    marginLeft: 10,
+                                    icon: 'icon-double-chevron-forward',
+                                    listen: [
+                                        {
+                                            'event': 'rendered.RocheBPSPMaterialsAddMaterialSearch',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerPreviousButton.finished',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerFirstPageButton.finished',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerNextButton.finished',
+                                            'method': 'refresh'
+                                        },
+                                        {
+                                            'event': 'launch.rocheBPSPMateralsAddMaterialSearchPagerLastPageButton.finished',
+                                            'method': 'refresh'
+                                        }
+                                    ],
+                                }
+                            ]
+                        }
+                    ]
+                }
 
             ]
         },

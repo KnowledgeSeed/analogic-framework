@@ -1,6 +1,7 @@
 /* global app, Listeners, QB, Widget */
 
 'use strict';
+
 class GridTableWidget extends Widget {
 
     getHtml(widgets, headerRowWidgetHtml, d) {
@@ -15,22 +16,38 @@ class GridTableWidget extends Widget {
             skin: this.getRealValue('skin', d, 'standard')
         };
 
+
         let mainDivStyle = this.getGeneralStyles(d);
-        if(v.hideIfNoData === true && (!d ||  d.length === 0)) {
+        if (v.hideIfNoData === true && (!d || d.length === 0)) {
             mainDivStyle.push('display:none;');
         }
 
-        let r = [], c = [], tb, th, j = 0, col = o.widgets.filter(e => e.type.name !== 'GridTableHeaderRowWidget').length, hw = '';
-        let maxRows = v.maxRows !== false ? v.maxRows * col : 1000000;
+        let r = [], c = [], tb, th, j = 0,
+            col = o.widgets.filter(e => e.type.name !== 'GridTableHeaderRowWidget').length, hw = '';
 
         if (o.errorMessage !== '') {
             return `<div><h3 style="color:red;">${o.errorMessage}</h3></div>`;
         }
 
-        while (j < widgets.length && j < maxRows) {
-            r.push(this.buildTableRowHtml(widgets.slice(j, j + col).join(''), v.rowHeight, v.borderBottom));
-            j = j + col;
+        if (v.maxRows) {
+            let page = this.state.page ? this.state.page : 1;
+            let maxRows = v.maxRows * col;
+            let start = (page - 1) * maxRows, end = page * maxRows;
+            this.state['widgets'] = widgets;
+            this.state['headerRowWidgetHtml'] = headerRowWidgetHtml;
+         //   this.state['d'] = d;
+            this.state['maxRows'] = v.maxRows;
+            while (start < widgets.length && start < end) {
+                r.push(this.buildTableRowHtml(widgets.slice(start, start + col).join(''), v.rowHeight, v.borderBottom));
+                start = start + col;
+            }
+        } else {
+            while (j < widgets.length) {
+                r.push(this.buildTableRowHtml(widgets.slice(j, j + col).join(''), v.rowHeight, v.borderBottom));
+                j = j + col;
+            }
         }
+
 
         tb = this.buildTableBodyHtml(r.join(''));
 
@@ -65,7 +82,7 @@ class GridTableWidget extends Widget {
     }
 
     buildTableHeaderRowHtml(innerHtml, height, borderTop = true, borderBottom = true) {
-        return `<div class="ks-grid-table-row ${borderBottom ? 'border-bottom' : ''} ${borderTop ? 'border-top' : ''}" ${height ? `style="height:${height}px;"` : '' }>${innerHtml}</div>`;
+        return `<div class="ks-grid-table-row ${borderBottom ? 'border-bottom' : ''} ${borderTop ? 'border-top' : ''}" ${height ? `style="height:${height}px;"` : ''}>${innerHtml}</div>`;
     }
 
     buildTableHeaderCellHtml(innerHtml, width, borderLeft = true, borderRight = true, alignment = 'center-center') {
@@ -77,7 +94,11 @@ class GridTableWidget extends Widget {
     }
 
     buildTableRowHtml(innerHtml, height, borderBottom = true) {
-        return `<div class="ks-grid-table-row ${borderBottom ? 'border-bottom' : ''}"  ${height ? `style="height:${height}px;"` : '' }>${innerHtml}</div>`;
+        return `<div class="ks-grid-table-row ${borderBottom ? 'border-bottom' : ''}"  ${height ? `style="height:${height}px;"` : ''}>${innerHtml}</div>`;
+    }
+
+    renderPage() {
+        return this.getHtml(this.state['widgets'], this.state['headerRowWidgetHtml'], this.value['cellData']);
     }
 
     render(withState) {
@@ -106,6 +127,9 @@ class GridTableWidget extends Widget {
         }
 
         Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
+        if(o.maxRows){
+            Listeners.push({options: o, method: 'renderPage', eventName: 'page.' + o.id, handler: h});
+        }
 
         return QB.loadData(o.id, instance.name).then(function (data) {
             let deffered = [], w, processedData = instance.processData(data), i = 0, j = 0, rows, k, colNum;
@@ -172,7 +196,7 @@ class GridTableWidget extends Widget {
                 }
                 let visible = data && typeof data.visible !== 'undefined' ? data.visible : o.visible;
                 let ghtml = instance.getHtml(widgetHtmls, headerRowWidgetHtml, processedData, withState);
-                return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" ${visible === false ? 'style="display:none"' : '' } id="${o.id}">${ghtml}</section>`;
+                return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" ${visible === false ? 'style="display:none"' : ''} id="${o.id}">${ghtml}</section>`;
             });
         });
     }

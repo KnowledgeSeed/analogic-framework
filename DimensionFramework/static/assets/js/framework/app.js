@@ -25,7 +25,7 @@ let EventMap, Repository, WidgetConfig;
         app.id = Utils.getRandomId();
 
         initEvents();
-     /*   WidgetValue['systemValueGlobalStartingPlanYear'] = 2021;//todo temp
+      /*  WidgetValue['systemValueGlobalStartingPlanYear'] = 2021;//todo temp
         WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';//todo temp
         WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = 'Y1'; //todo temp
         WidgetValue['activeUserName'] = 'Knowledgeseed/Oravecz Tamás'; //todo temp

@@ -249,6 +249,21 @@ const Utils = {
         }
         return result;
     },
+    getGridTableActualAndLastPage(widgetId){
+        let state = WidgetState[widgetId], maxPage = Math.ceil(state.rows / state.maxRows), actualPage = state.page ? state.page : 1;
+        return {actualPage: actualPage, maxPage: maxPage};
+    },
+    getGridTablePagerText(widgetId) {
+        let info = Utils.getGridTableActualAndLastPage(widgetId);
+        return info.actualPage + '/' + info.maxPage;
+    },
+    isGridTablePagerPreviousButtonVisible(widgetId) {
+        return WidgetState[widgetId].page ? WidgetState[widgetId].page > 1 ? true : false : false;
+    },
+    isGridTablePagerNextButtonVisible(widgetId) {
+        let info = Utils.getGridTableActualAndLastPage(widgetId);
+        return info.actualPage !== info.maxPage;
+    },
     create_UUID() {
         let dt = new Date().getTime();
 

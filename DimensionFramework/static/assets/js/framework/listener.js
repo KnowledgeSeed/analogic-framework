@@ -4,7 +4,7 @@ const Listeners = [];
 
 Listeners.handle = ev => {
     const m = ev.data.method;
-console.log(m);
+
     if ('refresh' === m) {
         Render.renderWidget(ev);
     } else if ('refreshWithoutLoader' === m) {
@@ -44,5 +44,10 @@ console.log(m);
                 }
             });
         }
+    } else if ('renderPage' === m) {
+        let holder = $('#' + ev.data.options.id);
+        let widget = new ev.data.options.type(ev.data.options);
+        holder.html(widget.renderPage());
+        widget.initEvents();
     }
 };

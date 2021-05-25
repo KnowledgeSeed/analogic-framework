@@ -318,7 +318,7 @@ app.fn.toggleInfoWidget = arg => {
 };
 
 app.fn.pastToGridTableText = (argument, ev, element) => {
-  TextWidget.paste($('#' + WidgetValue['rightclick']), ev);
+    TextWidget.paste($('#' + WidgetValue['rightclick']), ev);
 };
 
 app.fn.checkTIResponseStatus = (argument, ev, element, response) => {
@@ -329,8 +329,8 @@ app.fn.checkTIResponseStatus = (argument, ev, element, response) => {
 
     let f1 = false, f2 = false, f1args = [], f2args = [], i = 0, r;
 
-    while(i < argument.length){
-        if(typeof argument[i] === 'function'){
+    while (i < argument.length) {
+        if (typeof argument[i] === 'function') {
             f1 === false ? f1 = argument[i] : f2 = argument[i];
         } else {
             f2 === false ? f1args.push(argument[i]) : f2args.push(argument[i]);
@@ -338,7 +338,7 @@ app.fn.checkTIResponseStatus = (argument, ev, element, response) => {
         ++i;
     }
 
-    if(f1 === false || f2 === false){
+    if (f1 === false || f2 === false) {
         alert('checkResponseStatus has 2 mandatory function argument!');
 
         return;
@@ -346,7 +346,7 @@ app.fn.checkTIResponseStatus = (argument, ev, element, response) => {
 
     r = v('ProcessExecuteStatusCode', response);
 
-    if (r && r !== 'Aborted'){
+    if (r && r !== 'Aborted') {
         f1args.length <= 1 ? f1args.length > 0 ? f1(f1args[0], ev, element) : f1('', ev, element) : f1(f1args, ev, element);
     } else {
         f2args.length <= 1 ? f2args.length > 0 ? f2(f2args[0], ev, element) : f2('', ev, element) : f2(f2args, ev, element);
@@ -355,12 +355,38 @@ app.fn.checkTIResponseStatus = (argument, ev, element, response) => {
 
 app.fn.conditionalGridTablePopup = (argument, ev, element) => {
     let currentCell = Utils.getGridTableCurrentCell(element.data('id').split('_')[0]), i, j;
-    for(i = 0; i < argument.length; ++i){
-        if((currentCell[argument[i].conditionKey] && currentCell[argument[i].conditionKey] === true) || argument[i].conditionKey === 'else'){
-            for(j = 0; j < argument[i].actions.length;++j){
+    for (i = 0; i < argument.length; ++i) {
+        if ((currentCell[argument[i].conditionKey] && currentCell[argument[i].conditionKey] === true) || argument[i].conditionKey === 'else') {
+            for (j = 0; j < argument[i].actions.length; ++j) {
                 argument[i].actions[j].action(argument[i].actions[j].argument, ev, element);
             }
             return;
         }
     }
 }
+
+app.fn.increasePage = (widgetId) => {
+    if (WidgetState[widgetId].page) {
+        WidgetState[widgetId]['page'] = WidgetState[widgetId]['page'] + 1;
+    } else {
+        WidgetState[widgetId]['page'] = 2;
+    }
+    El.body.triggerHandler('page.' + widgetId);
+};
+
+app.fn.decreasePage = (widgetId) => {
+    if (WidgetState[widgetId].page) {
+        WidgetState[widgetId]['page'] = WidgetState[widgetId]['page'] - 1;
+    }
+    El.body.triggerHandler('page.' + widgetId);
+};
+
+app.fn.jumpToFirstPage = (widgetId) => {
+    WidgetState[widgetId]['page'] = 1;
+    El.body.triggerHandler('page.' + widgetId);
+};
+
+app.fn.jumpToLastPage = (widgetId) => {
+    WidgetState[widgetId]['page'] = Utils.getGridTableActualAndLastPage(widgetId).maxPage;
+    El.body.triggerHandler('page.' + widgetId);
+};

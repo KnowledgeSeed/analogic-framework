@@ -3180,6 +3180,13 @@ app.repository = {
 
                 },
         },
+    rocheBPSPAddMaterialCompanyInfo: {
+        init: {
+            execute: (db) => {
+                return {title: v('rocheBPSPMaterialGridRow1Cell2DropBox.value')};
+            }
+        }
+    },
 
 
     rocheBPSPipPlanningMaterialSelectorShortcutPopupGridTable: {
@@ -3212,6 +3219,57 @@ app.repository = {
         }
     },
 
+    rocheBPSPMateralsAddMaterialSearchPagerInfoText: {
+        init: {
+            execute: (db) => {
+                if(v('RocheBPSPMaterialsAddMaterialSearch.cellData.length') === false){
+                    return {visible: false};
+                }
+                return {title: Utils.getGridTablePagerText('RocheBPSPMaterialsAddMaterialSearch')};
+            }
+        }
+    },
+    rocheBPSPMateralsAddMaterialSearchPagerPreviousButton: {
+        init: {
+            execute: (db) => {
+                if(v('RocheBPSPMaterialsAddMaterialSearch.cellData.length') === false){
+                    return {visible: false};
+                }
+                return {visible: Utils.isGridTablePagerPreviousButtonVisible('RocheBPSPMaterialsAddMaterialSearch')};
+            }
+        }
+    },
+    rocheBPSPMateralsAddMaterialSearchPagerFirstPageButton: {
+        init: {
+            execute: (db) => {
+                if(v('RocheBPSPMaterialsAddMaterialSearch.cellData.length') === false){
+                    return {visible: false};
+                }
+                return Repository.rocheBPSPMateralsAddMaterialSearchPagerPreviousButton.init.execute(db);
+            }
+        }
+    },
+    rocheBPSPMateralsAddMaterialSearchPagerNextButton: {
+        init: {
+            execute: (db) => {
+                if(v('RocheBPSPMaterialsAddMaterialSearch.cellData.length') === false){
+                    return {visible: false};
+                }
+                return {visible: Utils.isGridTablePagerNextButtonVisible('RocheBPSPMaterialsAddMaterialSearch')};
+            }
+        }
+    },
+    rocheBPSPMateralsAddMaterialSearchPagerLastPageButton: {
+        init: {
+            execute: (db) => {
+                if(v('RocheBPSPMaterialsAddMaterialSearch.cellData.length') === false){
+                    return {visible: false};
+                }
+                return Repository.rocheBPSPMateralsAddMaterialSearchPagerNextButton.init.execute(db);
+            }
+        }
+    },
+
     RocheBPSPMaterialsAddMaterialSearch:
         {
             refresh_col_0: {
@@ -3219,7 +3277,7 @@ app.repository = {
                     return {value: v('RocheBPSPMaterialsAddMaterialSearchSelectAll.switch.value')};
                 }
             },
-            initCondition: (db) => {L('ddd');
+            initCondition: (db) => {
                 let l = v('rocheBPSPAddMaterialGridRow4Cell1Search.value') != '' ||
                     v('rocheBPSPAddMaterialGridRow4Cell2Search.value') != '' || v('rocheBPSPAddMaterialGridRow4Cell3Dropbox.value') != ''
                 || v('rocheBPSPAddMaterialGridRow4Cell4Search.value') != '' || v('rocheBPSPAddMaterialGridRow4Cell5Search.value')  != '';
@@ -3232,7 +3290,10 @@ app.repository = {
                 {
                     url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
                     type: 'POST',
-                    body: (db) => `{"MDX":"
+                    body: (db) => {
+                        let dbV = v('rocheBPSPAddMaterialGridRow4Cell3Dropbox.value');
+                        dbV = dbV === false ? 'CC' : dbV;
+                        return `{"MDX":"
                                         With 
                                         Member [Measures Material Information by Company].[Measures Material Information by Company].[ID] As
                                            [Materials].[Materials].CurrentMember.Properties('Element')
@@ -3283,7 +3344,7 @@ app.repository = {
                                                 [Materials].[Materials].CurrentMember.Properties('IP Active Flag') = '1')
                                                          }, 0)
                                                   --Dropbox with Category
-                                                  }, [Materials].[Materials].CurrentMember.Properties('Material Category - Key') = 'CC')
+                                                  }, [Materials].[Materials].CurrentMember.Properties('Material Category - Key') = '${dbV}')
                                          -- Instr search
                                          }, InStr([Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key') ,'458360')<>0)
                                         }, InStr([Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key'), '297')<>0)
@@ -3295,7 +3356,8 @@ app.repository = {
                                           (
                                            [Companies].[Companies].[1391]
                                           )
-            "}`,
+                            "}`;
+                    },
                     parsingControl: {
                         type: 'matrix',
                         length: 13,
