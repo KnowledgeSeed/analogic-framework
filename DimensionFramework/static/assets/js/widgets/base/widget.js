@@ -51,7 +51,7 @@ class Widget {
                 Listeners.push({
                     options: o,
                     method: 'refreshGridCell',
-                    eventName: l.action + '.' + a + '_' + b + '_' + l.col + '.finished',
+                    eventName: l.event ? l.event : l.action + '.' + a + '_' + b + '_' + l.col + '.finished',
                     parameters: l.parameters || [],
                     handler: h
                 });
@@ -72,7 +72,8 @@ class Widget {
             }
 
             return $.when.apply($, deffered).then(function (...results) {
-                let widgetHtmls = [], r, processedData = instance.processData(data), v = (processedData || {}).visible, visible = undefined !== v ? v : o.visible;
+                let widgetHtmls = [], r, processedData = instance.processData(data), v = (processedData || {}).visible,
+                    visible = undefined !== v ? v : o.visible;
 
                 for (r of results) {
                     widgetHtmls.push(r);
@@ -86,7 +87,7 @@ class Widget {
     getMainHtmlElement(o, data, visible, widgetHtmls, withState) {
         let gs = [], html;
 
-        if(o.applyMeasuresToSection === true) {
+        if (o.applyMeasuresToSection === true) {
             gs = this.getWidthAndHeight(data);
         }
 
@@ -95,15 +96,15 @@ class Widget {
         }
 
         let originalId = false, write = 'on';
-        if(data && data.originalId){
+        if (data && data.originalId) {
             originalId = data.originalId;
         }
 
-        if(o.write){
+        if (o.write) {
             write = o.write;
         }
 
-        if(data && data.write){
+        if (data && data.write) {
             write = data.write;
         }
         html = this.getHtml(widgetHtmls, data, withState);
@@ -136,12 +137,12 @@ class Widget {
 
         if (o.depends) {//grid
             const f = o.id.split('_'), a = f[0], b = f[1];
-
+console.log(o.depends);
             for (let l of o.depends) {
                 Listeners.push({
                     options: o,
                     method: 'refreshGridCell',
-                    eventName: l.action + '.' + a + '_' + b + '_' + l.col + '.finished',
+                    eventName: l.event ? l.event : l.action + '.' + a + '_' + b + '_' + l.col + '.finished',
                     parameters: l.parameters || [],
                     handler: h
                 });
@@ -209,6 +210,12 @@ class Widget {
             w.initFinished();
         }
         El.body.triggerHandler('init.' + o.id + '.finished');
+        let actions = EventMap['init.' + o.id + '.finished'], a;
+        if(actions) {
+            for (a of actions) {
+                a.action(a.argument, {}, {});
+            }
+        }
     }
 
     initEvents(withState) {
@@ -253,7 +260,7 @@ class Widget {
 
         const eventMapId = a + '.' + i;
 
-        if('rightclick' === a){
+        if ('rightclick' === a) {
             WidgetValue['rightclick'] = i;
         }
 
@@ -269,9 +276,11 @@ class Widget {
     }
 
     static doHandleGridTableSystemEvent(element, event, updateValue = true) {
-        let a = element.data('action'), i = element.data('id'), idParts = i.split('_'), section = element.closest('section');
+        let a = element.data('action'), i = element.data('id'), idParts = i.split('_'),
+            section = element.closest('section');
 
-        const eventMapId = a + '.' + idParts[0] + '_row_' + idParts[2], columnEventMapId = a + '.' + idParts[0] + '_' + idParts[1] + '_' + idParts[2] + '_' + section.data('originalid');
+        const eventMapId = a + '.' + idParts[0] + '_row_' + idParts[2],
+            columnEventMapId = a + '.' + idParts[0] + '_' + idParts[1] + '_' + idParts[2] + '_' + section.data('originalid');
 
         El.body.triggerHandler(eventMapId + '.started');
         El.body.triggerHandler(columnEventMapId + '.started');
@@ -292,7 +301,7 @@ class Widget {
 
         let actions = EventMap[eventMapId], a;
         let writeSuccess = true;
-        if(write === true) {
+        if (write === true) {
             writeSuccess = QB.writeData(eventMapId, event, element);
         }
 
@@ -356,10 +365,10 @@ class Widget {
         return [...this.getWidthAndHeight(data, defaults, dataPrefix), ...this.getPaddings(data, defaults, dataPrefix), ...this.getMargins(data, defaults, dataPrefix)];
     }
 
-    getWidthAndHeight(data = {}, defaults = {}, dataPrefix = ''){
+    getWidthAndHeight(data = {}, defaults = {}, dataPrefix = '') {
         const s = [],
-        height = this.getRealValue('height', data, defaults.height, dataPrefix),
-        width = this.getRealValue('width', data, defaults.width, dataPrefix);
+            height = this.getRealValue('height', data, defaults.height, dataPrefix),
+            width = this.getRealValue('width', data, defaults.width, dataPrefix);
 
         height && s.push('height:', height, isNaN(height) ? ';' : 'px;');
         width && s.push('width:', width, isNaN(width) ? ';' : 'px;');
@@ -367,12 +376,12 @@ class Widget {
         return s;
     }
 
-    getPaddings(data = {}, defaults = {}, dataPrefix = ''){
+    getPaddings(data = {}, defaults = {}, dataPrefix = '') {
         const s = [],
-        paddingBottom = this.getRealValue('paddingBottom', data, defaults.paddingBottom, dataPrefix),
-        paddingLeft = this.getRealValue('paddingLeft', data, defaults.paddingLeft, dataPrefix),
-        paddingRight = this.getRealValue('paddingRight', data, defaults.paddingRight, dataPrefix),
-        paddingTop = this.getRealValue('paddingTop', data, defaults.paddingTop, dataPrefix);
+            paddingBottom = this.getRealValue('paddingBottom', data, defaults.paddingBottom, dataPrefix),
+            paddingLeft = this.getRealValue('paddingLeft', data, defaults.paddingLeft, dataPrefix),
+            paddingRight = this.getRealValue('paddingRight', data, defaults.paddingRight, dataPrefix),
+            paddingTop = this.getRealValue('paddingTop', data, defaults.paddingTop, dataPrefix);
 
         paddingTop && s.push('padding-top:', paddingTop, paddingTop !== 'auto' && !isNaN(paddingTop) ? 'px;' : ';');
         paddingLeft && s.push('padding-left:', paddingLeft, paddingLeft !== 'auto' && !isNaN(paddingLeft) ? 'px;' : ';');
@@ -382,13 +391,13 @@ class Widget {
         return s;
     }
 
-    getMargins(data = {}, defaults = {}, dataPrefix = ''){
+    getMargins(data = {}, defaults = {}, dataPrefix = '') {
         const s = [],
-        marginBottom = this.getRealValue('marginBottom', data, defaults.marginBottom, dataPrefix),
-        marginLeft = this.getRealValue('marginLeft', data, defaults.marginLeft, dataPrefix),
-        marginRight = this.getRealValue('marginRight', data, defaults.marginRight, dataPrefix),
-        marginTop = this.getRealValue('marginTop', data, defaults.marginTop, dataPrefix),
-        height = this.getRealValue('height', data, defaults.height, dataPrefix);
+            marginBottom = this.getRealValue('marginBottom', data, defaults.marginBottom, dataPrefix),
+            marginLeft = this.getRealValue('marginLeft', data, defaults.marginLeft, dataPrefix),
+            marginRight = this.getRealValue('marginRight', data, defaults.marginRight, dataPrefix),
+            marginTop = this.getRealValue('marginTop', data, defaults.marginTop, dataPrefix),
+            height = this.getRealValue('height', data, defaults.height, dataPrefix);
 
         marginTop && s.push('margin-top:', marginTop, marginTop !== 'auto' && !isNaN(marginTop) ? 'px;' : ';');
         marginLeft && s.push('margin-left:', marginLeft, marginLeft !== 'auto' && !isNaN(marginLeft) ? 'px;' : ';');
@@ -399,7 +408,7 @@ class Widget {
         return s;
     }
 
-    getWidthForSection(data = {}, defaults = {}){
+    getWidthForSection(data = {}, defaults = {}) {
         const s = [], width = this.getRealValue('width', data, defaults.width);
 
         if (!isNaN(width)) {
@@ -411,7 +420,7 @@ class Widget {
         return s;
     }
 
-    getHeightForSection(data = {}, defaults = {}){
+    getHeightForSection(data = {}, defaults = {}) {
         const s = [], height = this.getRealValue('height', data, defaults.height);
 
         if (!isNaN(height)) {

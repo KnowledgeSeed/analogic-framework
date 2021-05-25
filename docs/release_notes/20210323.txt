@@ -58,6 +58,7 @@ TextWidget:
  monthly_right_bpsp
  monthly_center_bpsp
  edit_distribution_value
+ products_gd_readonly_with_icon_center_bpsp
 
 ButtonWidget:
  blue_bg_bpsp
@@ -108,6 +109,7 @@ PanelWidget:
 
 ToggleWidget:
     lock_unlock_bpsp
+    row_selector_bpsp
 
 GridTableWidget:
     edit_distribution_bpsp
@@ -117,6 +119,9 @@ SliderWidget:
 
 TextBoxWidget:
    copy_bpsp
+
+DropBoxWidget:
+  simple_bold_with_border_bpsp
 
 
   widgetId probléma: widgetId-08 -> repoban csak 'widgetid-08'

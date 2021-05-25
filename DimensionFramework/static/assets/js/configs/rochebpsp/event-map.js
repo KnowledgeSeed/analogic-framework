@@ -830,7 +830,6 @@ app.eventMap = {
         }
     ],
 
-
     'launch.rocheBPSPMaterialGridRow4Cell1Button': [
         {
             action: app.fn.openPage,

@@ -10,6 +10,7 @@ class GridTableWidget extends Widget {
             borderBottom: this.getRealValue('borderBottom', d, true),
             borderTop: this.getRealValue('borderTop', d, true),
             hideIfNoData: this.getRealValue('hideIfNoData', d, false),
+            maxRows: this.getRealValue('maxRows', d, false),
             rowHeight: this.getRealValue('rowHeight', d, false),
             skin: this.getRealValue('skin', d, 'standard')
         };
@@ -20,12 +21,13 @@ class GridTableWidget extends Widget {
         }
 
         let r = [], c = [], tb, th, j = 0, col = o.widgets.filter(e => e.type.name !== 'GridTableHeaderRowWidget').length, hw = '';
+        let maxRows = v.maxRows !== false ? v.maxRows * col : 1000000;
 
         if (o.errorMessage !== '') {
             return `<div><h3 style="color:red;">${o.errorMessage}</h3></div>`;
         }
 
-        while (j < widgets.length) {
+        while (j < widgets.length && j < maxRows) {
             r.push(this.buildTableRowHtml(widgets.slice(j, j + col).join(''), v.rowHeight, v.borderBottom));
             j = j + col;
         }

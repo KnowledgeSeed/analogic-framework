@@ -468,6 +468,19 @@
     overflow: auto;
 }
 
+/* products_gd_readonly_with_icon_center_bpsp */
+
+.ks-text-products_gd_readonly_with_icon_center_bpsp {
+    font-family: Imago-Regular;
+    font-size: 15px;
+    font-color: #000000;
+}
+
+.ks-text-products_gd_readonly_with_icon_center_bpsp .ks-text-icon{
+    display: flex;
+    justify-content: center;
+}
+
 
 /* end ote */
 

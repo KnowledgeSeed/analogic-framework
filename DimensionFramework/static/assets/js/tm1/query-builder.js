@@ -48,9 +48,9 @@ QB.loadData = (argument, type, useDefaultData = false, path = 'init') => {
 };
 
 QB.refreshGridCellData = (argument, type) => {
-    let t = argument.split('_');
+    let t = argument.split('_');console.log(argument);
 
-    return QB.loadData(t[0], type, 'refresh_col_' + t[2]);
+    return QB.loadData(t[0], type, false,'refresh_col_' + t[2]);
 };
 
 QB.loadComment = repositoryId => {
@@ -300,7 +300,7 @@ QB.writeData = (eventMapId, event, element) => {
     return true;
 };
 
-QB.executeEventMapAction = (eventMapId, event, element, response) => {
+QB.executeEventMapAction = (eventMapId, event, element, response) => {console.log(eventMapId);
     El.body.triggerHandler(eventMapId);
     let actions = EventMap[eventMapId], a;
     if (actions) {
