@@ -947,7 +947,7 @@ app.eventMap = {
     'segmentedControlTab1.rocheBPSPMaterialGridRow2Cell1SegmentedControl': [
         {
             action: app.fn.hideWidget,
-            argument: 'RocheBPSPMaterial_IPNode_GridTable'
+            argument: 'RocheBPSPMaterialIPNodeGridTable'
         },
         {
             action: app.fn.showWidget,
@@ -962,7 +962,7 @@ app.eventMap = {
         },
         {
             action: app.fn.showWidget,
-            argument: 'RocheBPSPMaterial_IPNode_GridTable'
+            argument: 'RocheBPSPMaterialIPNodeGridTable'
         }
     ],
 
@@ -979,13 +979,27 @@ app.eventMap = {
         }
     ],
 
+    'launch.rocheBPSPMaterialAddDummyPopupControlPanelAddButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialAddDummyPopup'
+        }
+    ],
 
-    'launch.rocheBPSPMaterialGridRow4Cell3Button': [
+    'launch.rocheBPSPMaterialGridTable_row_6': [
         {
             action: app.fn.openPopup,
             argument: 'rocheBPSPMaterialMoveDataPopup'
         },
     ],
+
+        'launch.RocheBPSPMaterialIPNodeGridTable_row_6': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPMaterialMoveDataPopup'
+        },
+    ],
+
     'launch.rocheBPSPMaterialMoveDataPopupControlPanelCancelButton': [
         {
             action: app.fn.togglePopup,
@@ -1000,36 +1014,56 @@ app.eventMap = {
         }
     ],
 
-
-    'launch.rocheBPSPMaterialAddDummyPopupControlPanelAddButton': [
-        {
-            action: app.fn.togglePopup,
-            argument: 'rocheBPSPMaterialAddDummyPopup'
-        }
-    ],
-    'launch.rocheBPSPMateralsAddMaterialSearchPagerPreviousButton' : [
+    'launch.rocheBPSPMateralsAddMaterialSearchPagerPreviousButton': [
         {
             action: app.fn.decreasePage,
             argument: 'RocheBPSPMaterialsAddMaterialSearch'
         }
     ],
-    'launch.rocheBPSPMateralsAddMaterialSearchPagerNextButton' : [
+    'launch.rocheBPSPMateralsAddMaterialSearchPagerNextButton': [
         {
             action: app.fn.increasePage,
             argument: 'RocheBPSPMaterialsAddMaterialSearch'
         }
     ],
-    'launch.rocheBPSPMateralsAddMaterialSearchPagerFirstPageButton' : [
+    'launch.rocheBPSPMateralsAddMaterialSearchPagerFirstPageButton': [
         {
             action: app.fn.jumpToFirstPage,
             argument: 'RocheBPSPMaterialsAddMaterialSearch'
         }
     ],
-    'launch.rocheBPSPMateralsAddMaterialSearchPagerLastPageButton' : [
+    'launch.rocheBPSPMateralsAddMaterialSearchPagerLastPageButton': [
         {
             action: app.fn.jumpToLastPage,
             argument: 'RocheBPSPMaterialsAddMaterialSearch'
         }
-    ]
+    ],
+
+    'launch.rocheBPSPMaterialGridTable_row_5': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPMaterialDeleteDataPopup'
+        },
+    ],
+
+    'launch.RocheBPSPMaterialIPNodeGridTable_row_5': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPMaterialDeleteDataPopup'
+        },
+    ],
+    'launch.rocheBPSPMaterialDeleteDataPopupControlPanelAddButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialDeleteDataPopup'
+        }
+    ],
+
+    'launch.rocheBPSPMaterialDeleteDataPopupControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialDeleteDataPopup'
+        }
+    ],
 
 };
