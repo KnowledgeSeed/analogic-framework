@@ -264,6 +264,10 @@ const Utils = {
         let info = Utils.getGridTableActualAndLastPage(widgetId);
         return info.actualPage !== info.maxPage;
     },
+    isValueExistingAndNotEmpty(widgetId) {
+        let l = v(widgetId + '.value.length');
+        return l !== false && l !== 0;
+    },
     create_UUID() {
         let dt = new Date().getTime();
 
