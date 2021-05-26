@@ -1048,7 +1048,7 @@ app.widgetConfig = {
                     id: 'rocheBPSPProductsPageInit',
                     type: ShadowWidget,
                     listen: [
-                        {event: 'bodyReady', method: 'refresh'},
+                        {event: 'bodyReady', method: 'refreshWithWaitingForEvent', parameters: ['rendered.rocheBPSPProductsGridRow1Cell2DropBox']},
                         {event: 'choose.rocheBPSPProductsGridRow1Cell2DropBox.finished', method: 'refresh'}
                     ]
                 },
@@ -6388,7 +6388,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-02',
                                     type: GridTableHeaderCellWidget,
-                                    alignment: 'bottom-left',
+                                    alignment: 'bottom-center',
                                     width: '4%',
                                     widgets: [
 
@@ -6397,9 +6397,9 @@ app.widgetConfig = {
                                             type: TextWidget,
                                             body: 'Level',
                                             skin: 'products_gd_header_bpsp',
-                                            titleAlignment: 'start',
+                                            titleAlignment: 'center',
                                             marginBottom: 8,
-                                            bodyAlignment: 'start'
+                                            bodyAlignment: 'center'
                                         }
                                     ]
                                 },
@@ -6408,7 +6408,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-03',
                                     type: GridTableHeaderCellWidget,
                                     width: '6%',
-                                    alignment: 'bottom-left',
+                                    alignment: 'bottom-center',
                                     widgets: [
 
                                         {
@@ -6416,9 +6416,10 @@ app.widgetConfig = {
                                             type: TextWidget,
                                             body: 'Profit Center Number',
                                             skin: 'products_gd_header_bpsp',
-                                            titleAlignment: 'start',
+                                            titleAlignment: 'center',
                                             marginBottom: 8,
-                                            bodyAlignment: 'start'
+                                            marginLeft: 8,
+                                            bodyAlignment: 'center'
                                         }
                                     ]
                                 },
@@ -6834,6 +6835,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     title: '',
+                                    titleAlignment: 'center'
                                 }
                             ]
                         },
@@ -6848,7 +6850,8 @@ app.widgetConfig = {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyText-03',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    alignment: 'center-center',
+                                    titleAlignment: 'end',
+                                    marginRight: 8,
                                     title: '',
                                 }
                             ]
@@ -6859,6 +6862,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             width: '6%',
                             alignment: 'center-right',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -6866,6 +6870,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
+                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -6876,6 +6881,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             alignment: 'center-right',
                             width: '4%',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -6883,6 +6889,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     paddingRight: 8,
                                     skin: 'products_gd_readonly_bpsp',
+                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -6893,6 +6900,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             alignment: 'center-right',
                             width: '4%',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -6900,6 +6908,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     paddingRight: 8,
                                     skin: 'products_gd_readonly_bpsp',
+                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -6910,6 +6919,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             alignment: 'center-right',
                             width: '4%',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -6917,6 +6927,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     paddingRight: 8,
                                     skin: 'products_gd_readonly_bpsp',
+                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -6927,6 +6938,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             alignment: 'center-right',
                             width: '4%',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -6934,6 +6946,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     paddingRight: 8,
                                     title: '',
+                                    titleAlignment: 'end',
                                     skin: 'products_gd_readonly_bpsp'
                                 }
                             ]
@@ -6944,6 +6957,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             alignment: 'center-right',
                             width: '4%',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -6951,6 +6965,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
+                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -6961,6 +6976,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             alignment: 'center-right',
                             width: '4%',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -6968,6 +6984,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
+                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -6979,6 +6996,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             alignment: 'center-right',
                             width: '4%',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -6986,6 +7004,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
+                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -6996,6 +7015,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             alignment: 'center-right',
                             width: '4%',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -7003,6 +7023,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
+                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7013,6 +7034,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             alignment: 'center-right',
                             width: '4%',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -7020,6 +7042,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
+                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7030,6 +7053,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             alignment: 'center-right',
                             width: '4%',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -7037,6 +7061,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
+                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7047,6 +7072,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             alignment: 'center-right',
                             width: '4%',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -7054,6 +7080,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
+                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7064,6 +7091,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             alignment: 'center-right',
                             width: '4%',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -7071,6 +7099,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
+                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7081,6 +7110,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             alignment: 'center-right',
                             width: '4%',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -7088,6 +7118,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
+                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7098,6 +7129,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             alignment: 'center-right',
                             width: '5%',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -7105,6 +7137,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
+                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7115,6 +7148,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             alignment: 'center-right',
                             width: '4%',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -7122,6 +7156,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
+                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7132,6 +7167,7 @@ app.widgetConfig = {
                             type: GridTableCellWidget,
                             alignment: 'center-right',
                             width: '3%',
+                            skin: 'readonly_bpsp',
                             widgets: [
 
                                 {
@@ -7139,6 +7175,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
+                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]

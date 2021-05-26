@@ -258,7 +258,7 @@ app.repository = {
 
     rocheBPSPProductsPageInit: {
         initCondition: (db) => {
-            return v('rocheBPSPProductsGridRow1Cell2DropBox') !== false;
+            return Utils.isValueExistingAndNotEmpty('rocheBPSPProductsGridRow1Cell2DropBox');
         },
         initDefault: (db) => {
             return [];
