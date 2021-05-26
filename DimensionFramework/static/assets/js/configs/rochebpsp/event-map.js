@@ -986,14 +986,14 @@ app.eventMap = {
         }
     ],
 
-    'launch.rocheBPSPMaterialGridTable_row_6': [
+    'launch.rocheBPSPMaterialGridTable_row_5': [
         {
             action: app.fn.openPopup,
             argument: 'rocheBPSPMaterialMoveDataPopup'
         },
     ],
 
-        'launch.RocheBPSPMaterialIPNodeGridTable_row_6': [
+    'launch.RocheBPSPMaterialIPNodeGridTable_row_5': [
         {
             action: app.fn.openPopup,
             argument: 'rocheBPSPMaterialMoveDataPopup'
@@ -1039,14 +1039,14 @@ app.eventMap = {
         }
     ],
 
-    'launch.rocheBPSPMaterialGridTable_row_5': [
+    'launch.rocheBPSPMaterialGridTable_row_4': [
         {
             action: app.fn.openPopup,
             argument: 'rocheBPSPMaterialDeleteDataPopup'
         },
     ],
 
-    'launch.RocheBPSPMaterialIPNodeGridTable_row_5': [
+    'launch.RocheBPSPMaterialIPNodeGridTable_row_4': [
         {
             action: app.fn.openPopup,
             argument: 'rocheBPSPMaterialDeleteDataPopup'
