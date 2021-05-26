@@ -3242,9 +3242,6 @@ app.repository = {
     rocheBPSPMateralsAddMaterialSearchPagerFirstPageButton: {
         init: {
             execute: (db) => {
-                if(v('RocheBPSPMaterialsAddMaterialSearch.cellData.length') === false){
-                    return {visible: false};
-                }
                 return Repository.rocheBPSPMateralsAddMaterialSearchPagerPreviousButton.init.execute(db);
             }
         }
@@ -3262,9 +3259,6 @@ app.repository = {
     rocheBPSPMateralsAddMaterialSearchPagerLastPageButton: {
         init: {
             execute: (db) => {
-                if(v('RocheBPSPMaterialsAddMaterialSearch.cellData.length') === false){
-                    return {visible: false};
-                }
                 return Repository.rocheBPSPMateralsAddMaterialSearchPagerNextButton.init.execute(db);
             }
         }
