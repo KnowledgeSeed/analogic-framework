@@ -810,13 +810,13 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutDistributionEditPopup'
         }
     ],
-    'launch.rocheBPSPProductsCheckoutDistributionPopupLastYearButton' : [
+    'launch.rocheBPSPProductsCheckoutDistributionPopupLastYearButton': [
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPProductsCheckoutDistributionPopup'
         }
     ],
-    'launch.rocheBPSPProductsCheckoutDistributionPopupLinearSplitButton' : [
+    'launch.rocheBPSPProductsCheckoutDistributionPopupLinearSplitButton': [
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPProductsCheckoutDistributionPopup'

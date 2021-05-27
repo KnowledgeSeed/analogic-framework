@@ -926,8 +926,8 @@ app.widgetConfig = {
                                             id: 'rocheBPSPProductsGridRow2Cell1Button',
                                             listen: [
                                                 {
-                                                    'event' : 'rendered.rocheBPSPProductsPageInit',
-                                                    'method' : 'refresh'
+                                                    'event': 'rendered.rocheBPSPProductsPageInit',
+                                                    'method': 'refresh'
                                                 }
                                             ],
                                             type: ButtonWidget,
@@ -1054,7 +1054,11 @@ app.widgetConfig = {
                     id: 'rocheBPSPProductsPageInit',
                     type: ShadowWidget,
                     listen: [
-                        {event: 'bodyReady', method: 'refreshWithWaitingForEvent', parameters: ['init.rocheBPSPProductsGridRow1Cell2DropBox.finished']},
+                        {
+                            event: 'bodyReady',
+                            method: 'refreshWithWaitingForEvent',
+                            parameters: ['init.rocheBPSPProductsGridRow1Cell2DropBox.finished']
+                        },
                         {event: 'choose.rocheBPSPProductsGridRow1Cell2DropBox.finished', method: 'refresh'}
                     ]
                 },
@@ -3878,12 +3882,12 @@ app.widgetConfig = {
                                 {
                                     'event': 'write.rocheBPSPProductsCheckoutDistributionEditPopupGridTable.finished',
                                     'method': 'refreshWithTimeout',
-                                    'parameters' : [500]
+                                    'parameters': [500]
                                 },
                                 {
                                     'event': 'switch.rocheBPSPProductsCheckoutDistributionEditPopupGridTable.finished',
                                     'method': 'refreshWithTimeout',
-                                    'parameters' : [500]
+                                    'parameters': [500]
                                 }
                             ],
                             widgets: [
@@ -5280,12 +5284,12 @@ app.widgetConfig = {
                         {
                             'event': 'write.rocheBPSPProductsCheckoutGridTableMonthly.finished',
                             'method': 'refreshWithTimeout',
-                            'parameters' : [500]
+                            'parameters': [500]
                         },
                         {
                             'event': 'perform.rocheBPSPProductsCheckoutGridTableMonthly.finished',
                             'method': 'refreshWithTimeout',
-                            'parameters' : [500]
+                            'parameters': [500]
                         },
                         {
                             'event': 'launch.rocheBPSPProductsCheckoutDistributionPopupLastYearButton.finished',
@@ -7781,26 +7785,13 @@ app.widgetConfig = {
                     id: 'rocheBPSPMaterialPageInit',
                     type: ShadowWidget,
                     listen: [
-                        {event: 'bodyReady', method: 'refresh'},
                         {event: 'choose.rocheBPSPMaterialGridRow1Cell2DropBox.finished', method: 'refresh'},
                         {
                             'event': 'bodyReady',
-                            'method': 'refreshWithWaitingForEvents',
-                            'parameters': [
-                                'rendered.rocheBPSPMaterialPageInit',
-                                'rendered.rocheBPSPMaterialGridRow1Cell2DropBox',
-                            ]
-                        },
-
-                        {
-                            'event': 'choose.rocheBPSPMaterialGridRow1Cell2DropBox.finished',
                             'method': 'refreshWithWaitingForEvent',
-                            'parameters': ['rendered.rocheBPSPMaterialPageInit']
-                        },
-
-                        {
-                            'event': 'rendered.rocheBPSPMaterialPageInit',
-                            'method': 'refresh'
+                            'parameters': [
+                                'init.rocheBPSPMaterialGridRow1Cell2DropBox.finished',
+                            ]
                         },
                     ]
                 },
@@ -8052,17 +8043,18 @@ app.widgetConfig = {
                     visible: true,
                     skin: 'products_bpsp',
                     listen: [
-                        {'event': 'choose.rocheBPSPMaterialGridRow1Cell2DropBox.finished'},
-                        {event: 'bodyReady', method: 'refresh'},
-                        {event: 'choose.rocheBPSPMaterialPageInit.finished', method: 'refresh'},
-
+                        {event: 'choose.rocheBPSPMaterialGridRow1Cell2DropBox.finished', method: 'refresh'},
                         {
                             'event': 'bodyReady',
-                            'method': 'refreshWithWaitingForEvents',
+                            'method': 'refreshWithWaitingForEvent',
                             'parameters': [
                                 'rendered.rocheBPSPMaterialPageInit',
-                                'rendered.rocheBPSPMaterialGridRow1Cell2DropBox',
                             ]
+                        },
+
+                        {
+                            event: 'choose.rocheBPSPMaterialDeleteDataPopupControlPanelAddButton.finished',
+                            method: 'refresh'
                         },
 
 
@@ -8303,7 +8295,18 @@ app.widgetConfig = {
                     hideIfNoData: true,
                     visible: false,
                     skin: 'products_bpsp',
-                    listen: [{'event': 'choose.rocheBPSPMaterialGridRow1Cell2DropBox.finished'}],
+                    listen: [
+
+                        {event: 'choose.rocheBPSPMaterialGridRow1Cell2DropBox.finished', method: 'refresh'},
+                        {
+                            'event': 'bodyReady',
+                            'method': 'refreshWithWaitingForEvent',
+                            'parameters': [
+                                'rendered.rocheBPSPMaterialPageInit',
+                            ]
+                        },
+
+                    ],
                     width: '50%',
                     title: '',
                     widgets: [
@@ -8673,7 +8676,21 @@ app.widgetConfig = {
                                                     skin: 'add_dummy_bpsp',
                                                     marginBottom: 5,
                                                     selectFirst: true,
-                                                    backdrop: true
+                                                    backdrop: true,
+                                                    listen: [
+
+                                                        {
+                                                            event: 'choose.rocheBPSPMaterialGridRow1Cell2DropBox.finished',
+                                                            method: 'refresh'
+                                                        },
+                                                        {
+                                                            'event': 'bodyReady',
+                                                            'method': 'refreshWithWaitingForEvent',
+                                                            'parameters': [
+                                                                'rendered.rocheBPSPMaterialPageInit',
+                                                            ]
+                                                        },
+                                                    ]
                                                 }
 
                                             ]
@@ -8831,7 +8848,20 @@ app.widgetConfig = {
                                                     skin: 'add_dummy_bpsp',
                                                     marginBottom: 5,
                                                     selectFirst: true,
-                                                    backdrop: true
+                                                    backdrop: true,
+                                                    listen: [
+                                                        {
+                                                            event: 'choose.rocheBPSPMaterialGridRow1Cell2DropBox.finished',
+                                                            method: 'refresh'
+                                                        },
+                                                        {
+                                                            'event': 'bodyReady',
+                                                            'method': 'refreshWithWaitingForEvent',
+                                                            'parameters': [
+                                                                'rendered.rocheBPSPMaterialPageInit',
+                                                            ]
+                                                        },
+                                                    ]
                                                 }
 
 
