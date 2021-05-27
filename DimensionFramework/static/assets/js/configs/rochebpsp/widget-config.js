@@ -3668,7 +3668,6 @@ app.widgetConfig = {
                                     alignment: 'bottom-left',
                                     width: '7%',
                                     widgets: [
-                                        ,
                                         {
                                             id: 'rocheBPSPProductsCheckoutGridRow2Cell3Button',
                                             type: ButtonWidget,
