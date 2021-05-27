@@ -264,9 +264,17 @@ const Utils = {
         let info = Utils.getGridTableActualAndLastPage(widgetId);
         return info.actualPage !== info.maxPage;
     },
-    isValueExistingAndNotEmpty(widgetId) {
-        let l = v(widgetId + '.value.length');
+    isValueExistingAndNotEmpty(widgetId, value = 'value') {
+        let l = v(widgetId + '.' + value + '.length');
         return l !== false && l !== 0;
+    },
+    setWidgetValueIfNotExist(key, value){
+        if(!WidgetValue[key]){
+            WidgetValue[key] = value;
+        }
+    },
+    setWidgetValue(key, value){
+        WidgetValue[key] = value;
     },
     create_UUID() {
         let dt = new Date().getTime();

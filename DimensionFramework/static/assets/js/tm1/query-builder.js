@@ -48,8 +48,7 @@ QB.loadData = (argument, type, useDefaultData = false, path = 'init') => {
 };
 
 QB.refreshGridCellData = (argument, type) => {
-    let t = argument.split('_');console.log(argument);
-
+    let t = argument.split('_');
     return QB.loadData(t[0], type, false,'refresh_col_' + t[2]);
 };
 
