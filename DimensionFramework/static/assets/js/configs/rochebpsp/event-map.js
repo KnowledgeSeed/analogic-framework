@@ -657,6 +657,10 @@ app.eventMap = {
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPProducts'
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPProductsCheckoutGridTableYearly', 'rocheBPSPProductsCheckoutGridTableMonthly']
         }
     ],
     'segmentedControlTab2.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl': [
@@ -804,6 +808,18 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPProductsCheckoutDistributionEditPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutDistributionPopupLastYearButton' : [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutDistributionPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutDistributionPopupLinearSplitButton' : [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutDistributionPopup'
         }
     ],
     //end rocheBPSPProductsCheckout comment mody

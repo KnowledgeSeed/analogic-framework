@@ -924,6 +924,12 @@ app.widgetConfig = {
                                     widgets: [
                                         {
                                             id: 'rocheBPSPProductsGridRow2Cell1Button',
+                                            listen: [
+                                                {
+                                                    'event' : 'rendered.rocheBPSPProductsPageInit',
+                                                    'method' : 'refresh'
+                                                }
+                                            ],
                                             type: ButtonWidget,
                                             label: 'Columns',
                                             width: '100',
@@ -1048,7 +1054,7 @@ app.widgetConfig = {
                     id: 'rocheBPSPProductsPageInit',
                     type: ShadowWidget,
                     listen: [
-                        {event: 'bodyReady', method: 'refreshWithWaitingForEvent', parameters: ['rendered.rocheBPSPProductsGridRow1Cell2DropBox']},
+                        {event: 'bodyReady', method: 'refreshWithWaitingForEvent', parameters: ['init.rocheBPSPProductsGridRow1Cell2DropBox.finished']},
                         {event: 'choose.rocheBPSPProductsGridRow1Cell2DropBox.finished', method: 'refresh'}
                     ]
                 },
@@ -1395,8 +1401,11 @@ app.widgetConfig = {
                     listen: [
                         {
                             'event': 'bodyReady',
-                            'method': 'refreshWithWaitingForEvent',
-                            'parameters': ['init.rocheBPSPProductsGridRow1Cell3DropBox.finished']
+                            'method': 'refreshWithWaitingForEvents',
+                            'parameters': [
+                                'rendered.rocheBPSPProductsGridRow1Cell3DropBox',
+                                'rendered.rocheBPSPProductsPageInit'
+                            ]
                         },
                         {'event': 'choose.rocheBPSPProductsGridRow1Cell3DropBox.finished', 'method': 'refresh'},
                         {
@@ -2292,13 +2301,15 @@ app.widgetConfig = {
                     type: GridTableWidget,
                     marginTop: '60',
                     hideIfNoData: true,
-                    visible: false,
                     skin: 'products_bpsp',
                     listen: [
                         {
                             'event': 'bodyReady',
-                            'method': 'refreshWithWaitingForEvent',
-                            'parameters': ['init.rocheBPSPProductsGridRow1Cell3DropBox.finished']
+                            'method': 'refreshWithWaitingForEvents',
+                            'parameters': [
+                                'rendered.rocheBPSPProductsGridRow1Cell3DropBox',
+                                'rendered.rocheBPSPProductsPageInit'
+                            ]
                         },
                         {'event': 'choose.rocheBPSPProductsGridRow1Cell3DropBox.finished', 'method': 'refresh'},
                         {
@@ -3620,14 +3631,12 @@ app.widgetConfig = {
                                             label: 'Excel Template',
                                             width: '100%',
                                             icon: 'icon-doc-arrow-up',
-                                            visible: false,
                                             skin: 'blue_link_columns_bpsp'
                                         },
                                         {
                                             id: 'rocheBPSPProductsCheckoutGridRow2Cell1bButton',
                                             type: ButtonWidget,
                                             label: 'Upload excel',
-                                            visible: false,
                                             width: '100%',
                                             icon: 'icon-columns',
                                             skin: 'blue_link_columns_bpsp',
@@ -3869,11 +3878,13 @@ app.widgetConfig = {
                             listen: [
                                 {
                                     'event': 'write.rocheBPSPProductsCheckoutDistributionEditPopupGridTable.finished',
-                                    'method': 'refresh'
+                                    'method': 'refreshWithTimeout',
+                                    'parameters' : [500]
                                 },
                                 {
                                     'event': 'switch.rocheBPSPProductsCheckoutDistributionEditPopupGridTable.finished',
-                                    'method': 'refresh'
+                                    'method': 'refreshWithTimeout',
+                                    'parameters' : [500]
                                 }
                             ],
                             widgets: [
@@ -5255,7 +5266,6 @@ app.widgetConfig = {
                     type: GridTableWidget,
                     marginTop: '60',
                     hideIfNoData: true,
-                    visible: false,
                     skin: 'products_bpsp',
                     listen: [
                         {'event': 'switch.rocheBPSPProductsYearSegmentedControl.finished', 'method': 'refresh'},
@@ -5270,10 +5280,20 @@ app.widgetConfig = {
                         },
                         {
                             'event': 'write.rocheBPSPProductsCheckoutGridTableMonthly.finished',
-                            'method': 'refresh'
+                            'method': 'refreshWithTimeout',
+                            'parameters' : [500]
                         },
                         {
                             'event': 'perform.rocheBPSPProductsCheckoutGridTableMonthly.finished',
+                            'method': 'refreshWithTimeout',
+                            'parameters' : [500]
+                        },
+                        {
+                            'event': 'launch.rocheBPSPProductsCheckoutDistributionPopupLastYearButton.finished',
+                            'method': 'refresh'
+                        },
+                        {
+                            'event': 'launch.rocheBPSPProductsCheckoutDistributionPopupLinearSplitButton.finished',
                             'method': 'refresh'
                         }
                     ],
