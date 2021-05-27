@@ -2689,6 +2689,44 @@ app.repository = {
         }
     },
 
+    rocheBPSPMaterialPageInit: {
+        initCondition: (db) => {
+            return v('rocheBPSPMaterialGridRow1Cell2DropBox') !== false;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT 
+                        {[Versions].[Versions].[Live]} 
+                    PROPERTIES [Versions].[Versions].[Caption]  ON COLUMNS , 
+                    NON EMPTY 
+                        {[Measures Company Information].[Measures Company Information].[Products Hierarchy]} 
+                        PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON ROWS 
+                    FROM [Company Information] 
+                WHERE 
+                (
+                    [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}]
+                )
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        value: (r, x) => {
+                            WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = r.Cells[0].FormattedValue;
+                            L(r.Cells[0].FormattedValue);
+                            return true;
+                        }
+                    }
+            }
+        }
+    },
+
 
     rocheBPSPMaterialGridRow1Cell2DropBox: {
         init: {
@@ -3144,7 +3182,9 @@ app.repository = {
                                          [}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag],
                                          [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag]} 
                                       ON COLUMNS , 
-                                       {TM1SubsetToSet([Materials].[BPSP Budget],'1391 MM')} 
+                                        {TM1SubsetToSet([Materials].[BPSP Budget],'1391 MM')}
+                                       -- {TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}],'1391 MM')}
+                                       
                                       ON ROWS 
                                     FROM [}ElementAttributes_Materials] 
 
@@ -3155,10 +3195,6 @@ app.repository = {
                         type: 'matrix',
                         length: 6,
                         query: [
-
-                            (r, x) => {
-                                return {}
-                            },
 
 
                             (r, x) => {
@@ -3206,6 +3242,25 @@ app.repository = {
         },
 
 
+    rocheBPSPMaterialDeleteDataPopupControlPanelAddButton: {
+        launch:
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Material Maintenance Remove Material From Subset')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => `{
+                        "Parameters": [
+                        
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}"},
+                                {"Name": "pMaterial", "Value": "${Utils.setAndGetGridTableSystemValueByCurrentRow(WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPMaterialGridTable' : 'rocheBPSPMaterialGridTable', 1, 'systemValueCheckoutProduct', 'title')}"},
+                        
+                        ]
+
+
+                    }`
+            },
+    },
+
+
     RocheBPSPMaterialIPNodeGridTable:
         {
 
@@ -3249,10 +3304,6 @@ app.repository = {
                         type: 'matrix',
                         length: 6,
                         query: [
-
-                            (r, x) => {
-                                return {}
-                            },
 
 
                             (r, x) => {
@@ -3360,6 +3411,9 @@ app.repository = {
     rocheBPSPMateralsAddMaterialSearchPagerFirstPageButton: {
         init: {
             execute: (db) => {
+                if (v('RocheBPSPMaterialsAddMaterialSearch.cellData.length') === false) {
+                    return {visible: false};
+                }
                 return Repository.rocheBPSPMateralsAddMaterialSearchPagerPreviousButton.init.execute(db);
             }
         }
@@ -3377,6 +3431,9 @@ app.repository = {
     rocheBPSPMateralsAddMaterialSearchPagerLastPageButton: {
         init: {
             execute: (db) => {
+                if (v('RocheBPSPMaterialsAddMaterialSearch.cellData.length') === false) {
+                    return {visible: false};
+                }
                 return Repository.rocheBPSPMateralsAddMaterialSearchPagerNextButton.init.execute(db);
             }
         }
