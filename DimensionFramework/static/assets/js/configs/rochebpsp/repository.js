@@ -2581,7 +2581,7 @@ app.repository = {
 
     rocheBPSPMaterialPageInit: {
         initCondition: (db) => {
-            return v('rocheBPSPMaterialGridRow1Cell2DropBox') !== false;
+            return Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow1Cell2DropBox');
         },
         initDefault: (db) => {
             return [];
@@ -2608,8 +2608,8 @@ app.repository = {
                 query:
                     {
                         value: (r, x) => {
+                            Utils.
                             WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = r.Cells[0].FormattedValue;
-                            L(r.Cells[0].FormattedValue);
                             return true;
                         }
                     }
