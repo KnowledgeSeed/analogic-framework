@@ -600,4 +600,508 @@ app.eventMap = {
     'launch.rocheBPSPProductsCheckoutCommentShowGridXButton': [
         {
             action: app.fn.togglePopup,
-            ar
+            argument: 'rocheBPSPProductsCheckoutCommentShow'
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPProductsCheckoutCommentShowGridTable', 'rocheBPSPProductsCheckoutCommentShowGridTableSource']
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutCommentEditControlPanelSaveButton.finished': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutCommentEdit'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsCheckoutCommentShow'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutCommentShowGridTable'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutCommentShowGridTableSource'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutColumnSelectorCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutColumnSelectorPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutGridRow2Cell1Button': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsCheckoutColumnSelectorPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutColumnSelectorPopupDropBox'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutColumnSelectorRestoreButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutColumnSelectorPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutColumnSelectorUpdateButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutColumnSelectorPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutGridRow2Cell3Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPProducts'
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPProductsCheckoutGridTableYearly', 'rocheBPSPProductsCheckoutGridTableMonthly']
+        }
+    ],
+    'segmentedControlTab2.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductsCheckoutGridTableYearly'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductsCheckoutGridTableMonthly'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductsCheckoutGridRow2Cell1Button'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductsCheckoutGridRow2Cell1aButton'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductsCheckoutGridRow2Cell1bButton'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutGridTableMonthly'
+        }
+    ],
+    'segmentedControlTab1.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductsCheckoutGridTableMonthly'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductsCheckoutGridTableYearly'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductsCheckoutGridRow2Cell1Button'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductsCheckoutGridRow2Cell1aButton'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductsCheckoutGridRow2Cell1bButton'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutGridTableYearly'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutGridRow2Cell1bButton': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsCheckoutUploadPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutUploadPopupPlDropbox'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutUploadPopupCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutUploadPopup'
+        }
+    ],
+    /*  'launch.rocheBPSPProductsCheckoutGridTableMonthlyHeaderButton-05': [
+          {
+              action: app.fn.openPopup,
+              argument: 'rocheBPSPProductsCheckoutDistributionPopup'
+          }
+      ],*/
+    'launch.rocheBPSPProductsCheckoutGridTableMonthly_row_4': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductsCheckoutDistributionPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutCopyMergeBackButton': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutCopyMergePopupSlider'
+        }
+    ],
+    'perform.rocheBPSPProductsCheckoutGridTableYearly': [
+        {
+            action: app.fn.conditionalGridTablePopup,
+            argument: [
+                {
+                    conditionKey: 'distributionEdit',
+                    actions: [
+                        {
+                            action: app.fn.addGridTableCurrentRowSystemValue,
+                            argument: ['DistributionEditProductCode', 'rocheBPSPProductsCheckoutGridTableYearly', 1, 'title']
+                        },
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCheckoutDistributionEditPopup'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutDistributionEditPopupGridTable'
+                        }
+                    ]
+                },
+                {
+                    conditionKey: 'copyMerge',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCheckoutCopyMergePopup'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutCopyMergePopupSlider'
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    'perform.rocheBPSPProductsCheckoutGridTableYearly.finished': [
+        {
+            action: app.fn.conditionalGridTablePopup,
+            argument: [
+                {
+                    conditionKey: 'performWrite',
+                    actions: [
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutGridTableYearly'
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutCopyMergePopupCopyButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutCopyMergePopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutCopyMergePopupMergeButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutCopyMergePopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutCopyMergePopupCancel': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutCopyMergePopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutDistributionEditPopupControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutDistributionEditPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutDistributionEditPopupControlPanelSaveButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutDistributionEditPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutDistributionPopupLastYearButton' : [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutDistributionPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutDistributionPopupLinearSplitButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutDistributionPopup'
+        }
+    ],
+    //end rocheBPSPProductsCheckout comment mody
+
+    'launch.rocheBPSPSettingsGridRow2Cell3Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPMaterial'
+        }
+    ],
+
+    'launch.rocheBPSPMaterialGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPSettings'
+        }
+    ],
+
+    'launch.rocheBPSPAddMaterialGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPMaterial'
+        }
+    ],
+
+    'launch.rocheBPSPMaterialGridRow4Cell1Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPAddMaterial'
+        }
+    ],
+
+
+    'launch.rocheBPSPMainGridRow3Cell3Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPipPlanning'
+        }
+    ],
+
+    'launch.rocheBPSPipPlanningGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPMain'
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPipPlanningGridRow1Cell3DropBox']
+        }
+    ],
+
+
+    'launch.rocheBPSPMainGridRow5Cell1Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPSettings'
+        }
+    ],
+
+    'launch.rocheBPSPipPlanningGridRow2Cell1SegmentedControlItem1': [
+        {
+            action: app.fn.addSystemValue,
+            argument: ['dynamicValue', 'Cash Sales']
+        }
+    ],
+
+    'launch.rocheBPSPipPlanningGridRow2Cell1SegmentedControlItem2': [
+        {
+            action: app.fn.addSystemValue,
+            argument: ['dynamicValue', 'Lease']
+        }
+    ],
+
+    'launch.rocheBPSPipPlanningGridRow2Cell1SegmentedControlItem3': [
+        {
+            action: app.fn.addSystemValue,
+            argument: ['dynamicValue', 'Return']
+        }
+    ],
+
+
+    'launch.rocheBPSPipPlanningGridTableMonthlyHeaderFocusButton': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPipPlanningMaterialSelectorShortcutPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPipPlanningMaterialSelectorShortcutPopupGridTable'
+        }
+    ],
+
+
+    'segmentedControlTab1.rocheBPSPAddMaterialGridRow2Cell1SegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'RocheBPSPMaterialsAddMaterialClipboard'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPAddMaterialGridRow4'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPAddMaterialGridRow3'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPMateralsAddMaterialSearchPagerPanel'
+        }
+    ],
+
+
+    'segmentedControlTab2.rocheBPSPAddMaterialGridRow2Cell1SegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'RocheBPSPMaterialsAddMaterialClipboard'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPAddMaterialGridRow3'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPAddMaterialGridRow4'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPMateralsAddMaterialSearchPagerPanel'
+        }
+    ],
+
+    'segmentedControlTab1.rocheBPSPMaterialGridRow2Cell1SegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'RocheBPSPMaterialIPNodeGridTable'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPMaterialGridTable'
+        }
+    ],
+
+    'segmentedControlTab2.rocheBPSPMaterialGridRow2Cell1SegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPMaterialGridTable'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'RocheBPSPMaterialIPNodeGridTable'
+        }
+    ],
+
+    'launch.rocheBPSPMaterialGridRow4Cell2Button': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPMaterialAddDummyPopup'
+        },
+    ],
+    'launch.rocheBPSPMaterialAddDummyPopupControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialAddDummyPopup'
+        }
+    ],
+
+    'launch.rocheBPSPMaterialAddDummyPopupControlPanelAddButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialAddDummyPopup'
+        }
+    ],
+
+    'launch.rocheBPSPMaterialGridTable_row_5': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPMaterialMoveDataPopup'
+        },
+    ],
+
+    'launch.RocheBPSPMaterialIPNodeGridTable_row_5': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPMaterialMoveDataPopup'
+        },
+    ],
+
+    'launch.rocheBPSPMaterialMoveDataPopupControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialMoveDataPopup'
+        }
+    ],
+
+    'launch.rocheBPSPMaterialMoveDataPopupControlPanelAddButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialMoveDataPopup'
+        }
+    ],
+
+    'launch.rocheBPSPMateralsAddMaterialSearchPagerPreviousButton': [
+        {
+            action: app.fn.decreasePage,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        }
+    ],
+    'launch.rocheBPSPMateralsAddMaterialSearchPagerNextButton': [
+        {
+            action: app.fn.increasePage,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        }
+    ],
+    'launch.rocheBPSPMateralsAddMaterialSearchPagerFirstPageButton': [
+        {
+            action: app.fn.jumpToFirstPage,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        }
+    ],
+    'launch.rocheBPSPMateralsAddMaterialSearchPagerLastPageButton': [
+        {
+            action: app.fn.jumpToLastPage,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        }
+    ],
+
+    'launch.rocheBPSPMaterialGridTable_row_4': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPMaterialDeleteDataPopup'
+        },
+    ],
+
+    'launch.RocheBPSPMaterialIPNodeGridTable_row_4': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPMaterialDeleteDataPopup'
+        },
+    ],
+    'launch.rocheBPSPMaterialDeleteDataPopupControlPanelAddButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialDeleteDataPopup'
+        }
+    ],
+
+    'launch.rocheBPSPMaterialDeleteDataPopupControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialDeleteDataPopup'
+        }
+    ],
+
+};
