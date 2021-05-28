@@ -8247,7 +8247,7 @@ app.widgetConfig = {
                             widgets: [
 
                                 {
-                                    id: 'rocheBPSPMaterialGridTableButton-4',
+                                    id: 'rocheBPSPMaterialGridTableButton4',
                                     type: ButtonWidget,
                                     skin: 'chartGT_bpsp',
                                 }
@@ -8854,6 +8854,7 @@ app.widgetConfig = {
                                                             event: 'choose.rocheBPSPMaterialGridRow1Cell2DropBox.finished',
                                                             method: 'refresh'
                                                         },
+                                                        {event: 'bodyReady', method: 'refresh'},
                                                         {
                                                             'event': 'bodyReady',
                                                             'method': 'refreshWithWaitingForEvent',
@@ -8980,6 +8981,475 @@ app.widgetConfig = {
                                         },
                                         {
                                             id: 'rocheBPSPMaterialDeleteDataPopupControlPanelCancelButton',
+                                            type: ButtonWidget,
+                                            width: 100,
+                                            height: 40,
+                                            marginLeft: 15,
+                                            skin: 'white_bg_bpsp',
+                                            label: 'Cancel'
+                                        }
+                                    ]
+                                }
+
+
+                            ]
+                        },
+
+                    ]
+                },
+
+                {
+                    id: 'rocheBPSPMaterialAddDummyGridTablePopup',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: false,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    width: '400',
+                    heiht: '800',
+                    bgScrollable: true,
+                    fixed: true,
+                    heightFixed: false,
+                    behaviour: 'popup',
+                    position: 'top',
+                    skin: '',
+                    left: '250px',
+                    top: '350px',
+                    fadingSpeed: 0,
+                    offset: 260,
+                    widgets: [
+                        {
+                            id: 'rocheBPSPMaterialAddDummyGridTablePopupGrid',
+                            type: GridWidget,
+                            width: 350,
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow1',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    marginTop: '4%',
+                                    paddingBottom: 10,
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow1Cell1',
+                                            type: GridCellWidget,
+                                            width: '100%',
+                                            alignment: 'center-center',
+                                            widgets: [
+                                                {
+                                                    id: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow1Cell1Text',
+                                                    type: TextWidget,
+                                                    paddingRight: 1,
+                                                    fontBold: true,
+                                                    fontSize: 30,
+                                                    skin: 'messageboard_text_bpsp',
+                                                    title: 'Add New Dummy GRID TABLE'
+                                                },
+                                            ]
+                                        }
+                                        ,
+
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow2',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    marginTop: '10%',
+                                    paddingBottom: 10,
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow2Cell1',
+                                            type: GridCellWidget,
+                                            width: '100%',
+                                            alignment: 'center-center',
+                                            widgets: [
+                                                {
+                                                    id: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow2Cell1TextInput',
+                                                    type: TextBoxWidget,
+                                                    width: '350',
+                                                    skin: 'searchbox_material_bpsp',
+                                                    titleFontColor: '#000000',
+                                                    textFontSize: '14',
+                                                    title: 'Description',
+                                                    defaultText: 'New Dummy Title',
+                                                }
+                                            ]
+                                        }
+                                        ,
+
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow3',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    marginTop: '5%',
+                                    paddingBottom: 10,
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow3Cell1',
+                                            type: GridCellWidget,
+                                            width: '100%',
+                                            alignment: 'center-center',
+                                            widgets: [
+                                                {
+                                                    id: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow3Cell1textInput',
+                                                    type: TextBoxWidget,
+                                                    width: '350',
+                                                    skin: 'searchbox_material_bpsp',
+                                                    titleFontColor: '#000000',
+                                                    textFontSize: '14',
+                                                    title: 'Profit Center Number',
+                                                    defaultText: '46464',
+                                                }
+                                            ]
+                                        }
+                                        ,
+
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow4',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    paddingTop: 10,
+                                    paddingBottom: 10,
+                                    marginTop: '7%',
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow4Cell1',
+                                            type: GridCellWidget,
+                                            width: '100%',
+                                            alignment: 'center-left',
+                                            widgets: [
+                                                {
+                                                    id: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow4Cell1Dropbox',
+                                                    type: DropBoxWidget,
+                                                    width: '350px',
+                                                    title: 'IP Node',
+                                                    skin: 'add_dummy_bpsp',
+                                                    marginBottom: 5,
+                                                    selectFirst: true,
+                                                    backdrop: true,
+                                                    listen: [
+
+                                                        {
+                                                            event: 'choose.rocheBPSPMaterialGridRow1Cell2DropBox.finished',
+                                                            method: 'refresh'
+                                                        },
+                                                        {
+                                                            'event': 'bodyReady',
+                                                            'method': 'refreshWithWaitingForEvent',
+                                                            'parameters': [
+                                                                'rendered.rocheBPSPMaterialPageInit',
+                                                            ]
+                                                        },
+                                                    ]
+                                                }
+
+                                            ]
+                                        }
+                                        ,
+
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow5',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    marginTop: '7%',
+                                    paddingBottom: 10,
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow5Cell1',
+                                            type: GridCellWidget,
+                                            width: '100%',
+                                            alignment: 'center-left',
+                                            widgets: [
+
+                                                {
+                                                    id: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow5Cell1Dropbox',
+                                                    type: DropBoxWidget,
+                                                    width: '350px',
+                                                    title: 'Material Category',
+                                                    skin: 'add_dummy_bpsp',
+                                                    marginBottom: 5,
+                                                    selectFirst: true,
+                                                    backdrop: true
+                                                }
+
+                                            ]
+                                        }
+                                        ,
+
+                                    ]
+                                },
+
+
+                                {
+                                    id: 'rocheBPSPMaterialAddDummyGridTablePopupControlPanel',
+                                    type: PanelWidget,
+                                    skin: 'horizontal_align_center',
+                                    marginTop: '11%',
+                                    marginBottom: 30,
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPMaterialAddDummyGridTablePopupControlPanelAddButton',
+                                            type: ButtonWidget,
+                                            height: 40,
+                                            width: 100,
+                                            skin: 'blue_button_bpsp',
+                                            borderWidth: 0,
+                                            label: 'Add'
+                                        },
+                                        {
+                                            id: 'rocheBPSPMaterialAddDummyGridTablePopupControlPanelCancelButton',
+                                            type: ButtonWidget,
+                                            width: 100,
+                                            height: 40,
+                                            marginLeft: 15,
+                                            skin: 'white_bg_bpsp',
+                                            label: 'Cancel'
+                                        }
+                                    ]
+                                }
+
+
+                            ]
+                        },
+
+                    ]
+                },
+
+
+                {
+                    id: 'rocheBPSPMaterialAddDummyGridTableIPpopup',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: false,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    width: '400',
+                    heiht: '800',
+                    bgScrollable: true,
+                    fixed: true,
+                    heightFixed: false,
+                    behaviour: 'popup',
+                    position: 'top',
+                    skin: '',
+                    left: '250px',
+                    top: '350px',
+                    fadingSpeed: 0,
+                    offset: 260,
+                    widgets: [
+                        {
+                            id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGrid',
+                            type: GridWidget,
+                            width: 350,
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow1',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    marginTop: '4%',
+                                    paddingBottom: 10,
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow1Cell1',
+                                            type: GridCellWidget,
+                                            width: '100%',
+                                            alignment: 'center-center',
+                                            widgets: [
+                                                {
+                                                    id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow1Cell1Text',
+                                                    type: TextWidget,
+                                                    paddingRight: 1,
+                                                    fontBold: true,
+                                                    fontSize: 30,
+                                                    skin: 'messageboard_text_bpsp',
+                                                    title: 'Add New Dummy IP Node '
+                                                },
+                                            ]
+                                        }
+                                        ,
+
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow2',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    marginTop: '10%',
+                                    paddingBottom: 10,
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow2Cell1',
+                                            type: GridCellWidget,
+                                            width: '100%',
+                                            alignment: 'center-center',
+                                            widgets: [
+                                                {
+                                                    id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow2Cell1TextInput',
+                                                    type: TextBoxWidget,
+                                                    width: '350',
+                                                    skin: 'searchbox_material_bpsp',
+                                                    titleFontColor: '#000000',
+                                                    textFontSize: '14',
+                                                    title: 'Description',
+                                                    defaultText: 'New Dummy Title',
+                                                }
+                                            ]
+                                        }
+                                        ,
+
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow3',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    marginTop: '5%',
+                                    paddingBottom: 10,
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow3Cell1',
+                                            type: GridCellWidget,
+                                            width: '100%',
+                                            alignment: 'center-center',
+                                            widgets: [
+                                                {
+                                                    id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow3Cell1textInput',
+                                                    type: TextBoxWidget,
+                                                    width: '350',
+                                                    skin: 'searchbox_material_bpsp',
+                                                    titleFontColor: '#000000',
+                                                    textFontSize: '14',
+                                                    title: 'Profit Center Number',
+                                                    defaultText: '46464',
+                                                }
+                                            ]
+                                        }
+                                        ,
+
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow4',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    paddingTop: 10,
+                                    paddingBottom: 10,
+                                    marginTop: '7%',
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow4Cell1',
+                                            type: GridCellWidget,
+                                            width: '100%',
+                                            alignment: 'center-left',
+                                            widgets: [
+                                                {
+                                                    id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow4Cell1Dropbox',
+                                                    type: DropBoxWidget,
+                                                    width: '350px',
+                                                    title: 'IP Node',
+                                                    skin: 'add_dummy_bpsp',
+                                                    marginBottom: 5,
+                                                    selectFirst: true,
+                                                    backdrop: true,
+                                                    listen: [
+
+                                                        {
+                                                            event: 'choose.rocheBPSPMaterialGridRow1Cell2DropBox.finished',
+                                                            method: 'refresh'
+                                                        },
+                                                        {
+                                                            'event': 'bodyReady',
+                                                            'method': 'refreshWithWaitingForEvent',
+                                                            'parameters': [
+                                                                'rendered.rocheBPSPMaterialPageInit',
+                                                            ]
+                                                        },
+                                                    ]
+                                                }
+
+                                            ]
+                                        }
+                                        ,
+
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow5',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    marginTop: '7%',
+                                    paddingBottom: 10,
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow5Cell1',
+                                            type: GridCellWidget,
+                                            width: '100%',
+                                            alignment: 'center-left',
+                                            widgets: [
+
+                                                {
+                                                    id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow5Cell1Dropbox',
+                                                    type: DropBoxWidget,
+                                                    width: '350px',
+                                                    title: 'Material Category',
+                                                    skin: 'add_dummy_bpsp',
+                                                    marginBottom: 5,
+                                                    selectFirst: true,
+                                                    backdrop: true
+                                                }
+
+                                            ]
+                                        }
+                                        ,
+
+                                    ]
+                                },
+
+
+                                {
+                                    id: 'rocheBPSPMaterialAddDummyGridTableIPpopupControlPanel',
+                                    type: PanelWidget,
+                                    skin: 'horizontal_align_center',
+                                    marginTop: '11%',
+                                    marginBottom: 30,
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPMaterialAddDummyGridTableIPpopupControlPanelAddButton',
+                                            type: ButtonWidget,
+                                            height: 40,
+                                            width: 100,
+                                            skin: 'blue_button_bpsp',
+                                            borderWidth: 0,
+                                            label: 'Add'
+                                        },
+                                        {
+                                            id: 'rocheBPSPMaterialAddDummyGridTableIPpopupControlPanelCancelButton',
                                             type: ButtonWidget,
                                             width: 100,
                                             height: 40,

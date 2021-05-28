@@ -3270,14 +3270,14 @@ app.repository = {
     rocheBPSPMaterialMoveDataPopupControlPanelAddButton: {
         launch:
             {
-                url: (db) => `/api/v1/Processes('MODULE - UI - Material Maintenance Add Dummy Material')/tm1.ExecuteWithReturn`,
+                url: (db) => `/api/v1/Processes('MODULE - UI - Material Maintenance Move IP plan')/tm1.ExecuteWithReturn`,
                 type: 'POST',
                 body: (db) => `{
                         "Parameters": [
                         
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pMaterialFrom", "Value": "${Utils.getGridTableCell('rocheBPSPMaterialGridTable', 2).title}"},
-                                {"Name": "pMaterialTo", "Value": "${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}"},
+                                {"Name": "pMaterialTo", "Value": "${v('rocheBPSPMaterialMoveDataPopupGridRow2Cell1Dropbox.value')}"},
                         ]
 
 
@@ -3891,7 +3891,6 @@ app.repository = {
 
 
     rocheBPSPMaterialMoveDataPopupGridRow2Cell1Dropbox: {
-
         initCondition: (db) => {
             return Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow1Cell2DropBox') && db.systemValueGlobalCompanyProductPlanVersion;
         },
@@ -3902,8 +3901,9 @@ app.repository = {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
             type: 'POST',
             body: (db) => `
-                        {
-                    "MDX" :"
+            {
+            "MDX" : "
+
                             SELECT 
                                {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP Caption]} 
                               ON COLUMNS , 
@@ -3913,6 +3913,129 @@ app.repository = {
                               ON ROWS 
                             FROM [}ElementAttributes_Materials] 
 
+            "}`,
+            parsingControl: {
+                type: 'list',
+                query:
+                    (r, x) => {
+                        let selected = v('rocheBPSPMaterialMoveDataPopupGridRow2Cell1Dropbox.value');
+                        return {name: r.Cells[x].FormattedValue, on: selected === r.Cells[x].FormattedValue};
+                    }
+            }
+        }
+    },
+
+
+    rocheBPSPMaterialAddDummyGridTablePopupGridRow4Cell1Dropbox: {
+
+        initCondition: (db) => {
+            return Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow1Cell2DropBox') && db.systemValueGlobalCompanyProductPlanVersion;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+                            "MDX" : "SELECT
+                   {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP Caption]}
+                  ON COLUMNS ,
+                   {Filter(
+                      {TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')},
+                    [Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].CurrentMember.Properties('Product Level - Name') = 'IP Node')}
+                  ON ROWS
+                FROM [}ElementAttributes_Materials]
+
+
+            "}`,
+            parsingControl: {
+                type: 'list',
+                query:
+                    (r, x) => {
+                        return {name: r.Cells[x].FormattedValue, on: false};
+                    }
+            }
+        }
+    },
+
+
+    rocheBPSPMaterialAddDummyGridTablePopupGridRow5Cell1Dropbox: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+                        {
+                    "MDX" :"
+                    SELECT
+                       {[}ElementAttributes_zSYS UI Material Category].[}ElementAttributes_zSYS UI Material Category].[Caption]}
+                      ON COLUMNS ,
+                       {[zSYS UI Material Category].[zSYS UI Material Category].Members}
+                      ON ROWS
+                    FROM [}ElementAttributes_zSYS UI Material Category]
+                     "}`,
+            parsingControl: {
+                type: 'list',
+                query:
+                    (r, x) => {
+                        return {name: r.Cells[x].FormattedValue, on: false};
+                    }
+            }
+        }
+    },
+
+
+    rocheBPSPMaterialAddDummyGridTableIPpopupGridRow4Cell1Dropbox: {
+
+        initCondition: (db) => {
+            return Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow1Cell2DropBox') && db.systemValueGlobalCompanyProductPlanVersion;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+                            "MDX" : "SELECT
+                   {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP Caption]}
+                  ON COLUMNS ,
+                   {Filter(
+                      {TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')},
+                    [Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].CurrentMember.Properties('Product Level - Name') = 'IP Node')}
+                  ON ROWS
+                FROM [}ElementAttributes_Materials]
+
+
+            "}`,
+            parsingControl: {
+                type: 'list',
+                query:
+                    (r, x) => {
+                        return {name: r.Cells[x].FormattedValue, on: false};
+                    }
+            }
+        }
+    },
+
+
+    rocheBPSPMaterialAddDummyGridTableIPpopupGridRow5Cell1Dropbox: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+                        {
+                    "MDX" :"
+                    SELECT
+                       {[}ElementAttributes_zSYS UI Material Category].[}ElementAttributes_zSYS UI Material Category].[Caption]}
+                      ON COLUMNS ,
+                       {[zSYS UI Material Category].[zSYS UI Material Category].Members}
+                      ON ROWS
+                    FROM [}ElementAttributes_zSYS UI Material Category]
                      "}`,
             parsingControl: {
                 type: 'list',

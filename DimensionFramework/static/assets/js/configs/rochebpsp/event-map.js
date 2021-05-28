@@ -1082,4 +1082,44 @@ app.eventMap = {
         }
     ],
 
+    'launch.rocheBPSPMaterialGridTable_row_3': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPMaterialAddDummyGridTablePopup'
+        },
+    ],
+    'launch.rocheBPSPMaterialAddDummyGridTablePopupControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialAddDummyGridTablePopup'
+        }
+    ],
+
+    'launch.rocheBPSPMaterialAddDummyGridTablePopupControlPanelAddButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialAddDummyGridTablePopup'
+        }
+    ],
+
+
+    'launch.RocheBPSPMaterialIPNodeGridTable_row_3': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPMaterialAddDummyGridTableIPpopup'
+        },
+    ],
+    'launch.rocheBPSPMaterialAddDummyGridTableIPpopupControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialAddDummyGridTableIPpopup'
+        }
+    ],
+
+    'launch.rocheBPSPMaterialAddDummyGridTableIPpopupControlPanelAddButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialAddDummyGridTableIPpopup'
+        }
+    ],
 };
