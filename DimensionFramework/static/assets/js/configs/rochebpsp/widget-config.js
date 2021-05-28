@@ -3888,6 +3888,10 @@ app.widgetConfig = {
                                     'event': 'switch.rocheBPSPProductsCheckoutDistributionEditPopupGridTable.finished',
                                     'method': 'refreshWithTimeout',
                                     'parameters': [500]
+                                },
+                                {
+                                    'event': 'launch.rocheBPSPProductsCheckoutDistributionEditPopupGridTable_row_6.finished',
+                                    'method': 'refresh'
                                 }
                             ],
                             widgets: [
@@ -4305,6 +4309,22 @@ app.widgetConfig = {
                         },
                         {
                             'event': 'launch.rocheBPSPProductsCheckoutCommentEditControlPanelSaveButton.finished',
+                            'method': 'refresh'
+                        },
+                        {
+                            'event': 'launch.rocheBPSPProductsCheckoutCopyMergePopupCopyButton.finished',
+                            'method': 'refresh'
+                        },
+                        {
+                            'event': 'launch.rocheBPSPProductsCheckoutCopyMergePopupMergeButton.finished',
+                            'method': 'refresh'
+                        },
+                        {
+                            'event': 'launch.rocheBPSPProductsCheckoutDistributionEditPopupControlPanelSaveButton.finished',
+                            'method': 'refresh'
+                        },
+                        {
+                            'event': 'launch.rocheBPSPProductsCheckoutDistributionEditPopupControlPanelCancelButton.finished',
                             'method': 'refresh'
                         }
                     ],

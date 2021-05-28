@@ -276,6 +276,12 @@ const Utils = {
     setWidgetValue(key, value){
         WidgetValue[key] = value;
     },
+    getPropertyOrFunctionValue(object, property){
+        if(typeof object[property] === 'function'){
+            return object[property]();
+        }
+        return object[property];
+    },
     create_UUID() {
         let dt = new Date().getTime();
 
