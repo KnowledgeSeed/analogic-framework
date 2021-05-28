@@ -757,6 +757,10 @@ app.eventMap = {
                     conditionKey: 'distributionEdit',
                     actions: [
                         {
+                            action: app.fn.addGridTableCurrentRowSystemValue,
+                            argument: ['DistributionEditProductCode', 'rocheBPSPProductsCheckoutGridTableYearly', 1, 'title']
+                        },
+                        {
                             action: app.fn.openPopup,
                             argument: 'rocheBPSPProductsCheckoutDistributionEditPopup'
                         },
@@ -798,6 +802,18 @@ app.eventMap = {
             ]
         }
     ],
+    'launch.rocheBPSPProductsCheckoutCopyMergePopupCopyButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutCopyMergePopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutCopyMergePopupMergeButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutCopyMergePopup'
+        }
+    ],
     'launch.rocheBPSPProductsCheckoutCopyMergePopupCancel': [
         {
             action: app.fn.togglePopup,
@@ -805,6 +821,12 @@ app.eventMap = {
         }
     ],
     'launch.rocheBPSPProductsCheckoutDistributionEditPopupControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutDistributionEditPopup'
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutDistributionEditPopupControlPanelSaveButton': [
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPProductsCheckoutDistributionEditPopup'

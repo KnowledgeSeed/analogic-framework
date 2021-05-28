@@ -74,13 +74,14 @@ class TextWidget extends Widget {
         }
 
         section.find('.ks-text-icon').on('click', (e) => {
-            let s = $(e.currentTarget);
-
+            let s = $(e.currentTarget), pDiv = s.closest('.ks-text');
+            s.data('on', pDiv.hasClass('ks-perform-edit'));
             Widget.doHandleSystemEvent(s, e);
 
             if (this.amIOnAGridTable()) {
                 Widget.doHandleGridTableSystemEvent(s, e);
             }
+            pDiv.removeClass('ks-perform-edit');
         });
     }
 
@@ -226,7 +227,7 @@ class TextWidget extends Widget {
         textTitle.on('click', e => {
             let c = $(e.currentTarget), ksText = section.find('.ks-text'), editable = textTitle.data('editable') == 1, originalValue = c.text();
             c.off('click');
-            ksText.addClass('ks-on');
+            ksText.addClass('ks-on').addClass('ks-perform-edit');
             c.html(`<input class="ks-text-title-input" data-id="${o.id}" data-action="write" data-ordinal="${c.data('ordinal')}" type="text" value="${originalValue}"/>`).promise().then(() => {
                 let r = c.find('.ks-text-title-input').focus().select().on('focusout', f => {
                     let val =  Utils.escapeText(r.val());

@@ -278,7 +278,7 @@ QB.writeData = (eventMapId, event, element) => {
             return Server.download(g.download(context));
         }
         let c = r.cellsetId || '', body = isGridTable ? g.body(context,v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.body(context),
-            url = isGridTable ? g.url({...r, ...{cellsetId: c}}, z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
+            url = isGridTable ? g.url({...r, ...{cellsetId: c}}, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
 
         if (g.server) {
 
@@ -287,7 +287,14 @@ QB.writeData = (eventMapId, event, element) => {
             body = mm.body;
         }
 
-        Auth.getTm1AjaxRequest(app.tm1ApiHost + url, body, g.type).then((d) => {
+        let type;
+        if(typeof g.type === 'function'){
+            type = isGridTable ? g.type(context, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.type(context);
+        }else{
+            type = g.type;
+        }
+
+        Auth.getTm1AjaxRequest(app.tm1ApiHost + url, body, type).then((d) => {
             QB.executeEventMapAction(eventMapId + '.finished', event, element, d);
         });
     }

@@ -216,6 +216,10 @@ app.fn.addGridTableSystemValue = arg => {
     let systemValueName = 'systemValue' + arg[0], gridTableValues = v(arg[1]);
 
     WidgetValue[systemValueName] = gridTableValues.cellData[gridTableValues.row][arg[2]][arg[3]];
+}
+
+app.fn.addGridTableCurrentRowSystemValue = arg => {
+    WidgetValue['systemValue' + arg[0]] = Utils.getGridTableCell(arg[1], arg[2])[arg[3]];
 };
 
 app.fn.increaseWidgetValue = arg => {
@@ -356,11 +360,20 @@ app.fn.checkTIResponseStatus = (argument, ev, element, response) => {
 app.fn.conditionalGridTablePopup = (argument, ev, element) => {
     let currentCell = Utils.getGridTableCurrentCell(element.data('id').split('_')[0]), i, j;
     for (i = 0; i < argument.length; ++i) {
-        if ((currentCell[argument[i].conditionKey] && currentCell[argument[i].conditionKey] === true) || argument[i].conditionKey === 'else') {
-            for (j = 0; j < argument[i].actions.length; ++j) {
-                argument[i].actions[j].action(argument[i].actions[j].argument, ev, element);
+        if (currentCell[argument[i].conditionKey] || argument[i].conditionKey === 'else') {
+            let conditionKeyResult;
+            if (typeof currentCell[argument[i].conditionKey] === 'function') {
+                conditionKeyResult = currentCell[argument[i].conditionKey]();
+            } else {
+                conditionKeyResult = currentCell[argument[i].conditionKey];
             }
-            return;
+
+            if (conditionKeyResult === true || argument[i].conditionKey === 'else') {
+                for (j = 0; j < argument[i].actions.length; ++j) {
+                    argument[i].actions[j].action(argument[i].actions[j].argument, ev, element);
+                }
+                return;
+            }
         }
     }
 }
