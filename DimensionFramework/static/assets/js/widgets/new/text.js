@@ -75,7 +75,7 @@ class TextWidget extends Widget {
 
         section.find('.ks-text-icon').on('click', (e) => {
             let s = $(e.currentTarget), pDiv = s.closest('.ks-text');
-            s.data('on', pDiv.hasClass('ks-perform-edit'));
+            s.data('on', pDiv.hasClass('ks-perform-edit'));L(pDiv.hasClass('ks-perform-edit'));
             Widget.doHandleSystemEvent(s, e);
 
             if (this.amIOnAGridTable()) {
@@ -237,6 +237,8 @@ class TextWidget extends Widget {
                     let ic = section.find('.ks-text-icon');
                     if (ic.is(':visible') && originalValue !== val) {
                         ic.data('value', val);
+                        let pDiv = ic.closest('.ks-text');
+                        ic.data('on', pDiv.hasClass('ks-perform-edit'));L(pDiv.hasClass('ks-perform-edit'));
                         Widget.doHandleSystemEvent(ic, f);
 
                         if (amIOnGridTable) {

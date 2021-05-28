@@ -1570,10 +1570,11 @@ app.repository = {
                         WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex'] = WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex'] + 1;
                         let c = r.Cells[WidgetValue['rocheBPSPProductsCheckoutDistributionEditPopupGridTableRelativeIndex']], editable = c.Consolidated === false && c.RuleDerived === false;
                         return {
-                            value: parseInt(c.FormattedValue) === 0 ? 0 : editable ? 1 : 0,
+                            value: parseInt(c.FormattedValue) === 0 ? 0 : 1,
                             ordinal: c.Ordinal,
-                          //  cellSkin: editable ? '' : 'readonly_bpsp',//todo !!!
-                            editable: editable
+                            cellSkin: editable ? '' : 'readonly_bpsp',
+                            editable: editable,
+                            skin: 'lock_unlock_bpsp'
                         };
                     },
                     (r, x) => {
@@ -1835,7 +1836,7 @@ app.repository = {
                 }else {
                     return `{
                         "Parameters": [
-                                {"Name": "pValue", "Value": "${v('rocheBPSPProductsCheckoutGridTableYearly.perform.value').replace(/\s/g, '')}"},
+                                {"Name": "pValue", "Value": "${v('rocheBPSPProductsCheckoutGridTableYearly.value').replace(/\s/g, '')}"},
                                 {"Name": "pPeriod", "Value": "${v('systemValueGlobalSegmentedControlRelativeYearValue')}"},
                                 {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPProductsCheckoutGridTableYearly', 1).title}"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
@@ -2018,9 +2019,15 @@ app.repository = {
         },
         launch: {
             download: (db) => {
-                let y1 = parseInt(db.systemValueGlobalStartingPlanYear);
+                let y1 = parseInt(db.systemValueGlobalStartingPlanYear), s = [], fileName;
+                s.push(Utils.getFormattedDate(new Date(), '_', true));
+                s.push(db.activeUserName);
+                s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key'));
+                s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key'));
+                s.push(db.systemValueCheckoutProduct);
+                fileName =  s.join('_').replaceAll(':','_').replaceAll(' ', '_').replaceAll('/', '_');
                 return {
-                    url: 'export?export_key=rocheMonthly',
+                    url: 'export?export_key=rocheMonthly&file_name=' + fileName + '.xlsx',
                     activeUserName: db.activeUserName,
                     companyVersion: db.systemValueGlobalCompanyVersion, //Live
                     productPlanVersion: db.systemValueGlobalCompanyProductPlanVersion, //Budget
@@ -2100,6 +2107,25 @@ app.repository = {
                 validationMessage: 'First row of excel does not match'
                 //      preProcessTemplate: v('preprocess.choose.value') === false ? 'Template1' : v('preprocess.choose.value')
             };
+        },
+        request:  {
+            url: (db) => `/api/v1/Processes('MODULE - UI - CSV Upload Post Processing')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => {
+                let fileName = v('rocheBPSPProductsCheckoutUploadPopupUpload.fileNames')[0].replace('.xlsx', '.csv');
+                L(fileName);
+                return `{
+                        "Parameters": [
+                                {"Name": "pUser", "Value": "${db.activeUserName}"},
+                                {"Name": "pProduct", "Value": "${db.systemValueCheckoutProduct}"},
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
+                                {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}"},
+                                {"Name": "pTargetCube", "Value": "Sales Plan by Product"},
+                                {"Name": "pSelectedProductLevel", "Value": "${v('rocheBPSPProductsCheckoutUploadPopupPlDropbox.value')}"},
+                                {"Name": "pFileName", "Value": "${fileName}"}
+                        ]
+                    }`;
+            }
         }
     },
     rocheBPSPProductsCheckoutCopyMergePopupCopyButton: {

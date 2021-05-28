@@ -333,6 +333,11 @@
     display: none!important;
 }
 
+.ks-toggle-lock_unlock_bpsp .ks-toggle-inner.readonly {
+    background-color: rgba(235, 236, 236, 0.4);
+    opacity: 90%;
+}
+
 .ks-toggle-lock_unlock_bpsp.ks-toggle .ks-toggle-icon-on:before{
     font-family: 'analogic' !important;
     content: "\e9eb";

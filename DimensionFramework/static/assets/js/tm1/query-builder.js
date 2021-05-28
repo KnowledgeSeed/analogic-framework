@@ -306,7 +306,8 @@ QB.writeData = (eventMapId, event, element) => {
     return true;
 };
 
-QB.executeEventMapAction = (eventMapId, event, element, response) => {console.log(eventMapId);
+QB.executeEventMapAction = (eventMapId, event, element, response) => {
+    L(eventMapId);
     El.body.triggerHandler(eventMapId);
     let actions = EventMap[eventMapId], a;
     if (actions) {

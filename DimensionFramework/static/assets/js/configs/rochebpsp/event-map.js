@@ -448,6 +448,12 @@ app.eventMap = {
     //end products
 
     //rocheBPSPProductsCheckout
+    'upload.rocheBPSPProductsCheckoutUploadPopupUpload.finished' : [
+        {
+            action: app.fn.executeRequest,
+            argument: 'request.rocheBPSPProductsCheckoutUploadPopupUpload'
+        }
+    ],
     'launch.rocheBPSPProductsCheckoutGridRow1Cell4Button': [
         {
             action: app.fn.forceRefresh,
