@@ -403,3 +403,7 @@ app.fn.jumpToLastPage = (widgetId) => {
     WidgetState[widgetId]['page'] = Utils.getGridTableActualAndLastPage(widgetId).maxPage;
     El.body.triggerHandler('page.' + widgetId);
 };
+
+app.fn.executeRequest = (eventMapId) => {
+    QB.writeData(eventMapId, {}, {});
+};

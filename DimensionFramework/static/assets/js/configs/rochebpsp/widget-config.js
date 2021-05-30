@@ -5318,6 +5318,10 @@ app.widgetConfig = {
                         {
                             'event': 'launch.rocheBPSPProductsCheckoutDistributionPopupLinearSplitButton.finished',
                             'method': 'refresh'
+                        },
+                        {
+                            'event': 'request.rocheBPSPProductsCheckoutUploadPopupUpload.finished',
+                            'method': 'refresh'
                         }
                     ],
                     title: '',

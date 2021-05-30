@@ -34,7 +34,7 @@ class Export:
         product = request.args['product']
 
         font_size = 12
-        worksheet.protect('ADSBP')
+        worksheet.protect('ADSBP', {'format_cells': True, 'format_rows': True, 'format_columns': True})
 
         worksheet.write(0, 0, user)
         worksheet.write(0, 1, company)
