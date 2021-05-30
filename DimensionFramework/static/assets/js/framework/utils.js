@@ -282,6 +282,9 @@ const Utils = {
         }
         return object[property];
     },
+    getDecimalFromPercentString(value){
+        return Utils.parseNumber(value.replace('%', '')) / 100;
+    },
     create_UUID() {
         let dt = new Date().getTime();
 

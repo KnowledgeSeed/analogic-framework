@@ -82,7 +82,7 @@ class Export:
         target_url = cnf['tm1ApiHostBackend']
 
         response = requests.request(
-            url=target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue, Consolidated, RuleDerived, Updateable)',
+            url=target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable)',
             method='POST',
             data=mdx,
             headers=headers,
@@ -108,24 +108,33 @@ class Export:
             if i % 55 == 0:
                 r = r + 1
                 c = 0
-                pl = int(d['Cells'][i + 2]['FormattedValue'].replace('PL', '').replace('a', ''))
+                pl = int(d['Cells'][i + 2]['Value'].replace('PL', '').replace('a', ''))
                 cf = workbook.add_format()
                 cf.set_indent(pl)
                 cf.set_font_name('Imago')
                 cf.set_font_size(font_size)
                 cf.set_bg_color('#ebecec')
-                worksheet.write(r, c, d['Cells'][i]['FormattedValue'], cf)
+                value = d['Cells'][i]['Value']
+                if (value == None):
+                    value = 0
+                worksheet.write(r, c, value, cf)
                 c = c + 1
                 i = i + 1
-                worksheet.write(r, c, d['Cells'][i]['FormattedValue'], read_only)
+                value = d['Cells'][i]['Value']
+                if (value == None):
+                    value = 0
+                worksheet.write(r, c, value, read_only)
                 c = c + 1
                 i = i + 1
                 worksheet.write(r, c, pl, read_only)
             else:
+                value = d['Cells'][i]['Value']
+                if (value == None):
+                    value = 0
                 if d['Cells'][i]['Consolidated'] == False and d['Cells'][i]['RuleDerived'] == False:
-                    worksheet.write(r, c, d['Cells'][i]['FormattedValue'], simple)
+                    worksheet.write(r, c, value, simple)
                 else:
-                    worksheet.write(r, c, d['Cells'][i]['FormattedValue'], read_only)
+                    worksheet.write(r, c, value, read_only)
 
             i = i + 1
             c = c + 1

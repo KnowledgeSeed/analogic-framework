@@ -771,8 +771,8 @@ app.eventMap = {
                             argument: 'rocheBPSPProductsCheckoutDistributionEditPopup'
                         },
                         {
-                            action: app.fn.forceRefresh,
-                            argument: 'rocheBPSPProductsCheckoutDistributionEditPopupGridTable'
+                            action: app.fn.forceRefreshWithDelay,
+                            argument: ['rocheBPSPProductsCheckoutDistributionEditPopupGridTable', 500]
                         }
                     ]
                 },

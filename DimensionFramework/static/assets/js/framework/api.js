@@ -197,6 +197,10 @@ app.fn.showToolTipsChanged = () => $('.ks-button-info').toggle(WidgetValue.ShowT
 
 app.fn.forceRefresh = widgetId => El.body.triggerHandler('forcerefresh.' + widgetId);
 
+app.fn.forceRefreshWithDelay = (argument) => {
+    setTimeout(function(){ El.body.triggerHandler('forcerefresh.' + argument[0]); }, argument[1]);
+};
+
 app.fn.goToUrl = url => window.location.href = url;
 
 app.fn.goToUrlNewTab = url => {

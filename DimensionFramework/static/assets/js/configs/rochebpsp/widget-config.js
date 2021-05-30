@@ -2030,7 +2030,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPProductsCommentShowGridRow1Title',
                                             type: ButtonWidget,
-                                            label: 'Comment Show',
+                                            label: 'Comment',
                                             icon: 'icon-comment-off',
                                             marginTop: '15',
                                             marginBottom: '10',
@@ -3123,7 +3123,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPProductsCheckoutCommentShowGridRow1Title',
                                             type: ButtonWidget,
-                                            label: 'Comment Show',
+                                            label: 'Comment',
                                             icon: 'icon-comment-off',
                                             marginTop: '15',
                                             marginBottom: '10',
