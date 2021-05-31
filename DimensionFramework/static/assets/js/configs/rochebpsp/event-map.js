@@ -928,7 +928,7 @@ app.eventMap = {
     'launch.rocheBPSPIpPlanningCheckoutPopupCheckoutButton.finished': [
         {
             action: app.fn.checkTIResponseStatus,
-            argument: [app.fn.openPage, 'rocheBPSPIpPlanningCheckout', app.fn.openPopup, 'rocheBPSPIpPlanningCheckoutWarning']
+            argument: [app.fn.openPage, 'rocheBPSPIpPlanningCheckout', app.fn.openPage, 'rocheBPSPIpPlanningCheckout' ] //app.fn.openPopup, 'rocheBPSPIpPlanningCheckoutWarning']
         }
     ],
     'launch.rocheBPSPIpPlanningCheckoutWarningCancel': [

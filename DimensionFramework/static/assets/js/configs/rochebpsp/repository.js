@@ -3119,7 +3119,7 @@ app.repository = {
             }
     },
 
-     rocheBPSPIpPlanningCheckoutPopupCheckoutButton: {
+    rocheBPSPIpPlanningCheckoutPopupCheckoutButton: {
         launch:
             {
                 url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable Checkout by User')/tm1.ExecuteWithReturn`,
@@ -3127,7 +3127,7 @@ app.repository = {
                 body: (db) => `{
                         "Parameters": [
                                 {"Name": "pUserID", "Value": "${db.activeUserName}"},
-                                {"Name": "pMaterial", "Value": "${Utils.setAndGetGridTableSystemValueByCurrentRow('rocheBPSPipPlanningGridTableMonthly', 2, 'systemValueIPPlanningCheckoutProduct', 'title')}"},
+                                {"Name": "pMaterial", "Value": "${Utils.setAndGetGridTableSystemValueByCurrentRow('rocheBPSPipPlanningGridTableMonthly', 2, 'systemValueIpPlanningCheckoutProduct', 'title')}"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell3DropBox', 'key')}"},
                                 {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"}
@@ -3143,23 +3143,23 @@ app.repository = {
                 L('checkin success');
             }
         }
-      /*  launch:
-            {
-                url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
-                type: 'POST',
-                body: (db) => {
-                    Utils.setWidgetValue('systemValueBackFromCheckin', true);
-                    return `{
-                        "Parameters": [
-                                {"Name": "pUserID", "Value": "${db.activeUserName}"},
-                                {"Name": "pProduct", "Value": "${WidgetValue['systemValueCheckoutProduct']}"},
-                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}"},
-                                {"Name": "pReceiver", "Value": "${v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value')}"},
-                                {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"}
-                        ]
-                    }`
-                }
-            },*/
+        /*  launch:
+              {
+                  url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
+                  type: 'POST',
+                  body: (db) => {
+                      Utils.setWidgetValue('systemValueBackFromCheckin', true);
+                      return `{
+                          "Parameters": [
+                                  {"Name": "pUserID", "Value": "${db.activeUserName}"},
+                                  {"Name": "pProduct", "Value": "${WidgetValue['systemValueCheckoutProduct']}"},
+                                  {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}"},
+                                  {"Name": "pReceiver", "Value": "${v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value')}"},
+                                  {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"}
+                          ]
+                      }`
+                  }
+              },*/
     },
 
 
@@ -3523,6 +3523,508 @@ app.repository = {
                 }
             },
     },
+
+    rocheBPSPIpPlanningCheckoutGridTableMonthlyFunctions: {
+        getCell: (index, r) => {
+            let c = r.Cells[index], editable = c.Consolidated === false && c.RuleDerived === false,
+                performable = c.Consolidated === true && c.RuleDerived === false;
+
+            let result = {
+                title: c.FormattedValue,
+                cellSkin: editable ? '' : 'readonly_bpsp',
+                skin: editable ? 'monthly_center_bpsp' : 'monthly_right_bpsp',
+                cellVisible: true,
+                editable: editable,
+                ordinal: c.Ordinal,
+                members: c.Members,
+                performable: performable
+            };
+            if (performable) {
+                result['icon'] = 'icon-cloud-arrow-up';
+            }
+            return result;
+        }
+    },
+    rocheBPSPIpPlanningCheckoutGridRow1Cell9Button: {
+        reference: 'rocheBPSPProductsGridRow1Cell9Button'
+    },
+    rocheBPSPIpPlanningCheckoutGridRow1Cell2CompanyText: {
+        init: {
+            execute: (db) => {
+                return {title: v('rocheBPSPipPlanningGridRow1Cell2DropBox.value')};
+            }
+        }
+    },
+
+    rocheBPSPIpPlanningCheckoutGridRow1Cell3ReceiverText: {
+        init: {
+            execute: (db) => {
+                return {title: v('rocheBPSPipPlanningGridRow1Cell3DropBox.value')};
+            }
+        }
+    },
+    rocheBPSPIpPlanningCheckoutGridTableMonthly: {
+        perform: {
+            url: (db) => `/api/v1/Processes('MODULE - UI - Sales Plan by Product Split')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db, cell, widgetValue) => {
+                return `{
+                        "Parameters": [
+                                {"Name": "pValue", "Value": "${Utils.parseNumber(v('rocheBPSPIpPlanningCheckoutGridTableMonthly.value'))}"},
+                                {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPIpPlanningCheckoutGridTableMonthly', 1).title}"},
+                                {"Name": "pPeriod", "Value": "${Utils.getGridTableCurrentCell('rocheBPSPIpPlanningCheckoutGridTableMonthly').members[6].Name}"},
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}"},
+                                {"Name": "pReceiver", "Value": "${v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value')}"},
+                                {"Name": "pSplitMode", "Value": "Default"}
+                        ]
+                    }`
+            }
+        },
+        pastelast: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db, cell, widgetValue) => {
+                return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
+            }
+        },
+        paste: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db, cell, widgetValue) => {
+                return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
+            }
+        },
+        write: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db, cell, widgetValue) => {
+                return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
+            }
+        },
+        initCondition: (db) => {
+            return false;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Consolidated,RuleDerived,Updateable;$expand=Members($select=Name))`,
+            type: 'POST',
+            body: (db) => `
+            {
+                "MDX" : 
+                    "With
+                        --Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion
+                             Set DefaultProductRows AS
+                             {TM1DRILLDOWNMEMBER({[IpPlanning].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[PL1]}, ALL, RECURSIVE )}
+                        --Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion and systemValueGlobalCompanyFocusedElement
+                             Set FocusedOnProductRows AS
+                             {TM1DRILLDOWNMEMBER({[IpPlanning].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[${db.systemValueIpPlanningCheckoutProduct}]}, ALL, RECURSIVE )}
+                        --Decide which rowSet to use
+                             MEMBER [IpPlanning].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused] AS 
+                             IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
+                        -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
+                             MEMBER [Periods].[Periods].[ProductName] as 
+                                    [IpPlanning].[BPSP Budget].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
+                             MEMBER [Periods].[Periods].[ProductCaption] as 
+                                    [IpPlanning].[BPSP Budget].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
+                             MEMBER [Periods].[Periods].[ProductLevel] as 
+                                    [IpPlanning].[BPSP Budget].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                             MEMBER [Periods].[Periods].[zUI CheckOutFlag] as
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value])
+                             MEMBER [Periods].[Periods].[HasComment] as
+                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Comment Flag])
+                             MEMBER [Periods].[Periods].[zUI CheckOutUser] as 
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedBy])
+                             MEMBER [Periods].[Periods].[zUI CheckOutDateTime] as 
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime])
+                             MEMBER [Periods].[Periods].[zUI Split Flag] as 
+                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Paln],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Monthly Split Type])
+                        -- Create the first 5 column with information
+                             Set FixColumns AS
+                             {[Periods].[Periods].[ProductName],
+                              [Periods].[Periods].[ProductCaption],
+                              [Periods].[Periods].[ProductLevel],
+                              [Periods].[Periods].[zUI CheckOutFlag],
+                              [Periods].[Periods].[zUI CheckOutUser],
+                              [Periods].[Periods].[zUI CheckOutDateTime],
+                              [Periods].[Periods].[zUI Split Flag]}
+                             Set Comment AS
+                             {([Periods].[Periods].[HasComment])}
+                        -- query
+                        SELECT 
+                        --Columns
+                           {Union(Union(FixColumns,{DRILLDOWNMEMBER({[Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}]},{[Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}]})},All),{Comment},All)}
+                           PROPERTIES [Periods].[Periods].[Caption] ON COLUMNS , 
+                        -- rows
+                          {StrToSet([IpPlanning].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
+                          PROPERTIES [IpPlanning].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption] ON ROWS 
+                        FROM [Sales Plan by Product] 
+                        WHERE 
+                          (
+                           [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
+                       [Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
+                       [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}],
+                       [Receivers].[Receivers].[${v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value')}],
+                           [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value]
+                          )
+                        "
+            }
+       `,
+            parsingControl: {
+                type: 'matrix',
+                length: 21,
+                query: [
+                    (r, x) => {
+                        let result, pl;
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = x;
+
+                        pl = r.Cells[x + 2].FormattedValue.replace('a', '');
+                        result = {
+                            label: r.Cells[x].FormattedValue,
+                            skin: 'gridtable_checkout_hierarchy_bpsp_' + pl,
+                            cellVisible: true,
+                            icon: 'icon-badge',
+                            members: r.Cells[x].Members,
+                            productLevel: pl,
+                            hasComment: r.Cells[x + 20].FormattedValue === ''
+                        };
+                        return result;
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
+                            cellSkin: '',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue.replace('PL', ''),
+                            cellSkin: '',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 5;
+                        return {
+                            title: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue,
+                            cellSkin: 'readonly_bpsp',
+                            cellVisible: true,
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                        };
+                    },
+                    (r, x) => {
+                        let icon = v('systemValueIpPlanningCheckotSplitIcons')[r.Cells[x + 6].FormattedValue];
+
+                        let cell = {
+                            icon: !icon ? 'icon-distribution-equal' : icon,
+                            cellSkin: '',
+                            cellVisible: true,
+                            skin: 'IpPlanning_gd_distribution_icon_bpsp'
+                        };
+                        if (!icon) {
+                            cell['iconColor'] = 'white';
+                        }
+                        if (cell.icon === 'icon-distribution-equal') {
+                            cell.iconFontSize = 11;
+                        }
+                        return cell;
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthlyFunctions.getCell(WidgetValue['systemValueMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + 1;
+                        return {
+                            cellSkin: '',
+                            icon: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue === '' ? 'icon-comment-off' : 'icon-comment-on',
+                            iconColor: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue === '' ? '#C5C6C6' : '#0066cc',
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members,
+                            hasComment: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue !== ''
+                        };
+                    }
+                ]
+            }
+        }
+    },
+    rocheBPSPIpPlanningCheckoutUploadPopupUpload: {
+        upload: (db) => {
+            return {
+                staging: app.defaultUploadStagingFolder,
+                target: app.defaultUploadTargetFolder,
+                productLevel: v('rocheBPSPIpPlanningCheckoutUploadPopupPlDropbox.value'),
+                validation: 'validateExcelImport',
+                validationUser: db.activeUserName,
+                validationCompany: Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key'),
+                validationReceiver: v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value'),
+                validationGlobalVersion: WidgetValue.systemValueGlobalCompanyVersion,
+                validationVersion: WidgetValue.systemValueGlobalCompanyProductPlanVersion,
+                validationProduct: WidgetValue.systemValueIpPlanningCheckoutProduct,
+                validationMessage: 'First row of excel does not match'
+                //      preProcessTemplate: v('preprocess.choose.value') === false ? 'Template1' : v('preprocess.choose.value')
+            };
+        },
+        request: {
+            url: (db) => `/api/v1/Processes('MODULE - UI - CSV Upload Post Processing')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => {
+                let fileName = v('rocheBPSPIpPlanningCheckoutUploadPopupUpload.fileNames')[0].replace('.xlsx', '.csv');
+                L(fileName);
+                return `{
+                        "Parameters": [
+                                {"Name": "pUser", "Value": "${db.activeUserName}"},
+                                {"Name": "pProduct", "Value": "${db.systemValueIpPlanningCheckoutProduct}"},
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}"},
+                                {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell3DropBox', 'key')}"},
+                                {"Name": "pTargetCube", "Value": "Sales Plan by Product"},
+                                {"Name": "pSelectedProductLevel", "Value": "${v('rocheBPSPIpPlanningCheckoutUploadPopupPlDropbox.value')}"},
+                                {"Name": "pFileName", "Value": "${fileName}"}
+                        ]
+                    }`;
+            }
+        }
+    },
+    rocheBPSPIpPlanningCheckoutCommentShowGridTable: {
+        initCondition: (db) => {
+            return Repository.templateFunctions.initConditionDependingOnCheckoutYearlyMonthly(db);
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => {
+                let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPIpPlanningCheckoutGridTableYearly' : 'rocheBPSPIpPlanningCheckoutGridTableMonthly';
+                let productCode = Utils.getGridTableCell(g, 1).title;
+                return `{"MDX":"
+                    SELECT 
+                    {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Comment]}
+                    PROPERTIES  [Measures Sales Plan by Product]. [Measures Sales Plan by Product].[Caption]
+                    ON COLUMNS , 
+                    {[IpPlanning].[BPSP Budget].[${productCode}]} PROPERTIES [IpPlanning].[BPSP Budget].[Caption]
+                    ON ROWS 
+                    FROM [Sales Plan by Product] 
+                    WHERE 
+                    ([Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
+                    [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}],
+                    [Receivers].[Receivers].[${v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value')}],
+                    [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
+                    [Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}])
+            "}`
+            },
+            parsingControl: {
+                type: 'matrix',
+                length: 1,
+                query: [
+                    (r, x) => {
+                        return {
+                            title: r.Cells[x].FormattedValue,
+                        }
+                    }]
+            }
+        }
+    },
+    rocheBPSPIpPlanningCheckoutCommentShowGridTableSource: {
+        initCondition: (db) => {
+            return Repository.templateFunctions.initConditionDependingOnCheckoutYearlyMonthly(db);
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => {
+                let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPIpPlanningCheckoutGridTableYearly' : 'rocheBPSPIpPlanningCheckoutGridTableMonthly';
+                let productCode = Utils.getGridTableCell(g, 1).title;
+                return `{"MDX":"
+                        SELECT 
+                            {{[Measures Sales Plan by Product].[Measures Sales Plan by Product].[CommentSource]},
+                            {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedBy]},
+                            {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime]}}
+                            
+                            PROPERTIES  [Measures Sales Plan by Product]. [Measures Sales Plan by Product].[Caption]
+                        ON COLUMNS , 
+                            {[IpPlanning].[BPSP Budget].[${productCode}]} 
+                            PROPERTIES [IpPlanning].[BPSP Budget].[Caption] 
+                        ON ROWS 
+                        FROM [Sales Plan by Product] 
+                        WHERE 
+                            ([Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
+                            [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}],
+                            [Receivers].[Receivers].[${v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value')}],
+                            [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
+                            [Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}])
+            "}`
+            },
+            parsingControl: {
+                type: 'matrix',
+                length: 3,
+                query: [
+                    (r, x) => {
+                        return {
+                            title: r.Cells[x].FormattedValue + '<br/><div style=\"margin-top:20px; float: left; font-size: 10px;  ";  >' + 'Edited by ' + '</div>' + '<div style=\"font-size:12px; font-weight: bold; margin-top:18px; margin-left: 3px; float: left;";  >' + r.Cells[x + 1].FormattedValue + '</div>' + '<div style=\"font-size:10px;color:#B1B3B3;margin-top:20px;margin-left: 5px; float: left; \" >' + r.Cells[x + 2].FormattedValue + '</div>',
+                        }
+                    }
+
+
+                ]
+            }
+        }
+    },
+    rocheBPSPIpPlanningCheckoutCommentEditGridRow2CommentInput: {
+        init: {
+            execute: (db) => {
+                let l = v('rocheBPSPIpPlanningCheckoutCommentShowGridTable.cellData.length'), r = {value: ''};
+                if (l !== false && l !== 0) {
+                    r.value = v('rocheBPSPIpPlanningCheckoutCommentShowGridTable.cellData')[0][0].title;
+                }
+                return r;
+            }
+        }
+    },
+    rocheBPSPIpPlanningCheckoutCommentEditGridRow3TextInput: {
+        init: {
+            execute: (db) => {
+                let l = v('rocheBPSPIpPlanningCheckoutCommentShowGridTableSource.cellData.length'), r = {value: ''};
+                if (l !== false && l !== 0) {
+                    r.value = v('rocheBPSPIpPlanningCheckoutCommentShowGridTableSource.cellData')[0][0].title.split('<br/>')[0];
+                }
+                return r;
+            }
+        }
+    },
+
+    rocheBPSPIpPlanningCheckoutCommentEditControlPanelSaveButton: {
+        launch: {
+            url: (db) => `/api/v1/Cubes('Sales Plan by Product')/tm1.Update`,
+            type: 'POST',
+            body: (db) => {
+                let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPIpPlanningCheckoutGridTableYearly' : 'rocheBPSPIpPlanningCheckoutGridTableMonthly';
+                let productCode = Utils.getGridTableCell(g, 1).title;
+                return `
+                [
+                    {
+                        "Cells": [
+                            {
+                                "Tuple@odata.bind": [
+                                    "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                    "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}')",
+                                    "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}')",
+                                    "Dimensions('IpPlanning')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                    "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value')}')",
+                                    "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('Final Sales Plan')",
+                                    "Dimensions('Measures Sales Plan by Product')/Hierarchies('Measures Sales Plan by Product')/Elements('EditedDateTime')"
+                                ]
+                            },
+                        ],
+                         "Value": "${Utils.getFormattedDate(new Date(), '.', true)}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                   "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                   "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}')",
+                                   "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}')",
+                                   "Dimensions('IpPlanning')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                   "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value')}')",
+                                   "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('Final Sales Plan')",
+                                   "Dimensions('Measures Sales Plan by Product')/Hierarchies('Measures Sales Plan by Product')/Elements('EditedBy')"
+                               ]
+                            },
+                        ],
+                        "Value": "${WidgetValue['activeUserName']}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                   "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                   "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}')",
+                                   "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}')",
+                                   "Dimensions('IpPlanning')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                   "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value')}')",
+                                   "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('Final Sales Plan')",
+                                   "Dimensions('Measures Sales Plan by Product')/Hierarchies('Measures Sales Plan by Product')/Elements('CommentSource')"
+                               ]
+                            },
+                        ],
+                        "Value": "${v('rocheBPSPIpPlanningCheckoutCommentEditGridRow3TextInput.value') ? v('rocheBPSPIpPlanningCheckoutCommentEditGridRow3TextInput.value') : ''}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                   "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                   "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}')",
+                                   "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}')",
+                                   "Dimensions('IpPlanning')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                   "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value')}')",
+                                   "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('Final Sales Plan')",
+                                   "Dimensions('Measures Sales Plan by Product')/Hierarchies('Measures Sales Plan by Product')/Elements('Comment')"
+                               ]
+                            },
+                        ],
+                        "Value": "${v('rocheBPSPIpPlanningCheckoutCommentEditGridRow2CommentInput.value') ? v('rocheBPSPIpPlanningCheckoutCommentEditGridRow2CommentInput.value') : ''}"
+                    }
+                ]
+                `;
+            }
+        }
+    },
+
 
     rocheBPSPMaterialGridTable:
         {
