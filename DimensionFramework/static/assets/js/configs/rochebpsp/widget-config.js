@@ -2030,7 +2030,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPProductsCommentShowGridRow1Title',
                                             type: ButtonWidget,
-                                            label: 'Comment Show',
+                                            label: 'Comment',
                                             icon: 'icon-comment-off',
                                             marginTop: '15',
                                             marginBottom: '10',
@@ -3123,7 +3123,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPProductsCheckoutCommentShowGridRow1Title',
                                             type: ButtonWidget,
-                                            label: 'Comment Show',
+                                            label: 'Comment',
                                             icon: 'icon-comment-off',
                                             marginTop: '15',
                                             marginBottom: '10',
@@ -6001,8 +6001,192 @@ app.widgetConfig = {
             id: 'rocheBPSPipPlanning',
             type: PageWidget,
             widgets: [
+                {
+                    id: 'rocheBPSPipPlanningPageInit',
+                    type: ShadowWidget,
+                    listen: [
+                        {
+                            event: 'bodyReady',
+                            method: 'refreshWithWaitingForEvent',
+                            parameters: ['init.rocheBPSPipPlanningGridRow1Cell2DropBox.finished']
+                        },
+                        {event: 'choose.rocheBPSPipPlanningGridRow1Cell2DropBox.finished', method: 'refresh'}
 
-
+                    ]
+                },
+                {
+                    id: 'rocheBPSPIpPlanningCheckoutPopup',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: true,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    skin: 'checkout_popup_bpsp',
+                    width: '220',
+                    bgScrollable: true,
+                    fadingSpeed: 0,
+                    fixed: false,
+                    height: '165',
+                    behaviour: 'popup',
+                    position: 'right',
+                    widgets: [
+                        {
+                            id: 'rocheBPSPIpPlanningCheckoutPopupCheckoutButton',
+                            type: ButtonWidget,
+                            skin: 'yellow_bg_bpsp',
+                            label: 'Check Out',
+                            icon: 'icon-lock'
+                        },
+                        {
+                            id: 'rocheBPSPIpPlanningCheckoutPopupFocusButton',
+                            type: ButtonWidget,
+                            skin: 'blue_bg_bpsp',
+                            marginTop: '10',
+                            label: 'Focus'
+                        },
+                        {
+                            id: 'rocheBPSPIpPlanningCheckoutPopupCancelButton',
+                            type: ButtonWidget,
+                            skin: 'white_bg_bpsp',
+                            marginTop: '10',
+                            label: 'Cancel'
+                        }
+                    ]
+                },
+                {
+                    id: 'rocheBPSPIpPlanningNoCheckoutPopup',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: true,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    skin: 'checkout_popup_bpsp',
+                    width: '220',
+                    bgScrollable: true,
+                    fadingSpeed: 0,
+                    fixed: false,
+                    height: '240',
+                    behaviour: 'popup',
+                    position: 'right',
+                    widgets: [
+                        {
+                            id: 'rocheBPSPIpPlanningCheckoutPopupNoCheckoutButton',
+                            type: ButtonWidget,
+                            skin: 'grey_bg_bpsp',
+                            label: 'Check Out',
+                            icon: 'icon-lock'
+                        },
+                        {
+                            id: 'rocheBPSPIpPlanningCheckoutPopupNoCheckoutWarningText1',
+                            type: TextWidget,
+                            skin: 'checkout_warning_message_bpsp',
+                            title: 'Cannot be Checked Out',
+                            titleAlignment: 'center',
+                            marginTop: 10,
+                            paddingBottom: 1,
+                            titleFontSize: 10
+                        },
+                        {
+                            id: 'rocheBPSPIpPlanningCheckoutPopupNoCheckoutWarningText2',
+                            type: TextWidget,
+                            skin: 'checkout_warning_message_bpsp',
+                            title: 'a subsection is being edited',
+                            titleAlignment: 'center',
+                            titleFontSize: 10
+                        },
+                        {
+                            id: 'rocheBPSPIpPlanningCheckoutPopupNoCheckoutWarningText3',
+                            type: TextWidget,
+                            skin: 'checkout_warning_message_bpsp',
+                            title: 'at least one child',
+                            titleAlignment: 'center',
+                            titleFontSize: 10
+                        },
+                        {
+                            id: 'rocheBPSPIpPlanningNoCheckoutPopupFocusButton',
+                            type: ButtonWidget,
+                            skin: 'blue_bg_bpsp',
+                            marginTop: '10',
+                            label: 'Focus on this Block'
+                        },
+                        {
+                            id: 'rocheBPSPIpPlanningNoCheckoutPopupCancelButton',
+                            type: ButtonWidget,
+                            skin: 'white_bg_bpsp',
+                            marginTop: '10',
+                            label: 'Cancel'
+                        }
+                    ]
+                },
+                {
+                    id: 'rocheBPSPIpPlanningCheckoutWarning',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: false,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    width: '260',
+                    bgScrollable: true,
+                    fadingSpeed: 0,
+                    fixed: true,
+                    height: '270',
+                    behaviour: 'popup',
+                    skin: 'popup_bpsp ',
+                    position: 'center',
+                    widgets: [
+                        {
+                            id: 'rocheBPSPIpPlanningCheckoutWarningLockIcon',
+                            type: ImageWidget,
+                            skin: 'warning_bpsp',
+                            icon: 'lock'
+                        },
+                        {
+                            id: 'rocheBPSPIpPlanningCheckoutWarningText',
+                            type: TextWidget,
+                            skin: 'checkout_warning_bpsp',
+                            title: 'This section is being edited',
+                            titleAlignment: 'center'
+                        },
+                        {
+                            id: 'rocheBPSPIpPlanningCheckoutWarningByUserText',
+                            type: TextWidget,
+                            marginTop: 10,
+                            skin: 'checkout_warning_bpsp',
+                            titleAlignment: 'center',
+                            titleFontSize: 10
+                        },
+                        {
+                            id: 'rocheBPSPIpPlanningCheckoutWarningMessageText',
+                            type: TextWidget,
+                            marginTop: 10,
+                            skin: 'checkout_warning_message_bpsp',
+                            title: 'You can checkout this section for editing after the',
+                            body: 'current editor checks it in again',
+                            titleAlignment: 'center',
+                            titleFontSize: 10,
+                            bodyAlignment: 'center',
+                            bodyFontSize: 10,
+                            marginBottom: 10
+                        },
+                        {
+                            id: 'rocheBPSPIpPlanningCheckoutWarningContactEditorButton',
+                            type: ButtonWidget,
+                            skin: 'blue_bg_bpsp',
+                            label: 'Contact Editor',
+                            url: 'https://hangouts.google.com/chat/person/109335557829914353504',
+                            marginBottom: 10
+                        },
+                        {
+                            id: 'rocheBPSPIpPlanningCheckoutWarningCancel',
+                            type: ButtonWidget,
+                            skin: 'white_bg_bpsp',
+                            label: 'Cancel'
+                        }
+                    ]
+                },
                 {
                     id: 'rocheBPSPipPlanningMaterialSelectorShortcutPopup',
                     type: ContainerWidget,
@@ -6013,7 +6197,7 @@ app.widgetConfig = {
                     closeBtn: false,
                     width: '320',
                     heightFixed: false,
-                    bgScrollable: false,
+                    bgScrollable: true,
                     fixed: false,
                     behaviour: 'popup',
                     position: 'bottom',
@@ -6195,7 +6379,7 @@ app.widgetConfig = {
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPProductsYearSegmentedControl',
+                                            id: 'rocheBPSPipPlanningYearSegmentedControl',
                                             type: SegmentedControlWidget,
                                             width: '100%',
                                             skin: 'segmented',
@@ -6203,32 +6387,18 @@ app.widgetConfig = {
                                             widgets: [
 
                                                 {
-                                                    id: 'rocheBPSPProductsYearSegmentedControlItem1',
+                                                    id: 'rocheBPSPipPlanningYearSegmentedControlItem1',
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab1',
                                                     selected: true,
                                                     value: 'Y0'
                                                 },
                                                 {
-                                                    id: 'rocheBPSPProductsYearSegmentedControlItem2',
+                                                    id: 'rocheBPSPipPlanningYearSegmentedControlItem2',
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab2',
                                                     selected: false,
                                                     value: 'Y1'
-                                                },
-                                                {
-                                                    id: 'rocheBPSPProductsYearSegmentedControlItem3',
-                                                    type: SegmentedControlItemWidget,
-                                                    action: 'segmentedControlTab3',
-                                                    selected: false,
-                                                    value: 'Y2'
-                                                },
-                                                {
-                                                    id: 'rocheBPSPProductsYearSegmentedControlItem4',
-                                                    type: SegmentedControlItemWidget,
-                                                    action: 'segmentedControlTab4',
-                                                    selected: false,
-                                                    value: 'Y3'
                                                 }
                                             ]
                                         }
@@ -6295,22 +6465,19 @@ app.widgetConfig = {
                                                     id: 'rocheBPSPipPlanningGridRow2Cell1SegmentedControlItem1',
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab1',
-                                                    selected: true,
-                                                    value: 'Cash Sales'
+                                                    selected: true
                                                 },
                                                 {
                                                     id: 'rocheBPSPipPlanningGridRow2Cell1SegmentedControlItem2',
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab2',
-                                                    selected: false,
-                                                    value: 'Lease'
+                                                    selected: false
                                                 },
                                                 {
                                                     id: 'rocheBPSPipPlanningGridRow2Cell1SegmentedControlItem3',
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab3',
-                                                    selected: false,
-                                                    value: 'Return'
+                                                    selected: false
                                                 },
                                             ]
 
@@ -6342,15 +6509,13 @@ app.widgetConfig = {
                                                     id: 'rocheBPSPipPlanningGridRow2Cell2SegmentedControlItem1',
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab1',
-                                                    selected: true,
-                                                    value: 'ImportList'
+                                                    selected: true
                                                 },
                                                 {
                                                     id: 'rocheBPSPipPlanningGridRow2Cell2SegmentedControlItem2',
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab2',
-                                                    selected: false,
-                                                    value: 'Search'
+                                                    selected: false
                                                 }
                                             ]
 
@@ -6381,6 +6546,7 @@ app.widgetConfig = {
                             'method': 'refreshWithWaitingForEvents',
                             'parameters': [
                                 'rendered.rocheBPSPipPlanningGridRow1Cell3DropBox',
+                                'rendered.rocheBPSPipPlanningPageInit',
                                 'init.rocheBPSPipPlanningGridRow2Cell1SegmentedControl.finished',
                                 'init.rocheBPSPipPlanningGridRow2Cell2SegmentedControl.finished'
                             ]
@@ -6389,8 +6555,36 @@ app.widgetConfig = {
                         {
                             'event': 'choose.rocheBPSPipPlanningGridRow1Cell2DropBox.finished',
                             'method': 'refreshWithWaitingForEvent',
-                            'parameters': ['rendered.rocheBPSPipPlanningGridRow1Cell3DropBox']
+                            'parameters': ['rendered.rocheBPSPipPlanningGridRow1Cell3DropBox', 'rendered.rocheBPSPipPlanningPageInit']
                         },
+                        {
+                            event: 'switch.rocheBPSPipPlanningYearSegmentedControl.finished',
+                            method: 'refresh'
+                        },
+                        {
+                            event: 'switch.rocheBPSPipPlanningGridRow2Cell2SegmentedControl.finished',
+                            method: 'refresh'
+                        },
+                        {
+                            event: 'switch.rocheBPSPipPlanningGridRow2Cell1SegmentedControl.finished',
+                            method: 'refresh'
+                        },
+                        {
+                            event: 'launch.rocheBPSPipPlanningMaterialSelectorShortcutPopupGridTableButton01.finished',
+                            method: 'refresh'
+                        },
+                        {
+                            'event': 'launch.rocheBPSPipPlanningGridTableMonthlyHeaderReturnFromFocus.finished',
+                            'method': 'refresh'
+                        },
+                        {
+                            event: 'launch.rocheBPSPIpPlanningCheckoutPopupFocusButton.finished',
+                            method: 'refresh'
+                        },
+                        {
+                            event: 'launch.rocheBPSPIpPlanningNoCheckoutPopupFocusButton.finished',
+                            method: 'refresh'
+                        }
                     ],
                     title: '',
                     widgets: [
@@ -7264,6 +7458,18 @@ app.widgetConfig = {
 
             ]
         },
+
+    rocheBPSPipPlanningCheckout: {
+        id: 'rocheBPSPipPlanningCheckout',
+        type: PageWidget,
+        widgets: [
+            {
+                id: 'tttt',
+                type: TextWidget,
+                title: 'test'
+            }
+        ]
+    },
 
     rocheBPSPSettings:
         {

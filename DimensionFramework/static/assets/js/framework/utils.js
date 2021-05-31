@@ -272,6 +272,7 @@ const Utils = {
         if(!WidgetValue[key]){
             WidgetValue[key] = value;
         }
+        return WidgetValue[key];
     },
     setWidgetValue(key, value){
         WidgetValue[key] = value;
@@ -281,6 +282,9 @@ const Utils = {
             return object[property]();
         }
         return object[property];
+    },
+    getDecimalFromPercentString(value){
+        return Utils.parseNumber(value.replace('%', '')) / 100;
     },
     create_UUID() {
         let dt = new Date().getTime();

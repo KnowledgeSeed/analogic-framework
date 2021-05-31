@@ -223,7 +223,7 @@ app.eventMap = {
         },
         {
             action: app.fn.forceRefresh,
-            argument: 'rocheBPSPProductsGridTableYearly'
+            argument: 'rocheBPSPProductsGridTfbleYearly'
         }
     ],
     'launch.rocheBPSPProductsCheckoutPopupFocusButton': [
@@ -774,8 +774,8 @@ app.eventMap = {
                             argument: 'rocheBPSPProductsCheckoutDistributionEditPopup'
                         },
                         {
-                            action: app.fn.forceRefresh,
-                            argument: 'rocheBPSPProductsCheckoutDistributionEditPopupGridTable'
+                            action: app.fn.forceRefreshWithDelay,
+                            argument: ['rocheBPSPProductsCheckoutDistributionEditPopupGridTable', 500]
                         }
                     ]
                 },
@@ -910,6 +910,97 @@ app.eventMap = {
         }
     ],
 
+     'launch.rocheBPSPIpPlanningCheckoutPopupFocusButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningCheckoutPopup'
+        }
+    ],
+    'launch.rocheBPSPIpPlanningCheckoutPopupCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningCheckoutPopup'
+        }
+    ],
+    'launch.rocheBPSPIpPlanningCheckoutPopupCheckoutButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningCheckoutPopup'
+        }
+    ],
+    'launch.rocheBPSPIpPlanningCheckoutPopupCheckoutButton.finished': [
+        {
+            action: app.fn.checkTIResponseStatus,
+            argument: [app.fn.openPage, 'rocheBPSPIpPlanningCheckout', app.fn.openPopup, 'rocheBPSPIpPlanningCheckoutWarning']
+        }
+    ],
+    'launch.rocheBPSPIpPlanningCheckoutWarningCancel': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningCheckoutWarning'
+        }
+    ],
+    'launch.rocheBPSPIpPlanningNoCheckoutPopupCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningNoCheckoutPopup'
+        }
+    ],
+    'launch.rocheBPSPIpPlanningNoCheckoutPopupFocusButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningNoCheckoutPopup'
+        }
+    ],
+
+    'launch.rocheBPSPipPlanningGridTableMonthly_row_0': [
+        {
+            action: app.fn.conditionalGridTablePopup,
+            argument: [
+                {
+                    conditionKey: 'isChildrenLocked',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPIpPlanningNoCheckoutPopup'
+                        }
+                    ]
+                },
+                {
+                    conditionKey: 'isLockedByMe',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPIpPlanningCheckoutPopup'
+                        }
+                    ]
+                },
+                {
+                    conditionKey: 'isLocked',
+                    actions: [
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPIpPlanningCheckoutWarningByUserText'
+                        },
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPIpPlanningCheckoutWarning'
+                        }
+                    ]
+                },
+                {
+                    conditionKey: 'else',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPIpPlanningCheckoutPopup'
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+
     'launch.rocheBPSPipPlanningGridRow2Cell1SegmentedControlItem1': [
         {
             action: app.fn.addSystemValue,
@@ -940,6 +1031,13 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPipPlanningMaterialSelectorShortcutPopupGridTable'
+        }
+    ],
+
+    'launch.rocheBPSPipPlanningMaterialSelectorShortcutPopupGridTable_row_0': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPipPlanningMaterialSelectorShortcutPopup'
         }
     ],
 
