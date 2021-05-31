@@ -272,6 +272,7 @@ const Utils = {
         if(!WidgetValue[key]){
             WidgetValue[key] = value;
         }
+        return WidgetValue[key];
     },
     setWidgetValue(key, value){
         WidgetValue[key] = value;
