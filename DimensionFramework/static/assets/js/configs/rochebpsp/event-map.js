@@ -1,12 +1,15 @@
 /* global app */
 'use strict';
 app.eventMap = {
+    /*
     'launch.rocheBPSPMainGridRow3Cell1Button': [
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPCustomers'
         }
     ],
+
+     */
 
     'launch.rocheBPSPMainGridRow3Cell2Button': [
         {
@@ -448,7 +451,7 @@ app.eventMap = {
     //end products
 
     //rocheBPSPProductsCheckout
-    'upload.rocheBPSPProductsCheckoutUploadPopupUpload.finished' : [
+    'upload.rocheBPSPProductsCheckoutUploadPopupUpload.finished': [
         {
             action: app.fn.executeRequest,
             argument: 'request.rocheBPSPProductsCheckoutUploadPopupUpload'
@@ -838,7 +841,7 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutDistributionEditPopup'
         }
     ],
-    'launch.rocheBPSPProductsCheckoutDistributionPopupLastYearButton' : [
+    'launch.rocheBPSPProductsCheckoutDistributionPopupLastYearButton': [
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPProductsCheckoutDistributionPopup'
@@ -1037,13 +1040,6 @@ app.eventMap = {
         },
     ],
 
-    'launch.RocheBPSPMaterialIPNodeGridTable_row_5': [
-        {
-            action: app.fn.openPopup,
-            argument: 'rocheBPSPMaterialMoveDataPopup'
-        },
-    ],
-
     'launch.rocheBPSPMaterialMoveDataPopupControlPanelCancelButton': [
         {
             action: app.fn.togglePopup,
@@ -1090,12 +1086,7 @@ app.eventMap = {
         },
     ],
 
-    'launch.RocheBPSPMaterialIPNodeGridTable_row_4': [
-        {
-            action: app.fn.openPopup,
-            argument: 'rocheBPSPMaterialDeleteDataPopup'
-        },
-    ],
+
     'launch.rocheBPSPMaterialDeleteDataPopupControlPanelAddButton': [
         {
             action: app.fn.togglePopup,
@@ -1107,6 +1098,27 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPMaterialDeleteDataPopup'
+        }
+    ],
+
+    'launch.RocheBPSPMaterialIPNodeGridTable_row_4': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPMaterialDeleteDataIPGridTablePopup'
+        },
+    ],
+
+    'launch.rocheBPSPMaterialDeleteDataIPGridTablePopupControlPanelAddButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialDeleteDataIPGridTablePopup'
+        }
+    ],
+
+    'launch.rocheBPSPMaterialDeleteDataIPGridTablePopupControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialDeleteDataIPGridTablePopup'
         }
     ],
 
@@ -1148,6 +1160,27 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPMaterialAddDummyGridTableIPpopup'
+        }
+    ],
+
+    'launch.RocheBPSPMaterialIPNodeGridTable_row_5': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPMaterialMoveDataIPNodePopup'
+        },
+    ],
+
+    'launch.rocheBPSPMaterialMoveDataIPNodePopupControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialMoveDataIPNodePopup'
+        }
+    ],
+
+    'launch.rocheBPSPMaterialMoveDataIPNodePopupControlPanelAddButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMaterialMoveDataIPNodePopup'
         }
     ],
 };
