@@ -11088,7 +11088,6 @@ app.widgetConfig = {
                                                     selectFirst: true,
                                                     backdrop: true,
                                                     listen: [
-
                                                         {
                                                             event: 'choose.rocheBPSPMaterialGridRow1Cell2DropBox.finished',
                                                             method: 'refresh'
@@ -11096,9 +11095,7 @@ app.widgetConfig = {
                                                         {
                                                             'event': 'bodyReady',
                                                             'method': 'refreshWithWaitingForEvent',
-                                                            'parameters': [
-                                                                'rendered.rocheBPSPMaterialPageInit',
-                                                            ]
+                                                            'parameters': ['rendered.rocheBPSPMaterialPageInit',]
                                                         },
                                                     ]
                                                 }
@@ -11418,10 +11415,28 @@ app.widgetConfig = {
                                             widgets: [
 
                                                 {
-                                                    id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow3Cell1Text',
-                                                    type: TextWidget,
-                                                    marginTop: 10,
-                                                    skin: 'simple_bold_bpsp'
+                                                    id: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow3Cell1Dropbox',
+                                                    type: DropBoxWidget,
+                                                    width: '350px',
+                                                    title: 'Profit Center',
+                                                    skin: 'add_dummy_bpsp',
+                                                    marginBottom: 5,
+                                                    selectFirst: true,
+                                                    backdrop: true,
+                                                    listen: [
+
+                                                        {
+                                                            event: 'choose.rocheBPSPMaterialGridRow1Cell2DropBox.finished',
+                                                            method: 'refresh'
+                                                        },
+                                                        {
+                                                            'event': 'bodyReady',
+                                                            'method': 'refreshWithWaitingForEvent',
+                                                            'parameters': [
+                                                                'rendered.rocheBPSPMaterialPageInit',
+                                                            ]
+                                                        },
+                                                    ]
                                                 }
                                             ]
                                         }
@@ -12025,10 +12040,34 @@ app.widgetConfig = {
                                 },
 
                                 {
+                                    id: 'rocheBPSPAddMaterialGridRow4CellRefresh',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-right',
+                                    width: '19%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPAddMaterialGridRow4CellRefreshButton',
+                                            type: ButtonWidget,
+                                            label: 'Refresh Table',
+                                            action: '',
+                                            icon: 'icon-od_refresh',
+                                            marginLeft: '20',
+                                            height: '40',
+                                            marginTop: '5',
+                                            fontColor: '#007aff',
+                                            skin: 'refresh_search_bpsp'
+
+
+                                        }
+                                    ]
+                                },
+
+
+                                {
                                     id: 'rocheBPSPAddMaterialGridRow4Cell6',
                                     type: GridCellWidget,
                                     alignment: 'bottom-right',
-                                    width: '25%',
+                                    width: '6%',
                                     widgets: [
                                         {
                                             id: 'rocheBPSPAddMaterialGridRow4Cell6Button',
@@ -12518,6 +12557,7 @@ app.widgetConfig = {
                     visible: false,
                     skin: 'products_bpsp',
                     listen: [
+                        /*
                         {
                             'event': 'writeEnd.rocheBPSPAddMaterialGridRow4Cell1Search.finished',
                             'method': 'refresh'
@@ -12537,7 +12577,14 @@ app.widgetConfig = {
                         {
                             'event': 'writeEnd.rocheBPSPAddMaterialGridRow4Cell5Search.finished',
                             'method': 'refresh'
-                        }
+                        },
+
+                         */
+
+                        {
+                            'event': 'rendered.rocheBPSPAddMaterialGridRow4CellRefreshButton',
+                            'method': 'refresh'
+                        },
                     ],
                     width: '100%',
                     maxRows: 10,
@@ -13071,7 +13118,7 @@ app.widgetConfig = {
                             widgets: [
 
                                 {
-                                    id: 'RocheBPSPMaterialsAddMaterialSearchButton-14',
+                                    id: 'RocheBPSPMaterialsAddMaterialSearchButton14',
                                     type: ButtonWidget,
                                     icon: 'icon-plus-circle-outline',
                                     skin: 'chartGT_bpsp',

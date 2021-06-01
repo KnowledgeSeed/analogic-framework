@@ -910,7 +910,7 @@ app.eventMap = {
         }
     ],
 
-     'launch.rocheBPSPIpPlanningCheckoutPopupFocusButton': [
+    'launch.rocheBPSPIpPlanningCheckoutPopupFocusButton': [
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPIpPlanningCheckoutPopup'
@@ -931,7 +931,7 @@ app.eventMap = {
     'launch.rocheBPSPIpPlanningCheckoutPopupCheckoutButton.finished': [
         {
             action: app.fn.checkTIResponseStatus,
-            argument: [app.fn.openPage, 'rocheBPSPIpPlanningCheckout', app.fn.openPage, 'rocheBPSPIpPlanningCheckout' ] //app.fn.openPopup, 'rocheBPSPIpPlanningCheckoutWarning']
+            argument: [app.fn.openPage, 'rocheBPSPIpPlanningCheckout', app.fn.openPage, 'rocheBPSPIpPlanningCheckout'] //app.fn.openPopup, 'rocheBPSPIpPlanningCheckoutWarning']
         }
     ],
     'launch.rocheBPSPIpPlanningCheckoutWarningCancel': [
@@ -1178,6 +1178,8 @@ app.eventMap = {
             action: app.fn.openPopup,
             argument: 'rocheBPSPMaterialMoveDataPopup'
         },
+
+
     ],
 
     'launch.rocheBPSPMaterialMoveDataPopupControlPanelCancelButton': [
@@ -1224,6 +1226,8 @@ app.eventMap = {
             action: app.fn.openPopup,
             argument: 'rocheBPSPMaterialDeleteDataPopup'
         },
+
+
     ],
 
 
@@ -1267,6 +1271,11 @@ app.eventMap = {
             action: app.fn.openPopup,
             argument: 'rocheBPSPMaterialAddDummyGridTablePopup'
         },
+
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow3Cell1Dropbox'
+        }
     ],
     'launch.rocheBPSPMaterialAddDummyGridTablePopupControlPanelCancelButton': [
         {
@@ -1288,6 +1297,10 @@ app.eventMap = {
             action: app.fn.openPopup,
             argument: 'rocheBPSPMaterialAddDummyGridTableIPpopup'
         },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow4Cell1Dropbox'
+        }
     ],
     'launch.rocheBPSPMaterialAddDummyGridTableIPpopupControlPanelCancelButton': [
         {
@@ -1323,4 +1336,13 @@ app.eventMap = {
             argument: 'rocheBPSPMaterialMoveDataIPNodePopup'
         }
     ],
-};
+
+    'launch.rocheBPSPAddMaterialGridRow4CellRefreshButton': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        }
+    ],
+
+}
+;
