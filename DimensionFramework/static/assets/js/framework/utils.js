@@ -196,6 +196,13 @@ const Utils = {
         let row = Utils.getGridTableCurrentRow(widgetId);
         return row !== false ? row[columnIndex] : false;
     },
+    getGridTableCellByRowAndColumn(widgetId, rowIndex, columnIndex, property = ''){
+        let a = v(widgetId + '.cellData');
+        if(a === false){
+            return false;
+        }
+        return property !== '' ?  a[rowIndex][columnIndex][property] : a[rowIndex][columnIndex];
+    },
     setAndGetGridTableSystemValueByCurrentRow(widgetId, columnIndex, systemValue, cellProperty) {
         let c = Utils.getGridTableCell(widgetId, columnIndex);
         if (c !== false) {
