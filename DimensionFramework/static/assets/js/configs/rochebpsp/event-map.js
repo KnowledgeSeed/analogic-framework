@@ -1021,8 +1021,20 @@ app.eventMap = {
             argument: ['dynamicValue', 'Return']
         }
     ],
-
-
+    'launch.rocheBPSPipPlanningGridRow1Cell4Button': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPIpPlanningCheckoutInfoPopupText1'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPIpPlanningCheckoutInfoPopupText2'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPIpPlanningCheckoutInfoPopup'
+        }
+    ],
     'launch.rocheBPSPipPlanningGridTableMonthlyHeaderFocusButton': [
         {
             action: app.fn.openPopup,
@@ -1038,6 +1050,36 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPipPlanningMaterialSelectorShortcutPopup'
+        }
+    ],
+    'launch.rocheBPSPIpPlanningCheckoutGridRow1Cell4Button': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPIpPlanningCheckoutInfoPopupText1'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPIpPlanningCheckoutInfoPopupText2'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPIpPlanningCheckoutInfoPopup'
+        }
+    ],
+    'launch.rocheBPSPIpPlanningCheckoutInfoPopupCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningCheckoutInfoPopup'
+        }
+    ],
+    'launch.rocheBPSPIpPlanningCheckoutGridRow2Cell3Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPipPlanning'
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPPipPlanningGridTableMonthly']
         }
     ],
 
