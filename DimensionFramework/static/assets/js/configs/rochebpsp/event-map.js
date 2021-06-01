@@ -1344,5 +1344,19 @@ app.eventMap = {
         }
     ],
 
+    'launch.rocheBPSPAddMaterialGridRow4Cell6Button': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        }
+    ],
+
+    'launch.rocheBPSPAddMaterialGridRow4Cell7Button': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        }
+    ],
+
 }
 ;
