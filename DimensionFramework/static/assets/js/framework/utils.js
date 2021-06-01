@@ -281,8 +281,17 @@ const Utils = {
         }
         return WidgetValue[key];
     },
+    setWidgetValueIfNotExistByOther(key1, key2){
+        if(!WidgetValue[key1]){
+            WidgetValue[key1] = WidgetValue[key2];
+        }
+        return WidgetValue[key1];
+    },
     setWidgetValue(key, value){
         WidgetValue[key] = value;
+    },
+    setWidgetValueByOther(key1, key2){
+        WidgetValue[key1] = WidgetValue[key2];
     },
     getPropertyOrFunctionValue(object, property){
         if(typeof object[property] === 'function'){

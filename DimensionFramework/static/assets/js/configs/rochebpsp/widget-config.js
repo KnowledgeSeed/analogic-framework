@@ -109,6 +109,12 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPMainGridRow1Cell5Button',
                                             type: ButtonWidget,
+                                            listen: [
+                                                {
+                                                    event: 'init.rocheBPSPMainApplicationInit.finished',
+                                                    method: 'refresh'
+                                                }
+                                            ],
                                             backgroundColor: '#EBECEC',
                                             action: '',
                                             width: '100%',
