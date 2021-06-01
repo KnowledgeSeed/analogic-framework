@@ -4580,6 +4580,15 @@ app.repository = {
 
     RocheBPSPMaterialsAddMaterialClipboard:
         {
+
+            switch: {
+                url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+                type: 'PATCH',
+                body: (db, cell, widgetValue) => {
+                    return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
+                }
+            },
+
             refresh_col_0: {
                 execute: (db) => {
                     return {value: v('RocheBPSPMaterialsAddMaterialClipboardSelectAll.switch.value')};
@@ -4587,7 +4596,7 @@ app.repository = {
             },
             init:
                 {
-                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Consolidated,RuleDerived,Updateable;$expand=Members($select=Name, Attributes/Caption))`,
                     type: 'POST',
                     body: (db) => `{"MDX":"
                                 SELECT 
@@ -4617,14 +4626,16 @@ app.repository = {
                         length: 11,
                         query: [
 
-
                             (r, x) => {
+                                let editable = r.Cells[x].Consolidated === false && r.Cells[x].RuleDerived === false;
                                 return {
-                                    value: v('RocheBPSPMaterialsAddMaterialClipboardSelectAll.switch.value'),
-                                    cellSkin: r.Cells[x + 10].FormattedValue === '' ? '' : 'locked',
+                                    ordinal: r.Cells[x].Ordinal,
+                                    value: r.Cells[x].FormattedValue,
+                                    //value: v('RocheBPSPMaterialsAddMaterialClipboardSelectAll.switch.value'),
+                                    cellSkin: editable ? '' : 'locked',
+                                    editable: editable
                                 }
                             },
-
 
                             (r, x) => {
                                 return {
@@ -5336,6 +5347,21 @@ app.repository = {
         launch:
             {
                 url: (db) => `/api/v1/Processes('MODULE - UI - Clear All Inputs')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => `{
+                        "Parameters": [
+                        
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}"}, 
+                                {"Name": "pCube", "Value": "Material Information by Company"},                       
+                        ]
+                    }`
+            },
+    },
+
+    rocheBPSPAddMaterialGridRow3Cell3Button: {
+        launch:
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Material Import Add Materials')/tm1.ExecuteWithReturn`,
                 type: 'POST',
                 body: (db) => `{
                         "Parameters": [

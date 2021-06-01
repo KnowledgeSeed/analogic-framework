@@ -431,3 +431,8 @@
 .ks-toggle-row_selector_bpsp.ks-toggle.ks-on .ks-toggle-icon-on {
     display: block;
 }
+
+
+.ks-toggle-inner.readonly{
+    background-color: rgba(239, 193, 209, 0);
+}
