@@ -4332,6 +4332,10 @@ app.widgetConfig = {
                         {
                             'event': 'launch.rocheBPSPProductsCheckoutDistributionEditPopupControlPanelCancelButton.finished',
                             'method': 'refresh'
+                        },
+                        {
+                            event: 'launch.rocheBPSPProductsCheckoutGridRow2Cell2Button.finished',
+                            method: 'refresh'
                         }
                     ],
                     title: '',
@@ -5328,6 +5332,10 @@ app.widgetConfig = {
                         {
                             'event': 'request.rocheBPSPProductsCheckoutUploadPopupUpload.finished',
                             'method': 'refresh'
+                        },
+                        {
+                            event: 'launch.rocheBPSPProductsCheckoutGridRow2Cell2Button.finished',
+                            method: 'refresh'
                         }
                     ],
                     title: '',
@@ -7551,6 +7559,10 @@ app.widgetConfig = {
         type: PageWidget,
         widgets: [
             {
+                id: 'rocheBPSPIpPlanningCheckoutPageInit',
+                type: ShadowWidget
+            },
+            {
                 id: 'rocheBPSPIpPlanningCheckoutInfoPopup',
                 type: ContainerWidget,
                 anchorVisible: false,
@@ -8365,6 +8377,10 @@ app.widgetConfig = {
                     {
                         event: 'switch.rocheBPSPipPlanningGridRow2Cell1SegmentedControl.finished',
                         method: 'refresh'
+                    },
+                    {
+                        'event': 'launch.rocheBPSPIpPlanningCheckoutGridRow2Cell2Button.finished',
+                        'method': 'refresh'
                     }
                 ],
                 title: '',
