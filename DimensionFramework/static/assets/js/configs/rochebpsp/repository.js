@@ -3178,8 +3178,8 @@ app.repository = {
                                   {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"}
                           ]
                       }`
-                  }
-              },
+                }
+            },
     },
 
 
@@ -3187,9 +3187,18 @@ app.repository = {
         init: {
             execute: (db) => {
                 return [
-                    {label: 'Cash Sales', selected: v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected') === 'Cash Sales' || v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected') === false},
-                    {label: 'Lease', selected: v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected') === 'Lease'},
-                    {label: 'Return', selected: v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected') === 'Return'},
+                    {
+                        label: 'Cash Sales',
+                        selected: v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected') === 'Cash Sales' || v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected') === false
+                    },
+                    {
+                        label: 'Lease',
+                        selected: v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected') === 'Lease'
+                    },
+                    {
+                        label: 'Return',
+                        selected: v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected') === 'Return'
+                    },
                 ];
             }
 
@@ -3201,8 +3210,14 @@ app.repository = {
         init: {
             execute: (db) => {
                 return [
-                    {label: 'New', selected: v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected') === 'New'  || v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected') === false},
-                    {label: 'Used', selected: v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected') === 'Used'},
+                    {
+                        label: 'New',
+                        selected: v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected') === 'New' || v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected') === false
+                    },
+                    {
+                        label: 'Used',
+                        selected: v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected') === 'Used'
+                    },
                 ];
             }
         },
@@ -3332,7 +3347,7 @@ app.repository = {
                     Utils.isValueExistingAndNotEmpty('rocheBPSPipPlanningGridRow2Cell1SegmentedControl', 'selected') &&
                     Utils.isValueExistingAndNotEmpty('rocheBPSPipPlanningGridRow2Cell2SegmentedControl', 'selected') &&
                     v('systemValueGlobalCompanyProductPlanVersion') !== false && v('systemValueBackFromCheckin') === false;
-                    Utils.setWidgetValue('systemValueBackFromCheckin', false);
+                Utils.setWidgetValue('systemValueBackFromCheckin', false);
                 return b;
             },
             initDefault: (db) => {
@@ -3607,7 +3622,7 @@ app.repository = {
     },
 
     rocheBPSPIpPlanningCheckoutInfoPopupText2: {
-         initCondition: (db) => {
+        initCondition: (db) => {
             return v('rocheBPSPipPlanningGridRow1Cell2DropBox.value.length') !== false;
         },
         initDefault: (db) => {
@@ -3642,7 +3657,7 @@ app.repository = {
     },
 
     rocheBPSPIpPlanningCheckoutInfoPopupText1: {
-         initCondition: (db) => {
+        initCondition: (db) => {
             return v('rocheBPSPipPlanningGridRow1Cell2DropBox.value.length') !== false;
         },
         initDefault: (db) => {
@@ -3699,7 +3714,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return { title: Utils.getGridTableCellByRowAndColumn('rocheBPSPIpPlanningCheckoutGridTableMonthly', 0, 3, 'year')};
+                return {title: Utils.getGridTableCellByRowAndColumn('rocheBPSPIpPlanningCheckoutGridTableMonthly', 0, 3, 'year')};
             }
         }
     },
@@ -3712,7 +3727,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return { title: Utils.getGridTableCellByRowAndColumn('rocheBPSPIpPlanningCheckoutGridTableMonthly', 0, 4, 'year')};
+                return {title: Utils.getGridTableCellByRowAndColumn('rocheBPSPIpPlanningCheckoutGridTableMonthly', 0, 4, 'year')};
             }
         }
     },
@@ -3725,7 +3740,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return { body: 'YEND vs Act ' + Utils.getGridTableCellByRowAndColumn('rocheBPSPIpPlanningCheckoutGridTableMonthly', 0, 18, 'year')};
+                return {body: 'YEND vs Act ' + Utils.getGridTableCellByRowAndColumn('rocheBPSPIpPlanningCheckoutGridTableMonthly', 0, 18, 'year')};
             }
         }
     },
@@ -3738,7 +3753,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return { body: 'YEND vs T3 ' + Utils.getGridTableCellByRowAndColumn('rocheBPSPIpPlanningCheckoutGridTableMonthly', 0, 19, 'year')};
+                return {body: 'YEND vs T3 ' + Utils.getGridTableCellByRowAndColumn('rocheBPSPIpPlanningCheckoutGridTableMonthly', 0, 19, 'year')};
             }
         }
     },
@@ -3896,7 +3911,7 @@ app.repository = {
                         pl = r.Cells[x + 1].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: pl === 'IP Node' ? 'gridtable_checkout_hierarchy_bpsp_PL6' :  'gridtable_checkout_hierarchy_bpsp_' + pl,
+                            skin: pl === 'IP Node' ? 'gridtable_checkout_hierarchy_bpsp_PL6' : 'gridtable_checkout_hierarchy_bpsp_' + pl,
                             cellVisible: true,
                             icon: 'icon-badge',
                             members: r.Cells[x].Members,
@@ -4419,23 +4434,23 @@ app.repository = {
 
                             (r, x) => {
                                 return {
-                                    icon: r.Cells[x + 3].FormattedValue === '1,00' ? 'icon-plus-circle-outline' : '',
-                                    cellSkin: r.Cells[x + 3].FormattedValue === '1,00' ? '' : 'readonly_bpsp',
+                                    icon: parseInt(r.Cells[x + 3].FormattedValue) === 1 ? 'icon-plus-circle-outline' : '',
+                                    cellSkin: parseInt(r.Cells[x + 3].FormattedValue) === 1 ? '' : 'readonly_bpsp',
                                 }
                             },
 
                             (r, x) => {
                                 return {
-                                    icon: r.Cells[x + 4].FormattedValue === '1,00' ? 'icon-trash' : '',
+                                    icon: parseInt(r.Cells[x + 4].FormattedValue) === 1 ? 'icon-trash' : '',
 
-                                    cellSkin: r.Cells[x + 4].FormattedValue === '1,00' ? '' : 'readonly_bpsp',
+                                    cellSkin: parseInt(r.Cells[x + 4].FormattedValue) === 1 ? '' : 'readonly_bpsp',
                                 }
                             },
 
                             (r, x) => {
                                 return {
-                                    icon: r.Cells[x + 5].FormattedValue === '1,00' ? 'icon-copy' : '',
-                                    cellSkin: r.Cells[x + 5].FormattedValue === '1,00' ? '' : 'readonly_bpsp',
+                                    icon: parseInt(r.Cells[x + 5].FormattedValue) === 1 ? 'icon-copy' : '',
+                                    cellSkin: parseInt(r.Cells[x + 5].FormattedValue) === 1 ? '' : 'readonly_bpsp',
                                 }
                             },
 
@@ -4559,23 +4574,22 @@ app.repository = {
 
                             (r, x) => {
                                 return {
-                                    icon: r.Cells[x + 3].FormattedValue === '1,00' ? 'icon-plus-circle-outline' : '',
-                                    cellSkin: r.Cells[x + 3].FormattedValue === '1,00' ? '' : 'readonly_bpsp',
+                                    icon: parseInt(r.Cells[x + 3].FormattedValue) === 1 ? 'icon-plus-circle-outline' : '',
+                                    cellSkin: parseInt(r.Cells[x + 3].FormattedValue) === 1 ? '' : 'readonly_bpsp',
                                 }
                             },
 
                             (r, x) => {
                                 return {
-                                    icon: r.Cells[x + 4].FormattedValue === '1,00' ? 'icon-trash' : '',
-
-                                    cellSkin: r.Cells[x + 4].FormattedValue === '1,00' ? '' : 'readonly_bpsp',
+                                    icon: parseInt(r.Cells[x + 4].FormattedValue) === 1 ? 'icon-trash' : '',
+                                    cellSkin: parseInt(r.Cells[x + 4].FormattedValue) === 1 ? '' : 'readonly_bpsp',
                                 }
                             },
 
                             (r, x) => {
                                 return {
-                                    icon: r.Cells[x + 5].FormattedValue === '1,00' ? 'icon-copy' : '',
-                                    cellSkin: r.Cells[x + 5].FormattedValue === '1,00' ? '' : 'readonly_bpsp',
+                                    icon: parseInt(r.Cells[x + 5].FormattedValue) === 1 ? 'icon-copy' : '',
+                                    cellSkin: parseInt(r.Cells[x + 5].FormattedValue) === 1 ? '' : 'readonly_bpsp',
                                 }
                             },
 
@@ -4686,7 +4700,7 @@ app.repository = {
                     body: (db) => {
 
                         let dbV = v('rocheBPSPAddMaterialGridRow4Cell3Dropbox.value');
-                        dbV = dbV === false ? 'CC' : dbV;
+                        dbV = dbV === false ? '' : dbV;
 
                         let IDsearch = '';
                         if (Utils.isValueExistingAndNotEmpty('rocheBPSPAddMaterialGridRow4Cell1Search')) {
@@ -4709,68 +4723,68 @@ app.repository = {
                         }
                         return `{"MDX":"
 
-                                                With 
-                        Member [Measures Material Information by Company].[Measures Material Information by Company].[ID] As
-                           [Materials].[Materials].CurrentMember.Properties('Element')
-                        Member [Measures Material Information by Company].[Measures Material Information by Company].[Description] As
-                           [Materials].[Materials].CurrentMember.Properties('Medium Name')   
-                        Member [Measures Material Information by Company].[Measures Material Information by Company].[Status] As
-                           [Materials].[Materials].CurrentMember.Properties('Material Status - Key')
-                        Member [Measures Material Information by Company].[Measures Material Information by Company].[Instrument Category] As
-                           [Materials].[Materials].CurrentMember.Properties('Material Category - Key')
-                        Member [Measures Material Information by Company].[Measures Material Information by Company].[Current Profit Center] As
-                           [Materials].[Materials].CurrentMember.Properties('Profit Center Actual - Key')
-                        Member [Measures Material Information by Company].[Measures Material Information by Company].[Budget Profit Center] As
-                           [Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key')
-                        Member [Measures Material Information by Company].[Measures Material Information by Company].[Product Type] As
-                           [Materials].[Materials].CurrentMember.Properties('Material Type - Key')
-                        Member [Measures Material Information by Company].[Measures Material Information by Company].[Current IP Node] As
-                           [Materials].[Materials].CurrentMember.Properties('IP Profit Center Actual - Key')
-                        Member [Measures Material Information by Company].[Measures Material Information by Company].[Budget IP Node] As
-                           [Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key')
-                        Member [Measures Material Information by Company].[Measures Material Information by Company].[IP Reporting Relevant] As
-                           [Materials].[Materials].CurrentMember.Properties('IP DIS Relevant Flag')
-                        Set ColumnSelection As
-                          {
-                           [Measures Material Information by Company].[Measures Material Information by Company].[Shopping Basket],
-                           [Measures Material Information by Company].[Measures Material Information by Company].[ID],
-                           [Measures Material Information by Company].[Measures Material Information by Company].[Description],
-                           [Measures Material Information by Company].[Measures Material Information by Company].[Status],
-                           [Measures Material Information by Company].[Measures Material Information by Company].[Instrument Category],
-                           [Measures Material Information by Company].[Measures Material Information by Company].[Current Profit Center],
-                           [Measures Material Information by Company].[Measures Material Information by Company].[Budget Profit Center],
-                           [Measures Material Information by Company].[Measures Material Information by Company].[Product Type],
-                           [Measures Material Information by Company].[Measures Material Information by Company].[Current IP Node],
-                           [Measures Material Information by Company].[Measures Material Information by Company].[Budget IP Node],
-                           [Measures Material Information by Company].[Measures Material Information by Company].[Last Modified],
-                           [Measures Material Information by Company].[Measures Material Information by Company].[IP Reporting Relevant],
-                           [Measures Material Information by Company].[Measures Material Information by Company].[Status Message]
-                          }
-                        SELECT 
-                           {ColumnSelection} 
-                           PROPERTIES [Measures Material Information by Company].[Measures Material Information by Company].[Caption]  ON COLUMNS ,
-                           {Subset({
-                            FILTER({
-                         FILTER({
-                        FILTER({
-                         FILTER({
-                        TM1FILTERBYLEVEL({
-                        FILTER({[Materials].[Materials].Members}, 
-                                [Materials].[Materials].CurrentMember.Properties('IP Active Flag') = '1')
-                                         }, 0)
-                                  --Dropbox with Category
-                                  }, [Materials].[Materials].CurrentMember.Properties('Material Category - Key') = '${dbV}')
-                         -- Instr search
-                         }, InStr([Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key') ,'${ProfitCenterSearch}')<>0)
-                        }, InStr([Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key'), '${IpNodeSearch}')<>0)
-                               }, InStr([Materials].[Materials].CurrentMember.Properties('Element'), '${IDsearch}' ) <> 0 AND
-                                  InStr([Materials].[Materials].CurrentMember.Properties('Medium Name'), '${DescriptionSearch}' ) <> 0 )},1,100)}  
-                           PROPERTIES [Materials].[Materials].[Caption]  ON ROWS 
-                        FROM [Material Information by Company] 
-                        WHERE 
-                          (
-                           [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}]
-                          )
+                                With 
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[ID] As
+                                   [Materials].[Materials].CurrentMember.Properties('Element')
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[Description] As
+                                   [Materials].[Materials].CurrentMember.Properties('Medium Name')   
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[Status] As
+                                   [Materials].[Materials].CurrentMember.Properties('Material Status - Key')
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[Instrument Category] As
+                                   [Materials].[Materials].CurrentMember.Properties('Material Category - Key')
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[Current Profit Center] As
+                                   [Materials].[Materials].CurrentMember.Properties('Profit Center Actual - Key')
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[Budget Profit Center] As
+                                   [Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key')
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[Product Type] As
+                                   [Materials].[Materials].CurrentMember.Properties('Material Type - Key')
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[Current IP Node] As
+                                   [Materials].[Materials].CurrentMember.Properties('IP Profit Center Actual - Key')
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[Budget IP Node] As
+                                   [Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key')
+                                Member [Measures Material Information by Company].[Measures Material Information by Company].[IP Reporting Relevant] As
+                                   [Materials].[Materials].CurrentMember.Properties('IP DIS Relevant Flag')
+                                Set ColumnSelection As
+                                  {
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Shopping Basket],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[ID],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Description],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Status],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Instrument Category],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Current Profit Center],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Budget Profit Center],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Product Type],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Current IP Node],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Budget IP Node],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Last Modified],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[IP Reporting Relevant],
+                                   [Measures Material Information by Company].[Measures Material Information by Company].[Status Message]
+                                  }
+                                SELECT 
+                                   {ColumnSelection} 
+                                   PROPERTIES [Measures Material Information by Company].[Measures Material Information by Company].[Caption]  ON COLUMNS ,
+                                   {Subset({
+                                    FILTER({
+                                 FILTER({
+                                FILTER({
+                                 FILTER({
+                                TM1FILTERBYLEVEL({
+                                FILTER({TM1FILTERBYLEVEL({TM1DRILLDOWNMEMBER({[Materials].[Materials].[All Materials]}, ALL, RECURSIVE )}, 0)}, 
+                                        [Materials].[Materials].CurrentMember.Properties('IP Active Flag') = '1')
+                                                 }, 0)
+                                          --Dropbox with Category
+                                          }, [Materials].[Materials].CurrentMember.Properties('Material Category - Key') = '${dbV}')
+                                 -- Instr search
+                                 }, InStr([Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key') ,'${ProfitCenterSearch}')<>0)
+                                }, InStr([Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key'), '${IpNodeSearch}')<>0)
+                                       }, InStr([Materials].[Materials].CurrentMember.Properties('Element'), '${IDsearch}' ) <> 0 AND
+                                          InStr([Materials].[Materials].CurrentMember.Properties('Medium Name'), '${DescriptionSearch}' ) <> 0 )},1,100)}  
+                                   PROPERTIES [Materials].[Materials].[Caption]  ON ROWS 
+                                FROM [Material Information by Company] 
+                                WHERE 
+                                  (
+                                   [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}]
+                                  )
                                     "}`;
 
                     },
