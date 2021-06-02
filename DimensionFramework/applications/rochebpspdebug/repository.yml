@@ -26,3 +26,49 @@ exportMonthly: >
        [Receivers].[Receivers].[$receiver],
        [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value]
       )
+
+exportIpPlanningMonthly: >
+  With
+    --Checked out Product Element drilled down
+
+    Set DefaultProductRows AS
+    {Intersect({TM1DRILLDOWNMEMBER({[Materials].[BPSP $productPlanVersion IP].[$material]}, ALL, RECURSIVE )},
+    {TM1SubsetToSet([Materials].[BPSP $productPlanVersion IP],'1391')})}
+
+    -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)
+
+    MEMBER [Periods].[Periods].[IP Name] as
+      [Materials].[BPSP $productPlanVersion IP].CurrentMember.Properties('BPSP $productPlanVersion IP Name')
+    MEMBER [Periods].[Periods].[IP Code] as
+      [Materials].[BPSP $productPlanVersion IP].CurrentMember.Properties('Element')
+    MEMBER [Periods].[Periods].[Level] as
+      [Materials].[BPSP $productPlanVersion IP].CurrentMember.Properties('Product Level - Name')
+
+    -- Create the first 3 column with information
+
+    Set FixColumns AS
+    {([Periods].[Periods].[IP Name]),
+     ([Periods].[Periods].[IP Code]),
+     ([Periods].[Periods].[Level])}
+    Set DataColumns As
+    {DRILLDOWNMEMBER({[Periods].[Periods].[$year1],[Periods].[Periods].[$year2]},{[Periods].[Periods].[$year1],[Periods].[Periods].[$year2]})}
+    -- query
+    SELECT
+    --Columns
+      {Union(FixColumns,DataColumns,All)}
+      PROPERTIES [Periods].[Periods].[Caption] ON COLUMNS ,
+    -- Rows
+      {TM1FILTERBYLEVEL({[Instrument Types].[Instrument Types].Members}, 0)}*
+      {TM1FILTERBYLEVEL({[Contract Types].[Contract Types].Members}, 0)}*
+      {DefaultProductRows}
+      PROPERTIES [Instrument Types].[Instrument Types].[Caption],[Contract Types].[Contract Types].[Caption],[Materials].[BPSP $productPlanVersion IP].[BPSP $productPlanVersion IP Caption] ON ROWS
+    FROM [Sales Plan IP]
+    WHERE
+    (
+      [LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan],
+      [Versions].[Versions].[$companyVersion],
+      [Companies].[Companies].[$company],
+      [Receivers].[Receivers].[$receiver],
+      [Measures Sales Plan IP].[Measures Sales Plan IP].[Value]
+    )
+

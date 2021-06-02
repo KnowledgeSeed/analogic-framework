@@ -14,6 +14,140 @@ class Export:
     def __init__(self):
         pass
 
+    def rocheIpPlanningMonthly(self, request, tm1_service, setting):
+
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        worksheet = workbook.add_worksheet()
+
+        mdx = setting.getMDX(request.args['key'])
+        for k in request.args:
+            mdx = mdx.replace('$' + k, request.args[k].replace('"', '\\"'))
+
+        mdx = '{"MDX"  :"' + mdx + '"}'
+        #     data = tm1_service.cells.execute_mdx(mdx)
+
+        user = request.args['activeUserName']
+        company = request.args['company']
+        receiver = request.args['receiver']
+        global_version = request.args['globalVersion']
+        version = request.args['version']
+        product = request.args['material']
+
+        font_size = 12
+        worksheet.protect('ADSBP', {'format_cells': True, 'format_rows': True, 'format_columns': True})
+
+        worksheet.write(0, 0, user)
+        worksheet.write(0, 1, company)
+        worksheet.write(0, 2, receiver)
+        worksheet.write(0, 3, global_version)
+        worksheet.write(0, 4, version)
+        worksheet.write(0, 5, product)
+
+        bold = workbook.add_format({'bold': True})
+        bold.set_font_name('Imago')
+        bold.set_font_size(font_size)
+
+        worksheet.write(2, 5, request.args['year1'], bold)
+        worksheet.write(2, 18, request.args['year2'], bold)
+
+        worksheet.write(2, 0, 'Material Number', bold)
+        worksheet.write(2, 2, 'Level', bold)
+        worksheet.write(2, 3, 'Instrument type', bold)
+        worksheet.write(2, 4, 'Contract type', bold)
+
+        i = 1
+        j = 6
+        while i <= 12:
+            worksheet.write(2, j, str(i).zfill(2), bold)
+            worksheet.write(2, j + 13, str(i).zfill(2), bold)
+            j = j + 1
+            i = i + 1
+
+        headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
+                                   'Accept-Encoding': 'gzip, deflate, br'}
+
+        tm1_session_id = setting.getTM1SessionId(session.get('cam_name', ''))
+
+        cookies: dict[str, str] = {"TM1SessionId": tm1_session_id}
+
+        cnf = setting.getConfig()
+
+        target_url = cnf['tm1ApiHostBackend']
+
+        response = requests.request(
+            url=target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable;$expand=Members($select=Name, Attributes/Caption))',
+            method='POST',
+            data=mdx,
+            headers=headers,
+            cookies=cookies,
+            verify=False)
+
+        d = response.json()
+
+        simple = workbook.add_format({'locked': False})
+        simple.set_font_name('Imago')
+        simple.set_font_size(font_size)
+
+        read_only = workbook.add_format()
+        read_only.set_bg_color('#ebecec')
+        read_only.set_font_name('Imago')
+        read_only.set_font_size(font_size)
+
+        l = len(d['Cells'])
+        i = 0
+        r = 2
+        c = 0
+        while i < l:
+            if i % 29 == 0:
+                r = r + 1
+                c = 0
+                pl = 6
+                pl_text = d['Cells'][i + 2]['Value']
+                if d['Cells'][i + 2]['Value'] != 'IP Node':
+                    pl = int(d['Cells'][i + 2]['Value'].replace('PL', '').replace('a', ''))
+                    pl_text = pl
+                instrument_type = d['Cells'][i]['Members'][5]['Attributes']['Caption']
+                contract_type = d['Cells'][i]['Members'][6]['Attributes']['Caption']
+                name = d['Cells'][i]['Value']
+                code = d['Cells'][i+1]['Value']
+
+
+                cf = workbook.add_format()
+                cf.set_indent(pl)
+                cf.set_font_name('Imago')
+                cf.set_font_size(font_size)
+                cf.set_bg_color('#ebecec')
+
+                worksheet.write(r, c, code, read_only)
+                c = c + 1
+                worksheet.write(r, c, name, cf)
+                c = c + 1
+                worksheet.write(r, c, pl_text, cf)
+                c = c + 1
+                worksheet.write(r, c, instrument_type, read_only)
+                c = c + 1
+                worksheet.write(r, c, contract_type, read_only)
+
+                i = i + 2
+
+            else:
+                value = d['Cells'][i]['Value']
+                if (value == None):
+                    value = 0
+                if d['Cells'][i]['Consolidated'] == False and d['Cells'][i]['RuleDerived'] == False:
+                    worksheet.write(r, c, value, simple)
+                else:
+                    worksheet.write(r, c, value, read_only)
+
+            i = i + 1
+            c = c + 1
+
+        workbook.close()
+        output.seek(0)
+        return output
+
+
     def rocheMonthly(self, request, tm1_service, setting):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})

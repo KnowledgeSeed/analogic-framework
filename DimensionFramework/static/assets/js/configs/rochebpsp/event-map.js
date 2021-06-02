@@ -931,7 +931,7 @@ app.eventMap = {
     'launch.rocheBPSPIpPlanningCheckoutPopupCheckoutButton.finished': [
         {
             action: app.fn.checkTIResponseStatus,
-            argument: [app.fn.openPage, 'rocheBPSPIpPlanningCheckout', app.fn.openPage, 'rocheBPSPIpPlanningCheckout'] //app.fn.openPopup, 'rocheBPSPIpPlanningCheckoutWarning']
+            argument: [app.fn.openPage, 'rocheBPSPIpPlanningCheckout', app.fn.openPopup, 'rocheBPSPIpPlanningCheckoutWarning']
         }
     ],
     'launch.rocheBPSPIpPlanningCheckoutWarningCancel': [
@@ -1080,6 +1080,28 @@ app.eventMap = {
         {
             action: app.fn.removeWidgetValues,
             argument: ['rocheBPSPPipPlanningGridTableMonthly']
+        }
+    ],
+    'launch.rocheBPSPIpPlanningCheckoutGridRow2Cell1bButton': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPIpPlanningCheckoutUploadPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPIpPlanningCheckoutUploadPopupPlDropbox'
+        }
+    ],
+    'launch.rocheBPSPIpPlanningCheckoutUploadPopupCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningCheckoutUploadPopup'
+        }
+    ],
+    'upload.rocheBPSPIpPlanningCheckoutUploadPopupUpload.finished': [
+        {
+            action: app.fn.executeRequest,
+            argument: 'request.rocheBPSPIpPlanningCheckoutUploadPopupUpload'
         }
     ],
 

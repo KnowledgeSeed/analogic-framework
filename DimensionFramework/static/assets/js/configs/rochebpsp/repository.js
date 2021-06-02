@@ -1812,6 +1812,25 @@ app.repository = {
                 }
             },
     },
+    rocheBPSPProductsCheckoutGridRow2Cell2Button: {
+        launch: {
+            url: (db) => `/api/v1/Processes('MODULE - UI - Clear All Inputs')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => {
+                return `{
+                        "Parameters": [
+                                {"Name": "pVersion", "Value": "${db.systemValueGlobalCompanyVersion}"},
+                                {"Name": "pProduct", "Value": "${db.systemValueCheckoutProduct}"},
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
+                                {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}"},
+                                {"Name": "pLineItem", "Value": "Final Sales Plan"},
+                                {"Name": "pCube", "Value": "Sales Plan by Product"},
+                                {"Name": "pPeriod", "Value": "${db.systemValueGlobalSegmentedControlRelativeYearValue}"}
+                        ]
+                    }`;
+            }
+        }
+    },
     rocheBPSPProductsCheckoutGridTableYearly: {
         perform: {
             validation: (db, cell, widgetValue) => {
@@ -1859,7 +1878,7 @@ app.repository = {
             return [];
         },
         init: {
-            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Updateable,RuleDerived,Consolidated;$expand=Members($select=Name, Attributes/Caption)))`,
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Updateable,RuleDerived,Consolidated;$expand=Members($select=Name, Attributes/Caption))`,
             type: 'POST',
             body: (db) => `
             {
@@ -3724,7 +3743,7 @@ app.repository = {
         }
     },
     rocheBPSPIpPlanningCheckoutGridTableMonthly: {
-        perform: {
+       /* perform: {
             url: (db) => `/api/v1/Processes('MODULE - UI - Sales Plan by Product Split')/tm1.ExecuteWithReturn`,
             type: 'POST',
             body: (db, cell, widgetValue) => {
@@ -3740,7 +3759,7 @@ app.repository = {
                         ]
                     }`
             }
-        },
+        },*/
         pastelast: {
             url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
             type: 'PATCH',
@@ -3765,8 +3784,8 @@ app.repository = {
         getCell: (r, x, inc) => {
             WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + inc;
             let c = r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']],
-                editable = c.Consolidated === false && c.RuleDerived === false,
-                performable = c.Consolidated === true && c.RuleDerived === false;
+                editable = c.Consolidated === false && c.RuleDerived === false;
+                /*,performable = c.Consolidated === true && c.RuleDerived === false;*/
 
             let result = {
                 title: c.FormattedValue,
@@ -3777,11 +3796,11 @@ app.repository = {
                 ordinal: c.Ordinal,
                 year: c.Members[7].Name,
                 members: c.Members,
-                performable: performable
+                //performable: performable
             };
-            if (performable) {
+       /*     if (performable) {
                 result['icon'] = 'icon-cloud-arrow-up';
-            }
+            }*/
             return result;
         },
         init: {
@@ -3991,37 +4010,111 @@ app.repository = {
             }
         }
     },
+    rocheBPSPIpPlanningCheckoutPageInit: {
+        initCondition: (db) => {
+            return v('systemValueIpPlanningUploadTargetPath') === false;
+        },
+        initDefault: (db) => {
+            return true;
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+                {
+                    "MDX" : "
+                        SELECT
+                            {[Value Type].[Value Type].[String]}
+                         ON COLUMNS ,
+                            {[Measures Control].[Measures Control].[UI Excel upload path IP]}
+                        ON ROWS
+                        FROM [Control]
+                    "
+                }
+            `,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        value: (r, x) => {
+                            Utils.setWidgetValue('systemValueIpPlanningUploadTargetPath', r.Cells[0].FormattedValue)
+                            return true;
+                        }
+                    }
+            }
+        }
+    },
+    rocheBPSPIpPlanningCheckoutGridRow2Cell2Button: {
+        launch: {
+            url: (db) => `/api/v1/Processes('MODULE - UI - Clear All Inputs')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => {
+                return `{
+                        "Parameters": [
+                                {"Name": "pVersion", "Value": "${db.systemValueGlobalCompanyVersion}"},
+                                {"Name": "pProduct", "Value": "${db.systemValueIpPlanningCheckoutProduct}"},
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key')}"},
+                                {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell3DropBox', 'key')}"},
+                                {"Name": "pLineItem", "Value": "Marketing Adjustment"},
+                                {"Name": "pCube", "Value": "Sales Plan IP"},
+                                {"Name": "pPeriod", "Value": "${db.systemValueIpPlanningSegmentedControlRelativeYearValue}"}
+                        ]
+                    }`;
+            }
+        }
+    },
+    rocheBPSPIpPlanningCheckoutUploadPopupPlDropbox: {
+        initCondition: (db) => {
+            let l = v('rocheBPSPIpPlanningCheckoutGridTableMonthly.cellData.length');
+            return l !== false && l !== 0;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            execute: (db) => {
+                return v('rocheBPSPIpPlanningCheckoutGridTableMonthly.cellData').map(function (e) {
+                    return {name: e[1].title === 'IP Node' ? e[1].title : 'PL' + e[1].title, key: e[1].title, on: false}
+                }).reduce((acc, current) => {
+                    const x = acc.find(item => item.name === current.name);
+                    if (!x) {
+                        return acc.concat([current]);
+                    } else {
+                        return acc;
+                    }
+                }, []);
+            }
+        }
+    },
     rocheBPSPIpPlanningCheckoutUploadPopupUpload: {
         upload: (db) => {
             return {
                 staging: app.defaultUploadStagingFolder,
-                target: app.defaultUploadTargetFolder,
+                target: v('systemValueIpPlanningUploadTargetPath'),
                 productLevel: v('rocheBPSPIpPlanningCheckoutUploadPopupPlDropbox.value'),
                 validation: 'validateExcelImport',
                 validationUser: db.activeUserName,
-                validationCompany: Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key'),
-                validationReceiver: v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value'),
-                validationGlobalVersion: WidgetValue.systemValueGlobalCompanyVersion,
-                validationVersion: WidgetValue.systemValueGlobalCompanyProductPlanVersion,
-                validationProduct: WidgetValue.systemValueIpPlanningCheckoutProduct,
+                validationCompany: Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key'),
+                validationReceiver: v('rocheBPSPipPlanningGridRow1Cell3DropBox.value'),
+                validationGlobalVersion: db.systemValueGlobalCompanyVersion,
+                validationVersion: db.systemValueGlobalCompanyProductPlanVersion,
+                validationProduct: db.systemValueIpPlanningCheckoutProduct,
                 validationMessage: 'First row of excel does not match'
-                //      preProcessTemplate: v('preprocess.choose.value') === false ? 'Template1' : v('preprocess.choose.value')
             };
         },
         request: {
-            url: (db) => `/api/v1/Processes('MODULE - UI - CSV Upload Post Processing')/tm1.ExecuteWithReturn`,
+            url: (db) => `/api/v1/Processes('MODULE - UI - CSV Upload Post Processing IP')/tm1.ExecuteWithReturn`,
             type: 'POST',
             body: (db) => {
                 let fileName = v('rocheBPSPIpPlanningCheckoutUploadPopupUpload.fileNames')[0].replace('.xlsx', '.csv');
-                L(fileName);
                 return `{
                         "Parameters": [
                                 {"Name": "pUser", "Value": "${db.activeUserName}"},
                                 {"Name": "pProduct", "Value": "${db.systemValueIpPlanningCheckoutProduct}"},
-                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}"},
-                                {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell3DropBox', 'key')}"},
-                                {"Name": "pTargetCube", "Value": "Sales Plan by Product"},
-                                {"Name": "pSelectedProductLevel", "Value": "${v('rocheBPSPIpPlanningCheckoutUploadPopupPlDropbox.value')}"},
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key')}"},
+                                {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell3DropBox', 'key')}"},
+                                {"Name": "pTargetCube", "Value": "Sales Plan IP"},
+                                {"Name": "pSelectedMaterialLevel", "Value": "${v('rocheBPSPIpPlanningCheckoutUploadPopupPlDropbox.value')}"},
                                 {"Name": "pFileName", "Value": "${fileName}"}
                         ]
                     }`;
@@ -4215,6 +4308,34 @@ app.repository = {
                     }
                 ]
                 `;
+            }
+        }
+    },
+
+     rocheBPSPIpPlanningCheckoutGridRow2Cell1aButton: {
+        launch: {
+            download: (db) => {
+                let y1 = parseInt(db.systemValueGlobalStartingPlanYear), s = [], fileName;
+                s.push(Utils.getFormattedDate(new Date(), '_', true));
+                s.push(db.activeUserName);
+                s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key'));
+                s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell3DropBox', 'key'));
+                s.push(db.systemValueIpPlanningCheckoutProduct);
+                fileName = s.join('_').replaceAll(':', '_').replaceAll(' ', '_').replaceAll('/', '_');
+                return {
+                    url: 'export?export_key=rocheIpPlanningMonthly&file_name=' + fileName + '.xlsx',
+                    activeUserName: db.activeUserName,
+                    companyVersion: db.systemValueGlobalCompanyVersion, //Live
+                    productPlanVersion: db.systemValueGlobalCompanyProductPlanVersion, //Budget
+                    company: Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key'),
+                    receiver: v('rocheBPSPipPlanningGridRow1Cell3DropBox.value'),
+                    material: db.systemValueIpPlanningCheckoutProduct,
+                    globalVersion: db.systemValueGlobalCompanyVersion,
+                    version: db.systemValueGlobalCompanyProductPlanVersion,
+                    year1: y1,
+                    year2: y1 + 1,
+                    key: 'exportIpPlanningMonthly'
+                };
             }
         }
     },
