@@ -9816,7 +9816,7 @@ app.widgetConfig = {
                                     marginRight: '0',
                                     marginTop: '0',
                                     alignment: 'top-center',
-                                    width: '63%',
+                                    width: '61%',
                                     height: '0',
                                     widgets: [
 
@@ -9836,8 +9836,9 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPMaterialGridRow1Cell3',
                                     type: GridCellWidget,
-                                    alignment: 'center-right',
-                                    width: '18%',
+                                    alignment: 'center-center',
+                                    width: '20%',
+                                    marginRight: '10px',
                                     widgets: [
                                         {
                                             id: 'rocheBPSPMaterialGridRow1Cell3Button',
@@ -10032,7 +10033,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPMaterialGridTableHeaderCell-01',
                                     type: GridTableHeaderCellWidget,
-                                    width: '50%',
+                                    width: '40%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
@@ -10056,7 +10057,6 @@ app.widgetConfig = {
                                     alignment: 'bottom-center',
                                     width: '3%',
                                     widgets: [
-
                                         {
                                             id: 'rocheBPSPMaterialGridTableHeaderText-02',
                                             type: TextWidget,
@@ -10072,17 +10072,16 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPMaterialGridTableHeaderCell-03',
                                     type: GridTableHeaderCellWidget,
-                                    width: '6.7%',
+                                    width: '16.7%',
                                     alignment: 'bottom-center',
                                     widgets: [
 
                                         {
                                             id: 'rocheBPSPMaterialGridTableHeaderText-03',
                                             type: TextWidget,
-                                            body: 'Profit Center Number',
+                                            body: 'Material Number',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
-                                            marginLeft: '10%',
                                             marginBottom: 8,
                                             bodyAlignment: 'center'
                                         }
@@ -10145,7 +10144,7 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPMaterialGridTableCell-01',
                             type: GridTableCellWidget,
-                            width: '50%',
+                            width: '40%',
                             alignment: 'center-left',
                             widgets: [
 
@@ -10183,7 +10182,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPMaterialGridTableCell-03',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '6.7%',
+                            width: '16.7%',
                             widgets: [
 
                                 {
@@ -10284,7 +10283,7 @@ app.widgetConfig = {
                                 {
                                     id: 'RocheBPSPMaterialIPNodeGridTableHeaderCell-01',
                                     type: GridTableHeaderCellWidget,
-                                    width: '50%',
+                                    width: '40%',
                                     alignment: 'bottom-left',
                                     widgets: [
                                         {
@@ -10323,7 +10322,7 @@ app.widgetConfig = {
                                 {
                                     id: 'RocheBPSPMaterialIPNodeGridTableHeaderCell-03',
                                     type: GridTableHeaderCellWidget,
-                                    width: '6.7%',
+                                    width: '16.7%',
                                     alignment: 'bottom-center',
                                     widgets: [
 
@@ -10331,7 +10330,6 @@ app.widgetConfig = {
                                             id: 'RocheBPSPMaterialIPNodeGridTableHeaderCellText-03',
                                             type: TextWidget,
                                             body: 'Profit Center Number',
-                                            marginLeft: '10%',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
                                             marginBottom: 8,
@@ -10395,7 +10393,7 @@ app.widgetConfig = {
                         {
                             id: 'RocheBPSPMaterialIPNodeGridTableCell-01',
                             type: GridTableCellWidget,
-                            width: '50%',
+                            width: '40%',
                             alignment: 'center-left',
                             widgets: [
 
@@ -10432,8 +10430,8 @@ app.widgetConfig = {
                         {
                             id: 'RocheBPSPMaterialIPNodeGridTableCell-03',
                             type: GridTableCellWidget,
-                            alignment: 'center-center',
-                            width: '6.7%',
+                            alignment: 'center-left',
+                            width: '16.7%',
                             widgets: [
 
                                 {
@@ -11774,7 +11772,7 @@ app.widgetConfig = {
                                     marginRight: '0',
                                     marginTop: '0',
                                     alignment: 'top-center',
-                                    width: '63%',
+                                    width: '61%',
                                     height: '0',
                                     widgets: [
                                         {
@@ -11790,8 +11788,9 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPAddMaterialGridRow1Cell3',
                                     type: GridCellWidget,
-                                    alignment: 'center-right',
-                                    width: '18%',
+                                    alignment: 'center-center',
+                                    marginRight: '10px',
+                                    width: '20%',
                                     widgets: [
                                         {
                                             id: 'rocheBPSPAddMaterialGridRow1Cell3Button',
@@ -12040,17 +12039,39 @@ app.widgetConfig = {
                                 },
 
                                 {
+                                    id: 'rocheBPSPAddMaterialGridRow4CellClearAllFilter',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-center',
+                                    width: '9%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPAddMaterialGridRow4CellClearAllFilterButton',
+                                            type: ButtonWidget,
+                                            label: 'Clear All Filter',
+                                            action: '',
+                                            icon: 'icon-arrow-return',
+                                            marginLeft: '20',
+                                            height: '40',
+                                            marginTop: '5',
+                                            fontColor: '#007aff',
+                                            skin: 'refresh_search_bpsp'
+
+
+                                        }
+                                    ]
+                                },
+
+                                {
                                     id: 'rocheBPSPAddMaterialGridRow4CellRefresh',
                                     type: GridCellWidget,
                                     alignment: 'bottom-right',
-                                    width: '19%',
+                                    width: '10%',
                                     widgets: [
                                         {
                                             id: 'rocheBPSPAddMaterialGridRow4CellRefreshButton',
                                             type: ButtonWidget,
                                             label: 'Refresh Table',
                                             action: '',
-                                            icon: 'icon-od_refresh',
                                             marginLeft: '20',
                                             height: '40',
                                             marginTop: '5',

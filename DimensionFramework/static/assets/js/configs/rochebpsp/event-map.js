@@ -1170,6 +1170,16 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPMaterialAddDummyPopup'
+        },
+
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPMaterialGridTable'
+        },
+
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialIPNodeGridTable'
         }
     ],
 
@@ -1235,6 +1245,10 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPMaterialDeleteDataPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPMaterialGridTable'
         }
     ],
 
@@ -1256,6 +1270,11 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPMaterialDeleteDataIPGridTablePopup'
+        },
+
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialIPNodeGridTable'
         }
     ],
 
@@ -1288,6 +1307,11 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPMaterialAddDummyGridTablePopup'
+        },
+
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPMaterialGridTable'
         }
     ],
 
@@ -1313,7 +1337,13 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPMaterialAddDummyGridTableIPpopup'
+        },
+
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialIPNodeGridTable'
         }
+
     ],
 
     'launch.RocheBPSPMaterialIPNodeGridTable_row_5': [
@@ -1357,6 +1387,58 @@ app.eventMap = {
             argument: 'RocheBPSPMaterialsAddMaterialSearch'
         }
     ],
+
+
+    'launch.rocheBPSPAddMaterialGridRow4CellClearAllFilterButton': [
+
+        {
+            action: app.fn.resetWidgetValue,
+            argument: ['rocheBPSPAddMaterialGridRow4Cell3Dropbox']
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell3Dropbox'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        },
+        {
+            action: app.fn.resetWidgetValue,
+            argument: ['rocheBPSPAddMaterialGridRow4Cell1Search']
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell1Search'
+        },
+
+        {
+            action: app.fn.resetWidgetValue,
+            argument: ['rocheBPSPAddMaterialGridRow4Cell2Search']
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell2Search'
+        },
+        {
+            action: app.fn.resetWidgetValue,
+            argument: ['rocheBPSPAddMaterialGridRow4Cell4Search']
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell4Search'
+        },
+        {
+            action: app.fn.resetWidgetValue,
+            argument: ['rocheBPSPAddMaterialGridRow4Cell5Search']
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell5Search'
+        },
+
+    ],
+
 
 }
 ;
