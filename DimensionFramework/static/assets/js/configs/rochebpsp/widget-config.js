@@ -8002,7 +8002,6 @@ app.widgetConfig = {
                                 ]
                             },
 
-
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutCommentShowGridRow2',
                                 type: GridRowWidget,
@@ -8015,8 +8014,8 @@ app.widgetConfig = {
                                         width: '90%',
                                         skin: '',
                                         widgets: [
-
-                                            {
+                                            /*
+                                           {
                                                 id: 'rocheBPSPIpPlanningCheckoutCommentShowGridTable',
                                                 type: GridTableWidget,
                                                 marginTop: '12px',
@@ -8043,6 +8042,7 @@ app.widgetConfig = {
                                                     },
                                                 ]
                                             }
+                                            */
 
                                         ]
                                     }
@@ -8081,7 +8081,7 @@ app.widgetConfig = {
                                         width: '90%',
                                         skin: '',
                                         widgets: [
-
+/*
                                             {
                                                 id: 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource',
                                                 type: GridTableWidget,
@@ -8108,6 +8108,7 @@ app.widgetConfig = {
                                                     },
                                                 ]
                                             }
+                                            */
 
                                         ]
                                     }
