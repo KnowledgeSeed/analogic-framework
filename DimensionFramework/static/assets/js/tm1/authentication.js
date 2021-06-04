@@ -47,7 +47,7 @@ Auth.handleSuccessLogin = () => {
         date.setTime(date.getTime() + (app.sessionExpiresInMinutes * 60 * 1000));
         $.cookie("authenticated", 'authenticated', {expires: date});
         if ('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode) {
-            app.handled401 = true;
+            app.handled401 = false;
         }
         //$.cookie("camPassport", 0);
     }

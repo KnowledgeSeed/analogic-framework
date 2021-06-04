@@ -74,6 +74,10 @@ app.eventMap = {
                             argument: 'rocheBPSPProductsCheckoutWarningByUserText'
                         },
                         {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutWarningContactEditorButton'
+                        },
+                        {
                             action: app.fn.openPopup,
                             argument: 'rocheBPSPProductsCheckoutWarning'
                         }
@@ -119,6 +123,10 @@ app.eventMap = {
                         {
                             action: app.fn.forceRefresh,
                             argument: 'rocheBPSPProductsCheckoutWarningByUserText'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutWarningContactEditorButton'
                         },
                         {
                             action: app.fn.openPopup,
@@ -223,7 +231,7 @@ app.eventMap = {
         },
         {
             action: app.fn.forceRefresh,
-            argument: 'rocheBPSPProductsGridTfbleYearly'
+            argument: 'rocheBPSPProductsGridTableYearly'
         }
     ],
     'launch.rocheBPSPProductsCheckoutPopupFocusButton': [
@@ -740,12 +748,18 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutUploadPopup'
         }
     ],
-    /*  'launch.rocheBPSPProductsCheckoutGridTableMonthlyHeaderButton-05': [
-          {
-              action: app.fn.openPopup,
-              argument: 'rocheBPSPProductsCheckoutDistributionPopup'
-          }
-      ],*/
+    'write.rocheBPSPProductsCheckoutGridTableMonthly.finished': [
+        {
+            action: app.fn.executeRequest,
+            argument: 'writeMonthlySplitType.rocheBPSPProductsCheckoutGridTableMonthly'
+        }
+    ],
+    'pastelast.rocheBPSPProductsCheckoutGridTableMonthly.finished': [
+        {
+            action: app.fn.executeRequest,
+            argument: 'writeMonthlySplitType.rocheBPSPProductsCheckoutGridTableMonthly'
+        }
+    ],
     'launch.rocheBPSPProductsCheckoutGridTableMonthly_row_4': [
         {
             action: app.fn.openPopup,
@@ -803,8 +817,8 @@ app.eventMap = {
                     conditionKey: 'performWrite',
                     actions: [
                         {
-                            action: app.fn.forceRefresh,
-                            argument: 'rocheBPSPProductsCheckoutGridTableYearly'
+                            action: app.fn.forceRefreshWithDelay,
+                            argument: ['rocheBPSPProductsCheckoutGridTableYearly', 500]
                         }
                     ]
                 }
@@ -978,6 +992,10 @@ app.eventMap = {
                 {
                     conditionKey: 'isLocked',
                     actions: [
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPIpPlanningCheckoutWarningContactEditorButton'
+                        },
                         {
                             action: app.fn.forceRefresh,
                             argument: 'rocheBPSPIpPlanningCheckoutWarningByUserText'

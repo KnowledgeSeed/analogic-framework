@@ -388,6 +388,8 @@ app.fn.increasePage = (widgetId) => {
     } else {
         WidgetState[widgetId]['page'] = 2;
     }
+    let start = (WidgetState[widgetId].page - 2) * WidgetState[widgetId].maxRows * WidgetState[widgetId].col ;
+    app.fn.copyChangedCells(widgetId, start);
     El.body.triggerHandler('page.' + widgetId);
 };
 
@@ -395,17 +397,31 @@ app.fn.decreasePage = (widgetId) => {
     if (WidgetState[widgetId].page) {
         WidgetState[widgetId]['page'] = WidgetState[widgetId]['page'] - 1;
     }
+
+    let start = (WidgetState[widgetId].page) * WidgetState[widgetId].maxRows * WidgetState[widgetId].col ;
+    app.fn.copyChangedCells(widgetId, start);
+
     El.body.triggerHandler('page.' + widgetId);
 };
 
 app.fn.jumpToFirstPage = (widgetId) => {
+    app.fn.copyChangedCells(widgetId, (WidgetState[widgetId]['page'] - 1)  * WidgetState[widgetId].maxRows * WidgetState[widgetId].col  );
     WidgetState[widgetId]['page'] = 1;
     El.body.triggerHandler('page.' + widgetId);
 };
 
 app.fn.jumpToLastPage = (widgetId) => {
+    app.fn.copyChangedCells(widgetId, (WidgetState[widgetId]['page'] - 1 )  * WidgetState[widgetId].maxRows * WidgetState[widgetId].col );
     WidgetState[widgetId]['page'] = Utils.getGridTableActualAndLastPage(widgetId).maxPage;
     El.body.triggerHandler('page.' + widgetId);
+};
+
+app.fn.copyChangedCells = (widgetId, start) => {
+    let changedCells = $('#' + widgetId).find('.ks-grid-table-content .ks-grid-table-cell'), i = 0;
+    while(i < changedCells.length){
+        WidgetState[widgetId]['widgets'][start + i] = changedCells[i].outerHTML;
+        ++i;
+    }
 };
 
 app.fn.executeRequest = (eventMapId) => {
