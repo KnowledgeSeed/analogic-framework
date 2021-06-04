@@ -302,6 +302,9 @@ const Utils = {
     getDecimalFromPercentString(value){
         return Utils.parseNumber(value.replace('%', '')) / 100;
     },
+    filterUnique(arr){
+        return arr.filter((v, i, a) => a.indexOf(v) === i)
+    },
     create_UUID() {
         let dt = new Date().getTime();
 

@@ -34,6 +34,7 @@ class GridTableWidget extends Widget {
             let maxRows = v.maxRows * col;
             let start = (page - 1) * maxRows, end = page * maxRows;
             this.state['widgets'] = widgets;
+            this.state['col'] = col;
             this.state['headerRowWidgetHtml'] = headerRowWidgetHtml;
          //   this.state['d'] = d;
             this.state['maxRows'] = v.maxRows;

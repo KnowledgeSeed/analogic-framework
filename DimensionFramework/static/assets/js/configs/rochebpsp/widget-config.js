@@ -1124,7 +1124,6 @@ app.widgetConfig = {
                             type: ButtonWidget,
                             skin: 'blue_bg_bpsp',
                             label: 'Contact Editor',
-                            url: 'https://hangouts.google.com/chat/person/109335557829914353504',
                             marginBottom: 10
                         },
                         {
@@ -5307,14 +5306,9 @@ app.widgetConfig = {
                             'method': 'refresh'
                         },
                         {
-                            'event': 'pastelast.rocheBPSPProductsCheckoutGridTableMonthly.finished',
+                            'event': 'writeMonthlySplitType.rocheBPSPProductsCheckoutGridTableMonthly.finished',
                             'method': 'refreshWithTimeout',
                             'parameters': [1500]
-                        },
-                        {
-                            'event': 'write.rocheBPSPProductsCheckoutGridTableMonthly.finished',
-                            'method': 'refreshWithTimeout',
-                            'parameters': [500]
                         },
                         {
                             'event': 'perform.rocheBPSPProductsCheckoutGridTableMonthly.finished',
@@ -6669,7 +6663,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPipPlanningGridTableMonthlyHeaderText-03',
                                             type: TextWidget,
-                                            body: 'Profit Center Number',
+                                            body: 'Material number',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'center',
                                             marginBottom: 8,
@@ -8430,7 +8424,7 @@ app.widgetConfig = {
                                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderText-03',
                                         type: TextWidget,
                                         paddingLeft: 5,
-                                        body: 'Profit Center Number',
+                                        body: 'Material number',
                                         skin: 'products_gd_header_bpsp',
                                         titleAlignment: 'center',
                                         marginBottom: 8,

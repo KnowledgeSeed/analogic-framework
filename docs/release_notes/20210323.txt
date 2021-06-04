@@ -41,6 +41,8 @@ Slider -> updateableWidgetId
 
 PopupWidget -> positionAndCalculateBestSpace
 
+GridTable pager, maxRows
+
 Skins:
 
 ImageWidget :

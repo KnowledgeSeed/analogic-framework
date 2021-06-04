@@ -424,9 +424,45 @@ app.repository = {
             },
     },
 
+    rocheBPSPProductsCheckoutWarningContactEditorButton: {
+        initCondition: (db) => {
+            return Repository.templateFunctions.initConditionDependingOnYearlyMonthly(db);
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => {
+                let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly',
+                    c = Utils.getGridTableCell(g, 0), u = c.checkoutUser;
+                u = db.activeUserName.split('/')[0] + '/' + u;
+                return `
+                      {"MDX":
+                        "SELECT
+                           {[}ElementAttributes_}Clients].[}ElementAttributes_}Clients].[Email]}
+                          ON COLUMNS ,
+                           {[}Clients].[}Clients].[${u}]}
+                          ON ROWS
+                        FROM [}ElementAttributes_}Clients]"}
+                    `;
+            },
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        url: (r, x) => {
+                            return 'mailto:' + r.Cells[0].FormattedValue;
+                        }
+                    }
+            }
+        }
+    },
+
     rocheBPSPProductsCheckoutWarningByUserText: {
         initCondition: (db) => {
-            return v('rocheBPSPProductsGridTableYearly.cellData') !== false;
+            return Repository.templateFunctions.initConditionDependingOnYearlyMonthly(db);
         },
         initDefault: (db) => {
             return {};
@@ -958,7 +994,7 @@ app.repository = {
                              MEMBER [Periods].[Periods].[zUI CheckOutDateTime] as 
                                     [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime])
                              MEMBER [Periods].[Periods].[zUI Split Flag] as 
-                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Paln],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Monthly Split Type])
+                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Monthly Split Type])
 
                         -- Create the first 5 column with information
                              Set FixColumns AS
@@ -1781,7 +1817,8 @@ app.repository = {
                                 {"Name": "pProduct", "Value": "${v('rocheBPSPProductsCheckoutDistributionEditPopupGridTable.cellData')[0][0].label.split(' ')[0]}"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}"},
-                                {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"}
+                                {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"},
+                                {"Name": "pLineItem", "Value": "${v('systemValueProductCheckoutGridTableYearlyPLineItem')}"},
                         ]
                     }`
                 }
@@ -1859,6 +1896,8 @@ app.repository = {
                 return 'POST';
             },
             body: (db, cell, widgetValue) => {
+                let pLineItem = Utils.getGridTableCurrentCell('rocheBPSPProductsCheckoutGridTableYearly').members[6].Name;
+                Utils.setWidgetValue('systemValueProductCheckoutGridTableYearlyPLineItem', pLineItem);
                 if (Utils.getPropertyOrFunctionValue(cell, 'distributionEdit')) {
                     return `{
                         "Parameters": [
@@ -1866,7 +1905,8 @@ app.repository = {
                                 {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPProductsCheckoutGridTableYearly', 1).title}"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}"},
-                                {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"}
+                                {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"},
+                                {"Name": "pLineItem", "Value": "${pLineItem}"}
                         ]
                     }`
                 } else {
@@ -1877,7 +1917,8 @@ app.repository = {
                                 {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPProductsCheckoutGridTableYearly', 1).title}"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}"},
-                                {"Name": "pSplitMode", "Value": "Default"}
+                                {"Name": "pSplitMode", "Value": "Default"},
+                                {"Name": "pLineItem", "Value": "${pLineItem}"}
                         ]
                     }`
                 }
@@ -2263,10 +2304,10 @@ app.repository = {
             url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
             type: 'PATCH',
             body: (db, cell, widgetValue, row, col) => {
-                let iconOrdinal = v('rocheBPSPProductsCheckoutGridTableMonthly.cellData')[row][4].ordinal;
+                Utils.setWidgetValueIfNotExist('systemValueCheckoutGridTableMonthlyPatchedProducts', []);
+                v('systemValueCheckoutGridTableMonthlyPatchedProducts').push(v('rocheBPSPProductsCheckoutGridTableMonthly.cellData')[row][1].title);
                 return `[
-                    {"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"},
-                    {"Ordinal": ${iconOrdinal},"Value": \"M\"}
+                    {"Ordinal": ${widgetValue.ordinal},"Value": \"${Utils.parseNumber(widgetValue.value)}\"}
                 ]`;
             }
         },
@@ -2274,10 +2315,10 @@ app.repository = {
             url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
             type: 'PATCH',
             body: (db, cell, widgetValue, row, col) => {
-                let iconOrdinal = v('rocheBPSPProductsCheckoutGridTableMonthly.cellData')[row][4].ordinal;
+                Utils.setWidgetValueIfNotExist('systemValueCheckoutGridTableMonthlyPatchedProducts', []);
+                v('systemValueCheckoutGridTableMonthlyPatchedProducts').push(v('rocheBPSPProductsCheckoutGridTableMonthly.cellData')[row][1].title);
                 return `[
-                    {"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"},
-                    {"Ordinal": ${iconOrdinal},"Value": \"M\"}
+                    {"Ordinal": ${widgetValue.ordinal},"Value": \"${Utils.parseNumber(widgetValue.value)}\"}
                 ]`;
             }
         },
@@ -2285,10 +2326,49 @@ app.repository = {
             url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
             type: 'PATCH',
             body: (db, cell, widgetValue, row, col) => {
-                let iconOrdinal = v('rocheBPSPProductsCheckoutGridTableMonthly.cellData')[row][4].ordinal;
+                Utils.setWidgetValueIfNotExist('systemValueCheckoutGridTableMonthlyPatchedProducts', []);
+                v('systemValueCheckoutGridTableMonthlyPatchedProducts').push(v('rocheBPSPProductsCheckoutGridTableMonthly.cellData')[row][1].title);
                 return `[
-                    {"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"},
-                    {"Ordinal": ${iconOrdinal},"Value": \"M\"}
+                    {"Ordinal": ${widgetValue.ordinal},"Value": \"${Utils.parseNumber(widgetValue.value)}\"}
+                ]`;
+            }
+        },
+        writeMonthlySplitType: {
+            url: (db) => `/api/v1/Cubes('Sales Plan by Product')/tm1.Update`,
+            type: 'POST',
+            body: (db) => {
+
+                let touchedProducts = Utils.filterUnique(v('systemValueCheckoutGridTableMonthlyPatchedProducts')),
+                    cellTemplates = [];
+
+                let cellTemplate = (productCode) => `
+                    {
+                        "Cells": [
+                            {
+                                "Tuple@odata.bind": [
+                                    "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                    "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueGlobalSegmentedControlRelativeYearValue}')",
+                                    "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}')",
+                                    "Dimensions('Products')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                    "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}')",
+                                    "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('Final Sales Plan')",
+                                    "Dimensions('Measures Sales Plan by Product')/Hierarchies('Measures Sales Plan by Product')/Elements('Monthly Split Type')"
+                                ]
+                            },
+                        ],
+                         "Value": "M"
+                    }
+                    `;
+
+                for (const t of touchedProducts) {
+                    cellTemplates.push(cellTemplate(t));
+                }
+
+                Utils.setWidgetValue('systemValueCheckoutGridTableMonthlyPatchedProducts', []);
+
+                return `
+                    [
+                    ${cellTemplates.join(',')}
                 ]`;
             }
         },
@@ -2330,7 +2410,7 @@ app.repository = {
                              MEMBER [Periods].[Periods].[zUI CheckOutDateTime] as 
                                     [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime])
                              MEMBER [Periods].[Periods].[zUI Split Flag] as 
-                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Paln],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Monthly Split Type])
+                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Monthly Split Type])
                         -- Create the first 5 column with information
                              Set FixColumns AS
                              {[Periods].[Periods].[ProductName],
@@ -2416,7 +2496,7 @@ app.repository = {
                             icon: !icon ? 'icon-distribution-equal' : icon,
                             cellSkin: '',
                             cellVisible: true,
-                            ordinal: r.Cells[x+6].Ordinal,
+                            ordinal: r.Cells[x + 6].Ordinal,
                             skin: 'products_gd_distribution_icon_bpsp'
                         };
                         if (!icon) {
@@ -2696,7 +2776,7 @@ app.repository = {
             return v('activeUserName');
         },
         initDefault: (db) => {
-          return {};
+            return {};
         },
         init: {
             execute: (db) => {
@@ -3136,6 +3216,42 @@ app.repository = {
         }
     },
 
+    rocheBPSPIpPlanningCheckoutWarningContactEditorButton: {
+        initCondition: (db) => {
+            return Utils.isGridTableLoaded('rocheBPSPipPlanningGridTableMonthly');
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => {
+                let g = 'rocheBPSPipPlanningGridTableMonthly',
+                    c = Utils.getGridTableCell(g, 0), u = c.checkoutUser;
+                u = db.activeUserName.split('/')[0] + '/' + u;
+                return `
+                      {"MDX":
+                        "SELECT
+                           {[}ElementAttributes_}Clients].[}ElementAttributes_}Clients].[Email]}
+                          ON COLUMNS ,
+                           {[}Clients].[}Clients].[${u}]}
+                          ON ROWS
+                        FROM [}ElementAttributes_}Clients]"}
+                    `;
+            },
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        url: (r, x) => {
+                            return 'mailto:' + r.Cells[0].FormattedValue;
+                        }
+                    }
+            }
+        }
+    },
+
     rocheBPSPIpPlanningCheckoutWarningByUserText: {
         initCondition: (db) => {
             return Utils.isGridTableLoaded('rocheBPSPipPlanningGridTableMonthly');
@@ -3189,13 +3305,13 @@ app.repository = {
 
 
     rocheBPSPIpPlanningCheckoutGridRow2Cell3Button: {
-          launch:
-              {
-                  url: (db) => `/api/v1/Processes('MODULE - UI - Materials GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
-                  type: 'POST',
-                  body: (db) => {
-                      Utils.setWidgetValue('systemValueBackFromCheckin', true);
-                      return `{
+        launch:
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Materials GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => {
+                    Utils.setWidgetValue('systemValueBackFromCheckin', true);
+                    return `{
                           "Parameters": [
                                   {"Name": "pUserID", "Value": "${db.activeUserName}"},
                                   {"Name": "pMaterial", "Value": "${WidgetValue['systemValueIpPlanningCheckoutProduct']}"},
@@ -3322,7 +3438,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return { title: Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 3, 'year')};
+                return {title: Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 3, 'year')};
             }
         }
     },
@@ -3335,7 +3451,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return { title: Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 4, 'year')};
+                return {title: Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 4, 'year')};
             }
         }
     },
@@ -3348,7 +3464,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return { body: 'YEND vs Act ' + Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 18, 'year')};
+                return {body: 'YEND vs Act ' + Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 18, 'year')};
             }
         }
     },
@@ -3361,7 +3477,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return { body: 'YEND vs T3 ' + Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 19, 'year')};
+                return {body: 'YEND vs T3 ' + Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 19, 'year')};
             }
         }
     },
@@ -3484,8 +3600,8 @@ app.repository = {
                                 WidgetValue['systemValueRocheBPSPipPlanningGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
 
                                 pl = r.Cells[x + 1].FormattedValue.replace('a', '');
-                                skin =  pl === 'IP Node'  ? 'gridtable_hierarchy_bpsp_PL6' : 'gridtable_hierarchy_bpsp_' + pl;
-                                if(WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked']){
+                                skin = pl === 'IP Node' ? 'gridtable_hierarchy_bpsp_PL6' : 'gridtable_hierarchy_bpsp_' + pl;
+                                if (WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked']) {
                                     skin += '_locked';
                                 }
                                 result = {
@@ -3784,23 +3900,23 @@ app.repository = {
         }
     },
     rocheBPSPIpPlanningCheckoutGridTableMonthly: {
-       /* perform: {
-            url: (db) => `/api/v1/Processes('MODULE - UI - Sales Plan by Product Split')/tm1.ExecuteWithReturn`,
-            type: 'POST',
-            body: (db, cell, widgetValue) => {
-                return `{
-                        "Parameters": [
-                                {"Name": "pValue", "Value": "${Utils.parseNumber(v('rocheBPSPIpPlanningCheckoutGridTableMonthly.value'))}"},
-                                {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPIpPlanningCheckoutGridTableMonthly', 1).title}"},
-                                {"Name": "pPeriod", "Value": "${Utils.getGridTableCurrentCell('rocheBPSPIpPlanningCheckoutGridTableMonthly').members[6].Name}"},
-                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}"},
-                                {"Name": "pReceiver", "Value": "${v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value')}"},
-                                {"Name": "pSplitMode", "Value": "Default"},
-                                {"Name": "pLineitem", "Value": "Marketing Adjustment"}
-                        ]
-                    }`
-            }
-        },*/
+        /* perform: {
+             url: (db) => `/api/v1/Processes('MODULE - UI - Sales Plan by Product Split')/tm1.ExecuteWithReturn`,
+             type: 'POST',
+             body: (db, cell, widgetValue) => {
+                 return `{
+                         "Parameters": [
+                                 {"Name": "pValue", "Value": "${Utils.parseNumber(v('rocheBPSPIpPlanningCheckoutGridTableMonthly.value'))}"},
+                                 {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPIpPlanningCheckoutGridTableMonthly', 1).title}"},
+                                 {"Name": "pPeriod", "Value": "${Utils.getGridTableCurrentCell('rocheBPSPIpPlanningCheckoutGridTableMonthly').members[6].Name}"},
+                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}"},
+                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value')}"},
+                                 {"Name": "pSplitMode", "Value": "Default"},
+                                 {"Name": "pLineitem", "Value": "Marketing Adjustment"}
+                         ]
+                     }`
+             }
+         },*/
         pastelast: {
             url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
             type: 'PATCH',
@@ -3826,7 +3942,7 @@ app.repository = {
             WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + inc;
             let c = r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']],
                 editable = c.Consolidated === false && c.RuleDerived === false;
-                /*,performable = c.Consolidated === true && c.RuleDerived === false;*/
+            /*,performable = c.Consolidated === true && c.RuleDerived === false;*/
 
             let result = {
                 title: c.FormattedValue,
@@ -3839,9 +3955,9 @@ app.repository = {
                 members: c.Members,
                 //performable: performable
             };
-       /*     if (performable) {
-                result['icon'] = 'icon-cloud-arrow-up';
-            }*/
+            /*     if (performable) {
+                     result['icon'] = 'icon-cloud-arrow-up';
+                 }*/
             return result;
         },
         init: {
@@ -4353,7 +4469,7 @@ app.repository = {
         }
     },
 
-     rocheBPSPIpPlanningCheckoutGridRow2Cell1aButton: {
+    rocheBPSPIpPlanningCheckoutGridRow2Cell1aButton: {
         launch: {
             download: (db) => {
                 let y1 = parseInt(db.systemValueGlobalStartingPlanYear), s = [], fileName;
@@ -4700,7 +4816,8 @@ app.repository = {
             switch: {
                 url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
                 type: 'PATCH',
-                body: (db, cell, widgetValue) => {
+                body: (db, cell, widgetValue, row, col) => {
+                    WidgetValue['RocheBPSPMaterialsAddMaterialSearch']['cellData'][row][col].value = widgetValue.value;
                     return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
                 }
             },
