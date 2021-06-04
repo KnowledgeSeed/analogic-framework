@@ -2670,7 +2670,7 @@ app.repository = {
             return v('activeUserName');
         },
         initDefault: (db) => {
-          return {};
+            return {};
         },
         init: {
             execute: (db) => {
@@ -3163,13 +3163,13 @@ app.repository = {
 
 
     rocheBPSPIpPlanningCheckoutGridRow2Cell3Button: {
-          launch:
-              {
-                  url: (db) => `/api/v1/Processes('MODULE - UI - Materials GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
-                  type: 'POST',
-                  body: (db) => {
-                      Utils.setWidgetValue('systemValueBackFromCheckin', true);
-                      return `{
+        launch:
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Materials GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => {
+                    Utils.setWidgetValue('systemValueBackFromCheckin', true);
+                    return `{
                           "Parameters": [
                                   {"Name": "pUserID", "Value": "${db.activeUserName}"},
                                   {"Name": "pMaterial", "Value": "${WidgetValue['systemValueIpPlanningCheckoutProduct']}"},
@@ -3296,7 +3296,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return { title: Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 3, 'year')};
+                return {title: Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 3, 'year')};
             }
         }
     },
@@ -3309,7 +3309,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return { title: Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 4, 'year')};
+                return {title: Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 4, 'year')};
             }
         }
     },
@@ -3322,7 +3322,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return { body: 'YEND vs Act ' + Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 18, 'year')};
+                return {body: 'YEND vs Act ' + Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 18, 'year')};
             }
         }
     },
@@ -3335,7 +3335,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return { body: 'YEND vs T3 ' + Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 19, 'year')};
+                return {body: 'YEND vs T3 ' + Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 19, 'year')};
             }
         }
     },
@@ -3458,8 +3458,8 @@ app.repository = {
                                 WidgetValue['systemValueRocheBPSPipPlanningGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
 
                                 pl = r.Cells[x + 1].FormattedValue.replace('a', '');
-                                skin =  pl === 'IP Node'  ? 'gridtable_hierarchy_bpsp_PL6' : 'gridtable_hierarchy_bpsp_' + pl;
-                                if(WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked']){
+                                skin = pl === 'IP Node' ? 'gridtable_hierarchy_bpsp_PL6' : 'gridtable_hierarchy_bpsp_' + pl;
+                                if (WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked']) {
                                     skin += '_locked';
                                 }
                                 result = {
@@ -3758,23 +3758,23 @@ app.repository = {
         }
     },
     rocheBPSPIpPlanningCheckoutGridTableMonthly: {
-       /* perform: {
-            url: (db) => `/api/v1/Processes('MODULE - UI - Sales Plan by Product Split')/tm1.ExecuteWithReturn`,
-            type: 'POST',
-            body: (db, cell, widgetValue) => {
-                return `{
-                        "Parameters": [
-                                {"Name": "pValue", "Value": "${Utils.parseNumber(v('rocheBPSPIpPlanningCheckoutGridTableMonthly.value'))}"},
-                                {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPIpPlanningCheckoutGridTableMonthly', 1).title}"},
-                                {"Name": "pPeriod", "Value": "${Utils.getGridTableCurrentCell('rocheBPSPIpPlanningCheckoutGridTableMonthly').members[6].Name}"},
-                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}"},
-                                {"Name": "pReceiver", "Value": "${v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value')}"},
-                                {"Name": "pSplitMode", "Value": "Default"},
-                                {"Name": "pLineitem", "Value": "Marketing Adjustment"}
-                        ]
-                    }`
-            }
-        },*/
+        /* perform: {
+             url: (db) => `/api/v1/Processes('MODULE - UI - Sales Plan by Product Split')/tm1.ExecuteWithReturn`,
+             type: 'POST',
+             body: (db, cell, widgetValue) => {
+                 return `{
+                         "Parameters": [
+                                 {"Name": "pValue", "Value": "${Utils.parseNumber(v('rocheBPSPIpPlanningCheckoutGridTableMonthly.value'))}"},
+                                 {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPIpPlanningCheckoutGridTableMonthly', 1).title}"},
+                                 {"Name": "pPeriod", "Value": "${Utils.getGridTableCurrentCell('rocheBPSPIpPlanningCheckoutGridTableMonthly').members[6].Name}"},
+                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}"},
+                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value')}"},
+                                 {"Name": "pSplitMode", "Value": "Default"},
+                                 {"Name": "pLineitem", "Value": "Marketing Adjustment"}
+                         ]
+                     }`
+             }
+         },*/
         pastelast: {
             url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
             type: 'PATCH',
@@ -3800,7 +3800,7 @@ app.repository = {
             WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + inc;
             let c = r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']],
                 editable = c.Consolidated === false && c.RuleDerived === false;
-                /*,performable = c.Consolidated === true && c.RuleDerived === false;*/
+            /*,performable = c.Consolidated === true && c.RuleDerived === false;*/
 
             let result = {
                 title: c.FormattedValue,
@@ -3813,9 +3813,9 @@ app.repository = {
                 members: c.Members,
                 //performable: performable
             };
-       /*     if (performable) {
-                result['icon'] = 'icon-cloud-arrow-up';
-            }*/
+            /*     if (performable) {
+                     result['icon'] = 'icon-cloud-arrow-up';
+                 }*/
             return result;
         },
         init: {
@@ -4327,7 +4327,7 @@ app.repository = {
         }
     },
 
-     rocheBPSPIpPlanningCheckoutGridRow2Cell1aButton: {
+    rocheBPSPIpPlanningCheckoutGridRow2Cell1aButton: {
         launch: {
             download: (db) => {
                 let y1 = parseInt(db.systemValueGlobalStartingPlanYear), s = [], fileName;
@@ -4442,25 +4442,19 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     icon: parseInt(r.Cells[x + 4].FormattedValue) === 1 ? 'icon-trash' : '',
-
                                     cellSkin: parseInt(r.Cells[x + 4].FormattedValue) === 1 ? '' : 'readonly_bpsp',
                                 }
                             },
-
                             (r, x) => {
                                 return {
                                     icon: parseInt(r.Cells[x + 5].FormattedValue) === 1 ? 'icon-copy' : '',
                                     cellSkin: parseInt(r.Cells[x + 5].FormattedValue) === 1 ? '' : 'readonly_bpsp',
                                 }
                             },
-
-
                         ]
                     }
-
                 },
         },
-
 
     rocheBPSPMaterialDeleteDataPopupControlPanelAddButton: {
         launch:
@@ -4480,7 +4474,6 @@ app.repository = {
             },
     },
 
-
     rocheBPSPMaterialMoveDataPopupControlPanelAddButton: {
         launch:
             {
@@ -4499,17 +4492,14 @@ app.repository = {
             },
     },
 
-
     RocheBPSPMaterialIPNodeGridTable:
         {
-
             initCondition: (db) => {
-                return Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow1Cell2DropBox') && db.systemValueGlobalCompanyProductPlanVersion;
+                return Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow1Cell2DropBox') && db.systemValueGlobalCompanyProductPlanVersion && Utils.isGridTableLoaded('rocheBPSPMaterialGridTable');
             },
             initDefault: (db) => {
                 return [];
             },
-
             init:
                 {
                     url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
@@ -4519,8 +4509,7 @@ app.repository = {
                         if (Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow3Cell1SearchBox')) {
                             searchString = v('rocheBPSPMaterialGridRow3Cell1SearchBox.value');
                         }
-                        return `{"MDX":"
-								                                    
+                        return `{"MDX":"                     
 								With 
 								-- IP Node then add dummy flag
 								Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag] As
@@ -4546,57 +4535,45 @@ app.repository = {
 								  {Filter({TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')},
 								   Instr([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP Name], '${searchString}') > 0)}
 								   PROPERTIES [Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].[Caption]  ON ROWS 
-								FROM [}ElementAttributes_Materials] 
-                                    
+								FROM [}ElementAttributes_Materials]
                                     "}`;
-
                     },
                     parsingControl: {
                         type: 'matrix',
                         length: 6,
                         query: [
-
-
                             (r, x) => {
                                 return {
                                     label: r.Cells[x].FormattedValue,
                                     skin: r.Cells[x + 1].FormattedValue === 'IP Node' ? 'gridtable_hierarchy_bpsp_PL6' : 'gridtable_hierarchy_bpsp_' + r.Cells[x + 1].FormattedValue.replace('a', '')
                                 }
                             },
-
                             (r, x) => {
                                 return {title: r.Cells[x + 1].FormattedValue}
                             },
-
                             (r, x) => {
                                 return {title: r.Cells[x + 2].FormattedValue}
                             },
-
                             (r, x) => {
                                 return {
                                     icon: parseInt(r.Cells[x + 3].FormattedValue) === 1 ? 'icon-plus-circle-outline' : '',
                                     cellSkin: parseInt(r.Cells[x + 3].FormattedValue) === 1 ? '' : 'readonly_bpsp',
                                 }
                             },
-
                             (r, x) => {
                                 return {
                                     icon: parseInt(r.Cells[x + 4].FormattedValue) === 1 ? 'icon-trash' : '',
                                     cellSkin: parseInt(r.Cells[x + 4].FormattedValue) === 1 ? '' : 'readonly_bpsp',
                                 }
                             },
-
                             (r, x) => {
                                 return {
                                     icon: parseInt(r.Cells[x + 5].FormattedValue) === 1 ? 'icon-copy' : '',
                                     cellSkin: parseInt(r.Cells[x + 5].FormattedValue) === 1 ? '' : 'readonly_bpsp',
                                 }
                             },
-
-
                         ]
                     }
-
                 },
         },
     rocheBPSPAddMaterialCompanyInfo: {
@@ -4772,13 +4749,11 @@ app.repository = {
                                 FILTER({TM1FILTERBYLEVEL({TM1DRILLDOWNMEMBER({[Materials].[Materials].[All Materials]}, ALL, RECURSIVE )}, 0)}, 
                                         [Materials].[Materials].CurrentMember.Properties('IP Active Flag') = '1')
                                                  }, 0)
-                                          --Dropbox with Category
-                                          }, [Materials].[Materials].CurrentMember.Properties('Material Category - Key') = '${dbV}')
-                                 -- Instr search
-                                 }, InStr([Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key') ,'${ProfitCenterSearch}')<>0)
+                                }, InStr([Materials].[Materials].CurrentMember.Properties('Material Category - Key') , '${dbV}') <> 0)
+                                }, InStr([Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key') ,'${ProfitCenterSearch}')<>0)
                                 }, InStr([Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key'), '${IpNodeSearch}')<>0)
-                                       }, InStr([Materials].[Materials].CurrentMember.Properties('Element'), '${IDsearch}' ) <> 0 AND
-                                          InStr([Materials].[Materials].CurrentMember.Properties('Medium Name'), '${DescriptionSearch}' ) <> 0 )},1,100)}  
+                                }, InStr([Materials].[Materials].CurrentMember.Properties('Element'), '${IDsearch}' ) <> 0 AND
+                                   InStr([Materials].[Materials].CurrentMember.Properties('Medium Name'), '${DescriptionSearch}' ) <> 0 )},1,100)}  
                                    PROPERTIES [Materials].[Materials].[Caption]  ON ROWS 
                                 FROM [Material Information by Company] 
                                 WHERE 
@@ -5318,7 +5293,6 @@ app.repository = {
                                     )}
                               ON ROWS 
                             FROM [}ElementAttributes_Materials] 
-
             "}`,
             parsingControl: {
                 type: 'object',
@@ -5341,12 +5315,10 @@ app.repository = {
     },
 
     rocheBPSPMaterialAddDummyGridTablePopupGridRow5Cell1Dropbox: {
-
         init: {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
             type: 'POST',
-            body: (db) => `
-            {
+            body: (db) => `{
             "MDX" : "
 					SELECT
 					{[}ElementAttributes_zSYS UI Material Category].[}ElementAttributes_zSYS UI Material Category].[Caption]}
@@ -5354,7 +5326,6 @@ app.repository = {
 					{[zSYS UI Material Category].[zSYS UI Material Category].Members}
 					ON ROWS
 					FROM [}ElementAttributes_zSYS UI Material Category]
-
             "}`,
             parsingControl: {
                 type: 'list',
@@ -5377,10 +5348,8 @@ app.repository = {
         init: {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
             type: 'POST',
-            body: (db) => `
-            {
+            body: (db) => `{
                             "MDX" : "
-
                             SELECT 
                                {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption],
                                 [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element]} 
@@ -5390,7 +5359,6 @@ app.repository = {
                                 [Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('Product Level - Name') = 'PL6')} 
                               ON ROWS 
                             FROM [}ElementAttributes_Materials]
-
             "}`,
             parsingControl: {
                 type: 'object',
@@ -5410,26 +5378,21 @@ app.repository = {
                     }
             }
         }
-
-
     },
 
     rocheBPSPMaterialAddDummyGridTableIPpopupGridRow4Cell1Dropbox: {
-
         initCondition: (db) => {
             return Utils.isGridTableLoaded('RocheBPSPMaterialIPNodeGridTable');
         },
         initDefault: (db) => {
             return [];
         },
-
         init:
             {
                 execute: (db) => {
                     return [{name: Utils.getGridTableCell('RocheBPSPMaterialIPNodeGridTable', 0).label}];
                 }
             }
-
         /*
         init: {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
@@ -5508,20 +5471,12 @@ app.repository = {
                 type: 'POST',
                 body: (db) => `{
                         "Parameters": [
-                        
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}"},
-
                                 {"Name": "pProductPL6", "Value": " ${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialAddDummyPopupGridRow3Cell1Dropbox', 'key')} "},
-
                                 {"Name": "pProductIPNode", "Value":"${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialAddDummyPopupGridRow4Cell1Dropbox', 'key')}"},
-
                                 {"Name": "pMaterialName", "Value": "${v('rocheBPSPMaterialAddDummyPopupGridRow2Cell1TextInput.value')}"},
-
                                 {"Name": "pMaterialCategory", "Value": "${v('rocheBPSPMaterialAddDummyPopupGridRow5Cell1Dropbox.value')}"}
-                        
                         ]
-
-
                     }`
             },
     },
@@ -5538,8 +5493,7 @@ app.repository = {
                                 {"Name": "pProductIPNode", "Value":"${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialAddDummyGridTablePopupGridRow4Cell1Dropbox', 'key')}"},
                                 {"Name": "pMaterialName", "Value": "${v('rocheBPSPMaterialAddDummyGridTablePopupGridRow2Cell1TextInput.value')}"},
                                 {"Name": "pMaterialCategory", "Value": " ${v('rocheBPSPMaterialAddDummyGridTablePopupGridRow5Cell1Dropbox.value')}"},
-                        ]
-                    }`
+                        ]}`
             },
     },
 
@@ -5550,13 +5504,9 @@ app.repository = {
                 type: 'POST',
                 body: (db) => `{
                         "Parameters": [
-                        
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pMaterial", "Value": "${Utils.getGridTableCell('RocheBPSPMaterialIPNodeGridTable', 2).title}"},
-                        
                         ]
-
-
                     }`
             },
     },
@@ -5571,10 +5521,8 @@ app.repository = {
         init: {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
             type: 'POST',
-            body: (db) => `
-            {
+            body: (db) => `{
             "MDX" : "
-
                             SELECT 
                                {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP Caption]} 
                               ON COLUMNS , 
@@ -5582,8 +5530,7 @@ app.repository = {
                                   {TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')}, 
                                 [Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].CurrentMember.Properties('Product Level - Name') = 'PL8')} 
                               ON ROWS 
-                            FROM [}ElementAttributes_Materials] 
-
+                            FROM [}ElementAttributes_Materials]
             "}`,
             parsingControl: {
                 type: 'list',
@@ -5603,17 +5550,12 @@ app.repository = {
                 type: 'POST',
                 body: (db) => `{
                         "Parameters": [
-                        
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pMaterialFrom", "Value": "${Utils.getGridTableCell('RocheBPSPMaterialIPNodeGridTable', 2).title}"},
                                 {"Name": "pMaterialTo", "Value": "${v('rocheBPSPMaterialMoveDataIPNodePopupGridRow2Cell1Dropbox.value')}"},
-                        ]
-
-
-                    }`
+                        ]}`
             },
     },
-
 
     rocheBPSPMaterialAddDummyGridTableIPpopupGridRow3Cell1Text: {
         initCondition: (db) => {
@@ -5632,13 +5574,9 @@ app.repository = {
                 body: (db) => `{
                         "Parameters": [
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}"},
-
                                 {"Name": "pProductPL6", "Value": " ${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialAddDummyGridTableIPpopupGridRow3Cell1Dropbox', 'key')}"},
-
                                 {"Name": "pProductIPNode", "Value":"${Utils.getGridTableCell('RocheBPSPMaterialIPNodeGridTable', 2).title}"},
-
                                 {"Name": "pMaterialName", "Value": "${v('rocheBPSPMaterialAddDummyGridTableIPpopupGridRow2Cell1TextInput.value')}"},
-
                                 {"Name": "pMaterialCategory", "Value": " ${v('rocheBPSPMaterialAddDummyGridTableIPpopupGridRow5Cell1Dropbox.value')}"},
                         ] }`
             },
@@ -5652,8 +5590,7 @@ app.repository = {
                 body: (db) => `{
                         "Parameters": [
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}"},                        
-                        ]
-                    }`
+                        ]}`
             },
     },
 
@@ -5664,13 +5601,11 @@ app.repository = {
                 type: 'POST',
                 body: (db) => `{
                         "Parameters": [
-                        
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}"},                        
                         ]
                     }`
             },
     },
-
 
     rocheBPSPAddMaterialGridRow4Cell6Button: {
         launch:
@@ -5682,8 +5617,7 @@ app.repository = {
                         
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}"}, 
                                 {"Name": "pCube", "Value": "Material Information by Company"},                       
-                        ]
-                    }`
+                        ]}`
             },
     },
 
@@ -5694,12 +5628,9 @@ app.repository = {
                 type: 'POST',
                 body: (db) => `{
                         "Parameters": [
-                        
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}"},                        
                         ]
                     }`
             },
     },
-
-
 };
