@@ -1,6 +1,6 @@
 import os
 import redis
-from flask import Flask
+from flask import Flask, session
 from flask_caching import Cache
 import DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory
 from DimensionFramework.AuthenticationProviders.Base import Base
@@ -9,7 +9,6 @@ from datetime import timedelta
 app = Flask(__name__)
 site_root = os.path.realpath(os.path.dirname(__file__))
 app.secret_key = b'\x18m\x18\\]\xec\xcf\xbd\xf2\x89\xb9\xa3\x06N\x07\xfd'
-app.permanent_session_lifetime = timedelta(minutes=19)
 
 
 @app.route('/', defaults={'instance': 'default'})
@@ -73,6 +72,9 @@ def getProvider(instance):
     provider = DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory.getProvider(config, cache,
                                                                                                     site_root,
                                                                                                     instance)
+
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=config['sessionExpiresInMinutes'] - 1)
     return provider
 
 
