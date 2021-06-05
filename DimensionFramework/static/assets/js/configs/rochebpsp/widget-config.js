@@ -6638,7 +6638,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-02',
                                     type: GridTableHeaderCellWidget,
                                     alignment: 'bottom-center',
-                                    width: '4%',
+                                    width: '3%',
                                     widgets: [
 
                                         {
@@ -6656,7 +6656,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-03',
                                     type: GridTableHeaderCellWidget,
-                                    width: '6%',
+                                    width: '7%',
                                     alignment: 'bottom-center',
                                     widgets: [
 
@@ -6676,7 +6676,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-04',
                                     type: GridTableHeaderCellWidget,
-                                    width: '6%',
+                                    width: '5%',
                                     alignment: 'bottom-left',
                                     cellHeaderSkin: 'long_border_bpsp',
                                     widgets: [
@@ -6698,7 +6698,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-05',
                                     type: GridTableHeaderCellWidget,
-                                    width: '4%',
+                                    width: '5%',
                                     alignment: 'bottom-left',
                                     cellHeaderSkin: 'long_border_bpsp',
                                     widgets: [
@@ -6720,7 +6720,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-06',
                                     type: GridTableHeaderCellWidget,
-                                    width: '4%',
+                                    width: '3.75%',
                                     alignment: 'bottom-left',
                                     cellHeaderSkin: 'long_border_bpsp',
                                     widgets: [
@@ -6742,7 +6742,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-07',
                                     type: GridTableHeaderCellWidget,
-                                    width: '4%',
+                                    width: '3.75%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
@@ -6762,7 +6762,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-08',
                                     type: GridTableHeaderCellWidget,
-                                    width: '4%',
+                                    width: '3.75%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
@@ -6782,7 +6782,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-09',
                                     type: GridTableHeaderCellWidget,
-                                    width: '4%',
+                                    width: '3.75%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
@@ -6802,7 +6802,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-10',
                                     type: GridTableHeaderCellWidget,
-                                    width: '4%',
+                                    width: '3.75%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
@@ -6822,7 +6822,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-11',
                                     type: GridTableHeaderCellWidget,
-                                    width: '4%',
+                                    width: '3.75%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
@@ -6842,7 +6842,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-12',
                                     type: GridTableHeaderCellWidget,
-                                    width: '4%',
+                                    width: '3.75%',
                                     alignment: 'bottom-left',
                                     cellHeaderSkin: 'products_gd_header_bpsp',
                                     widgets: [
@@ -6864,7 +6864,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-13',
                                     type: GridTableHeaderCellWidget,
-                                    width: '4%',
+                                    width: '3.75%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
@@ -6884,7 +6884,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-14',
                                     type: GridTableHeaderCellWidget,
-                                    width: '4%',
+                                    width: '3.75%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
@@ -6903,7 +6903,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-15',
                                     type: GridTableHeaderCellWidget,
-                                    width: '4%',
+                                    width: '3.75%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
@@ -6922,7 +6922,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-16',
                                     type: GridTableHeaderCellWidget,
-                                    width: '4%',
+                                    width: '3.75%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
@@ -6941,7 +6941,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-17',
                                     type: GridTableHeaderCellWidget,
-                                    width: '4%',
+                                    width: '3.75%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
@@ -6960,7 +6960,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyHeaderCell-18',
                                     type: GridTableHeaderCellWidget,
-                                    width: '5%',
+                                    width: '4%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
@@ -7076,7 +7076,7 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-02',
                             type: GridTableCellWidget,
-                            width: '4%',
+                            width: '3%',
                             widgets: [
 
                                 {
@@ -7092,7 +7092,7 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-03',
                             type: GridTableCellWidget,
-                            width: '6%',
+                            width: '7%',
                             widgets: [
 
                                 {
@@ -7109,7 +7109,7 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-04',
                             type: GridTableCellWidget,
-                            width: '6%',
+                            width: '5%',
                             alignment: 'center-right',
                             skin: 'readonly_bpsp',
                             widgets: [
@@ -7129,7 +7129,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-05',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '4%',
+                            width: '5%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -7148,7 +7148,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-06',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '4%',
+                            width: '3.75%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -7167,7 +7167,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-07',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '4%',
+                            width: '3.75%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -7186,7 +7186,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-08',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '4%',
+                            width: '3.75%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -7205,7 +7205,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-09',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '4%',
+                            width: '3.75%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -7224,7 +7224,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-10',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '4%',
+                            width: '3.75%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -7244,7 +7244,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-11',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '4%',
+                            width: '3.75%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -7263,7 +7263,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-12',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '4%',
+                            width: '3.75%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -7282,7 +7282,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-13',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '4%',
+                            width: '3.75%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -7301,7 +7301,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-14',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '4%',
+                            width: '3.75%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -7320,7 +7320,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-15',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '4%',
+                            width: '3.75%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -7339,7 +7339,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-16',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '4%',
+                            width: '3.75%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -7358,7 +7358,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-17',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '4%',
+                            width: '3.75%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -7377,7 +7377,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPipPlanningGridTableMonthlyCell-18',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '5%',
+                            width: '4%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -8398,7 +8398,7 @@ app.widgetConfig = {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-02',
                                 type: GridTableHeaderCellWidget,
                                 alignment: 'bottom-center',
-                                width: '4%',
+                                width: '3%',
                                 widgets: [
 
                                     {
@@ -8416,7 +8416,7 @@ app.widgetConfig = {
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-03',
                                 type: GridTableHeaderCellWidget,
-                                width: '6%',
+                                width: '7%',
                                 alignment: 'bottom-center',
                                 widgets: [
 
@@ -8436,7 +8436,7 @@ app.widgetConfig = {
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-04',
                                 type: GridTableHeaderCellWidget,
-                                width: '6%',
+                                width: '5%',
                                 alignment: 'bottom-left',
                                 cellHeaderSkin: 'long_border_bpsp',
                                 widgets: [
@@ -8458,7 +8458,7 @@ app.widgetConfig = {
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-05',
                                 type: GridTableHeaderCellWidget,
-                                width: '4%',
+                                width: '5%',
                                 alignment: 'bottom-left',
                                 cellHeaderSkin: 'long_border_bpsp',
                                 widgets: [
@@ -8480,7 +8480,7 @@ app.widgetConfig = {
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-06',
                                 type: GridTableHeaderCellWidget,
-                                width: '4%',
+                                width: '3.75%',
                                 alignment: 'bottom-left',
                                 cellHeaderSkin: 'long_border_bpsp',
                                 widgets: [
@@ -8502,7 +8502,7 @@ app.widgetConfig = {
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-07',
                                 type: GridTableHeaderCellWidget,
-                                width: '4%',
+                                width: '3.75%',
                                 alignment: 'bottom-left',
                                 widgets: [
 
@@ -8522,7 +8522,7 @@ app.widgetConfig = {
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-08',
                                 type: GridTableHeaderCellWidget,
-                                width: '4%',
+                                width: '3.75%',
                                 alignment: 'bottom-left',
                                 widgets: [
 
@@ -8542,7 +8542,7 @@ app.widgetConfig = {
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-09',
                                 type: GridTableHeaderCellWidget,
-                                width: '4%',
+                                width: '3.75%',
                                 alignment: 'bottom-left',
                                 widgets: [
 
@@ -8562,7 +8562,7 @@ app.widgetConfig = {
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-10',
                                 type: GridTableHeaderCellWidget,
-                                width: '4%',
+                                width: '3.75%',
                                 alignment: 'bottom-left',
                                 widgets: [
 
@@ -8582,7 +8582,7 @@ app.widgetConfig = {
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-11',
                                 type: GridTableHeaderCellWidget,
-                                width: '4%',
+                                width: '3.75%',
                                 alignment: 'bottom-left',
                                 widgets: [
 
@@ -8602,7 +8602,7 @@ app.widgetConfig = {
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-12',
                                 type: GridTableHeaderCellWidget,
-                                width: '4%',
+                                width: '3.75%',
                                 alignment: 'bottom-left',
                                 cellHeaderSkin: 'products_gd_header_bpsp',
                                 widgets: [
@@ -8624,7 +8624,7 @@ app.widgetConfig = {
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-13',
                                 type: GridTableHeaderCellWidget,
-                                width: '4%',
+                                width: '3.75%',
                                 alignment: 'bottom-left',
                                 widgets: [
 
@@ -8644,7 +8644,7 @@ app.widgetConfig = {
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-14',
                                 type: GridTableHeaderCellWidget,
-                                width: '4%',
+                                width: '3.75%',
                                 alignment: 'bottom-left',
                                 widgets: [
 
@@ -8663,7 +8663,7 @@ app.widgetConfig = {
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-15',
                                 type: GridTableHeaderCellWidget,
-                                width: '4%',
+                                width: '3.75%',
                                 alignment: 'bottom-left',
                                 widgets: [
 
@@ -8682,7 +8682,7 @@ app.widgetConfig = {
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-16',
                                 type: GridTableHeaderCellWidget,
-                                width: '4%',
+                                width: '3.75%',
                                 alignment: 'bottom-left',
                                 widgets: [
 
@@ -8701,7 +8701,7 @@ app.widgetConfig = {
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-17',
                                 type: GridTableHeaderCellWidget,
-                                width: '4%',
+                                width: '3.75%',
                                 alignment: 'bottom-left',
                                 widgets: [
 
@@ -8720,7 +8720,7 @@ app.widgetConfig = {
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderCell-18',
                                 type: GridTableHeaderCellWidget,
-                                width: '5%',
+                                width: '4%',
                                 alignment: 'bottom-left',
                                 widgets: [
 
@@ -8837,7 +8837,7 @@ app.widgetConfig = {
                     {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-02',
                         type: GridTableCellWidget,
-                        width: '4%',
+                        width: '3%',
                         widgets: [
 
                             {
@@ -8853,7 +8853,7 @@ app.widgetConfig = {
                     {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-03',
                         type: GridTableCellWidget,
-                        width: '6%',
+                        width: '7%',
                         alignment: 'center-center',
                         widgets: [
 
@@ -8869,7 +8869,7 @@ app.widgetConfig = {
                     {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-04',
                         type: GridTableCellWidget,
-                        width: '6%',
+                        width: '5%',
                         alignment: 'center-right',
                         widgets: [
 
@@ -8887,7 +8887,7 @@ app.widgetConfig = {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-05',
                         type: GridTableCellWidget,
                         alignment: 'center-center',
-                        width: '4%',
+                        width: '5%',
                         widgets: [
                             {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyText-05',
@@ -8905,7 +8905,7 @@ app.widgetConfig = {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-06',
                         type: GridTableCellWidget,
                         alignment: 'center-right',
-                        width: '4%',
+                        width: '3.75%',
                         widgets: [
 
                             {
@@ -8924,7 +8924,7 @@ app.widgetConfig = {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-07',
                         type: GridTableCellWidget,
                         alignment: 'center-right',
-                        width: '4%',
+                        width: '3.75%',
                         widgets: [
 
                             {
@@ -8943,7 +8943,7 @@ app.widgetConfig = {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-08',
                         type: GridTableCellWidget,
                         alignment: 'center-right',
-                        width: '4%',
+                        width: '3.75%',
                         widgets: [
 
                             {
@@ -8962,7 +8962,7 @@ app.widgetConfig = {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-09',
                         type: GridTableCellWidget,
                         alignment: 'center-right',
-                        width: '4%',
+                        width: '3.75%',
                         widgets: [
 
                             {
@@ -8981,7 +8981,7 @@ app.widgetConfig = {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-10',
                         type: GridTableCellWidget,
                         alignment: 'center-right',
-                        width: '4%',
+                        width: '3.75%',
                         widgets: [
 
                             {
@@ -9000,7 +9000,7 @@ app.widgetConfig = {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-11',
                         type: GridTableCellWidget,
                         alignment: 'center-right',
-                        width: '4%',
+                        width: '3.75%',
                         widgets: [
 
                             {
@@ -9019,7 +9019,7 @@ app.widgetConfig = {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-12',
                         type: GridTableCellWidget,
                         alignment: 'center-right',
-                        width: '4%',
+                        width: '3.75%',
                         widgets: [
 
                             {
@@ -9038,7 +9038,7 @@ app.widgetConfig = {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-13',
                         type: GridTableCellWidget,
                         alignment: 'center-right',
-                        width: '4%',
+                        width: '3.75%',
                         widgets: [
 
                             {
@@ -9056,7 +9056,7 @@ app.widgetConfig = {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-14',
                         type: GridTableCellWidget,
                         alignment: 'center-right',
-                        width: '4%',
+                        width: '3.75%',
                         widgets: [
 
                             {
@@ -9074,7 +9074,7 @@ app.widgetConfig = {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-15',
                         type: GridTableCellWidget,
                         alignment: 'center-right',
-                        width: '4%',
+                        width: '3.75%',
                         widgets: [
 
                             {
@@ -9092,7 +9092,7 @@ app.widgetConfig = {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-16',
                         type: GridTableCellWidget,
                         alignment: 'center-right',
-                        width: '4%',
+                        width: '3.75%',
                         widgets: [
 
                             {
@@ -9110,7 +9110,7 @@ app.widgetConfig = {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-17',
                         type: GridTableCellWidget,
                         alignment: 'center-right',
-                        width: '4%',
+                        width: '3.75%',
                         widgets: [
 
                             {
@@ -9128,7 +9128,7 @@ app.widgetConfig = {
                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyCell-18',
                         type: GridTableCellWidget,
                         alignment: 'center-right',
-                        width: '5%',
+                        width: '4%',
                         widgets: [
 
                             {
