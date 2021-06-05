@@ -3896,8 +3896,9 @@ app.widgetConfig = {
                                     'parameters': [500]
                                 },
                                 {
-                                    'event': 'launch.rocheBPSPProductsCheckoutDistributionEditPopupGridTable_row_6.finished',
-                                    'method': 'refresh'
+                                    'event': 'launch.rocheBPSPProductsCheckoutDistributionEditPopupGridTableCellButton-07.finished',
+                                    'method': 'refreshWithTimeout',
+                                    'parameters': [500]
                                 }
                             ],
                             widgets: [
@@ -6189,7 +6190,6 @@ app.widgetConfig = {
                             type: ButtonWidget,
                             skin: 'blue_bg_bpsp',
                             label: 'Contact Editor',
-                            url: 'https://hangouts.google.com/chat/person/109335557829914353504',
                             marginBottom: 10
                         },
                         {

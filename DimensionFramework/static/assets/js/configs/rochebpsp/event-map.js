@@ -670,11 +670,14 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutColumnSelectorPopup'
         }
     ],
-    'launch.rocheBPSPProductsCheckoutGridRow2Cell3Button.finished': [
+    'launch.rocheBPSPProductsCheckoutGridRow2Cell3Button' : [
         {
             action: app.fn.removeWidgetValues,
-            argument: ['rocheBPSPProductsCheckoutGridTableYearly', 'rocheBPSPProductsCheckoutGridTableMonthly']
-        },
+            argument: ['rocheBPSPProductsGridTableYearly', 'rocheBPSPProductsGridTableMonthly']
+        }
+    ],
+    'launch.rocheBPSPProductsCheckoutGridRow2Cell3Button.finished': [
+
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPProducts'
