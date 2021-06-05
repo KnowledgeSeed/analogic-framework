@@ -1480,5 +1480,280 @@ app.eventMap = {
     ],
 
 
+    'launch.rocheBPSPIpPlanningCommentEditControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: ['rocheBPSPIpPlanningCommentEdit']
+        },
+        /*
+        {
+             action: app.fn.removeWidgetValues,
+             argument: ['rocheBPSPIpPlanningCommentShowGridTable', 'rocheBPSPIpPlanningCommentShowGridTableSource']
+         }
+         */
+    ],
+
+    'launch.rocheBPSPipPlanningGridTableMonthly_row_21': [
+        {
+            action: app.fn.conditionalGridTablePopup,
+            argument: [
+                {
+                    conditionKey: 'hasComment',
+                    actions: [
+                        /*
+                            {
+                                action: app.fn.forceRefresh,
+                                argument: 'rocheBPSPIpPlanningCommentShowGridTable'
+                            },
+                            {
+                                action: app.fn.forceRefresh,
+                                argument: 'rocheBPSPIpPlanningCommentShowGridTableSource'
+                            },
+                        */
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPIpPlanningCommentShow'
+                        }
+                    ]
+                },
+                {
+                    conditionKey: 'else',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPIpPlanningCommentEdit'
+                        }
+                        /*
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPIpPlanningCommentEditGridRow2CommentInput'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPIpPlanningCommentEditGridRow3TextInput'
+                        }
+                        */
+                    ]
+                }
+            ]
+        }
+    ],
+
+
+    'launch.rocheBPSPIpPlanningCommentEditGridXButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningCommentEdit'
+        },
+        /*
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPIpPlanningCommentShowGridTable', 'rocheBPSPIpPlanningCommentShowGridTableSource']
+        }
+
+         */
+    ],
+
+
+    'launch.rocheBPSPIpPlanningCommentEditControlPanelSaveButton.finished': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningCommentEdit'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPIpPlanningCommentShow'
+        },
+        /*
+    {
+        action: app.fn.forceRefresh,
+        argument: 'rocheBPSPIpPlanningCommentShowGridTable'
+    },
+    {
+        action: app.fn.forceRefresh,
+        argument: 'rocheBPSPIpPlanningCommentShowGridTableSource'
+    }
+
+         */
+    ],
+
+
+    'launch.rocheBPSPIpPlanningCommentShowGridXButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningCommentShow'
+        },
+        /*
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPIpPlanningCommentShowGridTable', 'rocheBPSPIpPlanningCommentShowGridTableSource']
+        }
+
+         */
+    ],
+
+
+    'launch.rocheBPSPIpPlanningCommentShowGridRow5Button': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPIpPlanningCommentEdit'
+        },
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningCommentShow'
+        },
+        /*
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPIpPlanningCommentEditGridRow2CommentInput'
+        },
+
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPIpPlanningCommentEditGridRow3TextInput'
+        },
+
+         */
+
+    ],
+
+
+    'launch.rocheBPSPIpPlanningCheckoutCommentEditControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: ['rocheBPSPIpPlanningCheckoutCommentEdit']
+        },
+        /*
+        {
+             action: app.fn.removeWidgetValues,
+             argument: ['rocheBPSPIpPlanningCheckoutCommentShowGridTable', 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource']
+         }
+         */
+    ],
+
+    'launch.rocheBPSPIpPlanningCheckoutGridTableMonthly_row_21': [
+        {
+            action: app.fn.conditionalGridTablePopup,
+            argument: [
+                {
+                    conditionKey: 'hasComment',
+                    actions: [
+                        /*
+                            {
+                                action: app.fn.forceRefresh,
+                                argument: 'rocheBPSPIpPlanningCheckoutCommentShowGridTable'
+                            },
+                            {
+                                action: app.fn.forceRefresh,
+                                argument: 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource'
+                            },
+                        */
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPIpPlanningCheckoutCommentShow'
+                        }
+                    ]
+                },
+                {
+                    conditionKey: 'else',
+                    actions: [
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPIpPlanningCheckoutCommentEdit'
+                        }
+                        /*
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPIpPlanningCheckoutCommentEditGridRow2CommentInput'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPIpPlanningCheckoutCommentEditGridRow3TextInput'
+                        }
+                        */
+                    ]
+                }
+            ]
+        }
+    ],
+
+
+    'launch.rocheBPSPIpPlanningCheckoutCommentEditGridXButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningCheckoutCommentEdit'
+        },
+        /*
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPIpPlanningCheckoutCommentShowGridTable', 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource']
+        }
+
+         */
+    ],
+
+
+    'launch.rocheBPSPIpPlanningCheckoutCommentEditControlPanelSaveButton.finished': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningCheckoutCommentEdit'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPIpPlanningCheckoutCommentShow'
+        }
+        /*
+    {
+        action: app.fn.forceRefresh,
+        argument: 'rocheBPSPIpPlanningCheckoutCommentShowGridTable'
+    },
+    {
+        action: app.fn.forceRefresh,
+        argument: 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource'
+    }
+
+         */
+    ],
+
+    'launch.rocheBPSPIpPlanningCheckoutCommentShowGridXButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningCheckoutCommentShow'
+        },
+        /*
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPIpPlanningCheckoutCommentShowGridTable', 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource']
+        }
+
+         */
+    ],
+
+
+    'launch.rocheBPSPIpPlanningCheckoutCommentShowGridRow5Button': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPIpPlanningCheckoutCommentEdit'
+        },
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningCheckoutCommentShow'
+        },
+        /*
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPIpPlanningCheckoutCommentEditGridRow2CommentInput'
+        },
+
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPIpPlanningCheckoutCommentEditGridRow3TextInput'
+        },
+
+         */
+
+    ],
+
+
 }
 ;
