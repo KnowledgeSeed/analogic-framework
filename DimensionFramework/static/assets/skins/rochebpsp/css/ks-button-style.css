@@ -944,6 +944,30 @@
 }
 
 
+.ks-button-gridtable_hierarchy_bpsp_PL8_locked {
+    margin-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_PL8_locked .ks-button-label {
+    padding-left: 4px;
+    width: 210px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_PL8_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_PL8_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
 /* shortcut */
 
 /* PL1 */
@@ -1571,6 +1595,29 @@
     margin-top: 1%;
 }
 
+.ks-button-gridtable_checkout_hierarchy_bpsp_PL8 {
+    margin-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_PL8 .ks-button-label {
+    padding-left: 4px;
+    width: 210px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_PL8 .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_PL8 .ks-button-icon {
+    color: #FAE2BF;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL1_locked {
     margin-left: 10px;
@@ -1706,6 +1753,29 @@
 }
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL6_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_PL8_locked {
+    margin-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_PL8_locked .ks-button-label {
+    padding-left: 4px;
+    width: 210px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_PL8_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_PL8_locked .ks-button-icon {
     color: #EFC1D1;
     font-size: 75%;
     margin-top: 1%;

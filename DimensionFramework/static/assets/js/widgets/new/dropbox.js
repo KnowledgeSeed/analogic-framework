@@ -120,14 +120,33 @@ class DropBoxWidget extends Widget {
                 f.toggle(-1 !== f.find('.ks-dropbox-panel-item-text').html().toLowerCase().indexOf(term.toLowerCase()));
             });
         });
+        $('#' + id + ' .ks-dropbox-panel-item-checkbox').on('click', function (e){
+            const clickedItem = $(e.currentTarget).closest('.ks-dropbox-panel-item ');
+            DropBoxWidget.handleClick(w, e, itemHolder, section, id, clickedItem, true);
 
+            return false;
+        });
         const itemHolder = $('#' + id + ' .ks-dropbox-panel').on('click', false).on('click', '.ks-dropbox-panel-item ', e => {
             const clickedItem = $(e.currentTarget);
+            DropBoxWidget.handleClick(w, e, itemHolder, section, id, clickedItem);
+        });
+
+        const catcher = Doc.not(dropbox).on('touch click', e => {
+            itemHolder.is(':visible') ? itemHolder.slideUp(50) : false;
+        });
+
+        itemHolder.hide();
+    }
+
+    static handleClick(w, e, itemHolder, section, id, clickedItem, fromCheckbox = false) {
             const checkbox = clickedItem.find('.ks-dropbox-panel-item-checkbox');
             const items = itemHolder.children('.widget-dropdown-item');
 
             if (checkbox.length && checkbox.is(':visible')) {
-                checkbox.prop('checked', !checkbox.prop('checked'));
+                if(!fromCheckbox){
+                    checkbox.prop('checked', !checkbox.prop('checked'));
+                }
+
                 w.items[clickedItem.index()].on = checkbox.prop("checked");
                 w.value = $.grep(w.items, (item, i) => item.on).map(item => item.name).join();
             } else {
@@ -156,13 +175,6 @@ class DropBoxWidget extends Widget {
             Widget.doHandleSystemEvent(element, e);
 
             return false;
-        });
-
-        const catcher = Doc.not(dropbox).on('touch click', e => {
-            itemHolder.is(':visible') ? itemHolder.slideUp(50) : false;
-        });
-
-        itemHolder.hide();
     }
 }
 ;
