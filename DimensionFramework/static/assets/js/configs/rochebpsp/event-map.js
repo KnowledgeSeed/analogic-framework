@@ -91,10 +91,11 @@ app.eventMap = {
                             argument: 'rocheBPSPProductsCheckoutPopup'
                         }
                     ]
-                }
+                },
             ]
         }
     ],
+
     'launch.rocheBPSPProductsGridTableYearly_row_0': [
         {
             action: app.fn.conditionalGridTablePopup,
@@ -885,9 +886,49 @@ app.eventMap = {
 
     'launch.rocheBPSPAddMaterialGridRow1Cell0Button': [
         {
+            action: app.fn.resetWidgetValue,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell3Dropbox'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell3Dropbox'
+        },
+        {
+            action: app.fn.resetWidgetValue,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell1Search'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell1Search'
+        },
+        {
+            action: app.fn.resetWidgetValue,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell2Search'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell2Search'
+        },
+        {
+            action: app.fn.resetWidgetValue,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell4Search'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell4Search'
+        },
+        {
+            action: app.fn.resetWidgetValue,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell5Search'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell5Search'
+        },
+        {
             action: app.fn.openPage,
             argument: 'rocheBPSPMaterial'
-        }
+        },
     ],
 
     'launch.rocheBPSPMaterialGridRow4Cell1Button': [
@@ -1485,12 +1526,12 @@ app.eventMap = {
             action: app.fn.togglePopup,
             argument: ['rocheBPSPIpPlanningCommentEdit']
         },
-        /*
+
         {
-             action: app.fn.removeWidgetValues,
-             argument: ['rocheBPSPIpPlanningCommentShowGridTable', 'rocheBPSPIpPlanningCommentShowGridTableSource']
-         }
-         */
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPIpPlanningCommentShowGridTable', 'rocheBPSPIpPlanningCommentShowGridTableSource']
+        }
+
     ],
 
     'launch.rocheBPSPipPlanningGridTableMonthly_row_21': [
@@ -1500,16 +1541,16 @@ app.eventMap = {
                 {
                     conditionKey: 'hasComment',
                     actions: [
-                        /*
-                            {
-                                action: app.fn.forceRefresh,
-                                argument: 'rocheBPSPIpPlanningCommentShowGridTable'
-                            },
-                            {
-                                action: app.fn.forceRefresh,
-                                argument: 'rocheBPSPIpPlanningCommentShowGridTableSource'
-                            },
-                        */
+
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPIpPlanningCommentShowGridTable'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPIpPlanningCommentShowGridTableSource'
+                        },
+
                         {
                             action: app.fn.openPopup,
                             argument: 'rocheBPSPIpPlanningCommentShow'
@@ -1522,8 +1563,8 @@ app.eventMap = {
                         {
                             action: app.fn.openPopup,
                             argument: 'rocheBPSPIpPlanningCommentEdit'
-                        }
-                        /*
+                        },
+
                         {
                             action: app.fn.forceRefresh,
                             argument: 'rocheBPSPIpPlanningCommentEditGridRow2CommentInput'
@@ -1532,7 +1573,7 @@ app.eventMap = {
                             action: app.fn.forceRefresh,
                             argument: 'rocheBPSPIpPlanningCommentEditGridRow3TextInput'
                         }
-                        */
+
                     ]
                 }
             ]
@@ -1545,13 +1586,12 @@ app.eventMap = {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPIpPlanningCommentEdit'
         },
-        /*
         {
             action: app.fn.removeWidgetValues,
             argument: ['rocheBPSPIpPlanningCommentShowGridTable', 'rocheBPSPIpPlanningCommentShowGridTableSource']
         }
 
-         */
+
     ],
 
 
@@ -1564,17 +1604,17 @@ app.eventMap = {
             action: app.fn.openPopup,
             argument: 'rocheBPSPIpPlanningCommentShow'
         },
-        /*
-    {
-        action: app.fn.forceRefresh,
-        argument: 'rocheBPSPIpPlanningCommentShowGridTable'
-    },
-    {
-        action: app.fn.forceRefresh,
-        argument: 'rocheBPSPIpPlanningCommentShowGridTableSource'
-    }
 
-         */
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPIpPlanningCommentShowGridTable'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPIpPlanningCommentShowGridTableSource'
+        }
+
+
     ],
 
 
@@ -1583,13 +1623,12 @@ app.eventMap = {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPIpPlanningCommentShow'
         },
-        /*
         {
             action: app.fn.removeWidgetValues,
             argument: ['rocheBPSPIpPlanningCommentShowGridTable', 'rocheBPSPIpPlanningCommentShowGridTableSource']
         }
 
-         */
+
     ],
 
 
@@ -1602,7 +1641,7 @@ app.eventMap = {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPIpPlanningCommentShow'
         },
-        /*
+
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPIpPlanningCommentEditGridRow2CommentInput'
@@ -1613,7 +1652,6 @@ app.eventMap = {
             argument: 'rocheBPSPIpPlanningCommentEditGridRow3TextInput'
         },
 
-         */
 
     ],
 
@@ -1623,12 +1661,12 @@ app.eventMap = {
             action: app.fn.togglePopup,
             argument: ['rocheBPSPIpPlanningCheckoutCommentEdit']
         },
-        /*
+
         {
-             action: app.fn.removeWidgetValues,
-             argument: ['rocheBPSPIpPlanningCheckoutCommentShowGridTable', 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource']
-         }
-         */
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPIpPlanningCheckoutCommentShowGridTable', 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource']
+        }
+
     ],
 
     'launch.rocheBPSPIpPlanningCheckoutGridTableMonthly_row_21': [
@@ -1638,16 +1676,16 @@ app.eventMap = {
                 {
                     conditionKey: 'hasComment',
                     actions: [
-                        /*
-                            {
-                                action: app.fn.forceRefresh,
-                                argument: 'rocheBPSPIpPlanningCheckoutCommentShowGridTable'
-                            },
-                            {
-                                action: app.fn.forceRefresh,
-                                argument: 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource'
-                            },
-                        */
+
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPIpPlanningCheckoutCommentShowGridTable'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource'
+                        },
+
                         {
                             action: app.fn.openPopup,
                             argument: 'rocheBPSPIpPlanningCheckoutCommentShow'
@@ -1660,8 +1698,7 @@ app.eventMap = {
                         {
                             action: app.fn.openPopup,
                             argument: 'rocheBPSPIpPlanningCheckoutCommentEdit'
-                        }
-                        /*
+                        },
                         {
                             action: app.fn.forceRefresh,
                             argument: 'rocheBPSPIpPlanningCheckoutCommentEditGridRow2CommentInput'
@@ -1670,7 +1707,7 @@ app.eventMap = {
                             action: app.fn.forceRefresh,
                             argument: 'rocheBPSPIpPlanningCheckoutCommentEditGridRow3TextInput'
                         }
-                        */
+
                     ]
                 }
             ]
@@ -1683,13 +1720,12 @@ app.eventMap = {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPIpPlanningCheckoutCommentEdit'
         },
-        /*
         {
             action: app.fn.removeWidgetValues,
             argument: ['rocheBPSPIpPlanningCheckoutCommentShowGridTable', 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource']
         }
 
-         */
+
     ],
 
 
@@ -1701,32 +1737,29 @@ app.eventMap = {
         {
             action: app.fn.openPopup,
             argument: 'rocheBPSPIpPlanningCheckoutCommentShow'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPIpPlanningCheckoutCommentShowGridTable'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource'
         }
-        /*
-    {
-        action: app.fn.forceRefresh,
-        argument: 'rocheBPSPIpPlanningCheckoutCommentShowGridTable'
-    },
-    {
-        action: app.fn.forceRefresh,
-        argument: 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource'
-    }
-
-         */
     ],
+
 
     'launch.rocheBPSPIpPlanningCheckoutCommentShowGridXButton': [
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPIpPlanningCheckoutCommentShow'
         },
-        /*
         {
             action: app.fn.removeWidgetValues,
             argument: ['rocheBPSPIpPlanningCheckoutCommentShowGridTable', 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource']
         }
 
-         */
+
     ],
 
 
@@ -1739,19 +1772,14 @@ app.eventMap = {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPIpPlanningCheckoutCommentShow'
         },
-        /*
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPIpPlanningCheckoutCommentEditGridRow2CommentInput'
         },
-
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPIpPlanningCheckoutCommentEditGridRow3TextInput'
-        },
-
-         */
-
+        }
     ],
 
 

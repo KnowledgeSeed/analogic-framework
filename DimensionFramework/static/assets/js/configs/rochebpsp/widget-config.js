@@ -7725,37 +7725,64 @@ app.widgetConfig = {
                                             width: '90%',
                                             skin: '',
                                             widgets: [
-                                                /*
+
+                                                {
+                                                    id: 'rocheBPSPIpPlanningCommentShowGridTable',
+                                                    type: GridTableWidget,
+                                                    marginTop: '12px',
+                                                    marginLeft: '1px',
+                                                    hideIfNoData: true,
+                                                    skin: '',
+                                                    listen: [
                                                         {
-                                                            id: 'rocheBPSPIpPlanningCommentShowGridTable',
-                                                            type: GridTableWidget,
-                                                            marginTop: '12px',
-                                                            marginLeft: '1px',
-                                                            hideIfNoData: true,
-                                                            skin: '',
-                                                            listen: [],
-                                                            title: '',
-                                                            widgets: [
-                                                                {
-                                                                    id: 'rocheBPSPIpPlanningCommentShowGridTable-Cell-01',
-                                                                    type: GridTableCellWidget,
-                                                                    width: '20%',
-                                                                    alignment: 'center-left',
-                                                                    widgets: [
+                                                            'event': 'switch.rocheBPSPProductsYearSegmentedControl.finished',
+                                                            'method': 'refresh'
+                                                        },
 
-                                                                        {
-                                                                            id: 'rocheBPSPIpPlanningCommentShowGridTable-Cell-01-Text',
-                                                                            type: TextWidget,
-                                                                            skin: '',
-                                                                            title: '',
-                                                                        }
-                                                                    ]
-                                                                },
+                                                        {
+                                                            'event': 'bodyReady',
+                                                            'method': 'refreshWithWaitingForEvents',
+                                                            'parameters': [
+                                                                'rendered.rocheBPSPipPlanningGridRow1Cell3DropBox',
+                                                                'rendered.rocheBPSPipPlanningPageInit',
+                                                                'init.rocheBPSPipPlanningGridRow2Cell1SegmentedControl.finished',
+                                                                'init.rocheBPSPipPlanningGridRow2Cell2SegmentedControl.finished'
                                                             ]
-                                                        }
+                                                        },
+
+                                                        {
+                                                            'event': 'choose.rocheBPSPipPlanningGridRow1Cell3DropBox.finished',
+                                                            'method': 'refresh'
+                                                        },
 
 
-                                                   */
+                                                        {
+                                                            'event': 'choose.rocheBPSPipPlanningGridRow1Cell2DropBox.finished',
+                                                            'method': 'refreshWithWaitingForEvent',
+                                                            'parameters': ['rendered.rocheBPSPipPlanningGridRow1Cell3DropBox', 'rendered.rocheBPSPipPlanningPageInit']
+                                                        },
+                                                    ],
+                                                    title: '',
+                                                    widgets: [
+                                                        {
+                                                            id: 'rocheBPSPIpPlanningCommentShowGridTable-Cell-01',
+                                                            type: GridTableCellWidget,
+                                                            width: '20%',
+                                                            alignment: 'center-left',
+                                                            widgets: [
+
+                                                                {
+                                                                    id: 'rocheBPSPIpPlanningCommentShowGridTable-Cell-01-Text',
+                                                                    type: TextWidget,
+                                                                    skin: '',
+                                                                    title: '',
+                                                                }
+                                                            ]
+                                                        },
+                                                    ]
+                                                }
+
+
                                             ]
                                         }
                                     ]
@@ -7793,7 +7820,7 @@ app.widgetConfig = {
                                             width: '90%',
                                             skin: '',
                                             widgets: [
-                                                /*
+
                                                 {
                                                     id: 'rocheBPSPIpPlanningCommentShowGridTableSource',
                                                     type: GridTableWidget,
@@ -7822,7 +7849,6 @@ app.widgetConfig = {
                                                 }
 
 
-                                                 */
                                             ]
                                         }
                                     ]
@@ -8008,8 +8034,8 @@ app.widgetConfig = {
                                         width: '90%',
                                         skin: '',
                                         widgets: [
-                                            /*
-                                           {
+
+                                            {
                                                 id: 'rocheBPSPIpPlanningCheckoutCommentShowGridTable',
                                                 type: GridTableWidget,
                                                 marginTop: '12px',
@@ -8036,7 +8062,7 @@ app.widgetConfig = {
                                                     },
                                                 ]
                                             }
-                                            */
+
 
                                         ]
                                     }
@@ -8075,7 +8101,7 @@ app.widgetConfig = {
                                         width: '90%',
                                         skin: '',
                                         widgets: [
-/*
+
                                             {
                                                 id: 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource',
                                                 type: GridTableWidget,
@@ -8102,7 +8128,7 @@ app.widgetConfig = {
                                                     },
                                                 ]
                                             }
-                                            */
+
 
                                         ]
                                     }
