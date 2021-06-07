@@ -3615,6 +3615,8 @@ app.repository = {
                                     skin: skin,
                                     cellSkin: WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked'] ? 'locked' : '',
                                     icon: WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
+                                    hasComment: r.Cells[x + 24].FormattedValue !== ''
+
                                 };
                                 if (WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsMainLocked']) {
                                     result['iconColor'] = '#D12D4A';
@@ -4279,7 +4281,7 @@ app.repository = {
     },
     rocheBPSPIpPlanningCheckoutCommentShowGridTable: {
         initCondition: (db) => {
-            return Repository.templateFunctions.initConditionDependingOnCheckoutYearlyMonthly(db);
+            return Utils.isGridTableLoaded('rocheBPSPIpPlanningCheckoutGridTableMonthly');
         },
         initDefault: (db) => {
             return [];
@@ -4288,22 +4290,25 @@ app.repository = {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
             type: 'POST',
             body: (db) => {
-                let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPIpPlanningCheckoutGridTableYearly' : 'rocheBPSPIpPlanningCheckoutGridTableMonthly';
-                let productCode = Utils.getGridTableCell(g, 1).title;
+                let g = 'rocheBPSPIpPlanningCheckoutGridTableMonthly';
+                let productCode = Utils.getGridTableCell(g, 2).title;
                 return `{"MDX":"
-                    SELECT 
-                    {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Comment]}
-                    PROPERTIES  [Measures Sales Plan by Product]. [Measures Sales Plan by Product].[Caption]
-                    ON COLUMNS , 
-                    {[IpPlanning].[BPSP Budget].[${productCode}]} PROPERTIES [IpPlanning].[BPSP Budget].[Caption]
-                    ON ROWS 
-                    FROM [Sales Plan by Product] 
-                    WHERE 
-                    ([Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
-                    [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}],
-                    [Receivers].[Receivers].[${v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value')}],
-                    [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
-                    [Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}])
+                      SELECT 
+                   {[Measures Sales Plan IP].[Measures Sales Plan IP].[Comment]} 
+                  ON COLUMNS , 
+                   {[Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key')}]} 
+                            ON ROWS 
+                        FROM [Sales Plan IP] 
+                        WHERE 
+                          (
+                           [Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
+                           [LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan],
+                           [Receivers].[Receivers].[${v('rocheBPSPipPlanningGridRow1Cell3DropBox.value')}],
+                           [Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].[${productCode}],
+                           [Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],
+                           [Contract Types].[Contract Types].[${v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected')}],
+                           [Instrument Types].[Instrument Types].[${v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected')}]
+                          )
             "}`
             },
             parsingControl: {
@@ -4320,7 +4325,7 @@ app.repository = {
     },
     rocheBPSPIpPlanningCheckoutCommentShowGridTableSource: {
         initCondition: (db) => {
-            return Repository.templateFunctions.initConditionDependingOnCheckoutYearlyMonthly(db);
+            return Utils.isGridTableLoaded('rocheBPSPIpPlanningCheckoutGridTableMonthly');
         },
         initDefault: (db) => {
             return [];
@@ -4332,23 +4337,24 @@ app.repository = {
                 let g = 'rocheBPSPIpPlanningCheckoutGridTableMonthly';
                 let productCode = Utils.getGridTableCell(g, 2).title;
                 return `{"MDX":"
-                        SELECT 
-                            {{[Measures Sales Plan by Product].[Measures Sales Plan by Product].[CommentSource]},
-                            {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedBy]},
-                            {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime]}}
-                            
-                            PROPERTIES  [Measures Sales Plan by Product]. [Measures Sales Plan by Product].[Caption]
-                        ON COLUMNS , 
-                            {[IpPlanning].[BPSP Budget].[${productCode}]} 
-                            PROPERTIES [IpPlanning].[BPSP Budget].[Caption] 
-                        ON ROWS 
-                        FROM [Sales Plan by Product] 
+                      SELECT 
+                   {[Measures Sales Plan IP].[Measures Sales Plan IP].[CommentSource],
+                   [Measures Sales Plan IP].[Measures Sales Plan IP].[EditedBy],
+                   [Measures Sales Plan IP].[Measures Sales Plan IP].[EditedDateTime]} 
+                  ON COLUMNS , 
+                   {[Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key')}]} 
+                            ON ROWS 
+                        FROM [Sales Plan IP] 
                         WHERE 
-                            ([Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
-                            [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPIpPlanningGridRow1Cell2DropBox', 'key')}],
-                            [Receivers].[Receivers].[${v('rocheBPSPIpPlanningGridRow1Cell3DropBox.value')}],
-                            [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
-                            [Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}])
+                          (
+                           [Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
+                           [LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan],
+                           [Receivers].[Receivers].[${v('rocheBPSPipPlanningGridRow1Cell3DropBox.value')}],
+                           [Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].[${productCode}],
+                           [Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],
+                           [Contract Types].[Contract Types].[${v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected')}],
+                           [Instrument Types].[Instrument Types].[${v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected')}]
+                          )
             "}`
             },
             parsingControl: {
@@ -4388,7 +4394,7 @@ app.repository = {
             }
         }
     },
-
+    /*
     rocheBPSPIpPlanningCheckoutCommentEditControlPanelSaveButton: {
         launch: {
             url: (db) => `/api/v1/Cubes('Sales Plan by Product')/tm1.Update`,
@@ -4467,6 +4473,8 @@ app.repository = {
             }
         }
     },
+
+     */
 
     rocheBPSPIpPlanningCheckoutGridRow2Cell1aButton: {
         launch: {
@@ -5776,4 +5784,306 @@ app.repository = {
                     }`
             },
     },
+
+    rocheBPSPIpPlanningCommentShowGridTable: {
+        initCondition: (db) => {
+            return Utils.isGridTableLoaded('rocheBPSPipPlanningGridTableMonthly');
+        },
+
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => {
+
+                let productCode = Utils.getGridTableCell('rocheBPSPipPlanningGridTableMonthly', 2).title;
+                return `{"MDX":"
+                        SELECT 
+                           {[Measures Sales Plan IP].[Measures Sales Plan IP].[Comment]} 
+                          ON COLUMNS , 
+                           {[Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key')}]} 
+                            ON ROWS 
+                        FROM [Sales Plan IP] 
+                        WHERE 
+                          (
+                           [Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
+                           [LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan],
+                           [Receivers].[Receivers].[${v('rocheBPSPipPlanningGridRow1Cell3DropBox.value')}],
+                           [Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].[${productCode}],
+                           [Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],
+                           [Contract Types].[Contract Types].[${v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected')}],
+                           [Instrument Types].[Instrument Types].[${v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected')}]
+                          )
+            "}`
+            },
+            parsingControl: {
+                type: 'matrix',
+                length: 1,
+                query: [
+                    (r, x) => {
+                        return {
+                            title: r.Cells[x].FormattedValue,
+                        }
+                    }]
+            }
+        }
+    },
+
+    rocheBPSPIpPlanningCommentShowGridTableSource: {
+        initCondition: (db) => {
+            return Utils.isGridTableLoaded('rocheBPSPipPlanningGridTableMonthly');
+        },
+
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => {
+
+                let productCode = Utils.getGridTableCell('rocheBPSPipPlanningGridTableMonthly', 2).title;
+                return `{"MDX":"
+                      SELECT 
+                   {[Measures Sales Plan IP].[Measures Sales Plan IP].[CommentSource],
+                   [Measures Sales Plan IP].[Measures Sales Plan IP].[EditedBy],
+                   [Measures Sales Plan IP].[Measures Sales Plan IP].[EditedDateTime]} 
+                  ON COLUMNS , 
+                   {[Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key')}]} 
+                            ON ROWS 
+                        FROM [Sales Plan IP] 
+                        WHERE 
+                          (
+                           [Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
+                           [LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan],
+                           [Receivers].[Receivers].[${v('rocheBPSPipPlanningGridRow1Cell3DropBox.value')}],
+                           [Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].[${productCode}],
+                           [Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],
+                           [Contract Types].[Contract Types].[${v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected')}],
+                           [Instrument Types].[Instrument Types].[${v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected')}]
+                          )
+            "}`
+            },
+            parsingControl: {
+                type: 'matrix',
+                length: 3,
+                query: [
+                    (r, x) => {
+                        return {
+                            title: r.Cells[x].FormattedValue + '<br/><div style=\"margin-top:20px; float: left; font-size: 10px;  ";  >' + 'Edited by ' + '</div>' + '<div style=\"font-size:12px; font-weight: bold; margin-top:18px; margin-left: 3px; float: left;";  >' + r.Cells[x + 1].FormattedValue + '</div>' + '<div style=\"font-size:10px;color:#B1B3B3;margin-top:20px;margin-left: 5px; float: left; \" >' + r.Cells[x + 2].FormattedValue + '</div>',
+                        }
+                    }
+
+                ]
+            }
+        }
+    },
+
+    rocheBPSPIpPlanningCommentEditGridRow2CommentInput: {
+        init: {
+            execute: (db) => {
+                let l = v('rocheBPSPIpPlanningCommentShowGridTable.cellData.length'), r = {value: ''};
+                if (l !== false && l !== 0) {
+                    r.value = v('rocheBPSPIpPlanningCommentShowGridTable.cellData')[0][0].title;
+                }
+                return r;
+            }
+        }
+    },
+
+    rocheBPSPIpPlanningCommentEditGridRow3TextInput: {
+        init: {
+            execute: (db) => {
+                let l = v('rocheBPSPIpPlanningCommentShowGridTableSource.cellData.length'), r = {value: ''};
+                if (l !== false && l !== 0) {
+                    r.value = v('rocheBPSPIpPlanningCommentShowGridTableSource.cellData')[0][0].title.split('<br/>')[0];
+                }
+                return r;
+            }
+        }
+    },
+
+    rocheBPSPIpPlanningCheckoutCommentEditControlPanelSaveButton: {
+        launch: {
+            url: (db) => `/api/v1/Cubes('Sales Plan IP')/tm1.Update`,
+            type: 'POST',
+            body: (db) => {
+                let g = 'rocheBPSPIpPlanningCheckoutGridTableMonthly';
+                let productCode = Utils.getGridTableCell(g, 2).title;
+                return `
+                [
+                    {
+                        "Cells": [
+                            {
+                                "Tuple@odata.bind": [
+                                    "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                    "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}')",
+                                    "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key')}')",
+                                    "Dimensions('Materials')/Hierarchies('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP')/Elements('${productCode}')",
+                                    "Dimensions('Contract Types')/Hierarchies('Contract Types')/Elements('${v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected')}')",
+                                    "Dimensions('Instrument Types')/Hierarchies('Instrument Types')/Elements('${v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected')}')",
+                                    "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPipPlanningGridRow1Cell3DropBox.value')}')",
+                                    "Dimensions('LineItems Sales Plan IP')/Hierarchies('LineItems Sales Plan IP')/Elements('Final Quantity Plan')",
+                                    "Dimensions('Measures Sales Plan IP')/Hierarchies('Measures Sales Plan IP')/Elements('EditedDateTime')"
+                                ]
+                            },
+                        ],
+                         "Value": "${Utils.getFormattedDate(new Date(), '.', true)}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                    "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                    "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}')",
+                                    "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key')}')",
+                                    "Dimensions('Materials')/Hierarchies('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP')/Elements('${productCode}')",
+                                    "Dimensions('Contract Types')/Hierarchies('Contract Types')/Elements('${v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected')}')",
+                                     "Dimensions('Instrument Types')/Hierarchies('Instrument Types')/Elements('${v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected')}')",
+                                    "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPipPlanningGridRow1Cell3DropBox.value')}')",
+                                    "Dimensions('LineItems Sales Plan IP')/Hierarchies('LineItems Sales Plan IP')/Elements('Final Quantity Plan')",
+                                    "Dimensions('Measures Sales Plan IP')/Hierarchies('Measures Sales Plan IP')/Elements('EditedBy')"
+                               ]
+                            },
+                        ],
+                        "Value": "${WidgetValue['activeUserName']}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                    "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                    "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}')",
+                                    "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key')}')",
+                                    "Dimensions('Materials')/Hierarchies('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP')/Elements('${productCode}')",
+                                    "Dimensions('Contract Types')/Hierarchies('Contract Types')/Elements('${v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected')}')",
+                                    "Dimensions('Instrument Types')/Hierarchies('Instrument Types')/Elements('${v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected')}')",
+                                    "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPipPlanningGridRow1Cell3DropBox.value')}')",
+                                    "Dimensions('LineItems Sales Plan IP')/Hierarchies('LineItems Sales Plan IP')/Elements('Final Quantity Plan')",
+                                    "Dimensions('Measures Sales Plan IP')/Hierarchies('Measures Sales Plan IP')/Elements('CommentSource')"
+                               ]
+                            },
+                        ],
+                        "Value": "${v('rocheBPSPIpPlanningCheckoutCommentEditGridRow3TextInput.value') ? v('rocheBPSPIpPlanningCheckoutCommentEditGridRow3TextInput.value') : ''}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                    "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                    "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}')",
+                                    "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key')}')",
+                                    "Dimensions('Materials')/Hierarchies('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP')/Elements('${productCode}')",
+                                    "Dimensions('Contract Types')/Hierarchies('Contract Types')/Elements('${v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected')}')",
+                                    "Dimensions('Instrument Types')/Hierarchies('Instrument Types')/Elements('${v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected')}')",
+                                    "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPipPlanningGridRow1Cell3DropBox.value')}')",
+                                    "Dimensions('LineItems Sales Plan IP')/Hierarchies('LineItems Sales Plan IP')/Elements('Final Quantity Plan')",
+                                    "Dimensions('Measures Sales Plan IP')/Hierarchies('Measures Sales Plan IP')/Elements('Comment')"
+                               ]
+                            },
+                        ],
+                        "Value": "${v('rocheBPSPIpPlanningCheckoutCommentEditGridRow2CommentInput.value') ? v('rocheBPSPIpPlanningCheckoutCommentEditGridRow2CommentInput.value') : ''}"
+                    }
+                ]
+                `;
+            }
+        }
+    },
+
+
+
+
+
+
+    rocheBPSPIpPlanningCommentEditControlPanelSaveButton: {
+        launch: {
+            url: (db) => `/api/v1/Cubes('Sales Plan IP')/tm1.Update`,
+            type: 'POST',
+            body: (db) => {
+                let g = 'rocheBPSPipPlanningGridTableMonthly';
+                let productCode = Utils.getGridTableCell(g, 2).title;
+                return `
+                [
+                    {
+                        "Cells": [
+                            {
+                                "Tuple@odata.bind": [
+                                    "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                    "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}')",
+                                    "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key')}')",
+                                    "Dimensions('Materials')/Hierarchies('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP')/Elements('${productCode}')",
+                                    "Dimensions('Contract Types')/Hierarchies('Contract Types')/Elements('${v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected')}')",
+                                    "Dimensions('Instrument Types')/Hierarchies('Instrument Types')/Elements('${v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected')}')",
+                                    "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPipPlanningGridRow1Cell3DropBox.value')}')",
+                                    "Dimensions('LineItems Sales Plan IP')/Hierarchies('LineItems Sales Plan IP')/Elements('Final Quantity Plan')",
+                                    "Dimensions('Measures Sales Plan IP')/Hierarchies('Measures Sales Plan IP')/Elements('EditedDateTime')"
+                                ]
+                            },
+                        ],
+                         "Value": "${Utils.getFormattedDate(new Date(), '.', true)}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                    "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                    "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}')",
+                                    "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key')}')",
+                                    "Dimensions('Materials')/Hierarchies('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP')/Elements('${productCode}')",
+                                    "Dimensions('Contract Types')/Hierarchies('Contract Types')/Elements('${v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected')}')",
+                                    "Dimensions('Instrument Types')/Hierarchies('Instrument Types')/Elements('${v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected')}')",
+                                    "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPipPlanningGridRow1Cell3DropBox.value')}')",
+                                    "Dimensions('LineItems Sales Plan IP')/Hierarchies('LineItems Sales Plan IP')/Elements('Final Quantity Plan')",
+                                    "Dimensions('Measures Sales Plan IP')/Hierarchies('Measures Sales Plan IP')/Elements('EditedBy')"
+                               ]
+                            },
+                        ],
+                        "Value": "${WidgetValue['activeUserName']}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                    "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                    "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}')",
+                                    "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key')}')",
+                                    "Dimensions('Materials')/Hierarchies('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP')/Elements('${productCode}')",
+                                    "Dimensions('Contract Types')/Hierarchies('Contract Types')/Elements('${v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected')}')",
+                                    "Dimensions('Instrument Types')/Hierarchies('Instrument Types')/Elements('${v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected')}')",
+                                    "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPipPlanningGridRow1Cell3DropBox.value')}')",
+                                    "Dimensions('LineItems Sales Plan IP')/Hierarchies('LineItems Sales Plan IP')/Elements('Final Quantity Plan')",
+                                    "Dimensions('Measures Sales Plan IP')/Hierarchies('Measures Sales Plan IP')/Elements('CommentSource')"
+                               ]
+                            },
+                        ],
+                        "Value": "${v('rocheBPSPIpPlanningCommentEditGridRow3TextInput.value') ? v('rocheBPSPIpPlanningCommentEditGridRow3TextInput.value') : ''}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                    "Dimensions('Versions')/Hierarchies('Versions')/Elements('${db.systemValueGlobalCompanyVersion}')",
+                                    "Dimensions('Periods')/Hierarchies('Periods')/Elements('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}')",
+                                    "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key')}')",
+                                    "Dimensions('Materials')/Hierarchies('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP')/Elements('${productCode}')",
+                                    "Dimensions('Contract Types')/Hierarchies('Contract Types')/Elements('${v('rocheBPSPipPlanningGridRow2Cell1SegmentedControl.selected')}')",
+                                    "Dimensions('Instrument Types')/Hierarchies('Instrument Types')/Elements('${v('rocheBPSPipPlanningGridRow2Cell2SegmentedControl.selected')}')",
+                                    "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${v('rocheBPSPipPlanningGridRow1Cell3DropBox.value')}')",
+                                    "Dimensions('LineItems Sales Plan IP')/Hierarchies('LineItems Sales Plan IP')/Elements('Final Quantity Plan')",
+                                    "Dimensions('Measures Sales Plan IP')/Hierarchies('Measures Sales Plan IP')/Elements('Comment')"
+                               ]
+                            },
+                        ],
+                        "Value": "${v('rocheBPSPIpPlanningCommentEditGridRow2CommentInput.value') ? v('rocheBPSPIpPlanningCommentEditGridRow2CommentInput.value') : ''}"
+                    }
+                ]
+                `;
+            }
+        }
+    },
+
+
+
 };
