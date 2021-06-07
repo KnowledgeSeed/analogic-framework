@@ -437,7 +437,6 @@ app.widgetConfig = {
                                     type: GridCellWidget,
                                     alignment: 'top-left',
                                     width: '50%',
-                                    skin: 'messagebordblue',
                                     height: '100%',
                                     widgets: [
 
@@ -456,6 +455,7 @@ app.widgetConfig = {
                                                     type: GridTableCellWidget,
                                                     width: '20%',
                                                     alignment: 'center-left',
+                                                    skin: '',
                                                     widgets: [
 
                                                         {
