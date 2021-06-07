@@ -309,6 +309,10 @@
     line-height: 16px;
 }
 
+.ks-grid-table-products_bpsp .ks-grid-table-content .ks-grid-table-cell {
+    overflow: hidden;
+}
+
 /* edit_distribution_bpsp */
 
 .ks-grid-table-edit_distribution_bpsp .ks-grid-table-row {
@@ -338,6 +342,7 @@
     color: #000;
     font-size: 16px;
     line-height: 16px;
+    overflow: hidden;
 }
 
 /* end ote */

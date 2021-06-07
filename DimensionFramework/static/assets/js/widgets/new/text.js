@@ -56,7 +56,7 @@ class TextWidget extends Widget {
 <div class="ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}" style="${mainDivStyle.join('')}">
     <div class="ks-text-inner">
         ${v.icon !== false ? `<div class="ks-text-icon" data-id="${o.id}" data-action="perform" data-ordinal="${v.ordinal}"><span style="${iconStyles.join('')}" class="${v.icon}"></span></div>` : ''}
-        <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title ? v.title : ''}</div>
+        <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title ? Utils.stripHtml(v.title) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title ? v.title : ''}</div>
         <div class="ks-text-separator"></div>
         <div class="ks-text-body" style="${bodyStyles.join('')}">${v.body ? v.body : ''}</div>
     </div>
@@ -75,7 +75,7 @@ class TextWidget extends Widget {
 
         section.find('.ks-text-icon').on('click', (e) => {
             let s = $(e.currentTarget), pDiv = s.closest('.ks-text');
-            s.data('on', pDiv.hasClass('ks-perform-edit'));L(pDiv.hasClass('ks-perform-edit'));
+            s.data('on', pDiv.hasClass('ks-perform-edit'));
             Widget.doHandleSystemEvent(s, e);
 
             if (this.amIOnAGridTable()) {

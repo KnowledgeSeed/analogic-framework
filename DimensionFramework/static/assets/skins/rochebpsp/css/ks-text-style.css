@@ -240,6 +240,33 @@
     font-color: #000000;
 }
 
+.ks-text-products_gd_readonly_bpsp .ks-text-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 1px;
+}
+
+.ks-text-products_gd_readonly_bpsp  .ks-text-inner {
+    display:flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* material_gd_readonly_bpsp */
+
+.ks-text-material_gd_readonly_bpsp {
+    font-family: Imago-Regular;
+    font-size: 15px;
+    font-color: #000000;
+}
+
+.ks-text-material_gd_readonly_bpsp  .ks-text-inner {
+    display:flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
 /* monthly_right_bpsp */
 .ks-text-monthly_right_bpsp .ks-text-inner {
     display:flex;
@@ -253,6 +280,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.ks-text-monthly_right_bpsp .ks-text-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 1px;
 }
 
 .ks-text-monthly_right_bpsp .ks-text-icon{
@@ -336,12 +370,21 @@
 
 .ks-text-products_gd_readonly_with_icon_bpsp .ks-text-inner{
     display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .ks-text-products_gd_readonly_with_icon_bpsp .ks-text-icon{
     margin-left: 8px;
     color: #2A66C5;
     cursor: pointer;
+}
+
+.products_gd_readonly_with_icon_bpsp .ks-text-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 1px;
 }
 
 /* products_gd_writeable_with_icon_bpsp */
@@ -387,6 +430,13 @@
 
 .ks-text-products_gd_writeable_with_icon_bpsp.ks-on .icon-dots-vertical::before {
     content: "\e9f7";
+}
+
+.ks-text-products_gd_writeable_with_icon_bpsp .ks-text-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 1px;
 }
 
 /* edit_distribution_value */

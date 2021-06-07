@@ -61,6 +61,7 @@ TextWidget:
  monthly_center_bpsp
  edit_distribution_value
  products_gd_readonly_with_icon_center_bpsp
+ material_gd_readonly_bpsp
 
 ButtonWidget:
  blue_bg_bpsp
@@ -100,6 +101,7 @@ GridTableCell:
     locked
     gridtable_checkout_hierarchy_bpsp_PL1, ..., gridtable_checkout_hierarchy_bpsp_PL6
     gridtable_hierarchy_bpsp_PL1, ..., gridtable_hierarchy_bpsp_PL6
+    writeable_bpsp
 
 GridTableHeaderCell:
   no_border_bpsp

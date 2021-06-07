@@ -1023,7 +1023,7 @@ app.widgetConfig = {
                             titleAlignment: 'center',
                             marginTop: 10,
                             paddingBottom: 1,
-                            titleFontSize: 10
+                            titleFontSize: 12
                         },
                         {
                             id: 'rocheBPSPProductsCheckoutPopupNoCheckoutWarningText2',
@@ -1031,7 +1031,8 @@ app.widgetConfig = {
                             skin: 'checkout_warning_message_bpsp',
                             title: 'a subsection is being edited',
                             titleAlignment: 'center',
-                            titleFontSize: 10
+                            paddingBottom: 1,
+                            titleFontSize: 12
                         },
                         {
                             id: 'rocheBPSPProductsCheckoutPopupNoCheckoutWarningText3',
@@ -1039,7 +1040,7 @@ app.widgetConfig = {
                             skin: 'checkout_warning_message_bpsp',
                             title: 'at least one child',
                             titleAlignment: 'center',
-                            titleFontSize: 10
+                            titleFontSize: 12
                         },
                         {
                             id: 'rocheBPSPProductsNoCheckoutPopupFocusButton',
@@ -1105,20 +1106,19 @@ app.widgetConfig = {
                             marginTop: 10,
                             skin: 'checkout_warning_bpsp',
                             titleAlignment: 'center',
-                            titleFontSize: 10
+                            titleFontSize: 12
                         },
                         {
                             id: 'rocheBPSPProductsCheckoutWarningMessageText',
                             type: TextWidget,
                             marginTop: 10,
                             skin: 'checkout_warning_message_bpsp',
-                            title: 'You can checkout this section for editing after the',
-                            body: 'current editor checks it in again',
+                            title: 'You can checkout this section for editing after',
+                            body: 'the current editor checks it in again',
                             titleAlignment: 'center',
-                            titleFontSize: 10,
+                            titleFontSize: 12,
                             bodyAlignment: 'center',
-                            bodyFontSize: 10,
-                            marginBottom: 10
+                            bodyFontSize: 12
                         },
                         {
                             id: 'rocheBPSPProductsCheckoutWarningContactEditorButton',
@@ -4078,7 +4078,6 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPProductsCheckoutDistributionEditPopupGridTableCellText-04',
                                             type: TextWidget,
-                                            titleAlignment: 'end',
                                             paddingRight: 8,
                                             title: '',
                                         }
@@ -4258,15 +4257,15 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsCheckoutCopyMergePanelText1',
                                     type: TextWidget,
-                                    titleFontSize: 10,
+                                    titleFontSize: 12,
                                     titleFontColor: '#B1B3B3',
                                     title: '- 100 %',
-                                    marginRight: 190
+                                    marginRight: 178
                                 },
                                 {
                                     id: 'rocheBPSPProductsCheckoutCopyMergePanelText2',
                                     type: TextWidget,
-                                    titleFontSize: 10,
+                                    titleFontSize: 12,
                                     titleFontColor: '#B1B3B3',
                                     title: '+ 100 %'
                                 },
@@ -6099,7 +6098,7 @@ app.widgetConfig = {
                             titleAlignment: 'center',
                             marginTop: 10,
                             paddingBottom: 1,
-                            titleFontSize: 10
+                            titleFontSize: 12
                         },
                         {
                             id: 'rocheBPSPIpPlanningCheckoutPopupNoCheckoutWarningText2',
@@ -6107,7 +6106,8 @@ app.widgetConfig = {
                             skin: 'checkout_warning_message_bpsp',
                             title: 'a subsection is being edited',
                             titleAlignment: 'center',
-                            titleFontSize: 10
+                            paddingBottom: 1,
+                            titleFontSize: 12
                         },
                         {
                             id: 'rocheBPSPIpPlanningCheckoutPopupNoCheckoutWarningText3',
@@ -6115,7 +6115,7 @@ app.widgetConfig = {
                             skin: 'checkout_warning_message_bpsp',
                             title: 'at least one child',
                             titleAlignment: 'center',
-                            titleFontSize: 10
+                            titleFontSize: 12
                         },
                         {
                             id: 'rocheBPSPIpPlanningNoCheckoutPopupFocusButton',
@@ -6170,20 +6170,20 @@ app.widgetConfig = {
                             marginTop: 10,
                             skin: 'checkout_warning_bpsp',
                             titleAlignment: 'center',
-                            titleFontSize: 10
+                            titleFontSize: 12
                         },
                         {
                             id: 'rocheBPSPIpPlanningCheckoutWarningMessageText',
                             type: TextWidget,
                             marginTop: 10,
                             skin: 'checkout_warning_message_bpsp',
-                            title: 'You can checkout this section for editing after the',
-                            body: 'current editor checks it in again',
+                            title: 'You can checkout this section for editing after',
+                            body: 'the current editor checks it in again',
                             titleAlignment: 'center',
-                            titleFontSize: 10,
+                            titleFontSize: 12,
                             bodyAlignment: 'center',
                             bodyFontSize: 10,
-                            marginBottom: 10
+                            marginBottom: 5
                         },
                         {
                             id: 'rocheBPSPIpPlanningCheckoutWarningContactEditorButton',
@@ -7105,7 +7105,6 @@ app.widgetConfig = {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyText-03',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
-                                    titleAlignment: 'end',
                                     marginRight: 8,
                                     title: '',
                                 }
@@ -7125,7 +7124,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
-                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7144,7 +7142,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     paddingRight: 8,
                                     skin: 'products_gd_readonly_bpsp',
-                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7163,7 +7160,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     paddingRight: 8,
                                     skin: 'products_gd_readonly_bpsp',
-                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7182,7 +7178,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     paddingRight: 8,
                                     skin: 'products_gd_readonly_bpsp',
-                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7201,7 +7196,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     paddingRight: 8,
                                     title: '',
-                                    titleAlignment: 'end',
                                     skin: 'products_gd_readonly_bpsp'
                                 }
                             ]
@@ -7220,7 +7214,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
-                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7239,7 +7232,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
-                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7259,7 +7251,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
-                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7278,7 +7269,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
-                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7297,7 +7287,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
-                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7316,7 +7305,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
-                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7335,7 +7323,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
-                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7354,7 +7341,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
-                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7373,7 +7359,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
-                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7392,7 +7377,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
-                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7411,7 +7395,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
-                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -7430,7 +7413,6 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     paddingRight: 8,
-                                    titleAlignment: 'end',
                                     title: '',
                                 }
                             ]
@@ -9235,7 +9217,6 @@ app.widgetConfig = {
                                 type: TextWidget,
                                 paddingRight: 8,
                                 skin: 'products_gd_readonly_bpsp',
-                                titleAlignment: 'end',
                                 title: '',
                             }
 

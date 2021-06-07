@@ -116,6 +116,7 @@ const Utils = {
         return app.isMobile;
     },
     escapeText: str => JSON.stringify(str).slice(1, -1),
+    stripHtml: str => str.replace(/(<([^>]+)>)/gi, ""),
     nl2br: s => s.replace(/(?:\r\n|\r|\n)/g, '<br>'),
     getObjectValueByDotSeparatedKeys(o, dotSeparatedKeys) {
         if ('undefined' === typeof o) {

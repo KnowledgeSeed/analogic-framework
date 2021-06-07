@@ -21,15 +21,21 @@ class SliderWidget extends Widget {
             unit: this.getRealValue('unit', d, ''),
             updateableWidgetId: this.getRealValue('updateableWidgetId', d, false),
             css: {
-                tooltip: {'font-size': this.getRealValue('trackValueFontSize', d), color: this.getRealValue('trackValueFontColor', d)},
-                tooltipHover: {'font-size': this.getRealValue('trackValueMagnifierLabelFontSize', d), color: this.getRealValue('trackValueMagnifierLabelFontColor', d)}
+                tooltip: {
+                    'font-size': this.getRealValue('trackValueFontSize', d),
+                    color: this.getRealValue('trackValueFontColor', d)
+                },
+                tooltipHover: {
+                    'font-size': this.getRealValue('trackValueMagnifierLabelFontSize', d),
+                    color: this.getRealValue('trackValueMagnifierLabelFontColor', d)
+                }
             }
         };
 
         v.value = Utils.parseNumber(v.value); //temp!!!!!!
 
         this.value = v;
-;
+        ;
         return `
 <div data-id="${this.options.id}" class="ks-slider ks-slider-${v.skin}" style="${this.getGeneralStyles(d).join('')}">
     <div class="ks-slider-touch" style="display: none;">
@@ -113,15 +119,17 @@ class SliderWidget extends Widget {
         this.createSlider(section);
 
         if (!SliderWidget.isDocEventsHaveBeenBound) {
-            SliderWidget.initSliderDocEvents();
+            SliderWidget.initSliderDocEvents(this.value, section);
 
             SliderWidget.isDocEventsHaveBeenBound = true;
         }
     }
 
     createSlider(section) {
-        const id = section.prop('id'), isTouchMode = app.isTouched, sliderDiv = section.find('.ks-slider'), d = this.value, s = SliderWidget.slidersByIds[id];
-        const widgetDiv = SliderWidget.getWidgetDiv(sliderDiv), ordinal = d.ordinal, css = d.css, tooltipFontSize = css.tooltip['font-size'];
+        const id = section.prop('id'), isTouchMode = app.isTouched, sliderDiv = section.find('.ks-slider'),
+            d = this.value, s = SliderWidget.slidersByIds[id];
+        const widgetDiv = SliderWidget.getWidgetDiv(sliderDiv), ordinal = d.ordinal, css = d.css,
+            tooltipFontSize = css.tooltip['font-size'];
 
         if (s) {
             s.destroy();
@@ -167,18 +175,19 @@ class SliderWidget extends Widget {
 
         sliderDiv.find('.ks-slider-track-zero-indicator').css('left', width / 2 + offset);
 
-        const trackFillWidth = width * (trackFillStartValue - d.minRange) / totalRange, noUiConnect = widgetDiv.find('.noUi-connect');
+        const trackFillWidth = width * (trackFillStartValue - d.minRange) / totalRange,
+            noUiConnect = widgetDiv.find('.noUi-connect');
         const trackFill = $('<div class="ks-slider-track-fill" style="width: ' + trackFillWidth + 'px;"><\/div>');
 
         widgetDiv.find('.noUi-connects').append(trackFill).promise().then(() => {
             trackFillColor = trackFill.css('background-color');
             let updateableInput;
-            if(d.updateableWidgetId){
-                    updateableInput = $('#' + d.updateableWidgetId).find('input');
+            if (d.updateableWidgetId) {
+                updateableInput = $('#' + d.updateableWidgetId).find('input');
             }
             slider.on('update', (positions) => {
                 adjustTrackFill(positions[0]);
-                if(updateableInput){
+                if (updateableInput) {
                     updateableInput.val(positions[0] + ' ' + d.unit);
                 }
             });
@@ -212,8 +221,17 @@ class SliderWidget extends Widget {
         }
     }
 
-    static initSliderDocEvents() {
+    static initSliderDocEvents(widgetValue, section) {
         const isTouchMode = app.isTouched;
+        if (v('updateableWidgetId', widgetValue)) {
+            let updateableInput = $('#' + widgetValue.updateableWidgetId).find('input');
+            updateableInput.on('change', (e) => {
+                const sliderDiv = section.find('.ks-slider');
+                const slider = SliderWidget.getSlider(sliderDiv);
+                slider.set(Utils.parseNumber(updateableInput.val().replace(/\s/g, '').replace('%', '')));
+            });
+        }
+
 
         Doc.on('mouseover.slider', '.ks-slider', e => {
             e = $(Utils.stopEvent(e).currentTarget);
@@ -249,7 +267,8 @@ class SliderWidget extends Widget {
         }).on(app.clickEvent, '.ks-slider-options-button,.ks-slider-touch-options-button', e => {
             e = $(Utils.stopEvent(e).currentTarget);
 
-            let sliderDiv = SliderWidget.getSliderDiv(e), v, p = sliderDiv.removeClass('Highlighted').find('.ks-slider-touch,.ks-slider-options');
+            let sliderDiv = SliderWidget.getSliderDiv(e), v,
+                p = sliderDiv.removeClass('Highlighted').find('.ks-slider-touch,.ks-slider-options');
 
             if (e.hasClass('ks-button-update')) {
                 if (isTouchMode) {
@@ -339,7 +358,10 @@ class SliderWidget extends Widget {
             }
         }
 
-        o = sliderDiv.find('.ks-slider-touch-track-overflow').html(v.reverse().join('')).css('width', 3 * (maxRange - minRange)).data({'min-range': minRange, 'max-range': maxRange});
+        o = sliderDiv.find('.ks-slider-touch-track-overflow').html(v.reverse().join('')).css('width', 3 * (maxRange - minRange)).data({
+            'min-range': minRange,
+            'max-range': maxRange
+        });
 
         s.on('scroll', rulerScrolled);
 
@@ -361,7 +383,8 @@ class SliderWidget extends Widget {
     }
 
     static setRulerValue(sliderDiv, value) {
-        let s = sliderDiv.find('.ks-slider-touch-track'), p = sliderDiv.find('.ks-slider-touch-track-overflow'), min, max, offset, size;
+        let s = sliderDiv.find('.ks-slider-touch-track'), p = sliderDiv.find('.ks-slider-touch-track-overflow'), min,
+            max, offset, size;
 
         min = p.data('min-range');
         max = p.data('max-range');
