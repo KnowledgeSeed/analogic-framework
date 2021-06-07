@@ -440,7 +440,7 @@ app.widgetConfig = {
                                     height: '100%',
                                     widgets: [
 
-                                        {
+                                   /*{
                                             id: 'rocheBPSPMainBlueGridTable',
                                             type: GridTableWidget,
                                             marginTop: '10px',
@@ -467,7 +467,7 @@ app.widgetConfig = {
                                                     ]
                                                 },
                                             ]
-                                        }
+                                        }*/
                                     ]
                                 }]
                         },
@@ -12897,7 +12897,7 @@ app.widgetConfig = {
                                 {
                                     id: 'RocheBPSPMaterialsAddMaterialClipboardText-11',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    skin: 'material_gd_readonly_bpsp',
                                     marginLeft: 8,
                                     title: '',
                                 }
@@ -13270,7 +13270,7 @@ app.widgetConfig = {
                                 {
                                     id: 'RocheBPSPMaterialsAddMaterialSearchCell-02',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    skin: 'material_gd_readonly_left_bpsp',
                                     marginLeft: 8,
                                     title: '',
                                 }
@@ -13287,7 +13287,7 @@ app.widgetConfig = {
                                 {
                                     id: 'RocheBPSPMaterialsAddMaterialSearchText-03',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    skin: 'material_gd_readonly_left_bpsp',
                                     marginLeft: 8,
                                     title: '',
                                 }
@@ -13304,7 +13304,7 @@ app.widgetConfig = {
                                 {
                                     id: 'RocheBPSPMaterialsAddMaterialSearchText-04',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    skin: 'material_gd_readonly_left_bpsp',
                                     marginLeft: 8,
                                     title: '',
                                 }
@@ -13321,7 +13321,7 @@ app.widgetConfig = {
                                 {
                                     id: 'RocheBPSPMaterialsAddMaterialSearchText-05',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    skin: 'material_gd_readonly_left_bpsp',
                                     marginLeft: 8,
                                     title: '',
                                 }
@@ -13338,7 +13338,7 @@ app.widgetConfig = {
                                 {
                                     id: 'RocheBPSPMaterialsAddMaterialSearchText-06',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    skin: 'material_gd_readonly_left_bpsp',
                                     marginLeft: 8,
                                     title: '',
                                 }
@@ -13355,7 +13355,7 @@ app.widgetConfig = {
                                 {
                                     id: 'RocheBPSPMaterialsAddMaterialSearchText-07',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    skin: 'material_gd_readonly_left_bpsp',
                                     marginLeft: 8,
                                     title: '',
                                 }
@@ -13372,7 +13372,7 @@ app.widgetConfig = {
                                 {
                                     id: 'RocheBPSPMaterialsAddMaterialSearchText-08',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    skin: 'material_gd_readonly_left_bpsp',
                                     marginLeft: 8,
                                     title: '',
                                 }
@@ -13390,7 +13390,7 @@ app.widgetConfig = {
                                 {
                                     id: 'RocheBPSPMaterialsAddMaterialSearchText-09',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    skin: 'material_gd_readonly_left_bpsp',
                                     marginLeft: 8,
                                     title: '',
                                 }
@@ -13408,7 +13408,7 @@ app.widgetConfig = {
                                 {
                                     id: 'RocheBPSPMaterialsAddMaterialSearchText-10',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    skin: 'material_gd_readonly_left_bpsp',
                                     marginLeft: 8,
                                     title: '',
                                 }
@@ -13426,7 +13426,7 @@ app.widgetConfig = {
                                 {
                                     id: 'RocheBPSPMaterialsAddMaterialSearchText-11',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    skin: 'material_gd_readonly_left_bpsp',
                                     marginLeft: 8,
                                     title: '',
                                 }
@@ -13461,7 +13461,7 @@ app.widgetConfig = {
                                 {
                                     id: 'RocheBPSPMaterialsAddMaterialSearchText-13',
                                     type: TextWidget,
-                                    skin: 'products_gd_readonly_bpsp',
+                                    skin: 'material_gd_readonly_left_bpsp',
                                     marginLeft: 8,
                                     title: '',
                                 }

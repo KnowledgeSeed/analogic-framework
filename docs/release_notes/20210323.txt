@@ -62,6 +62,7 @@ TextWidget:
  edit_distribution_value
  products_gd_readonly_with_icon_center_bpsp
  material_gd_readonly_bpsp
+ material_gd_readonly_left_bpsp
 
 ButtonWidget:
  blue_bg_bpsp

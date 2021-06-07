@@ -267,6 +267,20 @@
     justify-content: flex-end;
 }
 
+/* material_gd_readonly_left_bpsp */
+
+.ks-text-material_gd_readonly_left_bpsp {
+    font-family: Imago-Regular;
+    font-size: 15px;
+    font-color: #000000;
+}
+
+.ks-text-material_gd_readonly_left_bpsp  .ks-text-inner {
+    display:flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
 /* monthly_right_bpsp */
 .ks-text-monthly_right_bpsp .ks-text-inner {
     display:flex;
