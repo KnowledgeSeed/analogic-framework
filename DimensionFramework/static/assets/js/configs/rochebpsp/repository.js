@@ -129,28 +129,29 @@ app.repository = {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption,Attributes/Memberdescription))`,
             type: 'POST',
             body: (db) => `{"MDX":"
-                SELECT 
-                    {[Measures Company Information].[Measures Company Information].[Start page message Title],
-                     [Measures Company Information].[Measures Company Information].[Start page message],
-                     [Measures Company Information].[Measures Company Information].[Start page message DateTime]
-                             } 
-                        PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON COLUMNS , 
-                         NON EMPTY 
-                       {[Companies].[Companies].[All Companies^1391]} 
-                      PROPERTIES [Companies].[Companies].[Member description]  ON ROWS 
-                    FROM [Company Information] 
-                    WHERE 
-                      (
-                       [Versions].[Versions].[Live]
-                      )
+                        SELECT 
+                           {[Measures Company Information].[Measures Company Information].[Start page message Title],
+                            [Measures Company Information].[Measures Company Information].[Start page message],
+                            [Measures Company Information].[Measures Company Information].[Start page message DateTime],
+                            [Measures Company Information].[Measures Company Information].[Start page message User]} 
+                          PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON COLUMNS , 
+                          NON EMPTY 
+                        {TM1SubsetToSet([Companies].[Companies], 'All Active')} 
+                          PROPERTIES [Companies].[Companies].[Member description]  ON ROWS 
+                        FROM [Company Information] 
+                        WHERE 
+                          (
+                           [Versions].[Versions].[Live]
+                          )
+
             "}`,
             parsingControl: {
                 type: 'matrix',
-                length: 3,
+                length: 4,
                 query: [
                     (r, x) => {
                         return {
-                            title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 1%;margin-top:0.5%;";  >' + r.Cells[x].Members[1].Attributes.Caption + '</div>' + '<div style=\"font-size:10px;color:#408CD9;;margin-top:0.5%;\" >' + r.Cells[x + 2].FormattedValue + '</div>',
+                            title: r.Cells[x].FormattedValue + '<br/><div style=\"font-size:10px; float: left;margin-right: 1%;margin-top:0.5%;";  >' + r.Cells[x+2].FormattedValue + '</div>' + '<div style=\"font-size:10px;color:#408CD9;;margin-top:0.5%;\" >' + r.Cells[x+3].FormattedValue + '</div>',
                             body: r.Cells[x + 1].FormattedValue
                         }
                     }]
@@ -3615,7 +3616,6 @@ app.repository = {
                                     skin: skin,
                                     cellSkin: WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked'] ? 'locked' : '',
                                     icon: WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
-                                    hasComment: r.Cells[x + 24].FormattedValue !== ''
 
                                 };
                                 if (WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsMainLocked']) {
@@ -3725,6 +3725,7 @@ app.repository = {
                                     icon: c.FormattedValue === '' ? 'icon-comment-off' : 'icon-comment-on',
                                     iconColor: c.FormattedValue === '' ? '#C5C6C6' : '#0066cc',
                                     cellSkin: WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked'] ? 'locked' : '',
+                                    hasComment: c.FormattedValue !== ''
                                 }
                             },
 
@@ -4162,6 +4163,7 @@ app.repository = {
                         return {
                             icon: c.FormattedValue === '' ? 'icon-comment-off' : 'icon-comment-on',
                             iconColor: c.FormattedValue === '' ? '#C5C6C6' : '#0066cc',
+                            hasComment: c.FormattedValue !== ''
                         }
                     }
                 ]
@@ -4505,12 +4507,32 @@ app.repository = {
         }
     },
 
+    rocheBPSPAddMaterialGridRow1Cell0Button: {
+        launch: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueMaterialReturnFromSearch', true);
+            }
+        }
+
+    },
+
+    rocheBPSPSettingsGridRow2Cell3Button: {
+        launch: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueMaterialReturnFromSearch', true);
+            }
+        }
+
+    },
 
     rocheBPSPMaterialGridTable:
         {
 
             initCondition: (db) => {
-                return Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow1Cell2DropBox') && db.systemValueGlobalCompanyProductPlanVersion;
+                let a = Utils.setWidgetValueIfNotExist('systemValueMaterialReturnFromSearch', false);
+                let b = a === false && Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow1Cell2DropBox') && db.systemValueGlobalCompanyProductPlanVersion;
+                Utils.setWidgetValue('systemValueMaterialReturnFromSearch', false);
+                return b;
             },
             initDefault: (db) => {
                 return [];
@@ -4645,7 +4667,7 @@ app.repository = {
     RocheBPSPMaterialIPNodeGridTable:
         {
             initCondition: (db) => {
-                return Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow1Cell2DropBox') && db.systemValueGlobalCompanyProductPlanVersion && Utils.isGridTableLoaded('rocheBPSPMaterialGridTable');
+                return Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow1Cell2DropBox') && db.systemValueGlobalCompanyProductPlanVersion;
             },
             initDefault: (db) => {
                 return [];
@@ -4806,6 +4828,7 @@ app.repository = {
                 }
             },
 
+
             refresh_col_0: {
                 execute: (db) => {
                     return {value: v('RocheBPSPMaterialsAddMaterialSearchSelectAll.switch.value')};
@@ -4822,7 +4845,7 @@ app.repository = {
             },
             init:
                 {
-                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Consolidated,RuleDerived,Updateable;$expand=Members($select=Name, Attributes/Caption))`,
                     type: 'POST',
 
                     body: (db) => {
@@ -4922,8 +4945,12 @@ app.repository = {
 
 
                             (r, x) => {
+                                let editable = r.Cells[x].Consolidated === false && r.Cells[x].RuleDerived === false;
                                 return {
-                                    ordinal: r.Cells[x].Ordinal, value: r.Cells[x].FormattedValue
+                                    ordinal: r.Cells[x].Ordinal,
+                                    value: r.Cells[x].FormattedValue,
+                                    editable: editable,
+                                    visible: editable ? '' : false,
                                 }
                             },
 
@@ -4977,7 +5004,10 @@ app.repository = {
                             },
 
                             (r, x) => {
-                                return {}
+                                let editable = r.Cells[x].Consolidated === false && r.Cells[x].RuleDerived === false;
+                                return {
+                                    visible: editable ? '' : false,
+                                }
                             },
 
 
@@ -5993,10 +6023,6 @@ app.repository = {
     },
 
 
-
-
-
-
     rocheBPSPIpPlanningCommentEditControlPanelSaveButton: {
         launch: {
             url: (db) => `/api/v1/Cubes('Sales Plan IP')/tm1.Update`,
@@ -6083,7 +6109,6 @@ app.repository = {
             }
         }
     },
-
 
 
 };
