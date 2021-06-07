@@ -682,6 +682,10 @@ app.eventMap = {
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPProducts'
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPProductsCheckoutGridTableYearly', 'rocheBPSPProductsCheckoutGridTableMonthly']
         }
     ],
     'segmentedControlTab2.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl': [

@@ -2127,11 +2127,11 @@ app.repository = {
     rocheBPSPProductsCheckoutGridTableMonthlyFunctions: {
         getCell: (index, r) => {
             let c = r.Cells[index], editable = c.Consolidated === false && c.RuleDerived === false,
-                performable = c.Consolidated === true && c.RuleDerived === false;
+                performable = c.Consolidated === true && c.RuleDerived === false, isGrey = c.RuleDerived === true ;
 
             let result = {
                 title: c.FormattedValue,
-                cellSkin: editable ? '' : '',
+                cellSkin: isGrey ? 'readonly_bpsp' : '',
                 skin: editable ? 'monthly_center_bpsp' : 'monthly_right_bpsp',
                 cellVisible: true,
                 editable: editable,
