@@ -36,7 +36,7 @@ class GridTableWidget extends Widget {
             this.state['widgets'] = widgets;
             this.state['col'] = col;
             this.state['headerRowWidgetHtml'] = headerRowWidgetHtml;
-         //   this.state['d'] = d;
+            //   this.state['d'] = d;
             this.state['maxRows'] = v.maxRows;
             while (start < widgets.length && start < end) {
                 r.push(this.buildTableRowHtml(widgets.slice(start, start + col).join(''), v.rowHeight, v.borderBottom));
@@ -128,7 +128,7 @@ class GridTableWidget extends Widget {
         }
 
         Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
-        if(o.maxRows){
+        if (o.maxRows) {
             Listeners.push({options: o, method: 'renderPage', eventName: 'page.' + o.id, handler: h});
         }
 
@@ -196,8 +196,15 @@ class GridTableWidget extends Widget {
                     first = false;
                 }
                 let visible = data && typeof data.visible !== 'undefined' ? data.visible : o.visible;
-                let ghtml = instance.getHtml(widgetHtmls, headerRowWidgetHtml, processedData, withState);
-                return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" ${visible === false ? 'style="display:none"' : ''} id="${o.id}">${ghtml}</section>`;
+                let ghtml = instance.getHtml(widgetHtmls, headerRowWidgetHtml, processedData, withState), gs = [];
+                if (o.applyMeasuresToSection === true) {
+                    gs = instance.getWidthAndHeight(data);
+                }
+
+                if (visible === false) {
+                    gs.push('display:none;');
+                }
+                return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}"  style="${gs.join('')}"  id="${o.id}">${ghtml}</section>`;
             });
         });
     }

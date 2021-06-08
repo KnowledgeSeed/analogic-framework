@@ -352,7 +352,7 @@
 
 .ks-grid-table-blue_message_main_bpsp .ks-grid-table-row {
     background: aliceblue;
-    padding: 10px;
+    padding: 10px 10px 60px 15px;
     border-radius: 5px;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -361,6 +361,7 @@
 
 .ks-grid-table-blue_message_main_bpsp .ks-grid-table-head {
     visibility: hidden;
+    height: 0px;
 }
 
 

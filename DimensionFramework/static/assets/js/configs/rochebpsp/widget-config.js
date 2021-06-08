@@ -446,6 +446,8 @@ app.widgetConfig = {
                                             hideIfNoData: true,
                                             skin: 'blue_message_main_bpsp',
                                             width: '100%',
+                                            applyMeasuresToSection: true,
+                                            marginTop: -33,
                                             listen: [],
                                             title: '',
                                             widgets: [
@@ -12724,8 +12726,6 @@ app.widgetConfig = {
                             width: '3%',
                             alignment: 'center-center',
                             widgets: [
-
-
                                 {
                                     id: 'RocheBPSPMaterialsAddMaterialClipboardCell-01',
                                     type: ToggleWidget,
