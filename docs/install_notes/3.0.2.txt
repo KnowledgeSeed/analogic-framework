@@ -1,0 +1,5 @@
+
+  <Location "/rochebpspapi/api/v1/">
+    ProxyPass http://localhost:5352/api/v1/ timeout=1200
+    ProxyPassReverseCookiePath "/api/"  "/rochebpspapi/api/"
+  </Location>
