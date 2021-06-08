@@ -43,6 +43,7 @@ app.repository = {
                                 Utils.setWidgetValueByOther('systemValueFocusedProduct', 'systemValueFocusedProductDefault');
                                 Utils.setWidgetValue('systemValueIpPlanningFocusedProductDefault', 'IPL1');
                                 Utils.setWidgetValueByOther('systemValueIpPlanningFocusedProduct', 'systemValueIpPlanningFocusedProductDefault');
+                                Utils.setWidgetValueIfNotExist('systemValueGlobalSelectedCompany', false);
                                 return true;
                             }
                         }
@@ -196,6 +197,11 @@ app.repository = {
     },
 
     rocheBPSPProductsGridRow1Cell2DropBox: {
+        choose: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPProductsGridRow1Cell2DropBox.value'));
+            }
+        },
         init: {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
             type: 'POST',
@@ -213,7 +219,7 @@ app.repository = {
                 query:
                     {
                         items: (r, x) => {
-                            let result = [], selected = v('rocheBPSPProductsGridRow1Cell2DropBox.value');
+                            let result = [], selected = v('systemValueGlobalSelectedCompany');
                             for (let i = 0; i < r.Cells.length; i = i + 2) {
                                 result.push({
                                     name: r.Cells[i].FormattedValue,
@@ -1740,7 +1746,7 @@ app.repository = {
         getCell: (index, r) => {
             let uiIndex = index + 10, uiValue = parseInt(r.Cells[uiIndex].FormattedValue), skin = 'monthly_right_bpsp',
                 cellSkin = '',
-                applyMeasuresToSection = true,
+                applyMeasuresToSection = false,
                 icon = '', distributionEdit = false, copyMerge = false, performWrite = false;
             if (uiValue === 1) {
                 skin = 'products_gd_readonly_with_icon_bpsp';
@@ -1789,19 +1795,19 @@ app.repository = {
                 ordinal: r.Cells[index].Ordinal,
                 skin: skin,
                 cellVisible: r.Cells[index].Members[6].Name !== 'DUMMY',
-                members: r.Cells[index].Members
+                members: r.Cells[index].Members,
+                applyMeasuresToSection: true
             };
             if (icon !== '') {
                 result['icon'] = icon;
 
             }
             if (applyMeasuresToSection) {
-                result['applyMeasuresToSection'] = true;
                 result['width'] = '100%';
                 result['height'] = '100%';
                 result['performable'] = true;
-                if (uiValue === 3) {
-                    result['paddingRight'] = 18;
+                if (uiValue === 3 && r.Cells[index].Members[5].Name == WidgetValue.systemValueGlobalSegmentedControlRelativeYearValue) {
+                    result['paddingRight'] = 26;
                 }
             }
             return result;
@@ -2304,6 +2310,7 @@ app.repository = {
                                 {"Name": "pPeriod", "Value": "${v('systemValueGlobalSegmentedControlRelativeYearValue')}"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}"},
+                                {"Name": "pSplitMode", "Value": "Monthly"},
                                 {"Name": "pSplitMethod", "Value": "Previous Year"}
                         ]
                     }`
@@ -2322,6 +2329,7 @@ app.repository = {
                                 {"Name": "pPeriod", "Value": "${v('systemValueGlobalSegmentedControlRelativeYearValue')}"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}"},
+                                {"Name": "pSplitMode", "Value": "Monthly"},
                                 {"Name": "pSplitMethod", "Value": "Equal"}
                         ]
                     }`
@@ -3089,6 +3097,11 @@ app.repository = {
 
 
     rocheBPSPMaterialGridRow1Cell2DropBox: {
+        choose: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPMaterialGridRow1Cell2DropBox.value'));
+            }
+        },
         init: {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
             type: 'POST',
@@ -3106,12 +3119,12 @@ app.repository = {
                 query:
                     {
                         items: (r, x) => {
-                            let result = [];
+                            let result = [], selected = v('systemValueGlobalSelectedCompany');
                             for (let i = 0; i < r.Cells.length; i = i + 2) {
                                 result.push({
                                     'name': r.Cells[i].FormattedValue,
                                     key: r.Cells[i + 1].FormattedValue,
-                                    on: false
+                                    on: selected === r.Cells[i].FormattedValue
                                 });
                             }
                             return result;
@@ -3192,6 +3205,11 @@ app.repository = {
 
 
     rocheBPSPipPlanningGridRow1Cell2DropBox: {
+        choose: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPipPlanningGridRow1Cell2DropBox.value'));
+            }
+        },
         init: {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
             type: 'POST',
@@ -3209,12 +3227,12 @@ app.repository = {
                 query:
                     {
                         items: (r, x) => {
-                            let result = [];
+                            let result = [], selected = v('systemValueGlobalSelectedCompany');
                             for (let i = 0; i < r.Cells.length; i = i + 2) {
                                 result.push({
                                     'name': r.Cells[i].FormattedValue,
                                     key: r.Cells[i + 1].FormattedValue,
-                                    on: v('rocheBPSPipPlanningGridRow1Cell2DropBox.value') === r.Cells[i].FormattedValue
+                                    on: selected === r.Cells[i].FormattedValue
                                 });
                             }
                             return result;

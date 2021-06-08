@@ -33,7 +33,7 @@ exportIpPlanningMonthly: >
 
     Set DefaultProductRows AS
     {Intersect({TM1DRILLDOWNMEMBER({[Materials].[BPSP $productPlanVersion IP].[$material]}, ALL, RECURSIVE )},
-    {TM1SubsetToSet([Materials].[BPSP $productPlanVersion IP],'1391')})}
+    {TM1SubsetToSet([Materials].[BPSP $productPlanVersion IP],'$company')})}
 
     -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)
 

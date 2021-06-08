@@ -6162,7 +6162,8 @@ app.widgetConfig = {
                             type: TextWidget,
                             skin: 'checkout_warning_bpsp',
                             title: 'This section is being edited',
-                            titleAlignment: 'center'
+                            titleAlignment: 'center',
+                            titleFontSize: 12
                         },
                         {
                             id: 'rocheBPSPIpPlanningCheckoutWarningByUserText',
@@ -6182,7 +6183,7 @@ app.widgetConfig = {
                             titleAlignment: 'center',
                             titleFontSize: 12,
                             bodyAlignment: 'center',
-                            bodyFontSize: 10,
+                            bodyFontSize: 12,
                             marginBottom: 5
                         },
                         {

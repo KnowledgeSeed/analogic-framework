@@ -113,22 +113,17 @@ class DropBoxWidget extends Widget {
             return false;
         });
 
-        section.find('input').on('input', i => {
+        section.find('input[type="text"]').on('input', i => {
             let e = $(i.currentTarget), term = e.val(), f;
             section.find('.ks-dropbox-panel-item').each(function () {
                 f = $(this);
                 f.toggle(-1 !== f.find('.ks-dropbox-panel-item-text').html().toLowerCase().indexOf(term.toLowerCase()));
             });
         });
-        $('#' + id + ' .ks-dropbox-panel-item-checkbox').on('click', function (e){
-            const clickedItem = $(e.currentTarget).closest('.ks-dropbox-panel-item ');
-            DropBoxWidget.handleClick(w, e, itemHolder, section, id, clickedItem, true);
 
-            return false;
-        });
-        const itemHolder = $('#' + id + ' .ks-dropbox-panel').on('click', false).on('click', '.ks-dropbox-panel-item ', e => {
-            const clickedItem = $(e.currentTarget);
-            DropBoxWidget.handleClick(w, e, itemHolder, section, id, clickedItem);
+        const itemHolder = $('#' + id + ' .ks-dropbox-panel')./*on('click', false).*/on('click', '.ks-dropbox-panel-item ', e => {
+            const clickedItem = $(e.currentTarget);L(clickedItem);
+            DropBoxWidget.handleClick(w, e, itemHolder, section, id, clickedItem, $(e.target).hasClass('ks-dropbox-panel-item-checkbox'));
         });
 
         const catcher = Doc.not(dropbox).on('touch click', e => {
@@ -146,7 +141,6 @@ class DropBoxWidget extends Widget {
                 if(!fromCheckbox){
                     checkbox.prop('checked', !checkbox.prop('checked'));
                 }
-
                 w.items[clickedItem.index()].on = checkbox.prop("checked");
                 w.value = $.grep(w.items, (item, i) => item.on).map(item => item.name).join();
             } else {

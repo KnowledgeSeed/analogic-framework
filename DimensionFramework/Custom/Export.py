@@ -265,7 +265,7 @@ class Export:
                 value = d['Cells'][i]['Value']
                 if (value == None):
                     value = 0
-                if d['Cells'][i]['Consolidated'] == False and d['Cells'][i]['RuleDerived'] == False:
+                if d['Cells'][i]['RuleDerived'] == False:
                     worksheet.write(r, c, value, simple)
                 else:
                     worksheet.write(r, c, value, read_only)

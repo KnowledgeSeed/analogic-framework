@@ -13,6 +13,10 @@ app.eventMap = {
 
     'launch.rocheBPSPMainGridRow3Cell2Button': [
         {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPProductsGridRow1Cell3DropBox', 'rocheBPSPProductsGridTableYearly', 'rocheBPSPProductsGridTableMonthly']
+        },
+        {
             action: app.fn.openPage,
             argument: 'rocheBPSPProducts'
         }
@@ -32,7 +36,7 @@ app.eventMap = {
         },
         {
             action: app.fn.removeWidgetValues,
-            argument: ['rocheBPSPProductsGridRow1Cell3DropBox']
+            argument: ['rocheBPSPProductsGridRow1Cell3DropBox', 'rocheBPSPProductsGridTableYearly', 'rocheBPSPProductsGridTableMonthly']
         }
     ],
 
@@ -948,6 +952,10 @@ app.eventMap = {
 
     'launch.rocheBPSPMainGridRow3Cell3Button': [
         {
+           action: app.fn.removeWidgetValues,
+           argument: ['rocheBPSPipPlanningGridRow1Cell3DropBox', 'rocheBPSPipPlanningGridTableMonthly']
+        },
+        {
             action: app.fn.openPage,
             argument: 'rocheBPSPipPlanning'
         }
@@ -960,7 +968,7 @@ app.eventMap = {
         },
         {
             action: app.fn.removeWidgetValues,
-            argument: ['rocheBPSPipPlanningGridRow1Cell3DropBox']
+            argument: ['rocheBPSPipPlanningGridRow1Cell3DropBox', 'rocheBPSPipPlanningGridTableMonthly']
         }
     ],
 
