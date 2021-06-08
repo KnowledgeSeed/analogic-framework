@@ -1630,6 +1630,10 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPIpPlanningCommentShowGridTableSource'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPipPlanningGridTableMonthly'
         }
 
 
@@ -1763,7 +1767,12 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource'
+        },
+                {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPIpPlanningCheckoutGridTableMonthly'
         }
+
     ],
 
 
