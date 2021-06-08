@@ -447,6 +447,7 @@ app.widgetConfig = {
                                             marginLeft: '15px',
                                             hideIfNoData: true,
                                             skin: 'messege_board_bpsp',
+                                            width:  '100%',
                                             listen: [],
                                             title: '',
                                             widgets: [
