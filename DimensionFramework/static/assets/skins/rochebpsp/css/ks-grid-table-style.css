@@ -348,16 +348,28 @@
 /* end ote */
 
 
-/* Mody messege bord style 04 29  */
+/* blue_message_main_bpsp  */
 
-.ks-grid-table-messege_board_bpsp .ks-grid-table-row {
-
+.ks-grid-table-blue_message_main_bpsp .ks-grid-table-row {
+    background: aliceblue;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
 }
 
-.ks-grid-table-messege_board_bpsp .ks-grid-table-cell {
-    padding: 3px;
+.ks-grid-table-blue_message_main_bpsp .ks-grid-table-head {
+    visibility: hidden;
 }
 
-.ks-grid-table-messege_board_bpsp .ks-grid-table-cell {
 
+.ks-grid-table-blue_message_main_bpsp .ks-grid-table {
+    width: 100%;
 }
+
+.ks-grid-table-blue_message_main_bpsp .ks-general{
+    width: 100%;
+}
+
+/* end mody */

@@ -440,21 +440,19 @@ app.widgetConfig = {
                                     height: '100%',
                                     widgets: [
 
-                                   /*{
+                                        {
                                             id: 'rocheBPSPMainBlueGridTable',
                                             type: GridTableWidget,
-                                            marginTop: '10px',
-                                            marginLeft: '15px',
                                             hideIfNoData: true,
-                                            skin: 'messege_board_bpsp',
-                                            width:  '100%',
+                                            skin: 'blue_message_main_bpsp',
+                                            width: '100%',
                                             listen: [],
                                             title: '',
                                             widgets: [
                                                 {
                                                     id: 'rocheBPSPMainBlueGridTable-Cell-01',
                                                     type: GridTableCellWidget,
-                                                    width: '20%',
+                                                    width: '100%',
                                                     alignment: 'center-left',
                                                     skin: '',
                                                     widgets: [
@@ -463,12 +461,13 @@ app.widgetConfig = {
                                                             id: 'rocheBPSPMainBlueGridTable-Cell-01-Text',
                                                             type: TextWidget,
                                                             skin: 'messageboard_text_bpsp',
+                                                            width: '100%',
                                                             title: '',
                                                         }
                                                     ]
                                                 },
                                             ]
-                                        }*/
+                                        }
                                     ]
                                 }]
                         },
