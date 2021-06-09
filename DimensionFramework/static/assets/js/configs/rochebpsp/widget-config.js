@@ -11362,7 +11362,7 @@ app.widgetConfig = {
                                                     fontBold: true,
                                                     fontSize: 30,
                                                     skin: 'messageboard_text_bpsp',
-                                                    title: 'Add New Dummy GRID TABLE'
+                                                    title: 'Add New Dummy'
                                                 },
                                             ]
                                         }
