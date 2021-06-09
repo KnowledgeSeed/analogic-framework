@@ -7037,7 +7037,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPipPlanningGridTableMonthlyHeaderText-21',
                                             type: TextWidget,
-                                            body: 'DIS Reives',
+                                            body: 'DIS Relevant',
                                             skin: 'products_gd_header_bpsp',
                                             marginBottom: 8,
                                             marginLeft: 8,
@@ -9114,7 +9114,7 @@ app.widgetConfig = {
                                     {
                                         id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderText-21',
                                         type: TextWidget,
-                                        body: 'DIS Reives',
+                                        body: 'DIS Relevant',
                                         skin: 'products_gd_header_bpsp',
                                         marginBottom: 8,
                                         marginLeft: 8,
