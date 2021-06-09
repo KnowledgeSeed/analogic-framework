@@ -952,8 +952,8 @@ app.eventMap = {
 
     'launch.rocheBPSPMainGridRow3Cell3Button': [
         {
-           action: app.fn.removeWidgetValues,
-           argument: ['rocheBPSPipPlanningGridRow1Cell3DropBox', 'rocheBPSPipPlanningGridTableMonthly']
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPipPlanningGridRow1Cell3DropBox', 'rocheBPSPipPlanningGridTableMonthly']
         },
         {
             action: app.fn.openPage,
@@ -1768,7 +1768,7 @@ app.eventMap = {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPIpPlanningCheckoutCommentShowGridTableSource'
         },
-                {
+        {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPIpPlanningCheckoutGridTableMonthly'
         }
