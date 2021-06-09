@@ -5837,7 +5837,7 @@ app.repository = {
                 body: (db) => `{
                         "Parameters": [
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}"},
-                                {"Name": "pMaterial", "Value":"${Utils.getGridTableCell('RocheBPSPMaterialsAddMaterialSearch', 9).title}"},                        
+                                {"Name": "pMaterial", "Value":"${Utils.getGridTableCell('RocheBPSPMaterialsAddMaterialSearch', 1).title}"},                        
                         ]}`
             },
     },
