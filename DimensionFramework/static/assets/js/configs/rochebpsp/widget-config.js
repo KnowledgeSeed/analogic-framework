@@ -734,7 +734,7 @@ app.widgetConfig = {
                                     marginTop: '0',
                                     marginBottom: '0',
                                     alignment: 'bottom-left',
-                                    width: '17%',
+                                    width: '13%',
                                     widgets: [
 
                                         {
@@ -752,14 +752,14 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsGridRow1Cell2',
                                     type: GridCellWidget,
-                                    alignment: 'bottom-right',
-                                    width: '11%',
+                                    alignment: 'bottom-center',
+                                    width: '12%',
                                     widgets: [
 
                                         {
                                             id: 'rocheBPSPProductsGridRow1Cell2DropBox',
                                             type: DropBoxWidget,
-                                            width: '190',
+                                            width: '120%',
                                             skin: 'simple_bold_bpsp',
                                             marginBottom: 5,
                                             selectFirst: true,
@@ -771,14 +771,14 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductsGridRow1Cell3',
                                     type: GridCellWidget,
-                                    alignment: 'bottom-center',
-                                    width: '8%',
+                                    alignment: 'bottom-left',
+                                    width: '11%',
                                     widgets: [
 
                                         {
                                             id: 'rocheBPSPProductsGridRow1Cell3DropBox',
                                             type: DropBoxWidget,
-                                            width: '130',
+                                            width: '145%',
                                             skin: 'simple_bpsp',
                                             marginBottom: 5,
                                             selectFirst: true,
@@ -6308,7 +6308,7 @@ app.widgetConfig = {
                                     marginTop: '0',
                                     marginBottom: '0',
                                     alignment: 'bottom-left',
-                                    width: '17%',
+                                    width: '14%',
                                     widgets: [
 
                                         {
@@ -6326,13 +6326,13 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridRow1Cell2',
                                     type: GridCellWidget,
-                                    alignment: 'bottom-right',
-                                    width: '11%',
+                                    alignment: 'bottom-center',
+                                    width: '12%',
                                     widgets: [
                                         {
                                             id: 'rocheBPSPipPlanningGridRow1Cell2DropBox',
                                             type: DropBoxWidget,
-                                            width: '190',
+                                            width: '120%',
                                             skin: 'simple_bold_bpsp',
                                             marginBottom: 5,
                                             selectFirst: true,
@@ -6345,13 +6345,13 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPipPlanningGridRow1Cell3',
                                     type: GridCellWidget,
-                                    alignment: 'bottom-center',
-                                    width: '8%',
+                                    alignment: 'bottom-left',
+                                    width: '10%',
                                     widgets: [
                                         {
                                             id: 'rocheBPSPipPlanningGridRow1Cell3DropBox',
                                             type: DropBoxWidget,
-                                            width: '130',
+                                            width: '120%',
                                             skin: 'simple_bpsp',
                                             marginBottom: 5,
                                             selectFirst: true,
@@ -10164,7 +10164,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPMaterialGridRow1Cell2DropBox',
                                             type: DropBoxWidget,
-                                            width: '190',
+                                            width: '120%',
                                             skin: 'simple_bold_bpsp',
                                             marginBottom: 5,
                                             selectFirst: true,
@@ -11697,7 +11697,7 @@ app.widgetConfig = {
                                                     fontBold: true,
                                                     fontSize: 30,
                                                     skin: 'messageboard_text_bpsp',
-                                                    title: 'Add New Dummy IP Node '
+                                                    title: 'Add New Dummy'
                                                 },
                                             ]
                                         }
