@@ -1810,5 +1810,21 @@ app.eventMap = {
     ],
 
 
+    'launch.rocheBPSPAddMaterialGridRow3Cell3Button.finished': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialsAddMaterialClipboard'
+        }
+
+    ],
+
+        'launch.RocheBPSPMaterialsAddMaterialSearchButton14.finished': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        }
+
+    ],
+
 }
 ;

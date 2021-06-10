@@ -12945,6 +12945,12 @@ app.widgetConfig = {
                             'event': 'rendered.rocheBPSPAddMaterialGridRow4CellRefreshButton',
                             'method': 'refresh'
                         },
+
+                                                {
+                            event: 'choose.RocheBPSPMaterialsAddMaterialSearchButton14.finished',
+                            method: 'refresh'
+                        },
+
                     ],
                     width: '100%',
                     maxRows: 10,

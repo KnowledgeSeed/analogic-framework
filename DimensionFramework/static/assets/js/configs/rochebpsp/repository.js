@@ -980,14 +980,14 @@ app.repository = {
     },
     'rocheBPSPProductsGridTableMonthlyHeaderText-04': {
         initCondition: (db) => {
-                return Utils.isGridTableLoaded('rocheBPSPProductsGridTableMonthly');
+            return Utils.isGridTableLoaded('rocheBPSPProductsGridTableMonthly');
         },
-        initDefault: (db) =>{
-          return {};
+        initDefault: (db) => {
+            return {};
         },
         init: {
             execute: (db) => {
-               return {title: db.systemValueGlobalSegmentedControlRelativeYearValue};
+                return {title: db.systemValueGlobalSegmentedControlRelativeYearValue};
             }
         }
     },
@@ -2357,7 +2357,7 @@ app.repository = {
     'rocheBPSPProductsCheckoutGridTableMonthlyHeaderText-04': {
         init: {
             execute: (db) => {
-               return {title: db.systemValueGlobalSegmentedControlRelativeYearValue};
+                return {title: db.systemValueGlobalSegmentedControlRelativeYearValue};
             }
         }
     },
