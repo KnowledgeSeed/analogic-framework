@@ -141,7 +141,7 @@ class TextWidget extends Widget {
             }
             cells = rows[i].split('\t');
             for (k = 0; k < editableRows[i].length; ++k) {
-                if(lastRow) {
+                if (lastRow) {
                     lastCell = k === (cells.length - 1);
                 }
                 if (k >= cells.length) {
@@ -169,14 +169,14 @@ class TextWidget extends Widget {
     }
 
     static createEditableRows(editables, currentIndex) {
-        let result = [], rowIndex = -1, sgi, row = [], a, j = currentIndex, i = j, c, colIndex = 0, l = true, cl=0;
-        let ce = $(editables[j]).closest('section').attr('id').split('_'),cri = parseInt(ce[1]), cci = parseInt(ce[2]);
-        while(i >= 0 && l === true){
+        let result = [], rowIndex = -1, sgi, row = [], a, j = currentIndex, i = j, c, colIndex = 0, l = true, cl = 0;
+        let ce = $(editables[j]).closest('section').attr('id').split('_'), cri = parseInt(ce[1]), cci = parseInt(ce[2]);
+        while (i >= 0 && l === true) {
             sgi = $(editables[i]).closest('section').attr('id').split('_');
             a = parseInt(sgi[1]);
             c = parseInt(sgi[2]);
-            if(a !== cri || i === 0){
-                colIndex = cci - (i === 0 ? c: cl);
+            if (a !== cri || i === 0) {
+                colIndex = cci - (i === 0 ? c : cl);
                 l = false;
             }
             cl = c;
@@ -225,12 +225,13 @@ class TextWidget extends Widget {
             });
         }
         textTitle.on('click', e => {
-            let c = $(e.currentTarget), ksText = section.find('.ks-text'), editable = textTitle.data('editable') == 1, originalValue = c.text();
+            let c = $(e.currentTarget), ksText = section.find('.ks-text'), editable = textTitle.data('editable') == 1,
+                originalValue = c.text();
             c.off('click');
             ksText.addClass('ks-on').addClass('ks-perform-edit');
             c.html(`<input class="ks-text-title-input" data-id="${o.id}" data-action="write" data-ordinal="${c.data('ordinal')}" type="text" value="${originalValue}"/>`).promise().then(() => {
                 let r = c.find('.ks-text-title-input').focus().select().on('focusout', f => {
-                    let val =  Utils.escapeText(r.val());
+                    let val = Utils.escapeText(r.val());
                     r.off('focusout').data('value', val);
 
                     WidgetValue[r.data('id')] = {value: val};
@@ -238,14 +239,14 @@ class TextWidget extends Widget {
                     if (ic.is(':visible') && originalValue !== val) {
                         ic.data('value', val);
                         let pDiv = ic.closest('.ks-text');
-                        ic.data('on', pDiv.hasClass('ks-perform-edit'));L(pDiv.hasClass('ks-perform-edit'));
+                        ic.data('on', pDiv.hasClass('ks-perform-edit'));
                         Widget.doHandleSystemEvent(ic, f);
 
                         if (amIOnGridTable) {
                             Widget.doHandleGridTableSystemEvent(ic, f);
                         }
                     }
-                    if(editable && originalValue !== val) {
+                    if (editable && originalValue !== val) {
                         if (amIOnGridTable) {
                             Widget.doHandleGridTableSystemEvent(r, f);
                         }
@@ -260,6 +261,21 @@ class TextWidget extends Widget {
                 if (amIOnGridTable === true) {
                     let gridId = r.data('id').split('_')[0];
                     r.on('keydown', f => {
+                        if (f.keyCode === 13) {
+                            let val = Utils.escapeText(r.val());
+                            r.off('focusout').data('value', val);
+                            WidgetValue[r.data('id')] = {value: val};
+                            if (editable && originalValue !== val) {
+                                if (amIOnGridTable) {
+                                    Widget.doHandleGridTableSystemEvent(r, f);
+                                }
+
+                                Widget.doHandleSystemEvent(r, f);
+                            }
+                            c.html(r.val());
+                            ksText.removeClass('ks-on');
+                            TextWidget.addEdit(section, o, amIOnGridTable);
+                        }
                         if (f.keyCode === 39 || f.keyCode === 37) {
                             let editables = TextWidget.getEditables(gridId),
                                 j = TextWidget.getCurrentIndex(editables, c), k = 0;
@@ -271,14 +287,15 @@ class TextWidget extends Widget {
 
                         if (f.keyCode === 38 || f.keyCode === 40) {
                             let sgi = r.data('id').split('_'), gridId = sgi[0], actRow = parseInt(sgi[1]),
-                                row = f.keyCode === 38 ? actRow === 0 ? -1 : actRow - 1 : actRow + 1, column = sgi[2], t;
+                                row = f.keyCode === 38 ? actRow === 0 ? -1 : actRow - 1 : actRow + 1, column = sgi[2],
+                                t;
                             if (row === -1) {
                                 return;
                             }
                             let nextElement = $('#' + gridId + '_' + row + '_' + column);
                             if (nextElement.length && nextElement.is(':visible')) {
                                 t = nextElement.find('.ks-text-title');
-                                if(t.data('editable') == 1) {
+                                if (t.data('editable') == 1) {
                                     t.click();
                                 }
                             }

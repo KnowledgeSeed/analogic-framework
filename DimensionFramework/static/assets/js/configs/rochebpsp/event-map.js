@@ -609,6 +609,18 @@ app.eventMap = {
             ]
         }
     ],
+    'choose.rocheBPSPProductsGridRow1Cell2DropBox' : [
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPProductsGridRow1Cell3DropBox']
+        }
+    ],
+    'choose.rocheBPSPipPlanningGridRow1Cell2DropBox': [
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPipPlanningGridRow1Cell3DropBox']
+        }
+    ],
     'launch.rocheBPSPProductsCheckoutCommentEditGridXButton': [
         {
             action: app.fn.togglePopup,
