@@ -978,6 +978,19 @@ app.repository = {
             }
         }
     },
+    'rocheBPSPProductsGridTableMonthlyHeaderText-04': {
+        initCondition: (db) => {
+                return Utils.isGridTableLoaded('rocheBPSPProductsGridTableMonthly');
+        },
+        initDefault: (db) =>{
+          return {};
+        },
+        init: {
+            execute: (db) => {
+               return {title: db.systemValueGlobalSegmentedControlRelativeYearValue};
+            }
+        }
+    },
     rocheBPSPProductsGridTableMonthly: {
         initCondition: (db) => {
             let l = v('rocheBPSPProductsGridRow1Cell3DropBox.value.length') !== false
@@ -1120,15 +1133,20 @@ app.repository = {
                         let icon = v('systemValueProductsCheckotSplitIcons')[r.Cells[x + 6].FormattedValue];
 
                         let cell = {
-                            icon: !icon ? 'icon-distribution-equal' : icon,
+                            icon: !icon ? 'icon-circle' : icon,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : 'readonly_bpsp',
                             cellVisible: true,
                             iconColor: '#B1B3B3',
                             skin: 'products_gd_distribution_icon_bpsp'
                         };
 
+                        if (!icon) {
+                            cell['iconColor'] = 'black';
+                            cell['titleFontWeight'] = 'bold';
+                        }
+
                         if (cell.icon === 'icon-distribution-equal') {
-                            cell.iconFontSize = 11;
+                            cell.iconFontSize = 12;
                         }
                         return cell;
                     },
@@ -1348,7 +1366,7 @@ app.repository = {
                           Set UserSpecificSelection As
                              {StrToSet('{'+[zSYS Analogic UI User Data].([}Clients].[}Clients].[${db.activeUserName}],
                                   [zSYS Analogic UI Widget].[zSYS Analogic UI Widget].[rocheBPSPProductsColumnSelectorPopupDropBox],
-                                  [zSYS Analogic UI User Data Measure].[zSYS Analogic UI User Data Measure].[sValue])+'}')}
+                                  [zSYS Analogic UI User Data Measure].[zSYS Analogic UI User Data Measure].[sColumnSelectorTuple ${db.systemValueGlobalSegmentedControlRelativeYear}])+'}')}
                           Member [}ElementAttributes_zSYS UI Columns Selector].[}ElementAttributes_zSYS UI Columns Selector].[Flag] As
                              IIF(Count({UserSpecificSelection})=0,[}ElementAttributes_zSYS UI Columns Selector].[}ElementAttributes_zSYS UI Columns Selector].[${db.systemValueGlobalSegmentedControlRelativeYear}],
                               IIF(Count(Intersect({[zSYS UI Columns Selector].CurrentMember},{UserSpecificSelection}))>0,
@@ -1796,7 +1814,8 @@ app.repository = {
                 skin: skin,
                 cellVisible: r.Cells[index].Members[6].Name !== 'DUMMY',
                 members: r.Cells[index].Members,
-                applyMeasuresToSection: true
+                applyMeasuresToSection: true,
+                width: '100%'
             };
             if (icon !== '') {
                 result['icon'] = icon;
@@ -2189,7 +2208,6 @@ app.repository = {
                 ordinal: c.Ordinal,
                 members: c.Members,
                 performable: performable
-                //titleFontColor: x < 40 ? '#000000' : '#A05EB5', manual
             };
             if (performable) {
                 result['icon'] = 'icon-cloud-arrow-up';
@@ -2334,6 +2352,13 @@ app.repository = {
                         ]
                     }`
 
+        }
+    },
+    'rocheBPSPProductsCheckoutGridTableMonthlyHeaderText-04': {
+        init: {
+            execute: (db) => {
+               return {title: db.systemValueGlobalSegmentedControlRelativeYearValue};
+            }
         }
     },
     rocheBPSPProductsCheckoutGridTableMonthly: {
@@ -2546,17 +2571,18 @@ app.repository = {
                         let icon = v('systemValueProductsCheckotSplitIcons')[r.Cells[x + 6].FormattedValue];
 
                         let cell = {
-                            icon: !icon ? 'icon-distribution-equal' : icon,
+                            icon: !icon ? 'icon-circle' : icon,
                             cellSkin: '',
                             cellVisible: true,
                             ordinal: r.Cells[x + 6].Ordinal,
                             skin: 'products_gd_distribution_icon_bpsp'
                         };
                         if (!icon) {
-                            cell['iconColor'] = 'white';
+                            cell['iconColor'] = 'black';
+                            cell['titleFontWeight'] = 'bold';
                         }
                         if (cell.icon === 'icon-distribution-equal') {
-                            cell.iconFontSize = 11;
+                            cell.iconFontSize = 12;
                         }
                         return cell;
                     },
@@ -4981,7 +5007,7 @@ app.repository = {
                                 SELECT 
                                    {ColumnSelection} 
                                    PROPERTIES [Measures Material Information by Company].[Measures Material Information by Company].[Caption]  ON COLUMNS ,
-                                   {Subset({
+                                   {
                                      FILTER({
                                       FILTER({
                                        FILTER({
@@ -4993,7 +5019,7 @@ app.repository = {
                                 }, InStr([Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key') ,'${ProfitCenterSearch}')<>0)
                                 }, InStr([Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key'), '${IpNodeSearch}')<>0)
                                 }, InStr([Materials].[Materials].CurrentMember.Properties('Element'), '${IDsearch}' ) <> 0 AND
-                                   InStr([Materials].[Materials].CurrentMember.Properties('Medium Name'), '${DescriptionSearch}' ) <> 0 )},1,100)}  
+                                   InStr([Materials].[Materials].CurrentMember.Properties('Medium Name'), '${DescriptionSearch}' ) <> 0 )}  
                                    PROPERTIES [Materials].[Materials].[Caption]  ON ROWS 
                                 FROM [Material Information by Company] 
                                 WHERE 
