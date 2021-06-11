@@ -772,6 +772,12 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutUploadPopup'
         }
     ],
+    'rendered.rocheBPSPProductsCheckoutGridTableMonthly' : [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutUploadPopupUpload'
+        }
+    ],
     'write.rocheBPSPProductsCheckoutGridTableMonthly.finished': [
         {
             action: app.fn.executeRequest,

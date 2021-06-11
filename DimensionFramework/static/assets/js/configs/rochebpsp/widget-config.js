@@ -5276,6 +5276,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPProductsCheckoutUploadPopupPlDropbox',
                             marginTop: 10,
                             type: DropBoxWidget,
+                            title: 'Select level:',
                             skin: 'simple_bold_bpsp',
                             selectFirst: true,
                             backdrop: true
@@ -8578,7 +8579,7 @@ app.widgetConfig = {
                 visible: false,
                 closeBtn: false,
                 width: '260',
-                height: 190,
+                height: 130,
                 bgScrollable: true,
                 fixed: true,
                 behaviour: 'popup',
@@ -8640,6 +8641,7 @@ app.widgetConfig = {
                         type: DropBoxWidget,
                         skin: 'simple_bold_bpsp',
                         selectFirst: true,
+                        visible: false,
                         items: [],
                         backdrop: true
                     },
@@ -12945,7 +12947,7 @@ app.widgetConfig = {
                             'event': 'rendered.rocheBPSPAddMaterialGridRow4CellRefreshButton',
                             'method': 'refresh'
                         },
-                        
+
 
                     ],
                     width: '100%',

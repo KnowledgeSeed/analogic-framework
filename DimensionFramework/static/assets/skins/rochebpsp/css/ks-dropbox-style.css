@@ -401,6 +401,10 @@
     overflow: auto;
 }
 
+.ks-dropbox-simple_bold_bpsp .ks-dropbox-title-primary {
+    margin-left: 20px;
+}
+
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-field {
     height: 40px;
     overflow: auto;

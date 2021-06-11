@@ -4326,7 +4326,8 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return v('rocheBPSPIpPlanningCheckoutGridTableMonthly.cellData').map(function (e) {
+                return [{name: 'PL8', key: 'PL8', on: true}]
+                /*return v('rocheBPSPIpPlanningCheckoutGridTableMonthly.cellData').map(function (e) {
                     return {name: e[1].title === 'IP Node' ? e[1].title : 'PL' + e[1].title, key: e[1].title, on: false}
                 }).reduce((acc, current) => {
                     const x = acc.find(item => item.name === current.name);
@@ -4335,7 +4336,7 @@ app.repository = {
                     } else {
                         return acc;
                     }
-                }, []);
+                }, []);*/
             }
         }
     },
