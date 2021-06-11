@@ -609,7 +609,7 @@ app.eventMap = {
             ]
         }
     ],
-    'choose.rocheBPSPProductsGridRow1Cell2DropBox' : [
+    'choose.rocheBPSPProductsGridRow1Cell2DropBox': [
         {
             action: app.fn.removeWidgetValues,
             argument: ['rocheBPSPProductsGridRow1Cell3DropBox']
@@ -1830,7 +1830,7 @@ app.eventMap = {
 
     ],
 
-        'launch.RocheBPSPMaterialsAddMaterialSearchButton14.finished': [
+    'launch.RocheBPSPMaterialsAddMaterialSearchButton14.finished': [
         {
             action: app.fn.forceRefresh,
             argument: 'RocheBPSPMaterialsAddMaterialSearch'

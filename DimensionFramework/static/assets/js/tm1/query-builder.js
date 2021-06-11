@@ -49,7 +49,7 @@ QB.loadData = (argument, type, useDefaultData = false, path = 'init') => {
 
 QB.refreshGridCellData = (argument, type) => {
     let t = argument.split('_');
-    return QB.loadData(t[0], type, false,'refresh_col_' + t[2]);
+    return QB.loadData(t[0], type, false, 'refresh_col_' + t[2]);
 };
 
 QB.loadComment = repositoryId => {
@@ -249,7 +249,7 @@ QB.writeData = (eventMapId, event, element) => {
                 let secondary = $('#' + r.widget).find('.ks-textbox-title-secondary');
                 secondary.html(r.message);
             } else {
-                if(r.message) {
+                if (r.message) {
                     app.popup.show(r.message);
                 }
             }
@@ -273,11 +273,15 @@ QB.writeData = (eventMapId, event, element) => {
     if (g.execute) {
         isGridTable ? g.execute(context, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.execute(context);
         QB.executeEventMapAction(eventMapId + '.finished', event, element, {});
+        if (isGridTable) {
+            QB.executeEventMapAction(e + '.' + w + '.finished', event, element, {});
+        }
     } else {
         if (g.download && (typeof g.download === 'function')) {
             return Server.download(g.download(context));
         }
-        let c = r.cellsetId || '', body = isGridTable ? g.body(context,v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.body(context),
+        let c = r.cellsetId || '',
+            body = isGridTable ? g.body(context, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.body(context),
             url = isGridTable ? g.url({...r, ...{cellsetId: c}}, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
 
         if (g.server) {
@@ -288,20 +292,21 @@ QB.writeData = (eventMapId, event, element) => {
         }
 
         let type;
-        if(typeof g.type === 'function'){
+        if (typeof g.type === 'function') {
             type = isGridTable ? g.type(context, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.type(context);
-        }else{
+        } else {
             type = g.type;
         }
 
         Auth.getTm1AjaxRequest(app.tm1ApiHost + url, body, type).then((d) => {
+            L('finished after ajax');
             QB.executeEventMapAction(eventMapId + '.finished', event, element, d);
+            if (isGridTable) {
+                QB.executeEventMapAction(e + '.' + w + '.finished', event, element, {});
+            }
         });
     }
 
-    if (isGridTable) {
-        QB.executeEventMapAction(e + '.' + w + '.finished', event, element, {});
-    }
 
     return true;
 };
