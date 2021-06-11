@@ -34,27 +34,31 @@ const Utils = {
     getRandomId: () => window.crypto.getRandomValues(new Uint32Array(1))[0],
     toTitleCase: str => str.toLowerCase().replace(/(?:^|\s)\w/g, match => match.toUpperCase()),
     parseNumber(value, locale = navigator.language) {
-        if ('number' === typeof value) {
-            return value;
+        let localValue = value;
+        if(localValue === '' || localValue === null){
+            localValue = '0';
+        }
+        if ('number' === typeof localValue) {
+            return localValue;
         }
 
         if (2 === locale.length) {
             locale += '-' + locale.toUpperCase();
         }
 
-        value = ('' + value).trim();
-        const sign = ('(' === value[0] && ')' === value[value.length - 1] ? -1 : 1);
+        localValue = ('' + localValue).trim();
+        const sign = ('(' === localValue[0] && ')' === localValue[localValue.length - 1] ? -1 : 1);
 
-        value = value.replace(/\D+$/g, '');
+        localValue = localValue.replace(/\D+$/g, '');
 
-        const exponentSuffix = value.match(/e-{0,1}\d+$/i);
+        const exponentSuffix = localValue.match(/e-{0,1}\d+$/i);
         if (exponentSuffix) {
-            value = value.slice(0, exponentSuffix.index);
+            localValue = localValue.slice(0, exponentSuffix.index);
         }
 
         const decimal = Intl.NumberFormat(locale).format('1.1').charAt(1);
         const cleanPattern = new RegExp(`[^-+0-9${ decimal }]`, 'g');
-        const cleaned = value.replace(cleanPattern, '');
+        const cleaned = localValue.replace(cleanPattern, '');
         const normalized = cleaned.replace(decimal, '.');
 
         return sign * parseFloat(normalized) + (exponentSuffix ? exponentSuffix[0] : 0);
