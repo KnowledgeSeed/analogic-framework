@@ -10157,8 +10157,7 @@ app.widgetConfig = {
                                     type: GridCellWidget,
                                     marginLeft: '1',
                                     marginRight: '0',
-                                    marginTop: '0',
-                                    alignment: 'top-center',
+                                    alignment: 'center-center',
                                     width: '61%',
                                     height: '0',
                                     widgets: [
@@ -10168,7 +10167,7 @@ app.widgetConfig = {
                                             type: DropBoxWidget,
                                             width: '120%',
                                             skin: 'simple_bold_bpsp',
-                                            marginBottom: 5,
+                                            marginTop: '20%',
                                             selectFirst: true,
                                             backdrop: true
                                         }

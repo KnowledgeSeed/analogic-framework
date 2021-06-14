@@ -718,7 +718,7 @@
 
 .ks-button-gridtable_hierarchy_bpsp_PL3_locked .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -741,7 +741,7 @@
 
 .ks-button-gridtable_hierarchy_bpsp_PL3 .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -764,7 +764,7 @@
 
 .ks-button-gridtable_hierarchy_bpsp_PL4_locked .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -787,7 +787,7 @@
 
 .ks-button-gridtable_hierarchy_bpsp_PL4 .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -810,7 +810,7 @@
 
 .ks-button-gridtable_hierarchy_bpsp_PL5 .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -833,7 +833,7 @@
 
 .ks-button-gridtable_hierarchy_bpsp_PL5_locked .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -856,7 +856,7 @@
 
 .ks-button-gridtable_hierarchy_bpsp_PL6 .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -879,7 +879,7 @@
 
 .ks-button-gridtable_hierarchy_bpsp_PL6_locked .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -903,7 +903,7 @@
 
 .ks-button-gridtable_hierarchy_bpsp_PL7 .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -927,7 +927,7 @@
 
 .ks-button-gridtable_hierarchy_bpsp_PL8 .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -951,7 +951,7 @@
 
 .ks-button-gridtable_hierarchy_bpsp_PL8_locked .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -991,6 +991,7 @@
     font-size: 16px;
     color: #000000;
     font-family: Imago;
+    width: 100%;
 }
 
 /* PL2 */
@@ -1014,6 +1015,7 @@
     font-size: 16px;
     color: #000000;
     font-family: Imago;
+    width: 100%;
 }
 
 /* PL3 */
@@ -1034,14 +1036,10 @@
 
 .ks-button-gridtable_hierarchy_shortcut_bpsp_PL3 .ks-button-label {
     padding-left: 4px;
-}
-
-.ks-button-gridtable_hierarchy_shortcut_bpsp_PL3 .ks-button-label {
-    padding-left: 4px;
     font-size: 16px;
     color: #000000;
     font-family: Imago;
-    width: 250px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1510,7 +1508,7 @@
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL3 .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1533,7 +1531,7 @@
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL4 .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1556,7 +1554,7 @@
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL5 .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1579,7 +1577,7 @@
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL6 .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1602,7 +1600,7 @@
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL8 .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1671,7 +1669,7 @@
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL3_locked .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1695,7 +1693,7 @@
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL4_locked .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1718,7 +1716,7 @@
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL5_locked .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1742,7 +1740,7 @@
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL6_locked .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1765,7 +1763,7 @@
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL8_locked .ks-button-label {
     padding-left: 4px;
-    width: 210px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
