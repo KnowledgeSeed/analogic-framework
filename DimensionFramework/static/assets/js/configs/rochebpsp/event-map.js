@@ -1,7 +1,7 @@
 /* global app */
 'use strict';
 app.eventMap = {
-    /*
+
     'launch.rocheBPSPMainGridRow3Cell1Button': [
         {
             action: app.fn.openPage,
@@ -9,7 +9,6 @@ app.eventMap = {
         }
     ],
 
-     */
 
     'launch.rocheBPSPMainGridRow3Cell2Button': [
         {
@@ -772,7 +771,7 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutUploadPopup'
         }
     ],
-    'rendered.rocheBPSPProductsCheckoutGridTableMonthly' : [
+    'rendered.rocheBPSPProductsCheckoutGridTableMonthly': [
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPProductsCheckoutUploadPopupUpload'
@@ -1842,6 +1841,36 @@ app.eventMap = {
             argument: 'RocheBPSPMaterialsAddMaterialSearch'
         }
 
+    ],
+
+    'launch.rocheBPSPMainGridRow3Cell4Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPReports'
+        }
+    ],
+
+    'launch.rocheBPSPReportsGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPMain'
+        }
+    ],
+
+
+    'launch.rocheBPSPProductReportGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPReports'
+        }
+    ],
+
+
+    'launch.rocheBPSPReportsGridRow2Cell1Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPProductReport'
+        }
     ],
 
 }

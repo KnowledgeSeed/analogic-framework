@@ -1352,16 +1352,6 @@
     height: 110%
 }
 
-.ks-button-settings_bpsp:hover {
-    background-color: #004C99
-}
-
-.ks-button-settings_bpsp:active {
-    background-color: #004C99;
-    box-shadow: 0 5px #666;
-    transform: translateY(4px);
-}
-
 
 /* chart icon in gridtable Mody 04 28  */
 .ks-button-chartGT_bpsp .ks-button-icon {
