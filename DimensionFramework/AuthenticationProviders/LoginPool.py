@@ -9,7 +9,7 @@ class LoginPool(Pool):
     def login(self):
         cnf = self.setting.getConfig()
         if request.method == 'POST':
-            if request.form['username'] == 'test' and request.form['password'] == 'test':
+            if request.form['username'] == 'test' and request.form['password'] == 'Pass2323!%':
                 session['username'] = request.form['username']
                 resp = make_response(redirect(self.setting.getBaseUrl()))
                 return self.addAuthenticatedCookie(resp)
