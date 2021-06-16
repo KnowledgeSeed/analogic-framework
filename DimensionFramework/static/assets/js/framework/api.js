@@ -427,3 +427,8 @@ app.fn.copyChangedCells = (widgetId, start) => {
 app.fn.executeRequest = (eventMapId) => {
     QB.writeData(eventMapId, {}, {});
 };
+
+app.fn.removeSliders = () => {
+    SliderWidget.slidersByIds = [];
+    SliderWidget.isDocEventsHaveBeenBound = false;
+};

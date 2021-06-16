@@ -1772,6 +1772,9 @@ app.widgetConfig = {
                                     type: ButtonWidget,
                                     icon: 'icon-badge',
                                     skin: 'gridtablehierarchy_bpsp',
+                                    borderWidth: false,
+                                    width: '100%',
+                                    applyMeasuresToSection: true,
                                     label: '',
                                     action: '',
                                 }
@@ -2730,6 +2733,9 @@ app.widgetConfig = {
                                     type: ButtonWidget,
                                     icon: 'icon-badge',
                                     skin: 'gridtablehierarchy_bpsp',
+                                    borderWidth: false,
+                                    width: '100%',
+                                    applyMeasuresToSection: true,
                                     label: ''
                                 }
                             ]
@@ -3668,6 +3674,7 @@ app.widgetConfig = {
                                             id: 'rocheBPSPProductsCheckoutGridRow2Cell2Button',
                                             type: ButtonWidget,
                                             label: 'Clear all',
+                                            confirmMessage2: 'Are you sure you want to delete all input for this Year?',
                                             width: '100%',
                                             icon: 'icon-x-square-outline',
                                             skin: 'red_link_x_bpsp'
@@ -4646,6 +4653,9 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsCheckoutGridTableYearlyButton-01',
                                     type: ButtonWidget,
                                     icon: 'icon-badge',
+                                    borderWidth: false,
+                                    width: '100%',
+                                    applyMeasuresToSection: true,
                                     skin: 'gridtablehierarchy_bpsp',
                                     label: '',
                                     action: '',
@@ -5697,6 +5707,9 @@ app.widgetConfig = {
                                     id: 'rocheBPSPProductsCheckoutGridTableMonthlyButton-01',
                                     type: ButtonWidget,
                                     icon: 'icon-badge',
+                                    borderWidth: false,
+                                    width: '100%',
+                                    applyMeasuresToSection: true,
                                     skin: 'gridtablehierarchy_bpsp',
                                     label: ''
                                 }
@@ -7076,6 +7089,9 @@ app.widgetConfig = {
                                     id: 'rocheBPSPipPlanningGridTableMonthlyButton-01',
                                     type: ButtonWidget,
                                     icon: 'icon-badge',
+                                    borderWidth: false,
+                                    width: '100%',
+                                    applyMeasuresToSection: true,
                                     skin: '',
                                     label: '',
                                     action: '',
@@ -8540,6 +8556,7 @@ app.widgetConfig = {
                                         type: ButtonWidget,
                                         marginBottom: 3,
                                         label: 'Clear all',
+                                        confirmMessage2: 'Are you sure you want to delete all input for this Year?',
                                         width: '100%',
                                         icon: 'icon-x-square-outline',
                                         skin: 'red_link_x_bpsp'
@@ -9156,6 +9173,9 @@ app.widgetConfig = {
                                 id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyButton-01',
                                 type: ButtonWidget,
                                 icon: 'icon-badge',
+                                borderWidth: false,
+                                width: '100%',
+                                applyMeasuresToSection: true,
                                 skin: 'gridtablehierarchy_bpsp',
                                 label: ''
                             }
@@ -10495,6 +10515,8 @@ app.widgetConfig = {
                                     type: ButtonWidget,
                                     width: '100%',
                                     icon: 'icon-badge',
+                                    borderWidth: false,
+                                    applyMeasuresToSection: true,
                                     label: '',
                                     action: '',
                                 }
@@ -10742,7 +10764,9 @@ app.widgetConfig = {
                                 {
                                     id: 'RocheBPSPMaterialIPNodeGridTableCellButton-01',
                                     type: ButtonWidget,
+                                    borderWidth: false,
                                     width: '100%',
+                                    applyMeasuresToSection: true,
                                     icon: 'icon-badge',
                                     label: '',
                                     action: '',

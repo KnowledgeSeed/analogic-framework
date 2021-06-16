@@ -641,11 +641,15 @@
 
 .ks-button-gridtable_hierarchy_bpsp_PL1 .ks-button-label {
     padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
 .ks-button-gridtable_hierarchy_bpsp_PL1_locked {
-    margin-left: 10px;
+    padding-left: 10px;
     width: 100%;
 
 }
@@ -663,10 +667,14 @@
 
 .ks-button-gridtable_hierarchy_bpsp_PL1_locked .ks-button-label {
     padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .ks-button-gridtable_hierarchy_bpsp_PL2 {
-    margin-left: 30px;
+    padding-left: 30px;
     width: 100%;
 }
 
@@ -676,6 +684,10 @@
 
 .ks-button-gridtable_hierarchy_bpsp_PL2 .ks-button-label {
     padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .ks-button-gridtable_hierarchy_bpsp_PL2 .ks-button-content {
@@ -689,7 +701,7 @@
 }
 
 .ks-button-gridtable_hierarchy_bpsp_PL2_locked {
-    margin-left: 30px;
+    padding-left: 30px;
     width: 100%;
 }
 
@@ -699,6 +711,10 @@
 
 .ks-button-gridtable_hierarchy_bpsp_PL2_locked .ks-button-label {
     padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .ks-button-gridtable_hierarchy_bpsp_PL2_locked .ks-button-content {
@@ -735,7 +751,7 @@
 }
 
 .ks-button-gridtable_hierarchy_bpsp_PL3 {
-    margin-left: 50px;
+    padding-left: 50px;
     width: 100%;
 }
 
@@ -758,7 +774,7 @@
 }
 
 .ks-button-gridtable_hierarchy_bpsp_PL4_locked {
-    margin-left: 70px;
+    padding-left: 70px;
     width: 100%;
 }
 
@@ -781,7 +797,7 @@
 }
 
 .ks-button-gridtable_hierarchy_bpsp_PL4 {
-    margin-left: 70px;
+    padding-left: 70px;
     width: 100%;
 }
 
@@ -804,7 +820,7 @@
 }
 
 .ks-button-gridtable_hierarchy_bpsp_PL5 {
-    margin-left: 90px;
+    padding-left: 90px;
     width: 100%;
 }
 
@@ -827,7 +843,7 @@
 }
 
 .ks-button-gridtable_hierarchy_bpsp_PL5_locked {
-    margin-left: 90px;
+    padding-left: 90px;
     width: 100%;
 }
 
@@ -850,7 +866,7 @@
 }
 
 .ks-button-gridtable_hierarchy_bpsp_PL6 {
-    margin-left: 110px;
+    padding-left: 110px;
     width: 100%;
 }
 
@@ -873,7 +889,7 @@
 }
 
 .ks-button-gridtable_hierarchy_bpsp_PL6_locked {
-    margin-left: 110px;
+    padding-left: 110px;
     width: 100%;
 }
 
@@ -897,7 +913,7 @@
 
 
 .ks-button-gridtable_hierarchy_bpsp_PL7 {
-    margin-left: 110px;
+    padding-left: 110px;
     width: 100%;
 }
 
@@ -921,7 +937,7 @@
 
 
 .ks-button-gridtable_hierarchy_bpsp_PL8 {
-    margin-left: 130px;
+    padding-left: 130px;
     width: 100%;
 }
 
@@ -945,7 +961,7 @@
 
 
 .ks-button-gridtable_hierarchy_bpsp_PL8_locked {
-    margin-left: 110px;
+    padding-left: 110px;
     width: 100%;
 }
 
@@ -1458,7 +1474,7 @@
 
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL1 {
-    margin-left: 10px;
+    padding-left: 10px;
     width: 100%;
 
 }
@@ -1476,10 +1492,13 @@
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL1 .ks-button-label {
     padding-left: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL2 {
-    margin-left: 30px;
+    padding-left: 30px;
     width: 100%;
 }
 
@@ -1489,6 +1508,9 @@
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL2 .ks-button-label {
     padding-left: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL2 .ks-button-content {
@@ -1502,7 +1524,7 @@
 }
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL3 {
-    margin-left: 50px;
+    padding-left: 50px;
     width: 100%;
 }
 
@@ -1525,7 +1547,7 @@
 }
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL4 {
-    margin-left: 70px;
+    padding-left: 70px;
     width: 100%;
 }
 
@@ -1548,7 +1570,7 @@
 }
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL5 {
-    margin-left: 90px;
+    padding-left: 90px;
     width: 100%;
 }
 
@@ -1571,7 +1593,7 @@
 }
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL6 {
-    margin-left: 110px;
+    padding-left: 110px;
     width: 100%;
 }
 
@@ -1594,7 +1616,7 @@
 }
 
 .ks-button-gridtable_checkout_hierarchy_bpsp_PL8 {
-    margin-left: 110px;
+    padding-left: 110px;
     width: 100%;
 }
 

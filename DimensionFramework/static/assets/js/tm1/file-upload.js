@@ -52,6 +52,7 @@ FileUpload.uploadFile = (w, eventMapId, context, event, element) => {
             app.fn.showPopup(v.uploadSuccessMessage);
         } else {
             app.fn.showPopup(d, 600);
+            QB.executeEventMapAction(eventMapId + '.error', event, element, d);
         }
     }).fail(() => {
         app.fn.showPopup('Upload failed');

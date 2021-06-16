@@ -1715,6 +1715,7 @@ app.repository = {
                         if (parseInt(s.title) > 0) {
                             s['titleFontColor'] = '#A86B24';
                         }
+                        s['visible'] = x ===0;
                         return s;
                     },
                     (r, x) => {
@@ -2211,6 +2212,9 @@ app.repository = {
             };
             if (performable) {
                 result['icon'] = 'icon-cloud-arrow-up';
+            }
+            if( editable ) {
+                result['titleFontColor'] = '#A05EB5';
             }
             return result;
         }
@@ -4040,7 +4044,7 @@ app.repository = {
             let result = {
                 title: c.FormattedValue,
                 cellSkin: editable ? '' : 'readonly_bpsp',
-                skin: editable ? 'monthly_center_bpsp' : 'monthly_right_bpsp',
+                skin: 'monthly_right_bpsp',
                 cellVisible: true,
                 editable: editable,
                 ordinal: c.Ordinal,
@@ -4050,6 +4054,9 @@ app.repository = {
                 width: '100%'
                 //performable: performable
             };
+            if( editable ) {
+                result['titleFontColor'] = '#A05EB5';
+            }
             /*     if (performable) {
                      result['icon'] = 'icon-cloud-arrow-up';
                  }*/
@@ -5115,7 +5122,8 @@ app.repository = {
             type: 'POST',
             body: (db) => `{"MDX":"
                 SELECT 
-                    {[Measures Material Import by Company].[Measures Material Import by Company].[Materials]} 
+                    {[Measures Material Import by Company].[Measures Material Import by Company].[Materials],
+                    [Measures Material Import by Company].[Measures Material Import by Company].[Selected for Basket]} 
                 ON COLUMNS , 
                     {TM1FILTERBYLEVEL({[Items].[Items].Members}, 0)} 
                 ON ROWS 
@@ -5130,7 +5138,10 @@ app.repository = {
                 query:
                     {
                         cells: (r, x) => {
-                            return r.Cells;
+                            return Utils.getEvenElements(r.Cells);
+                        },
+                        selectedElements: (r, x) => {
+                            return Utils.getOddElements(r.Cells);
                         }
                     }
             }
@@ -5140,8 +5151,9 @@ app.repository = {
             type: 'PATCH',
             body: (db) => {
                 let values = Utils.getCellsByColumnsFromClipboard('rocheBPSPAddMaterialGridRow3Cell2Button', 0);
-                let existingValues = v('rocheBPSPAddMaterialGridRow3Cell2Button.data.cells');
-                return `[${Utils.getOrdinalValuePairsAndEmptyFilledValues(values, existingValues)}]`;
+                let existingValues = v('rocheBPSPAddMaterialGridRow3Cell2Button.data.cells'), selectedElements = v('rocheBPSPAddMaterialGridRow3Cell2Button.data.selectedElements'),
+                selectedValues = Utils.getArrayWithValues(values.length, 1);
+                return `[${Utils.getOrdinalValuePairs(selectedElements, selectedValues)}, ${Utils.getOrdinalValuePairsAndEmptyFilledValues(values, existingValues)}]`;
             }
         }
     },

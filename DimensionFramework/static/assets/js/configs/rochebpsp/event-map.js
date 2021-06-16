@@ -690,7 +690,11 @@ app.eventMap = {
     'launch.rocheBPSPProductsCheckoutGridRow2Cell3Button': [
         {
             action: app.fn.removeWidgetValues,
-            argument: ['rocheBPSPProductsGridTableYearly', 'rocheBPSPProductsGridTableMonthly']
+            argument: ['rocheBPSPProductsGridTableYearly', 'rocheBPSPProductsGridTableMonthly', 'rocheBPSPProductsCheckoutCopyMergePopupSlider']
+        },
+        {
+            action: app.fn.removeSliders,
+            argument: ''
         }
     ],
     'launch.rocheBPSPProductsCheckoutGridRow2Cell3Button.finished': [
@@ -772,7 +776,13 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutUploadPopup'
         }
     ],
-    'rendered.rocheBPSPProductsCheckoutGridTableMonthly' : [
+    'request.rocheBPSPProductsCheckoutUploadPopupUpload.finished': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsCheckoutUploadPopupUpload'
+        }
+    ],
+    'upload.rocheBPSPProductsCheckoutUploadPopupUpload.error': [
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPProductsCheckoutUploadPopupUpload'
@@ -1196,7 +1206,18 @@ app.eventMap = {
             argument: 'request.rocheBPSPIpPlanningCheckoutUploadPopupUpload'
         }
     ],
-
+    'upload.rocheBPSPIpPlanningCheckoutUploadPopupUpload.error': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPIpPlanningCheckoutUploadPopupUpload'
+        }
+    ],
+    'request.rocheBPSPIpPlanningCheckoutUploadPopupUpload.finished': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPIpPlanningCheckoutUploadPopupUpload'
+        }
+    ],
 
     'segmentedControlTab1.rocheBPSPAddMaterialGridRow2Cell1SegmentedControl': [
         {

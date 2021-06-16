@@ -19,7 +19,7 @@ eventMap -> event.widgetid.(finished|started)
 
 ImageWidget -> skin
 
-ButtonWidget -> iconColor, iconFontSize, paste
+ButtonWidget -> iconColor, iconFontSize, paste, confirmMessage2
 
 ContainerWidget -> heightFixed
 

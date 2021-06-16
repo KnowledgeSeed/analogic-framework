@@ -31,6 +31,24 @@
     text-align: center;
 }
 
+.ks-popup-button-cancel {
+    margin-top:5px;
+    background-color: #fff;
+    border-radius: 7px;
+    color: #0066cc;
+    cursor: pointer;
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+}
+
+.ks-popup-button-cancel:hover {
+    background-color: rgba(191, 217, 242, 0.5);
+}
+
 .ks-popup-background {
     background-color: rgba(116, 123, 133, 0.75);
     bottom: 0;

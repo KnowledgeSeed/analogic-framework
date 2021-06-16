@@ -82,7 +82,7 @@ class ButtonWidget extends Widget {
         this.value = {data: d, paste: v.paste};
 
         return `
-<a style="${aStyle.join('')}" ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''} ${v.url ? `target="_blank" href="${v.url}"` : `data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}"`} class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
+<a style="${aStyle.join('')}" ${o.confirmMessage2 ? `data-confirmmessage2="${o.confirmMessage2}" ` : ''} ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''} ${v.url ? `target="_blank" href="${v.url}"` : `data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}"`} class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
     <div class="ks-button-inner" style="${innerStyle.join('')}">
         <div class="ks-button-content">
             <div class="ks-button-icon" style="${imgStyle.join('')}">${v.icon !== false ? `<span style="${imgStyle.join('')}" class="${v.icon}"></span>` : ''}</div>
@@ -95,7 +95,7 @@ class ButtonWidget extends Widget {
 
     initEventHandlers(section) {
         let v = this.value;
-        if (!section.find('a').data('confirmmessage')) {
+        if (!section.find('a').data('confirmmessage') && !section.find('a').data('confirmmessage2')) {
             return section.find('a').on('click', (e) => {
                 let s = $(e.currentTarget);
                 if (v.paste) {
@@ -116,7 +116,30 @@ class ButtonWidget extends Widget {
                 }
             });
         }
+        let instance = this;
+        if (section.find('a').data('confirmmessage2')) {
+            return section.find('a').on('click', (e) => {
+                let w = $(e.currentTarget), t = [];
+                t.push('<div id="buttonPopup" class="ks-popup ks-popup-holder"><div class="ks-popup-background"></div><div class="ks-popup-content-holder"><div class="ks-popup-content">');
+                t.push(w.data('confirmmessage2'))
+                t.push('<br><br><a id="deleteOk" class="ks-popup-button">Ok</a><a id="deleteCancel"  class="ks-popup-button-cancel">Cancel</a></div></div></div>')
+                El.body.prepend(t.join('')).promise().then(() => {
+                    $('#deleteOk').on('click', () => {
+                        Widget.doHandleSystemEvent(w, e);
+                        if (instance.amIOnAGridTable()) {
+                            Widget.doHandleGridTableSystemEvent(w, e);
+                        }
+                        $('#buttonPopup').remove();
+                    });
 
+                    $('#deleteCancel').on('click', () => {
+                        $('#buttonPopup').remove();
+                    });
+                });
+            });
+        }
+
+        //todo van használva valahol?(horizontal table)
         section.find('a').on('click', e => {
             let w = $(e.currentTarget), p = w.parent().parent(), t = [];
 

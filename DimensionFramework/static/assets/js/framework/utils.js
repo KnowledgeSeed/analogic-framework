@@ -232,6 +232,22 @@ const Utils = {
         }
         return result;
     },
+    getArrayWithValues(arrayLength, value){
+       return Array.from({length:arrayLength},()=> value)
+    },
+    getOrdinalValuePairs(ordinalsArray, values) {
+        if(!ordinalsArray || !values){
+            return [];
+        }
+        if(ordinalsArray.length < values.length){
+            return [];
+        }
+        let template = (ordinal, value) => `{"Ordinal": ${ordinal},"Value": \"${value}\"}`, result = [], i = 0;
+        for(i = 0; i < values.length; ++i){
+            result.push(template(ordinalsArray[i].Ordinal, values[i]));
+        }
+        return result.join(',');
+    },
     getOrdinalValuePairsAndEmptyFilledValues(values, existingValues) {
         let template = (ordinal, value) => `{"Ordinal": ${ordinal},"Value": \"${value}\"}`, result = [], i = 0;
         while (i < existingValues.length) {
@@ -317,6 +333,16 @@ const Utils = {
             let r = (dt + Math.random() * 16) % 16 | 0;
             dt = Math.floor(dt / 16);
             return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+    },
+    getEvenElements(arr){
+        return arr.filter(function(element, index, array) {
+            return (index % 2 === 0);
+        });
+    },
+    getOddElements(arr){
+        return arr.filter(function(element, index, array) {
+            return (index % 2 === 1);
         });
     }
 };
