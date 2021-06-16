@@ -4650,10 +4650,8 @@ app.repository = {
 
                         }
                         return `{"MDX":"
-
                                     
                                     With 
-                                    -- IP Node then add dummy flag
                                     Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag] As
                                     IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL6',1,0)
                                     -- IP Node and has no pland Data then deletable
@@ -6215,6 +6213,300 @@ app.repository = {
             }
         }
     },
+
+
+    rocheBPSPReportsGridRow1Cell5Button: {
+        init: {
+            execute: (db) => {
+                return {label: WidgetValue['activeUserName']};
+            }
+        }
+    },
+
+
+    rocheBPSPProductReportGridRow1Cell2DropBox: {
+        choose: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPProductReportGridRow1Cell2DropBox.value'));
+            }
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "
+
+                        SELECT
+                        {
+                        [}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],
+                        [}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]}
+                          ON COLUMNS ,
+                           {TM1SubsetToSet([Companies].[Companies], 'All Active')}
+                          ON ROWS
+                        FROM [}ElementAttributes_Companies]
+
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [], selected = v('systemValueGlobalSelectedCompany');
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    'name': r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: selected === r.Cells[i].FormattedValue
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
+    },
+
+    rocheBPSPProductReportGridRow1Cell3DropBox: {
+        initCondition: (db) => {
+            return v('rocheBPSPProductReportGridRow1Cell2DropBox.value');
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "
+
+            SELECT
+               {
+                [}ElementAttributes_Receivers].[}ElementAttributes_Receivers].[Member description],
+                [}ElementAttributes_Receivers].[}ElementAttributes_Receivers].[Receiver - Key]}
+              ON COLUMNS ,
+               {TM1SubsetToSet([Receivers].[Receivers], 'zUI ${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'key')} Report Receivers')}
+              ON ROWS
+            FROM [}ElementAttributes_Receivers]
+
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [];
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    'name': r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: v('rocheBPSPProductReportGridRow1Cell3DropBox.value') === r.Cells[i].FormattedValue
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
+    },
+
+    rocheBPSPProductReportGridRow1Cell5DropBox: {
+        initCondition: (db) => {
+            return v('rocheBPSPProductReportGridRow1Cell2DropBox.value');
+        },
+
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "
+
+                SELECT
+                   {[}ElementAttributes_Currency Keys].[}ElementAttributes_Currency Keys].Members}
+                  ON COLUMNS ,
+                   {TM1SubsetToSet([Currency Keys].[Currency Keys], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'key')} Reporting Currencies')}
+                  ON ROWS
+                FROM [}ElementAttributes_Currency Keys]
+
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [];
+                            for (let i = 0; i < r.Cells.length; i = i + 1) {
+                                result.push({
+                                    'name': r.Cells[i].FormattedValue,
+                                    on: v('rocheBPSPProductReportGridRow1Cell5DropBox.value') === r.Cells[i].FormattedValue
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
+    },
+
+
+    rocheBPSPProductReportGridRow1Cell9Button: {
+        init: {
+            execute: (db) => {
+                return {label: WidgetValue['activeUserName']};
+            }
+        }
+    },
+
+
+    rocheBPSPProductReportGridRow2Cell1SegmentedControl: {
+        init: {
+            execute: (db) => {
+                return [
+                    {label: 'List'},
+                    {label: 'Chart'},
+                ];
+            }
+        },
+
+    },
+
+
+    rocheBPSPProductReportGridTable:
+        {
+            initDefault: (db) => {
+                return [];
+            },
+
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+                    type: 'POST',
+                    body: (db) => `{"MDX":"
+                            
+                With
+                --Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion
+                     Set DefaultProductRows AS
+                     {TM1DRILLDOWNMEMBER({[Products].[BPSP Budget].[PL1]}, ALL, RECURSIVE )}
+                --Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion and systemValueGlobalCompanyFocusedElement
+                     Set FocusedOnProductRows AS
+                     {TM1DRILLDOWNMEMBER({[Products].[BPSP Budget].[PL1]}, ALL, RECURSIVE )}
+                --Decide which rowSet to use
+                     MEMBER [Products].[BPSP Budget].[ProductIsFocused] AS
+                     IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
+                -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)
+                     MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductName] as
+                            [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Description')
+                     MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductCaption] as
+                            [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Element')
+                     MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel] as
+                            [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Product Level - Name')
+                SELECT
+                   {([Periods].[Periods].[2020],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductName]),
+                    ([Periods].[Periods].[2020],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductCaption]),
+                    ([Periods].[Periods].[2020],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel]),
+                     ([Periods].[Periods].[2020],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                     ([Periods].[Periods].[2021],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice YTD]),
+                     ([Periods].[Periods].[2021],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[2022],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[2023],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[2024],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[2021],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan]),
+                     ([Periods].[Periods].[2022],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan]),
+                     ([Periods].[Periods].[2023],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan]),
+                     ([Periods].[Periods].[2024],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan])
+                   }
+                   PROPERTIES [Periods].[Periods].[Caption] ,[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Caption]  ON COLUMNS ,
+                   StrToSet([Products].[BPSP Budget].[ProductIsFocused])
+                   PROPERTIES [Products].[BPSP Budget].[BPSP Budget Caption]  ON ROWS
+                FROM [Sales Report by Product]
+                WHERE
+                  (
+                   [Versions].[Versions].[Live],
+                   [Companies].[Companies].[1391],
+                   [Receivers].[Receivers].[PL],
+                   [Measures Sales Report by Product].[Measures Sales Report by Product].[Value]
+                  )
+
+                    "}`,
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 13,
+                        query: [
+
+                            (r, x) => {
+                                return {
+                                    label: r.Cells[x].FormattedValue,
+                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x + 2].FormattedValue.replace('a', '')
+                                }
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 1].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 2].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 3].FormattedValue}
+                            },
+
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 4].FormattedValue}
+                            },
+
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 5].FormattedValue}
+                            },
+
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 6].FormattedValue}
+                            },
+
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 7].FormattedValue}
+                            },
+
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 8].FormattedValue}
+                            },
+
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 9].FormattedValue}
+                            },
+
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 10].FormattedValue}
+                            },
+
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 11].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 12].FormattedValue}
+                            },
+
+
+                        ]
+                    }
+
+                },
+        },
 
 
 };
