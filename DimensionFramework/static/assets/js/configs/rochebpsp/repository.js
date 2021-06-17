@@ -1715,7 +1715,7 @@ app.repository = {
                         if (parseInt(s.title) > 0) {
                             s['titleFontColor'] = '#A86B24';
                         }
-                        s['visible'] = x ===0;
+                        s['visible'] = x === 0;
                         return s;
                     },
                     (r, x) => {
@@ -2213,7 +2213,7 @@ app.repository = {
             if (performable) {
                 result['icon'] = 'icon-cloud-arrow-up';
             }
-            if( editable ) {
+            if (editable) {
                 result['titleFontColor'] = '#A05EB5';
             }
             return result;
@@ -4054,7 +4054,7 @@ app.repository = {
                 width: '100%'
                 //performable: performable
             };
-            if( editable ) {
+            if (editable) {
                 result['titleFontColor'] = '#A05EB5';
             }
             /*     if (performable) {
@@ -5149,8 +5149,9 @@ app.repository = {
             type: 'PATCH',
             body: (db) => {
                 let values = Utils.getCellsByColumnsFromClipboard('rocheBPSPAddMaterialGridRow3Cell2Button', 0);
-                let existingValues = v('rocheBPSPAddMaterialGridRow3Cell2Button.data.cells'), selectedElements = v('rocheBPSPAddMaterialGridRow3Cell2Button.data.selectedElements'),
-                selectedValues = Utils.getArrayWithValues(values.length, 1);
+                let existingValues = v('rocheBPSPAddMaterialGridRow3Cell2Button.data.cells'),
+                    selectedElements = v('rocheBPSPAddMaterialGridRow3Cell2Button.data.selectedElements'),
+                    selectedValues = Utils.getArrayWithValues(values.length, 1);
                 return `[${Utils.getOrdinalValuePairs(selectedElements, selectedValues)}, ${Utils.getOrdinalValuePairsAndEmptyFilledValues(values, existingValues)}]`;
             }
         }
@@ -6507,6 +6508,83 @@ app.repository = {
 
                 },
         },
+
+
+    rocheBPSPCustomersHorizontalTable: {
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+                type: 'POST',
+                body: (db) => `{"MDX":"
+                        
+    
+                                           With
+                            Member [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[Code] as
+                                [Customers Plan].[Customers Plan].CurrentMember.Properties('Code')
+                            Member [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[Territory] as
+                                [Territories].[Territories].CurrentMember.Properties('Code')
+                            Member [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[Receiver] as
+                                [Receivers].[Receivers].CurrentMember.Properties('Receiver - Key')
+                            Member [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[2020 Actual] as
+                                1
+                            Member [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[2021 Final] as
+                                1
+                            Member [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[2022 Plan] as
+                                1
+                        SELECT
+                           {[Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[Code],
+                            [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[Receiver],
+                            [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[2020 Actual],
+                            [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[2021 Final],
+                            [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[2022 Plan],
+                            [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[Submitted By],
+                            [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[Submitted DateTime]
+                           }
+                          ON COLUMNS ,
+                           {TM1FILTERBYLEVEL({DRILLDOWNMEMBER({DRILLUPMEMBER({[Customers Plan].[Customers Plan].Members}, {[Customers Plan].[Customers Plan].[All Customers Plan]})}, {[Customers Plan].[Customers Plan].[All Customers Plan]})}, 0)}
+                           * {TM1FILTERBYLEVEL({DRILLDOWNMEMBER({DRILLUPMEMBER({[Territories].[Territories].Members}, {[Territories].[Territories].[All Territories]})}, {[Territories].[Territories].[All Territories]})}, 0)}
+                          ON ROWS
+                        FROM [Sales Plan by Customer Submission Status]
+                        WHERE
+                          (
+                           [Receivers].[Receivers].[PL],
+                           [Companies].[Companies].[1391],
+                           [Versions].[Versions].[Live]
+                          )       
+                  "}`
+                ,
+                parsingControl: {
+                    type: 'matrix',
+                    length: 9,
+                    query: [
+
+                        (r, x) => {
+                            return {value: r.Cells[x].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 1].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 2].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 3].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 4].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 5].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 6].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 7].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 8].FormattedValue};
+                        }, (r, x) => {
+                            return {active: true};
+                        }
+
+                    ]
+                }
+
+            },
+    },
 
 
 };
