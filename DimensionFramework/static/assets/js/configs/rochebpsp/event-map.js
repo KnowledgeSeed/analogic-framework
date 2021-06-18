@@ -1878,7 +1878,6 @@ app.eventMap = {
         }
     ],
 
-
     'launch.rocheBPSPProductReportGridRow1Cell0Button': [
         {
             action: app.fn.openPage,
@@ -1886,11 +1885,76 @@ app.eventMap = {
         }
     ],
 
-
     'launch.rocheBPSPReportsGridRow2Cell1Button': [
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPProductReport'
+        }
+    ],
+
+    'segmentedControlTab1.rocheBPSPProductReportGridRow2Cell1SegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductReportChart'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductReportGridTable'
+        }
+    ],
+
+    'segmentedControlTab2.rocheBPSPProductReportGridRow2Cell1SegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductReportGridTable'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductReportChart'
+        }
+    ],
+
+
+    'launch.rocheBPSPProductReportGridTableHeaderFocusButton': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductReportMaterialSelectorShortcutPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportMaterialSelectorShortcutPopupGridTable'
+        }
+    ],
+
+
+    'launch.rocheBPSPProductReportMaterialSelectorShortcutPopupGridTable_row_0': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductReportMaterialSelectorShortcutPopup'
+        }
+    ],
+
+
+    'launch.rocheBPSPProductReportGridRow1Cell4Button': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportInfoPopupText1'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportInfoPopupText2'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductReportInfoPopup'
+        }
+    ],
+
+
+    'launch.rocheBPSPProductReportInfoPopupCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductReportInfoPopup'
         }
     ],
 

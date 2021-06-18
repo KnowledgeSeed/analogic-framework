@@ -13734,7 +13734,6 @@ app.widgetConfig = {
                     id: 'rocheBPSPProductReportPageInit',
                     type: ShadowWidget,
                     listen: [
-
                         {
                             event: 'bodyReady',
                             method: 'refreshWithWaitingForEvent',
@@ -13872,7 +13871,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductReportGridRow1Cell5',
                                     type: GridCellWidget,
-                                    alignment: 'bottom-left',
+                                    alignment: 'bottom-center',
                                     width: '10%',
                                     widgets: [
 
@@ -13999,6 +13998,156 @@ app.widgetConfig = {
 
                 },
 
+
+                {
+                    id: 'rocheBPSPProductReportMaterialSelectorShortcutPopup',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: true,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    width: '320',
+                    heightFixed: false,
+                    bgScrollable: true,
+                    fixed: false,
+                    behaviour: 'popup',
+                    position: 'bottom',
+                    offset: 100,
+                    skin: 'popup_bpsp ',
+                    fadingSpeed: 0,
+                    widgets: [
+                        {
+                            id: 'rocheBPSPProductReportMaterialSelectorShortcutPopupGridTable',
+                            type: GridTableWidget,
+                            title: '',
+                            marginTop: 5,
+                            marginBottom: 5,
+                            marginLeft: 5,
+                            listen: [],
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPProductReportMaterialSelectorShortcutPopupGridTableRow',
+                                    type: GridTableHeaderRowWidget,
+                                    height: '80',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPProductReportMaterialSelectorShortcutPopupGridTableRowCell1',
+                                            type: GridTableHeaderCellWidget,
+                                            width: '20%',
+                                            alignment: 'bottom-left',
+                                            widgets: []
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'rocheBPSPProductReportMaterialSelectorShortcutPopupGridTable01',
+                                    type: GridTableCellWidget,
+                                    width: '100%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductReportMaterialSelectorShortcutPopupGridTableButton01',
+                                            type: ButtonWidget,
+                                            height: 40,
+                                            skin: 'gridtablehierarchy_bpsp',
+                                            borderWidth: 0,
+                                            label: '',
+                                            action: '',
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+
+
+                {
+                    id: 'rocheBPSPProductReportInfoPopup',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: true,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    width: '260',
+                    height: 170,
+                    bgScrollable: true,
+                    fixed: true,
+                    behaviour: 'popup',
+                    position: 'bottom',
+                    skin: 'popup_bpsp ',
+                    fadingSpeed: 0,
+                    widgets: [
+                        {
+                            id: 'rocheBPSPProductReportInfoPopupPopupGrid',
+                            type: GridWidget,
+                            width: 260,
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPProductReportInfoPopupPopupGridRow1',
+                                    type: GridRowWidget,
+                                    skin: 'bottomborder_columnselector_bpsp',
+                                    paddingTop: 20,
+                                    paddingBottom: 20,
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPProductReportInfoPopupPopupGridRow1Cell1',
+                                            type: GridCellWidget,
+                                            width: '50%',
+                                            alignment: 'center-left',
+                                            widgets: [
+                                                {
+                                                    id: 'rocheBPSPProductReportInfoPopupPopupText',
+                                                    type: TextWidget,
+                                                    paddingLeft: 20,
+                                                    skin: 'popup_header_bpsp',
+                                                    title: 'Info'
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            id: 'rocheBPSPProductReportInfoPopupPopupGridRow1Cell4',
+                                            type: GridCellWidget,
+                                            width: '50%',
+                                            alignment: 'center-right',
+                                            widgets: [
+                                                {
+                                                    id: 'rocheBPSPProductReportInfoPopupCancelButton',
+                                                    type: ButtonWidget,
+                                                    icon: 'icon-x',
+                                                    marginRight: 20,
+                                                    borderWidth: 0,
+                                                    skin: 'blue_icon_bpsp'
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'rocheBPSPProductReportInfoPopupText1',
+                            marginTop: 20,
+                            type: TextWidget,
+                            marginLeft: 20,
+                            titleFontSize: 16
+                        },
+                        {
+                            id: 'rocheBPSPProductReportInfoPopupText2',
+                            type: TextWidget,
+                            marginTop: 20,
+                            marginLeft: 20,
+                            titleFontSize: 16
+                        }
+
+                    ]
+                },
+
+
                 {
                     id: 'rocheBPSPProductReportGridTable',
                     type: GridTableWidget,
@@ -14007,54 +14156,27 @@ app.widgetConfig = {
                     hideIfNoData: true,
                     skin: 'products_bpsp',
                     listen: [
-                        /*
-                            {'event': 'switch.rocheBPSPProductsYearSegmentedControl.finished', 'method': 'refresh'},
 
-                            {
-                                'event': 'bodyReady',
-                                'method': 'refreshWithWaitingForEvents',
-                                'parameters': [
-                                    'rendered.rocheBPSPipPlanningGridRow1Cell3DropBox',
-                                    'rendered.rocheBPSPipPlanningPageInit',
-                                    'init.rocheBPSPipPlanningGridRow2Cell1SegmentedControl.finished',
-                                    'init.rocheBPSPipPlanningGridRow2Cell2SegmentedControl.finished'
-                                ]
-                            },
-                            {'event': 'choose.rocheBPSPipPlanningGridRow1Cell3DropBox.finished', 'method': 'refresh'},
-                            {
-                                'event': 'choose.rocheBPSPipPlanningGridRow1Cell2DropBox.finished',
-                                'method': 'refreshWithWaitingForEvent',
-                                'parameters': ['rendered.rocheBPSPipPlanningGridRow1Cell3DropBox', 'rendered.rocheBPSPipPlanningPageInit']
-                            },
-                            {
-                                event: 'switch.rocheBPSPipPlanningYearSegmentedControl.finished',
-                                method: 'refresh'
-                            },
-                            {
-                                event: 'switch.rocheBPSPipPlanningGridRow2Cell2SegmentedControl.finished',
-                                method: 'refresh'
-                            },
-                            {
-                                event: 'switch.rocheBPSPipPlanningGridRow2Cell1SegmentedControl.finished',
-                                method: 'refresh'
-                            },
-                            {
-                                event: 'launch.rocheBPSPipPlanningMaterialSelectorShortcutPopupGridTableButton01.finished',
-                                method: 'refresh'
-                            },
-                            {
-                                'event': 'launch.rocheBPSPProductReportGridTableHeaderReturnFromFocus.finished',
-                                'method': 'refresh'
-                            },
-                            {
-                                event: 'launch.rocheBPSPIpPlanningCheckoutPopupFocusButton.finished',
-                                method: 'refresh'
-                            },
-                            {
-                                event: 'launch.rocheBPSPIpPlanningNoCheckoutPopupFocusButton.finished',
-                                method: 'refresh'
-                            }
-                            */
+                        {
+                            'event': 'bodyReady',
+                            'method': 'refreshWithWaitingForEvents',
+                            'parameters': [
+                                'rendered.rocheBPSPProductReportGridRow1Cell3DropBox',
+                                'rendered.rocheBPSPipPlanningPageInit'
+                            ]
+                        },
+                        {'event': 'choose.rocheBPSPProductReportGridRow1Cell3DropBox.finished', 'method': 'refresh'},
+                        {
+                            'event': 'choose.rocheBPSPProductReportGridRow1Cell2DropBox.finished',
+                            'method': 'refreshWithWaitingForEvent',
+                            'parameters': ['rendered.rocheBPSPProductReportGridRow1Cell3DropBox']
+                        },
+
+                        {
+                            'event': 'launch.rocheBPSPipPlanningGridTableMonthlyHeaderReturnFromFocus.finished',
+                            'method': 'refresh'
+                        },
+
                     ],
                     title: '',
                     widgets: [
