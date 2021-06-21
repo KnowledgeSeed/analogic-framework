@@ -1886,14 +1886,12 @@ app.eventMap = {
         }
     ],
 
-
     'launch.rocheBPSPProductReportGridRow1Cell0Button': [
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPReports'
         }
     ],
-
 
     'launch.rocheBPSPReportsGridRow2Cell1Button': [
         {
@@ -1902,5 +1900,111 @@ app.eventMap = {
         }
     ],
 
+    'segmentedControlTab1.rocheBPSPProductReportGridRow2Cell1SegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductReportChart'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductReportGridTable'
+        }
+    ],
+
+    'segmentedControlTab2.rocheBPSPProductReportGridRow2Cell1SegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductReportGridTable'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductReportChart'
+        }
+    ],
+
+
+    'launch.rocheBPSPProductReportGridTableHeaderFocusButton': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductReportMaterialSelectorShortcutPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportMaterialSelectorShortcutPopupGridTable'
+        }
+    ],
+
+
+    'launch.rocheBPSPProductReportMaterialSelectorShortcutPopupGridTable_row_0': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductReportMaterialSelectorShortcutPopup'
+        }
+    ],
+
+
+    'launch.rocheBPSPProductReportGridRow1Cell4Button': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportInfoPopupText1'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportInfoPopupText2'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductReportInfoPopup'
+        }
+    ],
+
+
+    'launch.rocheBPSPProductReportInfoPopupCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductReportInfoPopup'
+        }
+    ],
+
+
+    'launch.rocheBPSPProductReportGridRow2Cell2Button': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductReportExportPopup'
+        }
+
+    ],
+    'launch.rocheBPSPProductReportExportPopupCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductReportExportPopup'
+        }
+    ],
+
+
+    'launch.rocheBPSPProductReportGridTable_row_0': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductReportCheckoutPopup'
+        }
+
+    ],
+    'launch.rocheBPSPProductReportCheckoutPopupCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductReportCheckoutPopup'
+        }
+    ],
+
+    'launch.rocheBPSPProductReportCheckoutPopupFocusButton': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportGridTable'
+        },
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductReportCheckoutPopup'
+        }
+    ],
 }
 ;
