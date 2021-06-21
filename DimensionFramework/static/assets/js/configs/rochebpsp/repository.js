@@ -2165,15 +2165,19 @@ app.repository = {
                 return {visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly'};
             }
         },
+        getFileName: (db) => {
+            let s = [], fileName;
+            s.push(Utils.getFormattedDate(new Date(), '_', true));
+            s.push(db.activeUserName);
+            s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key'));
+            s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key'));
+            s.push(db.systemValueCheckoutProduct);
+            return s.join('_').replaceAll(':', '_').replaceAll(' ', '_').replaceAll('/', '_');
+        },
         launch: {
             download: (db) => {
-                let y1 = parseInt(db.systemValueGlobalStartingPlanYear), s = [], fileName;
-                s.push(Utils.getFormattedDate(new Date(), '_', true));
-                s.push(db.activeUserName);
-                s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key'));
-                s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key'));
-                s.push(db.systemValueCheckoutProduct);
-                fileName = s.join('_').replaceAll(':', '_').replaceAll(' ', '_').replaceAll('/', '_');
+                let y1 = parseInt(db.systemValueGlobalStartingPlanYear),
+                    fileName = Repository.rocheBPSPProductsCheckoutGridRow2Cell1aButton.getFileName(db);
                 return {
                     url: 'export?export_key=rocheMonthly&file_name=' + fileName + '.xlsx',
                     fileName: fileName + '.xlsx',
@@ -2245,6 +2249,9 @@ app.repository = {
     },
     rocheBPSPProductsCheckoutUploadPopupUpload: {
         upload: (db) => {
+            let fileName = Repository.rocheBPSPProductsCheckoutGridRow2Cell1aButton.getFileName(db);
+            Utils.modifyFileName('rocheBPSPProductsCheckoutUploadPopupUpload', fileName);
+            Utils.setWidgetValue('systemValueUploadFileName', fileName + '.csv');
             return {
                 staging: app.defaultUploadStagingFolder,
                 target: app.defaultUploadTargetFolder,
@@ -2264,8 +2271,7 @@ app.repository = {
             url: (db) => `/api/v1/Processes('MODULE - UI - CSV Upload Post Processing')/tm1.ExecuteWithReturn`,
             type: 'POST',
             body: (db) => {
-                let fileName = v('rocheBPSPProductsCheckoutUploadPopupUpload.fileNames')[0].replace('.xlsx', '.csv');
-                L(fileName);
+                let fileName = v('systemValueUploadFileName');
                 return `{
                         "Parameters": [
                                 {"Name": "pUser", "Value": "${db.activeUserName}"},
@@ -4349,6 +4355,9 @@ app.repository = {
     },
     rocheBPSPIpPlanningCheckoutUploadPopupUpload: {
         upload: (db) => {
+            let fileName = Repository.rocheBPSPIpPlanningCheckoutGridRow2Cell1aButton.getFileName(db);
+            Utils.modifyFileName('rocheBPSPIpPlanningCheckoutUploadPopupUpload', fileName);
+            Utils.setWidgetValue('systemValueUploadFileName', fileName + '.csv');
             return {
                 staging: app.defaultUploadStagingFolder,
                 target: v('systemValueIpPlanningUploadTargetPath'),
@@ -4367,7 +4376,7 @@ app.repository = {
             url: (db) => `/api/v1/Processes('MODULE - UI - CSV Upload Post Processing IP')/tm1.ExecuteWithReturn`,
             type: 'POST',
             body: (db) => {
-                let fileName = v('rocheBPSPIpPlanningCheckoutUploadPopupUpload.fileNames')[0].replace('.xlsx', '.csv');
+                let fileName = v('systemValueUploadFileName');
                 return `{
                         "Parameters": [
                                 {"Name": "pUser", "Value": "${db.activeUserName}"},
@@ -4384,7 +4393,8 @@ app.repository = {
     },
     rocheBPSPIpPlanningCheckoutCommentShowGridTable: {
         initCondition: (db) => {
-            return Utils.isGridTableLoaded('rocheBPSPIpPlanningCheckoutGridTableMonthly');
+            let g = 'rocheBPSPIpPlanningCheckoutGridTableMonthly';
+            return Utils.isGridTableLoaded(g) && Utils.getGridTableCell(g, 2).title;
         },
         initDefault: (db) => {
             return [];
@@ -4428,7 +4438,8 @@ app.repository = {
     },
     rocheBPSPIpPlanningCheckoutCommentShowGridTableSource: {
         initCondition: (db) => {
-            return Utils.isGridTableLoaded('rocheBPSPIpPlanningCheckoutGridTableMonthly');
+            let g = 'rocheBPSPIpPlanningCheckoutGridTableMonthly';
+            return Utils.isGridTableLoaded(g) && Utils.getGridTableCell(g, 2).title;
         },
         initDefault: (db) => {
             return [];
@@ -4580,15 +4591,19 @@ app.repository = {
      */
 
     rocheBPSPIpPlanningCheckoutGridRow2Cell1aButton: {
+        getFileName: (db) => {
+            let s = [];
+            s.push(Utils.getFormattedDate(new Date(), '_', true));
+            s.push(db.activeUserName);
+            s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key'));
+            s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell3DropBox', 'key'));
+            s.push(db.systemValueIpPlanningCheckoutProduct);
+            return s.join('_').replaceAll(':', '_').replaceAll(' ', '_').replaceAll('/', '_');
+        },
         launch: {
             download: (db) => {
-                let y1 = parseInt(db.systemValueGlobalStartingPlanYear), s = [], fileName;
-                s.push(Utils.getFormattedDate(new Date(), '_', true));
-                s.push(db.activeUserName);
-                s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell2DropBox', 'key'));
-                s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPipPlanningGridRow1Cell3DropBox', 'key'));
-                s.push(db.systemValueIpPlanningCheckoutProduct);
-                fileName = s.join('_').replaceAll(':', '_').replaceAll(' ', '_').replaceAll('/', '_');
+                let y1 = parseInt(db.systemValueGlobalStartingPlanYear),
+                    fileName = Repository.rocheBPSPIpPlanningCheckoutGridRow2Cell1aButton.getFileName(db);
                 return {
                     url: 'export?export_key=rocheIpPlanningMonthly&file_name=' + fileName + '.xlsx',
                     activeUserName: db.activeUserName,
@@ -5114,6 +5129,18 @@ app.repository = {
 
                 },
         },
+    rocheBPSPAddMaterialRemoveClipBoard: {
+        launch: {
+            url: (db) => `/api/v1/Cellsets('${Repository.rocheBPSPAddMaterialGridRow3Cell2Button.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db) => {
+                let values = Utils.getOrdinalValuePairsAndEmptyFilledValues([], v('rocheBPSPAddMaterialGridRow3Cell2Button.data.cells'));
+                let selectedElements = v('rocheBPSPAddMaterialGridRow3Cell2Button.data.selectedElements'),
+                    selectedValues = Utils.getArrayWithValues(v('rocheBPSPAddMaterialGridRow3Cell2Button.data.cells').filter((e) => e.FormattedValue !== '').length, 0);
+                return `[${Utils.getOrdinalValuePairs(selectedElements, selectedValues)},${values}]`;
+            }
+        }
+    },
     rocheBPSPAddMaterialGridRow3Cell2Button: {
         init: {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
@@ -5922,7 +5949,7 @@ app.repository = {
 
     rocheBPSPIpPlanningCommentShowGridTable: {
         initCondition: (db) => {
-            return Utils.isGridTableLoaded('rocheBPSPipPlanningGridTableMonthly');
+            return Utils.isGridTableLoaded('rocheBPSPipPlanningGridTableMonthly') && Utils.getGridTableCell('rocheBPSPipPlanningGridTableMonthly', 2).title;
         },
 
         initDefault: (db) => {
@@ -5968,7 +5995,7 @@ app.repository = {
 
     rocheBPSPIpPlanningCommentShowGridTableSource: {
         initCondition: (db) => {
-            return Utils.isGridTableLoaded('rocheBPSPipPlanningGridTableMonthly');
+            return Utils.isGridTableLoaded('rocheBPSPipPlanningGridTableMonthly') && Utils.getGridTableCell('rocheBPSPipPlanningGridTableMonthly', 2).title;
         },
 
         initDefault: (db) => {

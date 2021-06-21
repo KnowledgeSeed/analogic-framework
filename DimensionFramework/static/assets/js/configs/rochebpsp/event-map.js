@@ -1856,6 +1856,14 @@ app.eventMap = {
 
     ],
 
+     'launch.rocheBPSPAddMaterialRemoveClipBoard.finished': [
+        {
+            action: app.fn.forceRefreshWithDelay,
+            argument: [500, 'RocheBPSPMaterialsAddMaterialClipboard']
+        }
+
+    ],
+
     'launch.RocheBPSPMaterialsAddMaterialSearchButton14.finished': [
         {
             action: app.fn.forceRefresh,
