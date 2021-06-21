@@ -1958,5 +1958,45 @@ app.eventMap = {
         }
     ],
 
+
+    'launch.rocheBPSPProductReportGridRow2Cell2Button': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductReportExportPopup'
+        }
+
+    ],
+    'launch.rocheBPSPProductReportExportPopupCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductReportExportPopup'
+        }
+    ],
+
+
+    'launch.rocheBPSPProductReportGridTable_row_0': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductReportCheckoutPopup'
+        }
+
+    ],
+    'launch.rocheBPSPProductReportCheckoutPopupCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductReportCheckoutPopup'
+        }
+    ],
+
+    'launch.rocheBPSPProductReportCheckoutPopupFocusButton': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportGridTable'
+        },
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductReportCheckoutPopup'
+        }
+    ],
 }
 ;

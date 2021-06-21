@@ -60,3 +60,17 @@
 .ks-container-checkout_popup_bpsp .ks-container-content {
     padding: 5px;
 }
+
+
+/* export_popup_bpsp */
+.ks-container-export_popup_bpsp.ks-container-backdrop {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.ks-container-export_popup_bpsp.ks-container {
+    border-radius: 7px;
+}
+
+.ks-container-export_popup_bpsp .ks-container-content {
+    padding: 5px;
+}
