@@ -3625,8 +3625,8 @@ app.repository = {
                                      IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
                                 -- Decide 1st column element
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn] As
-                                     IIF('${db.systemValueIpPlanningSegmentedControlRelativeYearValue - 1}'='${db.systemValueGlobalStartingPlanYear - 1}', '([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue - 1}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])',
-                                                        '([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan])')
+                                     IIF('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}'='${db.systemValueGlobalStartingPlanYear}', '([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue }],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])',
+                                                        '([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])')
                                      Set FirstColumn As
                                      {StrToSet('{'+[LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn]+'}')}
                                 -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
@@ -4086,8 +4086,8 @@ app.repository = {
                                      IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
                                 -- Decide 1st column element
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn] As
-                                     IIF('${db.systemValueIpPlanningSegmentedControlRelativeYearValue - 1}'='${db.systemValueGlobalStartingPlanYear - 1}', '([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue - 1}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])',
-                                                        '([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan])')
+                                     IIF('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}'='${db.systemValueGlobalStartingPlanYear}', '([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])',
+                                                        '([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])')
                                      Set FirstColumn As
                                      {StrToSet('{'+[LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn]+'}')}
                                 -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
@@ -5150,7 +5150,7 @@ app.repository = {
             body: (db) => `{"MDX":"
                 SELECT 
                     {[Measures Material Import by Company].[Measures Material Import by Company].[Materials],
-                    [Measures Material Import by Company].[Measures Material Import by Company].[Selected for Basket]} 
+                    [Measures Material Import by Company].[Measures Material Import by Company].[Selected for Basket Input]} 
                 ON COLUMNS , 
                     {TM1FILTERBYLEVEL({[Items].[Items].Members}, 0)} 
                 ON ROWS 
@@ -5245,7 +5245,7 @@ app.repository = {
                         query: [
 
                             (r, x) => {
-                                let editable = r.Cells[x].Consolidated === false && r.Cells[x].RuleDerived === false;
+                                let value = Utils.parseNumber(r.Cells[x].FormattedValue), editable = value !== -1;
                                 return {
                                     ordinal: r.Cells[x].Ordinal,
                                     value: r.Cells[x].FormattedValue,
@@ -6578,6 +6578,87 @@ app.repository = {
                 },
         },
 
+    rocheBPSPCustomersTerritorySelector: {
+        initCondition: (db) => {
+            return Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector');
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "
+                    SELECT 
+                       {[}ElementAttributes_Territories].[}ElementAttributes_Territories].[Territory Code],
+                        [}ElementAttributes_Territories].[}ElementAttributes_Territories].[Caption]} 
+                      ON COLUMNS , 
+                       {TM1FILTERBYLEVEL(
+                         {FILTER({[Territories].[Territories].Members}, 
+                             [Territories].[Territories].CurrentMember.Properties(\\"Company\\") = \\"${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}\\")},
+                        0)} 
+                      ON ROWS 
+                    FROM [}ElementAttributes_Territories]
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [], selected = v('rocheBPSPCustomersCompanySelector.value');
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    name: r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: selected === r.Cells[i].FormattedValue
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
+    },
+
+    rocheBPSPCustomersCompanySelector: {
+      choose: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPCustomersCompanySelector.value'));
+            }
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT 
+                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]} 
+                    ON COLUMNS , 
+                     {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}  
+                    ON ROWS 
+                    FROM [}ElementAttributes_Companies] 
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [], selected = v('systemValueGlobalSelectedCompany');
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    name: r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: selected === r.Cells[i].FormattedValue
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
+    },
 
     rocheBPSPCustomersHorizontalTable: {
         init:
@@ -6585,41 +6666,35 @@ app.repository = {
                 url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
                 type: 'POST',
                 body: (db) => `{"MDX":"
-                        
-    
-                                           With
-                            Member [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[Code] as
-                                [Customers Plan].[Customers Plan].CurrentMember.Properties('Code')
-                            Member [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[Territory] as
+                         With
+                            Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Desc] as
+                                [Customers Plan].[Customers Plan].CurrentMember.Properties('Caption')
+                            Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Territory] as
                                 [Territories].[Territories].CurrentMember.Properties('Code')
-                            Member [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[Receiver] as
+                            Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Receiver] as
                                 [Receivers].[Receivers].CurrentMember.Properties('Receiver - Key')
-                            Member [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[2020 Actual] as
-                                1
-                            Member [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[2021 Final] as
-                                1
-                            Member [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[2022 Plan] as
-                                1
-                        SELECT
-                           {[Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[Code],
-                            [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[Receiver],
-                            [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[2020 Actual],
-                            [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[2021 Final],
-                            [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[2022 Plan],
-                            [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[Submitted By],
-                            [Measures Sales Plan by Customer Submission Status].[Measures Sales Plan by Customer Submission Status].[Submitted DateTime]
-                           }
-                          ON COLUMNS ,
-                           {TM1FILTERBYLEVEL({DRILLDOWNMEMBER({DRILLUPMEMBER({[Customers Plan].[Customers Plan].Members}, {[Customers Plan].[Customers Plan].[All Customers Plan]})}, {[Customers Plan].[Customers Plan].[All Customers Plan]})}, 0)}
-                           * {TM1FILTERBYLEVEL({DRILLDOWNMEMBER({DRILLUPMEMBER({[Territories].[Territories].Members}, {[Territories].[Territories].[All Territories]})}, {[Territories].[Territories].[All Territories]})}, 0)}
-                          ON ROWS
-                        FROM [Sales Plan by Customer Submission Status]
-                        WHERE
+                        SELECT 
+                            {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Desc],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Receiver],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[PY],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[CY],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[NY],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Submitted By],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Submitted DateTime]
+                           }  
+                          PROPERTIES [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Caption]  ON COLUMNS , 
+                          NON EMPTY 
+                              {TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan]}, ALL, RECURSIVE )}
+                           * {TM1SubsetToSet([Receivers].[Receivers], \\"zUI 1391 Plan Receivers\\")}  
+                          ON ROWS 
+                        FROM [Sales Territory to Customer] 
+                        WHERE 
                           (
-                           [Receivers].[Receivers].[PL],
                            [Companies].[Companies].[1391],
+                           [Territories].[Territories].[TTY-0000000451],
                            [Versions].[Versions].[Live]
-                          )       
+                          )      
                   "}`
                 ,
                 parsingControl: {

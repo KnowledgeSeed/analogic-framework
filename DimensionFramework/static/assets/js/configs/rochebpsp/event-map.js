@@ -1383,6 +1383,10 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPMaterialGridTable'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialIPNodeGridTable'
         }
     ],
 
@@ -1408,6 +1412,11 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'RocheBPSPMaterialIPNodeGridTable'
+        },
+
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPMaterialGridTable'
         }
     ],
 
@@ -1449,6 +1458,11 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPMaterialGridTable'
+        },
+
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialIPNodeGridTable'
         }
     ],
 
@@ -1479,6 +1493,11 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'RocheBPSPMaterialIPNodeGridTable'
+        },
+
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPMaterialGridTable'
         }
 
     ],
@@ -1859,7 +1878,7 @@ app.eventMap = {
      'launch.rocheBPSPAddMaterialRemoveClipBoard.finished': [
         {
             action: app.fn.forceRefreshWithDelay,
-            argument: [500, 'RocheBPSPMaterialsAddMaterialClipboard']
+            argument: ['RocheBPSPMaterialsAddMaterialClipboard', 500]
         }
 
     ],

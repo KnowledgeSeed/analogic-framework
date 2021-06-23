@@ -345,6 +345,11 @@ const Utils = {
             return (index % 2 === 1);
         });
     },
+    getArrayElements(arr, modulo, tailings){
+        return arr.filter(function(element, index, array) {
+            return (index % modulo === tailings);
+        });
+    },
     modifyFileName(widgetId, newName){
         let file = WidgetValue[widgetId].form.get('file0'), splittedName = file.name.split('.'), fileExt = splittedName[splittedName.length-1];
         file = new File([file], newName + "." + fileExt, {type:file.type});

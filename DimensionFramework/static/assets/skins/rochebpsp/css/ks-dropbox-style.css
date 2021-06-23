@@ -401,6 +401,10 @@
     overflow: auto;
 }
 
+.ks-dropbox-simple_bold_bpsp .ks-dropbox-inner {
+    display: flex;
+}
+
 .ks-dropbox-simple_bold_bpsp .ks-dropbox-title-primary {
     margin-left: 20px;
 }
@@ -554,6 +558,10 @@
     margin-bottom: 5px;
     display: block;
     overflow: auto;
+}
+
+.ks-dropbox-simple_bpsp .ks-dropbox-inner{
+    display: flex;
 }
 
 .ks-dropbox-simple_bpsp .ks-dropbox-field {
