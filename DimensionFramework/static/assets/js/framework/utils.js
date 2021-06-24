@@ -237,10 +237,10 @@ const Utils = {
     },
     getOrdinalValuePairs(ordinalsArray, values) {
         if(!ordinalsArray || !values){
-            return [];
+            return '';
         }
         if(ordinalsArray.length < values.length){
-            return [];
+            return '';
         }
         let template = (ordinal, value) => `{"Ordinal": ${ordinal},"Value": \"${value}\"}`, result = [], i = 0;
         for(i = 0; i < values.length; ++i){

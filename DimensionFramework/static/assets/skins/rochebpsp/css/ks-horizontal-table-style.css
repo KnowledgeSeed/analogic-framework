@@ -5,8 +5,11 @@
 /* Track */
 ::-webkit-scrollbar-track {
     background-color: #ebecec;
-    borground-color: #b1b3b3;
     border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #b1b3b3;
 }
 
 /* Handle on hover */

@@ -198,6 +198,14 @@ class Widget {
     }
 
     initFinished() {
+        this.triggerFinishedEvent();
+    }
+
+    refreshFinished() {
+        this.triggerFinishedEvent('refresh');
+    }
+
+    triggerFinishedEvent(eventName = 'init'){
         const o = this.options;
 
         let widgetOptions, widgets = [], w;
@@ -209,8 +217,8 @@ class Widget {
         for (w of widgets) {
             w.initFinished();
         }
-        El.body.triggerHandler('init.' + o.id + '.finished');
-        let actions = EventMap['init.' + o.id + '.finished'], a;
+        El.body.triggerHandler(eventName + '.' + o.id + '.finished');
+        let actions = EventMap[eventName + '.' + o.id + '.finished'], a;
         if(actions) {
             for (a of actions) {
                 a.action(a.argument, {}, {});
