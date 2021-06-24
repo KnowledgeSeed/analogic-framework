@@ -6248,6 +6248,8 @@ app.repository = {
                            {TM1SubsetToSet([Companies].[Companies], 'All Active')}
                           ON ROWS
                         FROM [}ElementAttributes_Companies]
+                  
+
 
             "}`,
             parsingControl: {
@@ -6370,7 +6372,8 @@ app.repository = {
                 SELECT
                    {[}ElementAttributes_Currency Keys].[}ElementAttributes_Currency Keys].Members}
                   ON COLUMNS ,
-                   {TM1SubsetToSet([Currency Keys].[Currency Keys], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'key')} Reporting Currencies')}
+                   {TM1SubsetToSet([Currency Keys].[Currency Keys],
+                    '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'key')} Reporting Currencies')}
                   ON ROWS
                 FROM [}ElementAttributes_Currency Keys]
 
@@ -6419,8 +6422,12 @@ app.repository = {
     rocheBPSPProductReportGridTable:
         {
             initCondition: (db) => {
-                return v('rocheBPSPProductReportGridRow1Cell3DropBox.value');
+                let b = Utils.isValueExistingAndNotEmpty('rocheBPSPProductReportGridRow1Cell3DropBox') &&
+                    Utils.isValueExistingAndNotEmpty('rocheBPSPProductReportGridRow1Cell5DropBox')
+                return b;
             },
+
+
             initDefault: (db) => {
                 return [];
             },
@@ -6429,53 +6436,69 @@ app.repository = {
                 {
                     url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
                     type: 'POST',
-                    body: (db) => `{"MDX":"
-                            
-                With
-                --Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion
-                     Set DefaultProductRows AS
-                     {TM1DRILLDOWNMEMBER({[Products].[BPSP Budget].[PL1]}, ALL, RECURSIVE )}
-                --Create deault subset for the rows by systemValueGlobalCompanyProductPlanVersion and systemValueGlobalCompanyFocusedElement
-                     Set FocusedOnProductRows AS
-                     {TM1DRILLDOWNMEMBER({[Products].[BPSP Budget].[${db.systemValueCustomerReportFocusedProduct}]}, ALL, RECURSIVE )}
-                --Decide which rowSet to use
-                     MEMBER [Products].[BPSP Budget].[ProductIsFocused] AS
-                     IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
-                -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)
-                     MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductName] as
-                            [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Description')
-                     MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductCaption] as
-                            [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Element')
-                     MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel] as
-                            [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Product Level - Name')
-                SELECT
-                   {([Periods].[Periods].[2020],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductName]),
-                    ([Periods].[Periods].[2020],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductCaption]),
-                    ([Periods].[Periods].[2020],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel]),
-                     ([Periods].[Periods].[2020],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
-                     ([Periods].[Periods].[2021],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice YTD]),
-                     ([Periods].[Periods].[2021],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
-                     ([Periods].[Periods].[2022],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
-                     ([Periods].[Periods].[2023],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
-                     ([Periods].[Periods].[2024],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
-                     ([Periods].[Periods].[2021],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan]),
-                     ([Periods].[Periods].[2022],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan]),
-                     ([Periods].[Periods].[2023],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan]),
-                     ([Periods].[Periods].[2024],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan])
-                   }
-                   PROPERTIES [Periods].[Periods].[Caption] ,[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Caption]  ON COLUMNS ,
-                   StrToSet([Products].[BPSP Budget].[ProductIsFocused])
-                   PROPERTIES [Products].[BPSP Budget].[BPSP Budget Caption]  ON ROWS
-                FROM [Sales Report by Product]
-                WHERE
-                  (
-                   [Versions].[Versions].[Live],
-                   [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'key')}],
-                   [Receivers].[Receivers].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell3DropBox', 'key')}],
-                   [Measures Sales Report by Product].[Measures Sales Report by Product].[Value]
-                  )
+                    body: (db) => {
 
-                    "}`,
+                        let yearzero = Utils.parseNumber(db.systemValueGlobalStartingPlanYear),
+                            YearMinusOne = yearzero - 1,
+                            YearPlusOne = yearzero + 1,
+                            YearPlusTwo = yearzero + 2,
+                            YearPlusThree = yearzero + 3,
+                            yearPlusFour = yearzero + 4;
+
+
+                        return `{"MDX":"
+                                                
+                    With
+                    --Create deault subset for the Rows by systemValueGlobalCompanyProductPlanVersion
+                         Set DefaultProductRows AS
+                         {TM1DRILLDOWNMEMBER({[Products].[BPSP Budget].[PL1]}, ALL, RECURSIVE )}
+                    --Create deault subset for the Rows by systemValueGlobalCompanyProductPlanVersion and systemValueGlobalCompanyFocusedElement
+                         Set FocusedOnProductRows AS
+                         {TM1DRILLDOWNMEMBER({[Products].[BPSP Budget].[${db.systemValueCustomerReportFocusedProduct}]}, ALL, RECURSIVE )}
+                    --Decide which rowSet to use
+                         MEMBER [Products].[BPSP Budget].[ProductIsFocused] AS 
+                         IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
+                    -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
+                         MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductName] as 
+                                [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Description')
+                         MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductCaption] as 
+                                [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Element')
+                         MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel] as 
+                                [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Product Level - Name')
+                    
+                    SELECT 
+                    
+                       {([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductName]),
+                        ([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductCaption]),
+                        ([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel]),
+                         ([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                         ([Periods].[Periods].[${yearzero}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice YTD]),
+                         ([Periods].[Periods].[${yearzero}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                         ([Periods].[Periods].[${YearPlusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                         ([Periods].[Periods].[${YearPlusTwo}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                         ([Periods].[Periods].[${YearPlusThree}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                         ([Periods].[Periods].[${yearzero}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan]),
+                         ([Periods].[Periods].[${YearPlusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan]),
+                         ([Periods].[Periods].[${YearPlusTwo}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan]),
+                         ([Periods].[Periods].[${YearPlusThree}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan])
+                         
+                       }
+                       PROPERTIES [Periods].[Periods].[Caption] ,[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Caption]  ON COLUMNS , 
+                       StrToSet([Products].[BPSP Budget].[ProductIsFocused])
+                       PROPERTIES [Products].[BPSP Budget].[BPSP Budget Caption]  ON ROWS 
+                    FROM [Sales Report by Product] 
+                    WHERE 
+                      (
+                       [Versions].[Versions].[Live],
+                       [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'key')}],
+                       [Receivers].[Receivers].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell3DropBox', 'key')}],
+                       [Currency Keys].[Currency Keys].[${v('rocheBPSPProductReportGridRow1Cell5DropBox.value')}],
+                       [Measures Sales Report by Product].[Measures Sales Report by Product].[Value]
+                      )
+
+
+                    "}`;
+                    },
                     parsingControl: {
                         type: 'matrix',
                         length: 13,
@@ -6484,6 +6507,7 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     label: r.Cells[x].FormattedValue,
+                                    productLevel: r.Cells[x + 2].FormattedValue.replace('a', ''),
                                     skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x + 2].FormattedValue.replace('a', '')
                                 }
                             },
@@ -6641,13 +6665,12 @@ app.repository = {
                     return [{
                         label: e[0].label,
                         skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].productLevel,
-                        productCode: e[2].title
+                        productCode: e[1].title
                     }];
                 });
             }
         }
     },
-    //pl = r.Cells[x + 1].FormattedValue.replace('a', '');
 
     rocheBPSPProductReportInfoPopupText1: {
         initCondition: (db) => {
@@ -6753,7 +6776,7 @@ app.repository = {
         launch:
             {
                 execute: (db) => {
-                    WidgetValue['systemValueCustomerReportFocusedProduct'] = Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorShortcutPopupGridTableButton01', 0).productCode;
+                    WidgetValue['systemValueCustomerReportFocusedProduct'] = Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorShortcutPopupGridTable', 0).productCode;
                 }
             },
     },
