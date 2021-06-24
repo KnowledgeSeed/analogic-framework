@@ -14250,19 +14250,32 @@ app.widgetConfig = {
                             'event': 'bodyReady',
                             'method': 'refreshWithWaitingForEvents',
                             'parameters': [
-                                'rendered.rocheBPSPProductReportGridRow1Cell3DropBox'
+                                'rendered.rocheBPSPProductReportGridRow1Cell3DropBox',
+                                'rendered.rocheBPSPProductReportGridRow1Cell5DropBox',
+                                'rendered.rocheBPSPProductReportPageInit'
                             ]
                         },
+                        {'event': 'choose.rocheBPSPProductReportGridRow1Cell3DropBox.finished', 'method': 'refresh'},
+
+                        {'event': 'choose.rocheBPSPProductReportGridRow1Cell5DropBox.finished', 'method': 'refresh'},
+
                         {
                             'event': 'choose.rocheBPSPProductReportGridRow1Cell2DropBox.finished',
                             'method': 'refreshWithWaitingForEvent',
-                            'parameters': ['rendered.rocheBPSPProductReportGridRow1Cell3DropBox']
+                            'parameters': ['rendered.rocheBPSPProductReportGridRow1Cell3DropBox', 'rendered.rocheBPSPProductReportPageInit']
                         },
-                        {'event': 'choose.rocheBPSPProductReportGridRow1Cell3DropBox.finished', 'method': 'refresh'},
+
+
+                        {
+                            event: 'launch.rocheBPSPProductReportMaterialSelectorShortcutPopupGridTableButton01.finished',
+                            method: 'refresh'
+                        },
                         {
                             'event': 'launch.rocheBPSPProductReportGridTableHeaderReturnFromFocus.finished',
                             'method': 'refresh'
-                        },
+                        }
+
+
                     ],
                     title: '',
                     widgets: [
@@ -14573,7 +14586,9 @@ app.widgetConfig = {
                                     icon: 'icon-badge',
                                     skin: '',
                                     label: '',
-                                    action: '',
+                                    borderWidth: false,
+                                    width: '100%',
+                                    applyMeasuresToSection: true,
                                 }
                             ]
                         },
