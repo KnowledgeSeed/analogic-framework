@@ -6550,7 +6550,7 @@ app.widgetConfig = {
                                             id: 'rocheBPSPipPlanningGridTableMonthlyHeaderText-05',
                                             type: TextWidget,
                                             title: '2021',
-                                            body: 'T3',
+                                            body: 'T0',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
                                             marginBottom: 8,
@@ -8633,7 +8633,7 @@ app.widgetConfig = {
                                             id: 'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderText-05',
                                             type: TextWidget,
                                             title: '2021',
-                                            body: 'T3',
+                                            body: 'T0',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
                                             marginBottom: 8,
@@ -12082,12 +12082,31 @@ app.widgetConfig = {
 
                                     ]
                                 },
+                                {
+                                    id: 'rocheBPSPAddMaterialGridRow3Cell3a',
+                                    type: GridCellWidget,
+                                    alignment: 'center-right',
+                                    width: '80%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPAddMaterialRemoveClipBoard',
+                                            type: ButtonWidget,
+                                            label: 'Clear Clipboard',
+                                            width: '150',
+                                            height: '40',
+                                            icon: 'icon-x-square-outline',
+                                            skin: 'clear_material_bpsp'
+                                        }
+
+
+                                    ]
+                                },
 
                                 {
                                     id: 'rocheBPSPAddMaterialGridRow3Cell3',
                                     type: GridCellWidget,
                                     alignment: 'center-right',
-                                    width: '85%',
+                                    width: '10%',
                                     widgets: [
                                         {
                                             id: 'rocheBPSPAddMaterialGridRow3Cell3Button',
@@ -14823,7 +14842,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPCustomersGridRow1Cell0',
                                     type: GridCellWidget,
-                                    alignment: 'bottom-center',
+                                    alignment: 'center-center',
                                     width: '2%',
                                     widgets: [
 
@@ -14863,19 +14882,44 @@ app.widgetConfig = {
                                 },
 
                                 {
-                                    id: 'rocheBPSPCustomersGridRow1CellKozepe',
+                                    id: 'rocheBPSPCustomersGridRow1CellCompanySelectorCell',
                                     type: GridCellWidget,
                                     alignment: 'center-center',
-                                    width: '39%',
+                                    width: '19%',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPCustomersGridRow1CellKozepeText',
-                                            type: TextWidget,
-                                            title: '6120 Roche Deutschland',
-                                            skin: 'text',
-                                            titleAlignment: 'center',
-                                            titleFontSize: 15,
+                                            id: 'rocheBPSPCustomersCompanySelector',
+                                            type: DropBoxWidget,
+                                            width: '120%',
+                                            skin: 'simple_bold_bpsp',
+                                            selectFirst: true,
+                                            backdrop: true
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCustomersGridRow1CellTerritorySelectorCell',
+                                    type: GridCellWidget,
+                                    alignment: 'center-center',
+                                    width: '19%',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCustomersTerritorySelector',
+                                            type: DropBoxWidget,
+                                            width: '120%',
+                                            skin: 'simple_bpsp',
+                                            selectFirst: true,
+                                            backdrop: true,
+                                            listen: [
+                                                {event: 'bodyReady', method: 'refresh'},
+                                                {
+                                                    event: 'choose.rocheBPSPCustomersCompanySelector.finished',
+                                                    method: 'refresh'
+                                                }
+                                            ]
                                         }
                                     ]
                                 },
@@ -14969,6 +15013,7 @@ app.widgetConfig = {
                                             backgroundColor: '#EBECEC',
                                             action: '',
                                             width: '100%',
+                                            applyMeasuresToSection: true,
                                             icon: 'icon-profile',
                                             skin: 'userpanelmain_bpsp',
                                         }

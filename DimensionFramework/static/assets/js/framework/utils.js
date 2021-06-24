@@ -35,7 +35,7 @@ const Utils = {
     toTitleCase: str => str.toLowerCase().replace(/(?:^|\s)\w/g, match => match.toUpperCase()),
     parseNumber(value, locale = navigator.language) {
         let localValue = value;
-        if(localValue === '' || localValue === null){
+        if(localValue === '' || localValue === null || localValue === false){
             localValue = '0';
         }
         if ('number' === typeof localValue) {
@@ -344,6 +344,16 @@ const Utils = {
         return arr.filter(function(element, index, array) {
             return (index % 2 === 1);
         });
+    },
+    getArrayElements(arr, modulo, tailings){
+        return arr.filter(function(element, index, array) {
+            return (index % modulo === tailings);
+        });
+    },
+    modifyFileName(widgetId, newName){
+        let file = WidgetValue[widgetId].form.get('file0'), splittedName = file.name.split('.'), fileExt = splittedName[splittedName.length-1];
+        file = new File([file], newName + "." + fileExt, {type:file.type});
+        WidgetValue[widgetId].form.set('file0', file);
     }
 };
 
