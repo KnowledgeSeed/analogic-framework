@@ -66,6 +66,12 @@ def clearCache(instance):
     return getProvider(instance).setting.clearCache()
 
 
+@app.route('/exportconfig', defaults={'instance': 'default'})
+@app.route('/<path:instance>/exportconfig')
+def exportConfig(instance):
+    return getProvider(instance).exportConfig()
+
+
 def getProvider(instance):
     cache = getCache()
     config = Base(cache, site_root, instance).setting.getConfig()

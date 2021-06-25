@@ -132,3 +132,10 @@ class Base:
         # TODO secure, httpOnly!!!
         response.set_cookie('authenticated', 'authenticated', max_age=cnf['sessionExpiresInMinutes'] * 60)
         return response
+
+    def exportConfig(self):
+        if self.checkAppAuthenticated() is False:
+            return self.getAuthenticationResponse()
+        repository = self.setting.getRepository()
+        config = self.setting.getConfig()
+        return 'valami', 200
