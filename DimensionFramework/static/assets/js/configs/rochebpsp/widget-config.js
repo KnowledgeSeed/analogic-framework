@@ -12074,7 +12074,7 @@ app.widgetConfig = {
                                             skin: 'blue_link_columns_bpsp',
                                             listen: [
                                                 {
-                                                    'event': 'launchpaste.rocheBPSPAddMaterialGridRow3Cell2Button.finished',
+                                                    'event': 'insert.rocheBPSPAddMaterialGridRow3Cell2Button.finished',
                                                     'method': 'refresh'
                                                 }
                                             ]
@@ -15064,7 +15064,7 @@ app.widgetConfig = {
                                     marginTop: '0',
                                     marginBottom: '0',
                                     alignment: 'center-left',
-                                    width: '16%',
+                                    width: '24%',
                                     widgets: [
 
                                         {
@@ -15083,13 +15083,14 @@ app.widgetConfig = {
                                     id: 'rocheBPSPCustomersGridRow1CellCompanySelectorCell',
                                     type: GridCellWidget,
                                     alignment: 'center-center',
-                                    width: '19%',
+                                    width: '15%',
                                     widgets: [
 
                                         {
                                             id: 'rocheBPSPCustomersCompanySelector',
                                             type: DropBoxWidget,
-                                            width: '120%',
+                                            width: '100%',
+                                            applyMeasuresToSection: true,
                                             skin: 'simple_bold_bpsp',
                                             selectFirst: true,
                                             backdrop: true
@@ -15101,13 +15102,14 @@ app.widgetConfig = {
                                     id: 'rocheBPSPCustomersGridRow1CellTerritorySelectorCell',
                                     type: GridCellWidget,
                                     alignment: 'center-center',
-                                    width: '19%',
+                                    width: '15%',
                                     widgets: [
 
                                         {
                                             id: 'rocheBPSPCustomersTerritorySelector',
                                             type: DropBoxWidget,
-                                            width: '120%',
+                                            width: '100%',
+                                            applyMeasuresToSection: true,
                                             skin: 'simple_bpsp',
                                             selectFirst: true,
                                             backdrop: true,
@@ -15121,86 +15123,80 @@ app.widgetConfig = {
                                         }
                                     ]
                                 },
-
-                                {
-                                    id: 'rocheBPSPCustomersGridRow1Cell2',
-                                    type: GridCellWidget,
-                                    marginLeft: '10',
-                                    marginRight: '0',
-                                    marginTop: '0',
-                                    alignment: 'top-right',
-                                    width: '8%',
-                                    height: '0',
-                                    widgets: [
-
-                                        {
-                                            id: 'rocheBPSPCustomersGridRow1Cell2Text',
-                                            type: TextWidget,
-                                            title: '2021',
-                                            body: '1000 EUR',
-                                            width: '100%',
-                                            skin: 'textrightborder',
-                                            titleAlignment: 'start',
-                                            bodyAlignment: 'start',
-                                        }
-                                    ]
-                                },
-
                                 {
                                     id: 'rocheBPSPCustomersGridRow1Cell3',
                                     type: GridCellWidget,
                                     marginLeft: '1',
                                     marginRight: '0',
                                     marginTop: '0',
-                                    alignment: 'top-right',
-                                    width: '8%',
+                                    alignment: 'top-left',
+                                    width: '24%',
                                     height: '0',
                                     widgets: [
-
                                         {
-                                            id: 'rocheBPSPCustomersGridRow1Cell3Text',
-                                            type: TextWidget,
-                                            title: '2021',
-                                            body: '1000 EUR',
-                                            width: '100%',
-                                            skin: 'textrightborder',
-                                            titleAlignment: 'start',
-                                            bodyAlignment: 'start',
-                                        }
-                                    ]
-                                },
-
-                                {
-                                    id: 'rocheBPSPCustomersGridRow1Cell4',
-                                    type: GridCellWidget,
-                                    marginLeft: '1',
-                                    marginRight: '0',
-                                    marginTop: '0',
-                                    alignment: 'top-right',
-                                    width: '8%',
-                                    height: '0',
-                                    widgets: [
-
-                                        {
-                                            id: 'rocheBPSPCustomersGridRow1Cell4Text',
-                                            type: TextWidget,
-                                            title: '2022',
-                                            body: '1000 EUR',
-                                            width: '100%',
-                                            skin: 'textnoborder',
-                                            titleAlignment: 'start',
-                                            bodyAlignment: 'start',
-                                        }
+                                            id: 'rocheBPSPCustomersHeaderInfoGridTable',
+                                            type: GridTableWidget,
+                                            widgets:[
+                                                {
+                                                    id: 'rocheBPSPCustomersHeaderInfoGridTableCell1',
+                                                    type: GridTableCellWidget,
+                                                    widgets: [
+                                                        {
+                                                            id: 'rocheBPSPCustomersHeaderInfoGridTableCell1Text',
+                                                            type: TextWidget,
+                                                            title: '2021',
+                                                            body: '1000 EUR',
+                                                            width: '100%',
+                                                            skin: 'textrightborder',
+                                                            titleAlignment: 'start',
+                                                            bodyAlignment: 'start',
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    id: 'rocheBPSPCustomersHeaderInfoGridTableCell2',
+                                                    type: GridTableCellWidget,
+                                                    widgets: [
+                                                        {
+                                                            id: 'rocheBPSPCustomersHeaderInfoGridTableCell2Text',
+                                                            type: TextWidget,
+                                                            title: '2021',
+                                                            body: '1000 EUR',
+                                                            width: '100%',
+                                                            skin: 'textrightborder',
+                                                            titleAlignment: 'start',
+                                                            bodyAlignment: 'start',
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    id: 'rocheBPSPCustomersHeaderInfoGridTableCell3',
+                                                    type: GridTableCellWidget,
+                                                    widgets: [
+                                                        {
+                                                            id: 'rocheBPSPCustomersHeaderInfoGridTableCell3Text',
+                                                            type: TextWidget,
+                                                            title: '2021',
+                                                            body: '1000 EUR',
+                                                            width: '100%',
+                                                            skin: 'textrightborder',
+                                                            titleAlignment: 'start',
+                                                            bodyAlignment: 'start',
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
                                     ]
                                 },
 
                                 {
                                     id: 'rocheBPSPCustomersGridRow1Cell5',
                                     type: GridCellWidget,
-                                    marginLeft: '5',
+                                    marginLeft: '0',
                                     marginRight: '0',
                                     marginTop: '1%',
-                                    alignment: 'top-center',
+                                    alignment: 'top-right',
                                     width: '20%',
                                     height: '0',
                                     widgets: [
@@ -15210,13 +15206,14 @@ app.widgetConfig = {
                                             type: ButtonWidget,
                                             backgroundColor: '#EBECEC',
                                             action: '',
-                                            width: '100%',
+                                            width: '95%',
                                             applyMeasuresToSection: true,
                                             icon: 'icon-profile',
                                             skin: 'userpanelmain_bpsp',
                                         }
                                     ]
-                                }]
+                                }
+                                ]
                         },
 
                         {
@@ -15224,7 +15221,6 @@ app.widgetConfig = {
                             type: GridRowWidget,
                             marginTop: '1%',
                             width: '100%',
-                            marginLeft: '3%',
                             widgets: [
 
                                 {
@@ -15237,9 +15233,9 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPCustomersGridRow2Cell1SearchBox',
                                             type: TextBoxWidget,
-                                            title: 'Case-Sensitive Search',
                                             width: '400',
                                             skin: 'searchbox',
+                                            defaultText: 'Search',
                                             titleFontColor: '#747b85',
                                             textFontSize: '14',
                                         }

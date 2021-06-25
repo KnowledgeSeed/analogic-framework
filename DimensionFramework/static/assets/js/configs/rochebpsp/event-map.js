@@ -1389,6 +1389,12 @@ app.eventMap = {
             argument: 'RocheBPSPMaterialIPNodeGridTable'
         }
     ],
+    'launchpaste.rocheBPSPAddMaterialGridRow3Cell2Button.finished': [
+        {
+            action: app.fn.executeRequest,
+            argument: 'insert.rocheBPSPAddMaterialGridRow3Cell2Button'
+        }
+    ],
 
     'launch.rocheBPSPMaterialDeleteDataPopupControlPanelCancelButton': [
         {

@@ -3539,7 +3539,9 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return {title: Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 3, 'year')};
+                let b = Utils.parseNumber(db.systemValueGlobalStartingPlanYear);
+                //return {title: Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 3, 'year')};
+                return {title: b -1};
             }
         }
     },
@@ -3552,7 +3554,13 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return {title: Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 4, 'year')};
+                let a = Utils.parseNumber(db.systemValueIpPlanningSegmentedControlRelativeYearValue);
+                let b = Utils.parseNumber(db.systemValueGlobalStartingPlanYear);
+                return {
+                   // title: Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 4, 'year'),
+                    title: b,
+                    body: a === b ? 'T0' : 'Plan'
+                };
             }
         }
     },
@@ -3625,8 +3633,8 @@ app.repository = {
                                      IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
                                 -- Decide 1st column element
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn] As
-                                     IIF('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}'='${db.systemValueGlobalStartingPlanYear}', '([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])',
-                                                        '([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])')
+                                     IIF('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}'='${db.systemValueGlobalStartingPlanYear}', '([Periods].[Periods].[${Utils.parseNumber(db.systemValueGlobalStartingPlanYear) - 1}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])',
+                                                        '([Periods].[Periods].[${db.systemValueGlobalStartingPlanYear}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])')
                                      Set FirstColumn As
                                      {StrToSet('{'+[LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn]+'}')}
                                 -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
@@ -3658,7 +3666,7 @@ app.repository = {
                                 -- column Tuple Create
                                      Set ColumnSelection As
                                         Union({FirstColumn},
-                                        {([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Last Submitted Plan]),
+                                        {([Periods].[Periods].[${db.systemValueGlobalStartingPlanYear}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Last Submitted Plan]),
                                          ([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}01],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
                                          ([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}02],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
                                          ([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}03],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
@@ -3961,7 +3969,9 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return {title: Utils.getGridTableCellByRowAndColumn('rocheBPSPIpPlanningCheckoutGridTableMonthly', 0, 3, 'year')};
+                let b = Utils.parseNumber(db.systemValueGlobalStartingPlanYear);
+                //return {title: Utils.getGridTableCellByRowAndColumn('rocheBPSPIpPlanningCheckoutGridTableMonthly', 0, 3, 'year')};
+                return {title: b -1};
             }
         }
     },
@@ -3974,7 +3984,13 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return {title: Utils.getGridTableCellByRowAndColumn('rocheBPSPIpPlanningCheckoutGridTableMonthly', 0, 4, 'year')};
+                let a = Utils.parseNumber(db.systemValueIpPlanningSegmentedControlRelativeYearValue);
+                let b = Utils.parseNumber(db.systemValueGlobalStartingPlanYear);
+                return {
+                    //title: Utils.getGridTableCellByRowAndColumn('rocheBPSPIpPlanningCheckoutGridTableMonthly', 0, 4, 'year')
+                    title: b,
+                    body: a === b ? 'T0' : 'Plan'
+                };
             }
         }
     },
@@ -4086,8 +4102,8 @@ app.repository = {
                                      IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
                                 -- Decide 1st column element
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn] As
-                                     IIF('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}'='${db.systemValueGlobalStartingPlanYear}', '([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])',
-                                                        '([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])')
+                                     IIF('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}'='${db.systemValueGlobalStartingPlanYear}', '([Periods].[Periods].[${Utils.parseNumber(db.systemValueGlobalStartingPlanYear) - 1}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])',
+                                                        '([Periods].[Periods].[${db.systemValueGlobalStartingPlanYear}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])')
                                      Set FirstColumn As
                                      {StrToSet('{'+[LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn]+'}')}
                                 -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
@@ -4119,7 +4135,7 @@ app.repository = {
                                 -- column Tuple Create
                                      Set ColumnSelection As
                                         Union({FirstColumn},
-                                        {([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Last Submitted Plan]),
+                                        {([Periods].[Periods].[${db.systemValueGlobalStartingPlanYear}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Last Submitted Plan]),
                                          ([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}01],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
                                          ([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}02],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
                                          ([Periods].[Periods].[${db.systemValueIpPlanningSegmentedControlRelativeYearValue}03],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan]),
@@ -5139,7 +5155,14 @@ app.repository = {
                 let values = Utils.getOrdinalValuePairsAndEmptyFilledValues([], v('rocheBPSPAddMaterialGridRow3Cell2Button.data.cells'));
                 let selectedElements = v('rocheBPSPAddMaterialGridRow3Cell2Button.data.selectedElements'),
                     selectedValues = Utils.getArrayWithValues(v('rocheBPSPAddMaterialGridRow3Cell2Button.data.cells').filter((e) => e.FormattedValue !== '').length, 0);
-                return `[${Utils.getOrdinalValuePairs(selectedElements, selectedValues)},${values}]`;
+                let ordinalValuePairs = Utils.getOrdinalValuePairs(selectedElements, selectedValues), patch = [];
+                if(ordinalValuePairs !== ''){
+                    patch.push(ordinalValuePairs);
+                }
+                if(values !== ''){
+                    patch.push(values);
+                }
+                return patch.length === 0 ?  '[]' : `[${patch.join(',')}]`;
             }
         }
     },
@@ -5174,6 +5197,13 @@ app.repository = {
             }
         },
         launchpaste: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db) => {
+                return Repository.rocheBPSPAddMaterialRemoveClipBoard.launch.body(db);
+            }
+        },
+        insert: {
             url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
             type: 'PATCH',
             body: (db) => {
@@ -6633,9 +6663,9 @@ app.repository = {
                             let result = [], selected = v('rocheBPSPCustomersCompanySelector.value');
                             for (let i = 0; i < r.Cells.length; i = i + 2) {
                                 result.push({
-                                    name: r.Cells[i].FormattedValue,
-                                    key: r.Cells[i + 1].FormattedValue,
-                                    on: selected === r.Cells[i].FormattedValue
+                                    name: r.Cells[i + 1].FormattedValue,
+                                    key: r.Cells[i].FormattedValue,
+                                    on: selected === r.Cells[i + 1].FormattedValue
                                 });
                             }
                             return result;
