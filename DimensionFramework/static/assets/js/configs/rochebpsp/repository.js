@@ -6502,26 +6502,25 @@ app.repository = {
                             YearPlusThree = yearzero + 3,
                             yearPlusFour = yearzero + 4;
 
-
-                        return `{"MDX":"
+                        return `{"MDX":"    
                                                 
                     With
                     --Create deault subset for the Rows by systemValueGlobalCompanyProductPlanVersion
                          Set DefaultProductRows AS
-                         {TM1DRILLDOWNMEMBER({[Products].[BPSP Budget].[PL1]}, ALL, RECURSIVE )}
+                         {TM1DRILLDOWNMEMBER({[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[PL1]}, ALL, RECURSIVE )}
                     --Create deault subset for the Rows by systemValueGlobalCompanyProductPlanVersion and systemValueGlobalCompanyFocusedElement
                          Set FocusedOnProductRows AS
-                         {TM1DRILLDOWNMEMBER({[Products].[BPSP Budget].[${db.systemValueCustomerReportFocusedProduct}]}, ALL, RECURSIVE )}
+                         {TM1DRILLDOWNMEMBER({[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[${db.systemValueCustomerReportFocusedProduct}]}, ALL, RECURSIVE )}
                     --Decide which rowSet to use
                          MEMBER [Products].[BPSP Budget].[ProductIsFocused] AS 
                          IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
                     -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
                          MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductName] as 
-                                [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Description')
+                                [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
                          MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductCaption] as 
-                                [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Element')
+                                [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
                          MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel] as 
-                                [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Product Level - Name')
+                                [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
                     
                     SELECT 
                     
@@ -6541,8 +6540,8 @@ app.repository = {
                          
                        }
                        PROPERTIES [Periods].[Periods].[Caption] ,[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Caption]  ON COLUMNS , 
-                       StrToSet([Products].[BPSP Budget].[ProductIsFocused])
-                       PROPERTIES [Products].[BPSP Budget].[BPSP Budget Caption]  ON ROWS 
+                       StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])
+                       PROPERTIES [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption]  ON ROWS 
                     FROM [Sales Report by Product] 
                     WHERE 
                       (
@@ -6677,7 +6676,7 @@ app.repository = {
     },
 
     rocheBPSPCustomersCompanySelector: {
-      choose: {
+        choose: {
             execute: (db) => {
                 Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPCustomersCompanySelector.value'));
             }
@@ -6909,6 +6908,253 @@ app.repository = {
             {
                 execute: (db) => {
                     WidgetValue['systemValueCustomerReportFocusedProduct'] = Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorShortcutPopupGridTable', 0).productCode;
+                }
+            },
+    },
+
+    rocheBPSPProductReportChart: {
+
+        initCondition: (db) => {
+            let b = Utils.isValueExistingAndNotEmpty('rocheBPSPProductReportGridRow1Cell3DropBox') &&
+                Utils.isValueExistingAndNotEmpty('rocheBPSPProductReportGridRow1Cell5DropBox')
+            return b;
+        },
+
+
+        initDefault: (db) => {
+            return [];
+        },
+
+        init: [
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+                type: 'POST',
+                body: (db) =>
+
+                    `{"MDX":"
+                                    SELECT
+                                      {[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[${db.systemValueCustomerReportFocusedProduct}]}
+                                       PROPERTIES [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption]   ON COLUMNS ,
+                                     {
+                                         ([Periods].[Periods].[202001],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                                         ([Periods].[Periods].[202002],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                                         ([Periods].[Periods].[202003],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                                         ([Periods].[Periods].[202004],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                                         ([Periods].[Periods].[202005],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                                         ([Periods].[Periods].[202006],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                                         ([Periods].[Periods].[202007],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                                         ([Periods].[Periods].[202008],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                                         ([Periods].[Periods].[202009],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                                         ([Periods].[Periods].[202010],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                                         ([Periods].[Periods].[202011],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                                         ([Periods].[Periods].[202012],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                                         ([Periods].[Periods].[202101],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202102],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202103],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202104],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202105],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202106],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202107],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202108],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202109],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202110],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202111],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202112],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202201],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202202],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202203],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202204],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202205],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202206],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202207],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202208],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202209],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202210],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202211],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202212],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202301],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202302],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202303],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202304],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202305],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202306],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202307],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202308],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202309],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202310],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202311],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202312],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202401],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202402],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202403],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202404],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202405],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202406],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202407],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202408],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202409],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202410],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202411],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                                         ([Periods].[Periods].[202412],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan])
+                                       }
+                                       PROPERTIES [Periods].[Periods].[Caption] ,[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Caption]  ON ROWS
+                                    FROM [Sales Report by Product]
+                                    WHERE
+                                      (
+                                       [Versions].[Versions].[Live],
+                                       [Companies].[Companies].[1391],
+                                       [Receivers].[Receivers].[PL],
+                                       [Currency Keys].[Currency Keys].[CHF],
+                                       [Measures Sales Report by Product].[Measures Sales Report by Product].[Value]
+                                      )
+
+
+            "}`,
+                parsingControl: {
+                    type: 'list',
+                    query:
+                        (r, x) => {
+                            return {
+                                value: r.Cells[x].Members[5].Name,
+                                label: r.Cells[x].Members[5].Name
+                            };
+                        }
+                }
+
+            },
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+                type: 'POST',
+                body: (db) => `{"MDX":"
+
+                SELECT
+                  {[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[${db.systemValueCustomerReportFocusedProduct}]}
+                   PROPERTIES [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption]   ON COLUMNS ,
+                 {
+                     ([Periods].[Periods].[202001],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                     ([Periods].[Periods].[202002],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                     ([Periods].[Periods].[202003],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                     ([Periods].[Periods].[202004],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                     ([Periods].[Periods].[202005],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                     ([Periods].[Periods].[202006],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                     ([Periods].[Periods].[202007],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                     ([Periods].[Periods].[202008],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                     ([Periods].[Periods].[202009],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                     ([Periods].[Periods].[202010],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                     ([Periods].[Periods].[202011],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                     ([Periods].[Periods].[202012],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+                     ([Periods].[Periods].[202101],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202102],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202103],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202104],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202105],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202106],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202107],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202108],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202109],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202110],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202111],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202112],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202201],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202202],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202203],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202204],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202205],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202206],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202207],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202208],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202209],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202210],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202211],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202212],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202301],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202302],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202303],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202304],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202305],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202306],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202307],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202308],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202309],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202310],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202311],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202312],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202401],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202402],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202403],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202404],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202405],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202406],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202407],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202408],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202409],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202410],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202411],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+                     ([Periods].[Periods].[202412],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan])
+                   }
+                   PROPERTIES [Periods].[Periods].[Caption] ,[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Caption]  ON ROWS
+                FROM [Sales Report by Product]
+                WHERE
+                  (
+                   [Versions].[Versions].[Live],
+                   [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'key')}],
+                   [Receivers].[Receivers].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell3DropBox', 'key')}],
+                   [Currency Keys].[Currency Keys].[${v('rocheBPSPProductReportGridRow1Cell5DropBox.value')}],
+                   [Measures Sales Report by Product].[Measures Sales Report by Product].[Value]
+                  )      
+
+            "}`,
+                parsingControl: {
+                    type: 'matrix',
+                    length: 1,
+                    query: [
+                        (r, x) => {
+                            return {value: r.Cells[x].FormattedValue};
+                        }
+                    ]
+                }
+
+            }
+        ],
+    },
+
+    rocheBPSPProductReportProductSelectorChartButton: {
+        state: (db) => {
+            return {
+                //label: v('systemValueCustomerReportFocusedProduct') === '' ? 'PL1'  :  v('systemValueCustomerReportFocusedProduct')
+                label: v('rocheBPSPProductReportGridTable_0_0.data.label')
+            };
+        }
+        ,
+    },
+
+
+    rocheBPSPProductReportMaterialSelectorPopopInChartGridTable: {
+        initCondition: (db) => {
+            return Utils.isGridTableLoaded('rocheBPSPProductReportGridTable')
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            execute: (db) => {
+                return v('rocheBPSPProductReportGridTable.cellData').filter(e => ['PL1', 'PL2', 'PL3'].includes(e[0].productLevel)).map(e => {
+                    return [{
+                        label: e[0].label,
+                        skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].productLevel,
+                        productCode: e[1].title
+                    }];
+                });
+            }
+        }
+    },
+
+
+    rocheBPSPProductReportMaterialSelectorPopopInChartGridTableButton01: {
+        launch:
+            {
+                execute: (db) => {
+                    WidgetValue['systemValueCustomerReportFocusedProduct'] = Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0).productCode;
                 }
             },
     },

@@ -1881,7 +1881,7 @@ app.eventMap = {
 
     ],
 
-     'launch.rocheBPSPAddMaterialRemoveClipBoard.finished': [
+    'launch.rocheBPSPAddMaterialRemoveClipBoard.finished': [
         {
             action: app.fn.forceRefreshWithDelay,
             argument: ['RocheBPSPMaterialsAddMaterialClipboard', 500]
@@ -1931,6 +1931,10 @@ app.eventMap = {
             argument: 'rocheBPSPProductReportChart'
         },
         {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPProductReportProductSelectorChartCell'
+        },
+        {
             action: app.fn.showWidget,
             argument: 'rocheBPSPProductReportGridTable'
         }
@@ -1944,7 +1948,12 @@ app.eventMap = {
         {
             action: app.fn.showWidget,
             argument: 'rocheBPSPProductReportChart'
-        }
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPProductReportProductSelectorChartCell'
+        },
+
     ],
 
 
@@ -1956,6 +1965,14 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPProductReportMaterialSelectorShortcutPopupGridTable'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportMaterialSelectorPopopInChartGridTable'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportProductSelectorChartButton'
         }
     ],
 
@@ -1964,6 +1981,54 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPProductReportMaterialSelectorShortcutPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportChart'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportMaterialSelectorPopopInChartGridTable'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportProductSelectorChartButton'
+        }
+    ],
+
+
+    'launch.rocheBPSPProductReportProductSelectorChartButton': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPProductReportMaterialSelectorPopopInChart'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportMaterialSelectorPopopInChartGridTable'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportChart'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportProductSelectorChartButton'
+        }
+    ],
+
+
+    'launch.rocheBPSPProductReportMaterialSelectorPopopInChartGridTable_row_0': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductReportMaterialSelectorPopopInChart'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportChart'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportProductSelectorChartButton'
         }
     ],
 
