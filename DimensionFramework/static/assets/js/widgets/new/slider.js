@@ -35,7 +35,7 @@ class SliderWidget extends Widget {
         v.value = Utils.parseNumber(v.value); //temp!!!!!!
 
         this.value = v;
-        ;
+
         return `
 <div data-id="${this.options.id}" class="ks-slider ks-slider-${v.skin}" style="${this.getGeneralStyles(d).join('')}">
     <div class="ks-slider-touch" style="display: none;">
@@ -126,10 +126,8 @@ class SliderWidget extends Widget {
     }
 
     createSlider(section) {
-        const id = section.prop('id'), isTouchMode = app.isTouched, sliderDiv = section.find('.ks-slider'),
-            d = this.value, s = SliderWidget.slidersByIds[id];
-        const widgetDiv = SliderWidget.getWidgetDiv(sliderDiv), ordinal = d.ordinal, css = d.css,
-            tooltipFontSize = css.tooltip['font-size'];
+        const id = section.prop('id'), isTouchMode = app.isTouched, sliderDiv = section.find('.ks-slider'), d = this.value, s = SliderWidget.slidersByIds[id];
+        const widgetDiv = SliderWidget.getWidgetDiv(sliderDiv), ordinal = d.ordinal, css = d.css, tooltipFontSize = css.tooltip['font-size'];
 
         if (s) {
             s.destroy();
@@ -175,8 +173,7 @@ class SliderWidget extends Widget {
 
         sliderDiv.find('.ks-slider-track-zero-indicator').css('left', width / 2 + offset);
 
-        const trackFillWidth = width * (trackFillStartValue - d.minRange) / totalRange,
-            noUiConnect = widgetDiv.find('.noUi-connect');
+        const trackFillWidth = width * (trackFillStartValue - d.minRange) / totalRange, noUiConnect = widgetDiv.find('.noUi-connect');
         const trackFill = $('<div class="ks-slider-track-fill" style="width: ' + trackFillWidth + 'px;"><\/div>');
 
         widgetDiv.find('.noUi-connects').append(trackFill).promise().then(() => {
@@ -268,7 +265,7 @@ class SliderWidget extends Widget {
             e = $(Utils.stopEvent(e).currentTarget);
 
             let sliderDiv = SliderWidget.getSliderDiv(e), v,
-                p = sliderDiv.removeClass('Highlighted').find('.ks-slider-touch,.ks-slider-options');
+            p = sliderDiv.removeClass('Highlighted').find('.ks-slider-touch,.ks-slider-options');
 
             if (e.hasClass('ks-button-update')) {
                 if (isTouchMode) {
@@ -384,7 +381,7 @@ class SliderWidget extends Widget {
 
     static setRulerValue(sliderDiv, value) {
         let s = sliderDiv.find('.ks-slider-touch-track'), p = sliderDiv.find('.ks-slider-touch-track-overflow'), min,
-            max, offset, size;
+        max, offset, size;
 
         min = p.data('min-range');
         max = p.data('max-range');

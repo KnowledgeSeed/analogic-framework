@@ -121,8 +121,8 @@ class ButtonWidget extends Widget {
             return section.find('a').on('click', (e) => {
                 let w = $(e.currentTarget), t = [];
                 t.push('<div id="buttonPopup" class="ks-popup ks-popup-holder"><div class="ks-popup-background"></div><div class="ks-popup-content-holder"><div class="ks-popup-content">');
-                t.push(w.data('confirmmessage2'))
-                t.push('<br><br><a id="deleteOk" class="ks-popup-button">Ok</a><a id="deleteCancel"  class="ks-popup-button-cancel">Cancel</a></div></div></div>')
+                t.push(w.data('confirmmessage2'));
+                t.push('<br><br><a id="deleteOk" class="ks-popup-button">Ok</a><a id="deleteCancel"  class="ks-popup-button-cancel">Cancel</a></div></div></div>');
                 El.body.prepend(t.join('')).promise().then(() => {
                     $('#deleteOk').on('click', () => {
                         Widget.doHandleSystemEvent(w, e);
