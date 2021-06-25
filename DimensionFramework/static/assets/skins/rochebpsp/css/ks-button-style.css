@@ -1208,7 +1208,7 @@
 /* blue_bg_bpsp */
 
 .ks-button-blue_bg_bpsp {
-    display: flex;
+    display: flex !important;
     justify-content: center;
 
 }

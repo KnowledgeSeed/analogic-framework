@@ -26,7 +26,7 @@ class TextWidget extends Widget {
             titleFontSize: this.getRealValue('titleFontSize', d, false),
             titleFontWeight: this.getRealValue('titleFontWeight', d, false),
             titleAlignment: this.getRealValue('titleAlignment', d, false),
-            ordinal: typeof d.ordinal !== 'undefined' ? d.ordinal : '',
+            ordinal: typeof d.ordinal !== 'undefined' ? d.ordinal : ''
         };
         this.value = {value: v.title, editable: v.editable, performable: v.performable};
 

@@ -70,7 +70,7 @@ class RepositoryExtractExport extends Export {
         variables = val.match(/\${[^}\s]+}/g), v, newVal = [], added = [], newVars = [];
         newVal.push('(db) => {');
         newVal.push('return {');
-        for (v of variables) {
+        for (v of variables || []) {
             if (!added.includes(v)) {
                 let nv = v.replace(/\${db./, '').replace(/}/, ''), tv = nv.replace(/\./g, '_');
                 newVars.push(tv + ': db.' + nv);

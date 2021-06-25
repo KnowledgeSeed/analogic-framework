@@ -22,7 +22,6 @@ class ScrollTableWidget extends Widget {
         colHeaderHtml = ['<thead>', '<tr><td style="height: 16px;"><\/td><\/tr>'.repeat(ribbonsCount), '<tr><th id="debug" style="color: black; min-width: ', o.headerWidth, 'px !important;" class="ks-scrolltable-name-col">&nbsp;<\/th><\/tr><\/thead><tbody style="height: ', o.height, 'px;" class="ks-scrolltable-header-col-body">'],
         selectedCellState = (withState && ScrollTableWidget.selectedCellStates) ? (ScrollTableWidget.selectedCellStates[o.id] || {}) : {}, cellFormatsByOrdinals = this.getCellFormatsByOrdinals(data[3]);
 
-
         for (i = 0; i < colHeaderRowCount; ++i) {
             e = colHeaderRowData[i];
             label = e.label;

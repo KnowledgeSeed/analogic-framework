@@ -24,7 +24,7 @@ class ImageWidget extends Widget {
         } else {
             html.push('<img src="' + app.assetsUrl + '/skins/' + app.applicationAssetsFolder + '/images/' + v.fileName + '" alt="' + v.title + '" style="' + s.join('') + '">');
         }
-        html.push('</div>')
+        html.push('</div>');
 
         return html.join('');
     }
