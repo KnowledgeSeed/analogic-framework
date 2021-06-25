@@ -10,6 +10,7 @@ class DropBoxWidget extends Widget {
         const v = {
             backdrop: this.getRealValue('backdrop', d, false),
             editable: this.getRealValue('editable', d, true),
+            panelWidth: this.getRealValue('panelWidth', d, false),
             placeHolder: this.getRealValue('placeHolder', d, ''),
             selectFirst: this.getRealValue('selectFirst', d, false),
             skin: this.getRealValue('skin', d, 'standard'),
@@ -44,7 +45,7 @@ class DropBoxWidget extends Widget {
 
         let hide = o.hideIfNoData === true && d.length === 0;
 
-        let mainDivStyle = this.getGeneralStyles(d), titleStyles = [], textStyles = [];
+        let mainDivStyle = this.getGeneralStyles(d), titleStyles = [], textStyles = [], panelStyles = [];
 
         v.titleTextAlignment && titleStyles.push(`display: flex;padding-left: 0px;justify-content: ${v.titleTextAlignment === 'start' || v.titleTextAlignment === 'end' ? `flex-${v.titleTextAlignment}` : v.titleTextAlignment};`);
         v.titleFontColor && titleStyles.push(`color:${v.titleFontColor};`);
@@ -53,6 +54,9 @@ class DropBoxWidget extends Widget {
         v.textAlignment && textStyles.push(`text-align:${v.textAlignment};`);
         v.textFontColor && textStyles.push(`color:${v.textFontColor};`);
         v.textFontSize && textStyles.push(`font-size:${v.textFontSize}px;`);
+
+        panelStyles.push('display:none;');
+        v.panelWidth && panelStyles.push(`width:${v.panelWidth}px;`);
 
         hide && mainDivStyle.push('display:none;');
 
@@ -72,7 +76,7 @@ class DropBoxWidget extends Widget {
             </div>
         </div>
     </div>
-    <div class="ks-dropbox-panel" style="display:none;">
+    <div class="ks-dropbox-panel" style="${panelStyles.join('')}">
         ${v.backdrop ? '<div class="ks-dropbox-backdrop"><\/div>' : ''}
         <div class="ks-dropbox-panel-inner">${this.getItems(data, v)}</div>
     </div>

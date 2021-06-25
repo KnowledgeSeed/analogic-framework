@@ -13,7 +13,7 @@ gridtablecell -> cellSkin
 gridtableheadercell -> cellHeaderSkin
 gridtable -> hideIfNoData
 
-dropbox -> backdrop, selectFirst
+dropbox -> backdrop, selectFirst, panelWidth
 
 eventMap -> event.widgetid.(finished|started)
 

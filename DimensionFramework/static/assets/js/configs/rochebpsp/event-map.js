@@ -1337,6 +1337,15 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPMaterialMoveDataPopup'
+        },
+         {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPMaterialGridTable'
+        },
+
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialIPNodeGridTable'
         }
     ],
 
@@ -1442,16 +1451,16 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow3Cell1Dropbox'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow4Cell1Dropbox'
         }
     ],
     'launch.rocheBPSPMaterialAddDummyGridTablePopupControlPanelCancelButton.finished': [
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPMaterialAddDummyGridTablePopup'
-        },
-        {
-            action: app.fn.forceRefresh,
-            argument: 'rocheBPSPMaterialGridTable'
         }
     ],
 
@@ -1481,6 +1490,10 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow4Cell1Dropbox'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow3Cell1Dropbox'
         }
     ],
     'launch.rocheBPSPMaterialAddDummyGridTableIPpopupControlPanelCancelButton': [
@@ -1526,6 +1539,15 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPMaterialMoveDataIPNodePopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPMaterialGridTable'
+        },
+
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialIPNodeGridTable'
         }
     ],
 

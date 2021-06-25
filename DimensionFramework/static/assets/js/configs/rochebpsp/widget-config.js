@@ -10847,11 +10847,17 @@ app.widgetConfig = {
                                                         },
                                                         {
                                                             'event': 'bodyReady',
-                                                            'method': 'refreshWithWaitingForEvent',
+                                                            'method': 'refreshWithWaitingForEvents',
                                                             'parameters': [
-                                                                'rendered.rocheBPSPMaterialPageInit',
+                                                                'refresh.rocheBPSPMaterialPageInit.finished',
+                                                                'refresh.rocheBPSPMaterialAddDummyPopupGridRow3Cell1Dropbox.finished',
+                                                                'init.rocheBPSPMaterialGridRow1Cell2DropBox.finished'
                                                             ]
                                                         },
+                                                        {
+                                                            event: 'choose.rocheBPSPMaterialAddDummyPopupGridRow3Cell1Dropbox.finished',
+                                                            method: 'refresh'
+                                                        }
                                                     ]
                                                 }
 
@@ -11615,9 +11621,10 @@ app.widgetConfig = {
                                                         },
                                                         {
                                                             'event': 'bodyReady',
-                                                            'method': 'refreshWithWaitingForEvent',
+                                                            'method': 'refreshWithWaitingForEvents',
                                                             'parameters': [
-                                                                'rendered.rocheBPSPMaterialPageInit',
+                                                                'refresh.rocheBPSPMaterialPageInit.finished',
+                                                                'init.rocheBPSPMaterialGridRow1Cell2DropBox.finished'
                                                             ]
                                                         },
                                                     ]
@@ -12189,10 +12196,10 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPAddMaterialGridRow4Cell3Dropbox',
                                             type: DropBoxWidget,
-                                            width: '190',
+                                            width: '80',
+                                            panelWidth: 160,
                                             marginRight: 5,
                                             skin: 'simple_bold_with_border_bpsp',
-                                            //  selectFirst: true,
                                             backdrop: true
                                         }
 
@@ -12203,14 +12210,14 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPAddMaterialGridRow4Cell4',
                                     type: GridCellWidget,
-                                    alignment: 'bottom-right',
+                                    alignment: 'bottom-left',
                                     width: '10%',
                                     marginLeft: '40',
                                     widgets: [
                                         {
                                             id: 'rocheBPSPAddMaterialGridRow4Cell4Search',
                                             type: TextBoxWidget,
-                                            width: '190',
+                                            width: '130',
                                             skin: 'searchbox_material_bpsp',
                                             titleFontColor: '#747b85',
                                             textFontSize: '14',
@@ -12224,18 +12231,24 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPAddMaterialGridRow4Cell5',
                                     type: GridCellWidget,
-                                    alignment: 'bottom-right',
+                                    alignment: 'bottom-left',
                                     width: '10%',
                                     marginLeft: '20px',
                                     widgets: [
                                         {
                                             id: 'rocheBPSPAddMaterialGridRow4Cell5Search',
                                             type: TextBoxWidget,
-                                            width: '190',
+                                            width: '130',
                                             skin: 'searchbox_material_bpsp',
                                             titleFontColor: '#747b85',
                                             textFontSize: '14',
                                             defaultText: 'IP Node...',
+                                        },
+                                        {
+                                            id: 'rocheBPSPAddMaterialGridRow4Cell5ValidToggle',
+                                            type: ToggleWidget,
+                                            titleOn: 'Valid only',
+                                            titleOff: 'Valid only'
                                         }
 
 
