@@ -103,6 +103,7 @@ GridTableCell:
     gridtable_checkout_hierarchy_bpsp_PL1, ..., gridtable_checkout_hierarchy_bpsp_PL6
     gridtable_hierarchy_bpsp_PL1, ..., gridtable_hierarchy_bpsp_PL6
     writeable_bpsp
+    customer_right_border
 
 GridTableHeaderCell:
   no_border_bpsp

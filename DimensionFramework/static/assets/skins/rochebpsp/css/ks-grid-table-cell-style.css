@@ -47,6 +47,10 @@
     background-color: rgba(239, 193, 209, 0.5);;
 }
 
+.ks-grid-table-cell-customer_right_border {
+    border-right: 1px solid #B1B3B3;
+}
+
 
 /* end ote */
 

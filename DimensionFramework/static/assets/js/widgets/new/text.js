@@ -57,8 +57,7 @@ class TextWidget extends Widget {
     <div class="ks-text-inner">
         ${v.icon !== false ? `<div class="ks-text-icon" data-id="${o.id}" data-action="perform" data-ordinal="${v.ordinal}"><span style="${iconStyles.join('')}" class="${v.icon}"></span></div>` : ''}
         <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title ? Utils.stripHtml(v.title) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title ? v.title : ''}</div>
-        <div class="ks-text-separator"></div>
-        <div class="ks-text-body" style="${bodyStyles.join('')}">${v.body ? v.body : ''}</div>
+        ${v.body ? `<div class="ks-text-body" style="${bodyStyles.join('')}">${v.body}</div>` : ''}
     </div>
 </div>`;
     }

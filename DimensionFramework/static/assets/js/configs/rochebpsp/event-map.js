@@ -967,6 +967,10 @@ app.eventMap = {
             action: app.fn.openPage,
             argument: 'rocheBPSPMaterial'
         },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['RocheBPSPMaterialsAddMaterialSearch']
+        },
     ],
 
     'launch.rocheBPSPMaterialGridRow4Cell1Button': [
@@ -1620,6 +1624,10 @@ app.eventMap = {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPAddMaterialGridRow4Cell5Search'
         },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell5ValidToggle'
+        }
 
     ],
 
@@ -1917,6 +1925,12 @@ app.eventMap = {
             argument: 'RocheBPSPMaterialsAddMaterialSearch'
         }
 
+    ],
+    'launch.RocheBPSPMaterialsAddMaterialSearchSelectAll.finished' : [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        }
     ],
 
     'launch.rocheBPSPMainGridRow3Cell4Button': [

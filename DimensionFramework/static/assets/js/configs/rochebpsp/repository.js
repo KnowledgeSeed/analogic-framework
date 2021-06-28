@@ -3541,7 +3541,7 @@ app.repository = {
             execute: (db) => {
                 let b = Utils.parseNumber(db.systemValueGlobalStartingPlanYear);
                 //return {title: Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 3, 'year')};
-                return {title: b -1};
+                return {title: b - 1};
             }
         }
     },
@@ -3557,7 +3557,7 @@ app.repository = {
                 let a = Utils.parseNumber(db.systemValueIpPlanningSegmentedControlRelativeYearValue);
                 let b = Utils.parseNumber(db.systemValueGlobalStartingPlanYear);
                 return {
-                   // title: Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 4, 'year'),
+                    // title: Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 4, 'year'),
                     title: b,
                     body: a === b ? 'T0' : 'Plan'
                 };
@@ -3971,7 +3971,7 @@ app.repository = {
             execute: (db) => {
                 let b = Utils.parseNumber(db.systemValueGlobalStartingPlanYear);
                 //return {title: Utils.getGridTableCellByRowAndColumn('rocheBPSPIpPlanningCheckoutGridTableMonthly', 0, 3, 'year')};
-                return {title: b -1};
+                return {title: b - 1};
             }
         }
     },
@@ -4891,10 +4891,52 @@ app.repository = {
     RocheBPSPMaterialsAddMaterialSearchSelectAll: {
         init: {
             execute: (db) => {
-                return {
-                    value: v('RocheBPSPMaterialsAddMaterialSearchSelectAll.switch.value')
-                }
+                return {visible: Utils.isGridTableLoaded('RocheBPSPMaterialsAddMaterialSearch')};
             }
+        },
+        launch: {
+            url: (db) => `/api/v1/Processes('MODULE - UI - Material Search Table Select All Filtered')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => {
+                let dbV = v('rocheBPSPAddMaterialGridRow4Cell3Dropbox.value');
+                dbV = dbV === false ? '' : dbV;
+
+                let IDsearch = '';
+                if (Utils.isValueExistingAndNotEmpty('rocheBPSPAddMaterialGridRow4Cell1Search')) {
+                    IDsearch = v('rocheBPSPAddMaterialGridRow4Cell1Search.value');
+                }
+
+                let DescriptionSearch = '';
+                if (Utils.isValueExistingAndNotEmpty('rocheBPSPAddMaterialGridRow4Cell2Search')) {
+                    DescriptionSearch = v('rocheBPSPAddMaterialGridRow4Cell2Search.value');
+                }
+
+                let ProfitCenterSearch = '';
+                if (Utils.isValueExistingAndNotEmpty('rocheBPSPAddMaterialGridRow4Cell4Search')) {
+                    ProfitCenterSearch = v('rocheBPSPAddMaterialGridRow4Cell4Search.value');
+                }
+
+                let IpNodeSearch = '';
+                if (Utils.isValueExistingAndNotEmpty('rocheBPSPAddMaterialGridRow4Cell5Search')) {
+                    IpNodeSearch = v('rocheBPSPAddMaterialGridRow4Cell5Search.value');
+                }
+                return `{
+                        "Parameters": [
+                                {"Name": "pMaterialCategory", "Value": "${dbV}"},
+                                {"Name": "pProfitCenterBudget", "Value": "${ProfitCenterSearch}"},
+                                {"Name": "pIPProfitCenterBudget", "Value": "${IpNodeSearch}"},
+                                {"Name": "pElement", "Value": "${IDsearch}"},
+                                {"Name": "pMediumName", "Value": "${DescriptionSearch}"},
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}"}
+                        ]
+                    }`;
+            }
+
+            /*    execute: (db) => {
+                    return {
+                        value: v('RocheBPSPMaterialsAddMaterialSearchSelectAll.switch.value')
+                    }
+                }*/
         }
     },
 
@@ -5046,7 +5088,7 @@ app.repository = {
                                 SELECT 
                                    {ColumnSelection} 
                                    PROPERTIES [Measures Material Information by Company].[Measures Material Information by Company].[Caption]  ON COLUMNS ,
-                                   {
+                                   Subset(
                                    Filter({
                                      FILTER({
                                       FILTER({
@@ -5059,9 +5101,10 @@ app.repository = {
                                 }, InStr([Materials].[Materials].CurrentMember.Properties('Profit Center Budget - Key') ,'${ProfitCenterSearch}')<>0)
                                 }, InStr([Materials].[Materials].CurrentMember.Properties('IP Profit Center Budget - Key'), '${IpNodeSearch}')<>0)
                                 }, InStr([Materials].[Materials].CurrentMember.Properties('Element'), '${IDsearch}' ) <> 0 AND
-                                   InStr([Materials].[Materials].CurrentMember.Properties('Medium Name'), '${DescriptionSearch}' ) <> 0 )}
+                                   InStr([Materials].[Materials].CurrentMember.Properties('Medium Name'), '${DescriptionSearch}' ) <> 0 )
                                    } 
-                                   ,[Material Information by Company].([Companies].[Companies].[1391],[Measures Material Information by Company].[Measures Material Information by Company].[Status flag])${v('rocheBPSPAddMaterialGridRow4Cell5ValidToggle.switch.value') ? '=' : '>='}0)  
+                                   ,[Material Information by Company].([Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')}],[Measures Material Information by Company].[Measures Material Information by Company].[Status flag])${v('rocheBPSPAddMaterialGridRow4Cell5ValidToggle.switch.value') ? '=' : '>='}0)
+                                   ,0,1000)  
                                    PROPERTIES [Materials].[Materials].[Caption]  ON ROWS 
                                 FROM [Material Information by Company] 
                                 WHERE 
@@ -5159,13 +5202,13 @@ app.repository = {
                 let selectedElements = v('rocheBPSPAddMaterialGridRow3Cell2Button.data.selectedElements'),
                     selectedValues = Utils.getArrayWithValues(v('rocheBPSPAddMaterialGridRow3Cell2Button.data.cells').filter((e) => e.FormattedValue !== '').length, 0);
                 let ordinalValuePairs = Utils.getOrdinalValuePairs(selectedElements, selectedValues), patch = [];
-                if(ordinalValuePairs !== ''){
+                if (ordinalValuePairs !== '') {
                     patch.push(ordinalValuePairs);
                 }
-                if(values !== ''){
+                if (values !== '') {
                     patch.push(values);
                 }
-                return patch.length === 0 ?  '[]' : `[${patch.join(',')}]`;
+                return patch.length === 0 ? '[]' : `[${patch.join(',')}]`;
             }
         }
     },
@@ -5692,7 +5735,7 @@ app.repository = {
         initCondition: (db) => {
             let b = Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow1Cell2DropBox') &&
                 db.systemValueGlobalCompanyProductPlanVersion &&
-                Utils.getGridTableCell('RocheBPSPMaterialIPNodeGridTable',2).title
+                Utils.getGridTableCell('RocheBPSPMaterialIPNodeGridTable', 2).title
             return b;
         },
         initDefault: (db) => {
@@ -5713,7 +5756,7 @@ app.repository = {
                                   {TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')}, 
                                    [Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('Product Level - Name') = 'PL6')},
                                    [Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BA ${db.systemValueGlobalCompanyProductPlanVersion}') = 
-                                   [Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].[${Utils.getGridTableCell('RocheBPSPMaterialIPNodeGridTable',2).title}].Properties('BA ${db.systemValueGlobalCompanyProductPlanVersion}')
+                                   [Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].[${Utils.getGridTableCell('RocheBPSPMaterialIPNodeGridTable', 2).title}].Properties('BA ${db.systemValueGlobalCompanyProductPlanVersion}')
                                     )}
                               ON ROWS 
                             FROM [}ElementAttributes_Materials]
@@ -5907,8 +5950,26 @@ app.repository = {
                         ]}`
             },
     },
+    rocheBPSPMaterialsAddMaterialSearchTruncatedWarning: {
+        initCondition: (db) => {
+            return Repository.RocheBPSPMaterialsAddMaterialSearchSelectAll.init.execute(db);
+        },
+        initDefault: (db) => {
+            return {visible: false};
+        },
+        init: {
+            execute: (db) => {
+                return {visible: v('RocheBPSPMaterialsAddMaterialSearch.cellData.length') === 1000};
+            }
+        }
+    },
 
     rocheBPSPAddMaterialGridRow4Cell7Button: {
+        init: {
+            execute: (db) => {
+                return Repository.RocheBPSPMaterialsAddMaterialSearchSelectAll.init.execute(db);
+            }
+        },
         launch:
             {
                 url: (db) => `/api/v1/Processes('MODULE - UI - Material Search Add Selected Materials')/tm1.ExecuteWithReturn`,
@@ -5922,6 +5983,11 @@ app.repository = {
     },
 
     rocheBPSPAddMaterialGridRow4Cell6Button: {
+        init: {
+            execute: (db) => {
+                return Repository.RocheBPSPMaterialsAddMaterialSearchSelectAll.init.execute(db);
+            }
+        },
         launch:
             {
                 url: (db) => `/api/v1/Processes('MODULE - UI - Clear All Inputs')/tm1.ExecuteWithReturn`,
@@ -6681,11 +6747,67 @@ app.repository = {
             }
         }
     },
-
-    rocheBPSPCustomersHorizontalTable: {
+    rocheBPSPCustomersHeaderInfoGridTable: {
+        initCondition: (db) => {
+            return Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector')  && Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersTerritorySelector');
+        },
+        initDefault: (db) => {
+            return [];
+        },
         init:
             {
-                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                type: 'POST',
+                body: (db) => `{"MDX":"
+                    SELECT 
+                           {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[PY],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[CY],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[NY]} 
+                           PROPERTIES [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Caption]  ON COLUMNS , 
+                           {[Customers Plan].[Customers Plan].[All Customers Plan]} 
+                          ON ROWS 
+                        FROM [Sales Territory to Customer] 
+                        WHERE 
+                          (
+                           [Versions].[Versions].[${v('systemValueGlobalCompanyVersion')}],
+                           [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}],
+                           [Territories].[Territories].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key')}],
+                           [Receivers].[Receivers].[All Receivers]
+                          )
+                "}`,
+                parsingControl: {
+                    type: 'matrix',
+                    length: 3,
+                    query: [
+
+                        (r, x) => {
+                            return {body: r.Cells[x].FormattedValue, title: r.Cells[x].Members[5].Attributes.Caption};
+                        }, (r, x) => {
+                            return {
+                                body: r.Cells[x + 1].FormattedValue,
+                                title: r.Cells[x].Members[5].Attributes.Caption
+                            };
+                        }, (r, x) => {
+                            return {
+                                body: r.Cells[x + 2].FormattedValue,
+                                title: r.Cells[x].Members[5].Attributes.Caption
+                            };
+                        }
+                    ]
+                }
+            }
+    },
+
+    rocheBPSPCustomersHorizontalTable: {
+        initCondition: (db) => {
+            return Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector')  && Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersTerritorySelector');
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;)`,
                 type: 'POST',
                 body: (db) => `{"MDX":"
                          With
@@ -6698,6 +6820,7 @@ app.repository = {
                         SELECT 
                             {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag],
                             [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Desc],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Territory],
                             [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Receiver],
                             [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[PY],
                             [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[CY],
@@ -6708,14 +6831,14 @@ app.repository = {
                           PROPERTIES [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Caption]  ON COLUMNS , 
                           NON EMPTY 
                               {TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan]}, ALL, RECURSIVE )}
-                           * {TM1SubsetToSet([Receivers].[Receivers], \\"zUI 1391 Plan Receivers\\")}  
+                           * {TM1SubsetToSet([Receivers].[Receivers], \\"zUI ${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')} Plan Receivers\\")}  
                           ON ROWS 
                         FROM [Sales Territory to Customer] 
                         WHERE 
                           (
-                           [Companies].[Companies].[1391],
-                           [Territories].[Territories].[TTY-0000000451],
-                           [Versions].[Versions].[Live]
+                           [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}],
+                           [Territories].[Territories].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key')}],
+                           [Versions].[Versions].[${v('systemValueGlobalCompanyVersion')}]
                           )      
                   "}`
                 ,
@@ -6725,8 +6848,6 @@ app.repository = {
                     query: [
 
                         (r, x) => {
-                            return {value: r.Cells[x].FormattedValue};
-                        }, (r, x) => {
                             return {value: r.Cells[x + 1].FormattedValue};
                         }, (r, x) => {
                             return {value: r.Cells[x + 2].FormattedValue};
