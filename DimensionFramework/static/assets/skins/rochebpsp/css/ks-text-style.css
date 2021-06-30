@@ -194,6 +194,7 @@
 
 /* ote */
 
+
 /* popup_header */
 
 .ks-text-popup_header_bpsp .ks-text-title {
@@ -485,7 +486,7 @@
     font-weight: bold;
 }
 
-/* checkout_warning_bpsp */
+/* checkout_warning_message_bpsp */
 .ks-text-checkout_warning_message_bpsp {
     padding-bottom: 10px;
 }
@@ -542,6 +543,15 @@
 .ks-text-products_gd_readonly_with_icon_center_bpsp .ks-text-icon{
     display: flex;
     justify-content: center;
+}
+
+.ks-text-material_warning_bpsp .ks-text-title {
+    font-weight: bold;
+    color: #E40046;
+    background-color: rgba(228, 0, 70, 0.1);
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 8px;
 }
 
 

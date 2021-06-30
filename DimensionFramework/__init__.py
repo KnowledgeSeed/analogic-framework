@@ -5,6 +5,7 @@ from flask_caching import Cache
 import DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory
 from DimensionFramework.AuthenticationProviders.Base import Base
 from datetime import timedelta
+import logging
 
 app = Flask(__name__)
 site_root = os.path.realpath(os.path.dirname(__file__))
@@ -66,9 +67,23 @@ def clearCache(instance):
     return getProvider(instance).setting.clearCache()
 
 
+@app.route('/exportconfig', defaults={'instance': 'default'})
+@app.route('/<path:instance>/exportconfig')
+def exportConfig(instance):
+    return getProvider(instance).exportConfig()
+
+
+@app.route('/ping', defaults={'instance': 'default'})
+@app.route('/<path:instance>/ping')
+def ping(instance):
+    return getProvider(instance).ping()
+
+
 def getProvider(instance):
     cache = getCache()
     config = Base(cache, site_root, instance).setting.getConfig()
+    logging.basicConfig(filename=os.path.join(os.path.dirname(__file__), 'logs', 'application.log'), level=logging.INFO,
+                        format='%(asctime)s :: %(levelname)s :: %(name)s :: %(lineno)d \:: %(message)s')
     provider = DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory.getProvider(config, cache,
                                                                                                     site_root,
                                                                                                     instance)

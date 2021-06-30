@@ -4,6 +4,7 @@ import os
 import keyring
 import base64
 from flask import json
+import logging
 
 
 class SettingManager:
@@ -117,8 +118,11 @@ class SettingManager:
         self.cacheSet(self.getTM1SessionExpiresCacheKey() + suffix, expires, 0)
 
     def getTM1SessionId(self, suffix=''):
+        self.getLogger().info(self.getTm1SessionIdCacheKey() + suffix)
         tm1_session_id = self.cacheGet(self.getTm1SessionIdCacheKey() + suffix)
+        self.getLogger().info(tm1_session_id)
         tm1_session_id_exp = self.cacheGet(self.getTM1SessionExpiresCacheKey() + suffix)
+        self.getLogger().info(tm1_session_id_exp)
         if tm1_session_id is None or (
                 tm1_session_id_exp is not None and datetime.datetime.now() >= tm1_session_id_exp):
             return None
@@ -160,3 +164,6 @@ class SettingManager:
     def cacheSet(self, key, value, expires=0):
         if self.cache is not None:
             self.cache.set(key, value, expires)
+
+    def getLogger(self):
+        return logging.getLogger(__name__)

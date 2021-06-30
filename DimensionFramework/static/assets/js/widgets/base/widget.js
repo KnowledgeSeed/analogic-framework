@@ -205,7 +205,7 @@ class Widget {
         this.triggerFinishedEvent('refresh');
     }
 
-    triggerFinishedEvent(eventName = 'init'){
+    triggerFinishedEvent(eventType = 'init'){
         const o = this.options;
 
         let widgetOptions, widgets = [], w;
@@ -215,10 +215,11 @@ class Widget {
         }
 
         for (w of widgets) {
-            w.initFinished();
+            w.triggerFinishedEvent(eventType);
         }
-        El.body.triggerHandler(eventName + '.' + o.id + '.finished');
-        let actions = EventMap[eventName + '.' + o.id + '.finished'], a;
+
+        El.body.triggerHandler(eventType + '.' + o.id + '.finished');
+        let actions = EventMap[eventType + '.' + o.id + '.finished'], a;
         if(actions) {
             for (a of actions) {
                 a.action(a.argument, {}, {});

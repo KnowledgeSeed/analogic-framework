@@ -55,19 +55,6 @@ Server.download = (p) => {
             }
         }
     });
-    /* return $.ajax({
-         url: p.url,
-         method: 'POST',
-         cache: false,
-         processData: false,
-         data: p,
-         success: function (response, status, xhr) {
-             let blob = Server.base64ToBlob(response, xhr.getResponseHeader("content-type"));
-             let url = window.URL.createObjectURL(blob);
-             window.open(url, '_blank');
-             setTimeout(function() { URL.revokeObjectURL(url); }, 100);
-         },
-     });*/
 };
 
 Server.base64ToBlob = (base64, mimetype, slicesize) => {

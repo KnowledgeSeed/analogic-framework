@@ -4,7 +4,7 @@ app.eventMap = {
 
     'launch.rocheBPSPMainGridRow3Cell1Button': [
         {
-            action: app.fn.openPage,
+            action: app.fn.openPageWithState,
             argument: 'rocheBPSPCustomers'
         }
     ],
@@ -43,6 +43,25 @@ app.eventMap = {
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPMain'
+        }
+    ],
+
+    'launch.rocheBPSPMainGridRow5Cell1aSubmitToBPXP' : [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPMainSubmissionToBPXPPopup'
+        }
+    ],
+    'launch.rocheBPSPMainSubmissionToBPXPPopupNo' : [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMainSubmissionToBPXPPopup'
+        }
+    ],
+    'launch.rocheBPSPMainSubmissionToBPXPPopupYes' : [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMainSubmissionToBPXPPopup'
         }
     ],
 
@@ -967,6 +986,10 @@ app.eventMap = {
             action: app.fn.openPage,
             argument: 'rocheBPSPMaterial'
         },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['RocheBPSPMaterialsAddMaterialSearch']
+        },
     ],
 
     'launch.rocheBPSPMaterialGridRow4Cell1Button': [
@@ -1337,6 +1360,15 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPMaterialMoveDataPopup'
+        },
+         {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPMaterialGridTable'
+        },
+
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialIPNodeGridTable'
         }
     ],
 
@@ -1442,16 +1474,16 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow3Cell1Dropbox'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPMaterialAddDummyGridTablePopupGridRow4Cell1Dropbox'
         }
     ],
     'launch.rocheBPSPMaterialAddDummyGridTablePopupControlPanelCancelButton.finished': [
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPMaterialAddDummyGridTablePopup'
-        },
-        {
-            action: app.fn.forceRefresh,
-            argument: 'rocheBPSPMaterialGridTable'
         }
     ],
 
@@ -1481,6 +1513,10 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow4Cell1Dropbox'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPMaterialAddDummyGridTableIPpopupGridRow3Cell1Dropbox'
         }
     ],
     'launch.rocheBPSPMaterialAddDummyGridTableIPpopupControlPanelCancelButton': [
@@ -1526,6 +1562,15 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPMaterialMoveDataIPNodePopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPMaterialGridTable'
+        },
+
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialIPNodeGridTable'
         }
     ],
 
@@ -1598,6 +1643,10 @@ app.eventMap = {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPAddMaterialGridRow4Cell5Search'
         },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPAddMaterialGridRow4Cell5ValidToggle'
+        }
 
     ],
 
@@ -1896,6 +1945,12 @@ app.eventMap = {
         }
 
     ],
+    'launch.RocheBPSPMaterialsAddMaterialSearchSelectAll.finished' : [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'RocheBPSPMaterialsAddMaterialSearch'
+        }
+    ],
 
     'launch.rocheBPSPMainGridRow3Cell4Button': [
         {
@@ -2076,5 +2131,19 @@ app.eventMap = {
             argument: 'rocheBPSPProductReportCheckoutPopup'
         }
     ],
+
+    'open.rocheBPSPCustomersHorizontalTable': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPCustomersPlanning'
+        }
+    ],
+
+    'launch.rocheBPSPCustomersPlanningGridRow1Cell0Button.finished' : [
+        {
+            action: app.fn.openPageWithState,
+            argument: 'rocheBPSPCustomers'
+        }
+    ]
 }
 ;

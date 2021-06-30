@@ -28,6 +28,10 @@ class ContainerWidget {
         this.c.refreshFinished();
     }
 
+    triggerFinishedEvent(eventType = 'init'){
+        this.c.triggerFinishedEvent(eventType);
+    }
+
     initEventHandlers(s) {
         this.c.initEventHandlers(s);
     }

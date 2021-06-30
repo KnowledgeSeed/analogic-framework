@@ -51,6 +51,20 @@ Auth.handleSuccessLogin = () => {
         }
         //$.cookie("camPassport", 0);
     }
+    if ((new Date().getTime() - app.pingTime) / 1000 >= 30) {
+        app.pingTime = new Date().getTime();
+        $.ajax({
+            url: 'ping',
+            method: 'GET',
+            global: false,
+            success: function (data) {
+            },
+            error: function (response, e) {
+            },
+            statusCode: {
+            }
+        });
+    }
 };
 
 
@@ -83,9 +97,9 @@ Auth.showTm1ErrorPage = (url, body, event, widgetId) => {
         El.body.html(`
 <div style="margin-left: 15px;">
     <br/><h1>Error in api request!</h1><br/><br/>
-    ${widgetId !== '' ? ` <h3>widget:</h3><br/><textarea rows="1" cols="100">${widgetId }</textarea><br/><br/>` : ''}
+    ${widgetId !== '' ? ` <h3>widget:</h3><br/><textarea rows="1" cols="100">${widgetId}</textarea><br/><br/>` : ''}
     <h3>response status:</h3><br/>
-    <textarea rows="2" cols="100">${event.status + ' ' + event.statusText }</textarea><br/><br/>
+    <textarea rows="2" cols="100">${event.status + ' ' + event.statusText}</textarea><br/><br/>
     <h3>response text:</h3><br/>
     <textarea rows="2" cols="100">${event.responseText}</textarea><br/><br/>
     <h3>request url:</h3><br/>
