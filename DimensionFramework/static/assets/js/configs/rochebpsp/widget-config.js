@@ -13853,9 +13853,12 @@ app.widgetConfig = {
                                             selectFirst: true,
                                             backdrop: true,
                                             listen: [
-                                                {event: 'bodyReady', method: 'refresh'},
                                                 {
                                                     event: 'choose.rocheBPSPProductReportGridRow1Cell2DropBox.finished',
+                                                    method: 'refresh'
+                                                },
+                                                                                                {
+                                                    event: 'init.rocheBPSPProductReportGridRow1Cell2DropBox.finished',
                                                     method: 'refresh'
                                                 }
                                             ]
@@ -14815,8 +14818,8 @@ app.widgetConfig = {
                 {
                     id: 'rocheBPSPProductReportChart',
                     type: ComboChartWidget,
-                    width: '1600',
-                    height: '800',
+                    width: '2000',
+                    height: '1000',
                     visible: false,
                     title: '',
                     listen: [
@@ -14824,9 +14827,9 @@ app.widgetConfig = {
                             'event': 'bodyReady',
                             'method': 'refreshWithWaitingForEvents',
                             'parameters': [
-                                'rendered.rocheBPSPProductReportGridRow1Cell3DropBox',
-                                'rendered.rocheBPSPProductReportGridRow1Cell5DropBox',
-                                'rendered.rocheBPSPProductReportPageInit'
+                                'refresh.rocheBPSPProductReportGridRow1Cell3DropBox.finished',
+                                'refresh.rocheBPSPProductReportGridRow1Cell5DropBox.finished',
+                                'refresh.rocheBPSPProductReportPageInit.finished'
                             ]
                         },
                         {'event': 'choose.rocheBPSPProductReportGridRow1Cell3DropBox.finished', 'method': 'refresh'},
@@ -14838,19 +14841,6 @@ app.widgetConfig = {
                             'method': 'refreshWithWaitingForEvent',
                             'parameters': ['rendered.rocheBPSPProductReportGridRow1Cell3DropBox', 'rendered.rocheBPSPProductReportPageInit']
                         },
-
-
-                        {
-                            event: 'launch.rocheBPSPProductReportMaterialSelectorShortcutPopupGridTableButton01.finished',
-                            method: 'refresh'
-                        },
-
-                        {
-                            'event': 'launch.rocheBPSPProductReportGridTableHeaderReturnFromFocus.finished',
-                            'method': 'refresh'
-                        }
-
-
                     ],
                     datasets: [{
                         "type": "line",
@@ -14861,7 +14851,7 @@ app.widgetConfig = {
                         "dataLabelFontColor": "#fff",
                         "dataLabelVisible": false,
                         "fill": false,
-                        "legendLabel": "data"
+                        "legendLabel": ""
                     }],
                     tooltipsEnabled: true,
                     marginBottom: '50',

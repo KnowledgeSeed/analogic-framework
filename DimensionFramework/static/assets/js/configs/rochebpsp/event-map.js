@@ -1969,10 +1969,6 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPProductReportMaterialSelectorPopopInChartGridTable'
-        },
-        {
-            action: app.fn.forceRefresh,
-            argument: 'rocheBPSPProductReportProductSelectorChartButton'
         }
     ],
 
@@ -1984,15 +1980,7 @@ app.eventMap = {
         },
         {
             action: app.fn.forceRefresh,
-            argument: 'rocheBPSPProductReportChart'
-        },
-        {
-            action: app.fn.forceRefresh,
             argument: 'rocheBPSPProductReportMaterialSelectorPopopInChartGridTable'
-        },
-        {
-            action: app.fn.forceRefresh,
-            argument: 'rocheBPSPProductReportProductSelectorChartButton'
         }
     ],
 
@@ -2005,14 +1993,6 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPProductReportMaterialSelectorPopopInChartGridTable'
-        },
-        {
-            action: app.fn.forceRefresh,
-            argument: 'rocheBPSPProductReportChart'
-        },
-        {
-            action: app.fn.forceRefresh,
-            argument: 'rocheBPSPProductReportProductSelectorChartButton'
         }
     ],
 
