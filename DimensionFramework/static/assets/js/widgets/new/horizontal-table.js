@@ -3,13 +3,14 @@
 'use strict';
 class HorizontalTableWidget extends Widget {
 
-    getHtml(widgets, data, withState, leftRowWidgets, rightRowWidgets) {
+    getHtml(widgets, data, withState, leftRowWidgets, rightRowWidgets) {L(data);
         const o = this.options;
         let mainDivStyle = this.getGeneralStyles(data), s = [], h, d, i, actionWidth = false;
 
         const v = {
             fadeOutNum: this.getRealValue('fadeOutNum', data, 10),
             searchField: this.getRealValue('searchField', data, false),
+            hideIfNoData: this.getRealValue('hideIfNoData', d, false),
             skin: this.getRealValue('skin', data, 'standard')
         };
 
@@ -34,6 +35,10 @@ class HorizontalTableWidget extends Widget {
     </div>
 </div>`
             );
+        }
+
+        if (v.hideIfNoData === true && (!data || data.cells.length === 0)) {
+            mainDivStyle.push('display:none;');
         }
 
         if (o.columnWidths && (leftRowWidgets.length + rightRowWidgets.length) > 0) {

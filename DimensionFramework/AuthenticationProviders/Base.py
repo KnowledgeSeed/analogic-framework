@@ -6,6 +6,7 @@ from flask import request, send_file, json, request
 from DimensionFramework.Core.ClassLoader import ClassLoader
 from DimensionFramework.Core.SettingManager import SettingManager
 from DimensionFramework.Core.FileUploadManager import FileUploadManager
+import logging
 
 
 class Base:
@@ -103,7 +104,8 @@ class Base:
             if validation_key != '':
                 description = self.setting.getCustomObjectDescription(validation_key)
 
-                validation_message = ClassLoader().call(description, request, self.getTM1Service(), self.setting, path=upload_path)
+                validation_message = ClassLoader().call(description, request, self.getTM1Service(), self.setting,
+                                                        path=upload_path)
 
                 if validation_message != '':
                     result = 'ERROR!<br/><br/>' + validation_message
@@ -112,7 +114,8 @@ class Base:
             preprocess_template = request.form.get('preProcessTemplate', default='')
 
             if preprocess_template != '':
-                pre_process_message = self.upload_manager.preProcess(self.getTM1Service(), preprocess_template, upload_path)
+                pre_process_message = self.upload_manager.preProcess(self.getTM1Service(), preprocess_template,
+                                                                     upload_path)
 
             if staging != '':
                 self.upload_manager.move(target, staging, sub_folder)
@@ -139,3 +142,10 @@ class Base:
         repository = self.setting.getRepository()
         config = self.setting.getConfig()
         return 'valami', 200
+
+    def getLogger(self):
+        return logging.getLogger(__name__)
+
+    def ping(self):
+        self.getLogger().info('ping test2')
+        return 'Ok', 200, {'Content-Type': 'application/json'}

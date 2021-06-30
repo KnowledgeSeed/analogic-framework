@@ -43,6 +43,28 @@ let EventMap, Repository, WidgetConfig;
             items: [{name: "Roche Dia Brazil", key: "1241", on: true}]
         };//todo temp
         WidgetValue['rocheBPSPProductsGridRow1Cell3DropBox'] = {value: 'BR Brazil'};*/
+
+        /* short route to customer planning page */
+        app.MainPage = 'rocheBPSPCustomersPlanning';
+        WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';
+        WidgetValue['activeUserName'] = 'Knowledgeseed/Oravecz Tamás';
+        WidgetValue['rocheBPSPCustomersCompanySelector'] = {
+            value: 'RD Poland',
+            items: [{name: "RD Poland", key: "1391", on: true}]
+        };
+        WidgetValue['rocheBPSPCustomersTerritorySelector'] = {
+            value: 'PL - ASM Centrum (Budzynski)',
+            items: [{name: "PL - ASM Centrum (Budzynski)", key: "TTY-0000000451", on: true}]
+        };
+        WidgetValue['rocheBPSPCustomersHorizontalTable'] = {
+            open: {
+                receiver: 'PL'
+            }
+        };
+
+        /* end customer planning */
+
+
         Render.showPage(WidgetValue['redirect'] !== null ? WidgetValue['redirect'] : app.MainPage);
 
         WidgetValue['redirect'] = null;

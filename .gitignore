@@ -7,3 +7,4 @@ local
 waitress_cmd_local.py
 venv
 minified*.*
+logs

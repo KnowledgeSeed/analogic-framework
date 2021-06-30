@@ -4,7 +4,7 @@ app.eventMap = {
 
     'launch.rocheBPSPMainGridRow3Cell1Button': [
         {
-            action: app.fn.openPage,
+            action: app.fn.openPageWithState,
             argument: 'rocheBPSPCustomers'
         }
     ],
@@ -43,6 +43,25 @@ app.eventMap = {
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPMain'
+        }
+    ],
+
+    'launch.rocheBPSPMainGridRow5Cell1aSubmitToBPXP' : [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPMainSubmissionToBPXPPopup'
+        }
+    ],
+    'launch.rocheBPSPMainSubmissionToBPXPPopupNo' : [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMainSubmissionToBPXPPopup'
+        }
+    ],
+    'launch.rocheBPSPMainSubmissionToBPXPPopupYes' : [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPMainSubmissionToBPXPPopup'
         }
     ],
 
@@ -2132,5 +2151,19 @@ app.eventMap = {
             argument: 'rocheBPSPProductReportCheckoutPopup'
         }
     ],
+
+    'open.rocheBPSPCustomersHorizontalTable': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPCustomersPlanning'
+        }
+    ],
+
+    'launch.rocheBPSPCustomersPlanningGridRow1Cell0Button.finished' : [
+        {
+            action: app.fn.openPageWithState,
+            argument: 'rocheBPSPCustomers'
+        }
+    ]
 }
 ;

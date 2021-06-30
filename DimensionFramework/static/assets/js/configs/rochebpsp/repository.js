@@ -98,6 +98,14 @@ app.repository = {
 
     },
 
+    rocheBPSPMainSubmissionToBPXPPopupYes: {
+        launch: {
+            execute: (db) => {
+                app.fn.showPopup('Not implemented yet');
+            }
+        }
+    },
+
     rocheBPSPMainGreyGridTable: {
         init: {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
@@ -6695,7 +6703,7 @@ app.repository = {
                 query:
                     {
                         items: (r, x) => {
-                            let result = [], selected = v('rocheBPSPCustomersCompanySelector.value');
+                            let result = [], selected = v('rocheBPSPCustomersTerritorySelector.value');
                             for (let i = 0; i < r.Cells.length; i = i + 2) {
                                 result.push({
                                     name: r.Cells[i + 1].FormattedValue,
@@ -6749,7 +6757,7 @@ app.repository = {
     },
     rocheBPSPCustomersHeaderInfoGridTable: {
         initCondition: (db) => {
-            return Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector')  && Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersTerritorySelector');
+            return Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector') && Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersTerritorySelector');
         },
         initDefault: (db) => {
             return [];
@@ -6785,12 +6793,12 @@ app.repository = {
                         }, (r, x) => {
                             return {
                                 body: r.Cells[x + 1].FormattedValue,
-                                title: r.Cells[x].Members[5].Attributes.Caption
+                                title: r.Cells[x + 1].Members[5].Attributes.Caption
                             };
                         }, (r, x) => {
                             return {
                                 body: r.Cells[x + 2].FormattedValue,
-                                title: r.Cells[x].Members[5].Attributes.Caption
+                                title: r.Cells[x + 2].Members[5].Attributes.Caption
                             };
                         }
                     ]
@@ -6800,27 +6808,31 @@ app.repository = {
 
     rocheBPSPCustomersHorizontalTable: {
         initCondition: (db) => {
-            return Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector')  && Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersTerritorySelector');
+            let b = Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector')
+                && Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersTerritorySelector');
+            return b;
         },
         initDefault: (db) => {
             return [];
         },
         init:
             {
-                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;)`,
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
                 type: 'POST',
                 body: (db) => `{"MDX":"
                          With
                             Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Desc] as
-                                [Customers Plan].[Customers Plan].CurrentMember.Properties('Caption')
+                                [Customers Plan].[Customers Plan].CurrentMember.Properties('Account Name')
                             Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Territory] as
                                 [Territories].[Territories].CurrentMember.Properties('Code')
                             Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Receiver] as
                                 [Receivers].[Receivers].CurrentMember.Properties('Receiver - Key')
+                            Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Code] as
+                               [Customers Plan].[Customers Plan].CurrentMember.Name
                         SELECT 
                             {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag],
                             [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Desc],
-                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Territory],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Code],
                             [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Receiver],
                             [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[PY],
                             [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[CY],
@@ -6830,7 +6842,7 @@ app.repository = {
                            }  
                           PROPERTIES [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Caption]  ON COLUMNS , 
                           NON EMPTY 
-                              {TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan]}, ALL, RECURSIVE )}
+                              {Except({TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan]}, ALL, RECURSIVE )},{[Customers Plan].[Customers Plan].[All Customers Plan]})}
                            * {TM1SubsetToSet([Receivers].[Receivers], \\"zUI ${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')} Plan Receivers\\")}  
                           ON ROWS 
                         FROM [Sales Territory to Customer] 
@@ -7248,6 +7260,68 @@ app.repository = {
                 }
             },
     },
+
+
+    /* customer planning */
+    rocheBPSPCustomersPlanningGridRow1Cell5Button: {
+        init: {
+            execute: (db) => {
+                return {label: db.activeUserName};
+            }
+        }
+    },
+
+    rocheBPSPCustomersPlanningHeaderInfoGridTable: {
+        initCondition: (db) => {
+            return Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector') && Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersTerritorySelector');
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                type: 'POST',
+                body: (db) => `{"MDX":"
+                    SELECT 
+                           {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[PY],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[CY],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[NY]} 
+                           PROPERTIES [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Caption]  ON COLUMNS , 
+                           {[Customers Plan].[Customers Plan].[All Customers Plan]} 
+                          ON ROWS 
+                        FROM [Sales Territory to Customer] 
+                        WHERE 
+                          (
+                           [Versions].[Versions].[${v('systemValueGlobalCompanyVersion')}],
+                           [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}],
+                           [Territories].[Territories].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key')}],
+                           [Receivers].[Receivers].[${v('rocheBPSPCustomersHorizontalTable.open.receiver')}]
+                          )
+                "}`,
+                parsingControl: {
+                    type: 'matrix',
+                    length: 3,
+                    query: [
+
+                        (r, x) => {
+                            return {body: r.Cells[x].FormattedValue, title: r.Cells[x].Members[5].Attributes.Caption};
+                        }, (r, x) => {
+                            return {
+                                body: r.Cells[x + 1].FormattedValue,
+                                title: r.Cells[x + 1].Members[5].Attributes.Caption
+                            };
+                        }, (r, x) => {
+                            return {
+                                body: r.Cells[x + 2].FormattedValue,
+                                title: r.Cells[x + 2].Members[5].Attributes.Caption
+                            };
+                        }
+                    ]
+                }
+            }
+    }
+    /* end customer planning */
 
 
 };
