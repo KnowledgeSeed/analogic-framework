@@ -44,7 +44,7 @@ let EventMap, Repository, WidgetConfig;
         };//todo temp
         WidgetValue['rocheBPSPProductsGridRow1Cell3DropBox'] = {value: 'BR Brazil'};*/
 
-        /* short route to customer planning page */
+        /* short route to customer planning page
         app.MainPage = 'rocheBPSPCustomersPlanning';
         WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';
         WidgetValue['activeUserName'] = 'Knowledgeseed/Oravecz Tamás';
@@ -62,7 +62,7 @@ let EventMap, Repository, WidgetConfig;
             }
         };
 
-        /* end customer planning */
+         end customer planning */
 
 
         Render.showPage(WidgetValue['redirect'] !== null ? WidgetValue['redirect'] : app.MainPage);
