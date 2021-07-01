@@ -42,6 +42,11 @@
     opacity: 90%;
 }
 
+.ks-grid-table-cell-readonly_green_bpsp {
+    background-color: #BFE5D7;
+    opacity: 50%;
+}
+
 
 .ks-grid-table-cell-locked {
     background-color: rgba(239, 193, 209, 0.5);;

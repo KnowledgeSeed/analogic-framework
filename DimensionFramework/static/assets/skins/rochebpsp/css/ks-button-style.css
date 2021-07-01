@@ -1111,6 +1111,16 @@
     margin-right: 7px;
 }
 
+.ks-button-red_link_x_bpsp {
+    padding: 5px;
+}
+
+.ks-button-red_link_x_bpsp:hover {
+    background-color: rgba(228, 0, 70, 0.1);
+    padding: 5px;
+    border-radius: 5px;
+}
+
 /* blue_icon_bpsp */
 
 .ks-button-blue_icon_bpsp .ks-button-icon {
@@ -1148,6 +1158,8 @@
 }
 
 
+
+
 /* green_link_bpsp */
 
 .ks-button-green_link_bpsp .ks-button-label {
@@ -1162,6 +1174,16 @@
     color: #00965E;
     padding-right: 1px;
     font-size: 10px;
+}
+
+.ks-button-green_link_bpsp:hover {
+    background-color: rgba(0, 150, 94, 0.1);
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.ks-button-green_link_bpsp {
+    padding: 5px;
 }
 
 /* blue_link_columns_bpsp */
@@ -1347,6 +1369,11 @@
 
 .ks-button-backbuttonrocheBPSP span {
     font-size: 25px;
+}
+
+.ks-button-backbuttonrocheBPSP:hover{
+    background-color: #bfd9f2;
+    border-radius: 8px;
 }
 
 
@@ -1935,6 +1962,15 @@
     background-color: rgba(0, 102, 204, 0.15);
     padding: 20px;
     border-radius: 5px;
+}
+
+
+/* customer_planning_text_bpsp */
+.ks-button-customer_planning_text_bpsp {
+    font-size: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #B1B3B3;
 }
 
 

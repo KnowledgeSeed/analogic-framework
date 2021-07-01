@@ -131,3 +131,14 @@ DropBoxWidget:
 
 
   widgetId probléma: widgetId-08 -> repoban csak 'widgetid-08'
+
+
+
+ButtonWidget:
+    customer_planning_text_bpsp
+
+TextWidget:
+    products_gd_header2_bpsp
+
+GridCellWidget:
+    readonly_green_bpsp

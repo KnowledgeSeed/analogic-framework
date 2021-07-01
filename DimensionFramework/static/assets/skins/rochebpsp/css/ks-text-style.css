@@ -233,6 +233,31 @@
     padding-bottom: 3px;
 }
 
+/* products_gd_header2_bpsp */
+
+.ks-text-products_gd_header2_bpsp .ks-text-title {
+    font-size: 12px;
+    font-family: imago;
+    font-weight: bold;
+    letter-spacing: 0px;
+    color: #000000;
+    opacity: 1;
+    margin-bottom: 1px;
+}
+
+.ks-text-products_gd_header2_bpsp .ks-text-body {
+    font-size: 12px;
+    font-family: imago;
+    font-weight: bold;
+    letter-spacing: 0px;
+    color: #000000;
+    opacity: 1;
+}
+
+.ks-text-products_gd_header2_bpsp {
+    padding-bottom: 3px;
+}
+
 /* products_gd_readonly_bpsp */
 
 .ks-text-products_gd_readonly_bpsp {

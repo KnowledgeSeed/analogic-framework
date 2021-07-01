@@ -510,7 +510,7 @@ app.widgetConfig = {
                                             type: ButtonWidget,
                                             action: '',
                                             width: '145',
-                                            icon: 'icon-arrow-right11',
+                                            icon: 'icon-icon-accept',
                                             fontColor: 'white',
                                             skin: 'rochemain',
                                             height: '145'
@@ -15515,7 +15515,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPCustomersPlanningGridRow1CellCompanySelectorCell',
                                     type: GridCellWidget,
                                     alignment: 'center-center',
-                                    width: '12%',
+                                    width: '20%',
                                     widgets: [
 
                                      /*   {
@@ -15530,14 +15530,14 @@ app.widgetConfig = {
                                     ]
                                 },
 
-                                {
+                               /* {
                                     id: 'rocheBPSPCustomersPlanningGridRow1CellTerritorySelectorCell',
                                     type: GridCellWidget,
                                     alignment: 'center-center',
                                     width: '12%',
                                     widgets: [
 
-                                       /* {
+                                        {
                                             id: 'rocheBPSPCustomersPlanningTerritorySelector',
                                             type: DropBoxWidget,
                                             width: '100%',
@@ -15552,9 +15552,9 @@ app.widgetConfig = {
                                                     method: 'refresh'
                                                 }
                                             ]
-                                        }*/
+                                        }
                                     ]
-                                },
+                                },*/
                                 {
                                     id: 'rocheBPSPCustomersPlanningGridRow1PeriodUnitSelectorCell',
                                     type: GridCellWidget,
@@ -15573,7 +15573,7 @@ app.widgetConfig = {
                                                     id: 'rocheBPSPCustomersPlanningYearSegmentedControlItem1',
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab1',
-                                                    label: '2020',
+                                                    label: '2021',
                                                     selected: true,
                                                     value: 'Y0'
                                                 },
@@ -15582,7 +15582,7 @@ app.widgetConfig = {
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab2',
                                                     selected: false,
-                                                    label: '2021',
+                                                    label: '2022',
                                                     value: 'Y1'
                                                 },
                                                 {
@@ -15590,7 +15590,7 @@ app.widgetConfig = {
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab3',
                                                     selected: false,
-                                                    label: '2022',
+                                                    label: '2023',
                                                     value: 'Y2'
                                                 },
                                                 {
@@ -15598,7 +15598,7 @@ app.widgetConfig = {
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab4',
                                                     selected: false,
-                                                    label: '2023',
+                                                    label: '2024',
                                                     value: 'Y3'
                                                 }
                                             ]
@@ -15610,7 +15610,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPCustomersPlanningGridRow1PeriodUnitSelectorCell',
                                     type: GridCellWidget,
                                     alignment: 'center-center',
-                                    width: '13%',
+                                    width: '17%',
                                     widgets: [
 
                                        {
@@ -15751,9 +15751,596 @@ app.widgetConfig = {
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            id: 'rocheBPSPCustomersPlanningGridRow2',
+                            type: GridRowWidget,
+                            marginTop: '1.3%',
+                            width: '100%',
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridRow2Cell1',
+                                    type: GridCellWidget,
+                                    alignment: 'center-center',
+                                    width: '10%',
+                                    widgets: []
+                                },
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridRow2Cell2',
+                                    type: GridCellWidget,
+                                    alignment: 'center-center',
+                                    width: '80%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridRow2Cell2PreviousButton',
+                                            type: ButtonWidget,
+                                            label: '',
+                                            width: '50',
+                                            iconFontSize: 15,
+                                            icon: 'icon-chevron-left',
+                                            marginRight: 10,
+                                            skin: 'backbuttonrocheBPSP',
+                                            height: '50'
+                                        },
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridRow2Cell2NextButton',
+                                            type: ButtonWidget,
+                                            label: '',
+                                            width: '50',
+                                            icon: 'icon-chevron-right',
+                                            iconFontSize: 15,
+                                            marginRight: 10,
+                                            skin: 'backbuttonrocheBPSP',
+                                            height: '50'
+                                        },
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningCustomerSelectorButton',
+                                            type: ButtonWidget,
+                                            borderWidth: false,
+                                            label: 'Frankfulrt - Stiftung zum heiligen Geist OT: Praunhei_604888 - 0040051937',
+                                            skin: 'customer_planning_text_bpsp'
+                                        },
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridRow2Cell2OpenPopupButton',
+                                            type: ButtonWidget,
+                                            marginLeft: 10,
+                                            label: '',
+                                            width: '50',
+                                            icon: 'icon-list',
+                                            iconFontSize: 15,
+                                            marginRight: 10,
+                                            skin: 'backbuttonrocheBPSP',
+                                            height: '50'
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridRow2Cell3',
+                                    type: GridCellWidget,
+                                    alignment: 'center-right',
+                                    width: '10%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridRow2Cell3ClearAllButton',
+                                            type: ButtonWidget,
+                                            label: 'Clear all',
+                                            borderWidth: false,
+                                            fontSize: 14,
+                                            marginRight: 40,
+                                            confirmMessage2: 'Are you sure you want to delete all input for this Year?',
+                                            width: '100%',
+                                            icon: 'icon-x-square-outline',
+                                            skin: 'red_link_x_bpsp'
+                                        },
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridRow2Cell3SubmitButton',
+                                            type: ButtonWidget,
+                                            label: 'Submit',
+                                            fontSize: 14,
+                                            width: '100%',
+                                            borderWidth: false,
+                                            marginRight: 20,
+                                            icon: 'icon-icon-accept',
+                                            skin: 'green_link_bpsp'
+                                        }
+                                    ]
+                                }
+                            ]
                         }
+
                     ]
                 },
+                {
+                    id: 'rocheBPSPCustomersPlanningGridTableYearly',
+                    type: GridTableWidget,
+                    marginTop: '60',
+                    hideIfNoData: true,
+                    skin: 'products_bpsp',
+                    listen: [
+                        {'event': 'switch.rocheBPSPCustomersPlanningYearSegmentedControl.finished', 'method': 'refresh'}
+                     /*   {
+                            'event': 'launch.rocheBPSPProductsCheckoutColumnSelectorUpdateButton.finished',
+                            'method': 'refresh'
+                        },
+                        {
+                            'event': 'launch.rocheBPSPProductsCheckoutColumnSelectorRestoreButton.finished',
+                            'method': 'refresh'
+                        },
+                        {
+                            'event': 'launch.rocheBPSPProductsCheckoutCommentEditControlPanelSaveButton.finished',
+                            'method': 'refresh'
+                        },
+                        {
+                            'event': 'launch.rocheBPSPProductsCheckoutCopyMergePopupCopyButton.finished',
+                            'method': 'refresh'
+                        },
+                        {
+                            'event': 'launch.rocheBPSPProductsCheckoutCopyMergePopupMergeButton.finished',
+                            'method': 'refresh'
+                        },
+                        {
+                            'event': 'launch.rocheBPSPProductsCheckoutDistributionEditPopupControlPanelSaveButton.finished',
+                            'method': 'refresh'
+                        },
+                        {
+                            'event': 'launch.rocheBPSPProductsCheckoutDistributionEditPopupControlPanelCancelButton.finished',
+                            'method': 'refresh'
+                        },
+                        {
+                            event: 'launch.rocheBPSPProductsCheckoutGridRow2Cell2Button.finished',
+                            method: 'refresh'
+                        }*/
+                    ],
+                    title: '',
+                    widgets: [
+
+                        {
+                            id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderRow',
+                            type: GridTableHeaderRowWidget,
+                            height: '90',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderCell-01',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '20%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-01',
+                                            type: TextWidget,
+                                            body: 'Profit Center',
+                                            skin: 'products_gd_header_bpsp',
+                                            marginLeft: 8,
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderCell-02',
+                                    type: GridTableHeaderCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '8%',
+                                    cellHeaderSkin: 'long_border_bpsp',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-02',
+                                            type: TextWidget,
+                                            title: '',
+                                            body: 'Actuals',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderCell-03',
+                                    type: GridTableHeaderCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '8%',
+                                    cellHeaderSkin: 'long_border_bpsp',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-03',
+                                            type: TextWidget,
+                                            title: '',
+                                            body: 'YTD Actuals',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderCell-04',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '8%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-04',
+                                            type: TextWidget,
+                                            title: 'Previous',
+                                            body: 'Base Total',
+                                            skin: 'products_gd_header2_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderCell-05',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '8%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-05',
+                                            type: TextWidget,
+                                            title: 'Previous',
+                                            body: 'Final Total',
+                                            skin: 'products_gd_header2_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderCell-06',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '8%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-06',
+                                            type: TextWidget,
+                                            title: '',
+                                            body: 'Base Plan',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderCell-07',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '8%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-07',
+                                            type: TextWidget,
+                                            body: 'Events',
+                                            skin: 'products_gd_header_bpsp',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderCell-08',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '8%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-08',
+                                            type: TextWidget,
+                                            body: 'Opportunities',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderCell-09',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '8%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-09',
+                                            type: TextWidget,
+                                            body: 'Final Sales',
+                                            skin: 'products_gd_header_bpsp',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderCell-10',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '7%',
+                                    alignment: 'bottom-left',
+                                    cellHeaderSkin: 'long_border_bpsp',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-10',
+                                            type: TextWidget,
+                                            title: 'Delta Volume',
+                                            body: '',
+                                            skin: 'products_gd_header2_bpsp',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderCell-11',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '7%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-11',
+                                            type: TextWidget,
+                                            title: 'Delta %',
+                                            body: '',
+                                            skin: 'products_gd_header2_bpsp',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderCell-12',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '2%',
+                                    cellHeaderSkin: 'long_border_bpsp',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-12',
+                                            type: TextWidget,
+                                            title: '',
+                                        }
+                                    ]
+                                }]
+                        },
+
+                        {
+                            id: 'rocheBPSPCustomersPlanningGridTableYearlyCell-01',
+                            type: GridTableCellWidget,
+                            width: '20%',
+                            alignment: 'center-left',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyButton-01',
+                                    type: ButtonWidget,
+                                    icon: 'icon-badge',
+                                    borderWidth: false,
+                                    width: '100%',
+                                    applyMeasuresToSection: true,
+                                    skin: 'gridtablehierarchy_bpsp',
+                                    label: '',
+                                    action: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPCustomersPlanningGridTableYearlyCell-02',
+                            type: GridTableCellWidget,
+                            width: '8%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyText-02',
+                                    type: TextWidget,
+                                    paddingRight: 8,
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPCustomersPlanningGridTableYearlyCell-03',
+                            type: GridTableCellWidget,
+                            width: '8%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyText-03',
+                                    type: TextWidget,
+                                    paddingRight: 8,
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPCustomersPlanningGridTableYearlyCell-04',
+                            type: GridTableCellWidget,
+                            width: '8%',
+                            alignment: 'center-right',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyText-04',
+                                    type: TextWidget,
+                                    paddingRight: 8,
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPCustomersPlanningGridTableYearlyCell-05',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '8%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyText-05',
+                                    type: TextWidget,
+                                    paddingRight: 8,
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPCustomersPlanningGridTableYearlyCell-06',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '8%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyText-06',
+                                    type: TextWidget,
+                                    paddingRight: 8,
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPCustomersPlanningGridTableYearlyCell-07',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '8%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyText-07',
+                                    type: TextWidget,
+                                    paddingRight: 8,
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPCustomersPlanningGridTableYearlyCell-08',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '8%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyText-08',
+                                    type: TextWidget,
+                                    paddingRight: 8,
+                                    title: ''
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPCustomersPlanningGridTableYearlyCell-09',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '8%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyText-09',
+                                    type: TextWidget,
+                                    paddingRight: 8,
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPCustomersPlanningGridTableYearlyCell-10',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '7%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyText-10',
+                                    type: TextWidget,
+                                    paddingRight: 8,
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPCustomersPlanningGridTableYearlyCell-11',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '7%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyText-11',
+                                    type: TextWidget,
+                                    paddingRight: 8,
+                                    title: '',
+                                }
+                            ]
+                        },
+
+
+                        {
+                            id: 'rocheBPSPCustomersPlanningGridTableYearlyCell-12',
+                            type: GridTableCellWidget,
+                            alignment: 'center-center',
+                            width: '2%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCustomersPlanningGridTableYearlyButton-12',
+                                    type: ButtonWidget,
+                                    icon: 'icon-chart',
+                                    skin: 'chartGT_bpsp',
+                                }
+                            ]
+                        }]
+                }
             ]
         },
 

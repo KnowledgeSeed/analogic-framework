@@ -46,6 +46,9 @@ let EventMap, Repository, WidgetConfig;
 
         /* short route to customer planning page
         app.MainPage = 'rocheBPSPCustomersPlanning';
+        WidgetValue['systemValueGlobalStartingPlanYear'] = 2021;
+        WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = 2021;
+        WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = 'Y0';
         WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';
         WidgetValue['activeUserName'] = 'Knowledgeseed/Oravecz Tamás';
         WidgetValue['rocheBPSPCustomersCompanySelector'] = {

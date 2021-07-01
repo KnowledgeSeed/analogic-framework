@@ -3,7 +3,7 @@
 'use strict';
 class HorizontalTableWidget extends Widget {
 
-    getHtml(widgets, data, withState, leftRowWidgets, rightRowWidgets) {L(data);
+    getHtml(widgets, data, withState, leftRowWidgets, rightRowWidgets) {
         const o = this.options;
         let mainDivStyle = this.getGeneralStyles(data), s = [], h, d, i, actionWidth = false;
 
