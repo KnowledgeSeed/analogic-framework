@@ -142,3 +142,6 @@ TextWidget:
 
 GridCellWidget:
     readonly_green_bpsp
+
+HorizontalTable (hideIfNoData):
+

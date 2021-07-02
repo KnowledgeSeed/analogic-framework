@@ -43,29 +43,32 @@ let EventMap, Repository, WidgetConfig;
             items: [{name: "Roche Dia Brazil", key: "1241", on: true}]
         };//todo temp
         WidgetValue['rocheBPSPProductsGridRow1Cell3DropBox'] = {value: 'BR Brazil'};*/
-
+WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';
         /* short route to customer planning page
         app.MainPage = 'rocheBPSPCustomersPlanning';
         WidgetValue['systemValueGlobalStartingPlanYear'] = 2021;
         WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = 2021;
         WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = 'Y0';
         WidgetValue['systemValueGlobalCompanyVersion'] = 'Live';
+        WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';
         WidgetValue['activeUserName'] = 'Knowledgeseed/Oravecz Tamás';
         WidgetValue['rocheBPSPCustomersCompanySelector'] = {
             value: 'RD Poland',
             items: [{name: "RD Poland", key: "1391", on: true}]
         };
         WidgetValue['rocheBPSPCustomersTerritorySelector'] = {
-            value: 'PL - ASM Centrum (Budzynski)',
-            items: [{name: "PL - ASM Centrum (Budzynski)", key: "TTY-0000000451", on: true}]
+            value: 'PL - Manager',
+            items: [{name: "PL - Manager", key: "TTY-0000000465", on: true}]
         };
         WidgetValue['rocheBPSPCustomersHorizontalTable'] = {
             open: {
-                receiver: 'PL'
+                receiver: 'PL',
+                code: '1391 Unassigned',
+                customer: 'Lublin-Samodzielny Publiczny Szpital Kliniczny Nr 1-PL43000922'
             }
         };
 
-         end customer planning */
+         /*end customer planning */
 
 
         Render.showPage(WidgetValue['redirect'] !== null ? WidgetValue['redirect'] : app.MainPage);

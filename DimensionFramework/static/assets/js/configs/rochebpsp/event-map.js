@@ -2144,6 +2144,18 @@ app.eventMap = {
             action: app.fn.openPageWithState,
             argument: 'rocheBPSPCustomers'
         }
+    ],
+    'launch.rocheBPSPCustomersPlanningCustomerSelectorButton' : [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPCustomersPlanningPopup'
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningGridRow2Cell2OpenPopupButton' : [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPCustomersPlanningPopup'
+        }
     ]
 }
 ;

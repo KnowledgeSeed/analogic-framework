@@ -6674,217 +6674,6 @@ app.repository = {
                 },
         },
 
-    rocheBPSPCustomersTerritorySelector: {
-        initCondition: (db) => {
-            return Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector');
-        },
-        initDefault: (db) => {
-            return [];
-        },
-        init: {
-            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
-            type: 'POST',
-            body: (db) => `
-            {
-            "MDX" : "
-                    SELECT 
-                       {[}ElementAttributes_Territories].[}ElementAttributes_Territories].[Territory Code],
-                        [}ElementAttributes_Territories].[}ElementAttributes_Territories].[Caption]} 
-                      ON COLUMNS , 
-                       {TM1FILTERBYLEVEL(
-                         {FILTER({[Territories].[Territories].Members}, 
-                             [Territories].[Territories].CurrentMember.Properties(\\"Company\\") = \\"${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}\\")},
-                        0)} 
-                      ON ROWS 
-                    FROM [}ElementAttributes_Territories]
-            "}`,
-            parsingControl: {
-                type: 'object',
-                query:
-                    {
-                        items: (r, x) => {
-                            let result = [], selected = v('rocheBPSPCustomersTerritorySelector.value');
-                            for (let i = 0; i < r.Cells.length; i = i + 2) {
-                                result.push({
-                                    name: r.Cells[i + 1].FormattedValue,
-                                    key: r.Cells[i].FormattedValue,
-                                    on: selected === r.Cells[i + 1].FormattedValue
-                                });
-                            }
-                            return result;
-                        }
-                    }
-            }
-        }
-    },
-
-    rocheBPSPCustomersCompanySelector: {
-        choose: {
-            execute: (db) => {
-                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPCustomersCompanySelector.value'));
-            }
-        },
-        init: {
-            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
-            type: 'POST',
-            body: (db) => `
-            {
-            "MDX" : "SELECT 
-                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]} 
-                    ON COLUMNS , 
-                     {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}  
-                    ON ROWS 
-                    FROM [}ElementAttributes_Companies] 
-            "}`,
-            parsingControl: {
-                type: 'object',
-                query:
-                    {
-                        items: (r, x) => {
-                            let result = [], selected = v('systemValueGlobalSelectedCompany');
-                            for (let i = 0; i < r.Cells.length; i = i + 2) {
-                                result.push({
-                                    name: r.Cells[i].FormattedValue,
-                                    key: r.Cells[i + 1].FormattedValue,
-                                    on: selected === r.Cells[i].FormattedValue
-                                });
-                            }
-                            return result;
-                        }
-                    }
-            }
-        }
-    },
-    rocheBPSPCustomersHeaderInfoGridTable: {
-        initCondition: (db) => {
-            return Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector') && Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersTerritorySelector');
-        },
-        initDefault: (db) => {
-            return [];
-        },
-        init:
-            {
-                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
-                type: 'POST',
-                body: (db) => `{"MDX":"
-                    SELECT 
-                           {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[PY],
-                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[CY],
-                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[NY]} 
-                           PROPERTIES [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Caption]  ON COLUMNS , 
-                           {[Customers Plan].[Customers Plan].[All Customers Plan]} 
-                          ON ROWS 
-                        FROM [Sales Territory to Customer] 
-                        WHERE 
-                          (
-                           [Versions].[Versions].[${v('systemValueGlobalCompanyVersion')}],
-                           [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}],
-                           [Territories].[Territories].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key')}],
-                           [Receivers].[Receivers].[All Receivers]
-                          )
-                "}`,
-                parsingControl: {
-                    type: 'matrix',
-                    length: 3,
-                    query: [
-
-                        (r, x) => {
-                            return {body: r.Cells[x].FormattedValue, title: r.Cells[x].Members[5].Attributes.Caption};
-                        }, (r, x) => {
-                            return {
-                                body: r.Cells[x + 1].FormattedValue,
-                                title: r.Cells[x + 1].Members[5].Attributes.Caption
-                            };
-                        }, (r, x) => {
-                            return {
-                                body: r.Cells[x + 2].FormattedValue,
-                                title: r.Cells[x + 2].Members[5].Attributes.Caption
-                            };
-                        }
-                    ]
-                }
-            }
-    },
-
-    rocheBPSPCustomersHorizontalTable: {
-        initCondition: (db) => {
-            let b = Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector')
-                && Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersTerritorySelector');
-            return b;
-        },
-        initDefault: (db) => {
-            return [];
-        },
-        init:
-            {
-                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
-                type: 'POST',
-                body: (db) => `{"MDX":"
-                         With
-                            Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Desc] as
-                                [Customers Plan].[Customers Plan].CurrentMember.Properties('Account Name')
-                            Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Territory] as
-                                [Territories].[Territories].CurrentMember.Properties('Code')
-                            Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Receiver] as
-                                [Receivers].[Receivers].CurrentMember.Properties('Receiver - Key')
-                            Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Code] as
-                               [Customers Plan].[Customers Plan].CurrentMember.Name
-                        SELECT 
-                            {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag],
-                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Desc],
-                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Code],
-                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Receiver],
-                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[PY],
-                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[CY],
-                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[NY],
-                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Submitted By],
-                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Submitted DateTime]
-                           }  
-                          PROPERTIES [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Caption]  ON COLUMNS , 
-                          NON EMPTY 
-                              {Except({TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan]}, ALL, RECURSIVE )},{[Customers Plan].[Customers Plan].[All Customers Plan]})}
-                           * {TM1SubsetToSet([Receivers].[Receivers], \\"zUI ${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')} Plan Receivers\\")}  
-                          ON ROWS 
-                        FROM [Sales Territory to Customer] 
-                        WHERE 
-                          (
-                           [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}],
-                           [Territories].[Territories].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key')}],
-                           [Versions].[Versions].[${v('systemValueGlobalCompanyVersion')}]
-                          )      
-                  "}`
-                ,
-                parsingControl: {
-                    type: 'matrix',
-                    length: 9,
-                    query: [
-
-                        (r, x) => {
-                            return {value: r.Cells[x + 1].FormattedValue};
-                        }, (r, x) => {
-                            return {value: r.Cells[x + 2].FormattedValue};
-                        }, (r, x) => {
-                            return {value: r.Cells[x + 3].FormattedValue};
-                        }, (r, x) => {
-                            return {value: r.Cells[x + 4].FormattedValue};
-                        }, (r, x) => {
-                            return {value: r.Cells[x + 5].FormattedValue};
-                        }, (r, x) => {
-                            return {value: r.Cells[x + 6].FormattedValue};
-                        }, (r, x) => {
-                            return {value: r.Cells[x + 7].FormattedValue};
-                        }, (r, x) => {
-                            return {value: r.Cells[x + 8].FormattedValue};
-                        }, (r, x) => {
-                            return {active: true};
-                        }
-
-                    ]
-                }
-
-            },
-    },
-
     rocheBPSPProductReportMaterialSelectorShortcutPopupGridTable: {
         initCondition: (db) => {
             return Utils.isGridTableLoaded('rocheBPSPProductReportGridTable')
@@ -7034,11 +6823,10 @@ app.repository = {
             {
                 url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
                 type: 'POST',
-                body: (db) =>
-                {
+                body: (db) => {
                     let selectedProduct = Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0) === false ? 'PL1' :
                         Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0).productCode;
-                   return `{"MDX":"         
+                    return `{"MDX":"         
                     With
                     --Create deault subset for the Rows by systemValueGlobalCompanyProductPlanVersion
                          Set DefaultProductRows AS
@@ -7132,7 +6920,8 @@ app.repository = {
                                       )
 
 
-            "}`;}
+            "}`;
+                }
                 ,
                 parsingControl: {
                     type: 'list',
@@ -7149,11 +6938,10 @@ app.repository = {
             {
                 url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
                 type: 'POST',
-                body: (db) =>
-                {
+                body: (db) => {
                     let selectedProduct = Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0) === false ? 'PL1' :
                         Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0).productCode;
-                   return `{"MDX":"
+                    return `{"MDX":"
                     
                 With
                     --Create deault subset for the Rows by systemValueGlobalCompanyProductPlanVersion
@@ -7249,8 +7037,9 @@ app.repository = {
                    [Currency Keys].[Currency Keys].[${v('rocheBPSPProductReportGridRow1Cell5DropBox.value')}],
                    [Measures Sales Report by Product].[Measures Sales Report by Product].[Value]
                   )      
-            "}`;}
-                        ,
+            "}`;
+                }
+                ,
                 parsingControl: {
                     type: 'matrix',
                     length: 1,
@@ -7413,49 +7202,49 @@ app.repository = {
             }
     },
     rocheBPSPCustomersPlanningGridTableYearly: {
-     /*   perform: {
-            validation: (db, cell, widgetValue) => {
-                return {success: cell.copyMerge === false};
-            },
-            url: (db, cell, widgetValue) => {
-                if (Utils.getPropertyOrFunctionValue(cell, 'distributionEdit')) {
-                    return `/api/v1/Processes('MODULE - UI - Products Yearly Prepare Split')/tm1.ExecuteWithReturn`;
-                } else {
-                    return `/api/v1/Processes('MODULE - UI - Sales Plan by Product Split ')/tm1.ExecuteWithReturn`;
-                }
-            },
-            type: (db, cell, widgetValue) => {
-                return 'POST';
-            },
-            body: (db, cell, widgetValue) => {
-                let pLineItem = Utils.getGridTableCurrentCell('rocheBPSPCustomersPlanningGridTableYearly').members[6].Name;
-                Utils.setWidgetValue('systemValueProductCheckoutGridTableYearlyPLineItem', pLineItem);
-                if (Utils.getPropertyOrFunctionValue(cell, 'distributionEdit')) {
-                    return `{
-                        "Parameters": [
-                                {"Name": "pPeriod", "Value": "${v('systemValueGlobalSegmentedControlRelativeYearValue')}"},
-                                {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 1).title}"},
-                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
-                                {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}"},
-                                {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"},
-                                {"Name": "pLineItem", "Value": "${pLineItem}"}
-                        ]
-                    }`
-                } else {
-                    return `{
-                        "Parameters": [
-                                {"Name": "pValue", "Value": "${Utils.parseNumber(v('rocheBPSPCustomersPlanningGridTableYearly.value'))}"},
-                                {"Name": "pPeriod", "Value": "${v('systemValueGlobalSegmentedControlRelativeYearValue')}"},
-                                {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 1).title}"},
-                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
-                                {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}"},
-                                {"Name": "pSplitMode", "Value": "Default"},
-                                {"Name": "pLineItem", "Value": "${pLineItem}"}
-                        ]
-                    }`
-                }
-            }
-        },*/
+        /*   perform: {
+               validation: (db, cell, widgetValue) => {
+                   return {success: cell.copyMerge === false};
+               },
+               url: (db, cell, widgetValue) => {
+                   if (Utils.getPropertyOrFunctionValue(cell, 'distributionEdit')) {
+                       return `/api/v1/Processes('MODULE - UI - Products Yearly Prepare Split')/tm1.ExecuteWithReturn`;
+                   } else {
+                       return `/api/v1/Processes('MODULE - UI - Sales Plan by Product Split ')/tm1.ExecuteWithReturn`;
+                   }
+               },
+               type: (db, cell, widgetValue) => {
+                   return 'POST';
+               },
+               body: (db, cell, widgetValue) => {
+                   let pLineItem = Utils.getGridTableCurrentCell('rocheBPSPCustomersPlanningGridTableYearly').members[6].Name;
+                   Utils.setWidgetValue('systemValueProductCheckoutGridTableYearlyPLineItem', pLineItem);
+                   if (Utils.getPropertyOrFunctionValue(cell, 'distributionEdit')) {
+                       return `{
+                           "Parameters": [
+                                   {"Name": "pPeriod", "Value": "${v('systemValueGlobalSegmentedControlRelativeYearValue')}"},
+                                   {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 1).title}"},
+                                   {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
+                                   {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}"},
+                                   {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"},
+                                   {"Name": "pLineItem", "Value": "${pLineItem}"}
+                           ]
+                       }`
+                   } else {
+                       return `{
+                           "Parameters": [
+                                   {"Name": "pValue", "Value": "${Utils.parseNumber(v('rocheBPSPCustomersPlanningGridTableYearly.value'))}"},
+                                   {"Name": "pPeriod", "Value": "${v('systemValueGlobalSegmentedControlRelativeYearValue')}"},
+                                   {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 1).title}"},
+                                   {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
+                                   {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}"},
+                                   {"Name": "pSplitMode", "Value": "Default"},
+                                   {"Name": "pLineItem", "Value": "${pLineItem}"}
+                           ]
+                       }`
+                   }
+               }
+           },*/
         getCell: (index, r) => {
             let uiIndex = index + 10, uiValue = parseInt(r.Cells[uiIndex].FormattedValue), skin = 'monthly_right_bpsp',
                 cellSkin = '',
@@ -7470,18 +7259,18 @@ app.repository = {
             if (uiValue === 1) {
                 cellSkin = 'readonly_bpsp';
             }
-            if(uiValue === 4){
+            if (uiValue === 4) {
                 cellSkin = 'readonly_green_bpsp';
             }
 
-         /*   if ((uiValue === 2 || uiValue === 3)
-                && r.Cells[index].Members[5].Name != v('systemValueGlobalSegmentedControlRelativeYearValue')) {
+            /*   if ((uiValue === 2 || uiValue === 3)
+                   && r.Cells[index].Members[5].Name != v('systemValueGlobalSegmentedControlRelativeYearValue')) {
 
-                skin = 'products_gd_readonly_with_icon_bpsp';
-                cellSkin = 'readonly_bpsp';
-                icon = 'icon-copy';
-                copyMerge = true;
-            }*/
+                   skin = 'products_gd_readonly_with_icon_bpsp';
+                   cellSkin = 'readonly_bpsp';
+                   icon = 'icon-copy';
+                   copyMerge = true;
+               }*/
             if ((uiValue === 2 || uiValue === 3)
                 && r.Cells[index].Members[7].Name == v('systemValueGlobalSegmentedControlRelativeYearValue')) {
 
@@ -7524,7 +7313,7 @@ app.repository = {
             return result;
         },
         initCondition: (db) => {
-           return true;// return v('systemValueSegmentedControlPeriodUnit') === 'Yearly';
+            return true;// return v('systemValueSegmentedControlPeriodUnit') === 'Yearly';
         },
         initDefault: (db) => {
             return [];
@@ -7532,80 +7321,93 @@ app.repository = {
         init: {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Updateable,RuleDerived,Consolidated;$expand=Members($select=Name,Attributes/Caption))`,
             type: 'POST',
-            body: (db) => `
-            {
-                "MDX" : 
-                    "With
-                        --Default mdx to run from JS
-                        Set ProductRows As
-                        {Filter(
-                          {Filter({[Products].[BPSP Budget].Members} ,
-                          [Sales Territory to Product].([Versions].[Versions].[Live],
-                                                        [Companies].[Companies].[1391],
-                                                        [Territories].[Territories].[TTY-0000000465],
-                                                        [Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Flag])>0)},
-                                   [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Product Level - Name') = 'PL1' or 
-                                   [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Product Level - Name') = 'PL2' or 
-                                   [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Product Level - Name') = 'PL2a' or 
-                                   [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Product Level - Name') = 'PL3'
-                                  )}   
-                        -- mdx to run from JS when user focusing
-                        Set FocusedRows As
-                        {Filter({TM1DRILLDOWNMEMBER({[Products].[BPSP Budget].[P132]} , All, Recursive)}
-                        ,[Sales Territory to Product].([Versions].[Versions].[Live],
-                                                        [Companies].[Companies].[1391],
-                                                        [Territories].[Territories].[TTY-0000000465],
-                                                        [Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Flag])>0)}
-                        --Create a dummy prodct for padding column headers
-                             MEMBER [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[DUMMY] as 1
-                        --Create a dummy Tuple with 9 member for column padding
-                             Set PaddingColumns AS
-                             {{TM1SubsetToSet([Periods].[Periods],'zUI Padding Years')}*{[LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[DUMMY]}}
-                        --Default column selection depend on Year selection
-                             Set DefaultColumnSelection AS
-                             {HEAD(UNION({StrToSet([Control].([Measures Control].[Measures Control].[UI CustomersGridTable DefaultColumnsTuple Y0],[Value Type].[Value Type].[String]))},{PaddingColumns},All),10)}
-                        -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
-                             MEMBER [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductName] as 
-                                    [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Description')
-                             MEMBER [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductCaption] as 
-                                    [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Element')
-                             MEMBER [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductLevel] as 
-                                    [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Product Level - Name')
-                             MEMBER [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[HasComment] as
-                                    [Sales Plan by Customer].([Periods].[Periods].[2021],[LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[Final Sales Plan],[Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Comment Flag])
-                        -- Create the first 3 column with information
-                             Set FixColumns AS
-                             {([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
-                               [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductName]),
-                             ([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
-                              [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductCaption]),
-                             ([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
-                              [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductLevel])}
-                             Set Comment AS
-                             {([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
-                               [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[HasComment])}
-                        SELECT 
-                           Union(
-                             Union({FixColumns},
-                                   {[Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[UIFormat]}*
-                                   {DefaultColumnSelection}
-                              ,All),
-                           {Comment},All)
-                          ON COLUMNS, 
-                           {ProductRows} 
-                          ON ROWS 
-                        FROM [Sales Plan by Customer] 
-                        WHERE 
-                          (
-                           [Versions].[Versions].[Live],
-                           [Receivers].[Receivers].[PL],
-                           [Territories].[Territories].[TTY-0000000465],
-                           [Companies].[Companies].[1391],
-                           [Customers Plan].[Customers Plan].[1391 Unassigned]
-                          )
-                        "
-            }
-       `,
+            body: (db) => {
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                    territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                    version = v('systemValueGlobalCompanyVersion'),
+                    receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                    productVersion = v('systemValueGlobalCompanyProductPlanVersion'),
+                    focusedProduct = 'PL1',
+                    relativeYear = v('systemValueGlobalSegmentedControlRelativeYear'),
+                    relativeYearValue = v('systemValueGlobalSegmentedControlRelativeYearValue'),
+                    hasFocusedProduct = false,
+                    customerCode = v('rocheBPSPCustomersHorizontalTable.open.code')
+                ;
+                return `
+                    {
+                        "MDX" : 
+                            "With
+                                --Default mdx to run from JS
+                                Set ProductRows As
+                                {Filter(
+                                  {Filter({[Products].[BPSP ${productVersion}].Members} ,
+                                  [Sales Territory to Product].([Versions].[Versions].[${version}],
+                                                                [Companies].[Companies].[${company}],
+                                                                [Territories].[Territories].[${territoryCode}],
+                                                                [Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Flag])>0)},
+                                           [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL1' or 
+                                           [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL2' or 
+                                           [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL2a' or 
+                                           [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL3'
+                                          )}   
+                                -- mdx to run from JS when user focusing
+                                Set FocusedRows As
+                                {Filter({TM1DRILLDOWNMEMBER({[Products].[BPSP ${productVersion}].[${focusedProduct}]} , All, Recursive)}
+                                ,[Sales Territory to Product].([Versions].[Versions].[${version}],
+                                                                [Companies].[Companies].[${company}],
+                                                                [Territories].[Territories].[${territoryCode}],
+                                                                [Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Flag])>0)}
+                                --Create a dummy prodct for padding column headers
+                                     MEMBER [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[DUMMY] as 1
+                                --Create a dummy Tuple with 9 member for column padding
+                                     Set PaddingColumns AS
+                                     {{TM1SubsetToSet([Periods].[Periods],'zUI Padding Years')}*{[LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[DUMMY]}}
+                                --Default column selection depend on Year selection
+                                     Set DefaultColumnSelection AS
+                                     {HEAD(UNION({StrToSet([Control].([Measures Control].[Measures Control].[UI CustomersGridTable DefaultColumnsTuple ${relativeYear}],[Value Type].[Value Type].[String]))},{PaddingColumns},All),10)}
+                                -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
+                                     MEMBER [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductName] as 
+                                            [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Description')
+                                     MEMBER [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductCaption] as 
+                                            [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Element')
+                                     MEMBER [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductLevel] as 
+                                            [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name')
+                                     MEMBER [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[HasComment] as
+                                            [Sales Plan by Customer].([Periods].[Periods].[${relativeYearValue}],[LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[Final Sales Plan],[Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Comment Flag])
+                                -- Create the first 3 column with information
+                                     Set FixColumns AS
+                                     {([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
+                                       [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductName]),
+                                     ([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
+                                      [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductCaption]),
+                                     ([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
+                                      [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductLevel])}
+                                     Set Comment AS
+                                     {([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
+                                       [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[HasComment])}
+                                SELECT 
+                                   Union(
+                                     Union({FixColumns},
+                                           {[Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[UIFormat]}*
+                                           ${hasFocusedProduct ? '{FocusedRows}' : '{DefaultColumnSelection}'}
+                                      ,All),
+                                   {Comment},All)
+                                  ON COLUMNS, 
+                                   {ProductRows} 
+                                  ON ROWS 
+                                FROM [Sales Plan by Customer] 
+                                WHERE 
+                                  (
+                                   [Versions].[Versions].[${version}],
+                                   [Receivers].[Receivers].[${receiver}],
+                                   [Territories].[Territories].[${territoryCode}],
+                                   [Companies].[Companies].[${company}],
+                                   [Customers Plan].[Customers Plan].[${customerCode}]
+                                  )
+                                "
+                    }
+               `;
+            },
             parsingControl: {
                 type: 'matrix',
                 length: 24,
@@ -7725,6 +7527,290 @@ app.repository = {
                 Utils.setWidgetValue('systemValueGlobalSegmentedControlRelativeYearValue', v('rocheBPSPCustomersPlanningYearSegmentedControl.selected'));
             }
         }
+    },
+
+      rocheBPSPCustomersTerritorySelector: {
+        initCondition: (db) => {
+            return Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector');
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "
+                    SELECT 
+                       {[}ElementAttributes_Territories].[}ElementAttributes_Territories].[Territory Code],
+                        [}ElementAttributes_Territories].[}ElementAttributes_Territories].[Caption]} 
+                      ON COLUMNS , 
+                       {TM1FILTERBYLEVEL(
+                         {FILTER({[Territories].[Territories].Members}, 
+                             [Territories].[Territories].CurrentMember.Properties(\\"Company\\") = \\"${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}\\")},
+                        0)} 
+                      ON ROWS 
+                    FROM [}ElementAttributes_Territories]
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [], selected = v('rocheBPSPCustomersTerritorySelector.value');
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    name: r.Cells[i + 1].FormattedValue,
+                                    key: r.Cells[i].FormattedValue,
+                                    on: selected === r.Cells[i + 1].FormattedValue
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
+    },
+
+    rocheBPSPCustomersCompanySelector: {
+        choose: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPCustomersCompanySelector.value'));
+            }
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT 
+                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]} 
+                    ON COLUMNS , 
+                     {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}  
+                    ON ROWS 
+                    FROM [}ElementAttributes_Companies] 
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [], selected = v('systemValueGlobalSelectedCompany');
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    name: r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: selected === r.Cells[i].FormattedValue
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
+    },
+
+    rocheBPSPCustomersHeaderInfoGridTable: {
+        initCondition: (db) => {
+            return Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector') && Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersTerritorySelector');
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                type: 'POST',
+                body: (db) => `{"MDX":"
+                    SELECT 
+                           {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[PY],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[CY],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[NY]} 
+                           PROPERTIES [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Caption]  ON COLUMNS , 
+                           {[Customers Plan].[Customers Plan].[All Customers Plan]} 
+                          ON ROWS 
+                        FROM [Sales Territory to Customer] 
+                        WHERE 
+                          (
+                           [Versions].[Versions].[${v('systemValueGlobalCompanyVersion')}],
+                           [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}],
+                           [Territories].[Territories].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key')}],
+                           [Receivers].[Receivers].[All Receivers]
+                          )
+                "}`,
+                parsingControl: {
+                    type: 'matrix',
+                    length: 3,
+                    query: [
+
+                        (r, x) => {
+                            return {body: r.Cells[x].FormattedValue, title: r.Cells[x].Members[5].Attributes.Caption};
+                        }, (r, x) => {
+                            return {
+                                body: r.Cells[x + 1].FormattedValue,
+                                title: r.Cells[x + 1].Members[5].Attributes.Caption
+                            };
+                        }, (r, x) => {
+                            return {
+                                body: r.Cells[x + 2].FormattedValue,
+                                title: r.Cells[x + 2].Members[5].Attributes.Caption
+                            };
+                        }
+                    ]
+                }
+            }
+    },
+
+    rocheBPSPCustomersHorizontalTable: {
+        initCondition: (db) => {
+            let b = Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector')
+                && Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersTerritorySelector');
+            return b;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+                type: 'POST',
+                body: (db) => `{"MDX":"
+                         With
+                            Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Desc] as
+                                [Customers Plan].[Customers Plan].CurrentMember.Properties('Account Name')
+                            Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Territory] as
+                                [Territories].[Territories].CurrentMember.Properties('Code')
+                            Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Receiver] as
+                                [Receivers].[Receivers].CurrentMember.Properties('Receiver - Key')
+                            Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Code] as
+                               [Customers Plan].[Customers Plan].CurrentMember.Name
+                        SELECT 
+                            {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Desc],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Code],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Receiver],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[PY],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[CY],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[NY],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Submitted By],
+                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Submitted DateTime]
+                           }  
+                          PROPERTIES [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Caption]  ON COLUMNS , 
+                          NON EMPTY 
+                              {Except({TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan]}, ALL, RECURSIVE )},{[Customers Plan].[Customers Plan].[All Customers Plan]})}
+                           * {TM1SubsetToSet([Receivers].[Receivers], \\"zUI ${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')} Plan Receivers\\")}  
+                          ON ROWS 
+                        FROM [Sales Territory to Customer] 
+                        WHERE 
+                          (
+                           [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}],
+                           [Territories].[Territories].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key')}],
+                           [Versions].[Versions].[${v('systemValueGlobalCompanyVersion')}]
+                          )      
+                  "}`
+                ,
+                parsingControl: {
+                    type: 'matrix',
+                    length: 9,
+                    query: [
+
+                        (r, x) => {
+                            return {value: r.Cells[x + 1].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 2].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 3].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 4].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 5].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 6].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 7].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 8].FormattedValue};
+                        }, (r, x) => {
+                            return {active: true};
+                        }
+
+                    ]
+                }
+
+            },
+    },
+    rocheBPSPCustomersPlanningCustomerSelectorButton: {
+        init: {
+            execute: (db) => {
+                return {label: v('rocheBPSPCustomersHorizontalTable.open.customer')};
+            }
+        }
+    },
+    rocheBPSPCustomersPlanningHorizontalTableCustomerSelector: {
+         initCondition: (db) => {
+            let b = Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector')
+                && Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersTerritorySelector');
+            return b;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+                type: 'POST',
+                body: (db) => `{"MDX":"
+                    With
+                        Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Desc] as
+                            [Customers Plan].[Customers Plan].CurrentMember.Properties('Account Name')
+                        Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Receiver] as
+                                                    [Receivers].[Receivers].CurrentMember.Properties('Receiver - Key')
+                       Member [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Code] as
+                               [Customers Plan].[Customers Plan].CurrentMember.Name
+                    SELECT 
+                       {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag],
+                        [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Desc],
+                        [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Code],
+                        [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Receiver],
+                        [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[PY]
+                       }  
+                      PROPERTIES [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Caption]  ON COLUMNS , 
+                      NON EMPTY 
+                          {Except({TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan]}, ALL, RECURSIVE )},{[Customers Plan].[Customers Plan].[All Customers Plan]})}
+                      ON ROWS 
+                    FROM [Sales Territory to Customer] 
+                    WHERE 
+                      (
+                       [Receivers].[Receivers].[${v('rocheBPSPCustomersHorizontalTable.open.receiver')}],  
+                       [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}],
+                       [Territories].[Territories].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key')}],
+                       [Versions].[Versions].[${v('systemValueGlobalCompanyVersion')}]
+                      )
+                
+                  "}`
+                ,
+                parsingControl: {
+                    type: 'matrix',
+                    length: 5,
+                    query: [
+                        (r, x) => {
+                            return {active: true, on: v('rocheBPSPCustomersHorizontalTable.open.customer') === r.Cells[x + 1].FormattedValue};
+                        },
+                        (r, x) => {
+                            return {value: r.Cells[x + 1].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 2].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 3].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 4].FormattedValue};
+                        },
+
+                    ]
+                }
+
+            },
     }
     /* end customer planning */
 
