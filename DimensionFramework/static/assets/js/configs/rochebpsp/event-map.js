@@ -2156,6 +2156,74 @@ app.eventMap = {
             action: app.fn.openPopup,
             argument: 'rocheBPSPCustomersPlanningPopup'
         }
+    ],
+    'switch.rocheBPSPCustomersPlanningPeriodUnitSegmentedControl.finished' : [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridRow2Cell3aCreateOpportunityButton'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableYearly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningTypeSegmentedControl'
+        }
+    ],
+    'switch.rocheBPSPCustomersPlanningTypeSegmentedControl.finished' : [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningGridTableYearly_row_0': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPCustomersPlanningFocusPopupPopup'
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningGridTableMonthly_row_0': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPCustomersPlanningFocusPopupPopup'
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningFocusPopupPopupCancelButton' : [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCustomersPlanningFocusPopupPopup'
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningFocusPopupPopupFocusButton.finished' : [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableYearly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        },
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCustomersPlanningFocusPopupPopup'
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningGridTableMonthlyHeaderReturnFromFocus.finished' : [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningGridTableYearlyHeaderReturnFromFocus.finished' : [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableYearly'
+        }
     ]
 }
 ;

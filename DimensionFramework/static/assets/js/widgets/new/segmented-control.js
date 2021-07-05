@@ -17,7 +17,7 @@ class SegmentedControlWidget extends Widget {
                 selected = {selected: vv[i].label, value: vv[i].value};
             }
         }
-        if(selected === false){
+        if(selected === false && vv.length > 0){
             selected = {selected: vv[0].label, value: vv[0].value};
         }
 
@@ -104,6 +104,10 @@ class SegmentedControlWidget extends Widget {
                 }
             }
         });
+    }
+
+    processData(data) {
+        return Array.isArray(data) ? data : [];
     }
 }
 ;

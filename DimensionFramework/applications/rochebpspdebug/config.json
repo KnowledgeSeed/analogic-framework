@@ -31,15 +31,15 @@
 
 	"tm1ApiHost" : "http://localhost:5000/rochebpspdebug/pool",
 
-	"tm1ApiHostBackend" : "https://dev.knowledgeseed.ch:5125/rochebpspapi",
+	"tm1ApiHostBackend" : "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi",
 
 	"tm1ApiSubPath" : "/api/v1/",
 
 	"tm1ExecuteMDX" : "ExecuteMDX?",
 
-	"MDXUrl" : "https://dev.knowledgeseed.ch:5125/rochebpspapi/api/v1/ExecuteMDX?",
+	"MDXUrl" : "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi/api/v1/ExecuteMDX?",
 
-	"defaultMDXQuery" : "https://dev.knowledgeseed.ch:5125/rochebpspapi/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value)",
+	"defaultMDXQuery" : "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value)",
 
 	"defaultUploadTargetFolder" : "\\\\\\\\USER-PC\\\\ddd",
 
@@ -48,6 +48,6 @@
 	"MainPage" : "rocheBPSPMain",
     "pool": {
         "users": ["oravecz.tamas"],
-        "target": "https://dev.knowledgeseed.ch:5125/rochebpspapi"
+        "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
     }
 }

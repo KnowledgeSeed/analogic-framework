@@ -46,6 +46,10 @@ app.repository = {
                                 Utils.setWidgetValueIfNotExist('systemValueGlobalSelectedCompany', false);
                                 Utils.setWidgetValue('systemValueCustomerReportFocusedProductDefault', 'PL1');
                                 Utils.setWidgetValueByOther('systemValueCustomerReportFocusedProduct', 'systemValueCustomerReportFocusedProductDefault');
+                                Utils.setWidgetValueIfNotExist('systemValueCustomerPlanningSegmentedControlPeriodUnit', 'Yearly');
+                                Utils.setWidgetValueIfNotExist('systemValueCustomersPlanningMonthlyType', 'Base Plan');
+                                Utils.setWidgetValue('systemValueDefaultCustomersPlanningFocused', 'PL1');
+                                Utils.setWidgetValueIfNotExist('systemValueCustomersPlanningFocused', v('systemValueDefaultCustomersPlanningFocused'));
                                 return true;
                             }
                         }
@@ -7201,6 +7205,191 @@ app.repository = {
                 }
             }
     },
+    rocheBPSPCustomersPlanningGridTableMonthly: {
+        initCondition: (db) => {
+            return Repository.rocheBPSPCustomersPlanning.isMonthly(db);
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        getCell: (index, r) => {
+            let c = r.Cells[index], editable = c.Consolidated === false && c.RuleDerived === false,
+                isGrey = c.RuleDerived === true;
+
+            let result = {
+                title: c.FormattedValue,
+                cellSkin: isGrey ? 'readonly_bpsp' : '',
+                skin: 'monthly_right_bpsp',
+                cellVisible: true,
+                editable: editable,
+                ordinal: c.Ordinal,
+                applyMeasuresToSection: true,
+                width: '100%',
+                members: c.Members
+            };
+
+            if (editable) {
+                result['titleFontColor'] = '#A05EB5';
+            }
+            return result;
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Updateable,RuleDerived,Consolidated;$expand=Members($select=Name,Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => {
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                    territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                    version = v('systemValueGlobalCompanyVersion'),
+                    receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                    productVersion = v('systemValueGlobalCompanyProductPlanVersion'),
+                    focusedProduct = v('systemValueCustomersPlanningFocused'),
+                    relativeYear = v('systemValueGlobalSegmentedControlRelativeYear'),
+                    relativeYearValue = v('systemValueGlobalSegmentedControlRelativeYearValue'),
+                    hasFocusedProduct = focusedProduct !== 'PL1',
+                    customerCode = v('rocheBPSPCustomersHorizontalTable.open.code'),
+                    type = v('systemValueCustomersPlanningMonthlyType')
+                ;
+                return `
+                    {
+                        "MDX" : 
+                            "With
+                                --Default mdx to run from JS
+                                Set ProductRows As
+                                {Filter(
+                                  {Filter({[Products].[BPSP ${productVersion}].Members} ,
+                                  [Sales Territory to Product].([Versions].[Versions].[${version}],
+                                                                [Companies].[Companies].[${company}],
+                                                                [Territories].[Territories].[${territoryCode}],
+                                                                [Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Flag])>0)},
+                                           [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL1' or 
+                                           [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL2' or 
+                                           [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL2a' or 
+                                           [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL3'
+                                          )}   
+                                -- mdx to run from JS when user focusing
+                                Set FocusedRows As
+                                {Filter({TM1DRILLDOWNMEMBER({[Products].[BPSP ${productVersion}].[${focusedProduct}]} , All, Recursive)}
+                                ,[Sales Territory to Product].([Versions].[Versions].[${version}],
+                                                                [Companies].[Companies].[${company}],
+                                                                [Territories].[Territories].[${territoryCode}],
+                                                                [Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Flag])>0)}
+                                -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
+                                     MEMBER [Periods].[Periods].[ProductName] as 
+                                            [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Description')
+                                     MEMBER [Periods].[Periods].[ProductCaption] as 
+                                            [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Element')
+                                     MEMBER [Periods].[Periods].[ProductLevel] as 
+                                            [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name')
+                                     MEMBER [Periods].[Periods].[HasComment] as
+                                            [Sales Plan by Customer].([Periods].[Periods].[${relativeYearValue}],[LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[Final Sales Plan],[Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Comment Flag])
+                                -- Create the first 3 column with information
+                                     Set FixColumns AS
+                                     {[Periods].[Periods].[ProductName],
+                                      [Periods].[Periods].[ProductCaption],
+                                      [Periods].[Periods].[ProductLevel]}
+                                     Set Comment AS
+                                     {[Periods].[Periods].[HasComment]}
+                                SELECT 
+                                  Union(
+                                     {Union({FixColumns}, 
+                                           {TM1DRILLDOWNMEMBER({[Periods].[Periods].[2021]}, ALL, RECURSIVE )}
+                                     ,All)},
+                                     {Comment}
+                                  ,All)
+                                  ON COLUMNS, 
+                                   ${hasFocusedProduct ? '{FocusedRows}' : '{ProductRows} '} 
+                                  ON ROWS 
+                                FROM [Sales Plan by Customer] 
+                                WHERE 
+                                  (
+                                   [Versions].[Versions].[${version}],
+                                   [Receivers].[Receivers].[${receiver}],
+                                   [Territories].[Territories].[${territoryCode}],
+                                   [Companies].[Companies].[${company}],
+                                   [Customers Plan].[Customers Plan].[${customerCode}],
+                                   [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[${type}],
+                                   [Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value]
+                                  )
+                                "
+                    }
+               `;
+            },
+            parsingControl: {
+                type: 'matrix',
+                length: 17,
+                query: [
+                    (r, x) => {
+                        let result, pl, pc;
+                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = x;
+                        pc = r.Cells[x + 1].FormattedValue;
+                        pl = r.Cells[x + 2].FormattedValue.replace('a', '');
+                        result = {
+                            label: r.Cells[x].FormattedValue,
+                            skin: 'gridtable_hierarchy_bpsp_' + pl,
+                            cellVisible: true,
+                            icon: 'icon-badge',
+                            members: r.Cells[x].Members,
+                            productLevel: pl,
+                            productCode: pc
+                        };
+                        return result;
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 3;
+                        return Repository.rocheBPSPCustomersPlanningGridTableMonthly.getCell(WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPCustomersPlanningGridTableMonthly.getCell(WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPCustomersPlanningGridTableMonthly.getCell(WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPCustomersPlanningGridTableMonthly.getCell(WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPCustomersPlanningGridTableMonthly.getCell(WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPCustomersPlanningGridTableMonthly.getCell(WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPCustomersPlanningGridTableMonthly.getCell(WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPCustomersPlanningGridTableMonthly.getCell(WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPCustomersPlanningGridTableMonthly.getCell(WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPCustomersPlanningGridTableMonthly.getCell(WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPCustomersPlanningGridTableMonthly.getCell(WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPCustomersPlanningGridTableMonthly.getCell(WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'], r);
+                    },
+                    (r, x) => {
+                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 1;
+                        return Repository.rocheBPSPCustomersPlanningGridTableMonthly.getCell(WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'], r);
+                    },
+                ]
+            }
+        }
+    },
     rocheBPSPCustomersPlanningGridTableYearly: {
         /*   perform: {
                validation: (db, cell, widgetValue) => {
@@ -7313,7 +7502,7 @@ app.repository = {
             return result;
         },
         initCondition: (db) => {
-            return true;// return v('systemValueSegmentedControlPeriodUnit') === 'Yearly';
+            return Repository.rocheBPSPCustomersPlanning.isYearly(db);
         },
         initDefault: (db) => {
             return [];
@@ -7327,10 +7516,10 @@ app.repository = {
                     version = v('systemValueGlobalCompanyVersion'),
                     receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
                     productVersion = v('systemValueGlobalCompanyProductPlanVersion'),
-                    focusedProduct = 'PL1',
+                    focusedProduct = v('systemValueCustomersPlanningFocused'),
                     relativeYear = v('systemValueGlobalSegmentedControlRelativeYear'),
                     relativeYearValue = v('systemValueGlobalSegmentedControlRelativeYearValue'),
-                    hasFocusedProduct = false,
+                    hasFocusedProduct = focusedProduct !== 'PL1',
                     customerCode = v('rocheBPSPCustomersHorizontalTable.open.code')
                 ;
                 return `
@@ -7389,11 +7578,11 @@ app.repository = {
                                    Union(
                                      Union({FixColumns},
                                            {[Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[UIFormat]}*
-                                           ${hasFocusedProduct ? '{FocusedRows}' : '{DefaultColumnSelection}'}
+                                           {DefaultColumnSelection}
                                       ,All),
                                    {Comment},All)
                                   ON COLUMNS, 
-                                   {ProductRows} 
+                                   ${hasFocusedProduct ? '{FocusedRows}' : '{ProductRows} '}
                                   ON ROWS 
                                 FROM [Sales Plan by Customer] 
                                 WHERE 
@@ -7529,7 +7718,7 @@ app.repository = {
         }
     },
 
-      rocheBPSPCustomersTerritorySelector: {
+    rocheBPSPCustomersTerritorySelector: {
         initCondition: (db) => {
             return Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector');
         },
@@ -7748,7 +7937,7 @@ app.repository = {
         }
     },
     rocheBPSPCustomersPlanningHorizontalTableCustomerSelector: {
-         initCondition: (db) => {
+        initCondition: (db) => {
             let b = Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector')
                 && Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersTerritorySelector');
             return b;
@@ -7795,7 +7984,10 @@ app.repository = {
                     length: 5,
                     query: [
                         (r, x) => {
-                            return {active: true, on: v('rocheBPSPCustomersHorizontalTable.open.customer') === r.Cells[x + 1].FormattedValue};
+                            return {
+                                active: true,
+                                on: v('rocheBPSPCustomersHorizontalTable.open.customer') === r.Cells[x + 1].FormattedValue
+                            };
                         },
                         (r, x) => {
                             return {value: r.Cells[x + 1].FormattedValue};
@@ -7811,6 +8003,110 @@ app.repository = {
                 }
 
             },
+    },
+    rocheBPSPCustomersPlanningPeriodUnitSegmentedControl: {
+        init: {
+            execute: (db) => {
+                let e = db.systemValueCustomerPlanningSegmentedControlPeriodUnit;
+                return e ? [{label: 'Yearly', selected: e === 'Yearly'}, {
+                    label: 'Monthly',
+                    selected: e === 'Monthly'
+                }] : false;
+            }
+        },
+        switch: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueCustomerPlanningSegmentedControlPeriodUnit', v('rocheBPSPCustomersPlanningPeriodUnitSegmentedControl.selected'));
+            }
+        }
+    },
+    rocheBPSPCustomersPlanning: {
+        isMonthly: (db) => {
+            return v('systemValueCustomerPlanningSegmentedControlPeriodUnit') === 'Monthly';
+        },
+        isYearly: (db) => {
+            return v('systemValueCustomerPlanningSegmentedControlPeriodUnit') === 'Yearly';
+        },
+        getVisibleGridTable: (db) => {
+            return Repository.rocheBPSPCustomersPlanning.isYearly(db) ? 'rocheBPSPCustomersPlanningGridTableYearly' : 'rocheBPSPCustomersPlanningGridTableMonthly';
+        },
+        isFocused: () => {
+            return v('systemValueCustomersPlanningFocused') !== v('systemValueDefaultCustomersPlanningFocused');
+        }
+    },
+    rocheBPSPCustomersPlanningGridRow2Cell3aCreateOpportunityButton: {
+        init: {
+            execute: (db) => {
+                return {visible: Repository.rocheBPSPCustomersPlanning.isYearly(db)};
+            }
+        }
+    },
+    rocheBPSPCustomersPlanningTypeSegmentedControl: {
+        switch: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueCustomersPlanningMonthlyType', v('rocheBPSPCustomersPlanningTypeSegmentedControl.selected'));
+            }
+        },
+        init: {
+            execute: (db) => {
+                let e = v('systemValueCustomersPlanningMonthlyType');
+                return {
+                    visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db),
+                    data: [
+                        {label: 'Base', selected: e === 'Base Plan'},
+                        {label: 'Events', selected: e === 'Events'},
+                        {label: 'Opportunities', selected: e === 'Opportunities'},
+                        {label: 'Final Sales', selected: e === 'Final Sales'}
+                    ]
+                };
+            }
+        }
+    },
+    rocheBPSPCustomersPlanningFocusPopupPopupFocusButton: {
+        launch: {
+            execute: (db) => {
+                let table = Repository.rocheBPSPCustomersPlanning.getVisibleGridTable(db);
+                Utils.setWidgetValue('systemValueCustomersPlanningFocused', Utils.getGridTableCell(table, 0).productCode);
+            }
+        }
+    },
+    'rocheBPSPCustomersPlanningGridTableMonthlyHeaderText-01' : {
+        init: {
+            execute: (db) => {
+                return {visible: !Repository.rocheBPSPCustomersPlanning.isFocused()};
+            }
+        }
+    },
+    'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-01' : {
+        init: {
+            execute: (db) => {
+                return {visible: !Repository.rocheBPSPCustomersPlanning.isFocused()};
+            }
+        }
+    },
+    rocheBPSPCustomersPlanningGridTableMonthlyHeaderReturnFromFocus : {
+        launch: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueCustomersPlanningFocused', v('systemValueDefaultCustomersPlanningFocused'));
+            }
+        },
+        init: {
+            execute: (db) => {
+                return {visible: Repository.rocheBPSPCustomersPlanning.isFocused()};
+            }
+        }
+    },
+    rocheBPSPCustomersPlanningGridTableYearlyHeaderReturnFromFocus : {
+        launch: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueCustomersPlanningFocused', v('systemValueDefaultCustomersPlanningFocused'));
+            }
+        },
+        init: {
+            execute: (db) => {
+                return {visible: Repository.rocheBPSPCustomersPlanning.isFocused()};
+            }
+        }
     }
     /* end customer planning */
 
