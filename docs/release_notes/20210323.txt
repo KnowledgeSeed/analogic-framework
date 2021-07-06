@@ -144,4 +144,4 @@ GridCellWidget:
     readonly_green_bpsp
 
 HorizontalTable (hideIfNoData):
-
+    customer_planning_bpsp

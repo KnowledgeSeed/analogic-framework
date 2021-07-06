@@ -2132,7 +2132,7 @@ app.eventMap = {
         }
     ],
 
-    'open.rocheBPSPCustomersHorizontalTable': [
+    'open.rocheBPSPCustomersHorizontalTable.finished': [
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPCustomersPlanning'
@@ -2143,6 +2143,10 @@ app.eventMap = {
         {
             action: app.fn.openPageWithState,
             argument: 'rocheBPSPCustomers'
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPCustomersPlanningHorizontalTableCustomerSelector', 'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector']
         }
     ],
     'launch.rocheBPSPCustomersPlanningCustomerSelectorButton' : [
@@ -2155,6 +2159,179 @@ app.eventMap = {
         {
             action: app.fn.openPopup,
             argument: 'rocheBPSPCustomersPlanningPopup'
+        }
+    ],
+    'switch.rocheBPSPCustomersPlanningPeriodUnitSegmentedControl.finished' : [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridRow2Cell3aCreateOpportunityButton'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableYearly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningTypeSegmentedControl'
+        }
+    ],
+    'switch.rocheBPSPCustomersPlanningTypeSegmentedControl.finished' : [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningGridTableYearly_row_0': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPCustomersPlanningFocusPopupPopup'
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningGridTableMonthly_row_0': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPCustomersPlanningFocusPopupPopup'
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningFocusPopupPopupCancelButton' : [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCustomersPlanningFocusPopupPopup'
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningFocusPopupPopupFocusButton.finished' : [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableYearly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        },
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCustomersPlanningFocusPopupPopup'
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningGridTableMonthlyHeaderReturnFromFocus.finished' : [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningGridTableYearlyHeaderReturnFromFocus.finished' : [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableYearly'
+        }
+    ],
+    'open.rocheBPSPCustomersPlanningHorizontalTableCustomerSelector.finished': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableYearly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningCustomerSelectorButton'
+        },
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCustomersPlanningPopup'
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningGridRow2Cell2NextButton.finished' : [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableYearly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningCustomerSelectorButton'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningHorizontalTableCustomerSelector'
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningGridRow2Cell2PreviousButton.finished' : [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableYearly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningCustomerSelectorButton'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningHorizontalTableCustomerSelector'
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningGridRow2Cell3aCreateOpportunityButton' : [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPCustomersPlanningOpportunitiesPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector'
+        }
+    ],
+    'perform.rocheBPSPCustomersPlanningGridTableYearly': [
+        {
+            action: app.fn.conditionalGridTablePopup,
+            argument: [
+                {
+                    conditionKey: 'distributionEdit',
+                    actions: [
+                     /*   {
+                            action: app.fn.addGridTableCurrentRowSystemValue,
+                            argument: ['DistributionEditProductCode', 'rocheBPSPProductsCheckoutGridTableYearly', 1, 'title']
+                        },*/
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPCustomersPlanningOpportunitiesFromGridTablePopup'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPCustomersPlanningOpportunitiesFromGridTableSelector'
+                        }
+                    ]
+                },
+                {
+                    conditionKey: 'copyMerge',
+                    actions: [
+                        {
+                            action: app.fn.showPopup,
+                            argument: 'In progress'
+                        }
+                      /*  {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPProductsCheckoutCopyMergePopup'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPProductsCheckoutCopyMergePopupSlider'
+                        }*/
+                    ]
+                }
+            ]
         }
     ]
 }

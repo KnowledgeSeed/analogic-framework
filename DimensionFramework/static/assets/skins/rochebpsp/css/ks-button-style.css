@@ -1095,6 +1095,16 @@
     font-size: 12px;
 }
 
+.ks-button-blue_link_bpsp {
+    padding: 5px;
+}
+
+.ks-button-blue_link_bpsp:hover {
+    background-color: #bfd9f2;
+    padding: 5px;
+    border-radius: 5px;
+}
+
 
 /* red_link_x_bpsp */
 

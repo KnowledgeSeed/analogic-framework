@@ -67,6 +67,10 @@ WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';
                 customer: 'Lublin-Samodzielny Publiczny Szpital Kliniczny Nr 1-PL43000922'
             }
         };
+        WidgetValue['systemValueCustomerPlanningSegmentedControlPeriodUnit'] = 'Yearly';
+        WidgetValue['systemValueCustomersPlanningMonthlyType'] = 'Base Plan';
+        WidgetValue['systemValueCustomersPlanningFocused'] = 'PL1';
+        WidgetValue['systemValueDefaultCustomersPlanningFocused'] = 'PL1';
 
          /*end customer planning */
 
