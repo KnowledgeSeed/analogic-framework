@@ -72,49 +72,48 @@ exportIpPlanningMonthly: >
       [Measures Sales Plan IP].[Measures Sales Plan IP].[Value]
     )
 
-rocheProductLevelExportMDX: >
-With
---Create deault subset for the rows
-     Set DefaultProductRows AS
-     {TM1DRILLDOWNMEMBER({[Products].[BPSP Budget].[PL1]}, ALL, RECURSIVE )}
---Create deault subset for the rows by Receiver
-     Set DefaultReceiversRows AS
-     {TM1DRILLDOWNMEMBER({[Receivers].[Receivers].[All Receivers]}, ALL, RECURSIVE )}
--- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)
-     MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductName] as
-            [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Description')
-     MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductCaption] as
-            [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Element')
-     MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel] as
-            [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Product Level - Name')
-     MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[DUMMY] AS 'DUMMY'
-     MEMBER [Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment] as
-            [Sales Report by Product].([Currency Keys].[Currency Keys].[Local],
-            [LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan],
-            [Measures Sales Report by Product].[Measures Sales Report by Product].[Comment])
-SELECT
-   {([Periods].[Periods].[2020],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductName]),
-    ([Periods].[Periods].[2020],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductCaption]),
-    ([Periods].[Periods].[2020],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel]),
-     ([Periods].[Periods].[2020],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
-     ([Periods].[Periods].[2021],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
-     ([Periods].[Periods].[2022],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
-     ([Periods].[Periods].[2023],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
-     ([Periods].[Periods].[2024],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan])
-     ,([Periods].[Periods].[2021],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
-     ([Periods].[Periods].[2022],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
-     ([Periods].[Periods].[2023],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
-     ([Periods].[Periods].[2024],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan])
-   }
-  ON COLUMNS ,
-  NON EMPTY
-   {DefaultReceiversRows}*{DefaultProductRows}
-  ON ROWS
-FROM [Sales Report by Product]
-WHERE
-  (
-   [Versions].[Versions].[Live],
-   [Companies].[Companies].[1394],
-   [Currency Keys].[Currency Keys].[CHF]
-  )
 
+rocheProductLevelExportMDX: >
+  With
+    --Create deault subset for the rows
+    Set DefaultProductRows AS
+    {TM1DRILLDOWNMEMBER({[Products].[BPSP Budget].[PL1]}, ALL, RECURSIVE )}
+    --Create deault subset for the rows by Receiver
+    Set DefaultReceiversRows AS
+    {TM1DRILLDOWNMEMBER({[Receivers].[Receivers].[All Receivers]}, ALL, RECURSIVE )}
+    -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)
+    MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductName] as
+    [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Description')
+    MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductCaption] as
+    [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Element')
+    MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel] as
+    [Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Product Level - Name')
+    MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[DUMMY] AS 'DUMMY'
+    MEMBER [Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment] as
+    [Sales Report by Product].([Currency Keys].[Currency Keys].[Local],
+    [LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan],
+    [Measures Sales Report by Product].[Measures Sales Report by Product].[Comment])
+    SELECT
+    {([Periods].[Periods].[2020],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductName]),
+      ([Periods].[Periods].[2020],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductCaption]),
+      ([Periods].[Periods].[2020],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel]),
+      ([Periods].[Periods].[2020],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+      ([Periods].[Periods].[2021],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+      ([Periods].[Periods].[2022],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+      ([Periods].[Periods].[2023],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+      ([Periods].[Periods].[2024],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan])
+      ,([Periods].[Periods].[2021],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+      ([Periods].[Periods].[2022],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+      ([Periods].[Periods].[2023],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+      ([Periods].[Periods].[2024],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan])
+    }
+    ON COLUMNS ,
+    NON EMPTY
+    {DefaultReceiversRows}*{DefaultProductRows}
+    ON ROWS
+    FROM [Sales Report by Product]
+    WHERE
+    ([Versions].[Versions].[Live],
+     [Companies].[Companies].[1394],
+     [Currency Keys].[Currency Keys].[CHF]
+    )

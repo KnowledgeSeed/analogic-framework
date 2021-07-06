@@ -7146,7 +7146,7 @@ app.repository = {
             },
     },
 
-        rocheBPSPProductReportExportPopupCheckoutButton: {
+    rocheBPSPProductReportExportPopupCheckoutButton: {
 
         /*
         init: {
@@ -7161,7 +7161,7 @@ app.repository = {
             s.push(Utils.getFormattedDate(new Date(), '_', true));
             s.push(db.activeUserName);
             s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'key'));
-            s.push(db.systemValueCustomerReportFocusedProduct);
+            s.push(v('rocheBPSPProductReportGridRow1Cell5DropBox.value'));
             return s.join('_').replaceAll(':', '_').replaceAll(' ', '_').replaceAll('/', '_');
         },
         launch: {
@@ -7175,10 +7175,10 @@ app.repository = {
                     companyVersion: db.systemValueGlobalCompanyVersion, //Live
                     productPlanVersion: db.systemValueGlobalCompanyProductPlanVersion, //Budget
                     company: Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'key'),
-                    product: db.systemValueCustomerReportFocusedProduct,
                     globalVersion: WidgetValue.systemValueGlobalCompanyVersion,
                     version: WidgetValue.systemValueGlobalCompanyProductPlanVersion,
                     currency: v('rocheBPSPProductReportGridRow1Cell5DropBox.value'),
+                    year0: y1 - 1,
                     year1: y1,
                     year2: y1 + 1,
                     year3: y1 + 2,
@@ -8260,7 +8260,7 @@ app.repository = {
         }
     },
     rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector: {
-         initCondition: (db) => {
+        initCondition: (db) => {
             let b = Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector')
                 && Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersTerritorySelector')
                 && v('systemValueCustomersPlanningIsOpportunitiesSelectorLoadable');
@@ -8283,7 +8283,7 @@ app.repository = {
                     [}ElementAttributes_Opportunities].[}ElementAttributes_Opportunities].[Link Sales Force],
                     [}ElementAttributes_Opportunities].[}ElementAttributes_Opportunities].[Use - Flag]}
                     ON COLUMNS ,
-                    {FILTER({[Opportunities].[Opportunities].Members}, [Opportunities].[Opportunities].CurrentMember.Properties(\\"Customers Plan\\") = \\"${v('systemValueCustomersPlanningCustomerCode') }\\")}
+                    {FILTER({[Opportunities].[Opportunities].Members}, [Opportunities].[Opportunities].CurrentMember.Properties(\\"Customers Plan\\") = \\"${v('systemValueCustomersPlanningCustomerCode')}\\")}
                     ON ROWS
                     FROM [}ElementAttributes_Opportunities] 
                   "}`
@@ -8300,17 +8300,17 @@ app.repository = {
                             return {value: r.Cells[x + 3].FormattedValue};
                         }, (r, x) => {
                             return {value: r.Cells[x + 2].FormattedValue};
-                        },(r, x) => {
+                        }, (r, x) => {
                             return {value: r.Cells[x + 5].FormattedValue};
-                        },(r, x) => {
+                        }, (r, x) => {
                             return {
                                 active: true
                             };
-                        },(r, x) => {
+                        }, (r, x) => {
                             return {
                                 active: true
                             };
-                        },(r, x) => {
+                        }, (r, x) => {
                             return {
                                 active: true
                             };
@@ -8369,7 +8369,7 @@ app.repository = {
                     query: [
                         (r, x) => {
                             return {value: r.Cells[x].Members[6].Name};
-                        },(r, x) => {
+                        }, (r, x) => {
                             return {value: r.Cells[x].FormattedValue};
                         }, (r, x) => {
                             return {
