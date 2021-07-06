@@ -43,8 +43,8 @@ let EventMap, Repository, WidgetConfig;
             items: [{name: "Roche Dia Brazil", key: "1241", on: true}]
         };//todo temp
         WidgetValue['rocheBPSPProductsGridRow1Cell3DropBox'] = {value: 'BR Brazil'};*/
-//WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';
-        /* short route to customer planning page*/
+WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';
+        /* short route to customer planning page
         app.MainPage = 'rocheBPSPCustomersPlanning';
         WidgetValue['systemValueGlobalStartingPlanYear'] = 2021;
         WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = 2021;

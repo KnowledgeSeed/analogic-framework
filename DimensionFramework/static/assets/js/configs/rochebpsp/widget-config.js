@@ -15533,7 +15533,115 @@ app.widgetConfig = {
                         },
                     ]
                 },
+                {
+                    id: 'rocheBPSPCustomersPlanningOpportunitiesPopup',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: false,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    width: '920',
+                    bgScrollable: true,
+                    fadingSpeed: 0,
+                    fixed: true,
+                    height: '500',
+                    behaviour: 'popup',
+                    skin: 'popup_bpsp ',
+                    position: 'center',
+                    widgets: [
+                        {
+                            id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector',
+                            type: HorizontalTableWidget,
+                            title: '',
+                            titleVisible: false,
+                            columnNames: ["Opportunity", "Product", "Type", "Probability", "Value"],
+                            searchField: true,
+                            visible: true,
+                            columnWidths: ["20%", "20%", "10%", "15%", "20%"],
+                            fadeOutNum: 7,
+                            marginLeft: 10,
+                            marginRight: 10,
+                            listen: [],
+                            isInBox: false,
+                            leftActionsLength: 1,
+                            marginBottom: '20',
+                            marginTop: '20',
+                            skin: 'customer_planning_bpsp',
+                            widgets: [
 
+                                {
+                                    id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelectorButton',
+                                    type: RadioButtonRowWidget,
+                                    action: 'select',
+                                    align: 'right',
+                                    position: 1
+                                },
+                                {
+                                    id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesDeleteButton',
+                                    type: DeleteButtonRowWidget,
+                                    action: 'delete',
+                                    align: 'right',
+                                    position: 2
+                                },
+                                {
+                                    id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesLinkButton',
+                                    type: ActionButtonRowWidget,
+                                    action: 'open',
+                                    align: 'right',
+                                    position: 3
+                                },
+
+                            ]
+                        },
+                    ]
+                },
+                {
+                    id: 'rocheBPSPCustomersPlanningOpportunitiesFromGridTablePopup',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: false,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    width: '400',
+                    bgScrollable: true,
+                    fadingSpeed: 0,
+                    fixed: true,
+                    height: '200',
+                    behaviour: 'popup',
+                    skin: 'popup_bpsp ',
+                    position: 'center',
+                    widgets: [
+                        {
+                            id: 'rocheBPSPCustomersPlanningOpportunitiesFromGridTableSelector',
+                            type: HorizontalTableWidget,
+                            title: '',
+                            titleVisible: false,
+                            columnNames: ["Opportunity", "Value"],
+                            searchField: true,
+                            visible: true,
+                            columnWidths: ["60%", "35%"],
+                            fadeOutNum: 7,
+                            marginLeft: 10,
+                            marginRight: 10,
+                            listen: [],
+                            isInBox: false,
+                            marginBottom: '20',
+                            marginTop: '20',
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPCustomersPlanningOpportunitiesFromGridTableSelectorOpenButton',
+                                    type: ActionButtonRowWidget,
+                                    action: 'open',
+                                    align: 'right',
+                                    position: 1
+                                },
+
+                            ]
+                        },
+                    ]
+                },
                 {
                     id: 'rocheBPSPCustomersPlanningGrid',
                     type: GridWidget,
@@ -15868,7 +15976,7 @@ app.widgetConfig = {
                                                     label: 'Events',
                                                     action: 'segmentedControlTab2',
                                                     selected: false,
-                                                    value: 'Events'
+                                                    value: 'One Time Event'
                                                 },
                                                 {
                                                     id: 'rocheBPSPCustomersPlanningTypeSegmentedControlItem3',
@@ -15876,7 +15984,7 @@ app.widgetConfig = {
                                                     label: 'Opportunities',
                                                     action: 'segmentedControlTab3',
                                                     selected: false,
-                                                    value: 'Opportunities'
+                                                    value: 'Opportunity'
                                                 },
                                                 {
                                                     id: 'rocheBPSPCustomersPlanningTypeSegmentedControlItem4',
@@ -15884,7 +15992,7 @@ app.widgetConfig = {
                                                     label: 'Final Sales',
                                                     action: 'segmentedControlTab4',
                                                     selected: false,
-                                                    value: 'Final Sales'
+                                                    value: 'Final Sales Plan'
                                                 }
                                             ]
                                         }
