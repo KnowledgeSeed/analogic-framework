@@ -7141,6 +7141,49 @@ app.repository = {
             },
     },
 
+        rocheBPSPProductReportExportPopupCheckoutButton: {
+
+        /*
+        init: {
+            execute: (db) => {
+                return {visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly'};
+            }
+        },
+         */
+
+        getFileName: (db) => {
+            let s = [], fileName;
+            s.push(Utils.getFormattedDate(new Date(), '_', true));
+            s.push(db.activeUserName);
+            s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'key'));
+            s.push(db.systemValueCustomerReportFocusedProduct);
+            return s.join('_').replaceAll(':', '_').replaceAll(' ', '_').replaceAll('/', '_');
+        },
+        launch: {
+            download: (db) => {
+                let y1 = parseInt(db.systemValueGlobalStartingPlanYear),
+                    fileName = Repository.rocheBPSPProductReportExportPopupCheckoutButton.getFileName(db);
+                return {
+                    url: 'export?export_key=rocheProductLevelExport&file_name=' + fileName + '.xlsx',   // custom_object json
+                    fileName: fileName + '.xlsx',
+                    activeUserName: db.activeUserName,
+                    companyVersion: db.systemValueGlobalCompanyVersion, //Live
+                    productPlanVersion: db.systemValueGlobalCompanyProductPlanVersion, //Budget
+                    company: Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'key'),
+                    product: db.systemValueCustomerReportFocusedProduct,
+                    globalVersion: WidgetValue.systemValueGlobalCompanyVersion,
+                    version: WidgetValue.systemValueGlobalCompanyProductPlanVersion,
+                    currency: v('rocheBPSPProductReportGridRow1Cell5DropBox.value'),
+                    year1: y1,
+                    year2: y1 + 1,
+                    year3: y1 + 2,
+                    year4: y1 + 3,
+                    key: 'rocheProductLevelExportMDX' // ez a yml
+                };
+            }
+        }
+    },
+
 
     /* customer planning */
     rocheBPSPCustomersPlanningGridRow1Cell5Button: {

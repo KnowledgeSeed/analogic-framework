@@ -110,8 +110,7 @@ class Export:
                 instrument_type = d['Cells'][i]['Members'][5]['Attributes']['Caption']
                 contract_type = d['Cells'][i]['Members'][6]['Attributes']['Caption']
                 name = d['Cells'][i]['Value']
-                code = d['Cells'][i+1]['Value']
-
+                code = d['Cells'][i + 1]['Value']
 
                 cf = workbook.add_format()
                 cf.set_indent(pl)
@@ -146,7 +145,6 @@ class Export:
         workbook.close()
         output.seek(0)
         return output
-
 
     def rocheMonthly(self, request, tm1_service, setting):
         output = io.BytesIO()
@@ -423,6 +421,133 @@ class Export:
         worksheet.write('I13', "=I12", money)
         worksheet.write('I15', "=I10-I13", money)
         worksheet.write('I16', "=I15/I10", format2)
+        workbook.close()
+        output.seek(0)
+        return output
+
+    def rocheProductLevelExport(self, request, tm1_service, setting):
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        worksheet = workbook.add_worksheet()
+
+        mdx = setting.getMDX(request.args['key'])
+        for k in request.args:
+            mdx = mdx.replace('$' + k, request.args[k].replace('"', '\\"'))
+
+        mdx = '{"MDX"  :"' + mdx + '"}'
+        #     data = tm1_service.cells.execute_mdx(mdx)
+
+        user = request.args['activeUserName']
+        company = request.args['company']
+        global_version = request.args['globalVersion']
+        version = request.args['version']
+
+        font_size = 12
+        worksheet.protect('ADSBP', {'format_cells': True, 'format_rows': True, 'format_columns': True})
+
+        worksheet.write(0, 0, user)
+        worksheet.write(0, 1, company)
+        worksheet.write(0, 3, global_version)
+        worksheet.write(0, 4, version)
+
+        bold = workbook.add_format({'bold': True})
+        bold.set_font_name('Imago')
+        bold.set_font_size(font_size)
+
+        worksheet.write(1, 3, request.args['year1'], bold)
+        worksheet.write(1, 16, request.args['year2'], bold)
+        worksheet.write(1, 29, request.args['year3'], bold)
+        worksheet.write(1, 42, request.args['year4'], bold)
+
+        worksheet.write(2, 1, 'Product Code', bold)
+        worksheet.write(2, 2, 'PL', bold)
+        worksheet.write(2, 3, 'Final Plan', bold)
+
+        i = 1
+        j = 4
+        while i <= 12:
+            worksheet.write(2, j, str(i).zfill(2), bold)
+            worksheet.write(2, j + 13, str(i).zfill(2), bold)
+            worksheet.write(2, j + 26, str(i).zfill(2), bold)
+            worksheet.write(2, j + 39, str(i).zfill(2), bold)
+            j = j + 1
+            i = i + 1
+
+        worksheet.write(2, 16, 'Final Plan', bold)
+        worksheet.write(2, 29, 'Final Plan', bold)
+        worksheet.write(2, 42, 'Final Plan', bold)
+
+        # temp
+        headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
+                                   'Accept-Encoding': 'gzip, deflate, br'}
+        tm1_session_id = setting.getTM1SessionId(session.get('cam_name', ''))
+
+        cookies: dict[str, str] = {"TM1SessionId": tm1_session_id}
+
+        cnf = setting.getConfig()
+
+        target_url = cnf['tm1ApiHostBackend']
+
+        response = requests.request(
+            url=target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable)',
+            method='POST',
+            data=mdx,
+            headers=headers,
+            cookies=cookies,
+            verify=False)
+
+        d = response.json()
+
+        simple = workbook.add_format({'locked': False})
+        simple.set_font_name('Imago')
+        simple.set_font_size(font_size)
+
+        read_only = workbook.add_format()
+        read_only.set_bg_color('#ebecec')
+        read_only.set_font_name('Imago')
+        read_only.set_font_size(font_size)
+
+        l = len(d['Cells'])
+        i = 0
+        r = 2
+        c = 0
+        while i < l:
+            if i % 12 == 0:
+                r = r + 1
+                c = 0
+                pl = int(d['Cells'][i + 2]['Value'].replace('PL', '').replace('a', ''))
+                cf = workbook.add_format()
+                cf.set_indent(pl)
+                cf.set_font_name('Imago')
+                cf.set_font_size(font_size)
+                cf.set_bg_color('#ebecec')
+                value = d['Cells'][i]['Value']
+                if (value == None):
+                    value = 0
+                worksheet.write(r, c, value, cf)
+                c = c + 1
+                i = i + 1
+                value = d['Cells'][i]['Value']
+                if (value == None):
+                    value = 0
+                worksheet.write(r, c, value, read_only)
+                c = c + 1
+                i = i + 1
+                worksheet.write(r, c, pl, read_only)
+            else:
+                value = d['Cells'][i]['Value']
+                if (value == None):
+                    value = 0
+                if d['Cells'][i]['RuleDerived'] == False:
+                    worksheet.write(r, c, value, simple)
+                else:
+                    worksheet.write(r, c, value, read_only)
+
+            i = i + 1
+            c = c + 1
+
+        # temp
+
         workbook.close()
         output.seek(0)
         return output
