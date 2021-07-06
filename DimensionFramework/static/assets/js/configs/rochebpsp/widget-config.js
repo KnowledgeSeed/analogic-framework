@@ -29,7 +29,7 @@ app.widgetConfig = {
                     bgScrollable: true,
                     fadingSpeed: 0,
                     fixed: true,
-                    height: '300',
+                    height: '250',
                     behaviour: 'popup',
                     skin: 'popup_bpsp ',
                     position: 'center',
@@ -56,27 +56,8 @@ app.widgetConfig = {
                             skin: 'simple_bold_bpsp',
                             marginTop: 15,
                             selectFirst: true,
+                            textAlignment: 'center',
                             backdrop: true
-                        },
-                        {
-                            id: 'rocheBPSPProductReportGridRow1Cell3DropBox',
-                            type: DropBoxWidget,
-                            width: '100%',
-                            skin: 'simple_bpsp',
-                            marginTop: 15,
-                            selectFirst: true,
-                            backdrop: true,
-                            listen: [
-                                {
-                                    event: 'init.rocheBPSPProductReportGridRow1Cell2DropBox.finished',
-                                    method: 'refresh'
-                                },
-                                {
-                                    event: 'choose.rocheBPSPProductReportGridRow1Cell2DropBox.finished',
-                                    method: 'refresh'
-                                }
-                            ]
-
                         },
                         {
                             id: 'rocheBPSPMainSubmissionToBPXPPopupYes',
@@ -15406,10 +15387,10 @@ app.widgetConfig = {
                     type: HorizontalTableWidget,
                     title: '',
                     titleVisible: false,
-                    columnNames: ["Customer", "Code", "Receiver", "2020 Actuals", "2021 Final", "2022 Plan", "Submitted", "Last Edited"],
+                    columnNames: ["Customer", "Code", "Receiver", "2020 Actuals", "2021 Final", "2022 Plan", "Submitted"],
                     searchField: true,
                     visible: true,
-                    columnWidths: ["21.2%", "10.6%", "10.6%", "10.6%", "10.6%", "10.6%", "10.6%", "10.6%", "4.6%"],
+                    columnWidths: ["35%", "10%", "10%", "10%", "10%", "10%", "10%"],
                     fadeOutNum: 15,
                     marginLeft: 10,
                     marginRight: 10,
@@ -15541,11 +15522,11 @@ app.widgetConfig = {
                     backdrop: true,
                     visible: false,
                     closeBtn: false,
-                    width: '920',
+                    width: '1500',
                     bgScrollable: true,
                     fadingSpeed: 0,
                     fixed: true,
-                    height: '500',
+                    height: '800',
                     behaviour: 'popup',
                     skin: 'popup_bpsp ',
                     position: 'center',
@@ -15558,8 +15539,8 @@ app.widgetConfig = {
                             columnNames: ["Opportunity", "Product", "Type", "Probability", "Value"],
                             searchField: true,
                             visible: true,
-                            columnWidths: ["20%", "20%", "10%", "15%", "20%"],
-                            fadeOutNum: 7,
+                            columnWidths: ["40%", "15%", "15%", "5%", "10%"],
+                            fadeOutNum: 12,
                             marginLeft: 10,
                             marginRight: 10,
                             listen: [],
@@ -15629,6 +15610,7 @@ app.widgetConfig = {
                             isInBox: false,
                             marginBottom: '20',
                             marginTop: '20',
+                            skin: 'customer_planning_bpsp',
                             widgets: [
                                 {
                                     id: 'rocheBPSPCustomersPlanningOpportunitiesFromGridTableSelectorOpenButton',
