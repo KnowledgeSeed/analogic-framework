@@ -441,12 +441,14 @@ class Export:
         company = request.args['company']
         global_version = request.args['globalVersion']
         version = request.args['version']
+        currency = request.args['currency']
 
         font_size = 12
-        worksheet.protect('ADSBP', {'format_cells': True, 'format_rows': True, 'format_columns': True})
 
+        # actual version
         worksheet.write(0, 0, user)
         worksheet.write(0, 1, company)
+        worksheet.write(0, 2, currency)
         worksheet.write(0, 3, global_version)
         worksheet.write(0, 4, version)
 
@@ -454,28 +456,39 @@ class Export:
         bold.set_font_name('Imago')
         bold.set_font_size(font_size)
 
-        worksheet.write(1, 3, request.args['year1'], bold)
-        worksheet.write(1, 16, request.args['year2'], bold)
-        worksheet.write(1, 29, request.args['year3'], bold)
-        worksheet.write(1, 42, request.args['year4'], bold)
+        worksheet.write(3, 4, request.args['year0'], bold)
+        worksheet.write(3, 5, request.args['year1'], bold)
+        worksheet.write(3, 6, request.args['year2'], bold)
+        worksheet.write(3, 7, request.args['year3'], bold)
+        worksheet.write(3, 8, request.args['year4'], bold)
+        worksheet.write(3, 9, request.args['year1'], bold)
+        worksheet.write(3, 10, request.args['year2'], bold)
+        worksheet.write(3, 11, request.args['year3'], bold)
+        worksheet.write(3, 12, request.args['year4'], bold)
 
-        worksheet.write(2, 1, 'Product Code', bold)
-        worksheet.write(2, 2, 'PL', bold)
-        worksheet.write(2, 3, 'Final Plan', bold)
+        worksheet.write(4, 4, 'Value', bold)
+        worksheet.write(4, 5, 'Value', bold)
+        worksheet.write(4, 6, 'Value', bold)
+        worksheet.write(4, 7, 'Value', bold)
+        worksheet.write(4, 8, 'Value', bold)
+        worksheet.write(4, 9, 'Plan Comment', bold)
+        worksheet.write(4, 10, 'Plan Comment', bold)
+        worksheet.write(4, 11, 'Plan Comment', bold)
+        worksheet.write(4, 12, 'Plan Comment', bold)
 
-        i = 1
-        j = 4
-        while i <= 12:
-            worksheet.write(2, j, str(i).zfill(2), bold)
-            worksheet.write(2, j + 13, str(i).zfill(2), bold)
-            worksheet.write(2, j + 26, str(i).zfill(2), bold)
-            worksheet.write(2, j + 39, str(i).zfill(2), bold)
-            j = j + 1
-            i = i + 1
-
-        worksheet.write(2, 16, 'Final Plan', bold)
-        worksheet.write(2, 29, 'Final Plan', bold)
-        worksheet.write(2, 42, 'Final Plan', bold)
+        worksheet.write(5, 0, 'Product Name', bold)
+        worksheet.write(5, 1, 'Product Code', bold)
+        worksheet.write(5, 2, 'Product Level', bold)
+        worksheet.write(5, 3, 'Reciver', bold)
+        worksheet.write(5, 4, 'Actual', bold)
+        worksheet.write(5, 5, 'Final Plan', bold)
+        worksheet.write(5, 6, 'Final Plan', bold)
+        worksheet.write(5, 7, 'Final Plan', bold)
+        worksheet.write(5, 8, 'Final Plan', bold)
+        worksheet.write(5, 9, 'Final Plan', bold)
+        worksheet.write(5, 10, 'Final Plan', bold)
+        worksheet.write(5, 11, 'Final Plan', bold)
+        worksheet.write(5, 12, 'Final Plan', bold)
 
         # temp
         headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
@@ -489,7 +502,7 @@ class Export:
         target_url = cnf['tm1ApiHostBackend']
 
         response = requests.request(
-            url=target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable)',
+            url=target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',
             method='POST',
             data=mdx,
             headers=headers,
@@ -498,7 +511,7 @@ class Export:
 
         d = response.json()
 
-        simple = workbook.add_format({'locked': False})
+        simple = workbook.add_format()
         simple.set_font_name('Imago')
         simple.set_font_size(font_size)
 
@@ -508,43 +521,40 @@ class Export:
         read_only.set_font_size(font_size)
 
         l = len(d['Cells'])
-        i = 0
-        r = 2
-        c = 0
+        i = 0  # az összes elem
+        r = 5  # sorok
+        c = 0  # oszlopok
         while i < l:
             if i % 12 == 0:
+                value = d['Cells'][i]['Value']
                 r = r + 1
                 c = 0
-                pl = int(d['Cells'][i + 2]['Value'].replace('PL', '').replace('a', ''))
-                cf = workbook.add_format()
-                cf.set_indent(pl)
-                cf.set_font_name('Imago')
-                cf.set_font_size(font_size)
-                cf.set_bg_color('#ebecec')
-                value = d['Cells'][i]['Value']
                 if (value == None):
                     value = 0
-                worksheet.write(r, c, value, cf)
-                c = c + 1
-                i = i + 1
-                value = d['Cells'][i]['Value']
-                if (value == None):
-                    value = 0
-                worksheet.write(r, c, value, read_only)
-                c = c + 1
-                i = i + 1
-                worksheet.write(r, c, pl, read_only)
+                    worksheet.write(r, c, value, simple)
+                    c = c + 1
+                    i = i + 1
+                else:
+                    worksheet.write(r, c, value, simple)
+                    c = c + 1
+                    i = i + 1
+            if c == 3:
+                    reciver = d['Cells'][i]['Members'][3]['Name']
+                    worksheet.write(r, c, reciver, simple)
+                    c = c + 1
             else:
                 value = d['Cells'][i]['Value']
                 if (value == None):
                     value = 0
-                if d['Cells'][i]['RuleDerived'] == False:
                     worksheet.write(r, c, value, simple)
+                    i = i + 1
+                    c = c + 1
                 else:
-                    worksheet.write(r, c, value, read_only)
+                    worksheet.write(r, c, value, simple)
+                    i = i + 1
+                    c = c + 1
 
-            i = i + 1
-            c = c + 1
+
 
         # temp
 
