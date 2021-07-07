@@ -8117,7 +8117,7 @@ app.repository = {
                         (r, x) => {
                             return {
                                 active: true,
-                                on: v('systemValueCustomersPlanningCustomerCode') === r.Cells[x + 2].FormattedValue
+                                on: v('systemValueCustomersPlanningCustomerCode') == r.Cells[x + 2].FormattedValue
                             };
                         },
                         (r, x) => {

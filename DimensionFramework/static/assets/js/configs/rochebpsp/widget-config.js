@@ -15434,6 +15434,134 @@ app.widgetConfig = {
             type: PageWidget,
             widgets: [
                 {
+                    id: 'rocheBPSPCustomersPlanningCopyMergePopup',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: true,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    skin: 'checkout_popup_bpsp',
+                    width: '290',
+                    bgScrollable: true,
+                    fadingSpeed: 0,
+                    fixed: false,
+                    height: '260',
+                    behaviour: 'popup',
+                    positionAndCalculateBestSpace: 'right',
+                    widgets: [
+                        {
+                            id: 'rocheBPSPCustomersPlanningCopyMergePopupGrid',
+                            type: GridWidget,
+                            marginTop: 10,
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPCustomersPlanningCopyMergePopupGridRow',
+                                    type: GridRowWidget,
+                                    skin: 'bottomborder_bpsp',
+                                    paddingBottom: 20,
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningCopyMergePopupCopyButton',
+                                            type: ButtonWidget,
+                                            height: 40,
+                                            width: 120,
+                                            marginLeft: 10,
+                                            skin: 'blue_button_bpsp',
+                                            borderWidth: 0,
+                                            label: 'Copy'
+                                        },
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningCopyMergePopupMergeButton',
+                                            type: ButtonWidget,
+                                            height: 40,
+                                            width: 120,
+                                            marginLeft: 10,
+                                            skin: 'blue_button_bpsp',
+                                            borderWidth: 0,
+                                            label: 'Merge',
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'rocheBPSPCustomersPlanningCopyMergePanel1',
+                            type: PanelWidget,
+                            skin: 'horizontal_align_right',
+                            marginTop: 20,
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPCustomersPlanningCopyMergeTextBox',
+                                    type: TextBoxWidget,
+                                    skin: 'copy_bpsp',
+                                    width: 80,
+                                    height: 40,
+                                    marginRight: 20
+                                },
+                                {
+                                    id: 'rocheBPSPCustomersPlanningCopyMergeBackButton',
+                                    type: ButtonWidget,
+                                    icon: 'icon-arrow-return',
+                                    iconColor: '#0066CC',
+                                    iconFontSize: 17,
+                                    marginTop: 14,
+                                    marginRight: 55
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPCustomersPlanningCopyMergePanel',
+                            type: PanelWidget,
+                            skin: 'horizontal_align_center',
+                            marginBottom: -17,
+                            marginTop: 10,
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPCustomersPlanningCopyMergePanelText1',
+                                    type: TextWidget,
+                                    titleFontSize: 12,
+                                    titleFontColor: '#B1B3B3',
+                                    title: '- 100 %',
+                                    marginRight: 178
+                                },
+                                {
+                                    id: 'rocheBPSPCustomersPlanningCopyMergePanelText2',
+                                    type: TextWidget,
+                                    titleFontSize: 12,
+                                    titleFontColor: '#B1B3B3',
+                                    title: '+ 100 %'
+                                },
+                            ]
+                        },
+                        {
+                            id: 'rocheBPSPCustomersPlanningCopyMergePopupSlider',
+                            type: SliderWidget,
+                            width: 270,
+                            buttonsVisible: false,
+                            trackFillStartValue: -100,
+                            minRange: -100,
+                            maxRange: 100,
+                            marginTop: 10,
+                            marginBottom: 10,
+                            updateableWidgetId: 'rocheBPSPCustomersPlanningCopyMergeTextBox',
+                            skin: 'copy_bpsp',
+                            unit: '%'
+
+                        },
+                        {
+                            id: 'rocheBPSPCustomersPlanningCopyMergePopupCancel',
+                            type: ButtonWidget,
+                            width: 200,
+                            skin: 'white_bg_bpsp',
+                            label: 'Cancel',
+                            marginLeft: 30
+
+                        }
+                    ]
+                },
+                {
                     id: 'rocheBPSPCustomersPlanningFocusPopupPopup',
                     type: ContainerWidget,
                     anchorVisible: false,
