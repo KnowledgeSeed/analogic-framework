@@ -14186,7 +14186,7 @@ app.widgetConfig = {
                     bgScrollable: true,
                     fadingSpeed: 0,
                     fixed: false,
-                    height: '165',
+                    height: '125', //ha 2 button lesz 165
                     behaviour: 'popup',
                     position: 'left',
                     widgets: [
@@ -14199,6 +14199,7 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPProductReportExportPopupFocusButton',
                             type: ButtonWidget,
+                            visible: false,
                             skin: 'blue_bg_bpsp',
                             marginTop: '10',
                             label: 'Customer level export'
