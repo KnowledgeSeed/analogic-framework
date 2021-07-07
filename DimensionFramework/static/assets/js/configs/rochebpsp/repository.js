@@ -7929,7 +7929,6 @@ app.repository = {
                             [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[PY],
                             [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[CY],
                             [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[NY],
-                            [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Submitted By],
                             [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Submitted DateTime]
                            }  
                           PROPERTIES [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Caption]  ON COLUMNS , 
@@ -7948,7 +7947,7 @@ app.repository = {
                 ,
                 parsingControl: {
                     type: 'matrix',
-                    length: 9,
+                    length: 8,
                     query: [
 
                         (r, x) => {
@@ -7965,8 +7964,6 @@ app.repository = {
                             return {value: r.Cells[x + 6].FormattedValue};
                         }, (r, x) => {
                             return {value: r.Cells[x + 7].FormattedValue};
-                        }, (r, x) => {
-                            return {value: r.Cells[x + 8].FormattedValue};
                         }, (r, x) => {
                             return {active: true};
                         }
