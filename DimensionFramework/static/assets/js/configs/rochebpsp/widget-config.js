@@ -14060,7 +14060,6 @@ app.widgetConfig = {
                                             selectFirst: true,
                                             backdrop: true,
                                             listen: [
-
                                                 {event: 'bodyReady', method: 'refresh'},
                                                 {
                                                     event: 'choose.rocheBPSPProductReportGridRow1Cell2DropBox.finished',
@@ -15536,10 +15535,10 @@ app.widgetConfig = {
                             type: HorizontalTableWidget,
                             title: '',
                             titleVisible: false,
-                            columnNames: ["Opportunity", "Product", "Type", "Probability", "Value"],
+                            columnNames: ["Opportunity", "Type", "Probability", "Value"],
                             searchField: true,
                             visible: true,
-                            columnWidths: ["40%", "15%", "15%", "5%", "10%"],
+                            columnWidths: ["55%", "15%", "5%", "10%"],
                             fadeOutNum: 12,
                             marginLeft: 10,
                             marginRight: 10,
@@ -16002,7 +16001,17 @@ app.widgetConfig = {
                                             icon: 'icon-chevron-left',
                                             marginRight: 10,
                                             skin: 'backbuttonrocheBPSP',
-                                            height: '50'
+                                            height: '50',
+                                            listen: [
+                                                {
+                                                    event: 'init.rocheBPSPCustomersPlanningHorizontalTableCustomerSelector.finished',
+                                                    method: 'refresh'
+                                                },
+                                                {
+                                                    event: 'open.rocheBPSPCustomersPlanningHorizontalTableCustomerSelector.finished',
+                                                    method: 'refresh'
+                                                }
+                                            ]
                                         },
                                         {
                                             id: 'rocheBPSPCustomersPlanningGridRow2Cell2NextButton',
@@ -16013,7 +16022,17 @@ app.widgetConfig = {
                                             iconFontSize: 15,
                                             marginRight: 10,
                                             skin: 'backbuttonrocheBPSP',
-                                            height: '50'
+                                            height: '50',
+                                            listen: [
+                                                {
+                                                    event: 'init.rocheBPSPCustomersPlanningHorizontalTableCustomerSelector.finished',
+                                                    method: 'refresh'
+                                                },
+                                                {
+                                                    event: 'open.rocheBPSPCustomersPlanningHorizontalTableCustomerSelector.finished',
+                                                    method: 'refresh'
+                                                }
+                                            ]
                                         },
                                         {
                                             id: 'rocheBPSPCustomersPlanningCustomerSelectorButton',
@@ -16037,12 +16056,12 @@ app.widgetConfig = {
                                     ]
                                 },
                                 {
-                                    id: 'rocheBPSPCustomersPlanningGridRow2Cell3a',
+                                    id: 'rocheBPSPCustomersPlanningGridRow2Cell3',
                                     type: GridCellWidget,
-                                    alignment: 'center-left',
-                                    width: '15%',
+                                    alignment: 'center-right',
+                                    width: '30%',
                                     widgets: [
-                                        {
+                                         {
                                             id: 'rocheBPSPCustomersPlanningGridRow2Cell3aCreateOpportunityButton',
                                             type: ButtonWidget,
                                             label: 'Create opportunity',
@@ -16050,16 +16069,9 @@ app.widgetConfig = {
                                             fontSize: 14,
                                             marginRight: 40,
                                             width: '100%',
+                                             icon: 'icon-doc',
                                             skin: 'blue_link_bpsp '
-                                        }
-                                    ]
-                                },
-                                {
-                                    id: 'rocheBPSPCustomersPlanningGridRow2Cell3',
-                                    type: GridCellWidget,
-                                    alignment: 'center-right',
-                                    width: '15%',
-                                    widgets: [
+                                        },
                                         {
                                             id: 'rocheBPSPCustomersPlanningGridRow2Cell3ClearAllButton',
                                             type: ButtonWidget,
@@ -16222,7 +16234,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-04',
                                             type: TextWidget,
-                                            title: 'Previous',
+                                            title: '',
                                             body: 'Base Total',
                                             skin: 'products_gd_header2_bpsp',
                                             titleAlignment: 'start',
@@ -16243,7 +16255,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-05',
                                             type: TextWidget,
-                                            title: 'Previous',
+                                            title: '',
                                             body: 'Final Total',
                                             skin: 'products_gd_header2_bpsp',
                                             titleAlignment: 'start',

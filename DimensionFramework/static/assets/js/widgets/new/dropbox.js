@@ -33,12 +33,18 @@ class DropBoxWidget extends Widget {
         } else {
             data = {...o, ...this.state};
         }
+        let selectedItemsArray = $.grep(data.items, (item, i) => item.on);
+        if(!v.multiSelect && selectedItemsArray.length > 1){
+            let firstSelectedItem = selectedItemsArray[0];
+            selectedItemsArray = [firstSelectedItem];
 
-        if (v.selectFirst === true && $.grep(data.items, (item, i) => item.on).length === 0 && data.items.length > 0) {
+        }
+        if (v.selectFirst === true && selectedItemsArray.length === 0 && data.items.length > 0) {
             data.items[0].on = true;
+            selectedItemsArray = $.grep(data.items, (item, i) => item.on);
         }
 
-        data.value = $.grep(data.items, (item, i) => item.on).map(item => item.name).join();
+        data.value = selectedItemsArray.map(item => item.name).join();
 
         this.state = o;
         this.value = data;
@@ -60,7 +66,7 @@ class DropBoxWidget extends Widget {
 
         hide && mainDivStyle.push('display:none;');
 
-        let selectedItems = $.grep(data.items, (item, i) => item.on).map(item => item.name).join(', ');
+        let selectedItems = selectedItemsArray.map(item => item.name).join(', ');
 
         return `
 <div class="ks-dropbox ks-dropbox-${v.skin}" style="${mainDivStyle.join('')}">

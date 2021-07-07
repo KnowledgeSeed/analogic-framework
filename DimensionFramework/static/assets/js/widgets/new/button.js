@@ -13,6 +13,7 @@ class ButtonWidget extends Widget {
             cornerRadius: this.getRealValue('cornerRadius', d, false),
             dividerWidth: this.getRealValue('dividerWidth', d, false),
             effect: this.getRealValue('effect', d, false),
+            enabled: this.getRealValue('enabled', d, true),
             fontBold: this.getRealValue('fontBold', d, false),
             fontColor: this.getRealValue('fontColor', d, false),
             fontSize: this.getRealValue('fontSize', d, false),
@@ -79,7 +80,7 @@ class ButtonWidget extends Widget {
         v.iconHeight && imgStyle.push('height:', v.iconHeight, 'px;');
         v.iconColor && imgStyle.push('color:', v.iconColor, ';');
         v.iconFontSize && imgStyle.push('font-size:', v.iconFontSize, 'px;');
-        this.value = {data: d, paste: v.paste};
+        this.value = {data: d, paste: v.paste, enabled: v.enabled};
 
         return `
 <a style="${aStyle.join('')}" ${o.confirmMessage2 ? `data-confirmmessage2="${o.confirmMessage2}" ` : ''} ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''} ${v.url ? `target="_blank" href="${v.url}"` : `data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}"`} class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
@@ -95,6 +96,9 @@ class ButtonWidget extends Widget {
 
     initEventHandlers(section) {
         let v = this.value;
+        if(v.enabled === false){
+            return;
+        }
         if (!section.find('a').data('confirmmessage') && !section.find('a').data('confirmmessage2')) {
             return section.find('a').on('click', (e) => {
                 let s = $(e.currentTarget);

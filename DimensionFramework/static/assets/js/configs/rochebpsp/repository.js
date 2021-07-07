@@ -105,9 +105,13 @@ app.repository = {
 
     rocheBPSPMainSubmissionToBPXPPopupYes: {
         launch: {
-            execute: (db) => {
-                app.fn.showPopup('Not implemented yet');
-            }
+            url: (db) => `/api/v1/Processes('MODULE - UI - BPSP - Submission')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => `{
+                        "Parameters": [
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'key')}"}
+                        ]
+                    }`
         }
     },
 
@@ -7258,7 +7262,7 @@ app.repository = {
         },
         getCell: (index, r) => {
             let c = r.Cells[index], editable = c.Consolidated === false && c.RuleDerived === false,
-                isGrey = c.RuleDerived === true;
+                performable = c.Consolidated === true && c.RuleDerived === false, isGrey = c.RuleDerived === true;
 
             let result = {
                 title: c.FormattedValue,
@@ -7267,11 +7271,15 @@ app.repository = {
                 cellVisible: true,
                 editable: editable,
                 ordinal: c.Ordinal,
-                applyMeasuresToSection: true,
                 width: '100%',
-                members: c.Members
+                height: '100%',
+                applyMeasuresToSection: true,
+                members: c.Members,
+                performable: performable
             };
-
+            if (performable) {
+                result['icon'] = 'icon-cloud-arrow-up';
+            }
             if (editable) {
                 result['titleFontColor'] = '#A05EB5';
             }
@@ -7713,27 +7721,96 @@ app.repository = {
     'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-02': {
         init: {
             execute: (db) => {
-                return {title: Utils.parseNumber(v('systemValueGlobalSegmentedControlRelativeYearValue')) - 1};
+                return {
+                    title: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderTitle(1),
+                    body: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderBody(1),
+                };
             }
         }
     },
     'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-03': {
         init: {
             execute: (db) => {
-                return {title: v('systemValueGlobalSegmentedControlRelativeYearValue')};
+                return {
+                    title: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderTitle(2),
+                    body: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderBody(2),
+                };
+            }
+        }
+    },
+    'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-04': {
+        init: {
+            execute: (db) => {
+                return {
+                    body: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderBody(3),
+                };
+            }
+        }
+    },
+    'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-05': {
+        init: {
+            execute: (db) => {
+                return {
+                    body: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderBody(4),
+                };
+            }
+        }
+    },
+    'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-06': {
+        init: {
+            execute: (db) => {
+                return {
+                    body: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderBody(5),
+                };
+            }
+        }
+    },
+    'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-07': {
+        init: {
+            execute: (db) => {
+                return {
+                    body: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderBody(6),
+                };
+            }
+        }
+    },
+    'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-08': {
+        init: {
+            execute: (db) => {
+                return {
+                    body: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderBody(7),
+                };
+            }
+        }
+    },
+    'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-09': {
+        init: {
+            execute: (db) => {
+                return {
+                    body: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderBody(8),
+                };
             }
         }
     },
     'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-10': {
         init: {
             execute: (db) => {
-                let d = v('systemValueGlobalSegmentedControlRelativeYearValue');
-                return {body: (Utils.parseNumber(d) - 1) + ' / ' + d};
+                return {
+                    title: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderBody(9),
+                    body: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderTitle(9),
+                };
             }
         }
     },
     'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-11': {
-        reference: 'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-10'
+        init: {
+            execute: (db) => {
+                return {
+                    title: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderBody(10),
+                    body: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderTitle(10),
+                };
+            }
+        }
     },
     rocheBPSPCustomersPlanningYearSegmentedControl: {
         init: {
@@ -8117,6 +8194,26 @@ app.repository = {
                 }
             }
             return false;
+        },
+        getYearlyGridTableHeaderTitle: (index) => {
+            return Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderInfo(index, 7);
+        },
+        getYearlyGridTableHeaderBody: (index) => {
+            return Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderInfo(index, 8);
+        },
+        getYearlyGridTableHeaderInfo: (index, membersIndex) => {
+            let gridTableData = v('rocheBPSPCustomersPlanningGridTableYearly.cellData'), members;
+            if(!gridTableData || gridTableData.length === 0) {
+                return '';
+            }
+            if(gridTableData[0].length < index){
+                return '';
+            }
+            members = v('members', gridTableData[0][index]);
+            if(!members || members.length < membersIndex){
+                return '';
+            }
+            return members[membersIndex].Attributes.Caption;
         }
     },
     rocheBPSPCustomersPlanningGridRow2Cell3aCreateOpportunityButton: {
@@ -8195,6 +8292,26 @@ app.repository = {
         }
     },
     rocheBPSPCustomersPlanningGridRow2Cell2NextButton: {
+        initCondition: (db) => {
+            return Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersPlanningHorizontalTableCustomerSelector', 'rows');
+        },
+        init: {
+            execute: (db) => {
+                let customerSelectorData = v('rocheBPSPCustomersPlanningHorizontalTableCustomerSelector');
+                if (!customerSelectorData) {
+                    return;
+                }
+                if (!customerSelectorData.open) {
+                    if (!Repository.rocheBPSPCustomersPlanning.setCustomerSelectorOpenRecord(db)) {
+                        return {};
+                    }
+                }
+                if (customerSelectorData.open.index === customerSelectorData.rows.length - 1) {
+                    return {iconColor: '#b1b3b3', enabled: false};
+                }
+                return {};
+            }
+        },
         launch: {
             execute: (db) => {
                 let customerSelectorData = v('rocheBPSPCustomersPlanningHorizontalTableCustomerSelector');
@@ -8226,6 +8343,26 @@ app.repository = {
         }
     },
     rocheBPSPCustomersPlanningGridRow2Cell2PreviousButton: {
+        initCondition: (db) => {
+            return Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersPlanningHorizontalTableCustomerSelector', 'rows');
+        },
+        init: {
+            execute: (db) => {
+                let customerSelectorData = v('rocheBPSPCustomersPlanningHorizontalTableCustomerSelector');
+                if (!customerSelectorData) {
+                    return;
+                }
+                if (!customerSelectorData.open) {
+                    if (!Repository.rocheBPSPCustomersPlanning.setCustomerSelectorOpenRecord(db)) {
+                        return {};
+                    }
+                }
+                if (customerSelectorData.open.index === 0) {
+                    return {iconColor: '#b1b3b3', enabled: false};
+                }
+                return {};
+            }
+        },
         launch: {
             execute: (db) => {
                 let customerSelectorData = v('rocheBPSPCustomersPlanningHorizontalTableCustomerSelector');
@@ -8291,9 +8428,7 @@ app.repository = {
                     query: [
                         (r, x) => {
                             return {value: r.Cells[x].FormattedValue};
-                        }, (r, x) => {
-                            return {value: ''};
-                        }, (r, x) => {
+                        },  (r, x) => {
                             return {value: r.Cells[x + 3].FormattedValue};
                         }, (r, x) => {
                             return {value: r.Cells[x + 2].FormattedValue};

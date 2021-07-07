@@ -2263,6 +2263,14 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPCustomersPlanningHorizontalTableCustomerSelector'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridRow2Cell2NextButton'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridRow2Cell2PreviousButton'
         }
     ],
     'launch.rocheBPSPCustomersPlanningGridRow2Cell2PreviousButton.finished' : [
@@ -2281,6 +2289,14 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPCustomersPlanningHorizontalTableCustomerSelector'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridRow2Cell2PreviousButton'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridRow2Cell2NextButton'
         }
     ],
     'launch.rocheBPSPCustomersPlanningGridRow2Cell3aCreateOpportunityButton' : [

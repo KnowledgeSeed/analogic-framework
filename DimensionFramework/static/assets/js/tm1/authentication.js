@@ -12,10 +12,11 @@ Auth.loadDefault = arg => {
 };
 
 Auth.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
+    let urlWithWidgetId = url + ( url.includes('?') ? '&' : '?' ) + 'widgetid=' + widgetId;
     return $.ajax({
         cache: true,
         type: type,
-        url: url,
+        url: urlWithWidgetId,
         headers: Auth.getHeader(),
         xhrFields: {withCredentials: true},
         data: type === 'GET' ? {} : data,

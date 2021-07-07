@@ -117,7 +117,7 @@ QB.executeMDXs = (repositoryId, path) => {
                 ++c;
             }
 
-            deffered.push(Auth.getTm1AjaxRequest(u.url, body, u.type));
+            deffered.push(Auth.getTm1AjaxRequest(u.url, body, u.type, repositoryId));
             isQuery.push(true);
         }
     }
@@ -298,7 +298,7 @@ QB.writeData = (eventMapId, event, element) => {
             type = g.type;
         }
 
-        Auth.getTm1AjaxRequest(app.tm1ApiHost + url, body, type).then((d) => {
+        Auth.getTm1AjaxRequest(app.tm1ApiHost + url, body, type, w).then((d) => {
             L('finished after ajax');
             QB.executeEventMapAction(eventMapId + '.finished', event, element, d);
             if (isGridTable) {
