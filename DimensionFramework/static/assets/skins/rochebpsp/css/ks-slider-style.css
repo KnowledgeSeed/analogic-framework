@@ -27,6 +27,7 @@
 }
 
 .ks-slider-copy_bpsp .ks-slider-track-zero-indicator {
+    display: none;
     background-color: #dee1e5;
     height: 35px;
     position: absolute;

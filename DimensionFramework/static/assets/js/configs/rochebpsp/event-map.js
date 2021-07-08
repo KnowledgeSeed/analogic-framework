@@ -2351,6 +2351,12 @@ app.eventMap = {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPCustomersPlanningCopyMergePopup'
         }
+    ],
+    'launch.rocheBPSPCustomersPlanningOpportunitiesPopupClose.finished': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCustomersPlanningOpportunitiesPopup'
+        }
     ]
 }
 ;
