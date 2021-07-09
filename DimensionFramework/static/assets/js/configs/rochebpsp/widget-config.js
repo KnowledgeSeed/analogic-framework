@@ -15667,7 +15667,7 @@ app.widgetConfig = {
                             columnNames: ["Opportunity", "Type", "Probability", "Value"],
                             searchField: true,
                             visible: true,
-                            columnWidths: ["55%", "15%", "5%", "10%"],
+                            columnWidths: ["55%", "13%", "7%", "10%"],
                             fadeOutNum: 12,
                             marginLeft: 10,
                             marginRight: 10,
@@ -15713,15 +15713,16 @@ app.widgetConfig = {
                         }
                     ]
                 },
-          /*      {
+                {
                     id: 'rocheBPSPCustomersPlanningOpportunityDistributionPopup',
                     type: ContainerWidget,
                     anchorVisible: false,
                     anchorOnClick: false,
                     backdrop: true,
+                    closeOnClickBackdrop: false,
                     visible: false,
                     closeBtn: false,
-                    width: '1500',
+                    width: '600',
                     bgScrollable: true,
                     fadingSpeed: 0,
                     fixed: true,
@@ -15730,6 +15731,30 @@ app.widgetConfig = {
                     skin: 'popup_bpsp ',
                     position: 'center',
                     widgets: [
+                        {
+                            id: 'rocheBPSPCustomersPlanningOpportunityDistributionPopupTitle',
+                            type: TextWidget,
+                            title: 'Opportunity Distribution'
+                        },
+                        {
+                            id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionTotal',
+                            type: HorizontalTableWidget,
+                            title: '',
+                            titleVisible: false,
+                            columnNames: ["Opportunity Distribution", "Value", "Distributed"],
+                            searchField: false,
+                            visible: true,
+                            columnWidths: ["60%", "20%", "10%"],
+                            fadeOutNum: 12,
+                            marginLeft: 10,
+                            marginRight: 10,
+                            listen: [],
+                            isInBox: false,
+                            marginBottom: '20',
+                            marginTop: '20',
+                            skin: 'customer_planning_bpsp',
+                            widgets: []
+                        },
                         {
                             id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistribution',
                             type: HorizontalTableWidget,
@@ -15748,28 +15773,33 @@ app.widgetConfig = {
                             marginBottom: '20',
                             marginTop: '20',
                             skin: 'customer_planning_bpsp',
-                            widgets: [
-
-                                {
-                                    id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionSelectorButton',
-                                    type: RadioButtonRowWidget,
-                                    action: 'select',
-                                    align: 'right',
-                                    position: 1
-                                }
-
-                            ]
+                            widgets: []
                         },
                         {
-                            id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionClose',
-                            type: ButtonWidget,
-                            label: 'Close',
-                            width: 200,
-                            skin: 'blue_bg_bpsp',
-                            marginLeft: 650
+                            id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionPanel1',
+                            type: PanelWidget,
+                            skin: 'horizontal_align_center',
+                            marginTop: 20,
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionSave',
+                                    type: ButtonWidget,
+                                    label: 'Save',
+                                    width: 200,
+                                    skin: 'blue_bg_bpsp',
+                                },
+                                {
+                                    id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionCancel',
+                                    type: ButtonWidget,
+                                    label: 'Cancel',
+                                    width: 200,
+                                    skin: 'white_bg_bpsp',
+                                    marginLeft: 5
+                                }
+                            ]
                         }
                     ]
-                },*/
+                },
                 {
                     id: 'rocheBPSPCustomersPlanningOpportunitiesFromGridTablePopup',
                     type: ContainerWidget,
@@ -16255,7 +16285,7 @@ app.widgetConfig = {
                                     alignment: 'center-right',
                                     width: '30%',
                                     widgets: [
-                                         {
+                                        {
                                             id: 'rocheBPSPCustomersPlanningGridRow2Cell3aCreateOpportunityButton',
                                             type: ButtonWidget,
                                             label: 'Create opportunity',
@@ -16263,7 +16293,7 @@ app.widgetConfig = {
                                             fontSize: 14,
                                             marginRight: 40,
                                             width: '100%',
-                                             icon: 'icon-doc',
+                                            icon: 'icon-doc',
                                             skin: 'blue_link_bpsp '
                                         },
                                         {

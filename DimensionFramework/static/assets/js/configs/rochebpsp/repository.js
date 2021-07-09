@@ -8203,17 +8203,42 @@ app.repository = {
         },
         getYearlyGridTableHeaderInfo: (index, membersIndex) => {
             let gridTableData = v('rocheBPSPCustomersPlanningGridTableYearly.cellData'), members;
-            if(!gridTableData || gridTableData.length === 0) {
+            if (!gridTableData || gridTableData.length === 0) {
                 return '';
             }
-            if(gridTableData[0].length < index){
+            if (gridTableData[0].length < index) {
                 return '';
             }
             members = v('members', gridTableData[0][index]);
-            if(!members || members.length < membersIndex){
+            if (!members || members.length < membersIndex) {
                 return '';
             }
             return members[membersIndex].Attributes.Caption;
+        },
+        getCopyMergeButtonProcessBody: (mode = 1) => {//1 = Copy, 2 = Merge
+            let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                product = Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 0).productCode,
+                periodFrom = Utils.getGridTableCurrentCell('rocheBPSPCustomersPlanningGridTableYearly').members[7].Name,
+                periodTo = v('systemValueGlobalSegmentedControlRelativeYearValue'),
+                growthRate = v('rocheBPSPCustomersPlanningCopyMergePopupSlider.value') / 100,
+                lineItem = Utils.getGridTableCurrentCell('rocheBPSPCustomersPlanningGridTableYearly').members[8].Name,
+                parameters = []
+            ;
+            parameters.push(Utils.getProcessNameValuePair('pProduct', product));
+            parameters.push(Utils.getProcessNameValuePair('pCompany', company));
+            parameters.push(Utils.getProcessNameValuePair('pReceiver', receiver));
+            parameters.push(Utils.getProcessNameValuePair('pTerritory', territoryCode));
+            parameters.push(Utils.getProcessNameValuePair('pPeriodFrom', periodFrom));
+            parameters.push(Utils.getProcessNameValuePair('pPeriodTo', periodTo));
+            parameters.push(Utils.getProcessNameValuePair('pMode', mode));
+            parameters.push(Utils.getProcessNameValuePair('pGrowthRate', growthRate));
+            parameters.push(Utils.getProcessNameValuePair('pLineItem', lineItem));
+            parameters.push(Utils.getProcessNameValuePair('pCustomer', customerCode));
+
+            return Utils.buildProcessParameters(parameters);
         }
     },
     rocheBPSPCustomersPlanningGridRow2Cell3aCreateOpportunityButton: {
@@ -8428,7 +8453,7 @@ app.repository = {
                     query: [
                         (r, x) => {
                             return {value: r.Cells[x].FormattedValue};
-                        },  (r, x) => {
+                        }, (r, x) => {
                             return {value: r.Cells[x + 3].FormattedValue};
                         }, (r, x) => {
                             return {value: r.Cells[x + 2].FormattedValue};
@@ -8513,6 +8538,178 @@ app.repository = {
                 }
 
             }
+    },
+    rocheBPSPCustomersPlanningGridRow2Cell3ClearAllButton: {
+        launch:
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Clear All Inputs')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => {
+                    let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                        territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                        version = v('systemValueGlobalCompanyVersion'),
+                        receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                        customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                        parameters = []
+                    ;
+                    parameters.push(Utils.getProcessNameValuePair('pVersion', version));
+                    parameters.push(Utils.getProcessNameValuePair('pCompany', company));
+                    parameters.push(Utils.getProcessNameValuePair('pReceiver', receiver));
+                    parameters.push(Utils.getProcessNameValuePair('pCube', 'Sales Plan by Customer'));
+                    parameters.push(Utils.getProcessNameValuePair('pTerritory', territoryCode));
+                    parameters.push(Utils.getProcessNameValuePair('pCustomer', customerCode));
+                    if (Repository.rocheBPSPCustomersPlanning.isMonthly(db)) {
+                        parameters.push(Utils.getProcessNameValuePair('pPeriod', v('systemValueGlobalSegmentedControlRelativeYearValue')));
+                        parameters.push(Utils.getProcessNameValuePair('pLineItem', v('systemValueCustomersPlanningMonthlyTypeValue')));
+                    }
+                    return Utils.buildProcessParameters(parameters);
+                }
+            }
+    },
+    rocheBPSPCustomersPlanningGridRow2Cell3SubmitButton: {
+        launch:
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Customers Plan Submit')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => {
+                    let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                        territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                        version = v('systemValueGlobalCompanyVersion'),
+                        receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                        customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                        parameters = []
+                    ;
+                    parameters.push(Utils.getProcessNameValuePair('pVersion', version));
+                    parameters.push(Utils.getProcessNameValuePair('pCompany', company));
+                    parameters.push(Utils.getProcessNameValuePair('pReceiver', receiver));
+                    parameters.push(Utils.getProcessNameValuePair('pTerritory', territoryCode));
+                    parameters.push(Utils.getProcessNameValuePair('pCustomer', customerCode));
+
+                    return Utils.buildProcessParameters(parameters);
+                }
+            }
+    },
+    rocheBPSPCustomersPlanningCopyMergePopupCopyButton: {
+        launch:
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Customers Plan Yearly Copy')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => {
+                    return Repository.rocheBPSPCustomersPlanning.getCopyMergeButtonProcessBody();
+                }
+            }
+    },
+    rocheBPSPCustomersPlanningCopyMergePopupMergeButton: {
+        launch:
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Customers Plan Yearly Copy')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => {
+                    return Repository.rocheBPSPCustomersPlanning.getCopyMergeButtonProcessBody(2);
+                }
+            }
+    },
+    rocheBPSPCustomersPlanningCopyMergePopupSlider: {
+        initCondition: (db) => {
+            let b = Utils.isGridTableLoaded('rocheBPSPCustomersPlanningGridTableYearly')
+                && Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 0).productCode
+            return b;
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            { "MDX" :
+                "SELECT 
+                   {[Versions].[Versions].[Live]} 
+                   PROPERTIES [Versions].[Versions].[Caption]  ON COLUMNS , 
+                   {[Measures Sales Parameters by Products Flat].[Measures Sales Parameters by Products Flat].[Growth rate for Products Copy Minimum],
+                    [Measures Sales Parameters by Products Flat].[Measures Sales Parameters by Products Flat].[Growth rate for Products Copy Maximum],
+                [Measures Sales Parameters by Products Flat].[Measures Sales Parameters by Products Flat].[Growth rate for Products Copy]} 
+                  ON ROWS 
+                FROM [Sales Parameters by Products Flat] 
+                WHERE 
+                  (
+                   [Years].[Years].[${v('systemValueGlobalSegmentedControlRelativeYearValue')}],
+                   [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}],
+                   [Receivers].[Receivers].[${v('rocheBPSPCustomersHorizontalTable.open.receiver')}],
+                   [Products Flat].[Products Flat].[${Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 0).productCode}]
+                  )
+                  "}
+           `,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        value: (r, x) => {
+                            return Utils.parseNumber(r.Cells[2].FormattedValue) * 100;
+                        },
+                        originalValue: (r, x) => {
+                            return Utils.parseNumber(r.Cells[2].FormattedValue) * 100;
+                        }
+                    }
+            }
+        }
+    },
+    rocheBPSPCustomersPlanningHorizontalTableOpportunityDistribution: {
+        initCondition: (db) => {
+            Utils.setWidgetValue('systemValueCustomersPlanningIsOpportunityDistributionLoadable', false);
+            return  v('systemValueCustomersPlanningIsOpportunityDistributionLoadable');
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => {
+                return `{"MDX":"SELECT
+                       {[Measures Sales Plan by Customer Opportunity Split].[Measures Sales Plan by Customer Opportunity Split].Members}
+                    ON COLUMNS ,
+                        {FILTER({[Products].[BPSP Budget].Members}, [Products].[BPSP Budget].CurrentMember.Properties(\\"BPSP Budget Product Level - Name\\") = \\"PL6\\")}
+                        PROPERTIES [Products].[BPSP Budget].[BPSP Budget Caption] ON ROWS
+                    FROM [Sales Plan by Customer Opportunity Split]
+                    WHERE
+                    (
+                        [Versions].[Versions].[Live],
+                        [Companies].[Companies].[1391],
+                        [Opportunities].[Opportunities].[OPP-0000058863]
+                    )"}`;
+            }
+            ,
+            parsingControl: {
+                type: 'matrix',
+                length: 6,
+                query: [
+                    (r, x) => {
+                        return {value: r.Cells[x].FormattedValue};
+                    }, (r, x) => {
+                        return {value: r.Cells[x + 3].FormattedValue};
+                    }, (r, x) => {
+                        return {value: r.Cells[x + 2].FormattedValue};
+                    }, (r, x) => {
+                        return {value: r.Cells[x + 5].FormattedValue};
+                    }, (r, x) => {
+                        return {
+                            active: true
+                        };
+                    }, (r, x) => {
+                        return {
+                            active: true
+                        };
+                    }, (r, x) => {
+                        return {
+                            active: true
+                        };
+                    }
+
+                ]
+            }
+
+        }
     }
     /* end customer planning */
 

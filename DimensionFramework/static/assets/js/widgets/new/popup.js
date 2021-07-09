@@ -15,6 +15,7 @@ class PopupWidget extends Widget {
             bgColor: this.getRealValue('bgColor', d),
             bgScrollable: this.getRealValue('bgScrollable', d, true),
             closeBtn: this.getRealValue('closeBtn', d, false),
+            closeOnClickBackdrop: this.getRealValue('closeOnClickBackdrop', d,true),
             fixed: this.getRealValue('fixed', d, true),
             heightFixed: this.getRealValue('heightFixed', d, true),
             heightStr: Utils.getSize(this.getRealValue('height', d, 200)),
@@ -81,7 +82,7 @@ ${v.backdrop ? `<div class="ks-container-${v.skin} ks-container-backdrop"  ${b}>
         this.container = section.children().last();
         this.backdrop = this.container.prev();
 
-        if(this.backdrop) {
+        if(this.backdrop && v.closeOnClickBackdrop) {
             this.backdrop.on('click', () => this.close());
         }
 
