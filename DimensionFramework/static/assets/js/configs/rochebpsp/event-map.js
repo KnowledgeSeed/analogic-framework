@@ -2445,7 +2445,6 @@ app.eventMap = {
         }
     ],
 
-    ],
     'launch.rocheBPSPCustomersPlanningGridRow2Cell3ClearAllButton.finished': [
         {
             action: app.fn.forceRefresh,
