@@ -2352,11 +2352,99 @@ app.eventMap = {
             argument: 'rocheBPSPCustomersPlanningCopyMergePopup'
         }
     ],
+
     'launch.rocheBPSPCustomersPlanningOpportunitiesPopupClose.finished': [
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPCustomersPlanningOpportunitiesPopup'
         }
+    ],
+
+    'launch.rocheBPSPSettingsGridRow2Cell1Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPCompanySettings'
+        }
+    ],
+
+    'launch.rocheBPSPSettingsGridRow2Cell2Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPSecuritySetup'
+        }
+    ],
+
+    'launch.rocheBPSPSettingsGridRow5Cell1Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPTerritories'
+        }
+    ],
+
+    'launch.rocheBPSPSettingsGridRow5Cell2Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPTerritoriesUsers'
+        }
+    ],
+
+    'launch.rocheBPSPSettingsGridRow5Cell3Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPAccounts'
+        }
+    ],
+
+    'launch.rocheBPSPSettingsGridRow5Cell4Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPAccountsTerritories'
+        }
+    ],
+
+    'launch.rocheBPSPCompanySettingsGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPSettings'
+        }
+    ],
+
+    'launch.rocheBPSPSecuritySetupGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPSettings'
+        }
+    ],
+
+    'launch.rocheBPSPTerritoriesGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPSettings'
+        }
+    ],
+
+    'launch.rocheBPSPTerritoriesUsersGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPSettings'
+        }
+    ],
+
+
+    'launch.rocheBPSPAccountsGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPSettings'
+        }
+    ],
+
+    'launch.rocheBPSPAccountsTerritoriesGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPSettings'
+        }
+    ],
+
     ],
     'launch.rocheBPSPCustomersPlanningGridRow2Cell3ClearAllButton.finished': [
         {
