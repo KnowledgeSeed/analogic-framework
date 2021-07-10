@@ -8577,5 +8577,144 @@ app.repository = {
         }
     },
 
+    rocheBPSPSecuritySetupGridTable:
+        {
+              /*
+            initCondition: (db) => {
+               let a = Utils.setWidgetValueIfNotExist('systemValueMaterialReturnFromSearch', false);
+
+
+                let b = a === false && Utils.isValueExistingAndNotEmpty('rocheBPSPSecuritySetupGridRow1Cell2DropBox') && db.systemValueGlobalCompanyProductPlanVersion;
+                Utils.setWidgetValue('systemValueMaterialReturnFromSearch', false);
+                return b;
+            },
+            initDefault: (db) => {
+                return [];
+            },
+            */
+
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => {
+                        /*
+                        let searchString = '';
+                        if (Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow3Cell1SearchBox')) {
+                            searchString = v('rocheBPSPMaterialGridRow3Cell1SearchBox.value');
+
+                        }
+                        */
+                        return `{"MDX":"
+                                    
+                              With
+                           Set Clients As
+                            Filter({[}Clients].[}Clients].Members},[}ClientGroups].([}Groups].[}Groups].[1391 SalesUser])<>'')
+                            Member  [}Groups].[}Groups].[SwitchMarketing] AS
+                            IIF([}ClientGroups].([}Groups].[}Groups].[1391 SalesMarketing]) <>'',1,0)
+                            Member  [}Groups].[}Groups].[SwitchFinance] AS
+                            IIF([}ClientGroups].([}Groups].[}Groups].[1391 SalesFinance]) <>'',1,0)
+                            Member  [}Groups].[}Groups].[SwitchSales] AS
+                            IIF([}ClientGroups].([}Groups].[}Groups].[1391 SalesCustomer]) <>'',1,0)
+                            Member  [}Groups].[}Groups].[FullName] AS
+                               [}Clients].[}Clients].CurrentMember.Properties('Full Name') +' (' +[}Clients].[}Clients].CurrentMember.Properties('User ID') + ')'
+                            Member  [}Groups].[}Groups].[Code] AS
+                               [}Clients].[}Clients].CurrentMember.Properties('User ID')
+                            Set Groups As
+                            {
+                              [}Groups].[}Groups].[Code],
+                              [}Groups].[}Groups].[FullName],
+                              [}Groups].[}Groups].[SwitchMarketing],
+                              [}Groups].[}Groups].[SwitchFinance],
+                              [}Groups].[}Groups].[SwitchSales]      
+                            }
+                        SELECT 
+                           {Groups} 
+                          ON COLUMNS , 
+                           {Clients} 
+                           PROPERTIES [}Clients].[}Clients].[}TM1_DefaultDisplayValue]  ON ROWS 
+                        FROM [}ClientGroups]
+
+                                    "}`;
+
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 5,
+                        query: [
+
+
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x + 1].FormattedValue,
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    value: parseInt(r.Cells[x + 2].FormattedValue) === 1 ? 1 : 0,
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    value: parseInt(r.Cells[x + 3].FormattedValue) === 1 ? 1 : 0,
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    value: parseInt(r.Cells[x + 4].FormattedValue) === 1 ? 1 : 0,
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    icon: parseInt(r.Cells[x + 4].FormattedValue) === 1 ? 'icon-arrow-right' : '',
+                                    cellSkin: parseInt(r.Cells[x + 4].FormattedValue) === 1 ? '' : 'readonly_bpsp',
+                                }
+                            },
+                        ]
+                    }
+                },
+        },
+
+    rocheBPSPSecuritySetupGridRow1Cell2DropBox: {
+        choose: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPSecuritySetupGridRow1Cell2DropBox.value'));
+            }
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT 
+                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]} 
+                    ON COLUMNS , 
+                     {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}  
+                    ON ROWS 
+                    FROM [}ElementAttributes_Companies] 
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [], selected = v('systemValueGlobalSelectedCompany');
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    'name': r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: selected === r.Cells[i].FormattedValue
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
+    },
 
 };
