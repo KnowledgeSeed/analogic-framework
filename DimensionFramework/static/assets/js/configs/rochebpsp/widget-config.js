@@ -15615,6 +15615,16 @@ app.widgetConfig = {
                     position: 'center',
                     widgets: [
                         {
+                            id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelectorTitle',
+                            type: TextWidget,
+                            width: '100%',
+                            titleFontWeight: 'bold',
+                            titleAlignment: 'center',
+                            titleFontSize: 24,
+                            marginTop: 5,
+                            applyMeasuresToSection: true
+                        },
+                        {
                             id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector',
                             type: HorizontalTableWidget,
                             title: '',
@@ -15622,10 +15632,10 @@ app.widgetConfig = {
                             columnNames: ["Opportunity", "Type", "Probability", "Value"],
                             searchField: true,
                             visible: true,
-                            columnWidths: ["55%", "15%", "5%", "10%"],
-                            fadeOutNum: 12,
+                            columnWidths: ["55%", "13%", "7%", "10%"],
+                            fadeOutNum: 10,
                             marginLeft: 10,
-                            marginRight: 10,
+                            marginRight: 11,
                             listen: [],
                             isInBox: false,
                             leftActionsLength: 1,
@@ -15668,63 +15678,97 @@ app.widgetConfig = {
                         }
                     ]
                 },
-                /*      {
-                          id: 'rocheBPSPCustomersPlanningOpportunityDistributionPopup',
-                          type: ContainerWidget,
-                          anchorVisible: false,
-                          anchorOnClick: false,
-                          backdrop: true,
-                          visible: false,
-                          closeBtn: false,
-                          width: '1500',
-                          bgScrollable: true,
-                          fadingSpeed: 0,
-                          fixed: true,
-                          height: '800',
-                          behaviour: 'popup',
-                          skin: 'popup_bpsp ',
-                          position: 'center',
-                          widgets: [
-                              {
-                                  id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistribution',
-                                  type: HorizontalTableWidget,
-                                  title: '',
-                                  titleVisible: false,
-                                  columnNames: ["ProfitCenters on Level 6", "Product Code", "Percent"],
-                                  searchField: true,
-                                  visible: true,
-                                  columnWidths: ["60%", "20%", "10%"],
-                                  fadeOutNum: 12,
-                                  marginLeft: 10,
-                                  marginRight: 10,
-                                  listen: [],
-                                  isInBox: false,
-                                  leftActionsLength: 1,
-                                  marginBottom: '20',
-                                  marginTop: '20',
-                                  skin: 'customer_planning_bpsp',
-                                  widgets: [
-
-                                      {
-                                          id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionSelectorButton',
-                                          type: RadioButtonRowWidget,
-                                          action: 'select',
-                                          align: 'right',
-                                          position: 1
-                                      }
-
-                                  ]
-                              },
-                              {
-                                  id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionClose',
-                                  type: ButtonWidget,
-                                  label: 'Close',
-                                  width: 200,
-                                  skin: 'blue_bg_bpsp',
-                                  marginLeft: 650
-                              }
-                          ]
-                      },*/
+                {
+                    id: 'rocheBPSPCustomersPlanningOpportunityDistributionPopup',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: false,
+                    backdrop: true,
+                    closeOnClickBackdrop: false,
+                    visible: false,
+                    closeBtn: false,
+                    width: '600',
+                    bgScrollable: true,
+                    fadingSpeed: 0,
+                    fixed: true,
+                    height: '900',
+                    behaviour: 'popup',
+                    skin: 'popup_bpsp ',
+                    position: 'center',
+                    widgets: [
+                        {
+                            id: 'rocheBPSPCustomersPlanningOpportunityDistributionPopupTitle',
+                            type: TextWidget,
+                            width: '100%',
+                            titleFontWeight: 'bold',
+                            titleAlignment: 'center',
+                            titleFontSize: 24,
+                            marginTop: 5,
+                            applyMeasuresToSection: true,
+                            title: 'Opportunity Distribution'
+                        },
+                        {
+                            id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionTotal',
+                            type: HorizontalTableWidget,
+                            title: '',
+                            titleVisible: false,
+                            columnNames: ["Opportunity Distribution", "Value", "Distributed"],
+                            searchField: false,
+                            visible: true,
+                            columnWidths: ["50%", "30%", "20%"],
+                            fadeOutNum: 12,
+                            marginLeft: 10,
+                            marginRight: 10,
+                            listen: [],
+                            isInBox: false,
+                            marginTop: '20',
+                            skin: 'customer_planning_bpsp',
+                            widgets: []
+                        },
+                        {
+                            id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistribution',
+                            type: HorizontalTableWidget,
+                            title: '',
+                            titleVisible: false,
+                            columnNames: ["ProfitCenters on Level 6", "Product Code", "Percent"],
+                            searchField: true,
+                            visible: true,
+                            columnWidths: ["60%", "25%", "15%"],
+                            fadeOutNum: 10,
+                            marginLeft: 10,
+                            marginRight: 10,
+                            listen: [],
+                            isInBox: false,
+                            marginBottom: '20',
+                            marginTop: '-20',
+                            skin: 'customer_planning_bpsp',
+                            widgets: []
+                        },
+                        {
+                            id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionPanel1',
+                            type: PanelWidget,
+                            skin: 'horizontal_align_center',
+                            marginTop: 20,
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionSave',
+                                    type: ButtonWidget,
+                                    label: 'Save',
+                                    width: 200,
+                                    skin: 'blue_bg_bpsp',
+                                },
+                                {
+                                    id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionCancel',
+                                    type: ButtonWidget,
+                                    label: 'Cancel',
+                                    width: 200,
+                                    skin: 'white_bg_bpsp',
+                                    marginLeft: 5
+                                }
+                            ]
+                        }
+                    ]
+                },
                 {
                     id: 'rocheBPSPCustomersPlanningOpportunitiesFromGridTablePopup',
                     type: ContainerWidget,

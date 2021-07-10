@@ -145,3 +145,5 @@ GridCellWidget:
 
 HorizontalTable (hideIfNoData):
     customer_planning_bpsp
+
+PopupWidget (closeOnClickBackdrop):

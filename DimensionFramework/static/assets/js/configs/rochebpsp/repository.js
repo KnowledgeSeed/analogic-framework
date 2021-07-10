@@ -7266,6 +7266,61 @@ app.repository = {
             }
     },
     rocheBPSPCustomersPlanningGridTableMonthly: {
+        perform: {
+            url: (db, cell, widgetValue) => {
+                return `/api/v1/Processes('MODULE - UI - Sales Plan by Customer Split')/tm1.ExecuteWithReturn`;
+            },
+            type: (db, cell, widgetValue) => {
+                return 'POST';
+            },
+            body: (db, cell, widgetValue) => {
+                L(widgetValue);
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                    territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                    receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                    customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                    product = Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableMonthly', 0).productCode,
+                    period = v('systemValueGlobalSegmentedControlRelativeYearValue'),
+                    parameters = [];
+
+                parameters.push(Utils.getProcessNameValuePair('pProduct', product));
+                parameters.push(Utils.getProcessNameValuePair('pCompany', company));
+                parameters.push(Utils.getProcessNameValuePair('pReceiver', receiver));
+                parameters.push(Utils.getProcessNameValuePair('pTerritory', territoryCode));
+                parameters.push(Utils.getProcessNameValuePair('pPeriod', period));
+                parameters.push(Utils.getProcessNameValuePair('pCustomer', customerCode));
+                parameters.push(Utils.getProcessNameValuePair('pValue', Utils.parseNumber(widgetValue.value)));
+
+                return Utils.buildProcessParameters(parameters);
+            }
+        },
+        pastelast: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db, cell, widgetValue, row, col) => {
+                return `[
+                    {"Ordinal": ${widgetValue.ordinal},"Value": \"${Utils.parseNumber(widgetValue.value)}\"}
+                ]`;
+            }
+        },
+        paste: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db, cell, widgetValue, row, col) => {
+                return `[
+                    {"Ordinal": ${widgetValue.ordinal},"Value": \"${Utils.parseNumber(widgetValue.value)}\"}
+                ]`;
+            }
+        },
+        write: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db, cell, widgetValue, row, col) => {
+                return `[
+                    {"Ordinal": ${widgetValue.ordinal},"Value": \"${Utils.parseNumber(widgetValue.value)}\"}
+                ]`;
+            }
+        },
         initCondition: (db) => {
             return Repository.rocheBPSPCustomersPlanning.isMonthly(db);
         },
@@ -7455,49 +7510,37 @@ app.repository = {
         }
     },
     rocheBPSPCustomersPlanningGridTableYearly: {
-        /*   perform: {
-               validation: (db, cell, widgetValue) => {
-                   return {success: cell.copyMerge === false};
-               },
-               url: (db, cell, widgetValue) => {
-                   if (Utils.getPropertyOrFunctionValue(cell, 'distributionEdit')) {
-                       return `/api/v1/Processes('MODULE - UI - Products Yearly Prepare Split')/tm1.ExecuteWithReturn`;
-                   } else {
-                       return `/api/v1/Processes('MODULE - UI - Sales Plan by Product Split ')/tm1.ExecuteWithReturn`;
-                   }
-               },
-               type: (db, cell, widgetValue) => {
-                   return 'POST';
-               },
-               body: (db, cell, widgetValue) => {
-                   let pLineItem = Utils.getGridTableCurrentCell('rocheBPSPCustomersPlanningGridTableYearly').members[6].Name;
-                   Utils.setWidgetValue('systemValueProductCheckoutGridTableYearlyPLineItem', pLineItem);
-                   if (Utils.getPropertyOrFunctionValue(cell, 'distributionEdit')) {
-                       return `{
-                           "Parameters": [
-                                   {"Name": "pPeriod", "Value": "${v('systemValueGlobalSegmentedControlRelativeYearValue')}"},
-                                   {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 1).title}"},
-                                   {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
-                                   {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}"},
-                                   {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"},
-                                   {"Name": "pLineItem", "Value": "${pLineItem}"}
-                           ]
-                       }`
-                   } else {
-                       return `{
-                           "Parameters": [
-                                   {"Name": "pValue", "Value": "${Utils.parseNumber(v('rocheBPSPCustomersPlanningGridTableYearly.value'))}"},
-                                   {"Name": "pPeriod", "Value": "${v('systemValueGlobalSegmentedControlRelativeYearValue')}"},
-                                   {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 1).title}"},
-                                   {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
-                                   {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}"},
-                                   {"Name": "pSplitMode", "Value": "Default"},
-                                   {"Name": "pLineItem", "Value": "${pLineItem}"}
-                           ]
-                       }`
-                   }
-               }
-           },*/
+        perform: {
+            validation: (db, cell, widgetValue) => {
+                return {success: cell.copyMerge === false && cell.distributionEdit === false};
+            },
+            url: (db, cell, widgetValue) => {
+                return `/api/v1/Processes('MODULE - UI - Sales Plan by Customer Split')/tm1.ExecuteWithReturn`;
+            },
+            type: (db, cell, widgetValue) => {
+                return 'POST';
+            },
+            body: (db, cell, widgetValue) => {
+                L(widgetValue);
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                    territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                    receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                    customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                    product = Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 0).productCode,
+                    period = v('systemValueGlobalSegmentedControlRelativeYearValue'),
+                    parameters = [];
+
+                parameters.push(Utils.getProcessNameValuePair('pProduct', product));
+                parameters.push(Utils.getProcessNameValuePair('pCompany', company));
+                parameters.push(Utils.getProcessNameValuePair('pReceiver', receiver));
+                parameters.push(Utils.getProcessNameValuePair('pTerritory', territoryCode));
+                parameters.push(Utils.getProcessNameValuePair('pPeriod', period));
+                parameters.push(Utils.getProcessNameValuePair('pCustomer', customerCode));
+                parameters.push(Utils.getProcessNameValuePair('pValue', Utils.parseNumber(widgetValue.value)));
+
+                return Utils.buildProcessParameters(parameters);
+            }
+        },
         getCell: (index, r) => {
             let uiIndex = index + 10, uiValue = parseInt(r.Cells[uiIndex].FormattedValue), skin = 'monthly_right_bpsp',
                 cellSkin = '',
@@ -8226,6 +8269,31 @@ app.repository = {
                 return '';
             }
             return members[membersIndex].Attributes.Caption;
+        },
+        getCopyMergeButtonProcessBody: (mode = 1) => {//1 = Copy, 2 = Merge
+            let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                product = Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 0).productCode,
+                periodFrom = Utils.getGridTableCurrentCell('rocheBPSPCustomersPlanningGridTableYearly').members[7].Name,
+                periodTo = v('systemValueGlobalSegmentedControlRelativeYearValue'),
+                growthRate = v('rocheBPSPCustomersPlanningCopyMergePopupSlider.value') / 100,
+                lineItem = Utils.getGridTableCurrentCell('rocheBPSPCustomersPlanningGridTableYearly').members[8].Name,
+                parameters = []
+            ;
+            parameters.push(Utils.getProcessNameValuePair('pProduct', product));
+            parameters.push(Utils.getProcessNameValuePair('pCompany', company));
+            parameters.push(Utils.getProcessNameValuePair('pReceiver', receiver));
+            parameters.push(Utils.getProcessNameValuePair('pTerritory', territoryCode));
+            parameters.push(Utils.getProcessNameValuePair('pPeriodFrom', periodFrom));
+            parameters.push(Utils.getProcessNameValuePair('pPeriodTo', periodTo));
+            parameters.push(Utils.getProcessNameValuePair('pMode', mode));
+            parameters.push(Utils.getProcessNameValuePair('pGrowthRate', growthRate));
+            parameters.push(Utils.getProcessNameValuePair('pLineItem', lineItem));
+            parameters.push(Utils.getProcessNameValuePair('pCustomer', customerCode));
+
+            return Utils.buildProcessParameters(parameters);
         }
     },
     rocheBPSPCustomersPlanningGridRow2Cell3aCreateOpportunityButton: {
@@ -8416,9 +8484,24 @@ app.repository = {
         initDefault: (db) => {
             return [];
         },
+        open: {
+            execute: (db) => {
+                app.fn.goToUrlNewTab(Utils.getHorizontalTableHiddenValue('rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector', 'open', 0, 'url'));
+            }
+        },
+        delete: {
+            url: (db) => `/api/v1/Processes('MODULE - UI - Sales Opportunity Delete')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => {
+                let opportunity = Utils.getHorizontalTableHiddenValue('rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector', 'delete', 0, 'code'),
+                    parameters = [];
+                parameters.push(Utils.getProcessNameValuePair('pOpportunity', opportunity));
+                return Utils.buildProcessParameters(parameters);
+            }
+        },
         init:
             {
-                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
                 type: 'POST',
                 body: (db) => `{"MDX":"
                    SELECT
@@ -8439,16 +8522,21 @@ app.repository = {
                     length: 6,
                     query: [
                         (r, x) => {
-                            return {value: r.Cells[x].FormattedValue};
+                            return {
+                                value: r.Cells[x].FormattedValue,
+                                code: r.Cells[x].Members[0].Name,
+                                url: r.Cells[x + 4].FormattedValue
+                            };
                         }, (r, x) => {
                             return {value: r.Cells[x + 3].FormattedValue};
                         }, (r, x) => {
                             return {value: r.Cells[x + 2].FormattedValue};
                         }, (r, x) => {
-                            return {value: r.Cells[x + 5].FormattedValue};
+                            return {value: r.Cells[x + 1].FormattedValue};
                         }, (r, x) => {
                             return {
-                                active: true
+                                active: true,
+                                on: Utils.parseNumber(r.Cells[x + 5].FormattedValue) === 1
                             };
                         }, (r, x) => {
                             return {
@@ -8525,6 +8613,270 @@ app.repository = {
                 }
 
             }
+    },
+    rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelectorTitle: {
+        init: {
+            execute: (db) => {
+                return {title: 'Opportunities ' + v('systemValueGlobalSegmentedControlRelativeYearValue')};
+            }
+        }
+    },
+    rocheBPSPCustomersPlanningGridRow2Cell3ClearAllButton: {
+        init: {
+          execute: (db)=> {
+              return {label: Repository.rocheBPSPCustomersPlanning.isYearly(db) ? 'Clear all' :  'Clear table'};
+          }
+        },
+        launch:
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Clear All Inputs')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => {
+                    let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                        territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                        version = v('systemValueGlobalCompanyVersion'),
+                        receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                        customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                        parameters = []
+                    ;
+                    parameters.push(Utils.getProcessNameValuePair('pVersion', version));
+                    parameters.push(Utils.getProcessNameValuePair('pCompany', company));
+                    parameters.push(Utils.getProcessNameValuePair('pReceiver', receiver));
+                    parameters.push(Utils.getProcessNameValuePair('pCube', 'Sales Plan by Customer'));
+                    parameters.push(Utils.getProcessNameValuePair('pTerritory', territoryCode));
+                    parameters.push(Utils.getProcessNameValuePair('pCustomer', customerCode));
+                    if (Repository.rocheBPSPCustomersPlanning.isMonthly(db)) {
+                        parameters.push(Utils.getProcessNameValuePair('pPeriod', v('systemValueGlobalSegmentedControlRelativeYearValue')));
+                        parameters.push(Utils.getProcessNameValuePair('pLineItem', v('systemValueCustomersPlanningMonthlyTypeValue')));
+                    }
+                    return Utils.buildProcessParameters(parameters);
+                }
+            }
+    },
+    rocheBPSPCustomersPlanningGridRow2Cell3SubmitButton: {
+        launch:
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Customers Plan Submit')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => {
+                    let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                        territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                        version = v('systemValueGlobalCompanyVersion'),
+                        receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                        customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                        parameters = []
+                    ;
+                    parameters.push(Utils.getProcessNameValuePair('pVersion', version));
+                    parameters.push(Utils.getProcessNameValuePair('pCompany', company));
+                    parameters.push(Utils.getProcessNameValuePair('pReceiver', receiver));
+                    parameters.push(Utils.getProcessNameValuePair('pTerritory', territoryCode));
+                    parameters.push(Utils.getProcessNameValuePair('pCustomer', customerCode));
+
+                    return Utils.buildProcessParameters(parameters);
+                }
+            }
+    },
+    rocheBPSPCustomersPlanningCopyMergePopupCopyButton: {
+        launch:
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Customers Plan Yearly Copy')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => {
+                    return Repository.rocheBPSPCustomersPlanning.getCopyMergeButtonProcessBody();
+                }
+            }
+    },
+    rocheBPSPCustomersPlanningCopyMergePopupMergeButton: {
+        launch:
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Customers Plan Yearly Copy')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => {
+                    return Repository.rocheBPSPCustomersPlanning.getCopyMergeButtonProcessBody(2);
+                }
+            }
+    },
+    rocheBPSPCustomersPlanningCopyMergePopupSlider: {
+        initCondition: (db) => {
+            let b = Utils.isGridTableLoaded('rocheBPSPCustomersPlanningGridTableYearly')
+                && Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 0).productCode
+            return b;
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            { "MDX" :
+                "SELECT 
+                   {[Versions].[Versions].[Live]} 
+                   PROPERTIES [Versions].[Versions].[Caption]  ON COLUMNS , 
+                   {[Measures Sales Parameters by Products Flat].[Measures Sales Parameters by Products Flat].[Growth rate for Products Copy Minimum],
+                    [Measures Sales Parameters by Products Flat].[Measures Sales Parameters by Products Flat].[Growth rate for Products Copy Maximum],
+                [Measures Sales Parameters by Products Flat].[Measures Sales Parameters by Products Flat].[Growth rate for Products Copy]} 
+                  ON ROWS 
+                FROM [Sales Parameters by Products Flat] 
+                WHERE 
+                  (
+                   [Years].[Years].[${v('systemValueGlobalSegmentedControlRelativeYearValue')}],
+                   [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}],
+                   [Receivers].[Receivers].[${v('rocheBPSPCustomersHorizontalTable.open.receiver')}],
+                   [Products Flat].[Products Flat].[${Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 0).productCode}]
+                  )
+                  "}
+           `,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        value: (r, x) => {
+                            return Utils.parseNumber(r.Cells[2].FormattedValue) * 100;
+                        },
+                        originalValue: (r, x) => {
+                            return Utils.parseNumber(r.Cells[2].FormattedValue) * 100;
+                        }
+                    }
+            }
+        }
+    },
+    rocheBPSPCustomersPlanningHorizontalTableOpportunityDistribution: {
+        initCondition: (db) => {
+            Utils.setWidgetValueIfNotExist('systemValueCustomersPlanningIsOpportunityDistributionLoadable', false);
+            return v('systemValueCustomersPlanningIsOpportunityDistributionLoadable');
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name,Attributes/BPSPBudgetDescription))`,
+            type: 'POST',
+            body: (db) => {
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                    version = v('systemValueGlobalCompanyVersion'),
+                    opportunity = Utils.getHorizontalTableHiddenValue('rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector', 'select', 0, 'code');
+                ;
+                return `{"MDX":"SELECT
+                       {[Measures Sales Plan by Customer Opportunity Split].[Measures Sales Plan by Customer Opportunity Split].Members}
+                    ON COLUMNS ,
+                        {FILTER({[Products].[BPSP Budget].Members}, [Products].[BPSP Budget].CurrentMember.Properties(\\"BPSP Budget Product Level - Name\\") = \\"PL6\\")}
+                        PROPERTIES [Products].[BPSP Budget].[BPSP Budget Caption] ON ROWS
+                    FROM [Sales Plan by Customer Opportunity Split]
+                    WHERE
+                    (
+                        [Versions].[Versions].[${version}],
+                        [Companies].[Companies].[${company}],
+                        [Opportunities].[Opportunities].[${opportunity}]
+                    )"}`;
+            }
+            ,
+            parsingControl: {
+                type: 'matrix',
+                length: 1,
+                query: [
+                    (r, x) => {
+                        return {value: r.Cells[x].Members[3].Attributes['BPSP Budget Description']};
+                    }, (r, x) => {
+                        return {value: r.Cells[x].Members[3].Name};
+                    }, (r, x) => {
+                        return {value: r.Cells[x].FormattedValue, editable: true, ordinal: r.Cells[x].Ordinal};
+                    }
+                ]
+            }
+
+        },
+        cellEdit: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db) => {
+                let a = v('rocheBPSPCustomersPlanningHorizontalTableOpportunityDistribution.cellEdit'),
+                    value = Utils.parseNumber(a.value.replace('%', '')) / 100;
+
+                return `{"Ordinal": ${a.ordinal},"Value": \"${value}\"}`
+            }
+        }
+    },
+    rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionSave: {
+        launch: {
+            validation: (db) => {
+                let value = Utils.parseNumber(v('rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionTotal.rows')[0][2].value.replace('%', ''));
+                return {success: value === 100, message: 'Please add 100% percentage'};
+            },
+            url: (db) => `/api/v1/Processes('MODULE - UI - Sales Opportunity Split')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => {
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                    territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                    version = v('systemValueGlobalCompanyVersion'),
+                    receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                    customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                    opportunity = Utils.getHorizontalTableHiddenValue('rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector', 'select', 0, 'code'),
+                    parameters = []
+                ;
+                parameters.push(Utils.getProcessNameValuePair('pOpportunity', opportunity));
+                parameters.push(Utils.getProcessNameValuePair('pCompany', company));
+                parameters.push(Utils.getProcessNameValuePair('pReceiver', receiver));
+                parameters.push(Utils.getProcessNameValuePair('pTerritory', territoryCode));
+                parameters.push(Utils.getProcessNameValuePair('pCustomer', customerCode));
+
+                return Utils.buildProcessParameters(parameters);
+            }
+
+
+        }
+    },
+    rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionTotal: {
+        initCondition: (db) => {
+            Utils.setWidgetValueIfNotExist('systemValueCustomersPlanningIsOpportunityDistributionTotalLoadable', false);
+            return v('systemValueCustomersPlanningIsOpportunityDistributionTotalLoadable');
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name,Attributes/TotalDealValue))`,
+            type: 'POST',
+            body: (db) => {
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                    version = v('systemValueGlobalCompanyVersion'),
+                    opportunity = Utils.getHorizontalTableHiddenValue('rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector', 'select', 0, 'code');
+                ;
+                return `{"MDX":"SELECT
+                       {[Measures Sales Plan by Customer Opportunity Split].[Measures Sales Plan by Customer Opportunity Split].Members} 
+                    ON COLUMNS ,
+                       {TM1FILTERBYLEVEL({[Products].[BPSP Budget].Members}, 5)} 
+                    ON ROWS
+                    FROM [Sales Plan by Customer Opportunity Split]
+                    WHERE
+                    (
+                        [Versions].[Versions].[${version}],
+                        [Companies].[Companies].[${company}],
+                        [Opportunities].[Opportunities].[${opportunity}]
+                    )"}`;
+            }
+            ,
+            parsingControl: {
+                type: 'matrix',
+                length: 1,
+                query: [
+                    (r, x) => {
+                        return {value: r.Cells[x].Members[2].Name};
+                    }, (r, x) => {
+                        let value = r.Cells[x].Members[2].Attributes['Total Deal Value'];
+                        if (value === null) {
+                            value = '0';
+                        }else{
+                            value = value.toString();
+                        }
+                        return {value: value};
+                    }, (r, x) => {
+                        return {value: r.Cells[x].FormattedValue};
+                    }
+                ]
+            }
+
+        }
     },
     /* end customer planning */
 

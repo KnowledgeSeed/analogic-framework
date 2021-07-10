@@ -57,21 +57,21 @@ WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';
             items: [{name: "RD Poland", key: "1391", on: true}]
         };
         WidgetValue['rocheBPSPCustomersTerritorySelector'] = {
-            value: 'PL - Manager',
-            items: [{name: "PL - Manager", key: "TTY-0000000465", on: true}]
+            value: 'PL - ASM Centrum (Budzynski)',
+            items: [{name: "PL - ASM Centrum (Budzynski)", key: "TTY-0000000451", on: true}]
         };
         WidgetValue['rocheBPSPCustomersHorizontalTable'] = {
             open: {
                 receiver: 'PL',
-                code: '1391 Unassigned',
-                customer: 'Lublin-Samodzielny Publiczny Szpital Kliniczny Nr 1-PL43000922'
+                code: 'GNN-0003251887',
+                customer: 'Lublin-Centrum Onkologii Ziemi Lubelskiej-PL43000116'
             }
         };
         WidgetValue['systemValueCustomerPlanningSegmentedControlPeriodUnit'] = 'Yearly';
         WidgetValue['systemValueCustomersPlanningMonthlyType'] = 'Base Plan';
         WidgetValue['systemValueCustomersPlanningFocused'] = 'PL1';
         WidgetValue['systemValueDefaultCustomersPlanningFocused'] = 'PL1';
-        WidgetValue['systemValueCustomersPlanningCustomerCode'] = '1391 Unassigned';
+        WidgetValue['systemValueCustomersPlanningCustomerCode'] = 'GNN-0003251887';
         WidgetValue['systemValueCustomersPlanningMonthlyTypeValue'] = 'Base Plan';
 
          /*end customer planning */

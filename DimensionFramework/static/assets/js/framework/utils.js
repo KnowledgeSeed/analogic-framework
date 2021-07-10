@@ -35,7 +35,7 @@ const Utils = {
     toTitleCase: str => str.toLowerCase().replace(/(?:^|\s)\w/g, match => match.toUpperCase()),
     parseNumber(value, locale = navigator.language) {
         let localValue = value;
-        if(localValue === '' || localValue === null || localValue === false){
+        if (localValue === '' || localValue === null || localValue === false) {
             localValue = '0';
         }
         if ('number' === typeof localValue) {
@@ -201,12 +201,12 @@ const Utils = {
         let row = Utils.getGridTableCurrentRow(widgetId);
         return row !== false ? row[columnIndex] : false;
     },
-    getGridTableCellByRowAndColumn(widgetId, rowIndex, columnIndex, property = ''){
+    getGridTableCellByRowAndColumn(widgetId, rowIndex, columnIndex, property = '') {
         let a = v(widgetId + '.cellData');
-        if(a === false){
+        if (a === false) {
             return false;
         }
-        return property !== '' ?  a[rowIndex][columnIndex][property] : a[rowIndex][columnIndex];
+        return property !== '' ? a[rowIndex][columnIndex][property] : a[rowIndex][columnIndex];
     },
     setAndGetGridTableSystemValueByCurrentRow(widgetId, columnIndex, systemValue, cellProperty) {
         let c = Utils.getGridTableCell(widgetId, columnIndex);
@@ -232,18 +232,18 @@ const Utils = {
         }
         return result;
     },
-    getArrayWithValues(arrayLength, value){
-       return Array.from({length:arrayLength},()=> value)
+    getArrayWithValues(arrayLength, value) {
+        return Array.from({length: arrayLength}, () => value)
     },
     getOrdinalValuePairs(ordinalsArray, values) {
-        if(!ordinalsArray || !values){
+        if (!ordinalsArray || !values) {
             return '';
         }
-        if(ordinalsArray.length < values.length){
+        if (ordinalsArray.length < values.length) {
             return '';
         }
         let template = (ordinal, value) => `{"Ordinal": ${ordinal},"Value": \"${value}\"}`, result = [], i = 0;
-        for(i = 0; i < values.length; ++i){
+        for (i = 0; i < values.length; ++i) {
             result.push(template(ordinalsArray[i].Ordinal, values[i]));
         }
         return result.join(',');
@@ -277,8 +277,9 @@ const Utils = {
         }
         return result;
     },
-    getGridTableActualAndLastPage(widgetId){
-        let state = WidgetState[widgetId], maxPage = Math.ceil(state.rows / state.maxRows), actualPage = state.page ? state.page : 1;
+    getGridTableActualAndLastPage(widgetId) {
+        let state = WidgetState[widgetId], maxPage = Math.ceil(state.rows / state.maxRows),
+            actualPage = state.page ? state.page : 1;
         return {actualPage: actualPage, maxPage: maxPage};
     },
     getGridTablePagerText(widgetId) {
@@ -296,34 +297,34 @@ const Utils = {
         let l = v(widgetId + '.' + value + '.length');
         return l !== false && l !== 0;
     },
-    setWidgetValueIfNotExist(key, value){
-        if(!WidgetValue[key]){
+    setWidgetValueIfNotExist(key, value) {
+        if (!WidgetValue[key]) {
             WidgetValue[key] = value;
         }
         return WidgetValue[key];
     },
-    setWidgetValueIfNotExistByOther(key1, key2){
-        if(!WidgetValue[key1]){
+    setWidgetValueIfNotExistByOther(key1, key2) {
+        if (!WidgetValue[key1]) {
             WidgetValue[key1] = WidgetValue[key2];
         }
         return WidgetValue[key1];
     },
-    setWidgetValue(key, value){
+    setWidgetValue(key, value) {
         WidgetValue[key] = value;
     },
-    setWidgetValueByOther(key1, key2){
+    setWidgetValueByOther(key1, key2) {
         WidgetValue[key1] = WidgetValue[key2];
     },
-    getPropertyOrFunctionValue(object, property){
-        if(typeof object[property] === 'function'){
+    getPropertyOrFunctionValue(object, property) {
+        if (typeof object[property] === 'function') {
             return object[property]();
         }
         return object[property];
     },
-    getDecimalFromPercentString(value){
+    getDecimalFromPercentString(value) {
         return Utils.parseNumber(value.replace('%', '')) / 100;
     },
-    filterUnique(arr){
+    filterUnique(arr) {
         return arr.filter((v, i, a) => a.indexOf(v) === i)
     },
     create_UUID() {
@@ -335,25 +336,49 @@ const Utils = {
             return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
         });
     },
-    getEvenElements(arr){
-        return arr.filter(function(element, index, array) {
+    getEvenElements(arr) {
+        return arr.filter(function (element, index, array) {
             return (index % 2 === 0);
         });
     },
-    getOddElements(arr){
-        return arr.filter(function(element, index, array) {
+    getOddElements(arr) {
+        return arr.filter(function (element, index, array) {
             return (index % 2 === 1);
         });
     },
-    getArrayElements(arr, modulo, tailings){
-        return arr.filter(function(element, index, array) {
+    getArrayElements(arr, modulo, tailings) {
+        return arr.filter(function (element, index, array) {
             return (index % modulo === tailings);
         });
     },
-    modifyFileName(widgetId, newName){
-        let file = WidgetValue[widgetId].form.get('file0'), splittedName = file.name.split('.'), fileExt = splittedName[splittedName.length-1];
-        file = new File([file], newName + "." + fileExt, {type:file.type});
+    modifyFileName(widgetId, newName) {
+        let file = WidgetValue[widgetId].form.get('file0'), splittedName = file.name.split('.'),
+            fileExt = splittedName[splittedName.length - 1];
+        file = new File([file], newName + "." + fileExt, {type: file.type});
         WidgetValue[widgetId].form.set('file0', file);
+    },
+    buildProcessParameters(nameValuePairs) {
+        let template = (name, value) => `{"Name": \"${name}\","Value": \"${value}\"}`, i, parameters = [];
+        for (i = 0; i < nameValuePairs.length; ++i) {
+            parameters.push(template(nameValuePairs[i].name, nameValuePairs[i].value));
+        }
+        return `{
+                   "Parameters": [
+                       ${parameters.join(',')}                    
+                   ]
+                }`;
+    },
+    getProcessNameValuePair(name, value) {
+        return {name: name, value: value};
+    },
+    getHorizontalTableHiddenValue(widgetId, actionName, colIndex, valueName) {
+        let w = v(widgetId);
+        if(!w || !w[actionName]){
+            return '';
+        }
+        let index = 'undefined' !== typeof w[actionName].index ? w[actionName].index : w[actionName].rowindex;
+        L(index);
+        return w.rows[index][colIndex][valueName];
     }
 };
 
