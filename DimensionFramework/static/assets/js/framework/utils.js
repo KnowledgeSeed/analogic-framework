@@ -370,6 +370,15 @@ const Utils = {
     },
     getProcessNameValuePair(name, value) {
         return {name: name, value: value};
+    },
+    getHorizontalTableHiddenValue(widgetId, actionName, colIndex, valueName) {
+        let w = v(widgetId);
+        if(!w || !w[actionName]){
+            return '';
+        }
+        let index = 'undefined' !== typeof w[actionName].index ? w[actionName].index : w[actionName].rowindex;
+        L(index);
+        return w.rows[index][colIndex][valueName];
     }
 };
 
