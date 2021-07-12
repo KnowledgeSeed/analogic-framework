@@ -67,10 +67,10 @@ def clearCache(instance):
     return getProvider(instance).setting.clearCache()
 
 
-@app.route('/exportconfig', defaults={'instance': 'default'})
-@app.route('/<path:instance>/exportconfig')
-def exportConfig(instance):
-    return getProvider(instance).exportConfig()
+@app.route('/exportconfig/<path:config_type>', defaults={'instance': 'default'})
+@app.route('/<path:instance>/exportconfig/<path:config_type>')
+def exportConfig(instance, config_type):
+    return getProvider(instance).exportConfig(config_type)
 
 
 @app.route('/ping', defaults={'instance': 'default'})
