@@ -2401,12 +2401,144 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableYearly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningHeaderInfoGridTable'
         }
     ],
     'launch.rocheBPSPCustomerPlanningOpportunityDeleteControlPanelCancelButton.finished': [
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPCustomerPlanningOpportunityDelete'
+        }
+    ],//----
+        'launch.rocheBPSPCustomersPlanningCommentShowGridRow5Button': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPCustomersPlanningCommentEdit'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningCommentEditGridRow2CommentInput'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningCommentEditGridRow3TextInput'
+        },
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCustomersPlanningCommentShow'
+        }
+    ],
+
+
+    'launch.rocheBPSPCustomersPlanningCommentEditControlPanelCancelButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: ['rocheBPSPCustomersPlanningCommentEdit']
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPCustomersPlanningCommentShowGridTable', 'rocheBPSPCustomersPlanningCommentShowGridTableSource']
+        }
+    ],
+
+    'launch.rocheBPSPCustomersPlanningGridTableYearly_row_11': [
+        {
+            action: app.fn.conditionalGridTablePopup,
+            argument: [
+                {
+                    conditionKey: 'hasComment',
+                    actions: [
+                        {
+                            action: app.fn.addGridTableCurrentRowSystemValue,
+                            argument: ['LastClickedProductCode', 'rocheBPSPCustomersPlanningGridTableYearly', 0, 'productCode']
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPCustomersPlanningCommentShowGridTable'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPCustomersPlanningCommentShowGridTableSource'
+                        },
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPCustomersPlanningCommentShow'
+                        }
+                    ]
+                },
+
+
+                {
+                    conditionKey: 'else',
+                    actions: [
+                        {
+                            action: app.fn.addGridTableCurrentRowSystemValue,
+                            argument: ['LastClickedProductCode', 'rocheBPSPCustomersPlanningGridTableYearly', 0, 'productCode']
+                        },
+                        {
+                            action: app.fn.openPopup,
+                            argument: 'rocheBPSPCustomersPlanningCommentEdit'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPCustomersPlanningCommentEditGridRow2CommentInput'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPCustomersPlanningCommentEditGridRow3TextInput'
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningCommentEditGridXButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCustomersPlanningCommentEdit'
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPCustomersPlanningCommentShowGridTable', 'rocheBPSPCustomersPlanningCommentShowGridTableSource']
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningCommentShowGridXButton': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCustomersPlanningCommentShow'
+        },
+        {
+            action: app.fn.removeWidgetValues,
+            argument: ['rocheBPSPCustomersPlanningCommentShowGridTable', 'rocheBPSPCustomersPlanningCommentShowGridTableSource']
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningCommentEditControlPanelSaveButton.finished': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCustomersPlanningCommentEdit'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPCustomersPlanningCommentShow'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningCommentShowGridTable'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningCommentShowGridTableSource'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableYearly'
         }
     ],
 
@@ -2665,7 +2797,7 @@ app.eventMap = {
             ]
         }
     ],
-    'pasteLast.rocheBPSPCustomersPlanningGridTableMonthly.finished': [
+    'pastelast.rocheBPSPCustomersPlanningGridTableMonthly.finished': [
         {
             action: app.fn.forceRefreshWithDelay,
             argument: [

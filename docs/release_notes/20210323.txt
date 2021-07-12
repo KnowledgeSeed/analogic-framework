@@ -146,4 +146,10 @@ GridCellWidget:
 HorizontalTable (hideIfNoData):
     customer_planning_bpsp
 
+ActionButtonRowWidget(columnName)
+
+DeleteButtonRow(columnName)
+
+RadioButtonRow(columnName)
+
 PopupWidget (closeOnClickBackdrop):

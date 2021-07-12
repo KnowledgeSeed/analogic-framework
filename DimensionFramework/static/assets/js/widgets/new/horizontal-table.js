@@ -75,7 +75,7 @@ class HorizontalTableWidget extends Widget {
 
         if (data.leftActionCells.length > 0) {
             for (l of data.leftActionCells[0]) {
-                s.push(`<div class="ks-horizontal-table-cell ks-${leftRowWidgets[i].name === 'RadioButtonRowWidget' ? 'checkbox' : 'action'}-cell" ${actionWidth !== false ? `style="flex: 0 0 ${actionWidth}%;"` : ''}></div>`);
+                s.push(`<div class="ks-horizontal-table-cell ks-${leftRowWidgets[i].name === 'RadioButtonRowWidget' ? 'checkbox' : 'action'}-cell" ${actionWidth !== false ? `style="flex: 0 0 ${actionWidth}%;"` : ''}>${leftRowWidgets[i].options.columnName ? leftRowWidgets[i].options.columnName : ''}</div>`);
                 ++i;
             }
         }
@@ -88,7 +88,7 @@ class HorizontalTableWidget extends Widget {
         if (data.rightActionCells.length > 0) {
             i = 0;
             for (l of data.rightActionCells[0]) {
-                s.push(`<div class="ks-horizontal-table-cell ks-${rightRowWidgets[i].name === 'RadioButtonRowWidget' ? 'checkbox' : 'action'}-cell"  ${actionWidth !== false ? `style="flex: 0 0 ${actionWidth}%;"` : ''}></div>`);
+                s.push(`<div class="ks-horizontal-table-cell ks-${rightRowWidgets[i].name === 'RadioButtonRowWidget' ? 'checkbox' : 'action'}-cell"  ${actionWidth !== false ? `style="flex: 0 0 ${actionWidth}%;"` : ''}>${rightRowWidgets[i].options.columnName ? rightRowWidgets[i].options.columnName : ''}</div>`);
                 ++i;
             }
         }

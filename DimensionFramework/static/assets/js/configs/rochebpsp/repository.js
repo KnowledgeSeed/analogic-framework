@@ -7280,7 +7280,7 @@ app.repository = {
                     receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
                     customerCode = v('systemValueCustomersPlanningCustomerCode'),
                     product = Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableMonthly', 0).productCode,
-                    period = v('systemValueGlobalSegmentedControlRelativeYearValue'),
+                    period = Utils.getGridTableCurrentCell('rocheBPSPCustomersPlanningGridTableMonthly').members[8].Name,
                     parameters = [];
 
                 parameters.push(Utils.getProcessNameValuePair('pProduct', product));
@@ -7330,6 +7330,10 @@ app.repository = {
         getCell: (index, r) => {
             let c = r.Cells[index], editable = c.Consolidated === false && c.RuleDerived === false,
                 performable = c.Consolidated === true && c.RuleDerived === false, isGrey = c.RuleDerived === true;
+            if(v('systemValueCustomersPlanningMonthlyType') === 'Final Sales' && c.Consolidated === true){
+                isGrey = true;
+                performable = false;
+            }
 
             let result = {
                 title: c.FormattedValue,
@@ -7411,7 +7415,7 @@ app.repository = {
                                 SELECT 
                                   Union(
                                      {Union({FixColumns}, 
-                                           {TM1DRILLDOWNMEMBER({[Periods].[Periods].[2021]}, ALL, RECURSIVE )}
+                                           {TM1DRILLDOWNMEMBER({[Periods].[Periods].[${relativeYearValue}]}, ALL, RECURSIVE )}
                                      ,All)},
                                      {Comment}
                                   ,All)
@@ -7556,7 +7560,14 @@ app.repository = {
                 cellSkin = 'readonly_bpsp';
             }
             if (uiValue === 4) {
-                cellSkin = r.Cells[index].Members[7].Name == v('systemValueGlobalSegmentedControlRelativeYearValue') ? 'readonly_green_bpsp' : 'readonly_bpsp';
+                if (r.Cells[index].Members[7].Name == v('systemValueGlobalSegmentedControlRelativeYearValue')) {
+                    cellSkin = 'readonly_green_bpsp';
+                } else {
+                    skin = 'products_gd_readonly_with_icon_bpsp';
+                    cellSkin = 'readonly_bpsp';
+                    icon = 'icon-copy';
+                    copyMerge = true;
+                }
             }
 
             if ((uiValue === 2 || uiValue === 3)
@@ -7565,7 +7576,6 @@ app.repository = {
                 skin = 'products_gd_writeable_with_icon_bpsp';
                 cellSkin = '';
                 applyMeasuresToSection = true;
-                performWrite = true;
                 if (uiValue === 3) {
                     icon = 'icon-dots-vertical';
                     distributionEdit = true;
@@ -7574,6 +7584,7 @@ app.repository = {
                 } else {
                     icon = 'icon-cloud-arrow-up';
                     skin = 'monthly_right_bpsp';
+                    performWrite = true;
                 }
             }
             let result = {
@@ -7582,10 +7593,12 @@ app.repository = {
                 distributionEdit: distributionEdit,
                 copyMerge: copyMerge,
                 performWrite: performWrite,
+                performable: performWrite,
                 ordinal: r.Cells[index].Ordinal,
                 skin: skin,
                 members: r.Cells[index].Members,
                 applyMeasuresToSection: true,
+                uiValue: uiValue,
                 width: '100%'
             };
             if (icon !== '') {
@@ -7595,7 +7608,6 @@ app.repository = {
             if (applyMeasuresToSection) {
                 result['width'] = '100%';
                 result['height'] = '100%';
-                result['performable'] = true;
                 if (uiValue === 3 && r.Cells[index].Members[5].Name == v('systemValueGlobalSegmentedControlRelativeYearValue')) {
                     result['paddingRight'] = 26;
                 }
@@ -7793,12 +7805,31 @@ app.repository = {
             }
         }
     },
+    'rocheBPSPCustomersPlanningGridTableYearlyHeaderCell-04': {
+        init: {
+            execute: (db) => {
+                let previousTitle = Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderTitle(2),
+                    currentTitle = Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderTitle(3);
+                if (previousTitle !== currentTitle) {
+                    return {cellHeaderSkin: 'long_border_bpsp'};
+                }
+                return {};
+            }
+        }
+    },
     'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-04': {
         init: {
             execute: (db) => {
-                return {
-                    body: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderBody(3),
-                };
+                let previousTitle = Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderTitle(2),
+                    currentTitle = Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderTitle(3),
+                    result = {
+                        body: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderBody(3),
+                    };
+                if (previousTitle !== currentTitle) {
+                    result['title'] = currentTitle;
+                    result['skin'] = 'products_gd_header_bpsp';
+                }
+                return result;
             }
         }
     },
@@ -8213,6 +8244,9 @@ app.repository = {
         isYearly: (db) => {
             return v('systemValueCustomerPlanningSegmentedControlPeriodUnit') === 'Yearly';
         },
+        isYearlyLoaded: (db) => {
+            return Utils.isGridTableLoaded('rocheBPSPCustomersPlanningGridTableYearly');
+        },
         getVisibleGridTable: (db) => {
             return Repository.rocheBPSPCustomersPlanning.isYearly(db) ? 'rocheBPSPCustomersPlanningGridTableYearly' : 'rocheBPSPCustomersPlanningGridTableMonthly';
         },
@@ -8502,9 +8536,9 @@ app.repository = {
             }
         },
         select: {
-          execute: (db) => {
-              Utils.setWidgetValue('systemValueCustomerPlanningSelectedOpportunitiy', Utils.getHorizontalTableHiddenValue('rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector', 'select', 0, 'code'));
-          }
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueCustomerPlanningSelectedOpportunitiy', Utils.getHorizontalTableHiddenValue('rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector', 'select', 0, 'code'));
+            }
         },
         init:
             {
@@ -8561,13 +8595,13 @@ app.repository = {
             }
     },
     rocheBPSPCustomersPlanningOpportunitiesFromGridTableSelectorTitle: {
-      init: {
-          execute: (db) => {
-              return {
-                  title: Utils.isGridTableLoaded('rocheBPSPCustomersPlanningGridTableYearly') ? Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 0).label : ''
-              };
-          }
-      }
+        init: {
+            execute: (db) => {
+                return {
+                    title: Utils.isGridTableLoaded('rocheBPSPCustomersPlanningGridTableYearly') ? Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 0).label : ''
+                };
+            }
+        }
     },
     rocheBPSPCustomersPlanningOpportunitiesFromGridTableSelector: {
         initCondition: (db) => {
@@ -8581,9 +8615,9 @@ app.repository = {
             return [];
         },
         open: {
-           execute: (db) => {
-               Utils.setWidgetValue('systemValueCustomerPlanningSelectedOpportunitiy', v('rocheBPSPCustomersPlanningOpportunitiesFromGridTableSelector.open.opportunity'));
-           }
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueCustomerPlanningSelectedOpportunitiy', v('rocheBPSPCustomersPlanningOpportunitiesFromGridTableSelector.open.opportunity'));
+            }
         },
         init:
             {
@@ -8685,6 +8719,7 @@ app.repository = {
                         version = v('systemValueGlobalCompanyVersion'),
                         receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
                         customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                        period = v('systemValueGlobalSegmentedControlRelativeYearValue'),
                         parameters = []
                     ;
                     parameters.push(Utils.getProcessNameValuePair('pVersion', version));
@@ -8692,6 +8727,7 @@ app.repository = {
                     parameters.push(Utils.getProcessNameValuePair('pReceiver', receiver));
                     parameters.push(Utils.getProcessNameValuePair('pTerritory', territoryCode));
                     parameters.push(Utils.getProcessNameValuePair('pCustomer', customerCode));
+                    //         parameters.push(Utils.getProcessNameValuePair('pPeriod', period));
 
                     return Utils.buildProcessParameters(parameters);
                 }
@@ -8812,9 +8848,9 @@ app.repository = {
             type: 'PATCH',
             body: (db) => {
                 let a = v('rocheBPSPCustomersPlanningHorizontalTableOpportunityDistribution.cellEdit'), value;
-                if(a.value.includes('%')) {
+                if (a.value.includes('%')) {
                     value = Utils.parseNumber(a.value.replace('%', '')) / 100;
-                }else{
+                } else {
                     value = Utils.parseNumber(a.value);
                 }
 
@@ -8866,7 +8902,6 @@ app.repository = {
                 let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
                     version = v('systemValueGlobalCompanyVersion'),
                     opportunity = v('systemValueCustomerPlanningSelectedOpportunitiy');
-                ;
                 return `{"MDX":"SELECT
                        {[Measures Sales Plan by Customer Opportunity Split].[Measures Sales Plan by Customer Opportunity Split].Members} 
                     ON COLUMNS ,
@@ -8901,6 +8936,232 @@ app.repository = {
                 ]
             }
 
+        }
+    },
+
+    rocheBPSPCustomersPlanningCommentShowGridTable: {
+        initCondition: (db) => {
+            return Repository.rocheBPSPCustomersPlanning.isYearlyLoaded(db);
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => {
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                    territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                    version = v('systemValueGlobalCompanyVersion'),
+                    receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                    customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                    productVersion = v('systemValueGlobalCompanyProductPlanVersion'),
+                    period = v('systemValueGlobalSegmentedControlRelativeYearValue'),
+                    productCode = v('systemValueLastClickedProductCode');
+                return `{"MDX":"
+                    SELECT 
+                         {[Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Comment]} 
+                      PROPERTIES [Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Caption]  ON COLUMNS , 
+                       {[Products].[BPSP ${productVersion}].[${productCode}]} 
+                      PROPERTIES [Products].[BPSP ${productVersion}].[Caption]  ON ROWS 
+                    FROM [Sales Plan by Customer] 
+                    WHERE 
+                      (
+                       [Versions].[Versions].[${version}],
+                       [Companies].[Companies].[${company}],
+                       [Receivers].[Receivers].[${receiver}],
+                       [Territories].[Territories].[${territoryCode}],
+                       [Customers Plan].[Customers Plan].[${customerCode}],
+                       [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[Final Sales Plan],
+                       [Periods].[Periods].[${period}]
+                      )
+
+            "}`
+            },
+            parsingControl: {
+                type: 'matrix',
+                length: 1,
+                query: [
+                    (r, x) => {
+                        return {
+                            title: r.Cells[x].FormattedValue,
+                        }
+                    }]
+            }
+        }
+    },
+
+
+    rocheBPSPCustomersPlanningCommentShowGridTableSource: {
+        initCondition: (db) => {
+            return Repository.rocheBPSPCustomersPlanning.isYearlyLoaded(db);
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => {
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                    territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                    version = v('systemValueGlobalCompanyVersion'),
+                    receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                    customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                    productVersion = v('systemValueGlobalCompanyProductPlanVersion'),
+                    period = v('systemValueGlobalSegmentedControlRelativeYearValue'),
+                    productCode = v('systemValueLastClickedProductCode');
+                return `{"MDX":"
+                    SELECT 
+                         {
+                         [Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[CommentSource],
+                         [Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[EditedBy],
+                         [Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[EditedDateTime]} 
+                      PROPERTIES [Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Caption]  ON COLUMNS , 
+                       {[Products].[BPSP ${productVersion}].[${productCode}]} 
+                      PROPERTIES [Products].[BPSP ${productVersion}].[Caption]  ON ROWS 
+                    FROM [Sales Plan by Customer] 
+                    WHERE 
+                      (
+                       [Versions].[Versions].[${version}],
+                       [Companies].[Companies].[${company}],
+                       [Receivers].[Receivers].[${receiver}],
+                       [Territories].[Territories].[${territoryCode}],
+                       [Customers Plan].[Customers Plan].[${customerCode}],
+                       [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[Final Sales Plan],
+                       [Periods].[Periods].[${period}]
+                      )
+
+            "}`
+            },
+            parsingControl: {
+                type: 'matrix',
+                length: 3,
+                query: [
+                    (r, x) => {
+                        return {
+                            title: r.Cells[x].FormattedValue + '<br/><div style=\"margin-top:20px; float: left; font-size: 10px;  ";  >' + 'Edited by ' + '</div>' + '<div style=\"font-size:12px; font-weight: bold; margin-top:18px; margin-left: 3px; float: left;";  >' + r.Cells[x + 1].FormattedValue + '</div>' + '<div style=\"font-size:10px;color:#B1B3B3;margin-top:20px;margin-left: 5px; float: left; \" >' + r.Cells[x + 2].FormattedValue + '</div>',
+                        }
+                    }
+
+
+                ]
+            }
+        }
+    },
+    rocheBPSPCustomersPlanningCommentEditGridRow2CommentInput: {
+        init: {
+            execute: (db) => {
+                let l = v('rocheBPSPCustomersPlanningCommentShowGridTable.cellData.length'), r = {value: ''};
+                if (l !== false && l !== 0) {
+                    r.value = v('rocheBPSPCustomersPlanningCommentShowGridTable.cellData')[0][0].title;
+                }
+                return r;
+            }
+        }
+    },
+    rocheBPSPCustomersPlanningCommentEditGridRow3TextInput: {
+        init: {
+            execute: (db) => {
+                let l = v('rocheBPSPCustomersPlanningCommentShowGridTableSource.cellData.length'), r = {value: ''};
+                if (l !== false && l !== 0) {
+                    r.value = v('rocheBPSPCustomersPlanningCommentShowGridTableSource.cellData')[0][0].title.split('<br/>')[0];
+                }
+                return r;
+            }
+        }
+    },
+
+    rocheBPSPCustomersPlanningCommentEditControlPanelSaveButton: {
+        launch: {
+            url: (db) => `/api/v1/Cubes('Sales Plan by Customer')/tm1.Update`,
+            type: 'POST',
+            body: (db) => {
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                    territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                    version = v('systemValueGlobalCompanyVersion'),
+                    receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                    customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                    productVersion = v('systemValueGlobalCompanyProductPlanVersion'),
+                    period = v('systemValueGlobalSegmentedControlRelativeYearValue'),
+                    productCode = v('systemValueLastClickedProductCode');
+                return `
+                [
+                    {
+                        "Cells": [
+                            {
+                                "Tuple@odata.bind": [
+                                    "Dimensions('Versions')/Hierarchies('Versions')/Elements('${version}')",
+                                    "Dimensions('Periods')/Hierarchies('Periods')/Elements('${period}')",
+                                    "Dimensions('Companies')/Hierarchies('Companies')/Elements('${company}')",
+                                    "Dimensions('Products')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                    "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${receiver}')",
+                                    "Dimensions('Territories')/Hierarchies('Territories')/Elements('${territoryCode}')",
+                                    "Dimensions('Customers Plan')/Hierarchies('Customers Plan')/Elements('${customerCode}')",
+                                    "Dimensions('LineItems Sales Plan by Customer')/Hierarchies('LineItems Sales Plan by Customer')/Elements('Final Sales Plan')",
+                                    "Dimensions('Measures Sales Plan by Customer')/Hierarchies('Measures Sales Plan by Customer')/Elements('EditedDateTime')"
+                                ]
+                            },
+                        ],
+                         "Value": "${Utils.getFormattedDate(new Date(), '.', true)}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                   "Dimensions('Versions')/Hierarchies('Versions')/Elements('${version}')",
+                                    "Dimensions('Periods')/Hierarchies('Periods')/Elements('${period}')",
+                                    "Dimensions('Companies')/Hierarchies('Companies')/Elements('${company}')",
+                                    "Dimensions('Products')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                    "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${receiver}')",
+                                    "Dimensions('Territories')/Hierarchies('Territories')/Elements('${territoryCode}')",
+                                    "Dimensions('Customers Plan')/Hierarchies('Customers Plan')/Elements('${customerCode}')",
+                                    "Dimensions('LineItems Sales Plan by Customer')/Hierarchies('LineItems Sales Plan by Customer')/Elements('Final Sales Plan')",
+                                    "Dimensions('Measures Sales Plan by Customer')/Hierarchies('Measures Sales Plan by Customer')/Elements('EditedBy')"
+                               ]
+                            },
+                        ],
+                        "Value": "${WidgetValue['activeUserName']}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                   "Dimensions('Versions')/Hierarchies('Versions')/Elements('${version}')",
+                                    "Dimensions('Periods')/Hierarchies('Periods')/Elements('${period}')",
+                                    "Dimensions('Companies')/Hierarchies('Companies')/Elements('${company}')",
+                                    "Dimensions('Products')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                    "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${receiver}')",
+                                    "Dimensions('Territories')/Hierarchies('Territories')/Elements('${territoryCode}')",
+                                    "Dimensions('Customers Plan')/Hierarchies('Customers Plan')/Elements('${customerCode}')",
+                                    "Dimensions('LineItems Sales Plan by Customer')/Hierarchies('LineItems Sales Plan by Customer')/Elements('Final Sales Plan')",
+                                    "Dimensions('Measures Sales Plan by Customer')/Hierarchies('Measures Sales Plan by Customer')/Elements('CommentSource')"
+                               ]
+                            },
+                        ],
+                        "Value": "${v('rocheBPSPCustomersPlanningCommentEditGridRow3TextInput.value') ? v('rocheBPSPCustomersPlanningCommentEditGridRow3TextInput.value') : ''}"
+                    },
+                    {
+                        "Cells": [
+                            {
+                               "Tuple@odata.bind": [
+                                   "Dimensions('Versions')/Hierarchies('Versions')/Elements('${version}')",
+                                    "Dimensions('Periods')/Hierarchies('Periods')/Elements('${period}')",
+                                    "Dimensions('Companies')/Hierarchies('Companies')/Elements('${company}')",
+                                    "Dimensions('Products')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
+                                    "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${receiver}')",
+                                    "Dimensions('Territories')/Hierarchies('Territories')/Elements('${territoryCode}')",
+                                    "Dimensions('Customers Plan')/Hierarchies('Customers Plan')/Elements('${customerCode}')",
+                                    "Dimensions('LineItems Sales Plan by Customer')/Hierarchies('LineItems Sales Plan by Customer')/Elements('Final Sales Plan')",
+                                    "Dimensions('Measures Sales Plan by Customer')/Hierarchies('Measures Sales Plan by Customer')/Elements('Comment')"
+                               ]
+                            },
+                        ],
+                        "Value": "${v('rocheBPSPCustomersPlanningCommentEditGridRow2CommentInput.value') ? v('rocheBPSPCustomersPlanningCommentEditGridRow2CommentInput.value') : ''}"
+                    }
+                ]
+                `;
+            }
         }
     },
     /* end customer planning */
