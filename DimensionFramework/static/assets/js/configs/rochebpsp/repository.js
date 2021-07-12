@@ -8623,9 +8623,9 @@ app.repository = {
     },
     rocheBPSPCustomersPlanningGridRow2Cell3ClearAllButton: {
         init: {
-          execute: (db)=> {
-              return {label: Repository.rocheBPSPCustomersPlanning.isYearly(db) ? 'Clear all' :  'Clear table'};
-          }
+            execute: (db) => {
+                return {label: Repository.rocheBPSPCustomersPlanning.isYearly(db) ? 'Clear all' : 'Clear table'};
+            }
         },
         launch:
             {
@@ -8866,7 +8866,7 @@ app.repository = {
                         let value = r.Cells[x].Members[2].Attributes['Total Deal Value'];
                         if (value === null) {
                             value = '0';
-                        }else{
+                        } else {
                             value = value.toString();
                         }
                         return {value: value};
@@ -8931,19 +8931,15 @@ app.repository = {
 
     rocheBPSPSecuritySetupGridTable:
         {
-              /*
+
             initCondition: (db) => {
-               let a = Utils.setWidgetValueIfNotExist('systemValueMaterialReturnFromSearch', false);
+                return Utils.isValueExistingAndNotEmpty('rocheBPSPSecuritySetupGridRow1Cell2DropBox');
 
-
-                let b = a === false && Utils.isValueExistingAndNotEmpty('rocheBPSPSecuritySetupGridRow1Cell2DropBox') && db.systemValueGlobalCompanyProductPlanVersion;
-                Utils.setWidgetValue('systemValueMaterialReturnFromSearch', false);
-                return b;
             },
             initDefault: (db) => {
                 return [];
             },
-            */
+
 
             init:
                 {

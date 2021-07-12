@@ -22,14 +22,17 @@
 .ks-toggle-skin1.ks-toggle.ks-on .ks-toggle-icon-off {
     display: none;
 }
+
 .ks-toggle-skin1.ks-toggle .ks-toggle-icon-on {
     background-color: #fff;
     display: none;
 }
+
 .ks-toggle-skin1.ks-toggle .ks-toggle-icon-off {
     background-color: #cbcbd0;
     display: block;
 }
+
 .ks-toggle-skin1.ks-toggle.ks-on .ks-toggle-icon-on {
     display: block;
 }
@@ -45,6 +48,7 @@
 .ks-toggle-skin1 .ks-toggle-label-off {
     color: #cbcbd0;
 }
+
 .ks-toggle-skin1 .ks-toggle-label-on {
     color: #fff;
 }
@@ -73,6 +77,7 @@
 .ks-toggle-skin2 .ks-toggle-label-off {
     color: #000;
 }
+
 .ks-toggle-skin2 .ks-toggle-label-on {
     color: #fff;
 }
@@ -87,9 +92,9 @@
     /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#eeedf2+0,ffffff+100 */
     background: #eeedf2; /* Old browsers */
     background: -moz-linear-gradient(top, #eeedf2 0%, #ffffff 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, #eeedf2 0%,#ffffff 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, #eeedf2 0%,#ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeedf2', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+    background: -webkit-linear-gradient(top, #eeedf2 0%, #ffffff 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, #eeedf2 0%, #ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeedf2', endColorstr='#ffffff', GradientType=0); /* IE6-9 */
     border: 1px solid #c5c5c9;
     border-radius: 50%;
     height: 40px;
@@ -107,6 +112,7 @@
 .ks-toggle-skin3 .ks-toggle-label-off {
     color: #000;
 }
+
 .ks-toggle-skin3 .ks-toggle-label-on {
     color: #fff;
 }
@@ -123,12 +129,15 @@
 .ks-toggle-skin3.ks-toggle.ks-on .ks-toggle-icon-off {
     display: none;
 }
+
 .ks-toggle-skin3.ks-toggle .ks-toggle-icon-on {
     display: none;
 }
+
 .ks-toggle-skin3.ks-toggle .ks-toggle-icon-off {
     display: block;
 }
+
 .ks-toggle-skin3.ks-toggle.ks-on .ks-toggle-icon-on {
     display: block;
 }
@@ -161,12 +170,15 @@
 .ks-toggle-skin4.ks-toggle.ks-on .ks-toggle-icon-off {
     display: none;
 }
+
 .ks-toggle-skin4.ks-toggle .ks-toggle-icon-on {
     display: none;
 }
+
 .ks-toggle-skin4.ks-toggle .ks-toggle-icon-off {
     display: block;
 }
+
 .ks-toggle-skin4.ks-toggle.ks-on .ks-toggle-icon-on {
     display: block;
 }
@@ -203,6 +215,7 @@
 .ks-toggle-skin-risk .ks-toggle-label-off {
     color: #747b85;
 }
+
 .ks-toggle-skin-risk .ks-toggle-label-on {
     color: #fff;
 }
@@ -210,9 +223,11 @@
 .ks-toggle-skin-risk.ks-toggle.ks-on .ks-toggle-icon-off {
     display: none;
 }
+
 .ks-toggle-skin-risk.ks-toggle .ks-toggle-icon-on {
     display: none;
 }
+
 .ks-toggle-skin-risk.ks-toggle .ks-toggle-icon-off {
     background-color: #fff;
     border-radius: 50%;
@@ -220,12 +235,13 @@
     height: 15px;
     width: 15px;
 }
+
 .ks-toggle-skin-risk.ks-toggle.ks-on .ks-toggle-icon-on {
     display: block;
 }
 
 /* deepblue_checkbox */
-.ks-toggle-deepblue_checkbox.ks-toggle .ks-toggle-icon-on:before{
+.ks-toggle-deepblue_checkbox.ks-toggle .ks-toggle-icon-on:before {
     font-family: 'roche' !important;
     content: "\e981";
     color: #0066cc;
@@ -233,7 +249,7 @@
     font-size: 20px;
 }
 
-.ks-toggle-deepblue_checkbox.ks-toggle .ks-toggle-icon-off:before{
+.ks-toggle-deepblue_checkbox.ks-toggle .ks-toggle-icon-off:before {
     font-family: 'roche' !important;
     content: "\e979";
     color: #0066cc;
@@ -264,18 +280,21 @@
 .ks-toggle-deepblue_checkbox.ks-toggle.ks-on .ks-toggle-icon-off {
     display: none;
 }
+
 .ks-toggle-deepblue_checkbox.ks-toggle .ks-toggle-icon-on {
     display: none;
 }
+
 .ks-toggle-deepblue_checkbox.ks-toggle .ks-toggle-icon-off {
     display: block;
 }
+
 .ks-toggle-deepblue_checkbox.ks-toggle.ks-on .ks-toggle-icon-on {
     display: block;
 }
 
 /* checkbox */
-.ks-toggle-checkbox.ks-toggle .ks-toggle-icon-on:before{
+.ks-toggle-checkbox.ks-toggle .ks-toggle-icon-on:before {
     font-family: 'roche' !important;
     content: "\e981";
     color: #0066cc;
@@ -283,7 +302,7 @@
     font-size: 20px;
 }
 
-.ks-toggle-checkbox.ks-toggle .ks-toggle-icon-off:before{
+.ks-toggle-checkbox.ks-toggle .ks-toggle-icon-off:before {
     font-family: 'roche' !important;
     content: "\e979";
     color: #0066cc;
@@ -313,12 +332,15 @@
 .ks-toggle-checkbox.ks-toggle.ks-on .ks-toggle-icon-off {
     display: none;
 }
+
 .ks-toggle-checkbox.ks-toggle .ks-toggle-icon-on {
     display: none;
 }
+
 .ks-toggle-checkbox.ks-toggle .ks-toggle-icon-off {
     display: block;
 }
+
 .ks-toggle-checkbox.ks-toggle.ks-on .ks-toggle-icon-on {
     display: block;
 }
@@ -326,11 +348,11 @@
 /* lock_unlock_bpsp */
 
 .ks-toggle-lock_unlock_bpsp .ks-toggle-label-on {
-    display: none!important;
+    display: none !important;
 }
 
 .ks-toggle-lock_unlock_bpsp .ks-toggle-label-off {
-    display: none!important;
+    display: none !important;
 }
 
 .ks-toggle-lock_unlock_bpsp .ks-toggle-inner.readonly {
@@ -338,7 +360,7 @@
     opacity: 90%;
 }
 
-.ks-toggle-lock_unlock_bpsp.ks-toggle .ks-toggle-icon-on:before{
+.ks-toggle-lock_unlock_bpsp.ks-toggle .ks-toggle-icon-on:before {
     font-family: 'analogic' !important;
     content: "\e9eb";
     color: #2C2D2D;
@@ -346,7 +368,7 @@
     font-size: 15px;
 }
 
-.ks-toggle-lock_unlock_bpsp.ks-toggle .ks-toggle-icon-off:before{
+.ks-toggle-lock_unlock_bpsp.ks-toggle .ks-toggle-icon-off:before {
     font-family: 'analogic' !important;
     content: "\ea05";
     color: #B1B3B3;
@@ -372,12 +394,15 @@
 .ks-toggle-lock_unlock_bpsp.ks-toggle.ks-on .ks-toggle-icon-off {
     display: none;
 }
+
 .ks-toggle-lock_unlock_bpsp.ks-toggle .ks-toggle-icon-on {
     display: none;
 }
+
 .ks-toggle-lock_unlock_bpsp.ks-toggle .ks-toggle-icon-off {
     display: block;
 }
+
 .ks-toggle-lock_unlock_bpsp.ks-toggle.ks-on .ks-toggle-icon-on {
     display: block;
 }
@@ -385,20 +410,20 @@
 /* row_selector_bpsp */
 
 .ks-toggle-row_selector_bpsp .ks-toggle-label-on {
-    display: none!important;
+    display: none !important;
 }
 
 .ks-toggle-row_selector_bpsp .ks-toggle-label-off {
-    display: none!important;
+    display: none !important;
 }
 
-.ks-toggle-row_selector_bpsp.ks-toggle .ks-toggle-icon-on{
+.ks-toggle-row_selector_bpsp.ks-toggle .ks-toggle-icon-on {
     color: #0066CC;
     cursor: pointer;
     font-size: 15px;
 }
 
-.ks-toggle-row_selector_bpsp.ks-toggle .ks-toggle-icon-off{
+.ks-toggle-row_selector_bpsp.ks-toggle .ks-toggle-icon-off {
     color: #C5C6C6;
     cursor: pointer;
     font-size: 15px;
@@ -422,17 +447,82 @@
 .ks-toggle-row_selector_bpsp.ks-toggle.ks-on .ks-toggle-icon-off {
     display: none;
 }
+
 .ks-toggle-row_selector_bpsp.ks-toggle .ks-toggle-icon-on {
     display: none;
 }
+
 .ks-toggle-row_selector_bpsp.ks-toggle .ks-toggle-icon-off {
     display: block;
 }
+
 .ks-toggle-row_selector_bpsp.ks-toggle.ks-on .ks-toggle-icon-on {
     display: block;
 }
 
 
-.ks-toggle-inner.readonly{
+.ks-toggle-inner.readonly {
     background-color: rgba(239, 193, 209, 0);
+}
+
+/* Settings_toggle_bpsp */
+
+.ks-toggle-Settings_toggle_bpsp .ks-toggle-label-on {
+    display: none !important;
+}
+
+.ks-toggle-Settings_toggle_bpsp .ks-toggle-label-off {
+    display: none !important;
+}
+
+.ks-toggle-Settings_toggle_bpsp.ks-toggle .ks-toggle-icon-on {
+    color: #0066CC;
+    cursor: pointer;
+    font-size: 15px;
+    padding-left: 25%;
+}
+
+.ks-toggle-Settings_toggle_bpsp.ks-toggle .ks-toggle-icon-off {
+    color: #C5C6C6;
+    cursor: pointer;
+    font-size: 15px;
+    padding-left: 55%;
+}
+
+.ks-toggle-Settings_toggle_bpsp.ks-toggle {
+    border-radius: 3px;
+    height: 30px;
+}
+
+
+.ks-toggle-Settings_toggle_bpsp .ks-toggle-icon span {
+    display: block;
+}
+
+.ks-toggle-Settings_toggle_bpsp .ks-toggle-label {
+    display: none;
+}
+
+
+.ks-toggle-Settings_toggle_bpsp.ks-toggle.ks-on .ks-toggle-icon-off {
+    display: none;
+}
+
+.ks-toggle-Settings_toggle_bpsp.ks-toggle .ks-toggle-icon-on {
+    display: none;
+    justify-content: flex-start;
+}
+
+.ks-toggle-Settings_toggle_bpsp.ks-toggle .ks-toggle-icon-off {
+    display: block;
+    justify-content: flex-end;
+    padding-right: 5px;
+}
+
+.ks-toggle-Settings_toggle_bpsp.ks-toggle.ks-on .ks-toggle-icon-on {
+    display: block;
+}
+
+.ks-toggle-Settings_toggle_bpsp.ks-toggle.ks-on .ks-toggle-inner{
+    justify-content: flex-start;
 }

@@ -17612,24 +17612,8 @@ app.widgetConfig = {
                     visible: true,
                     skin: 'products_bpsp',
                     listen: [
-                        /*
-                            {event: 'choose.rocheBPSPMaterialGridRow1Cell2DropBox.finished', method: 'refresh'},
-                            {
-                                'event': 'bodyReady',
-                                'method': 'refreshWithWaitingForEvent',
-                                'parameters': [
-                                    'rendered.rocheBPSPMaterialPageInit',
-                                ]
-                            },
-                            {
-                                event: 'choose.rocheBPSPMaterialDeleteDataPopupControlPanelAddButton.finished',
-                                method: 'refresh'
-                            },
-                            {
-                                event: 'writeEnd.rocheBPSPMaterialGridRow3Cell1SearchBox.finished',
-                                method: 'refresh'
-                            }
-                            */
+
+                            {event: 'choose.rocheBPSPSecuritySetupGridRow1Cell2DropBox.finished', method: 'refresh'}
                     ],
                     width: '40%',
                     title: '',
@@ -17777,7 +17761,7 @@ app.widgetConfig = {
                                     iconOff: 'icon-x-rectangle',
                                     icon: 'icon-check-rectangle',
                                     value: 0,
-                                    skin: 'row_selector_bpsp'
+                                    skin: 'Settings_toggle_bpsp'
                                 },
                             ]
                         },
@@ -17797,7 +17781,7 @@ app.widgetConfig = {
                                     iconOff: 'icon-x-rectangle',
                                     icon: 'icon-check-rectangle',
                                     value: 0,
-                                    skin: 'row_selector_bpsp'
+                                    skin: 'Settings_toggle_bpsp'
                                 },
                             ]
                         },
@@ -17815,7 +17799,7 @@ app.widgetConfig = {
                                     iconOff: 'icon-x-rectangle',
                                     icon: 'icon-check-rectangle',
                                     value: 0,
-                                    skin: 'row_selector_bpsp'
+                                    skin: 'Settings_toggle_bpsp'
                                 },
                             ]
                         },
