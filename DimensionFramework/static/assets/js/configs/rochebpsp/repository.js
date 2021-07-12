@@ -7905,10 +7905,10 @@ app.repository = {
                        {[}ElementAttributes_Territories].[}ElementAttributes_Territories].[Territory Code],
                         [}ElementAttributes_Territories].[}ElementAttributes_Territories].[Caption]} 
                       ON COLUMNS , 
+                      {FILTER(
                        {TM1FILTERBYLEVEL(
-                         {FILTER({[Territories].[Territories].Members}, 
-                             [Territories].[Territories].CurrentMember.Properties(\\"Company\\") = \\"${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}\\")},
-                        0)} 
+                             {TM1DRILLDOWNMEMBER(
+                                {[Territories].[Territories].[ALL TERRITORIES]}, ALL, RECURSIVE )}, 0)}, [Territories].[Territories].CurrentMember.Properties('Company')='${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}')}
                       ON ROWS 
                     FROM [}ElementAttributes_Territories]
             "}`,
@@ -8473,6 +8473,18 @@ app.repository = {
             }
         }
     },
+    rocheBPSPCustomerPlanningOpportunityDeleteControlPanelDeleteButton: {
+        launch: {
+            url: (db) => `/api/v1/Processes('MODULE - UI - Sales Opportunity Delete')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => {
+                let opportunity = Utils.getHorizontalTableHiddenValue('rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector', 'delete', 0, 'code'),
+                    parameters = [];
+                parameters.push(Utils.getProcessNameValuePair('pOpportunity', opportunity));
+                return Utils.buildProcessParameters(parameters);
+            }
+        }
+    },
     rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector: {
         initCondition: (db) => {
             let b = Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector')
@@ -8489,15 +8501,10 @@ app.repository = {
                 app.fn.goToUrlNewTab(Utils.getHorizontalTableHiddenValue('rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector', 'open', 0, 'url'));
             }
         },
-        delete: {
-            url: (db) => `/api/v1/Processes('MODULE - UI - Sales Opportunity Delete')/tm1.ExecuteWithReturn`,
-            type: 'POST',
-            body: (db) => {
-                let opportunity = Utils.getHorizontalTableHiddenValue('rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector', 'delete', 0, 'code'),
-                    parameters = [];
-                parameters.push(Utils.getProcessNameValuePair('pOpportunity', opportunity));
-                return Utils.buildProcessParameters(parameters);
-            }
+        select: {
+          execute: (db) => {
+              Utils.setWidgetValue('systemValueCustomerPlanningSelectedOpportunitiy', Utils.getHorizontalTableHiddenValue('rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector', 'select', 0, 'code'));
+          }
         },
         init:
             {
@@ -8536,7 +8543,7 @@ app.repository = {
                         }, (r, x) => {
                             return {
                                 active: true,
-                                on: Utils.parseNumber(r.Cells[x + 5].FormattedValue) === 1
+                                icon: Utils.parseNumber(r.Cells[x + 5].FormattedValue) === 1 ? 'icon-radio-on' : 'icon-radio-off'
                             };
                         }, (r, x) => {
                             return {
@@ -8553,6 +8560,15 @@ app.repository = {
 
             }
     },
+    rocheBPSPCustomersPlanningOpportunitiesFromGridTableSelectorTitle: {
+      init: {
+          execute: (db) => {
+              return {
+                  title: Utils.isGridTableLoaded('rocheBPSPCustomersPlanningGridTableYearly') ? Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 0).label : ''
+              };
+          }
+      }
+    },
     rocheBPSPCustomersPlanningOpportunitiesFromGridTableSelector: {
         initCondition: (db) => {
             let b = Utils.isValueExistingAndNotEmpty('rocheBPSPCustomersCompanySelector')
@@ -8564,9 +8580,14 @@ app.repository = {
         initDefault: (db) => {
             return [];
         },
+        open: {
+           execute: (db) => {
+               Utils.setWidgetValue('systemValueCustomerPlanningSelectedOpportunitiy', v('rocheBPSPCustomersPlanningOpportunitiesFromGridTableSelector.open.opportunity'));
+           }
+        },
         init:
             {
-                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
                 type: 'POST',
                 body: (db) => {
                     let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
@@ -8580,7 +8601,7 @@ app.repository = {
                             {[Measures Sales Plan by Customer Opportunity].[Measures Sales Plan by Customer Opportunity].Members}
                             ON COLUMNS ,
                             NON EMPTY
-                            Distinct({TM1FILTERBYLEVEL({[Opportunities].[Opportunities].Members}, 0)})
+                            {TM1FILTERBYLEVEL({ TM1DRILLDOWNMEMBER({[Opportunities].[Opportunities].[All Opportunities]}, ALL, RECURSIVE )}, 0)}
                             ON ROWS
                             FROM [Sales Plan by Customer Opportunity]
                             WHERE
@@ -8755,7 +8776,7 @@ app.repository = {
             body: (db) => {
                 let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
                     version = v('systemValueGlobalCompanyVersion'),
-                    opportunity = Utils.getHorizontalTableHiddenValue('rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector', 'select', 0, 'code');
+                    opportunity = v('systemValueCustomerPlanningSelectedOpportunitiy');
                 ;
                 return `{"MDX":"SELECT
                        {[Measures Sales Plan by Customer Opportunity Split].[Measures Sales Plan by Customer Opportunity Split].Members}
@@ -8790,8 +8811,12 @@ app.repository = {
             url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
             type: 'PATCH',
             body: (db) => {
-                let a = v('rocheBPSPCustomersPlanningHorizontalTableOpportunityDistribution.cellEdit'),
+                let a = v('rocheBPSPCustomersPlanningHorizontalTableOpportunityDistribution.cellEdit'), value;
+                if(a.value.includes('%')) {
                     value = Utils.parseNumber(a.value.replace('%', '')) / 100;
+                }else{
+                    value = Utils.parseNumber(a.value);
+                }
 
                 return `{"Ordinal": ${a.ordinal},"Value": \"${value}\"}`
             }
@@ -8811,7 +8836,7 @@ app.repository = {
                     version = v('systemValueGlobalCompanyVersion'),
                     receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
                     customerCode = v('systemValueCustomersPlanningCustomerCode'),
-                    opportunity = Utils.getHorizontalTableHiddenValue('rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector', 'select', 0, 'code'),
+                    opportunity = v('systemValueCustomerPlanningSelectedOpportunitiy'),
                     parameters = []
                 ;
                 parameters.push(Utils.getProcessNameValuePair('pOpportunity', opportunity));
@@ -8840,7 +8865,7 @@ app.repository = {
             body: (db) => {
                 let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
                     version = v('systemValueGlobalCompanyVersion'),
-                    opportunity = Utils.getHorizontalTableHiddenValue('rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector', 'select', 0, 'code');
+                    opportunity = v('systemValueCustomerPlanningSelectedOpportunitiy');
                 ;
                 return `{"MDX":"SELECT
                        {[Measures Sales Plan by Customer Opportunity Split].[Measures Sales Plan by Customer Opportunity Split].Members} 

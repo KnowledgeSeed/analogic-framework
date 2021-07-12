@@ -63,15 +63,15 @@ WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';
         WidgetValue['rocheBPSPCustomersHorizontalTable'] = {
             open: {
                 receiver: 'PL',
-                code: 'GNN-0003251887',
-                customer: 'Lublin-Centrum Onkologii Ziemi Lubelskiej-PL43000116'
+                code: 'GNN-0003251897',
+                customer: 'Lublin-Samodzielny Publiczny Szpital Kliniczny Nr 1-PL43000922'
             }
         };
         WidgetValue['systemValueCustomerPlanningSegmentedControlPeriodUnit'] = 'Yearly';
         WidgetValue['systemValueCustomersPlanningMonthlyType'] = 'Base Plan';
         WidgetValue['systemValueCustomersPlanningFocused'] = 'PL1';
         WidgetValue['systemValueDefaultCustomersPlanningFocused'] = 'PL1';
-        WidgetValue['systemValueCustomersPlanningCustomerCode'] = 'GNN-0003251887';
+        WidgetValue['systemValueCustomersPlanningCustomerCode'] = 'GNN-0003251897';
         WidgetValue['systemValueCustomersPlanningMonthlyTypeValue'] = 'Base Plan';
 
          /*end customer planning */

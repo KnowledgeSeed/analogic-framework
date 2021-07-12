@@ -2325,6 +2325,10 @@ app.eventMap = {
                         {
                             action: app.fn.forceRefresh,
                             argument: 'rocheBPSPCustomersPlanningOpportunitiesFromGridTableSelector'
+                        },
+                        {
+                            action: app.fn.forceRefresh,
+                            argument: 'rocheBPSPCustomersPlanningOpportunitiesFromGridTableSelectorTitle'
                         }
                     ]
                 },
@@ -2344,6 +2348,32 @@ app.eventMap = {
             ]
         }
     ],
+    'open.rocheBPSPCustomersPlanningOpportunitiesFromGridTableSelector.finished': [
+        {
+          action: app.fn.togglePopup,
+          argument: 'rocheBPSPCustomersPlanningOpportunitiesFromGridTablePopup'
+        },
+        {
+            action: app.fn.addSystemValue,
+            argument: ['systemValueCustomersPlanningIsOpportunityDistributionLoadable', true]
+        },
+        {
+            action: app.fn.addSystemValue,
+            argument: ['systemValueCustomersPlanningIsOpportunityDistributionTotalLoadable', true]
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPCustomersPlanningOpportunityDistributionPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistribution'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionTotal'
+        }
+    ],
     'launch.rocheBPSPCustomersPlanningCopyMergePopupCancel.finished': [
         {
             action: app.fn.togglePopup,
@@ -2359,8 +2389,24 @@ app.eventMap = {
     ],
     'delete.rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector.finished' : [
         {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPCustomerPlanningOpportunityDelete'
+        }
+    ],
+    'launch.rocheBPSPCustomerPlanningOpportunityDeleteControlPanelDeleteButton.finished': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCustomerPlanningOpportunityDelete'
+        },
+        {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector'
+        }
+    ],
+    'launch.rocheBPSPCustomerPlanningOpportunityDeleteControlPanelCancelButton.finished': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCustomerPlanningOpportunityDelete'
         }
     ],
 
@@ -2569,6 +2615,10 @@ app.eventMap = {
         {
             action: app.fn.forceRefreshWithDelay,
             argument: ['rocheBPSPCustomersPlanningHorizontalTableOpportunityDistributionTotal', 500]
+        },
+        {
+            action: app.fn.forceRefreshWithDelay,
+            argument: ['rocheBPSPCustomersPlanningHorizontalTableOpportunityDistribution', 500]
         }
     ],
     'perform.rocheBPSPCustomersPlanningGridTableYearly.finished': [

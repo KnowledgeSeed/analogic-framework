@@ -377,7 +377,6 @@ const Utils = {
             return '';
         }
         let index = 'undefined' !== typeof w[actionName].index ? w[actionName].index : w[actionName].rowindex;
-        L(index);
         return w.rows[index][colIndex][valueName];
     }
 };

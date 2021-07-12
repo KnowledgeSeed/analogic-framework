@@ -15647,14 +15647,15 @@ app.widgetConfig = {
 
                                 {
                                     id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelectorButton',
-                                    type: RadioButtonRowWidget,
+                                    type: ActionButtonRowWidget,
                                     action: 'select',
                                     align: 'right',
+                                    icon: 'icon-radio-off',
                                     position: 1
                                 },
                                 {
                                     id: 'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesDeleteButton',
-                                    type: DeleteButtonRowWidget,
+                                    type: ActionButtonRowWidget,
                                     action: 'delete',
                                     align: 'right',
                                     position: 2
@@ -15778,25 +15779,33 @@ app.widgetConfig = {
                     backdrop: true,
                     visible: false,
                     closeBtn: false,
-                    width: '400',
+                    width: '500',
                     bgScrollable: true,
                     fadingSpeed: 0,
                     fixed: true,
-                    height: '200',
+                    height: '300',
                     behaviour: 'popup',
                     skin: 'popup_bpsp ',
                     position: 'center',
                     widgets: [
+                        {
+                            id: 'rocheBPSPCustomersPlanningOpportunitiesFromGridTableSelectorTitle',
+                            type: TextWidget,
+                            titleFontSize: 18,
+                            titleFontWeight: 'bold',
+                            marginLeft: 10,
+                            marginTop: 10
+                        },
                         {
                             id: 'rocheBPSPCustomersPlanningOpportunitiesFromGridTableSelector',
                             type: HorizontalTableWidget,
                             title: '',
                             titleVisible: false,
                             columnNames: ["Opportunity", "Value"],
-                            searchField: true,
+                            searchField: false,
                             visible: true,
                             columnWidths: ["60%", "35%"],
-                            fadeOutNum: 7,
+                            fadeOutNum: 3,
                             marginLeft: 10,
                             marginRight: 10,
                             listen: [],
@@ -15815,6 +15824,94 @@ app.widgetConfig = {
 
                             ]
                         },
+                    ]
+                },
+                {
+                    id: 'rocheBPSPCustomerPlanningOpportunityDelete',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: false,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    width: '400',
+                    height: '800',
+                    bgScrollable: true,
+                    fixed: true,
+                    heightFixed: false,
+                    behaviour: 'popup',
+                    position: 'top',
+                    skin: '',
+                    fadingSpeed: 0,
+                    offset: 260,
+                    widgets: [
+                        {
+                            id: 'rocheBPSPCustomerPlanningOpportunityDeleteGrid',
+                            type: GridWidget,
+                            width: 390,
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPCustomerPlanningOpportunityDeleteGridRow1',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    marginTop: '4%',
+                                    paddingBottom: 10,
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPCustomerPlanningOpportunityDeleteGridRow1Cell1',
+                                            type: GridCellWidget,
+                                            width: '100%',
+                                            alignment: 'center-center',
+                                            widgets: [
+                                                {
+                                                    id: 'rocheBPSPCustomerPlanningOpportunityDeleteGridRow1Cell1Text',
+                                                    type: TextWidget,
+                                                    fontBold: true,
+                                                    fontSize: 30,
+                                                    skin: 'messageboard_text_bpsp',
+                                                    title: 'Are you sure?'
+                                                },
+                                            ]
+                                        }
+                                        ,
+
+                                    ]
+                                },
+
+
+                                {
+                                    id: 'rocheBPSPCustomerPlanningOpportunityDeleteControlPanel',
+                                    type: PanelWidget,
+                                    skin: 'horizontal_align_center',
+                                    marginTop: '11%',
+                                    marginBottom: 30,
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPCustomerPlanningOpportunityDeleteControlPanelDeleteButton',
+                                            type: ButtonWidget,
+                                            height: 40,
+                                            width: 100,
+                                            skin: 'blue_button_bpsp',
+                                            borderWidth: 0,
+                                            label: 'Delete'
+                                        },
+                                        {
+                                            id: 'rocheBPSPCustomerPlanningOpportunityDeleteControlPanelCancelButton',
+                                            type: ButtonWidget,
+                                            width: 100,
+                                            height: 40,
+                                            marginLeft: 15,
+                                            skin: 'white_bg_bpsp',
+                                            label: 'Cancel'
+                                        }
+                                    ]
+                                }
+
+
+                            ]
+                        },
+
                     ]
                 },
                 {

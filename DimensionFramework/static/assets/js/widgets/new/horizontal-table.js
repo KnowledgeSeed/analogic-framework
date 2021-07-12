@@ -122,7 +122,7 @@ class HorizontalTableWidget extends Widget {
                 cell = cells[i];
                 len2 = cell.length;
                 for (k = 0; k < len2; ++k) {
-                    s.push(leftRowWidgets[k].getHtml([], {index: i, on: (withState && this.state.radio === i) || cell[k].on === true, d: d, active: cell[k].active === true, id: o.id, num: leftActionsNum, actionWidth: actionWidth}));
+                    s.push(leftRowWidgets[k].getHtml([], {icon: cell[k].icon, index: i, on: (withState && this.state.radio === i) || cell[k].on === true, d: d, active: cell[k].active === true, id: o.id, num: leftActionsNum, actionWidth: actionWidth}));
                     ++leftActionsNum;
                 }
 
@@ -135,7 +135,7 @@ class HorizontalTableWidget extends Widget {
                 cell = cells[i];
                 len2 = cell.length;
                 for (k = 0; k < len2; ++k) {
-                    s.push(rightRowWidgets[k].getHtml([], {index: i, d: d, active: cell[k].active === true, id: o.id, num: rightActionsNum, actionWidth: actionWidth}));
+                    s.push(rightRowWidgets[k].getHtml([], {icon: cell[k].icon, index: i, d: d, active: cell[k].active === true, id: o.id, num: rightActionsNum, actionWidth: actionWidth}));
                     ++rightActionsNum;
                 }
 
