@@ -41,7 +41,7 @@ app.repository = {
                                 Utils.setWidgetValue('systemValueGlobalCompanyVersion', 'Live');
                                 Utils.setWidgetValue('systemValueFocusedProductDefault', 'PL1');
                                 Utils.setWidgetValueByOther('systemValueFocusedProduct', 'systemValueFocusedProductDefault');
-                                Utils.setWidgetValue('systemValueIpPlanningFocusedProductDefault', 'IPL1');
+                                Utils.setWidgetValue('systemValueIpPlanningFocusedProductDefault', 'PL1');
                                 Utils.setWidgetValueByOther('systemValueIpPlanningFocusedProduct', 'systemValueIpPlanningFocusedProductDefault');
                                 Utils.setWidgetValueIfNotExist('systemValueGlobalSelectedCompany', false);
                                 Utils.setWidgetValue('systemValueCustomerReportFocusedProductDefault', 'PL1');
