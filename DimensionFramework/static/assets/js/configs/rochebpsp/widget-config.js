@@ -15926,10 +15926,10 @@ app.widgetConfig = {
                             type: HorizontalTableWidget,
                             title: '',
                             titleVisible: false,
-                            columnNames: ["Opportunity", "Type", "Probability", "Value"],
+                            columnNames: ["Opportunity", "Type", "Contract Month", "Installation Revenue Date", "Probability", "Value"],
                             searchField: true,
                             visible: true,
-                            columnWidths: ["55%", "13%", "7%", "10%"],
+                            columnWidths: ["40%", "13%", "6%", "9%", "7%", "10%"],
                             fadeOutNum: 10,
                             marginLeft: 10,
                             marginRight: 11,
@@ -15947,7 +15947,7 @@ app.widgetConfig = {
                                     action: 'select',
                                     align: 'right',
                                     icon: 'icon-radio-off',
-                                    columnName: 'Add',
+                                    columnName: 'Split',
                                     position: 1
                                 },
                                 {
@@ -16544,7 +16544,7 @@ app.widgetConfig = {
                                                 {
                                                     id: 'rocheBPSPCustomersPlanningTypeSegmentedControlItem2',
                                                     type: SegmentedControlItemWidget,
-                                                    label: 'Events',
+                                                    label: 'One Time Event',
                                                     action: 'segmentedControlTab2',
                                                     selected: false,
                                                     value: 'One Time Event'
@@ -16552,7 +16552,7 @@ app.widgetConfig = {
                                                 {
                                                     id: 'rocheBPSPCustomersPlanningTypeSegmentedControlItem3',
                                                     type: SegmentedControlItemWidget,
-                                                    label: 'Opportunities',
+                                                    label: 'Opportunity',
                                                     action: 'segmentedControlTab3',
                                                     selected: false,
                                                     value: 'Opportunity'
@@ -16560,7 +16560,7 @@ app.widgetConfig = {
                                                 {
                                                     id: 'rocheBPSPCustomersPlanningTypeSegmentedControlItem4',
                                                     type: SegmentedControlItemWidget,
-                                                    label: 'Final Sales',
+                                                    label: 'Final Sales Plan',
                                                     action: 'segmentedControlTab4',
                                                     selected: false,
                                                     value: 'Final Sales Plan'
