@@ -7332,7 +7332,7 @@ app.repository = {
         getCell: (index, r) => {
             let c = r.Cells[index], editable = c.Consolidated === false && c.RuleDerived === false,
                 performable = c.Consolidated === true && c.RuleDerived === false, isGrey = c.RuleDerived === true;
-            if (v('systemValueCustomersPlanningMonthlyType') === 'Final Sales' && c.Consolidated === true) {
+            if (v('systemValueCustomersPlanningMonthlyType') === 'Final Sales Plan' && c.Consolidated === true) {
                 isGrey = true;
                 performable = false;
             }
@@ -7527,7 +7527,6 @@ app.repository = {
                 return 'POST';
             },
             body: (db, cell, widgetValue) => {
-                L(widgetValue);
                 let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
                     territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
                     receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),

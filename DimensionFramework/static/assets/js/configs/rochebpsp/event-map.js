@@ -2149,8 +2149,23 @@ app.eventMap = {
             argument: [
                 'rocheBPSPCustomersPlanningHorizontalTableCustomerSelector',
                 'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector',
-                'rocheBPSPCustomersPlanningGridTableYearly'
+                'rocheBPSPCustomersPlanningGridTableYearly',
+                'rocheBPSPCustomersPlanningGridTableMonthly',
+                'rocheBPSPCustomersPlanningPeriodUnitSegmentedControl',
+                'rocheBPSPCustomersPlanningTypeSegmentedControl'
             ]
+        },
+        {
+            action: app.fn.addSystemValue,
+            argument: ['systemValueCustomersPlanningMonthlyType', 'Base Plan']
+        },
+        {
+            action: app.fn.addSystemValue,
+            argument: ['systemValueCustomersPlanningMonthlyTypeValue', 'Base Plan']
+        },
+        {
+            action: app.fn.addSystemValue,
+            argument: ['systemValueCustomerPlanningSegmentedControlPeriodUnit', 'Yearly']
         }
     ],
     'launch.rocheBPSPCustomersPlanningCustomerSelectorButton': [
