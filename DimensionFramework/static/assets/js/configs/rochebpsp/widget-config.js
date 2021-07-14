@@ -15216,7 +15216,7 @@ app.widgetConfig = {
                                             selectFirst: true,
                                             backdrop: true,
                                             listen: [
-                                                {event: 'bodyReady', method: 'refresh'},
+                                                {event: 'rendered.rocheBPSPCustomersCompanySelector.finished', method: 'refresh'},
                                                 {
                                                     event: 'choose.rocheBPSPCustomersCompanySelector.finished',
                                                     method: 'refresh'

@@ -52,9 +52,9 @@ class Render {
                             El.body.on(i.eventName, {options: i.options, method: i.method, parameters: i.parameters}, i.handler);
                         }
                         if(!withState) {
-                            El.body.trigger('bodyReady');//backward compatibility
                             widget.initFinished();
                         }
+                        El.body.trigger('bodyReady');//backward compatibility
                     } else {
                         if(!withState) {
                             El.body.trigger('rendered.' + widgetId);//backward compatibility

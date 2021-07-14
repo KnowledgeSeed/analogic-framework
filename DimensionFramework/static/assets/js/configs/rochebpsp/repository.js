@@ -1305,7 +1305,8 @@ app.repository = {
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
                             icon: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue === '' ? 'icon-comment-off' : 'icon-comment-on',
                             iconColor: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue === '' ? '#C5C6C6' : '#0066cc',
-                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members
+                            members: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].Members,
+                            hasComment: r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']].FormattedValue !== ''
                         };
                     }
                 ]
@@ -7813,6 +7814,15 @@ app.repository = {
                 return {
                     title: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderTitle(2),
                     body: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderBody(2),
+                };
+            }
+        }
+    },
+    'rocheBPSPCustomersPlanningGridTableYearlyHeaderText-04': {
+        init: {
+            execute: (db) => {
+                return {
+                    body: Repository.rocheBPSPCustomersPlanning.getYearlyGridTableHeaderBody(3),
                 };
             }
         }

@@ -2142,11 +2142,15 @@ app.eventMap = {
     'launch.rocheBPSPCustomersPlanningGridRow1Cell0Button.finished': [
         {
             action: app.fn.openPageWithState,
-            argument: 'rocheBPSPCustomers'
+            argument: ['rocheBPSPCustomers', 'rocheBPSPCustomersHorizontalTable']
         },
         {
             action: app.fn.removeWidgetValues,
-            argument: ['rocheBPSPCustomersPlanningHorizontalTableCustomerSelector', 'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector']
+            argument: [
+                'rocheBPSPCustomersPlanningHorizontalTableCustomerSelector',
+                'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector',
+                'rocheBPSPCustomersPlanningGridTableYearly'
+            ]
         }
     ],
     'launch.rocheBPSPCustomersPlanningCustomerSelectorButton': [

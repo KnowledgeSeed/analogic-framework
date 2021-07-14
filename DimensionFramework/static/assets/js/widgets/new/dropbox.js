@@ -132,7 +132,7 @@ class DropBoxWidget extends Widget {
         });
 
         const itemHolder = $('#' + id + ' .ks-dropbox-panel')./*on('click', false).*/on('click', '.ks-dropbox-panel-item ', e => {
-            const clickedItem = $(e.currentTarget);L(clickedItem);
+            const clickedItem = $(e.currentTarget);
             DropBoxWidget.handleClick(w, e, itemHolder, section, id, clickedItem, $(e.target).hasClass('ks-dropbox-panel-item-checkbox'));
         });
 
