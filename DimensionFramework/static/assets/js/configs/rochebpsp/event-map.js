@@ -2166,6 +2166,10 @@ app.eventMap = {
         {
             action: app.fn.addSystemValue,
             argument: ['systemValueCustomerPlanningSegmentedControlPeriodUnit', 'Yearly']
+        },
+        {
+            action: app.fn.addSystemValueByVal,
+            argument: ['systemValueCustomersPlanningFocused', 'systemValueDefaultCustomersPlanningFocused']
         }
     ],
     'launch.rocheBPSPCustomersPlanningCustomerSelectorButton': [
@@ -2467,7 +2471,7 @@ app.eventMap = {
         }
     ],
 
-    'launch.rocheBPSPCustomersPlanningGridTableYearly_row_11': [
+    'launch.rocheBPSPCustomersPlanningGridTableYearly_row_13': [
         {
             action: app.fn.conditionalGridTablePopup,
             argument: [
