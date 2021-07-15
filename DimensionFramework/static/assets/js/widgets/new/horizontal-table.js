@@ -9,8 +9,9 @@ class HorizontalTableWidget extends Widget {
 
         const v = {
             fadeOutNum: this.getRealValue('fadeOutNum', data, 10),
-            searchField: this.getRealValue('searchField', data, false),
             hideIfNoData: this.getRealValue('hideIfNoData', d, false),
+            searchField: this.getRealValue('searchField', data, false),
+            selectFirst: this.getRealValue('selectFirst', data, false),
             skin: this.getRealValue('skin', data, 'standard')
         };
 
@@ -54,7 +55,7 @@ class HorizontalTableWidget extends Widget {
         }
 
         h = this.getTableHeader(o, data, leftRowWidgets, rightRowWidgets, actionWidth);
-        d = this.getTableBody(o, data, h.dataColumnNames, leftRowWidgets, rightRowWidgets, withState, actionWidth);
+        d = this.getTableBody(o, data, h.dataColumnNames, leftRowWidgets, rightRowWidgets, withState, actionWidth, v);
 
         return `
 <div class="ks-horizontal-table ${data.cells.length > v.fadeOutNum ? 'ks-scroll' : ''}  ks-horizontal-table-${v.skin}" style="${mainDivStyle.join('')}">
@@ -96,7 +97,7 @@ class HorizontalTableWidget extends Widget {
         return {html: s.join(''), dataColumnNames: dataColumnNames};
     }
 
-    getTableBody(o, data, dataColumnNames, leftRowWidgets, rightRowWidgets, withState, actionWidth) {
+    getTableBody(o, data, dataColumnNames, leftRowWidgets, rightRowWidgets, withState, actionWidth, v) {
         let i, j, k, l, c = [], d = [], leftActionsNum = 0, rightActionsNum = 0, s = [], mtx = data.cells, len = mtx.length, cells, cell, escapedValue, enabled, len2;
 
         for (i = 0; i < len; ++i) {//content
@@ -122,7 +123,12 @@ class HorizontalTableWidget extends Widget {
                 cell = cells[i];
                 len2 = cell.length;
                 for (k = 0; k < len2; ++k) {
-                    s.push(leftRowWidgets[k].getHtml([], {icon: cell[k].icon, index: i, on: (withState && this.state.radio === i) || cell[k].on === true, d: d, active: cell[k].active === true, id: o.id, num: leftActionsNum, actionWidth: actionWidth}));
+                    s.push(leftRowWidgets[k].getHtml([], {icon: cell[k].icon, index: i, on: (withState && this.state.radio === i) || cell[k].on === true || (v.selectFirst && k === 0), d: d, active: cell[k].active === true, id: o.id, num: leftActionsNum, actionWidth: actionWidth}));
+                    if(v.selectFirst && k === 0){
+                        let html = $(s[s.length - 1]), p = html.find('.ks-horizontal-table-row-toggle');
+                        WidgetValue[o.id][p.data('action')] = p.data();
+
+                    }
                     ++leftActionsNum;
                 }
 
