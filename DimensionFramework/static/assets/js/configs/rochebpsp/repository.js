@@ -9516,7 +9516,7 @@ app.repository = {
                         return `{"MDX":"
 
                              SELECT
-                                 {[Measures Client To Territory].[Measures Client To Territory].[Assign Input],[Measures Client To Territory].[Measures Client To Territory].[AssignSpread]}
+                                 {[Measures Client To Territory].[Measures Client To Territory].[Assign Input]}
                              ON COLUMNS ,
                                {TM1DRILLDOWNMEMBER({[Territories].[Territories].[ALL TERRITORIES ${company}]}, ALL, RECURSIVE )}
                                PROPERTIES [Territories].[Territories].[Caption]  ON ROWS
@@ -9530,20 +9530,20 @@ app.repository = {
                     },
                     parsingControl: {
                         type: 'matrix',
-                        length: 2,
+                        length: 1,
                         query: [
 
                             (r, x) => {
                                 return {
-                                    title: r.Cells[x+1].Members[2].Attributes.Caption,
-                                    ordinal: x+1
+                                    title: r.Cells[x].Members[2].Attributes.Caption,
+                                    ordinal: x
                                 }
                             },
 
                             (r, x) => {
                                 return {
-                                    value: parseInt(r.Cells[x+1].FormattedValue) > 0 ? 1 : 0,
-                                    ordinal: x+1
+                                    value: parseInt(r.Cells[x].FormattedValue) > 0 ? 1 : 0,
+                                    ordinal: x
                                 }
                             }
                         ]
@@ -9650,7 +9650,7 @@ app.repository = {
 
 
 
-
+/*
     rocheBPSPTerritoriesUsersTerritoriesGridTable:
         {
 
@@ -9689,13 +9689,13 @@ app.repository = {
                         let selectedUser = v('systemValueGlobalSelectedUser')
                         let company = v('rocheBPSPTerritoriesUsersTitleGridRow1Cell2DropBox.choose') ? Utils.getDropBoxSelectedItemAttribute('rocheBPSPTerritoriesUsersTitleGridRow1Cell2DropBox', 'key') : Utils.getDropBoxSelectedItemAttribute('rocheBPSPSecuritySetupGridRow1Cell2DropBox', 'key')
 
-                        /*
+                        *//*
                         let searchString = '';
                         if (Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow3Cell1SearchBox')) {
                             searchString = v('rocheBPSPMaterialGridRow3Cell1SearchBox.value');
 
                         }
-                        */
+                        *//*
                         return `{"MDX":"
 
                              SELECT
@@ -9745,8 +9745,8 @@ app.repository = {
                 };
             }
         }
-    },
-    rocheBPSPTerritoriesUsersTerritoriesHorizontalTableUserSelector: {
+    },*/
+    /*rocheBPSPTerritoriesUsersTerritoriesHorizontalTableUserSelector: {
         open: {
             execute: (db) => {
                 Utils.setWidgetValue('systemValueGlobalSelectedUser', v('rocheBPSPTerritoriesUsersTerritoriesHorizontalTableUserSelector.open.userid'));
@@ -9803,7 +9803,7 @@ app.repository = {
                 }
 
             },
-    },
+    },*/
 
 
 
