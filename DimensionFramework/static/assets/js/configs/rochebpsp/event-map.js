@@ -2184,6 +2184,7 @@ app.eventMap = {
             argument: 'rocheBPSPCustomersPlanningPopup'
         }
     ],
+
     'switch.rocheBPSPCustomersPlanningPeriodUnitSegmentedControl.finished': [
         {
             action: app.fn.forceRefreshWidgets,
@@ -2586,12 +2587,12 @@ app.eventMap = {
         }
     ],
 
-    'launch.rocheBPSPSettingsGridRow5Cell2Button': [
+   /* 'launch.rocheBPSPSettingsGridRow5Cell2Button': [
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPTerritoriesUsers'
         }
-    ],
+    ],*/
 
     'launch.rocheBPSPSettingsGridRow5Cell3Button': [
         {
@@ -2619,6 +2620,14 @@ app.eventMap = {
             action: app.fn.openPage,
             argument: 'rocheBPSPSettings'
         }
+    ],
+
+    'launch.rocheBPSPSecuritySetupGridTable_row_5': [
+         {
+                action: app.fn.openPage,
+                argument: 'rocheBPSPTerritoriesUsers'
+         },
+
     ],
 
     'launch.rocheBPSPTerritoriesGridRow1Cell0Button': [
@@ -2835,6 +2844,109 @@ app.eventMap = {
                 500
             ]
         }
-    ]
+    ],
+
+    'launch.rocheBPSPTerritoriesUsersTitleGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPSecuritySetup'
+        }
+    ],
+
+    'launch.rocheBPSPTerritoriesUsersGridRow3Cell2SelectorButton': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPTerritoriesUsersUsersPopup'
+        }
+    ],
+
+    'launch.rocheBPSPTerritoriesUsersGridRow3Cell3OpenPopupButton': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPTerritoriesUsersUsersPopup'
+        }
+    ],
+    'open.rocheBPSPTerritoriesUsersHorizontalTableUserSelector': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPTerritoriesUsersUsersPopup'
+        }
+    ],
+
+    'launch.rocheBPSPTerritoriesUsersTerritoriesGridRow3Cell2SelectorButton': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPTerritoriesUsersTerritoriesPopup'
+        }
+    ],
+
+    'launch.rocheBPSPTerritoriesUsersTerritoriesGridRow3Cell3OpenPopupButton': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPTerritoriesUsersTerritoriesPopup'
+        }
+    ],
+    'open.rocheBPSPTerritoriesUsersTerritoriesHorizontalTableUserSelector': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPTerritoriesUsersTerritoriesPopup'
+        }
+    ],
+
+
+  /*  'segmentedControlTab1.rocheBPSPTerritoriesUsersSegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPTerritoriesUsersGridRow3'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPTerritoriesUsersGridRow4'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPTerritoriesUsersGridTable'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPTerritoriesUsersTerritoriesGridRow3'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPTerritoriesUsersTerritoriesGridRow4'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPTerritoriesUsersTerritoriesGridTable'
+        }
+
+    ],*/
+    'segmentedControlTab2.rocheBPSPTerritoriesUsersSegmentedControl': [
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPTerritoriesUsersGridRow3'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPTerritoriesUsersGridRow4'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPTerritoriesUsersGridTable'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPTerritoriesUsersTerritoriesGridRow3'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPTerritoriesUsersTerritoriesGridRow4'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPTerritoriesUsersTerritoriesGridTable'
+        }
+
+    ],
 }
 ;

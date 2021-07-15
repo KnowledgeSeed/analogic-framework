@@ -1983,6 +1983,18 @@
     border: 1px solid #B1B3B3;
 }
 
+/* customer_planning_text_bpsp_left */
+.ks-button-customer_planning_text_bpsp_left {
+    font-size: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #B1B3B3;
+
+}
+
+.ks-button-customer_planning_text_bpsp_left .ks-button-content {
+    justify-content: flex-start !important;
+}
 
 
 

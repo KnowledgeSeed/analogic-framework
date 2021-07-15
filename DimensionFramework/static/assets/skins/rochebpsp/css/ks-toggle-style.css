@@ -479,14 +479,14 @@
     color: #0066CC;
     cursor: pointer;
     font-size: 15px;
-    padding-left: 25%;
+    padding-left: 15%;
 }
 
 .ks-toggle-Settings_toggle_bpsp.ks-toggle .ks-toggle-icon-off {
     color: #C5C6C6;
     cursor: pointer;
     font-size: 15px;
-    padding-left: 55%;
+    padding-left: 60%;
 }
 
 .ks-toggle-Settings_toggle_bpsp.ks-toggle {
