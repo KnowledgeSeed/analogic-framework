@@ -2142,11 +2142,34 @@ app.eventMap = {
     'launch.rocheBPSPCustomersPlanningGridRow1Cell0Button.finished': [
         {
             action: app.fn.openPageWithState,
-            argument: 'rocheBPSPCustomers'
+            argument: ['rocheBPSPCustomers', 'rocheBPSPCustomersHorizontalTable']
         },
         {
             action: app.fn.removeWidgetValues,
-            argument: ['rocheBPSPCustomersPlanningHorizontalTableCustomerSelector', 'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector']
+            argument: [
+                'rocheBPSPCustomersPlanningHorizontalTableCustomerSelector',
+                'rocheBPSPCustomersPlanningHorizontalTableOpportunitiesSelector',
+                'rocheBPSPCustomersPlanningGridTableYearly',
+                'rocheBPSPCustomersPlanningGridTableMonthly',
+                'rocheBPSPCustomersPlanningPeriodUnitSegmentedControl',
+                'rocheBPSPCustomersPlanningTypeSegmentedControl'
+            ]
+        },
+        {
+            action: app.fn.addSystemValue,
+            argument: ['systemValueCustomersPlanningMonthlyType', 'Base Plan']
+        },
+        {
+            action: app.fn.addSystemValue,
+            argument: ['systemValueCustomersPlanningMonthlyTypeValue', 'Base Plan']
+        },
+        {
+            action: app.fn.addSystemValue,
+            argument: ['systemValueCustomerPlanningSegmentedControlPeriodUnit', 'Yearly']
+        },
+        {
+            action: app.fn.addSystemValueByVal,
+            argument: ['systemValueCustomersPlanningFocused', 'systemValueDefaultCustomersPlanningFocused']
         }
     ],
     'launch.rocheBPSPCustomersPlanningCustomerSelectorButton': [
@@ -2449,7 +2472,7 @@ app.eventMap = {
         }
     ],
 
-    'launch.rocheBPSPCustomersPlanningGridTableYearly_row_11': [
+    'launch.rocheBPSPCustomersPlanningGridTableYearly_row_13': [
         {
             action: app.fn.conditionalGridTablePopup,
             argument: [
