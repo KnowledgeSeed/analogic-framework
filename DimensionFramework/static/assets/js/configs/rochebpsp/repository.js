@@ -9404,7 +9404,7 @@ app.repository = {
                         SELECT 
                            {Groups} 
                           ON COLUMNS ,
-                           {Clients}
+                            {FILTER({Clients}, INSTR([}Groups].[}Groups].[FullName], '${searchString}')<>0)}
                            PROPERTIES [}Clients].[}Clients].[}TM1_DefaultDisplayValue] ON ROWS
                         FROM [}ClientGroups]
 
@@ -9583,19 +9583,18 @@ app.repository = {
                         let selectedUser = v('systemValueGlobalSelectedUser')
                         let company = v('rocheBPSPTerritoriesUsersTitleGridRow1Cell2DropBox.choose') ? Utils.getDropBoxSelectedItemAttribute('rocheBPSPTerritoriesUsersTitleGridRow1Cell2DropBox', 'key') : Utils.getDropBoxSelectedItemAttribute('rocheBPSPSecuritySetupGridRow1Cell2DropBox', 'key')
 
-                        /*
                         let searchString = '';
-                        if (Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow3Cell1SearchBox')) {
-                            searchString = v('rocheBPSPMaterialGridRow3Cell1SearchBox.value');
+                        if (Utils.isValueExistingAndNotEmpty('rocheBPSPTerritoriesUsersGridRow4Cell1SearchBox')) {
+                            searchString = v('rocheBPSPTerritoriesUsersGridRow4Cell1SearchBox.value');
 
                         }
-                        */
                         return `{"MDX":"
 
                              SELECT
                                  {[Measures Client To Territory].[Measures Client To Territory].[Assign Input]}
                              ON COLUMNS ,
-                               {TM1DRILLDOWNMEMBER({[Territories].[Territories].[ALL TERRITORIES ${company}]}, ALL, RECURSIVE )}
+                               {FILTER({TM1DRILLDOWNMEMBER({[Territories].[Territories].[ALL TERRITORIES 1391]}, ALL, RECURSIVE )},
+                               INSTR([Territories].[Territories].[Caption], '${searchString}')<>0)}
                                PROPERTIES [Territories].[Territories].[Caption]  ON ROWS
                             FROM [Client To Territory]
                             WHERE

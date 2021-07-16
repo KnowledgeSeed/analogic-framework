@@ -18117,8 +18117,8 @@ app.widgetConfig = {
 
                         {event: 'choose.rocheBPSPSecuritySetupGridRow1Cell2DropBox.finished', method: 'refresh'},
                         {event: 'switch.rocheBPSPSecuritySetupGridTable.finished', method: 'refresh'},
-                        {event: 'init.rocheBPSPSecuritySetupGridRow1Cell2DropBox.finished', method: 'refresh'}
-
+                        {event: 'init.rocheBPSPSecuritySetupGridRow1Cell2DropBox.finished', method: 'refresh'},
+                        {event: 'writeEnd.rocheBPSPSecuritySetupGridRow2Cell1SearchBox.finished', method: 'refresh'}
                     ],
                     width: '40%',
                     title: '',
@@ -18780,7 +18780,8 @@ app.widgetConfig = {
                         {event: 'switch.rocheBPSPTerritoriesUsersGridTable.finished', method: 'refresh'},
                         {event: 'choose.rocheBPSPTerritoriesUsersTitleGridRow1Cell2DropBox.finished', method: 'refresh'},
                         {event: 'open.rocheBPSPTerritoriesUsersHorizontalTableUserSelector.finished', method: 'refresh'},
-                        {event: 'launch.rocheBPSPTerritoriesUsersTerritoriesGridRow3Cell4SaveButton.finished', method: 'refresh'}
+                        {event: 'launch.rocheBPSPTerritoriesUsersTerritoriesGridRow3Cell4SaveButton.finished', method: 'refresh'},
+                        {event: 'writeEnd.rocheBPSPTerritoriesUsersGridRow4Cell1SearchBox.finished', method: 'refresh'}
 
                     ],
                     width: '20%',
