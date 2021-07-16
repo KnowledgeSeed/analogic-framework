@@ -136,6 +136,7 @@ DropBoxWidget:
 
 ButtonWidget:
     customer_planning_text_bpsp
+    rochemain_disabled
 
 TextWidget:
     products_gd_header2_bpsp
@@ -143,7 +144,7 @@ TextWidget:
 GridCellWidget:
     readonly_green_bpsp
 
-HorizontalTable (hideIfNoData):
+HorizontalTable (hideIfNoData, selectFirst, alignmentIfNumber{left, right, center}):
     customer_planning_bpsp
 
 ActionButtonRowWidget(columnName)

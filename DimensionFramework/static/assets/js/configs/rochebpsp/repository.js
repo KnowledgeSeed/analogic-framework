@@ -59,6 +59,74 @@ app.repository = {
         ]
     },
 
+    rocheBPSPMainGridRow5Cell1aSubmitToBPXP: {
+         init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+                type: 'POST',
+                body: (db) => `
+                   {
+                    "MDX" : "SELECT 
+                            {[zSYS Analogic UI User Data Measure].[zSYS Analogic UI User Data Measure].[sValue]} 
+                              ON COLUMNS , 
+                               {[zSYS Analogic UI Widget].[zSYS Analogic UI Widget].[rocheBPSPMainGridRow5Cell1aSubmitToBPXP]} 
+                              ON ROWS 
+                            FROM [zSYS Analogic UI User Data] 
+                            WHERE 
+                              (
+                               [}Clients].[}Clients].[${db.activeUser}]
+                              ) 
+                    "}`,
+                parsingControl: {
+                    type: 'object',
+                    query:
+                        {
+                            enabled: (r, x) => {
+                               return r.Cells[0].FormattedValue == 'TRUE';
+                            },
+
+                            skin: (r, x) => {
+                                   return r.Cells[0].FormattedValue == 'TRUE' ? 'rochemain' :  'rochemain_disabled';
+                            }
+                        }
+                }
+            }
+    },
+
+    rocheBPSPMainGridRow5Cell1Button: {
+         init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+                type: 'POST',
+                body: (db) => `
+                   {
+                    "MDX" : "SELECT 
+                            {[zSYS Analogic UI User Data Measure].[zSYS Analogic UI User Data Measure].[sValue]} 
+                              ON COLUMNS , 
+                               {[zSYS Analogic UI Widget].[zSYS Analogic UI Widget].[rocheBPSPMainGridRow5Cell1Button]} 
+                              ON ROWS 
+                            FROM [zSYS Analogic UI User Data] 
+                            WHERE 
+                              (
+                               [}Clients].[}Clients].[${db.activeUser}]
+                              ) 
+                    "}`,
+                parsingControl: {
+                    type: 'object',
+                    query:
+                        {
+                            enabled: (r, x) => {
+                               return r.Cells[0].FormattedValue == 'TRUE';
+                            },
+
+                            skin: (r, x) => {
+                                   return r.Cells[0].FormattedValue == 'TRUE' ? 'rochemain' :  'rochemain_disabled';
+                            }
+                        }
+                }
+            }
+    },
+
     rocheBPSPMainApplicationInit2: {
         initCondition: (db) => {
             return db.systemValueGlobalStartingPlanYear ? true : false;
@@ -8860,20 +8928,29 @@ app.repository = {
             body: (db) => {
                 let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
                     version = v('systemValueGlobalCompanyVersion'),
-                    opportunity = v('systemValueCustomerPlanningSelectedOpportunitiy');
+                    territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                    opportunity = v('systemValueCustomerPlanningSelectedOpportunitiy'),
+                    productCode = 'PL1';//Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 0).productCode
                 ;
-                return `{"MDX":"SELECT
-                       {[Measures Sales Plan by Customer Opportunity Split].[Measures Sales Plan by Customer Opportunity Split].Members}
-                    ON COLUMNS ,
-                        {FILTER({[Products].[BPSP Budget].Members}, [Products].[BPSP Budget].CurrentMember.Properties(\\"BPSP Budget Product Level - Name\\") = \\"PL6\\")}
-                        PROPERTIES [Products].[BPSP Budget].[BPSP Budget Caption] ON ROWS
-                    FROM [Sales Plan by Customer Opportunity Split]
-                    WHERE
-                    (
+                return `{"MDX":"
+                        SELECT
+                            {[Measures Sales Plan by Customer Opportunity Split].[Measures Sales Plan by Customer Opportunity Split].Members}
+                            ON COLUMNS ,
+                            {FILTER(
+                            {FILTER(
+                            {TM1DRILLDOWNMEMBER({[Products].[BPSP Budget].[${productCode}]} , All, Recursive)}, [Sales Territory to Product].([Versions].[Versions].[${version}],
+                                                            [Companies].[Companies].[${company}],
+                                                            [Territories].[Territories].[${territoryCode}],
+                                                            [Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Flag])>0)},
+                            [Products].[BPSP Budget].CurrentMember.Properties(\\"BPSP Budget Product Level - Name\\") = \\"PL6\\")} ON ROWS
+                            FROM [Sales Plan by Customer Opportunity Split]
+                            WHERE
+                            (
                         [Versions].[Versions].[${version}],
                         [Companies].[Companies].[${company}],
-                        [Opportunities].[Opportunities].[${opportunity}]
-                    )"}`;
+                        [Opportunities].[Opportunities].[${opportunity}])
+                    
+                    "}`;
             }
             ,
             parsingControl: {
