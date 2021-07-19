@@ -8460,10 +8460,10 @@ app.repository = {
                 return {
                     visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db),
                     data: [
-                        {label: 'Base', selected: e === 'Base Plan'},
-                        {label: 'Events', selected: e === 'Events'},
-                        {label: 'Opportunities', selected: e === 'Opportunities'},
-                        {label: 'Final Sales', selected: e === 'Final Sales'}
+                        {label: 'Base Plan', selected: e === 'Base Plan'},
+                        {label: 'One Time Event', selected: e === 'One Time Event'},
+                        {label: 'Opportunity', selected: e === 'Opportunity'},
+                        {label: 'Final Sales Plan', selected: e === 'Final Sales Plan'}
                     ]
                 };
             }
