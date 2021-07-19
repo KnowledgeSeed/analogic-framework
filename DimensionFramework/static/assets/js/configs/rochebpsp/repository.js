@@ -9382,7 +9382,7 @@ app.repository = {
                                     
                               With
                            Set Clients As
-                            Filter({[}Clients].[}Clients].Members},[}ClientGroups].([}Groups].[}Groups].[${company} SalesUser])<>'')
+                            Filter({[}Clients].[}Clients].Members},[}ClientGroups].([}Groups].[}Groups].[${company} SalesUser])<>'' OR ([}Groups].[}Groups].[${company} KeyUser])<>'')
                             Member  [}Groups].[}Groups].[SwitchMarketing] AS
                             IIF([}ClientGroups].([}Groups].[}Groups].[${company} SalesMarketing]) <>'',1,0)
                             Member  [}Groups].[}Groups].[SwitchFinance] AS
@@ -9404,8 +9404,8 @@ app.repository = {
                         SELECT 
                            {Groups} 
                           ON COLUMNS ,
-                            {FILTER({Clients}, INSTR([}Groups].[}Groups].[FullName], '${searchString}')<>0)}
-                           PROPERTIES [}Clients].[}Clients].[}TM1_DefaultDisplayValue] ON ROWS
+                            DISTINCT({FILTER({Clients}, INSTR([}Groups].[}Groups].[FullName], '${searchString}')<>0)})
+                          ON ROWS
                         FROM [}ClientGroups]
 
                                     "}`;
