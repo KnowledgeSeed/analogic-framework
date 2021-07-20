@@ -10156,7 +10156,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPMaterialGridRow3Cell1SearchBox',
                                             type: TextBoxWidget,
-                                            title: 'Case-Sensitive Search',
+                                            title: 'Search',
                                             width: '400',
                                             skin: 'searchbox',
                                             titleFontColor: '#747b85',
@@ -18088,7 +18088,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPSecuritySetupGridRow2Cell1SearchBox',
                                             type: TextBoxWidget,
-                                            title: 'Case-Sensitive Search',
+                                            title: 'Search',
                                             width: '400',
                                             skin: 'searchbox',
                                             titleFontColor: '#747b85',
@@ -18758,7 +18758,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPTerritoriesUsersGridRow4Cell1SearchBox',
                                             type: TextBoxWidget,
-                                            title: 'Case-Sensitive Search',
+                                            title: 'Search',
                                             width: '400',
                                             skin: 'searchbox',
                                             titleFontColor: '#747b85',
@@ -19025,7 +19025,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPTerritoriesUsersTerritoriesGridRow4Cell1SearchBox',
                                             type: TextBoxWidget,
-                                            title: 'Case-Sensitive Search',
+                                            title: 'Search',
                                             width: '400',
                                             skin: 'searchbox',
                                             titleFontColor: '#747b85',
@@ -19568,7 +19568,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPAccountsTerritoriesGridRow4Cell1SearchBox',
                                             type: TextBoxWidget,
-                                            title: 'Case-Sensitive Search',
+                                            title: 'Search',
                                             width: '400',
                                             skin: 'searchbox',
                                             titleFontColor: '#747b85',
