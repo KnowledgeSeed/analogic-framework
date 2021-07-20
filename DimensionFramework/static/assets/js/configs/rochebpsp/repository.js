@@ -4766,7 +4766,7 @@ app.repository = {
                     body: (db) => {
                         let searchString = '';
                         if (Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow3Cell1SearchBox')) {
-                            searchString = v('rocheBPSPMaterialGridRow3Cell1SearchBox.value');
+                            searchString = v('rocheBPSPMaterialGridRow3Cell1SearchBox.value').toUpperCase();;
 
                         }
                         return `{"MDX":"
@@ -4795,7 +4795,7 @@ app.repository = {
                                       -- {TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}],'${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')}
                                       
                                           {Filter({TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')},
-                                                 Instr([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Name], '${searchString}') > 0)}
+                                                 Instr(UCASE([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Name]), '${searchString}') > 0)}
                                        
                                       ON ROWS 
                                     FROM [}ElementAttributes_Materials] 
@@ -4898,7 +4898,7 @@ app.repository = {
                     body: (db) => {
                         let searchString = '';
                         if (Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow3Cell1SearchBox')) {
-                            searchString = v('rocheBPSPMaterialGridRow3Cell1SearchBox.value');
+                            searchString = v('rocheBPSPMaterialGridRow3Cell1SearchBox.value').toUpperCase();
                         }
                         return `{"MDX":"                     
 								With 
@@ -4924,7 +4924,7 @@ app.repository = {
 								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag]} 
 								  ON COLUMNS , 
 								  {Filter({TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')},
-								   Instr([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP Name], '${searchString}') > 0)}
+								   Instr(UCASE([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP Name]), '${searchString}') > 0)}
 								   PROPERTIES [Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].[Caption]  ON ROWS 
 								FROM [}ElementAttributes_Materials]
                                     "}`;
@@ -8045,11 +8045,10 @@ app.repository = {
                     SELECT 
                        {[}ElementAttributes_Territories].[}ElementAttributes_Territories].[Territory Code],
                         [}ElementAttributes_Territories].[}ElementAttributes_Territories].[Caption]} 
-                      ON COLUMNS , 
-                      {FILTER(
+                      ON COLUMNS ,
                        {TM1FILTERBYLEVEL(
                              {TM1DRILLDOWNMEMBER(
-                                {[Territories].[Territories].[ALL TERRITORIES]}, ALL, RECURSIVE )}, 0)}, [Territories].[Territories].CurrentMember.Properties('Company')='${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}')}
+                                {[Territories].[Territories].[ALL TERRITORIES ${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}]}, ALL, RECURSIVE )}, 0)}
                       ON ROWS 
                     FROM [}ElementAttributes_Territories]
             "}`,
@@ -9374,7 +9373,7 @@ app.repository = {
                         let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPSecuritySetupGridRow1Cell2DropBox', 'key');
                         let searchString = '';
                         if (Utils.isValueExistingAndNotEmpty('rocheBPSPSecuritySetupGridRow2Cell1SearchBox')) {
-                            searchString = v('rocheBPSPSecuritySetupGridRow2Cell1SearchBox.value');
+                            searchString = v('rocheBPSPSecuritySetupGridRow2Cell1SearchBox.value').toUpperCase();
 
                         }
 
@@ -9404,7 +9403,7 @@ app.repository = {
                         SELECT 
                            {Groups} 
                           ON COLUMNS ,
-                            DISTINCT({FILTER({Clients}, INSTR([}Groups].[}Groups].[FullName], '${searchString}')<>0)})
+                            DISTINCT({FILTER({Clients}, INSTR(UCASE([}Groups].[}Groups].[FullName]), '${searchString}')<>0)})
                           ON ROWS
                         FROM [}ClientGroups]
 
@@ -9585,7 +9584,7 @@ app.repository = {
 
                         let searchString = '';
                         if (Utils.isValueExistingAndNotEmpty('rocheBPSPTerritoriesUsersGridRow4Cell1SearchBox')) {
-                            searchString = v('rocheBPSPTerritoriesUsersGridRow4Cell1SearchBox.value');
+                            searchString = v('rocheBPSPTerritoriesUsersGridRow4Cell1SearchBox.value').toUpperCase();
 
                         }
                         return `{"MDX":"
@@ -9594,7 +9593,7 @@ app.repository = {
                                  {[Measures Client To Territory].[Measures Client To Territory].[Assign Input]}
                              ON COLUMNS ,
                                {FILTER({TM1DRILLDOWNMEMBER({[Territories].[Territories].[ALL TERRITORIES 1391]}, ALL, RECURSIVE )},
-                               INSTR([Territories].[Territories].[Caption], '${searchString}')<>0)}
+                               INSTR(UCASE([Territories].[Territories].[Caption]), '${searchString}')<>0)}
                                PROPERTIES [Territories].[Territories].[Caption]  ON ROWS
                             FROM [Client To Territory]
                             WHERE
