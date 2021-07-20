@@ -19497,13 +19497,10 @@ app.widgetConfig = {
                                             width: 300,
                                             label: 'Test User',
                                             listen: [
-                                                /*
                                                 {
-                                                    event: 'open.rocheBPSPTerritoriesUsersHorizontalTableUserSelector.finished',
+                                                    event: 'open.rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.finished',
                                                     method: 'refresh'
                                                 }
-
-                                                 */
                                             ],
                                             skin: 'customer_planning_text_bpsp_left'
                                         }
@@ -19613,7 +19610,7 @@ app.widgetConfig = {
                         {event: 'writeEnd.rocheBPSPAccountsTerritoriesGridRow4Cell1SearchBox.finished', method: 'refresh'}
                         */
                     ],
-                    width: '20%',
+                    width: '60%',
                     title: '',
                     widgets: [
 
@@ -19629,7 +19626,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPAccountsTerritoriesGridTableHeaderCell1',
                                     type: GridTableHeaderCellWidget,
-                                    width: '70%',
+                                    width: '86%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
@@ -19651,12 +19648,31 @@ app.widgetConfig = {
                                     id: 'rocheBPSPAccountsTerritoriesGridTableHeaderCell2',
                                     type: GridTableHeaderCellWidget,
                                     alignment: 'bottom-left',
-                                    width: '11%',
+                                    width: '7%',
                                     widgets: [
                                         {
                                             id: 'rocheBPSPAccountsTerritoriesGridTableHeaderText2',
                                             type: TextWidget,
                                             body: 'Include in Territory',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: '15px',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPAccountsTerritoriesGridTableHeaderCell3',
+                                    type: GridTableHeaderCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '7%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPAccountsTerritoriesGridTableHeaderText3',
+                                            type: TextWidget,
+                                            body: 'Rexis fleg',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
                                             marginBottom: 8,
@@ -19672,7 +19688,7 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPAccountsTerritoriesGridTableCell1',
                             type: GridTableCellWidget,
-                            width: '70%',
+                            width: '86%',
                             alignment: 'center-left',
                             widgets: [
 
@@ -19680,9 +19696,9 @@ app.widgetConfig = {
                                     id: 'rocheBPSPAccountsTerritoriesGridTableText1',
                                     type: TextWidget,
                                     titleAlignment: 'start',
-                                    paddingRight: 8,
+                                    paddingRight: 4,
                                     skin: '',
-                                    marginLeft: '5%',
+                                    marginLeft: '1%',
                                     title: '',
                                 }
                             ]
@@ -19692,7 +19708,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPAccountsTerritoriesGridTableCell2',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '11%',
+                            width: '7%',
                             widgets: [
 
                                 {
@@ -19706,9 +19722,31 @@ app.widgetConfig = {
                                 },
                             ]
                         },
+                        {
+                            id: 'rocheBPSPAccountsTerritoriesGridTableCell3',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            cellBackgroundColor: 'rgba(235, 236, 236, 0.4)',
+                            width: '7%',
+
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPAccountsTerritoriesGridTable3Toggle',
+                                    type: ToggleWidget,
+                                    width: '100%',
+                                    iconOff: 'icon-x-rectangle',
+                                    icon: 'icon-check-rectangle',
+                                    value: 0,
+                                    editable: false,
+                                    skin: 'Settings_toggle_bpsp'
+                                },
+                            ]
+                        },
+
+
                     ]
                 },
-                    /*
                 {
                     id: 'rocheBPSPAccountsTerritoriesUsersPopup',
                     type: ContainerWidget,
@@ -19717,7 +19755,7 @@ app.widgetConfig = {
                     backdrop: true,
                     visible: false,
                     closeBtn: false,
-                    width: '500',
+                    width: '1000',
                     bgScrollable: true,
                     fadingSpeed: 0,
                     fixed: true,
@@ -19727,17 +19765,22 @@ app.widgetConfig = {
                     position: 'center',
                     widgets: [
                         {
-                            id: 'rocheBPSPAccountsTerritoriesHorizontalTableUserSelector',
+                            id: 'rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector',
                             type: HorizontalTableWidget,
                             title: '',
                             titleVisible: false,
-                            columnNames: ["User Name", "User ID"],
+                            columnNames: ["Territorie Name", "Territorie ID"],
                             searchField: true,
                             visible: true,
                             fadeOutNum: 7,
                             marginLeft: 10,
                             marginRight: 10,
-                            listen: [],
+                            listen: [
+                                                        {
+                            event: 'choose.rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox.finished',
+                            method: 'refresh'
+                        },
+                            ],
                             isInBox: false,
                             leftActionsLength: 1,
                             marginBottom: '20',
@@ -19745,7 +19788,7 @@ app.widgetConfig = {
                             widgets: [
 
                                 {
-                                    id: 'rocheBPSPAccountsTerritoriesHorizontalTableUserSelectorButton',
+                                    id: 'rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelectorButton',
                                     type: RadioButtonRowWidget,
                                     action: 'open',
                                     align: 'left',
@@ -19756,8 +19799,6 @@ app.widgetConfig = {
                         },
                     ]
                 },
-
-                     */
 
             ]
         },

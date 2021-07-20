@@ -2952,5 +2952,20 @@ app.eventMap = {
         }
 
     ],
+
+
+        'launch.rocheBPSPAccountsTerritoriesGridRow3Cell1SelectorButton': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPAccountsTerritoriesUsersPopup'
+        }
+    ],
+
+    'launch.rocheBPSPAccountsTerritoriesGridRow3Cell3OpenPopupButton': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPAccountsTerritoriesUsersPopup'
+        }
+    ],
 }
 ;
