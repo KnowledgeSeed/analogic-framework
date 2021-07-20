@@ -2170,6 +2170,10 @@ app.eventMap = {
         {
             action: app.fn.addSystemValueByVal,
             argument: ['systemValueCustomersPlanningFocused', 'systemValueDefaultCustomersPlanningFocused']
+        },
+        {
+            action: app.fn.removeSliders,
+            argument: ''
         }
     ],
     'launch.rocheBPSPCustomersPlanningCustomerSelectorButton': [

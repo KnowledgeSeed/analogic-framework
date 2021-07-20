@@ -8460,10 +8460,10 @@ app.repository = {
                 return {
                     visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db),
                     data: [
-                        {label: 'Base', selected: e === 'Base Plan'},
-                        {label: 'Events', selected: e === 'Events'},
-                        {label: 'Opportunities', selected: e === 'Opportunities'},
-                        {label: 'Final Sales', selected: e === 'Final Sales'}
+                        {label: 'Base Plan', selected: e === 'Base Plan'},
+                        {label: 'One Time Event', selected: e === 'One Time Event'},
+                        {label: 'Opportunity', selected: e === 'Opportunity'},
+                        {label: 'Final Sales Plan', selected: e === 'Final Sales Plan'}
                     ]
                 };
             }
@@ -9382,7 +9382,7 @@ app.repository = {
                                     
                               With
                            Set Clients As
-                            Filter({[}Clients].[}Clients].Members},[}ClientGroups].([}Groups].[}Groups].[${company} SalesUser])<>'')
+                            Filter({[}Clients].[}Clients].Members},[}ClientGroups].([}Groups].[}Groups].[${company} SalesUser])<>'' OR ([}Groups].[}Groups].[${company} KeyUser])<>'')
                             Member  [}Groups].[}Groups].[SwitchMarketing] AS
                             IIF([}ClientGroups].([}Groups].[}Groups].[${company} SalesMarketing]) <>'',1,0)
                             Member  [}Groups].[}Groups].[SwitchFinance] AS
@@ -9404,8 +9404,8 @@ app.repository = {
                         SELECT 
                            {Groups} 
                           ON COLUMNS ,
-                            {FILTER({Clients}, INSTR([}Groups].[}Groups].[FullName], '${searchString}')<>0)}
-                           PROPERTIES [}Clients].[}Clients].[}TM1_DefaultDisplayValue] ON ROWS
+                            DISTINCT({FILTER({Clients}, INSTR([}Groups].[}Groups].[FullName], '${searchString}')<>0)})
+                          ON ROWS
                         FROM [}ClientGroups]
 
                                     "}`;
