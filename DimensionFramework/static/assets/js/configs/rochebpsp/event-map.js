@@ -2142,7 +2142,7 @@ app.eventMap = {
     'launch.rocheBPSPCustomersPlanningGridRow1Cell0Button.finished': [
         {
             action: app.fn.openPageWithState,
-            argument: ['rocheBPSPCustomers', 'rocheBPSPCustomersHorizontalTable']
+            argument: ['rocheBPSPCustomers', 'rocheBPSPCustomersHorizontalTable', 'rocheBPSPCustomersHeaderInfoGridTable']
         },
         {
             action: app.fn.removeWidgetValues,
