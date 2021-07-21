@@ -9592,7 +9592,7 @@ app.repository = {
                              SELECT
                                  {[Measures Client To Territory].[Measures Client To Territory].[Assign Input]}
                              ON COLUMNS ,
-                               {FILTER({TM1DRILLDOWNMEMBER({[Territories].[Territories].[ALL TERRITORIES 1391]}, ALL, RECURSIVE )},
+                               {FILTER({TM1DRILLDOWNMEMBER({[Territories].[Territories].[ALL TERRITORIES ${company}]}, ALL, RECURSIVE )},
                                INSTR(UCASE([Territories].[Territories].[Caption]), '${searchString}')<>0)}
                                PROPERTIES [Territories].[Territories].[Caption]  ON ROWS
                             FROM [Client To Territory]
