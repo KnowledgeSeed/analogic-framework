@@ -65,7 +65,11 @@ app.widgetConfig = {
                             skin: 'blue_bg_bpsp',
                             label: 'Yes',
                             marginTop: 15,
-                            marginBottom: 10
+                            marginBottom: 10,
+                            listen: [
+                                    {event: 'choose.rocheBPSPProductReportGridRow1Cell2DropBox.finished', method: 'refresh'},
+                                    {event: 'init.rocheBPSPProductReportGridRow1Cell2DropBox.finished', method: 'refresh'},
+                            ],
                         },
                         {
                             id: 'rocheBPSPMainSubmissionToBPXPPopupNo',
@@ -15348,13 +15352,14 @@ app.widgetConfig = {
                     title: '',
                     titleVisible: false,
                     columnNames: ["Customer", "Code", "Receiver", "2020 Actuals", "2021 Final", "2022 Plan", "Submitted"],
+                    columnWidths: ["35%", "10%", "10%", "10%", "10%", "10%", "10%"],
                     searchField: true,
                     visible: true,
-                    columnWidths: ["35%", "10%", "10%", "10%", "10%", "10%", "10%"],
                     fadeOutNum: 15,
                     marginLeft: 10,
                     marginRight: 10,
                     hideIfNoData: true,
+                    columnTypes: ['string', 'string', 'string', 'real', 'real', 'real', 'string'],
                     listen: [
                         {
                             event: 'refresh.rocheBPSPCustomersTerritorySelector.finished',
@@ -15876,6 +15881,7 @@ app.widgetConfig = {
                             searchField: true,
                             visible: true,
                             columnWidths: ["45%", "20%", "10%", "20%"],
+                            columnTypes: ["string", "string", "string", "real"],
                             fadeOutNum: 7,
                             marginLeft: 10,
                             marginRight: 10,
@@ -15931,6 +15937,7 @@ app.widgetConfig = {
                             title: '',
                             titleVisible: false,
                             columnNames: ["Opportunity", "Type", "Contract Month", "Installation Revenue Date", "Probability", "Value"],
+                            columnTypes: ["string", "string", "real", "string", "real", "real"],
                             searchField: true,
                             visible: true,
                             columnWidths: ["40%", "13%", "6%", "9%", "7%", "10%"],
