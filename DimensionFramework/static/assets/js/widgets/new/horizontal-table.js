@@ -8,6 +8,7 @@ class HorizontalTableWidget extends Widget {
         let mainDivStyle = this.getGeneralStyles(data), s = [], h, d, i, actionWidth = false;
 
         const v = {
+            columnTypes: this.getRealValue('columnTypes', data, false),
             fadeOutNum: this.getRealValue('fadeOutNum', data, 10),
             hideIfNoData: this.getRealValue('hideIfNoData', d, false),
             searchField: this.getRealValue('searchField', data, false),
@@ -98,7 +99,7 @@ class HorizontalTableWidget extends Widget {
     }
 
     getTableBody(o, data, dataColumnNames, leftRowWidgets, rightRowWidgets, withState, actionWidth, v) {
-        let i, j, k, l, c = [], d = [], leftActionsNum = 0, rightActionsNum = 0, s = [], mtx = data.cells, len = mtx.length, cells, cell, escapedValue, enabled, len2;
+        let i, j, k, l, c = [], d = [], leftActionsNum = 0, rightActionsNum = 0, s = [], mtx = data.cells, len = mtx.length, cells, cell, escapedValue, enabled, len2, columnType = 'string';
 
         for (i = 0; i < len; ++i) {//content
             enabled = data.leftActionCells.length > 0 && data.leftActionCells[i].length > 0 ? data.leftActionCells[i][0].active : true;
@@ -110,8 +111,11 @@ class HorizontalTableWidget extends Widget {
             len2 = cells.length;
             for (j = 0; j < len2; ++j) {
                 cell = cells[j];
+                if(v.columnTypes){
+                    columnType = v.columnTypes[j];
+                }
                 escapedValue = cell.value.replace(/(<([^>]+)>)/ig, "").replace(/"/ig, "");
-                c.push(`<div class="ks-horizontal-table-cell" style="${o.columnWidths && o.columnWidths[j] ? 'flex: 0 0 ' + o.columnWidths[j] + (o.columnWidths[j].indexOf('%') === -1 ? 'px;' : ';') : ''}white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><div class="ks-horizontal-table-cell-inner ${cell.editable ? 'editable' : ''}" data-row="${i}" data-col="${j}" data-ordinal="${cell.ordinal}" data-editable="${cell.editable}" title="${escapedValue}">${cell.value.replace(/</ig, "< ")}</div></div>`);
+                c.push(`<div class="ks-horizontal-table-cell" style="${o.columnWidths && o.columnWidths[j] ? 'flex: 0 0 ' + o.columnWidths[j] + (o.columnWidths[j].indexOf('%') === -1 ? 'px;' : ';') : ''}white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><div class="ks-horizontal-table-cell-inner ${cell.editable ? 'editable' : ''}" data-columntype="${columnType}" data-row="${i}" data-col="${j}" data-ordinal="${cell.ordinal}" data-editable="${cell.editable}" title="${escapedValue}">${cell.value.replace(/</ig, "< ")}</div></div>`);
 
                 if (data.leftActionCells.length + data.rightActionCells.length > 0 && dataColumnNames[j] !== '' && cell.value.length < 200) {
                     d.push(` data-${dataColumnNames[j]}="${escapedValue}" `);
@@ -261,11 +265,19 @@ class HorizontalTableWidget extends Widget {
                 table.find('.ks-horizontal-table-cell').filter(function () {
                     return $(this).index() === thIndex;
                 }).sortElements(function (a, b) {
-                    if ($(a).find('div').text() === $(b).find('div').text()) {
+                    let aEl = $(a).find('div'), aValue, bValue;
+                    if(aEl.data('columntype') === 'real'){
+                        aValue = Utils.parseNumber(aEl.text());
+                        bValue = Utils.parseNumber($(b).find('div').text());
+                    }else{
+                        aValue = aEl.text();
+                        bValue = $(b).find('div').text();
+                    }
+                    if (aValue === bValue) {
                         return 0;
                     }
 
-                    return $(a).find('div').text() > $(b).find('div').text() ? inverse ? -1 : 1 : inverse ? 1 : -1;
+                    return aValue > bValue ? inverse ? -1 : 1 : inverse ? 1 : -1;
                 }, function () {
                     return this.parentNode;
                 });

@@ -172,6 +172,22 @@ app.repository = {
     },
 
     rocheBPSPMainSubmissionToBPXPPopupYes: {
+        initCondition: (db) => {
+            return Utils.isValueExistingAndNotEmpty('rocheBPSPProductReportGridRow1Cell2DropBox');
+        },
+        initDefault: (db) => {
+            return [];
+        },
+
+        init: {
+            execute: (db) => {
+                return {
+                    enabled: Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'flag') === '1' ? true : false,
+                    skin: Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'flag') === '1' ? 'blue_bg_bpsp' : 'grey_bg_bpsp'
+                };
+            }
+        },
+
         launch: {
             url: (db) => `/api/v1/Processes('MODULE - UI - BPSP - Submission')/tm1.ExecuteWithReturn`,
             type: 'POST',
@@ -6423,12 +6439,13 @@ app.repository = {
                         SELECT
                         {
                         [}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],
-                        [}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]}
+                        [}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key],
+                        [}ElementAttributes_Companies].[}ElementAttributes_Companies].[NextGen - Flag]}
                           ON COLUMNS ,
                            {TM1SubsetToSet([Companies].[Companies], 'All Active')}
                           ON ROWS
                         FROM [}ElementAttributes_Companies]
-                  
+
 
 
             "}`,
@@ -6438,10 +6455,11 @@ app.repository = {
                     {
                         items: (r, x) => {
                             let result = [], selected = v('systemValueGlobalSelectedCompany');
-                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                            for (let i = 0; i < r.Cells.length; i = i + 3) {
                                 result.push({
                                     'name': r.Cells[i].FormattedValue,
                                     key: r.Cells[i + 1].FormattedValue,
+                                    flag: r.Cells[i + 2].FormattedValue,
                                     on: selected === r.Cells[i].FormattedValue
                                 });
                             }
