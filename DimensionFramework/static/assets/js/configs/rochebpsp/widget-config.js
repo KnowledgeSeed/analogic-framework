@@ -67,8 +67,11 @@ app.widgetConfig = {
                             marginTop: 15,
                             marginBottom: 10,
                             listen: [
-                                    {event: 'choose.rocheBPSPProductReportGridRow1Cell2DropBox.finished', method: 'refresh'},
-                                    {event: 'init.rocheBPSPProductReportGridRow1Cell2DropBox.finished', method: 'refresh'},
+                                {
+                                    event: 'choose.rocheBPSPProductReportGridRow1Cell2DropBox.finished',
+                                    method: 'refresh'
+                                },
+                                {event: 'init.rocheBPSPProductReportGridRow1Cell2DropBox.finished', method: 'refresh'},
                             ],
                         },
                         {
@@ -18491,6 +18494,35 @@ app.widgetConfig = {
 
 
                         },
+
+                        {
+                            id: 'rocheBPSPTerritoriesGridRow2',
+                            type: GridRowWidget,
+                            marginTop: '1.3%',
+                            alignment: 'center-right',
+                            width: '100%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPTerritoriesGridRow2Cell1',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '21%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPTerritoriesGridRow2Cell1SearchBox',
+                                            type: TextBoxWidget,
+                                            title: 'Search',
+                                            width: '400',
+                                            skin: 'searchbox',
+                                            titleFontColor: '#747b85',
+                                            textFontSize: '14',
+
+                                        }
+                                    ]
+                                }]
+
+                        },
                     ]
 
 
@@ -18505,6 +18537,10 @@ app.widgetConfig = {
                     skin: 'products_bpsp',
                     listen: [
                         {event: 'choose.rocheBPSPTerritoriesGridRow1Cell2DropBox.finished', method: 'refresh'},
+                        {
+                            event: 'writeEnd.rocheBPSPTerritoriesGridRow2Cell1SearchBox.finished',
+                            method: 'refresh'
+                        },
                     ],
                     width: '50%',
                     title: '',
@@ -18673,6 +18709,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPTerritoriesGridTableCellText-03',
                                     type: TextWidget,
                                     paddingLeft: '10px',
+                                    performable: true,
                                     title: '',
                                 }
                             ]
@@ -18689,6 +18726,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPTerritoriesGridTableCellText-04',
                                     type: TextWidget,
                                     paddingLeft: '10px',
+                                    performable: true,
                                     title: '',
                                 }
                             ]
@@ -18705,6 +18743,7 @@ app.widgetConfig = {
                                     id: 'rocheBPSPTerritoriesGridTableCellText-05',
                                     type: TextWidget,
                                     paddingLeft: '10px',
+                                    performable: true,
                                     title: '',
                                 }
                             ]

@@ -10328,11 +10328,10 @@ app.repository = {
                     body: (db) => {
                         let searchString = '';
                         let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPTerritoriesGridRow1Cell2DropBox', 'key');
-                        /*if (Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow3Cell1SearchBox')) {
-                            searchString = v('rocheBPSPMaterialGridRow3Cell1SearchBox.value').toUpperCase();
+                        if (Utils.isValueExistingAndNotEmpty('rocheBPSPTerritoriesGridRow2Cell1SearchBox')) {
+                            searchString = v('rocheBPSPTerritoriesGridRow2Cell1SearchBox.value').toUpperCase();
                             ;
-
-                        }*/
+                        }
                         return `{"MDX":"
                                     WITH MEMBER [}Clients].[}Clients].[All]
                                     AS SUM([}Clients].[}Clients].Members)
@@ -10348,9 +10347,13 @@ app.repository = {
                                        ([}Clients].[}Clients].[Admin], [Measures Client To Territory].[Measures Client To Territory].[TerritoryToCustomer]), 
                                        ([}Clients].[}Clients].[All], [Measures Client To Territory].[Measures Client To Territory].[Assign Flag])
                                        } 
-                                      ON COLUMNS , 
-                                       {TM1DRILLDOWNMEMBER({[Territories].[Territories].[All Territories ${company}]}, All, Recursive)}
-                                      PROPERTIES [Territories].[Territories].[Caption]  ON ROWS 
+                                      ON COLUMNS,
+                                      --{TM1DRILLDOWNMEMBER({[Territories].[Territories].[All Territories 1391]}, All, Recursive)}
+                                      --PROPERTIES [Territories].[Territories].[Caption]
+                                        {FILTER({TM1DRILLDOWNMEMBER({[Territories].[Territories].[ALL TERRITORIES ${company}]},
+                                        {[Territories].[Territories].[ALL TERRITORIES ${company}]}, RECURSIVE )}, 
+                                        INSTR(UCASE([Territories].[Territories].CurrentMember.Properties('Caption')), '${searchString}')>0)}
+                                      ON ROWS 
                                     FROM [Client To Territory] 
                                     WHERE 
                                       (

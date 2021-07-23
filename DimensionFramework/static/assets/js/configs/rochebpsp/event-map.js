@@ -3025,7 +3025,7 @@ app.eventMap = {
         }
     ],
 
-        'launch.rocheBPSPAccountsTerritoriesGrid2Row3Cell1SelectorButton': [
+    'launch.rocheBPSPAccountsTerritoriesGrid2Row3Cell1SelectorButton': [
         {
             action: app.fn.openPopup,
             argument: 'rocheBPSPAccountsTerritoriesCustomerPopup'
@@ -3036,6 +3036,18 @@ app.eventMap = {
         {
             action: app.fn.openPopup,
             argument: 'rocheBPSPAccountsTerritoriesCustomerPopup'
+        }
+    ],
+    'perform.rocheBPSPTerritoriesGridTable_row_3': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPAccountsTerritories'
+        }
+    ],
+    'perform.rocheBPSPTerritoriesGridTable_row_4': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPTerritoriesUsers'
         }
     ],
 }
