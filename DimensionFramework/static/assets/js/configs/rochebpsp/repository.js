@@ -182,8 +182,8 @@ app.repository = {
         init: {
             execute: (db) => {
                 return {
-                    enabled: Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'flag') === '1' ? true : false,
-                    skin: Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'flag') === '1' ? 'blue_bg_bpsp' : 'grey_bg_bpsp'
+                    enabled: Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'flag') === 1 ? true : false,
+                    skin: Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'flag') === 1 ? 'blue_bg_bpsp' : 'grey_bg_bpsp'
                 };
             }
         },
@@ -6459,7 +6459,7 @@ app.repository = {
                                 result.push({
                                     'name': r.Cells[i].FormattedValue,
                                     key: r.Cells[i + 1].FormattedValue,
-                                    flag: r.Cells[i + 2].FormattedValue,
+                                    flag: Utils.parseNumber(r.Cells[i + 2].FormattedValue),
                                     on: selected === r.Cells[i].FormattedValue
                                 });
                             }
