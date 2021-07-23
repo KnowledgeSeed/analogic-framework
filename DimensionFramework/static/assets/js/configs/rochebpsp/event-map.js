@@ -2605,12 +2605,12 @@ app.eventMap = {
         }
     ],
 
-    'launch.rocheBPSPSettingsGridRow5Cell4Button': [
+/*    'launch.rocheBPSPSettingsGridRow5Cell4Button': [
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPAccountsTerritories'
         }
-    ],
+    ],*/
 
     'launch.rocheBPSPCompanySettingsGridRow1Cell0Button': [
         {
