@@ -20096,12 +20096,13 @@ app.widgetConfig = {
                             widgets: [
 
                                 {
-                                    id: 'rocheBPSPAccountsTerritoriesGridTable2Toggle',
+                                    id: 'rocheBPSPAccountsTerritoriesGridTableToggle2',
                                     type: ToggleWidget,
                                     width: '100%',
                                     iconOff: 'icon-x-rectangle',
                                     icon: 'icon-check-rectangle',
                                     skin: 'Settings_toggle_bpsp',
+                                    applyMeasuresToSection: true,
                                     value: 0,
                                 },
                             ]
@@ -20123,6 +20124,7 @@ app.widgetConfig = {
                                     icon: 'icon-check-rectangle',
                                     value: 0,
                                     editable: false,
+                                    applyMeasuresToSection: true,
                                     skin: 'Settings_toggle_bpsp'
                                 },
                             ]
@@ -20319,6 +20321,7 @@ app.widgetConfig = {
                                     iconOff: 'icon-x-rectangle',
                                     icon: 'icon-check-rectangle',
                                     value: 0,
+                                    applyMeasuresToSection: true,
                                     skin: 'Settings_toggle_bpsp'
                                 },
                             ]
@@ -20340,6 +20343,7 @@ app.widgetConfig = {
                                     icon: 'icon-check-rectangle',
                                     value: 0,
                                     editable: false,
+                                    applyMeasuresToSection: true,
                                     skin: 'Settings_toggle_bpsp'
                                 },
                             ]
@@ -20400,6 +20404,359 @@ app.widgetConfig = {
 
                             ]
                         },
+                    ]
+                },
+
+            ]
+        },
+
+    rocheBPSPTerritoriesProducts:
+        {
+            id: 'rocheBPSPTerritoriesProducts',
+            type: PageWidget,
+            widgets: [
+
+                {
+                    id: 'rocheBPSPTerritoriesProductsGrid',
+                    type: GridWidget,
+                    marginRight: '10px',
+                    marginLeft: '10px',
+                    width: '100%',
+                    widgets: [
+
+                        {
+                            id: 'rocheBPSPTerritoriesProductsGridRow1',
+                            type: GridRowWidget,
+                            marginTop: '1.3%',
+                            alignment: 'center-right',
+                            width: '100%',
+                            skin: 'bottomborder',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPTerritoriesProductsGridRow1Cell0',
+                                    type: GridCellWidget,
+                                    marginLeft: '0',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    alignment: 'center-right',
+                                    width: '3%',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPTerritoriesProductsGridRow1Cell0Button',
+                                            type: ButtonWidget,
+                                            label: '',
+                                            action: '',
+                                            width: '50',
+                                            icon: 'icon-back-arrow',
+                                            skin: 'backbuttonrocheBPSP',
+                                            height: '50'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPTerritoriesProductsGridRow1Cell1',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPTerritoriesProductsGridRow1Cell1Text',
+                                            type: TextWidget,
+                                            title: 'Territories + Products',
+                                            width: '100%',
+                                            skin: 'menu',
+                                            titleAlignment: 'start',
+                                            titleFontSize: 36,
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPTerritoriesProductsGridRow1Cell2',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '83%',
+                                    marginLeft: '10%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPTerritoriesProductsGridRow1Cell2DropBox',
+                                            type: DropBoxWidget,
+                                            width: '120%',
+                                            skin: 'simple_bold_bpsp',
+                                            marginBottom: 5,
+                                            selectFirst: true,
+                                            backdrop: true
+                                        }
+
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPTerritoriesProductsGridRow1Cell4',
+                                    type: GridCellWidget,
+                                    marginLeft: '5',
+                                    marginRight: '0',
+                                    marginTop: '1%',
+                                    alignment: 'top-center',
+                                    width: '20%',
+                                    height: '0',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPTerritoriesProductsGridRow1Cell4Button',
+                                            type: ButtonWidget,
+                                            label: '',
+                                            backgroundColor: '#EBECEC',
+                                            action: '',
+                                            width: '100%',
+                                            icon: 'icon-profile',
+                                            skin: 'userpanelmain',
+                                        }
+                                    ]
+                                }],
+
+
+                        },
+
+                        {
+                            id: 'rocheBPSPTerritoriesProductsGridRow2',
+                            type: GridRowWidget,
+                            marginTop: '1.3%',
+                            alignment: 'center-right',
+                            width: '100%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPTerritoriesProductsGridRow2Cell1',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '21%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPTerritoriesProductsGridRow2Cell1SearchBox',
+                                            type: TextBoxWidget,
+                                            title: 'Search',
+                                            width: '400',
+                                            skin: 'searchbox',
+                                            titleFontColor: '#747b85',
+                                            textFontSize: '14',
+
+                                        }
+                                    ]
+                                }]
+
+                        },
+                    ]
+
+                },
+
+                {
+                    id: 'rocheBPSPTerritoriesProductsGridTable',
+                    type: GridTableWidget,
+                    marginTop: '30',
+                    hideIfNoData: true,
+                    visible: true,
+                    skin: 'products_bpsp',
+                    listen: [
+                        /*
+                            {event: 'choose.rocheBPSPMaterialGridRow1Cell2DropBox.finished', method: 'refresh'},
+                            {
+                                'event': 'bodyReady',
+                                'method': 'refreshWithWaitingForEvent',
+                                'parameters': [
+                                    'rendered.rocheBPSPMaterialPageInit',
+                                ]
+                            },
+                            {
+                                event: 'choose.rocheBPSPMaterialDeleteDataPopupControlPanelAddButton.finished',
+                                method: 'refresh'
+                            },
+                                */
+
+                        {
+                            event: 'writeEnd.rocheBPSPTerritoriesProductsGridRow2Cell1SearchBox.finished',
+                            method: 'refresh'
+                        }
+
+                    ],
+                    width: '50%',
+                    title: '',
+                    widgets: [
+
+                        {
+                            id: 'rocheBPSPTerritoriesProductsGridTableHeaderRow',
+                            type: GridTableHeaderRowWidget,
+                            height: '90',
+                            width: '100%',
+                            widgets: [
+
+
+                                {
+                                    id: 'rocheBPSPTerritoriesProductsGridTableHeaderCell-01',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '60%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPTerritoriesProductsGridTableHeaderCell1Text',
+                                            type: TextWidget,
+                                            width: '100%',
+                                            body: 'Profit center name',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: '10%',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPTerritoriesProductsGridTableHeaderCell-02',
+                                    type: GridTableHeaderCellWidget,
+                                    alignment: 'bottom-center',
+                                    width: '20%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPTerritoriesProductsGridTableHeaderText-02',
+                                            type: TextWidget,
+                                            body: 'Product Code',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPTerritoriesProductsGridTableHeaderCell-03',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '10%',
+                                    alignment: 'bottom-center',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPTerritoriesProductsGridTableHeaderText-03',
+                                            type: TextWidget,
+                                            body: 'Level',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            bodyAlignment: 'center'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPTerritoriesProductsGridTableHeaderCell-04',
+                                    type: GridTableHeaderCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '10%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPTerritoriesProductsGridTableHeaderCellText-04',
+                                            type: TextWidget,
+                                            body: 'Assign Product',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: '15px',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+
+                            ]
+                        },
+
+
+                        {
+                            id: 'rocheBPSPTerritoriesProductsGridTableCell-01',
+                            type: GridTableCellWidget,
+                            width: '60%',
+                            alignment: 'center-left',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPTerritoriesProductsGridTableButton-01',
+                                    type: ButtonWidget,
+                                    width: '100%',
+                                    icon: 'icon-badge',
+                                    borderWidth: false,
+                                    applyMeasuresToSection: true,
+                                    label: '',
+                                    action: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPTerritoriesProductsGridTableCell-02',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '20%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPTerritoriesProductsGridTableText-02',
+                                    type: TextWidget,
+                                    titleAlignment: 'end',
+                                    paddingRight: 8,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    marginLeft: '35%',
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPTerritoriesProductsGridTableCell-03',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '10%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPTerritoriesProductsGridTableText-03',
+                                    type: TextWidget,
+                                    titleAlignment: 'end',
+                                    paddingRight: 8,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    marginLeft: '8%',
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPTerritoriesProductsGridTableCell-04',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '10%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPTerritoriesProductsGridTableCell4Toggle',
+                                    type: ToggleWidget,
+                                    width: '100%',
+                                    iconOff: 'icon-x-rectangle',
+                                    icon: 'icon-check-rectangle',
+                                    value: 0,
+                                    skin: 'Settings_toggle_bpsp'
+                                },
+                            ]
+                        },
+
+
                     ]
                 },
 

@@ -9360,7 +9360,6 @@ app.repository = {
 
     rocheBPSPSecuritySetupGridTable:
         {
-
             initCondition: (db) => {
                 return Utils.isValueExistingAndNotEmpty('rocheBPSPSecuritySetupGridRow1Cell2DropBox');
 
@@ -10013,14 +10012,12 @@ app.repository = {
                                 return {
                                     value: parseInt(r.Cells[x].FormattedValue) > 0 ? 1 : 0,
                                     editable: r.Cells[x].RuleDerived === true ? false : true,
-                                    //cellSkin: r.Cells[x].RuleDerived === true ? 'setting_readonly_bpsp' : '',
-                                    //skin: r.Cells[x].RuleDerived === true ? 'Settings_toggle_bpsp' : 'Settings_toggle_bpsp',
+                                    cellSkin: r.Cells[x].RuleDerived === true ? 'readonly_bpsp' : '',
                                 }
                             },
                             (r, x) => {
                                 return {
                                     value: parseInt(r.Cells[x + 1].FormattedValue) > 0 ? 1 : 0,
-                                    //cellSkin: parseInt(r.Cells[x + 5].FormattedValue) === 1 ? '' : 'readonly_bpsp',
                                 }
                             }
                         ]
@@ -10173,7 +10170,7 @@ app.repository = {
                                 return {
                                     value: parseInt(r.Cells[x].FormattedValue) > 0 ? 1 : 0,
                                     editable: r.Cells[x].RuleDerived === true ? false : true,
-                                    //cellSkin: r.Cells[x].RuleDerived === true ? 'readonly_bpsp' : '',
+                                    cellSkin: r.Cells[x].RuleDerived === true ? 'readonly_bpsp' : '',
                                     //ezen még javítani
                                 }
                             },
@@ -10401,7 +10398,7 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     title: parseInt(r.Cells[x + 1].FormattedValue) + ' Products',
-                                    skin: 'products_gd_readonly_with_icon_bpsp',
+                                    skin: 'territories_readonly_text_with_icon_bpsp',
                                     icon: 'icon-edit'
                                 }
                             },
@@ -10409,18 +10406,17 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     title: parseInt(r.Cells[x + 2].FormattedValue) + ' Customers',
-                                    skin: 'products_gd_readonly_with_icon_bpsp',
+                                    skin: 'territories_readonly_text_with_icon_bpsp',
                                     icon: 'icon-edit'
                                 }
                             },
                             (r, x) => {
                                 return {
                                     title: parseInt(r.Cells[x + 3].FormattedValue) + ' Users',
-                                    skin: 'products_gd_readonly_with_icon_bpsp',
+                                    skin: 'territories_readonly_text_with_icon_bpsp',
                                     icon: 'icon-edit'
                                 }
                             },
-
 
                         ]
                     }
@@ -10436,6 +10432,205 @@ app.repository = {
                     WidgetValue['systemValueGlobalSelectedUserName'] = Utils.getGridTableCell('rocheBPSPTerritoriesGridTable', 1).title;
                 }
             },
+    },
+
+
+    // rocheBPSPTerritoriesProducts
+    rocheBPSPTerritoriesProductsGridRow1Cell2DropBox: {
+        choose: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPTerritoriesGridRow1Cell2DropBox.value'));
+            }
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT
+                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]}
+                    ON COLUMNS ,
+                     {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}
+                    ON ROWS
+                    FROM [}ElementAttributes_Companies]
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [], selected = v('systemValueGlobalSelectedCompany');
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    'name': r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: selected === r.Cells[i].FormattedValue
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
+    },
+    /*
+    rocheBPSPTerritoriesProductsGridRow1Cell3DropBox: {
+    initCondition: (db) => {
+        return Utils.isValueExistingAndNotEmpty('rocheBPSPTerritoriesProductsGridRow1Cell2DropBox');
+    },
+    initDefault: (db) => {
+        return [];
+    },
+    init: {
+        url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Consolidated;$expand=Members($select=Name,Attributes/Caption))`,
+        type: 'POST',
+        body: (db) => `
+        {
+        "MDX" : "
+                SELECT
+                   {[}ElementAttributes_Territories].[}ElementAttributes_Territories].[Caption]}
+                  ON COLUMNS ,
+                   {EXCEPT({TM1DRILLDOWNMEMBER({[Territories].[Territories].[All Territories by Company]}, ALL)},{[Territories].[Territories].[All Territories by Company]})}
+                  ON ROWS
+                FROM [}ElementAttributes_Territories]
+        "}`,
+        parsingControl: {
+            type: 'object',
+            query:
+                {
+                    items: (r, x) => {
+                        let result = [], selected = v('rocheBPSPTerritoriesProductsGridRow1Cell3DropBox.value');
+                        for (let i = 0; i < r.Cells.length; i = i + 1) {
+                            result.push({
+                                name: r.Cells[i].FormattedValue,
+                                key: r.Cells[i].FormattedValue,
+                                on: selected === r.Cells[i].FormattedValue
+                            });
+                        }
+                        return result;
+                    }
+                }
+        }
+    }
+},
+     */
+
+
+    rocheBPSPTerritoriesProductsGridRow1Cell3DropBox: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Consolidated;$expand=Members($select=Name,Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "
+                SELECT 
+                   {[}ElementAttributes_Territories].[}ElementAttributes_Territories].[Caption]} 
+                  ON COLUMNS , 
+                   {EXCEPT({TM1DRILLDOWNMEMBER({[Territories].[Territories].[All Territories by Company]}, ALL)},{[Territories].[Territories].[All Territories by Company]})} 
+                  ON ROWS 
+                FROM [}ElementAttributes_Territories] 
+            "}`,
+            parsingControl: {
+                type: 'list',
+                query:
+                    (r, x) => {
+                        return {
+                            name: r.Cells[x].Members[0].Attributes.Caption,
+                            on: r.Cells[0].Members[0].Attributes.Caption
+                        };
+                    }
+            }
+        }
+    },
+
+    rocheBPSPTerritoriesProductsGridTable:
+        {
+            /*
+            initCondition: (db) => {
+                return Utils.isValueExistingAndNotEmpty('rocheBPSPTerritoriesProductsGridRow1Cell2DropBox');
+
+            },
+            initDefault: (db) => {
+                return [];
+            },
+
+             */
+
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Consolidated;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => {
+                        //let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPTerritoriesProductsGridRow1Cell2DropBox', 'key');
+                        let searchString = '';
+                        if (Utils.isValueExistingAndNotEmpty('rocheBPSPTerritoriesProductsGridRow2Cell1SearchBox')) {
+                            searchString = v('rocheBPSPTerritoriesProductsGridRow2Cell1SearchBox.value').toUpperCase();
+                        }
+
+                        return `{"MDX":"
+                                SELECT 
+                                   {[Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Flag]} 
+                                  ON COLUMNS , 
+                                  
+                                  -- {[Products].[BPSP Budget].Members} 
+                                  --  PROPERTIES [Products].[BPSP Budget].[BPSP Budget Caption]  
+                                   {FILTER({[Products].[BPSP Budget].Members}, 
+                                   INSTR(UCASE([Products].[BPSP Budget].CurrentMember.Properties('BPSP Budget Caption')), '${searchString}')>0)} 
+                                    PROPERTIES [Products].[BPSP Budget].[BPSP Budget Caption]
+                                   
+                                   ON ROWS 
+                                FROM [Sales Territory to Product] 
+                                WHERE 
+                                  (
+                                   [Versions].[Versions].[Live],
+                                   [Companies].[Companies].[1391],
+                                   [Territories].[Territories].[TTY-0000000451]
+                                  )
+                                    "}`;
+
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 1,
+                        query: [
+                            (r, x) => {
+                                return {
+                                    label: r.Cells[x].Members[3].Attributes.Caption,
+                                    //skin: '' + r.Cells[x].Members[3].Name.replace('a', '')
+                                    skin: 'gridtable_hierarchy_bpsp_PL6'
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x].Members[3].Name,
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    title: 'PL',
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    value: parseInt(r.Cells[x].FormattedValue) === 0 ? 0 : 1,
+                                }
+                            }
+
+                        ]
+                    }
+                },
+        },
+
+
+    rocheBPSPTerritoriesProductsGridRow1Cell4Button: {
+        init: {
+            execute: (db) => {
+                return {label: db.activeUserName};
+            }
+        }
     },
 
 

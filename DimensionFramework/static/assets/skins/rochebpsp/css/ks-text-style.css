@@ -273,8 +273,8 @@
     padding-left: 1px;
 }
 
-.ks-text-products_gd_readonly_bpsp  .ks-text-inner {
-    display:flex;
+.ks-text-products_gd_readonly_bpsp .ks-text-inner {
+    display: flex;
     align-items: center;
     justify-content: flex-end;
 }
@@ -287,8 +287,8 @@
     font-color: #000000;
 }
 
-.ks-text-material_gd_readonly_bpsp  .ks-text-inner {
-    display:flex;
+.ks-text-material_gd_readonly_bpsp .ks-text-inner {
+    display: flex;
     align-items: center;
     justify-content: flex-end;
 }
@@ -301,15 +301,15 @@
     font-color: #000000;
 }
 
-.ks-text-material_gd_readonly_left_bpsp  .ks-text-inner {
-    display:flex;
+.ks-text-material_gd_readonly_left_bpsp .ks-text-inner {
+    display: flex;
     align-items: center;
     justify-content: flex-start;
 }
 
 /* monthly_right_bpsp */
 .ks-text-monthly_right_bpsp .ks-text-inner {
-    display:flex;
+    display: flex;
     align-items: center;
     justify-content: flex-end;
 }
@@ -329,7 +329,7 @@
     padding-left: 1px;
 }
 
-.ks-text-monthly_right_bpsp .ks-text-icon{
+.ks-text-monthly_right_bpsp .ks-text-icon {
     display: none;
 }
 
@@ -337,11 +337,11 @@
     border: 2px solid #2A66C5;
 }
 
-.ks-text-monthly_right_bpsp.ks-on .ks-text-icon{
+.ks-text-monthly_right_bpsp.ks-on .ks-text-icon {
     display: block;
     color: #2A66C5;
     font-size: 12px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .ks-text-monthly_right_bpsp .ks-text-title-input {
@@ -356,7 +356,7 @@
 
 /* monthly_center_bpsp */
 .ks-text-monthly_center_bpsp .ks-text-inner {
-    display:flex;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -383,15 +383,15 @@
     border: 2px solid #2A66C5;
 }
 
-.ks-text-monthly_center_bpsp .ks-text-icon{
+.ks-text-monthly_center_bpsp .ks-text-icon {
     display: none;
 }
 
-.ks-text-monthly_center_bpsp.ks-on .ks-text-icon{
+.ks-text-monthly_center_bpsp.ks-on .ks-text-icon {
     display: block;
     color: #2A66C5;
     font-size: 12px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 /* products_gd_distribution_icon_bpsp */
@@ -408,13 +408,13 @@
     font-color: #000000;
 }
 
-.ks-text-products_gd_readonly_with_icon_bpsp .ks-text-inner{
+.ks-text-products_gd_readonly_with_icon_bpsp .ks-text-inner {
     display: flex;
     align-items: center;
     justify-content: flex-end;
 }
 
-.ks-text-products_gd_readonly_with_icon_bpsp .ks-text-icon{
+.ks-text-products_gd_readonly_with_icon_bpsp .ks-text-icon {
     margin-left: 8px;
     color: #2A66C5;
     cursor: pointer;
@@ -435,7 +435,7 @@
     font-color: #000000;
 }
 
-.ks-text-products_gd_writeable_with_icon_bpsp .ks-text-inner{
+.ks-text-products_gd_writeable_with_icon_bpsp .ks-text-inner {
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -445,10 +445,10 @@
     border: 2px solid #2A66C5;
 }
 
-.ks-text-products_gd_writeable_with_icon_bpsp.ks-on .ks-text-icon{
+.ks-text-products_gd_writeable_with_icon_bpsp.ks-on .ks-text-icon {
     color: #2A66C5;
     font-size: 12px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .ks-text-products_gd_writeable_with_icon_bpsp .ks-text-title-input {
@@ -461,7 +461,7 @@
     font-size: 16px;
 }
 
-.ks-text-products_gd_writeable_with_icon_bpsp .ks-text-icon{
+.ks-text-products_gd_writeable_with_icon_bpsp .ks-text-icon {
     padding-left: 8px;
     padding-right: 8px;
     color: #D8D9D9;
@@ -565,7 +565,7 @@
     font-color: #000000;
 }
 
-.ks-text-products_gd_readonly_with_icon_center_bpsp .ks-text-icon{
+.ks-text-products_gd_readonly_with_icon_center_bpsp .ks-text-icon {
     display: flex;
     justify-content: center;
 }
@@ -593,3 +593,33 @@
     margin-top: 1%;
     font-size: 18px;
 }
+
+
+/* territories_readonly_text_with_icon_bpsp */
+
+.ks-text-territories_readonly_text_with_icon_bpsp {
+    font-family: Imago-Regular;
+    font-size: 15px;
+    font-color: #000000;
+}
+
+.ks-text-territories_readonly_text_with_icon_bpsp .ks-text-inner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.ks-text-territories_readonly_text_with_icon_bpsp .ks-text-icon {
+    margin-left: 8px;
+    color: #2A66C5;
+    cursor: pointer;
+}
+
+.ks-text-territories_readonly_text_with_icon_bpsp .ks-text-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 1px;
+    width: 110px;
+}
+

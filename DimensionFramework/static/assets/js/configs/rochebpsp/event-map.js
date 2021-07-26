@@ -3050,5 +3050,20 @@ app.eventMap = {
             argument: 'rocheBPSPTerritoriesUsers'
         }
     ],
+
+
+    'launch.rocheBPSPTerritoriesProductsGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPSettings'
+        }
+    ],
+
+    'perform.rocheBPSPTerritoriesGridTable_row_2': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPTerritoriesProducts'
+        }
+    ],
 }
 ;
