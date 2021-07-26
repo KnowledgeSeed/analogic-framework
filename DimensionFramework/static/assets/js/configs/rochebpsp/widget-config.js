@@ -18727,6 +18727,7 @@ app.widgetConfig = {
                                     type: TextWidget,
                                     paddingLeft: '10px',
                                     performable: true,
+                                    editable: false,
                                     title: '',
                                 }
                             ]
@@ -18740,7 +18741,7 @@ app.widgetConfig = {
                             widgets: [
 
                                 {
-                                    id: 'rocheBPSPTerritoriesGridTableCellText-05',
+                                    id: 'rocheBPSPTerritoriesGridTableCellText05',
                                     type: TextWidget,
                                     paddingLeft: '10px',
                                     performable: true,
@@ -20100,8 +20101,8 @@ app.widgetConfig = {
                                     width: '100%',
                                     iconOff: 'icon-x-rectangle',
                                     icon: 'icon-check-rectangle',
+                                    skin: 'Settings_toggle_bpsp',
                                     value: 0,
-                                    skin: 'Settings_toggle_bpsp'
                                 },
                             ]
                         },

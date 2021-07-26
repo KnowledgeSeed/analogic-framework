@@ -59,4 +59,16 @@
 
 /* end ote */
 
+/* mody */
 
+
+.ks-grid-table-cell-setting_readonly_bpsp {
+    background-color: rgba(235, 236, 236, 0.4);
+    opacity: 90%;
+}
+
+.ks-grid-table-cell-setting_readonly_bpsp .ks-pos-center-right.ks-grid-table-cell-content {
+    align-items: center;
+    justify-content: flex-end;
+}
+/* end mody */

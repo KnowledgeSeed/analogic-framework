@@ -9960,7 +9960,7 @@ app.repository = {
                             if (Utils.isValueExistingAndNotEmpty('rocheBPSPAccountsTerritoriesGridRow4Cell1SearchBox')) {
                                 searchString = v('rocheBPSPAccountsTerritoriesGridRow4Cell1SearchBox.value')
                             */
-                        return `{"MDX":"
+                        /*return `{"MDX":"
                                         SELECT 
                                        {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag],
                                        [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[REXIS Flag]} 
@@ -9978,7 +9978,25 @@ app.repository = {
                                            [Territories].[Territories].[${selectedTerritory}]
                                           )
                             "}`;
-
+                         */
+                        return `{"MDX":"
+                                        SELECT 
+                                       {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag],
+                                       [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[REXIS Flag]} 
+                                      ON COLUMNS , 
+                                           {FILTER({TM1FILTERBYLEVEL({TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan 1391]},
+                                            {[Customers Plan].[Customers Plan].[All Customers Plan 1391]}, RECURSIVE )}, 0)}, 
+                                            INSTR(UCASE([Customers Plan].[Customers Plan].CurrentMember.Properties('Account Name')), '')>0)} 
+                                          ON ROWS 
+                                        FROM [Sales Territory to Customer] 
+                                        WHERE 
+                                          (
+                                           [Versions].[Versions].[Live],
+                                           [Companies].[Companies].[1391],
+                                           [Receivers].[Receivers].[All Receivers],
+                                           [Territories].[Territories].[TTY-0000000451]
+                                          )
+                            "}`;
                     },
                     parsingControl: {
                         type: 'matrix',
@@ -9995,8 +10013,8 @@ app.repository = {
                                 return {
                                     value: parseInt(r.Cells[x].FormattedValue) > 0 ? 1 : 0,
                                     editable: r.Cells[x].RuleDerived === true ? false : true,
-                                    //cellSkin: r.Cells[x].RuleDerived === true ? 'readonly_bpsp' : '',
-                                    //ezen még javítani
+                                    //cellSkin: r.Cells[x].RuleDerived === true ? 'setting_readonly_bpsp' : '',
+                                    //skin: r.Cells[x].RuleDerived === true ? 'Settings_toggle_bpsp' : 'Settings_toggle_bpsp',
                                 }
                             },
                             (r, x) => {
@@ -10408,6 +10426,17 @@ app.repository = {
                     }
                 },
         },
+
+
+    rocheBPSPTerritoriesGridTableCellText05: {
+        launch:
+            {
+                execute: (db) => {
+                    WidgetValue['systemValueGlobalSelectedUser'] = Utils.getGridTableCell('rocheBPSPTerritoriesGridTable', 0).title;
+                    WidgetValue['systemValueGlobalSelectedUserName'] = Utils.getGridTableCell('rocheBPSPTerritoriesGridTable', 1).title;
+                }
+            },
+    },
 
 
 }
