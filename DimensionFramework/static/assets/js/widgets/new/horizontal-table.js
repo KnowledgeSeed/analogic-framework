@@ -99,7 +99,8 @@ class HorizontalTableWidget extends Widget {
     }
 
     getTableBody(o, data, dataColumnNames, leftRowWidgets, rightRowWidgets, withState, actionWidth, v) {
-        let i, j, k, l, c = [], d = [], leftActionsNum = 0, rightActionsNum = 0, s = [], mtx = data.cells, len = mtx.length, cells, cell, escapedValue, enabled, len2, columnType = 'string';
+        let i, j, k, l, c = [], d = [], leftActionsNum = 0, rightActionsNum = 0, s = [], mtx = data.cells, len = mtx.length, cells, cell, escapedValue, enabled, len2, columnType = 'string',
+        selectFirstIndex;
 
         for (i = 0; i < len; ++i) {//content
             enabled = data.leftActionCells.length > 0 && data.leftActionCells[i].length > 0 ? data.leftActionCells[i][0].active : true;
@@ -127,11 +128,18 @@ class HorizontalTableWidget extends Widget {
                 cell = cells[i];
                 len2 = cell.length;
                 for (k = 0; k < len2; ++k) {
-                    s.push(leftRowWidgets[k].getHtml([], {icon: cell[k].icon, index: i, on: (withState && this.state.radio === i) || cell[k].on === true || (v.selectFirst && k === 0), d: d, active: cell[k].active === true, id: o.id, num: leftActionsNum, actionWidth: actionWidth}));
-                    if(v.selectFirst && k === 0){
+                    s.push(leftRowWidgets[k].getHtml([], {icon: cell[k].icon, index: i, on: (withState && this.state.radio === i) || cell[k].on === true || (v.selectFirst && i === 0), d: d, active: cell[k].active === true, id: o.id, num: leftActionsNum, actionWidth: actionWidth}));
+                    if(v.selectFirst && i === 0){
                         let html = $(s[s.length - 1]), p = html.find('.ks-horizontal-table-row-toggle');
                         WidgetValue[o.id][p.data('action')] = p.data();
-
+                        selectFirstIndex = s.length - 1;
+                    }
+                    if(cell[k].on === true){
+                        let html = $(s[s.length - 1]), p = html.find('.ks-horizontal-table-row-toggle');
+                        WidgetValue[o.id][p.data('action')] = p.data();
+                        if(v.selectFirst){
+                            s[selectFirstIndex] = s[selectFirstIndex].replace('ks-on', '');
+                        }
                     }
                     ++leftActionsNum;
                 }
