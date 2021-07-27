@@ -3055,7 +3055,7 @@ app.eventMap = {
     'launch.rocheBPSPTerritoriesProductsGridRow1Cell0Button': [
         {
             action: app.fn.openPage,
-            argument: 'rocheBPSPSettings'
+            argument: 'rocheBPSPTerritories'
         }
     ],
 
