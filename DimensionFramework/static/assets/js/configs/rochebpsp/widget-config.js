@@ -18706,7 +18706,7 @@ app.widgetConfig = {
                             widgets: [
 
                                 {
-                                    id: 'rocheBPSPTerritoriesGridTableCellText-03',
+                                    id: 'rocheBPSPTerritoriesGridTableCellText03',
                                     type: TextWidget,
                                     paddingLeft: '10px',
                                     performable: true,

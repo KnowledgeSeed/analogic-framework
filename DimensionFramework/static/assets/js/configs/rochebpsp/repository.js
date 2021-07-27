@@ -10633,6 +10633,26 @@ app.repository = {
         }
     },
 
+    rocheBPSPTerritoriesGridTable_row_2: {
+        launch:
+            {
+                execute: (db) => {
+                    WidgetValue['systemValueGlobalSelectedTerritori'] = Utils.getGridTableCell('rocheBPSPTerritoriesGridTable', 0).label;
+                    //WidgetValue['systemValueGlobalSelectedUserName'] = Utils.getGridTableCell('rocheBPSPTerritoriesGridTable', 1).title;
+                }
+            },
+    },
+
+    rocheBPSPTerritoriesGridTableCellText03: {
+        launch:
+            {
+                execute: (db) => {
+                    WidgetValue['systemValueGlobalSelectedTerritori'] = Utils.getGridTableCell('rocheBPSPTerritoriesGridTable', 0).label;
+                    //WidgetValue['systemValueGlobalSelectedUserName'] = Utils.getGridTableCell('rocheBPSPTerritoriesGridTable', 1).title;
+                }
+            },
+    },
+
 
 }
 ;
