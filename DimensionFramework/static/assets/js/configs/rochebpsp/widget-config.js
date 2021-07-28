@@ -19788,6 +19788,10 @@ app.widgetConfig = {
                                                     event: 'init.rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox.finished',
                                                     method: 'refresh'
                                                 },
+                                                {
+                                                    event: 'rendered.rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.finished',
+                                                    method: 'refresh'
+                                                }
                                             ],
                                             skin: 'customer_planning_text_bpsp_left'
                                         }
@@ -19897,6 +19901,10 @@ app.widgetConfig = {
                                                     event: 'open.rocheBPSPAccountsTerritoriesHorizontalTableCustomerSelector.finished',
                                                     method: 'refresh'
                                                 },
+                                                {
+                                                    event: 'init.rocheBPSPAccountsTerritoriesGridRow3Cell1SelectorButton.finished',
+                                                    method: 'refresh'
+                                                }
                                             ],
                                             skin: 'customer_planning_text_bpsp_left'
                                         }
@@ -20005,9 +20013,10 @@ app.widgetConfig = {
                         },
                         {event: 'init.rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox.finished', method: 'refresh'},
                         {
-                            event: 'init.rocheBPSPAccountsTerritoriesGridRow3Cell1SelectorButton.finished',
+                            event: 'rendered.rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.finished',
                             method: 'refresh'
-                        }
+                        },
+
                     ],
                     width: '60%',
                     title: '',

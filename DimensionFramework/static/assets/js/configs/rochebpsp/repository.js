@@ -9920,8 +9920,8 @@ app.repository = {
 
     rocheBPSPAccountsTerritoriesGridTable:
         {
-            initCondition: (db) => {
-                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox');
+             initCondition: (db) => {
+                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox') && v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryname');
                 return a;
             },
             initDefault: (db) => {
@@ -9949,8 +9949,8 @@ app.repository = {
                         let selectedTerritory = v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryid');
                         let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox', 'key');
                         let searchString = '';
-                        Utils.setWidgetValue('systemValueGlobalSelectedTerritoryID', v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryid'));
-                        Utils.setWidgetValue('systemValueGlobalSelectedTerritoryName', v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryname') + ' (' + v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryid') + ')');
+                        //Utils.setWidgetValue('systemValueGlobalSelectedTerritoryID', v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryid'));
+                        //Utils.setWidgetValue('systemValueGlobalSelectedTerritoryName', v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryname') + ' (' + v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryid') + ')');
                         if (Utils.isValueExistingAndNotEmpty('rocheBPSPAccountsTerritoriesGridRow4Cell1SearchBox')) {
                             searchString = v('rocheBPSPAccountsTerritoriesGridRow4Cell1SearchBox.value').toUpperCase();
                         }
@@ -9969,7 +9969,7 @@ app.repository = {
                                            [Versions].[Versions].[Live],
                                            [Companies].[Companies].[${company}],
                                            [Receivers].[Receivers].[All Receivers],
-                                           [Territories].[Territories].[${v('systemValueGlobalSelectedTerritoryID')}]
+                                           [Territories].[Territories].[${v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryid')}]
                                           )
                             "}`;
 
@@ -10025,8 +10025,8 @@ app.repository = {
                 body: (db) => {
                     //let company = v('rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox.choose') ? Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox', 'key') : Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox', 'key')
                     let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox', 'key');
-                    //Utils.setWidgetValue('systemValueGlobalSelectedTerritoryID', v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryid'));
-                    //Utils.setWidgetValue('systemValueGlobalSelectedTerritoryName', v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryname') + ' (' + v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryid') + ')');
+                    Utils.setWidgetValue('systemValueGlobalSelectedTerritoryID', v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryid'));
+                    Utils.setWidgetValue('systemValueGlobalSelectedTerritoryName', v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryname') + ' (' + v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryid') + ')');
                     return `{"MDX":"
                     
                     SELECT 
@@ -10045,7 +10045,8 @@ app.repository = {
                     length: 2,
                     query: [
                         (r, x) => {
-                            return {active: true}
+                            return {active: true,
+                                    on: r.Cells[x+1].FormattedValue === v('rocheBPSPTerritoriesGridTable').cellData[v('rocheBPSPTerritoriesGridTable.row')][0].territoryID}
                         },
                         (r, x) => {
                             return {value: r.Cells[x].FormattedValue};
@@ -10061,13 +10062,19 @@ app.repository = {
     },
 
     rocheBPSPAccountsTerritoriesGridRow3Cell1SelectorButton: {
+         initCondition: (db) => {
+                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox') && v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryname');
+                return a;
+            },
+            initDefault: (db) => {
+                return [];
+            },
         init: {
             execute: (db) => {
                 Utils.setWidgetValue('systemValueGlobalSelectedTerritoryID', v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryid'));
                 Utils.setWidgetValue('systemValueGlobalSelectedTerritoryName', v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryname') + ' (' + v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryid') + ')');
                 return {
-                    label: v('systemValueGlobalSelectedTerritoryName') === false ? '1391 UNASSIGNED' : v('systemValueGlobalSelectedTerritoryName'),
-                };
+                    label: v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryname') === false ? '1391 UNASSIGNED' : v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryname') + ' (' + v('rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.open.territoryid') + ')'};
             }
         }
     },
@@ -10357,7 +10364,7 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     label: r.Cells[x].Members[1].Attributes['Caption'],
-                                    territoriID: r.Cells[x].Members[1].Name,
+                                    territoryID: r.Cells[x].Members[1].Name,
                                     skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].FormattedValue.replace('a', '')
                                 }
                             },
