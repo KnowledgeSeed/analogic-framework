@@ -19800,7 +19800,7 @@ app.widgetConfig = {
                                     alignment: 'center-center',
                                     widgets: [
                                         {
-                                            id: 'rocheBPSPTerritoriesUsersTerritoriesGridRow3Cell4SaveButton',
+                                            id: 'rocheBPSPAccountsTerritoriesGridRow3Cell4SaveButton',
                                             type: ButtonWidget,
                                             label: 'Save',
                                             fontSize: 14,
