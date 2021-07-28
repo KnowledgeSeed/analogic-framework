@@ -2591,12 +2591,12 @@ app.eventMap = {
         }
     ],
 
-    /* 'launch.rocheBPSPSettingsGridRow5Cell2Button': [
-         {
-             action: app.fn.openPage,
-             argument: 'rocheBPSPTerritoriesUsers'
-         }
-     ],*/
+    'launch.rocheBPSPSettingsGridRow5Cell2Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPTerritoriesUsers'
+        }
+    ],
 
     'launch.rocheBPSPSettingsGridRow5Cell3Button': [
         {

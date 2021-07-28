@@ -19035,6 +19035,7 @@ app.widgetConfig = {
 
                     ]
                 },
+
                 {
                     id: 'rocheBPSPTerritoriesUsersGridTable',
                     type: GridTableWidget,
@@ -19154,6 +19155,8 @@ app.widgetConfig = {
                         },
                     ]
                 },
+
+
                 {
                     id: 'rocheBPSPTerritoriesUsersUsersPopup',
                     type: ContainerWidget,
@@ -19303,7 +19306,7 @@ app.widgetConfig = {
 
                     ]
                 },
-
+                /*
                 {
                     id: 'rocheBPSPTerritoriesUsersTerritoriesGridTable',
                     type: GridTableWidget,
@@ -19421,6 +19424,9 @@ app.widgetConfig = {
                         },
                     ]
                 },
+                */
+
+                /*
                 {
                     id: 'rocheBPSPTerritoriesUsersTerritoriesPopup',
                     type: ContainerWidget,
@@ -19468,7 +19474,7 @@ app.widgetConfig = {
                         },
                     ]
                 },
-
+                */
             ]
         },
 
@@ -19765,6 +19771,23 @@ app.widgetConfig = {
                                                     event: 'open.rocheBPSPAccountsTerritoriesHorizontalTableTerritoriesSelector.finished',
                                                     method: 'refresh'
                                                 },
+
+                                                {
+                                                    event: 'choose.rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox.finished',
+                                                    method: 'refresh'
+                                                },
+                                                {
+                                                    event: 'writeEnd.rocheBPSPAccountsTerritoriesGridRow4Cell1SearchBox.finished',
+                                                    method: 'refresh'
+                                                },
+                                                {
+                                                    event: 'switch.rocheBPSPAccountsTerritoriesGridTable.finished',
+                                                    method: 'refresh'
+                                                },
+                                                {
+                                                    event: 'init.rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox.finished',
+                                                    method: 'refresh'
+                                                },
                                             ],
                                             skin: 'customer_planning_text_bpsp_left'
                                         }
@@ -19800,7 +19823,7 @@ app.widgetConfig = {
                                     alignment: 'center-center',
                                     widgets: [
                                         {
-                                            id: 'rocheBPSPTerritoriesUsersTerritoriesGridRow3Cell4SaveButton',
+                                            id: 'rocheBPSPAccountsTerritoriesGridRow3Cell4SaveButton',
                                             type: ButtonWidget,
                                             label: 'Save',
                                             fontSize: 14,
@@ -19977,10 +20000,14 @@ app.widgetConfig = {
                         },
                         {event: 'switch.rocheBPSPAccountsTerritoriesGridTable.finished', method: 'refresh'},
                         {
-                            event: 'launch.rocheBPSPTerritoriesUsersTerritoriesGridRow3Cell4SaveButton.finished',
+                            event: 'launch.rocheBPSPAccountsTerritoriesGridRow3Cell4SaveButton.finished',
                             method: 'refresh'
                         },
                         {event: 'init.rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox.finished', method: 'refresh'},
+                        {
+                            event: 'init.rocheBPSPAccountsTerritoriesGridRow3Cell1SelectorButton.finished',
+                            method: 'refresh'
+                        }
                     ],
                     width: '60%',
                     title: '',
@@ -20144,7 +20171,7 @@ app.widgetConfig = {
                             type: HorizontalTableWidget,
                             title: '',
                             titleVisible: false,
-                            columnNames: ["Territorie Name", "Territorie ID"],
+                            columnNames: ["Territory Name", "Territory ID"],
                             searchField: true,
                             visible: true,
                             selectFirst: true,
@@ -20154,6 +20181,11 @@ app.widgetConfig = {
                             listen: [
                                 {
                                     event: 'choose.rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox.finished',
+                                    method: 'refresh'
+                                },
+
+                                {
+                                    event: 'init.rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox.finished',
                                     method: 'refresh'
                                 },
                             ],
@@ -20396,6 +20428,7 @@ app.widgetConfig = {
                         },
                     ]
                 },
+
 
             ]
         },
