@@ -2852,8 +2852,8 @@ app.eventMap = {
 
     'launch.rocheBPSPTerritoriesUsersTitleGridRow1Cell0Button': [
         {
-            action: app.fn.openPage,
-            argument: 'rocheBPSPSecuritySetup'
+            action: app.fn.openPrevPage,
+            argument: ''
         }
     ],
 
@@ -2898,7 +2898,7 @@ app.eventMap = {
     ],
 
 
-    'segmentedControlTabTerritories2.rocheBPSPTerritoriesUsersTerritoriesSegmentedControl': [
+    'segmentedControlTab2.rocheBPSPTerritoriesUsersTerritoriesSegmentedControl': [
         {
             action: app.fn.showWidget,
             argument: 'rocheBPSPTerritoriesUsersGrid'
@@ -2914,6 +2914,10 @@ app.eventMap = {
         {
             action: app.fn.hideWidget,
             argument: 'rocheBPSPTerritoriesUsersTerritoriesGridTable'
+        },
+         {
+            action: app.fn.removeWidgetValue,
+            argument: 'rocheBPSPTerritoriesUsersTerritoriesSegmentedControl'
         },
     ],
 
@@ -2935,7 +2939,12 @@ app.eventMap = {
             action: app.fn.showWidget,
             argument: 'rocheBPSPTerritoriesUsersTerritoriesGridTable'
         },
+         {
+            action: app.fn.removeWidgetValue,
+            argument: 'rocheBPSPTerritoriesUsersSegmentedControl'
+        },
     ],
+
 
     'launch.rocheBPSPAccountsTerritoriesGridRow3Cell1SelectorButton': [
         {
@@ -3031,7 +3040,23 @@ app.eventMap = {
         {
             action: app.fn.openPage,
             argument: 'rocheBPSPTerritoriesUsers'
-        }
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPTerritoriesUsersGrid'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPTerritoriesUsersGridTable'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPTerritoriesUsersTerritoriesGrid'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPTerritoriesUsersTerritoriesGridTable'
+        },
     ],
 
 

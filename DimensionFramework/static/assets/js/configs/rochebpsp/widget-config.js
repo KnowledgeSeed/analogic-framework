@@ -19009,7 +19009,7 @@ app.widgetConfig = {
                                     alignment: 'center-center',
                                     widgets: [
                                         {
-                                            id: 'rocheBPSPTerritoriesUsersTerritoriesGridRow3Cell4SaveButton',
+                                            id: 'rocheBPSPTerritoriesUsersGridRow3Cell4SaveButton',
                                             type: ButtonWidget,
                                             label: 'Save',
                                             fontSize: 14,
@@ -19095,7 +19095,7 @@ app.widgetConfig = {
                                                 {
                                                     id: 'rocheBPSPTerritoriesUsersTerritoriesSegmentedControlItem1',
                                                     type: SegmentedControlItemWidget,
-                                                    action: 'segmentedControlTabTerritories1',
+                                                    action: 'segmentedControlTab1',
                                                     selected: true,
                                                     value: '1',
                                                     label: 'By Territory'
@@ -19103,7 +19103,7 @@ app.widgetConfig = {
                                                 {
                                                     id: 'rocheBPSPTerritoriesUsersTerritoriesSegmentedControlItem2',
                                                     type: SegmentedControlItemWidget,
-                                                    action: 'segmentedControlTabTerritories2',
+                                                    action: 'segmentedControlTab2',
                                                     selected: false,
                                                     value: '2',
                                                     label: 'By User'
@@ -19188,6 +19188,27 @@ app.widgetConfig = {
                                         },
 
                                     ]
+                                },
+                                {
+                                    id: 'rocheBPSPTerritoriesUsersTerritoriesGridRow3Cell4',
+                                    type: GridCellWidget,
+                                    marginLeft: '5',
+                                    marginRight: '0',
+                                    alignment: 'center-center',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPTerritoriesUsersTerritoriesGridRow3Cell4SaveButton',
+                                            type: ButtonWidget,
+                                            label: 'Save',
+                                            fontSize: 14,
+                                            width: '100%',
+                                            borderWidth: false,
+                                            marginRight: 20,
+                                            icon: 'icon-icon-accept',
+                                            skin: 'green_link_bpsp'
+                                        }
+
+                                    ]
                                 }]
                         },
 
@@ -19245,7 +19266,7 @@ app.widgetConfig = {
                         },
                         {event: 'switch.rocheBPSPTerritoriesUsersGridTable.finished', method: 'refresh'},
                         {
-                            event: 'launch.rocheBPSPTerritoriesUsersTerritoriesGridRow3Cell4SaveButton.finished',
+                            event: 'launch.rocheBPSPTerritoriesUsersGridRow3Cell4SaveButton.finished',
                             method: 'refresh'
                         },
                         {event: 'init.rocheBPSPTerritoriesUsersTitleGridRow1Cell2DropBox.finished', method: 'refresh'},
@@ -19255,7 +19276,7 @@ app.widgetConfig = {
                         },
 
                     ],
-                    width: '20%',
+                    width: '30%',
                     title: '',
                     widgets: [
 
@@ -19318,15 +19339,18 @@ app.widgetConfig = {
                             alignment: 'center-left',
                             widgets: [
 
-                                {
+                             {
                                     id: 'rocheBPSPTerritoriesUsersGridTableText1',
-                                    type: TextWidget,
-                                    titleAlignment: 'start',
-                                    paddingRight: 8,
-                                    skin: '',
-                                    marginLeft: '5%',
-                                    title: '',
+                                    type: ButtonWidget,
+                                    width: '100%',
+                                    icon: 'icon-badge',
+                                    borderWidth: false,
+                                    applyMeasuresToSection: true,
+                                    label: '',
+                                    action: '',
                                 }
+
+
                             ]
                         },
 
@@ -19442,7 +19466,7 @@ app.widgetConfig = {
                         },
 
                     ],
-                    width: '20%',
+                    width: '30%',
                     title: '',
                     widgets: [
 
@@ -19509,9 +19533,9 @@ app.widgetConfig = {
                                     id: 'rocheBPSPTerritoriesUsersTerritoriesGridTableText1',
                                     type: TextWidget,
                                     titleAlignment: 'start',
-                                    paddingRight: 8,
+                                    paddingRight: 4,
                                     skin: '',
-                                    marginLeft: '5%',
+                                    marginLeft: '1%',
                                     title: '',
                                 }
                             ]
@@ -20177,6 +20201,7 @@ app.widgetConfig = {
                                     alignment: 'bottom-left',
                                     widgets: [
 
+
                                         {
                                             id: 'rocheBPSPAccountsTerritoriesGridTableHeaderCell1Text',
                                             type: TextWidget,
@@ -20410,7 +20435,7 @@ app.widgetConfig = {
                                             id: 'rocheBPSPAccountsTerritoriesGridTable2HeaderCell1Text',
                                             type: TextWidget,
                                             width: '100%',
-                                            body: 'Account',
+                                            body: 'Territory',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
                                             marginBottom: 8,
@@ -20468,15 +20493,18 @@ app.widgetConfig = {
                             alignment: 'center-left',
                             widgets: [
 
-                                {
+                             {
                                     id: 'rocheBPSPAccountsTerritoriesGridTable2Text1',
-                                    type: TextWidget,
-                                    titleAlignment: 'start',
-                                    paddingRight: 4,
-                                    skin: '',
-                                    marginLeft: '1%',
-                                    title: '',
+                                    type: ButtonWidget,
+                                    width: '100%',
+                                    icon: 'icon-badge',
+                                    borderWidth: false,
+                                    applyMeasuresToSection: true,
+                                    label: '',
+                                    action: '',
                                 }
+
+
                             ]
                         },
 
