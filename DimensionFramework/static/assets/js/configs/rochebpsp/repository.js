@@ -10020,24 +10020,16 @@ app.repository = {
                                        [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[REXIS Flag]} 
                                       ON COLUMNS ,
                                       
-                                      {
+                                     
                                       ORDER({ 
                                            {FILTER({TM1FILTERBYLEVEL({TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan ${company}]},
                                             {[Customers Plan].[Customers Plan].[All Customers Plan ${company}]}, RECURSIVE )}, 0)}, 
-                                            INSTR(UCASE([Customers Plan].[Customers Plan].CurrentMember.Properties('Account Name')), '${searchString}')>0)} 
+                                            INSTR(UCASE([Customers Plan].[Customers Plan].CurrentMember.Properties('Account Name')), '${searchString}')>0
+                                             OR
+                                             INSTR(UCASE([Customers Plan].[Customers Plan].CurrentMember.Properties('Caption')), '${searchString}')>0)
+                                             } 
                                       },[Customers Plan].[ Account Name], ASC )
-                                      }
-                                      +
-                                      {
-                                      ORDER({ 
-                                           {FILTER({TM1FILTERBYLEVEL({TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan ${company}]},
-                                            {[Customers Plan].[Customers Plan].[All Customers Plan ${company}]}, RECURSIVE )}, 0)}, 
-                                            INSTR(UCASE([Customers Plan].[Customers Plan].CurrentMember.Properties('Caption')), '${searchString}')>0)} 
-                                      },[Customers Plan].[ Account Name], ASC )
-                                      }
-                                      
-                                      
-                                           
+ 
                                           ON ROWS 
                                         FROM [Sales Territory to Customer] 
                                         WHERE 
@@ -10199,8 +10191,13 @@ app.repository = {
                                    {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag],
                                    [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[REXIS Flag]} 
                                   ON COLUMNS ,
+                                  
                                     {FILTER({TM1DRILLDOWNMEMBER({[Territories].[Territories].[ALL TERRITORIES ${company}]}, ALL, RECURSIVE )},
-                                    INSTR(UCASE([Territories].[Territories].[Caption]), '${searchString}')<>0)}
+                                    INSTR(UCASE([Territories].[Territories].[Caption]), '${searchString}')<>0
+                                    OR
+                                    INSTR(UCASE([Territories].[Territories].[Territory Code]), '${searchString}')<>0
+                                    )
+                                    }
                                     PROPERTIES [Territories].[Territories].[Caption]
 
                                     
