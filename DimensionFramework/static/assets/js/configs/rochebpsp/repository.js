@@ -9998,10 +9998,26 @@ app.repository = {
                                         SELECT 
                                        {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag],
                                        [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[REXIS Flag]} 
-                                      ON COLUMNS , 
+                                      ON COLUMNS ,
+                                      
+                                      {
+                                      ORDER({ 
                                            {FILTER({TM1FILTERBYLEVEL({TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan ${company}]},
                                             {[Customers Plan].[Customers Plan].[All Customers Plan ${company}]}, RECURSIVE )}, 0)}, 
                                             INSTR(UCASE([Customers Plan].[Customers Plan].CurrentMember.Properties('Account Name')), '${searchString}')>0)} 
+                                      },[Customers Plan].[ Account Name], ASC )
+                                      }
+                                      +
+                                      {
+                                      ORDER({ 
+                                           {FILTER({TM1FILTERBYLEVEL({TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan ${company}]},
+                                            {[Customers Plan].[Customers Plan].[All Customers Plan ${company}]}, RECURSIVE )}, 0)}, 
+                                            INSTR(UCASE([Customers Plan].[Customers Plan].CurrentMember.Properties('Caption')), '${searchString}')>0)} 
+                                      },[Customers Plan].[ Account Name], ASC )
+                                      }
+                                      
+                                      
+                                           
                                           ON ROWS 
                                         FROM [Sales Territory to Customer] 
                                         WHERE 
@@ -10162,10 +10178,13 @@ app.repository = {
                                 SELECT 
                                    {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag],
                                    [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[REXIS Flag]} 
-                                  ON COLUMNS , 
+                                  ON COLUMNS ,
                                     {FILTER({TM1DRILLDOWNMEMBER({[Territories].[Territories].[ALL TERRITORIES ${company}]}, ALL, RECURSIVE )},
                                     INSTR(UCASE([Territories].[Territories].[Caption]), '${searchString}')<>0)}
-                                    PROPERTIES [Territories].[Territories].[Caption]  ON ROWS
+                                    PROPERTIES [Territories].[Territories].[Caption]
+
+                                    
+                                    ON ROWS
 
                                 FROM [Sales Territory to Customer] 
                                 WHERE 
@@ -10188,14 +10207,15 @@ app.repository = {
                                     label: r.Cells[x].Members[4].Attributes['Caption'] + '  (' + r.Cells[x].Members[4].Name + ')',
                                     customerID: r.Cells[x].Members[4].Name,
                                     skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].Members[4].Attributes['UI Level Format'].replace('a', ''),
+                                    level: r.Cells[x].Members[4].Attributes['UI Level Format'].replace('a', ''),
                                 }
                             },
 
                             (r, x) => {
                                 return {
                                     value: parseInt(r.Cells[x].FormattedValue) > 0 ? 1 : 0,
-                                    editable: r.Cells[x].RuleDerived === true ? false : true,
-                                    cellSkin: r.Cells[x].RuleDerived === true ? 'readonly_bpsp' : '',
+                                    editable: r.Cells[x].Members[4].Attributes['UI Level Format'].replace('a', '') === 'PL6' ? true : false,
+                                    cellSkin: r.Cells[x].Members[4].Attributes['UI Level Format'].replace('a', '') === 'PL6' ? '' : 'readonly_bpsp',
                                 }
                             },
                             (r, x) => {
@@ -10321,7 +10341,7 @@ app.repository = {
 
     },
 
-        rocheBPSPTerritoriesUsersTerritoriesGridRow3Cell4SaveButton: {
+    rocheBPSPTerritoriesUsersTerritoriesGridRow3Cell4SaveButton: {
 
         launch: {
 
