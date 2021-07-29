@@ -8061,15 +8061,19 @@ app.repository = {
             body: (db) => `
             {
             "MDX" : "
-                    SELECT 
-                       {[}ElementAttributes_Territories].[}ElementAttributes_Territories].[Territory Code],
-                        [}ElementAttributes_Territories].[}ElementAttributes_Territories].[Caption]} 
-                      ON COLUMNS ,
+
+                    SELECT
+                         {[}ElementAttributes_Territories].[}ElementAttributes_Territories].[Territory Code],
+                          [}ElementAttributes_Territories].[}ElementAttributes_Territories].[Caption]}
+                    ON COLUMNS ,
+                       {FILTER(
                        {TM1FILTERBYLEVEL(
                              {TM1DRILLDOWNMEMBER(
                                 {[Territories].[Territories].[ALL TERRITORIES ${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key')}]}, ALL, RECURSIVE )}, 0)}
-                      ON ROWS 
+                        , [}ElementAttributes_Territories].[}ElementAttributes_Territories].[Territory Used Flag] = '1')}
+                      ON ROWS
                     FROM [}ElementAttributes_Territories]
+
             "}`,
             parsingControl: {
                 type: 'object',
@@ -9368,6 +9372,12 @@ app.repository = {
                 return [];
             },
 
+            launch: {
+                execute: (db) => {
+                    Utils.setWidgetValue('selectedTerritoriesUsersType', 'ByUser');
+                }
+            },
+
             switch: {
 
                 url: (db) => `/api/v1/Processes('MODULE - UI - Security Setup per User')/tm1.ExecuteWithReturn`,
@@ -9724,7 +9734,7 @@ app.repository = {
                         (r, x) => {
                             return {
                                 active: true,
-                                on: v('rocheBPSPSecuritySetupGridTable.row') > 0 && r.Cells[x + 1].FormattedValue === v('rocheBPSPSecuritySetupGridTable').cellData[v('rocheBPSPSecuritySetupGridTable.row')][0].title
+                                on: v('rocheBPSPSecuritySetupGridTable.row') > 0 && r.Cells[x].FormattedValue === v('rocheBPSPSecuritySetupGridTable').cellData[v('rocheBPSPSecuritySetupGridTable.row')][0].title
                             }
                         },
                         (r, x) => {
@@ -10187,9 +10197,13 @@ app.repository = {
                             searchString = v('rocheBPSPAccountsTerritoriesGrid2Row4Cell1SearchBox.value').toUpperCase();
                         }
                         return `{"MDX":"
+                                WITH
+                                     MEMBER [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[IsNElement]
+                                     AS IIF(ISLEAF([Territories].[Territories].CurrentMember),'1','0')
                                 SELECT 
                                    {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag],
-                                   [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[REXIS Flag]} 
+                                   [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[REXIS Flag],
+                                   [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[IsNElement]}
                                   ON COLUMNS ,
                                   
                                     {FILTER({TM1DRILLDOWNMEMBER({[Territories].[Territories].[ALL TERRITORIES ${company}]}, ALL, RECURSIVE )},
@@ -10216,7 +10230,7 @@ app.repository = {
                     },
                     parsingControl: {
                         type: 'matrix',
-                        length: 2,
+                        length: 3,
                         query: [
 
                             (r, x) => {
@@ -10231,8 +10245,8 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     value: parseInt(r.Cells[x].FormattedValue) > 0 ? 1 : 0,
-                                    editable: r.Cells[x].Members[4].Attributes['UI Level Format'].replace('a', '') === 'PL6' ? true : false,
-                                    cellSkin: r.Cells[x].Members[4].Attributes['UI Level Format'].replace('a', '') === 'PL6' ? '' : 'readonly_bpsp',
+                                    editable: r.Cells[x+2].FormattedValue === '1' ? true : false,
+                                    cellSkin: r.Cells[x+2].FormattedValue === '1' ? '' : 'readonly_bpsp' ,
                                 }
                             },
                             (r, x) => {
@@ -10244,6 +10258,7 @@ app.repository = {
                     }
                 },
         },
+
 
     rocheBPSPAccountsTerritoriesHorizontalTableCustomerSelector: {
         initCondition: (db) => {
@@ -10395,6 +10410,35 @@ app.repository = {
         }
     },
 
+    rocheBPSPTerritoriesUsersTerritoriesGrid: {
+        init: {
+            execute: (db) => {
+                return {visible: db.selectedTerritoriesUsersType === 'ByTerritory' ? true : false};
+            }
+        }
+
+    },
+
+      rocheBPSPTerritoriesUsersGrid: {
+        init: {
+            execute: (db) => {
+                return {visible: db.selectedTerritoriesUsersType === 'ByUser' ? true : false};
+            }
+        }
+
+    },
+
+    rocheBPSPSettingsGridRow5Cell2Button: {
+        launch: {
+                execute: (db) => {
+                    Utils.setWidgetValue('selectedTerritoriesUsersType', 'ByTerritory');
+                }
+            }
+
+    },
+
+
+
     // rocheBPSPTerritories
 
     rocheBPSPTerritoriesGridRow1Cell2DropBox: {
@@ -10445,6 +10489,14 @@ app.repository = {
             initDefault: (db) => {
                 return [];
             },
+
+            perform: {
+                execute: (db) => {
+                    Utils.setWidgetValue('selectedTerritoriesUsersType', 'ByTerritory');
+                }
+            },
+
+
             init:
                 {
                     url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Updateable,RuleDerived,Consolidated;$expand=Members($select=Name, Attributes/Caption,Attributes/TerritoryCode))`,

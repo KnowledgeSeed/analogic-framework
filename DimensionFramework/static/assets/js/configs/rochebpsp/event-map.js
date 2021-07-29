@@ -2904,17 +2904,10 @@ app.eventMap = {
             argument: 'rocheBPSPTerritoriesUsersGrid'
         },
         {
-            action: app.fn.showWidget,
-            argument: 'rocheBPSPTerritoriesUsersGridTable'
-        },
-        {
             action: app.fn.hideWidget,
             argument: 'rocheBPSPTerritoriesUsersTerritoriesGrid'
         },
-        {
-            action: app.fn.hideWidget,
-            argument: 'rocheBPSPTerritoriesUsersTerritoriesGridTable'
-        },
+
          {
             action: app.fn.removeWidgetValue,
             argument: 'rocheBPSPTerritoriesUsersTerritoriesSegmentedControl'
@@ -2928,16 +2921,8 @@ app.eventMap = {
             argument: 'rocheBPSPTerritoriesUsersGrid'
         },
         {
-            action: app.fn.hideWidget,
-            argument: 'rocheBPSPTerritoriesUsersGridTable'
-        },
-        {
             action: app.fn.showWidget,
             argument: 'rocheBPSPTerritoriesUsersTerritoriesGrid'
-        },
-        {
-            action: app.fn.showWidget,
-            argument: 'rocheBPSPTerritoriesUsersTerritoriesGridTable'
         },
          {
             action: app.fn.removeWidgetValue,
