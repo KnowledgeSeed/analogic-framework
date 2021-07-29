@@ -2898,41 +2898,10 @@ app.eventMap = {
     ],
 
 
-    /*  'segmentedControlTab1.rocheBPSPTerritoriesUsersSegmentedControl': [
-          {
-              action: app.fn.hideWidget,
-              argument: 'rocheBPSPTerritoriesUsersGridRow3'
-          },
-          {
-              action: app.fn.hideWidget,
-              argument: 'rocheBPSPTerritoriesUsersGridRow4'
-          },
-          {
-              action: app.fn.hideWidget,
-              argument: 'rocheBPSPTerritoriesUsersGridTable'
-          },
-          {
-              action: app.fn.showWidget,
-              argument: 'rocheBPSPTerritoriesUsersTerritoriesGridRow3'
-          },
-          {
-              action: app.fn.showWidget,
-              argument: 'rocheBPSPTerritoriesUsersTerritoriesGridRow4'
-          },
-          {
-              action: app.fn.showWidget,
-              argument: 'rocheBPSPTerritoriesUsersTerritoriesGridTable'
-          }
-
-      ],*/
-    'segmentedControlTab2.rocheBPSPTerritoriesUsersSegmentedControl': [
+    'segmentedControlTabTerritories2.rocheBPSPTerritoriesUsersTerritoriesSegmentedControl': [
         {
             action: app.fn.showWidget,
-            argument: 'rocheBPSPTerritoriesUsersGridRow3'
-        },
-        {
-            action: app.fn.showWidget,
-            argument: 'rocheBPSPTerritoriesUsersGridRow4'
+            argument: 'rocheBPSPTerritoriesUsersGrid'
         },
         {
             action: app.fn.showWidget,
@@ -2940,19 +2909,33 @@ app.eventMap = {
         },
         {
             action: app.fn.hideWidget,
-            argument: 'rocheBPSPTerritoriesUsersTerritoriesGridRow3'
-        },
-        {
-            action: app.fn.hideWidget,
-            argument: 'rocheBPSPTerritoriesUsersTerritoriesGridRow4'
+            argument: 'rocheBPSPTerritoriesUsersTerritoriesGrid'
         },
         {
             action: app.fn.hideWidget,
             argument: 'rocheBPSPTerritoriesUsersTerritoriesGridTable'
-        }
-
+        },
     ],
 
+
+    'segmentedControlTab1.rocheBPSPTerritoriesUsersSegmentedControl': [
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPTerritoriesUsersGrid'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPTerritoriesUsersGridTable'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPTerritoriesUsersTerritoriesGrid'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPTerritoriesUsersTerritoriesGridTable'
+        },
+    ],
 
     'launch.rocheBPSPAccountsTerritoriesGridRow3Cell1SelectorButton': [
         {
