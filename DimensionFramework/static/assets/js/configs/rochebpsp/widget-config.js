@@ -19332,6 +19332,7 @@ app.widgetConfig = {
                             ]
                         },
 
+
                         {
                             id: 'rocheBPSPTerritoriesUsersGridTableCell1',
                             type: GridTableCellWidget,

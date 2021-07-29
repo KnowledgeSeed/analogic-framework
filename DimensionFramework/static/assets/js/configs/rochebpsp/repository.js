@@ -9586,7 +9586,7 @@ app.repository = {
                                 {"Name": "pUser", "Value": "${v('rocheBPSPTerritoriesUsersHorizontalTableUserSelector.open.userid')}"},
                                 {"Name": "pMode", "Value": "1"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPTerritoriesUsersTitleGridRow1Cell2DropBox', 'key')}"},
-                                {"Name": "pTerritory", "Value": "${territory}"},
+                                {"Name": "pTerritory", "Value": "${v('rocheBPSPTerritoriesUsersGridTable').cellData[v('rocheBPSPTerritoriesUsersGridTable.row')][0].territoryID}"},
                         ]
                     }`;
                 }
@@ -9594,7 +9594,7 @@ app.repository = {
 
             init:
                 {
-                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption, Attributes/UILevelFormat))`,
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption, Attributes/REXISTerritoryID, Attributes/UILevelFormat))`,
                     type: 'POST',
                     body: (db) => {
                         let selectedUser = v('rocheBPSPTerritoriesUsersHorizontalTableUserSelector.open.userid');
@@ -9627,6 +9627,7 @@ app.repository = {
                                 return {
                                     label: r.Cells[x].Members[2].Attributes.Caption,
                                     skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].Members[2].Attributes['UI Level Format'].replace('a', ''),
+                                    territoryID: r.Cells[x].Members[2].Attributes['REXIS Territory ID'],
                                     ordinal: x
                                 }
                             },
@@ -9656,7 +9657,7 @@ app.repository = {
                 Utils.setWidgetValue('systemValueGlobalSelectedUser', v('rocheBPSPTerritoriesUsersHorizontalTableUserSelector.open.userid'));
                 Utils.setWidgetValue('systemValueGlobalSelectedUserName', v('rocheBPSPTerritoriesUsersHorizontalTableUserSelector.open.username') + ' (' + v('rocheBPSPTerritoriesUsersHorizontalTableUserSelector.open.userid') + ')');
                 return {
-                    label: v('rocheBPSPTerritoriesUsersHorizontalTableUserSelector.open.username') === false ? 'unknow' : v('rocheBPSPTerritoriesUsersHorizontalTableUserSelector.open.username') + ' (' + v('rocheBPSPTerritoriesUsersHorizontalTableUserSelector.open.username') + ')'
+                    label: v('rocheBPSPTerritoriesUsersHorizontalTableUserSelector.open.username') === false ? 'unknow' : v('rocheBPSPTerritoriesUsersHorizontalTableUserSelector.open.username') + ' (' + v('rocheBPSPTerritoriesUsersHorizontalTableUserSelector.open.userid') + ')'
                 };
             }
         }
@@ -9727,10 +9728,10 @@ app.repository = {
                             }
                         },
                         (r, x) => {
-                            return {value: r.Cells[x].FormattedValue};
+                            return {value: r.Cells[x + 1].FormattedValue};
                         },
                         (r, x) => {
-                            return {value: r.Cells[x + 1].FormattedValue};
+                            return {value: r.Cells[x].FormattedValue};
                         }
 
                     ]
@@ -9760,7 +9761,7 @@ app.repository = {
                     let user = Utils.getGridTableCell('rocheBPSPTerritoriesUsersTerritoriesGridTable', 0).title;
                     return `{
                             "Parameters": [
-                                    {"Name": "pUser", "Value": "${user}"},
+                                    {"Name": "pUser", "Value": "${v('rocheBPSPTerritoriesUsersTerritoriesGridTable').cellData[v('rocheBPSPTerritoriesUsersTerritoriesGridTable.row')][0].userID}"},
                                     {"Name": "pMode", "Value": "1"},
                                     {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPTerritoriesUsersTitleGridRow1Cell2DropBox', 'key')}"},
                                     {"Name": "pTerritory", "Value": "${v('rocheBPSPTerritoriesUsersTerritoriesHorizontalTableUserSelector.open.territoryid')}"},
@@ -9771,7 +9772,7 @@ app.repository = {
 
             init:
                 {
-                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name,Attributes/FullName))`,
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
                     type: 'POST',
                     body: (db) => {
                         let selectedTerritory = v('rocheBPSPTerritoriesUsersTerritoriesHorizontalTableUserSelector.open.territoryid');
@@ -9781,39 +9782,58 @@ app.repository = {
                             searchString = v('rocheBPSPTerritoriesUsersTerritoriesGridRow4Cell1SearchBox.value').toUpperCase();
                         }
 
-                        return `{"MDX":"
 
-                             SELECT
-                                 {[Measures Client To Territory].[Measures Client To Territory].[AssignSpread]}
-                             ON COLUMNS ,
-                               {FILTER({[}Clients].[}Clients].Members},
-                               INSTR(UCASE([}Clients].[}Clients].[FullName]), '${searchString}')<>0)}
-                               PROPERTIES [}Clients].[}Clients].[Full Name]  ON ROWS
-                            FROM [Client To Territory]
-                            WHERE
-                              (
-                               [Companies].[Companies].[${company}],
-                               [Territories].[Territories].[${selectedTerritory}])
-                            "}`;
+
+                         return `{"MDX":"
+
+                                 With
+                                       Set Clients As
+                                Filter({[}Clients].[}Clients].Members},[}ClientGroups].([}Groups].[}Groups].[${company} SalesUser])<>'')
+                                Member  [}Groups].[}Groups].[SwitchSales] AS
+                                IIF([}ClientGroups].([}Groups].[}Groups].[${company} SalesCustomer]) <>'',1,0)
+                                Member  [}Groups].[}Groups].[FullName] AS
+                                   [}Clients].[}Clients].CurrentMember.Properties('Full Name')
+                                Member  [}Groups].[}Groups].[Code] AS
+                                   [}Clients].[}Clients].CurrentMember.Properties('User ID')
+                                Member [}Groups].[}Groups].[TerritoryToUser]
+                                AS [Client To Territory].([Companies].[Companies].[${company}], [}Clients].[}Clients].CurrentMember, [Territories].[Territories].[${selectedTerritory}],[Measures Client To Territory].[Measures Client To Territory].[Assign Flag])
+                                Set Groups As
+                                {
+                                  [}Groups].[}Groups].[Code],
+                                  [}Groups].[}Groups].[FullName],
+                                  [}Groups].[}Groups].[SwitchSales],
+                                  [}Groups].[}Groups].[TerritoryToUser]
+                                }
+                            SELECT
+                               {Groups}
+                              ON COLUMNS ,
+                              NON EMPTY
+                               DISTINCT({FILTER({Clients}, INSTR(UCASE([}Groups].[}Groups].[FullName]), '${searchString}')<>0)})
+                               PROPERTIES [}Clients].[}Clients].[}TM1_DefaultDisplayValue]  ON ROWS
+                            FROM [}ClientGroups]
+
+                                    "}`
 
 
                     },
                     parsingControl: {
                         type: 'matrix',
-                        length: 1,
+                        length: 4,
                         query: [
 
                             (r, x) => {
                                 return {
-                                    title: r.Cells[x].Members[2].Attributes['Full Name'],
-                                    nameID: r.Cells[x].Members[2].Name,
+                                    title: r.Cells[x+1].FormattedValue + ' ('+ r.Cells[x].FormattedValue + ')',
+                                    nameID: r.Cells[x].Members[0].Name,
+                                    userID: r.Cells[x].FormattedValue
+
 
                                 }
                             },
 
                             (r, x) => {
                                 return {
-                                    value: parseInt(r.Cells[x].FormattedValue) > 0 ? 1 : 0,
+                                    value: parseInt(r.Cells[x+3].FormattedValue) > 0 ? 1 : 0,
                                     ordinal: x
                                 }
                             }
