@@ -611,6 +611,32 @@
      transform: translateY(4px);*/
 }
 
+/* rochemain_disabled menu icon */
+.ks-button-rochemain_disabled.ks-button {
+    height: 150px;
+    background-color: #ebecec;
+    border-radius: 30px;
+}
+
+.ks-button-rochemain_disabled .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-rochemain_disabled .ks-button-content {
+    height: 110%
+}
+
+.ks-button-rochemain_disabled:hover {
+    background-color: #ebecec;
+}
+
+.ks-button-rochemain_disabled:active {
+    background-color: #ebecec;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
 
 /* gridtablehierarchy */
 
@@ -1983,6 +2009,18 @@
     border: 1px solid #B1B3B3;
 }
 
+/* customer_planning_text_bpsp_left */
+.ks-button-customer_planning_text_bpsp_left {
+    font-size: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #B1B3B3;
+
+}
+
+.ks-button-customer_planning_text_bpsp_left .ks-button-content {
+    justify-content: flex-start !important;
+}
 
 
 

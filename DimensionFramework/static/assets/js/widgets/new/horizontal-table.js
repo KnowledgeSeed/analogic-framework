@@ -8,9 +8,11 @@ class HorizontalTableWidget extends Widget {
         let mainDivStyle = this.getGeneralStyles(data), s = [], h, d, i, actionWidth = false;
 
         const v = {
+            columnTypes: this.getRealValue('columnTypes', data, false),
             fadeOutNum: this.getRealValue('fadeOutNum', data, 10),
-            searchField: this.getRealValue('searchField', data, false),
             hideIfNoData: this.getRealValue('hideIfNoData', d, false),
+            searchField: this.getRealValue('searchField', data, false),
+            selectFirst: this.getRealValue('selectFirst', data, false),
             skin: this.getRealValue('skin', data, 'standard')
         };
 
@@ -54,7 +56,7 @@ class HorizontalTableWidget extends Widget {
         }
 
         h = this.getTableHeader(o, data, leftRowWidgets, rightRowWidgets, actionWidth);
-        d = this.getTableBody(o, data, h.dataColumnNames, leftRowWidgets, rightRowWidgets, withState, actionWidth);
+        d = this.getTableBody(o, data, h.dataColumnNames, leftRowWidgets, rightRowWidgets, withState, actionWidth, v);
 
         return `
 <div class="ks-horizontal-table ${data.cells.length > v.fadeOutNum ? 'ks-scroll' : ''}  ks-horizontal-table-${v.skin}" style="${mainDivStyle.join('')}">
@@ -75,7 +77,7 @@ class HorizontalTableWidget extends Widget {
 
         if (data.leftActionCells.length > 0) {
             for (l of data.leftActionCells[0]) {
-                s.push(`<div class="ks-horizontal-table-cell ks-${leftRowWidgets[i].name === 'RadioButtonRowWidget' ? 'checkbox' : 'action'}-cell" ${actionWidth !== false ? `style="flex: 0 0 ${actionWidth}%;"` : ''}></div>`);
+                s.push(`<div class="ks-horizontal-table-cell ks-${leftRowWidgets[i].name === 'RadioButtonRowWidget' ? 'checkbox' : 'action'}-cell" ${actionWidth !== false ? `style="flex: 0 0 ${actionWidth}%;"` : ''}>${leftRowWidgets[i].options.columnName ? leftRowWidgets[i].options.columnName : ''}</div>`);
                 ++i;
             }
         }
@@ -88,7 +90,7 @@ class HorizontalTableWidget extends Widget {
         if (data.rightActionCells.length > 0) {
             i = 0;
             for (l of data.rightActionCells[0]) {
-                s.push(`<div class="ks-horizontal-table-cell ks-${rightRowWidgets[i].name === 'RadioButtonRowWidget' ? 'checkbox' : 'action'}-cell"  ${actionWidth !== false ? `style="flex: 0 0 ${actionWidth}%;"` : ''}></div>`);
+                s.push(`<div class="ks-horizontal-table-cell ks-${rightRowWidgets[i].name === 'RadioButtonRowWidget' ? 'checkbox' : 'action'}-cell"  ${actionWidth !== false ? `style="flex: 0 0 ${actionWidth}%;"` : ''}>${rightRowWidgets[i].options.columnName ? rightRowWidgets[i].options.columnName : ''}</div>`);
                 ++i;
             }
         }
@@ -96,8 +98,9 @@ class HorizontalTableWidget extends Widget {
         return {html: s.join(''), dataColumnNames: dataColumnNames};
     }
 
-    getTableBody(o, data, dataColumnNames, leftRowWidgets, rightRowWidgets, withState, actionWidth) {
-        let i, j, k, l, c = [], d = [], leftActionsNum = 0, rightActionsNum = 0, s = [], mtx = data.cells, len = mtx.length, cells, cell, escapedValue, enabled, len2;
+    getTableBody(o, data, dataColumnNames, leftRowWidgets, rightRowWidgets, withState, actionWidth, v) {
+        let i, j, k, l, c = [], d = [], leftActionsNum = 0, rightActionsNum = 0, s = [], mtx = data.cells, len = mtx.length, cells, cell, escapedValue, enabled, len2, columnType = 'string',
+        selectFirstIndex;
 
         for (i = 0; i < len; ++i) {//content
             enabled = data.leftActionCells.length > 0 && data.leftActionCells[i].length > 0 ? data.leftActionCells[i][0].active : true;
@@ -109,8 +112,11 @@ class HorizontalTableWidget extends Widget {
             len2 = cells.length;
             for (j = 0; j < len2; ++j) {
                 cell = cells[j];
+                if(v.columnTypes){
+                    columnType = v.columnTypes[j];
+                }
                 escapedValue = cell.value.replace(/(<([^>]+)>)/ig, "").replace(/"/ig, "");
-                c.push(`<div class="ks-horizontal-table-cell" style="${o.columnWidths && o.columnWidths[j] ? 'flex: 0 0 ' + o.columnWidths[j] + (o.columnWidths[j].indexOf('%') === -1 ? 'px;' : ';') : ''}white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><div class="ks-horizontal-table-cell-inner ${cell.editable ? 'editable' : ''}" data-row="${i}" data-col="${j}" data-ordinal="${cell.ordinal}" data-editable="${cell.editable}" title="${escapedValue}">${cell.value.replace(/</ig, "< ")}</div></div>`);
+                c.push(`<div class="ks-horizontal-table-cell" style="${o.columnWidths && o.columnWidths[j] ? 'flex: 0 0 ' + o.columnWidths[j] + (o.columnWidths[j].indexOf('%') === -1 ? 'px;' : ';') : ''}white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><div class="ks-horizontal-table-cell-inner ${cell.editable ? 'editable' : ''}" data-columntype="${columnType}" data-row="${i}" data-col="${j}" data-ordinal="${cell.ordinal}" data-editable="${cell.editable}" title="${escapedValue}">${cell.value.replace(/</ig, "< ")}</div></div>`);
 
                 if (data.leftActionCells.length + data.rightActionCells.length > 0 && dataColumnNames[j] !== '' && cell.value.length < 200) {
                     d.push(` data-${dataColumnNames[j]}="${escapedValue}" `);
@@ -122,7 +128,19 @@ class HorizontalTableWidget extends Widget {
                 cell = cells[i];
                 len2 = cell.length;
                 for (k = 0; k < len2; ++k) {
-                    s.push(leftRowWidgets[k].getHtml([], {icon: cell[k].icon, index: i, on: (withState && this.state.radio === i) || cell[k].on === true, d: d, active: cell[k].active === true, id: o.id, num: leftActionsNum, actionWidth: actionWidth}));
+                    s.push(leftRowWidgets[k].getHtml([], {icon: cell[k].icon, index: i, on: (withState && this.state.radio === i) || cell[k].on === true || (v.selectFirst && i === 0), d: d, active: cell[k].active === true, id: o.id, num: leftActionsNum, actionWidth: actionWidth}));
+                    if(v.selectFirst && i === 0){
+                        let html = $(s[s.length - 1]), p = html.find('.ks-horizontal-table-row-toggle');
+                        WidgetValue[o.id][p.data('action')] = p.data();
+                        selectFirstIndex = s.length - 1;
+                    }
+                    if(cell[k].on === true){
+                        let html = $(s[s.length - 1]), p = html.find('.ks-horizontal-table-row-toggle');
+                        WidgetValue[o.id][p.data('action')] = p.data();
+                        if(v.selectFirst){
+                            s[selectFirstIndex] = s[selectFirstIndex].replace('ks-on', '');
+                        }
+                    }
                     ++leftActionsNum;
                 }
 
@@ -255,11 +273,19 @@ class HorizontalTableWidget extends Widget {
                 table.find('.ks-horizontal-table-cell').filter(function () {
                     return $(this).index() === thIndex;
                 }).sortElements(function (a, b) {
-                    if ($(a).find('div').text() === $(b).find('div').text()) {
+                    let aEl = $(a).find('div'), aValue, bValue;
+                    if(aEl.data('columntype') === 'real'){
+                        aValue = Utils.parseNumber(aEl.text());
+                        bValue = Utils.parseNumber($(b).find('div').text());
+                    }else{
+                        aValue = aEl.text();
+                        bValue = $(b).find('div').text();
+                    }
+                    if (aValue === bValue) {
                         return 0;
                     }
 
-                    return $(a).find('div').text() > $(b).find('div').text() ? inverse ? -1 : 1 : inverse ? 1 : -1;
+                    return aValue > bValue ? inverse ? -1 : 1 : inverse ? 1 : -1;
                 }, function () {
                     return this.parentNode;
                 });

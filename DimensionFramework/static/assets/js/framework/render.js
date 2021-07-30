@@ -51,8 +51,8 @@ class Render {
                         for (i of Listeners) {
                             El.body.on(i.eventName, {options: i.options, method: i.method, parameters: i.parameters}, i.handler);
                         }
+                        El.body.trigger('bodyReady');//backward compatibility
                         if(!withState) {
-                            El.body.trigger('bodyReady');//backward compatibility
                             widget.initFinished();
                         }
                     } else {

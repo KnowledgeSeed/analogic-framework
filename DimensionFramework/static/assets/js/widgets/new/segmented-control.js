@@ -52,12 +52,12 @@ class SegmentedControlWidget extends Widget {
         //rekurzív renderelés, adatbetöltéssel
 
         return QB.loadData(o.id, instance.name).then(function (data) {
-            let deffered = [], w, i = 0, childrenData;
+            let deffered = [], w, i = 0, childrenData, widgetData = Array.isArray(data) ? data : (data && data.data) ? data.data : [];
 
             for (w of widgets) {
                 //childrenData = {width: 100 / o.widgets.length, id: o.id, position: i};
                 childrenData = {id: o.id, position: i};
-                deffered.push(w.embeddedRender(withState, {...childrenData, ...data[i]}));
+                deffered.push(w.embeddedRender(withState, {...childrenData, ...widgetData[i]}));
 
                 ++i;
             }
@@ -107,7 +107,7 @@ class SegmentedControlWidget extends Widget {
     }
 
     processData(data) {
-        return Array.isArray(data) ? data : [];
+        return Array.isArray(data) ? data : (data && data.data) ? data.data : [];
     }
 }
 ;
