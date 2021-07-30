@@ -9793,8 +9793,7 @@ app.repository = {
                         }
 
 
-
-                         return `{"MDX":"
+                        return `{"MDX":"
 
                                  With
                                        Set Clients As
@@ -9818,7 +9817,9 @@ app.repository = {
                                {Groups}
                               ON COLUMNS ,
                               NON EMPTY
-                               DISTINCT({FILTER({Clients}, INSTR(UCASE([}Groups].[}Groups].[FullName]), '${searchString}')<>0)})
+                              ORDER({
+                               {DISTINCT({FILTER({Clients}, INSTR(UCASE([}Groups].[}Groups].[FullName]), '${searchString}')<>0)})}
+                               },[}Groups].[FullName], ASC )
                                PROPERTIES [}Clients].[}Clients].[}TM1_DefaultDisplayValue]  ON ROWS
                             FROM [}ClientGroups]
 
@@ -9833,7 +9834,7 @@ app.repository = {
 
                             (r, x) => {
                                 return {
-                                    title: r.Cells[x+1].FormattedValue + ' ('+ r.Cells[x].FormattedValue + ')',
+                                    title: r.Cells[x + 1].FormattedValue + ' (' + r.Cells[x].FormattedValue + ')',
                                     nameID: r.Cells[x].Members[0].Name,
                                     userID: r.Cells[x].FormattedValue
 
@@ -9843,7 +9844,7 @@ app.repository = {
 
                             (r, x) => {
                                 return {
-                                    value: parseInt(r.Cells[x+3].FormattedValue) > 0 ? 1 : 0,
+                                    value: parseInt(r.Cells[x + 3].FormattedValue) > 0 ? 1 : 0,
                                     ordinal: x
                                 }
                             }
@@ -10245,8 +10246,8 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     value: parseInt(r.Cells[x].FormattedValue) > 0 ? 1 : 0,
-                                    editable: r.Cells[x+2].FormattedValue === '1' ? true : false,
-                                    cellSkin: r.Cells[x+2].FormattedValue === '1' ? '' : 'readonly_bpsp' ,
+                                    editable: r.Cells[x + 2].FormattedValue === '1' ? true : false,
+                                    cellSkin: r.Cells[x + 2].FormattedValue === '1' ? '' : 'readonly_bpsp',
                                 }
                             },
                             (r, x) => {
@@ -10419,7 +10420,7 @@ app.repository = {
 
     },
 
-      rocheBPSPTerritoriesUsersGrid: {
+    rocheBPSPTerritoriesUsersGrid: {
         init: {
             execute: (db) => {
                 return {visible: db.selectedTerritoriesUsersType === 'ByUser' ? true : false};
@@ -10430,13 +10431,12 @@ app.repository = {
 
     rocheBPSPSettingsGridRow5Cell2Button: {
         launch: {
-                execute: (db) => {
-                    Utils.setWidgetValue('selectedTerritoriesUsersType', 'ByTerritory');
-                }
+            execute: (db) => {
+                Utils.setWidgetValue('selectedTerritoriesUsersType', 'ByTerritory');
             }
+        }
 
     },
-
 
 
     // rocheBPSPTerritories
@@ -10701,6 +10701,36 @@ app.repository = {
             }
         }
     },
+
+
+    rocheBPSPMaterialGridRow4Cell3ExportButton: {
+        getFileName: (db) => {
+            let s = [], fileName;
+            s.push(Utils.getFormattedDate(new Date(), '_', true));
+            s.push(db.activeUserName);
+            s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key'));
+            return s.join('_').replaceAll(':', '_').replaceAll(' ', '_').replaceAll('/', '_');
+        },
+        launch: {
+            download: (db) => {
+                let y1 = parseInt(db.systemValueGlobalStartingPlanYear),
+                    fileName = Repository.rocheBPSPMaterialGridRow4Cell3ExportButton.getFileName(db);
+                return {
+                    url: 'export?export_key=rocheMaterialMaintenanceExport&file_name=' + fileName + '.xlsx',   // custom_object json
+                    fileName: fileName + '.xlsx',
+                    activeUserName: db.activeUserName,
+                    companyVersion: db.systemValueGlobalCompanyVersion, //Live
+                    productPlanVersion: db.systemValueGlobalCompanyProductPlanVersion, //Budget
+                    company: Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key'),
+                    globalVersion: WidgetValue.systemValueGlobalCompanyVersion,
+                    version: WidgetValue.systemValueGlobalCompanyProductPlanVersion,
+                    year1: y1,
+                    key: 'rocheMaterialMaintenanceExportMDX' // ez a yml
+                };
+            }
+        }
+    },
+
 
 }
 ;

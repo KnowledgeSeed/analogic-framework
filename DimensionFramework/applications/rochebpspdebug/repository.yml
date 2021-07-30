@@ -116,3 +116,32 @@ rocheProductLevelExportMDX: >
     ([Versions].[Versions].[Live],
      [Companies].[Companies].[$company],
      [Currency Keys].[Currency Keys].[$currency])
+
+rocheMaterialMaintenanceExportMDX: >
+  With
+    Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag] As
+    IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL6',1,0)
+    -- IP Node and has no pland Data then deletable
+    Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag] As
+    IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
+        [Material Information by Company].([ Companies].[ Companies].[$company],
+        [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) = 0,1,0)
+    -- IP Node and has pland Data then go to plan
+    Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag] As
+    IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
+        [Material Information by Company].([ Companies].[ Companies].[$company],
+        [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) <> 0,1,0)
+    SELECT
+       {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP $productPlanVersion Name],
+        [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name],
+         [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element]}
+      ON COLUMNS ,
+      -- {TM1SubsetToSet([Materials].[BPSP $productPlanVersion],'$company MM')}
+
+          {Filter({TM1SubsetToSet([Materials].[BPSP $productPlanVersion], '1391 MM')},
+                 Instr(UCASE([Materials].[BPSP $productPlanVersion].[BPSP $productPlanVersion Name]), '') > 0)}
+      ON ROWS
+    FROM [}ElementAttributes_Materials]
+
+
+

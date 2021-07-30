@@ -539,9 +539,9 @@ class Export:
                     c = c + 1
                     i = i + 1
             if c == 3:
-                    reciver = d['Cells'][i]['Members'][3]['Name']
-                    worksheet.write(r, c, reciver, simple)
-                    c = c + 1
+                reciver = d['Cells'][i]['Members'][3]['Name']
+                worksheet.write(r, c, reciver, simple)
+                c = c + 1
             else:
                 value = d['Cells'][i]['Value']
                 if (value == None):
@@ -554,7 +554,105 @@ class Export:
                     i = i + 1
                     c = c + 1
 
+        # temp
 
+        workbook.close()
+        output.seek(0)
+        return output
+
+    def rocheMaterialMaintenanceExport(self, request, tm1_service, setting):
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        worksheet = workbook.add_worksheet()
+
+        mdx = setting.getMDX(request.args['key'])
+        for k in request.args:
+            mdx = mdx.replace('$' + k, request.args[k].replace('"', '\\"'))
+
+        mdx = '{"MDX"  :"' + mdx + '"}'
+        #     data = tm1_service.cells.execute_mdx(mdx)
+
+        user = request.args['activeUserName']
+        company = request.args['company']
+        global_version = request.args['globalVersion']
+        version = request.args['version']
+
+        font_size = 12
+
+        # actual version
+        worksheet.write(0, 0, user)
+        worksheet.write(0, 1, company)
+        worksheet.write(0, 2, global_version)
+        worksheet.write(0, 3, version)
+
+        bold = workbook.add_format({'bold': True})
+        bold.set_font_name('Imago')
+        bold.set_font_size(font_size)
+
+        worksheet.write(3, 0, 'Profit center name', bold)
+        worksheet.write(3, 1, 'Level', bold)
+        worksheet.write(3, 2, 'Material Number', bold)
+
+        # temp
+        headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
+                                   'Accept-Encoding': 'gzip, deflate, br'}
+        tm1_session_id = setting.getTM1SessionId(session.get('cam_name', ''))
+
+        cookies: dict[str, str] = {"TM1SessionId": tm1_session_id}
+
+        cnf = setting.getConfig()
+
+        target_url = cnf['tm1ApiHostBackend']
+
+        response = requests.request(
+            url=target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))',
+            method='POST',
+            data=mdx,
+            headers=headers,
+            cookies=cookies,
+            verify=False)
+
+        d = response.json()
+
+        simple = workbook.add_format()
+        simple.set_font_name('Imago')
+        simple.set_font_size(font_size)
+
+        read_only = workbook.add_format()
+        read_only.set_bg_color('#ebecec')
+        read_only.set_font_name('Imago')
+        read_only.set_font_size(font_size)
+
+        l = len(d['Cells'])
+        i = 0  # az összes elem
+        r = 3  # sorok kezdese
+        c = 0  # oszlopok
+
+        while i < l:
+            if i % 3 == 0:
+                value = d['Cells'][i]['FormattedValue']
+                r = r + 1
+                c = 0
+                if (value == None):
+                    value = 0
+                    worksheet.write(r, c, value, simple)
+                    c = c + 1
+                    i = i + 1
+                else:
+                    worksheet.write(r, c, value, simple)
+                    c = c + 1
+                    i = i + 1
+            else:
+                value = d['Cells'][i]['FormattedValue']
+                if (value == None):
+                    value = 0
+                    worksheet.write(r, c, value, simple)
+                    i = i + 1
+                    c = c + 1
+                else:
+                    worksheet.write(r, c, value, simple)
+                    i = i + 1
+                    c = c + 1
 
         # temp
 
