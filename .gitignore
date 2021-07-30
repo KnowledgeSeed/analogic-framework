@@ -1,5 +1,7 @@
 __pycache__
 .idea
+.project
+.pydevproject
 nbproject
 *.dist
 cache
