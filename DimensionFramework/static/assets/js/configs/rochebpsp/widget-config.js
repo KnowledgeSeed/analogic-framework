@@ -10243,7 +10243,8 @@ app.widgetConfig = {
                                             marginBottom: '4%',
                                             height: '40',
                                             icon: 'icon-columns',
-                                            skin: 'blue_link_columns_bpsp'
+                                            skin: 'blue_link_columns_bpsp',
+                                            visible: false
                                         }
 
 
@@ -19115,6 +19116,10 @@ app.widgetConfig = {
                                                     method: 'refresh'
                                                 },
                                                 {
+                                                    event: 'switch.rocheBPSPTerritoriesUsersTerritoriesGridTable.finished',
+                                                    method: 'refresh'
+                                                },
+                                                {
                                                     event: 'launch.rocheBPSPTerritoriesUsersGridRow3Cell4SaveButton.finished',
                                                     method: 'refresh'
                                                 },
@@ -19456,6 +19461,10 @@ app.widgetConfig = {
                                                 },
                                                 {
                                                     event: 'switch.rocheBPSPTerritoriesUsersTerritoriesGridTable.finished',
+                                                    method: 'refresh'
+                                                },
+                                                {
+                                                    event: 'switch.rocheBPSPTerritoriesUsersGridTable.finished',
                                                     method: 'refresh'
                                                 },
                                                 {
@@ -20245,6 +20254,7 @@ app.widgetConfig = {
                             method: 'refresh'
                         },
                         {event: 'switch.rocheBPSPAccountsTerritoriesGridTable.finished', method: 'refresh'},
+                        {event: 'switch.rocheBPSPAccountsTerritoriesGridTable2.finished', method: 'refresh'},
                         {
                             event: 'launch.rocheBPSPAccountsTerritoriesGridRow3Cell4SaveButton.finished',
                             method: 'refresh'
@@ -20476,6 +20486,7 @@ app.widgetConfig = {
                             method: 'refresh'
                         },
                         {event: 'switch.rocheBPSPAccountsTerritoriesGridTable2.finished', method: 'refresh'},
+                        {event: 'switch.rocheBPSPAccountsTerritoriesGridTable.finished', method: 'refresh'},
                         {
                             event: 'launch.rocheBPSPAccountsTerritoriesGrid2Row3Cell4SaveButton.finished',
                             method: 'refresh'
@@ -20788,6 +20799,35 @@ app.widgetConfig = {
                         },
 
                         {
+                            id: 'rocheBPSPTerritoriesProductsGridRow15',
+                            type: GridRowWidget,
+                            marginTop: '1.3%',
+                            alignment: 'center-right',
+                            width: '100%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPTerritoriesProductsGridRow15Cell1',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '21%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPTerritoriesProductsGridRow15Cell1Title',
+                                            type: TextWidget,
+                                            title: '',
+                                            width: '100%',
+                                            marginBottom: 20,
+                                            titleAlignment: 'start',
+                                            titleFontSize: 26,
+
+                                        }
+                                    ]
+                                }]
+
+                        },
+
+                        {
                             id: 'rocheBPSPTerritoriesProductsGridRow2',
                             type: GridRowWidget,
                             marginTop: '1.3%',
@@ -20815,6 +20855,7 @@ app.widgetConfig = {
                                 }]
 
                         },
+
                     ]
 
                 },
@@ -20822,7 +20863,6 @@ app.widgetConfig = {
                 {
                     id: 'rocheBPSPTerritoriesProductsGridTable',
                     type: GridTableWidget,
-                    marginTop: '30',
                     hideIfNoData: true,
                     visible: true,
                     skin: 'products_bpsp',

@@ -10248,6 +10248,8 @@ app.repository = {
                                     value: parseInt(r.Cells[x].FormattedValue) > 0 ? 1 : 0,
                                     editable: r.Cells[x + 2].FormattedValue === '1' ? true : false,
                                     cellSkin: r.Cells[x + 2].FormattedValue === '1' ? '' : 'readonly_bpsp',
+                                    skin: r.Cells[x + 2].FormattedValue === '1' ? 'Settings_toggle_bpsp' : 'label_toggle_bpsp',
+                                    titleOn: r.Cells[x + 2].FormattedValue === '1' ? '' : ''+ parseInt(r.Cells[x].FormattedValue),
                                 }
                             },
                             (r, x) => {
@@ -10517,11 +10519,15 @@ app.repository = {
                                     AS [Sales Territory to Product].([Versions].[Versions].[Live], [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[PL1], [Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Flag])
                                     MEMBER [Measures Client To Territory].[Measures Client To Territory].[TerritoryToCustomer]
                                     AS [Sales Territory to Customer].([Versions].[Versions].[Live], [Receivers].[Receivers].[All Receivers], [Customers Plan].[Customers Plan].[All Customers Plan ${company}], [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag])
-                                    SELECT 
+                                    MEMBER [Measures Client To Territory].[Measures Client To Territory].[IsNElement]
+                                    AS IIF(ISLEAF([Territories].[Territories].CurrentMember),'1','0')
+                                    SELECT
                                        {([}Clients].[}Clients].[Admin], [Measures Client To Territory].[Measures Client To Territory].[UILevelFormat]),
                                        ([}Clients].[}Clients].[Admin], [Measures Client To Territory].[Measures Client To Territory].[TerritoryToProduct]), 
                                        ([}Clients].[}Clients].[Admin], [Measures Client To Territory].[Measures Client To Territory].[TerritoryToCustomer]), 
-                                       ([}Clients].[}Clients].[All], [Measures Client To Territory].[Measures Client To Territory].[Assign Flag])
+                                       ([}Clients].[}Clients].[All], [Measures Client To Territory].[Measures Client To Territory].[Assign Flag]),
+                                       ([}Clients].[}Clients].[Admin], [Measures Client To Territory].[Measures Client To Territory].[IsNElement])
+
                                        } 
                                       ON COLUMNS,
                                       --{TM1DRILLDOWNMEMBER({[Territories].[Territories].[All Territories 1391]}, All, Recursive)}
@@ -10541,7 +10547,7 @@ app.repository = {
                     },
                     parsingControl: {
                         type: 'matrix',
-                        length: 4,
+                        length: 5,
                         query: [
 
 
@@ -10569,14 +10575,17 @@ app.repository = {
                                 return {
                                     title: parseInt(r.Cells[x + 2].FormattedValue) + ' Customers',
                                     skin: 'territories_readonly_text_with_icon_bpsp',
-                                    icon: 'icon-edit'
+                                    icon: r.Cells[x + 4].FormattedValue === '1' ? 'icon-edit': '',
+                                    cellSkin: r.Cells[x + 4].FormattedValue === '1' ? '' : 'readonly_bpsp'
                                 }
                             },
                             (r, x) => {
                                 return {
-                                    title: parseInt(r.Cells[x + 3].FormattedValue) + ' Users',
+                                    title: r.Cells[x + 4].FormattedValue === '1' ? parseInt(r.Cells[x + 3].FormattedValue) + ' Users' : '',
                                     skin: 'territories_readonly_text_with_icon_bpsp',
-                                    icon: 'icon-edit'
+                                    icon: r.Cells[x + 4].FormattedValue === '1' ? 'icon-edit': '',
+                                    cellSkin: r.Cells[x + 4].FormattedValue === '1' ? '' : 'readonly_bpsp'
+
                                 }
                             },
 
@@ -10692,6 +10701,15 @@ app.repository = {
                     }
                 },
         },
+
+    rocheBPSPTerritoriesProductsGridRow15Cell1Title:{
+        init: {
+            execute: (db) => {
+                return {title: Utils.getGridTableCell('rocheBPSPTerritoriesGridTable', 0).territoryID};
+            }
+        }
+    },
+
 
 
     rocheBPSPTerritoriesProductsGridRow1Cell4Button: {

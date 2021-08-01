@@ -2651,15 +2651,15 @@ app.eventMap = {
 
     'launch.rocheBPSPAccountsGridRow1Cell0Button': [
         {
-            action: app.fn.openPage,
-            argument: 'rocheBPSPSettings'
+            action: app.fn.openPrevPage,
+            argument: ''
         }
     ],
 
     'launch.rocheBPSPAccountsTerritoriesGridRow1Cell0Button': [
         {
-            action: app.fn.openPage,
-            argument: 'rocheBPSPSettings'
+            action: app.fn.openPrevPage,
+            argument: ''
         }
     ],
 
@@ -3047,8 +3047,8 @@ app.eventMap = {
 
     'launch.rocheBPSPTerritoriesProductsGridRow1Cell0Button': [
         {
-            action: app.fn.openPage,
-            argument: 'rocheBPSPTerritories'
+            action: app.fn.openPrevPage,
+            argument: ''
         }
     ],
 
