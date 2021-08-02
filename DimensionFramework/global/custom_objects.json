@@ -33,5 +33,10 @@
     "namespace": "DimensionFramework.Custom.Export",
     "class": "Export",
     "method": "rocheMaterialMaintenanceExport"
+  },
+  "rocheMaterialMaintenanceByIpNodeExport": {
+    "namespace": "DimensionFramework.Custom.Export",
+    "class": "Export",
+    "method": "rocheMaterialMaintenanceByIpNodeExport"
   }
 }

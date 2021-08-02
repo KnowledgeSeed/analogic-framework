@@ -4810,10 +4810,8 @@ app.repository = {
                                          [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag]} 
                                       ON COLUMNS , 
                                       -- {TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}],'${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')}
-                                      
                                           {Filter({TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')},
                                                  Instr(UCASE([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Name]), '${searchString}') > 0)}
-                                       
                                       ON ROWS 
                                     FROM [}ElementAttributes_Materials] 
                                     "}`;
@@ -10249,7 +10247,7 @@ app.repository = {
                                     editable: r.Cells[x + 2].FormattedValue === '1' ? true : false,
                                     cellSkin: r.Cells[x + 2].FormattedValue === '1' ? '' : 'readonly_bpsp',
                                     skin: r.Cells[x + 2].FormattedValue === '1' ? 'Settings_toggle_bpsp' : 'label_toggle_bpsp',
-                                    titleOn: r.Cells[x + 2].FormattedValue === '1' ? '' : ''+ parseInt(r.Cells[x].FormattedValue),
+                                    titleOn: r.Cells[x + 2].FormattedValue === '1' ? '' : '' + parseInt(r.Cells[x].FormattedValue),
                                 }
                             },
                             (r, x) => {
@@ -10575,7 +10573,7 @@ app.repository = {
                                 return {
                                     title: parseInt(r.Cells[x + 2].FormattedValue) + ' Customers',
                                     skin: 'territories_readonly_text_with_icon_bpsp',
-                                    icon: r.Cells[x + 4].FormattedValue === '1' ? 'icon-edit': '',
+                                    icon: r.Cells[x + 4].FormattedValue === '1' ? 'icon-edit' : '',
                                     cellSkin: r.Cells[x + 4].FormattedValue === '1' ? '' : 'readonly_bpsp'
                                 }
                             },
@@ -10583,7 +10581,7 @@ app.repository = {
                                 return {
                                     title: r.Cells[x + 4].FormattedValue === '1' ? parseInt(r.Cells[x + 3].FormattedValue) + ' Users' : '',
                                     skin: 'territories_readonly_text_with_icon_bpsp',
-                                    icon: r.Cells[x + 4].FormattedValue === '1' ? 'icon-edit': '',
+                                    icon: r.Cells[x + 4].FormattedValue === '1' ? 'icon-edit' : '',
                                     cellSkin: r.Cells[x + 4].FormattedValue === '1' ? '' : 'readonly_bpsp'
 
                                 }
@@ -10702,14 +10700,13 @@ app.repository = {
                 },
         },
 
-    rocheBPSPTerritoriesProductsGridRow15Cell1Title:{
+    rocheBPSPTerritoriesProductsGridRow15Cell1Title: {
         init: {
             execute: (db) => {
                 return {title: Utils.getGridTableCell('rocheBPSPTerritoriesGridTable', 0).territoryID};
             }
         }
     },
-
 
 
     rocheBPSPTerritoriesProductsGridRow1Cell4Button: {
@@ -10745,6 +10742,131 @@ app.repository = {
                     year1: y1,
                     key: 'rocheMaterialMaintenanceExportMDX' // ez a yml
                 };
+            }
+        }
+    },
+
+    rocheBPSPMaterialGridRow4Cell3ExportByIpNodeButton: {
+        getFileName: (db) => {
+            let s = [], fileName;
+            s.push(Utils.getFormattedDate(new Date(), '_', true));
+            s.push(db.activeUserName);
+            s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key'));
+            return s.join('_').replaceAll(':', '_').replaceAll(' ', '_').replaceAll('/', '_');
+        },
+        launch: {
+            download: (db) => {
+                let y1 = parseInt(db.systemValueGlobalStartingPlanYear),
+                    fileName = Repository.rocheBPSPMaterialGridRow4Cell3ExportButton.getFileName(db);
+                return {
+                    url: 'export?export_key=rocheMaterialMaintenanceByIpNodeExport&file_name=' + fileName + '.xlsx',   // custom_object json
+                    fileName: fileName + '.xlsx',
+                    activeUserName: db.activeUserName,
+                    companyVersion: db.systemValueGlobalCompanyVersion, //Live
+                    productPlanVersion: db.systemValueGlobalCompanyProductPlanVersion, //Budget
+                    company: Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key'),
+                    globalVersion: WidgetValue.systemValueGlobalCompanyVersion,
+                    version: WidgetValue.systemValueGlobalCompanyProductPlanVersion,
+                    year1: y1,
+                    key: 'rocheMaterialMaintenanceByIpNodeExportMDX' // ez a yml
+                };
+            }
+        }
+    },
+
+
+    //rocheBPSPAccounts
+
+    rocheBPSPAccountsGridRow1Cell2DropBox: {
+        choose: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPAccountsGridRow1Cell2DropBox.value'));
+            }
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT 
+                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]} 
+                    ON COLUMNS , 
+                     {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}  
+                    ON ROWS 
+                    FROM [}ElementAttributes_Companies] 
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [], selected = v('systemValueGlobalSelectedCompany');
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    'name': r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: selected === r.Cells[i].FormattedValue
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
+    },
+
+
+    rocheBPSPAccountsOverviewGridRow1Cell2DropBox: {
+        choose: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPAccountsGridRow1Cell2DropBox.value'));
+            }
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT 
+                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]} 
+                    ON COLUMNS , 
+                     {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}  
+                    ON ROWS 
+                    FROM [}ElementAttributes_Companies] 
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [], selected = v('systemValueGlobalSelectedCompany');
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    'name': r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: selected === r.Cells[i].FormattedValue
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
+    },
+
+
+    rocheBPSPAccountsGridRow1Cell4Button: {
+        init: {
+            execute: (db) => {
+                return {label: db.activeUserName};
+            }
+        }
+    },
+
+    rocheBPSPAccountsOverviewGridRow1Cell4Button: {
+        init: {
+            execute: (db) => {
+                return {label: db.activeUserName};
             }
         }
     },

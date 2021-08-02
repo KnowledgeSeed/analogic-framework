@@ -10238,13 +10238,24 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPMaterialGridRow4Cell3ExportButton',
                                             type: ButtonWidget,
-                                            label: 'Excel Export',
+                                            label: 'Export',
                                             width: '100',
                                             marginBottom: '4%',
                                             height: '40',
                                             icon: 'icon-columns',
                                             skin: 'blue_link_columns_bpsp',
-                                            visible: false
+                                        },
+
+                                        {
+                                            id: 'rocheBPSPMaterialGridRow4Cell3ExportByIpNodeButton',
+                                            type: ButtonWidget,
+                                            label: 'Export',
+                                            width: '100',
+                                            marginBottom: '4%',
+                                            height: '40',
+                                            icon: 'icon-columns',
+                                            visible: false,
+                                            skin: 'blue_link_columns_bpsp',
                                         }
 
 
@@ -19761,7 +19772,7 @@ app.widgetConfig = {
                                     marginTop: '0',
                                     marginBottom: '0',
                                     alignment: 'center-left',
-                                    width: '78%',
+                                    width: '25%',
                                     widgets: [
 
                                         {
@@ -19776,20 +19787,227 @@ app.widgetConfig = {
                                     ]
                                 },
 
+                                {
+                                    id: 'rocheBPSPAccountsGridRow1Cell3',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '15%',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPAccountsGridRow1Cell3SegmentedControl',
+                                            type: SegmentedControlWidget,
+                                            width: '100%',
+                                            skin: 'segmented',
+                                            marginBottom: 5,
+                                            widgets: [
+
+                                                {
+                                                    id: 'rocheBPSPAccountsGridRow1Cell3SegmentedControlItem1',
+                                                    type: SegmentedControlItemWidget,
+                                                    action: 'segmentedControlTab1',
+                                                    selected: true,
+                                                    label: 'Edit'
+                                                },
+                                                {
+                                                    id: 'rocheBPSPAccountsGridRow1Cell3SegmentedControlItem2',
+                                                    type: SegmentedControlItemWidget,
+                                                    action: 'segmentedControlTab2',
+                                                    selected: false,
+                                                    label: 'Overview'
+                                                }
+                                            ]
+                                        }
+                                    ]
+
+                                },
 
                                 {
-                                    id: 'rocheBPSPAccountsGridRow1Cell5',
+                                    id: 'rocheBPSPAccountsGridRow1Cell2',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '23%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPAccountsGridRow1Cell2DropBox',
+                                            type: DropBoxWidget,
+                                            width: '144%',
+                                            skin: 'simple_bold_bpsp',
+                                            marginBottom: 5,
+                                            selectFirst: true,
+                                            backdrop: true
+                                        }
+
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPAccountsGridRow1Cell4',
                                     type: GridCellWidget,
                                     marginLeft: '5',
-                                    marginRight: '0',
+                                    marginRight: '1%',
                                     marginTop: '1%',
-                                    alignment: 'top-center',
-                                    width: '20%',
+                                    alignment: 'top-right',
+                                    width: '37%',
                                     height: '0',
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPAccountsGridRow1Cell5Button',
+                                            id: 'rocheBPSPAccountsGridRow1Cell4Button',
+                                            type: ButtonWidget,
+                                            label: '',
+                                            backgroundColor: '#EBECEC',
+                                            action: '',
+                                            width: '100%',
+                                            icon: 'icon-profile',
+                                            skin: 'userpanelmain',
+                                        }
+                                    ]
+                                }],
+
+
+                        },
+                    ]
+
+
+                }]
+        },
+
+    rocheBPSPAccountsOverview:
+        {
+            id: 'rocheBPSPAccountsOverview',
+            type: PageWidget,
+            widgets: [
+
+                {
+                    id: 'rocheBPSPAccountsOverviewGrid',
+                    type: GridWidget,
+                    marginRight: '10px',
+                    marginLeft: '10px',
+                    width: '100%',
+                    widgets: [
+
+                        {
+                            id: 'rocheBPSPAccountsOverviewGridRow1',
+                            type: GridRowWidget,
+                            marginTop: '1.3%',
+                            alignment: 'center-right',
+                            width: '100%',
+                            skin: 'bottomborder',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPAccountsOverviewGridRow1Cell0',
+                                    type: GridCellWidget,
+                                    marginLeft: '0',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    alignment: 'center-right',
+                                    width: '3%',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPAccountsOverviewGridRow1Cell0Button',
+                                            type: ButtonWidget,
+                                            label: '',
+                                            action: '',
+                                            width: '50',
+                                            icon: 'icon-back-arrow',
+                                            skin: 'backbuttonrocheBPSP',
+                                            height: '50'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPAccountsOverviewGridRow1Cell1',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    alignment: 'center-left',
+                                    width: '25%',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPAccountsOverviewGridRow1Cell1Text',
+                                            type: TextWidget,
+                                            title: 'Accounts',
+                                            width: '100%',
+                                            skin: 'menu',
+                                            titleAlignment: 'start',
+                                            titleFontSize: 36,
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPAccountsOverviewGridRow1Cell3',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '15%',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPAccountsOverviewGridRow1Cell3SegmentedControl',
+                                            type: SegmentedControlWidget,
+                                            width: '100%',
+                                            skin: 'segmented',
+                                            marginBottom: 5,
+                                            widgets: [
+
+                                                {
+                                                    id: 'rocheBPSPAccountsOverviewGridRow1Cell3SegmentedControlItem1',
+                                                    type: SegmentedControlItemWidget,
+                                                    action: 'segmentedControlTab1',
+                                                    selected: false,
+                                                    label: 'Edit'
+                                                },
+                                                {
+                                                    id: 'rocheBPSPAccountsOverviewGridRow1Cell3SegmentedControlItem2',
+                                                    type: SegmentedControlItemWidget,
+                                                    action: 'segmentedControlTab2',
+                                                    selected: true,
+                                                    label: 'Overview'
+                                                }
+                                            ]
+                                        }
+                                    ]
+
+                                },
+
+                                {
+                                    id: 'rocheBPSPAccountsOverviewGridRow1Cell2',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '23%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPAccountsOverviewGridRow1Cell2DropBox',
+                                            type: DropBoxWidget,
+                                            width: '144%',
+                                            skin: 'simple_bold_bpsp',
+                                            marginBottom: 5,
+                                            selectFirst: true,
+                                            backdrop: true
+                                        }
+
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPAccountsOverviewGridRow1Cell4',
+                                    type: GridCellWidget,
+                                    marginLeft: '5',
+                                    marginRight: '1%',
+                                    marginTop: '1%',
+                                    alignment: 'top-right',
+                                    width: '37%',
+                                    height: '0',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPAccountsOverviewGridRow1Cell4Button',
                                             type: ButtonWidget,
                                             label: '',
                                             backgroundColor: '#EBECEC',

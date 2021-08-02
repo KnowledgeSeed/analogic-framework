@@ -1296,6 +1296,15 @@ app.eventMap = {
         {
             action: app.fn.showWidget,
             argument: 'rocheBPSPMaterialGridTable'
+        },
+
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPMaterialGridRow4Cell3ExportByIpNodeButton'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPMaterialGridRow4Cell3ExportButton'
         }
     ],
 
@@ -1307,6 +1316,15 @@ app.eventMap = {
         {
             action: app.fn.showWidget,
             argument: 'RocheBPSPMaterialIPNodeGridTable'
+        },
+
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPMaterialGridRow4Cell3ExportButton'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPMaterialGridRow4Cell3ExportByIpNodeButton'
         }
     ],
 
@@ -2648,14 +2666,6 @@ app.eventMap = {
         }
     ],
 
-
-    'launch.rocheBPSPAccountsGridRow1Cell0Button': [
-        {
-            action: app.fn.openPrevPage,
-            argument: ''
-        }
-    ],
-
     'launch.rocheBPSPAccountsTerritoriesGridRow1Cell0Button': [
         {
             action: app.fn.openPrevPage,
@@ -2908,7 +2918,7 @@ app.eventMap = {
             argument: 'rocheBPSPTerritoriesUsersTerritoriesGrid'
         },
 
-         {
+        {
             action: app.fn.removeWidgetValue,
             argument: 'rocheBPSPTerritoriesUsersTerritoriesSegmentedControl'
         },
@@ -2924,7 +2934,7 @@ app.eventMap = {
             action: app.fn.showWidget,
             argument: 'rocheBPSPTerritoriesUsersTerritoriesGrid'
         },
-         {
+        {
             action: app.fn.removeWidgetValue,
             argument: 'rocheBPSPTerritoriesUsersSegmentedControl'
         },
@@ -3058,5 +3068,37 @@ app.eventMap = {
             argument: 'rocheBPSPTerritoriesProducts'
         }
     ],
+
+    'segmentedControlTab1.rocheBPSPAccountsOverviewGridRow1Cell3SegmentedControl': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPAccounts'
+        }
+    ],
+
+
+    'segmentedControlTab2.rocheBPSPAccountsGridRow1Cell3SegmentedControl': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPAccountsOverview'
+        }
+    ],
+
+
+    'launch.rocheBPSPAccountsGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPSettings'
+        }
+    ],
+
+
+    'launch.rocheBPSPAccountsOverviewGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPSettings'
+        }
+    ],
+
 }
 ;
