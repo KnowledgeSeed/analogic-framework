@@ -888,9 +888,10 @@ app.repository = {
                             }
 
                             if (!marketingAdjustmentVisible && !finalSalesPlanVisible) {
-                                visibleType = 'Access Denied';
+                                visibleType = 'Access denied';
                             }
-                            Utils.setWidgetValue('systemValueProductsTypeSegmentedControlVisibleType', visibleType)
+                            Utils.setWidgetValue('systemValueProductsTypeSegmentedControlVisibleType', visibleType);
+                            Utils.setWidgetValue('systemValueProductsTypeIsOk', visibleType !== 'Access denied');
                             return v('systemValueSegmentedControlPeriodUnit') === 'Monthly' && visible;
                         }
                     }
