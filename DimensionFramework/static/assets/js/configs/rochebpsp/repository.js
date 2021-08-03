@@ -832,6 +832,71 @@ app.repository = {
             }
         }
     },
+    rocheBPSPProductsTypeSegmentedControlInfoText: {
+        initCondition: (db) => {
+            return db.systemValueSegmentedControlPeriodUnit === 'Monthly';
+        },
+        initDefault: (db) => {
+            return {visible: false};
+        },
+        init: {
+            execute: (db) => {
+                return {
+                    visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly' && v('systemValueProductsTypeSegmentedControlVisibleType') !== '',
+                    title: v('systemValueProductsTypeSegmentedControlVisibleType')
+                };
+            }
+        }
+    },
+    rocheBPSPProductsTypeSegmentedControl: {
+        initCondition: (db) => {
+            return db.systemValueSegmentedControlPeriodUnit === 'Monthly';
+        },
+        initDefault: (db) => {
+            return {visible: false};  
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => {
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key');
+                return `{"MDX":"
+                  SELECT 
+                    {[}Groups].[}Groups].[${company} SalesMarketing],[}Groups].[}Groups].[${company} SalesFinance]} 
+                  ON COLUMNS , 
+                    {[}Clients].[}Clients].[${db.activeUser}]} 
+                    PROPERTIES [}Clients].[}Clients].[}TM1_DefaultDisplayValue]  ON ROWS 
+                    FROM [}ClientGroups] 
+                  "}`;
+            },
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        visible: (r, x) => {
+                            let marketingAdjustmentVisible = r.Cells[0].FormattedValue !== '',
+                                finalSalesPlanVisible = r.Cells[1].FormattedValue !== '',
+                                visible = finalSalesPlanVisible && marketingAdjustmentVisible,
+                                visibleType = '';
+
+                            if(marketingAdjustmentVisible && !finalSalesPlanVisible){
+                                visibleType = 'Marketing Adjustment';
+                            }
+
+                            if(!marketingAdjustmentVisible && finalSalesPlanVisible){
+                                visibleType = 'Final Sales Plan';
+                            }
+
+                            if (!marketingAdjustmentVisible && !finalSalesPlanVisible) {
+                                visibleType = 'Access Denied';
+                            }
+                            Utils.setWidgetValue('systemValueProductsTypeSegmentedControlVisibleType', visibleType)
+                            return v('systemValueSegmentedControlPeriodUnit') === 'Monthly' && visible;
+                        }
+                    }
+            }
+        }
+    },
     rocheBPSPProductsGridTableYearly: {
         initCondition: (db) => {
             let l = v('rocheBPSPProductsGridRow1Cell3DropBox.value.length') !== false
@@ -10249,7 +10314,7 @@ app.repository = {
                                     editable: r.Cells[x + 2].FormattedValue === '1' ? true : false,
                                     cellSkin: r.Cells[x + 2].FormattedValue === '1' ? '' : 'readonly_bpsp',
                                     skin: r.Cells[x + 2].FormattedValue === '1' ? 'Settings_toggle_bpsp' : 'label_toggle_bpsp',
-                                    titleOn: r.Cells[x + 2].FormattedValue === '1' ? '' : ''+ parseInt(r.Cells[x].FormattedValue),
+                                    titleOn: r.Cells[x + 2].FormattedValue === '1' ? '' : '' + parseInt(r.Cells[x].FormattedValue),
                                 }
                             },
                             (r, x) => {
@@ -10575,7 +10640,7 @@ app.repository = {
                                 return {
                                     title: parseInt(r.Cells[x + 2].FormattedValue) + ' Customers',
                                     skin: 'territories_readonly_text_with_icon_bpsp',
-                                    icon: r.Cells[x + 4].FormattedValue === '1' ? 'icon-edit': '',
+                                    icon: r.Cells[x + 4].FormattedValue === '1' ? 'icon-edit' : '',
                                     cellSkin: r.Cells[x + 4].FormattedValue === '1' ? '' : 'readonly_bpsp'
                                 }
                             },
@@ -10583,7 +10648,7 @@ app.repository = {
                                 return {
                                     title: r.Cells[x + 4].FormattedValue === '1' ? parseInt(r.Cells[x + 3].FormattedValue) + ' Users' : '',
                                     skin: 'territories_readonly_text_with_icon_bpsp',
-                                    icon: r.Cells[x + 4].FormattedValue === '1' ? 'icon-edit': '',
+                                    icon: r.Cells[x + 4].FormattedValue === '1' ? 'icon-edit' : '',
                                     cellSkin: r.Cells[x + 4].FormattedValue === '1' ? '' : 'readonly_bpsp'
 
                                 }
@@ -10702,14 +10767,13 @@ app.repository = {
                 },
         },
 
-    rocheBPSPTerritoriesProductsGridRow15Cell1Title:{
+    rocheBPSPTerritoriesProductsGridRow15Cell1Title: {
         init: {
             execute: (db) => {
                 return {title: Utils.getGridTableCell('rocheBPSPTerritoriesGridTable', 0).territoryID};
             }
         }
     },
-
 
 
     rocheBPSPTerritoriesProductsGridRow1Cell4Button: {
