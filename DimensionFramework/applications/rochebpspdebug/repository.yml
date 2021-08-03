@@ -138,10 +138,33 @@ rocheMaterialMaintenanceExportMDX: >
       ON COLUMNS ,
       -- {TM1SubsetToSet([Materials].[BPSP $productPlanVersion],'$company MM')}
 
-          {Filter({TM1SubsetToSet([Materials].[BPSP $productPlanVersion], '1391 MM')},
+          {Filter({TM1SubsetToSet([Materials].[BPSP $productPlanVersion], '$company MM')},
                  Instr(UCASE([Materials].[BPSP $productPlanVersion].[BPSP $productPlanVersion Name]), '') > 0)}
       ON ROWS
     FROM [}ElementAttributes_Materials]
 
-
+rocheMaterialMaintenanceByIpNodeExportMDX: >
+  With
+    -- IP Node then add dummy flag
+    Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag] As
+    IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='IP Node',1,0)
+    -- IP Node and has no pland Data then deletable
+    Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag] As
+    IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
+    [Material Information by Company].([ Companies].[ Companies].[$company],
+    [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) = 0,1,0)
+    -- IP Node and has pland Data then go to plan
+    Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag] As
+    IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
+    [Material Information by Company].([ Companies].[ Companies].[$company],
+    [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) <> 0,1,0)
+    SELECT
+    {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP $productPlanVersion IP Name],
+    [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name],
+    [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element]}
+    ON COLUMNS ,
+    {Filter({TM1SubsetToSet([Materials].[BPSP $productPlanVersion IP], '$company MM')},
+    Instr(UCASE([Materials].[BPSP $productPlanVersion IP].[BPSP $productPlanVersion IP Name]), '') > 0)}
+    PROPERTIES [Materials].[BPSP $productPlanVersion IP].[Caption]  ON ROWS
+    FROM [}ElementAttributes_Materials]
 
