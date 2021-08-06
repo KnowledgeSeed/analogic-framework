@@ -219,6 +219,7 @@ class Widget {
         }
 
         El.body.triggerHandler(eventType + '.' + o.id + '.finished');
+
         let actions = EventMap[eventType + '.' + o.id + '.finished'], a;
         if(actions) {
             for (a of actions) {

@@ -20,7 +20,7 @@ exportMonthly: >
     FROM [Sales Plan by Product]
     WHERE
       (
-       [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
+       [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[$lineItem],
        [Versions].[Versions].[$companyVersion],
        [Companies].[Companies].[$company],
        [Receivers].[Receivers].[$receiver],

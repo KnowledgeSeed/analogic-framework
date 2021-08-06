@@ -236,7 +236,7 @@ app.eventMap = {
         },
         {
             action: app.fn.forceRefresh,
-            argument: 'rocheBPSPProductsGridTableMonthly'
+            argument: 'rocheBPSPProductsTypeSegmentedControl'
         }
     ],
     'segmentedControlTab1.rocheBPSPProductsPeriodUnitSegmentedControl': [
@@ -255,6 +255,14 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPProductsGridTableYearly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsTypeSegmentedControl'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsTypeSegmentedControlInfoText'
         }
     ],
     'launch.rocheBPSPProductsCheckoutPopupFocusButton': [
@@ -749,7 +757,7 @@ app.eventMap = {
         },
         {
             action: app.fn.forceRefresh,
-            argument: 'rocheBPSPProductsCheckoutGridTableMonthly'
+            argument: 'rocheBPSPProductsTypeSegmentedControl'
         }
     ],
     'segmentedControlTab1.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl': [
@@ -776,6 +784,14 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPProductsCheckoutGridTableYearly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsTypeSegmentedControlInfoText'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductsTypeSegmentedControl'
         }
     ],
     'launch.rocheBPSPProductsCheckoutGridRow2Cell1bButton': [

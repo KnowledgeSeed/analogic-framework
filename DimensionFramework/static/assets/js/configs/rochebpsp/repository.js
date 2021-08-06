@@ -515,10 +515,10 @@ app.repository = {
         init: {
             execute: (db) => {
                 let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly';
-                return v(g + '.cellData').filter(e => ['PL1', 'PL2', 'PL3'].includes(e[0].productLevel)).map(e => {
+                return v(g + '.cellData').filter(e => ['01C', '02C', '03C', '01N', '02N', '03C'].includes(e[0].uiLevel)).map(e => {
                     return [{
                         label: e[0].label,
-                        skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].productLevel,
+                        skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].uiLevel,
                         productCode: e[1].title
                     }];
                 });
@@ -842,18 +842,24 @@ app.repository = {
         init: {
             execute: (db) => {
                 return {
-                    visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly' && v('systemValueProductsTypeSegmentedControlVisibleType') !== '',
+                    visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly' && v('systemValueProductsTypeSegmentedControlVisibleType') !== false,
                     title: v('systemValueProductsTypeSegmentedControlVisibleType')
                 };
             }
         }
     },
     rocheBPSPProductsTypeSegmentedControl: {
+        switch: {
+            execute: (db) => {
+                L(v('rocheBPSPProductsTypeSegmentedControl.selected'));
+                Utils.setWidgetValue('selectedProductsTypeSegmentedControl', v('rocheBPSPProductsTypeSegmentedControl.selected'));
+            }
+        },
         initCondition: (db) => {
             return db.systemValueSegmentedControlPeriodUnit === 'Monthly';
         },
         initDefault: (db) => {
-            return {visible: false};  
+            return {visible: false};
         },
         init: {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
@@ -879,11 +885,11 @@ app.repository = {
                                 visible = finalSalesPlanVisible && marketingAdjustmentVisible,
                                 visibleType = '';
 
-                            if(marketingAdjustmentVisible && !finalSalesPlanVisible){
+                            if (marketingAdjustmentVisible && !finalSalesPlanVisible) {
                                 visibleType = 'Marketing Adjustment';
                             }
 
-                            if(!marketingAdjustmentVisible && finalSalesPlanVisible){
+                            if (!marketingAdjustmentVisible && finalSalesPlanVisible) {
                                 visibleType = 'Final Sales Plan';
                             }
 
@@ -893,9 +899,34 @@ app.repository = {
                             Utils.setWidgetValue('systemValueProductsTypeSegmentedControlVisibleType', visibleType);
                             Utils.setWidgetValue('systemValueProductsTypeIsOk', visibleType !== 'Access denied');
                             return v('systemValueSegmentedControlPeriodUnit') === 'Monthly' && visible;
+                        },
+                        data: (r, x) => {
+                            let vv = v('systemValueProductsTypeSegmentedControlVisibleType'),
+                                selected = vv === false ? v('selectedProductsTypeSegmentedControl') !== false ? v('selectedProductsTypeSegmentedControl') : 'Final Sales Plan' : vv;
+                            return [
+                                {
+                                    selected: 'Final Sales Plan' === selected,
+                                    label: 'Final Sales Plan',
+                                    value: 'Final Sales Plan'
+                                },
+                                {
+                                    selected: 'Marketing Adjustment' === selected,
+                                    label: 'Marketing Adjustment',
+                                    value: 'Marketing Adjustment'
+                                }
+                            ];
                         }
                     }
             }
+        }
+    },
+    rocheBPSPProducts: {
+        getProductsTypeSegmentedControlValue: (db) => {
+            let vv = v('systemValueProductsTypeSegmentedControlVisibleType');
+            if (vv !== false) {
+                return vv;
+            }
+            return v('rocheBPSPProductsTypeSegmentedControl.selected');
         }
     },
     rocheBPSPProductsGridTableYearly: {
@@ -936,6 +967,7 @@ app.repository = {
                                  MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductName] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
                                  MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductCaption] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
                                  MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductLevel] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                                 MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[UILevelFormat] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} UI Level Format')
                                  MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[HasComment] as
                                         [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Comment Flag])
                                  MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutDateTime] as 
@@ -952,7 +984,8 @@ app.repository = {
                                  Set Comment AS
                                  {([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[HasComment])}
                             SELECT 
-                              {UNION(HEAD(UNION(UNION({FixColumns},{ColumnSelectionByUser},All),{DefaultColumnSelection},All),16),{Comment},All)}
+                              {UNION({UNION(HEAD(UNION(UNION({FixColumns},{ColumnSelectionByUser},All),{DefaultColumnSelection},All),16),{Comment},All)},
+                              {([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[UILevelFormat])})}
                               PROPERTIES [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Caption] ,[Periods].[Periods].[Caption]  ON COLUMNS , 
                               {StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
                               PROPERTIES [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption] ON ROWS 
@@ -970,10 +1003,10 @@ app.repository = {
        `,
             parsingControl: {
                 type: 'matrix',
-                length: 17,
+                length: 18,
                 query: [
                     (r, x) => {
-                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue;
+                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue, uiLevel = r.Cells[x + 17].FormattedValue;
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'];
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
@@ -981,7 +1014,7 @@ app.repository = {
                         pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: 'gridtable_hierarchy_bpsp_' + pl + (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? '_locked' : ''),
+                            skin: 'gridtable_hierarchy_bpsp_' + uiLevel + (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? '_locked' : ''),
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
                             icon: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
@@ -993,6 +1026,7 @@ app.repository = {
                             checkedOutAt: r.Cells[x + 5].FormattedValue,
                             members: r.Cells[x].Members,
                             productLevel: pl,
+                            uiLevel: uiLevel,
                             hasComment: r.Cells[x + 16].FormattedValue !== ''
                         };
                         if (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked']) {
@@ -1157,7 +1191,7 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return {title: db.systemValueGlobalSegmentedControlRelativeYearValue};
+                return {title: db.systemValueGlobalSegmentedControlRelativeYearValue, body: Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)};
             }
         }
     },
@@ -1165,7 +1199,8 @@ app.repository = {
         initCondition: (db) => {
             let l = v('rocheBPSPProductsGridRow1Cell3DropBox.value.length') !== false
                 && v('systemValueSegmentedControlPeriodUnit') === 'Monthly'
-                && v('systemValueBackFromCheckinMonthly') === false;
+                && v('systemValueBackFromCheckinMonthly') === false
+                && v('systemValueProductsTypeIsOk') === true;
             Utils.setWidgetValue('systemValueBackFromCheckinMonthly', false);
             return l;
         },
@@ -1190,11 +1225,13 @@ app.repository = {
                              IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
                         -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
                              MEMBER [Periods].[Periods].[ProductName] as 
-                                    [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
+                                    [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
                              MEMBER [Periods].[Periods].[ProductCaption] as 
-                                    [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
+                                    [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
                              MEMBER [Periods].[Periods].[ProductLevel] as 
-                                    [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                                    [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                             MEMBER [Periods].[Periods].[UILevelFormat] as 
+                                    [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} UI Level Format')
                              MEMBER [Periods].[Periods].[zUI CheckOutFlag] as
                                     [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value])
                              MEMBER [Periods].[Periods].[HasComment] as
@@ -1204,7 +1241,7 @@ app.repository = {
                              MEMBER [Periods].[Periods].[zUI CheckOutDateTime] as 
                                     [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime])
                              MEMBER [Periods].[Periods].[zUI Split Flag] as 
-                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Monthly Split Type])
+                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Monthly Split Type])
 
                         -- Create the first 5 column with information
                              Set FixColumns AS
@@ -1220,7 +1257,8 @@ app.repository = {
                         -- query
                         SELECT 
                         --Columns
-                           {Union(Union(FixColumns,{DRILLDOWNMEMBER({[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]},{[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]})},All),{Comment},All)}
+                           {Union({Union(Union(FixColumns,{DRILLDOWNMEMBER({[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]},{[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]})},All),{Comment},All)},
+                           {[Periods].[Periods].[UILevelFormat]})}
                            PROPERTIES [Periods].[Periods].[Caption]ON COLUMNS , 
                         -- rows
                           {StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
@@ -1228,7 +1266,7 @@ app.repository = {
                         FROM [Sales Plan by Product] 
                         WHERE 
                           (
-                           [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
+                           [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}],
                            [Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
                            [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}],
                            [Receivers].[Receivers].[${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}],
@@ -1239,10 +1277,10 @@ app.repository = {
        `,
             parsingControl: {
                 type: 'matrix',
-                length: 21,
+                length: 22,
                 query: [
                     (r, x) => {
-                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue;
+                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue, uiLevel = r.Cells[x + 21].FormattedValue;
                         WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
                         WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsMainLocked'];
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
@@ -1251,7 +1289,7 @@ app.repository = {
                         pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: 'gridtable_hierarchy_bpsp_' + pl + (WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? '_locked' : ''),
+                            skin: 'gridtable_hierarchy_bpsp_' + uiLevel + (WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? '_locked' : ''),
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
                             icon: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
@@ -1263,6 +1301,7 @@ app.repository = {
                             checkedOutAt: r.Cells[x + 5].FormattedValue,
                             members: r.Cells[x].Members,
                             productLevel: pl,
+                            uiLevel: uiLevel,
                             hasComment: r.Cells[x + 19].FormattedValue === ''
                         };
                         if (WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsMainLocked']) {
@@ -2109,13 +2148,14 @@ app.repository = {
             url: (db) => `/api/v1/Processes('MODULE - UI - Clear All Inputs')/tm1.ExecuteWithReturn`,
             type: 'POST',
             body: (db) => {
+                let pLineItem = v('systemValueSegmentedControlPeriodUnit') === 'Yearly' ? 'Final Sales Plan' : Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db);
                 return `{
                         "Parameters": [
                                 {"Name": "pVersion", "Value": "${db.systemValueGlobalCompanyVersion}"},
                                 {"Name": "pProduct", "Value": "${db.systemValueCheckoutProduct}"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}"},
-                                {"Name": "pLineItem", "Value": "Final Sales Plan"},
+                                {"Name": "pLineItem", "Value": "${pLineItem}"},
                                 {"Name": "pCube", "Value": "Sales Plan by Product"},
                                 {"Name": "pPeriod", "Value": "${db.systemValueGlobalSegmentedControlRelativeYearValue}"}
                         ]
@@ -2198,6 +2238,7 @@ app.repository = {
                          MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductName] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
                          MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductCaption] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
                          MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductLevel] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                         MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[UILevelFormat] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} UI Level Format')
                          MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutDateTime] as 
                                 [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime])
                          MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutUser] as 
@@ -2208,18 +2249,19 @@ app.repository = {
                          ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductLevel]),
                          ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag]),
                          ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutUser]),
-                         ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutDateTime])}
+                         ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutDateTime]),
+                         ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[UILevelFormat])}
                          Set Comment AS
                               {([Measures Sales Plan by Product].[Measures Sales Plan by Product].[Comment Flag],[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan])}
 
-                    SELECT 
+                    SELECT
                         {UNION(
                            HEAD(
                              UNION(
                                UNION({[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value]}*{FixColumns},
                                {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[UI Format]}*{ColumnSelectionByUser},All),
-                               {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[UI Format]}*{DefaultColumnSelection},All),26),
-                                       {Comment},All)}ON COLUMNS , 
+                               {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[UI Format]}*{DefaultColumnSelection},All),27),
+                                       {Comment},All)}  ON COLUMNS , 
                       {DefaultProductRows} PROPERTIES [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption] ON ROWS 
                     FROM [Sales Plan by Product] 
                     WHERE 
@@ -2234,20 +2276,20 @@ app.repository = {
        `,
             parsingControl: {
                 type: 'matrix',
-                length: 27,
+                length: 28,
                 query: [
                     (r, x) => {
-                        let result, pl;
+                        let result, pl, uiLevel = r.Cells[x + 6].FormattedValue;
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = x;
                         pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: 'gridtable_checkout_hierarchy_bpsp_' + pl,
+                            skin: 'gridtable_checkout_hierarchy_bpsp_' + uiLevel,
                             cellVisible: true,
                             icon: 'icon-badge',
                             members: r.Cells[x].Members,
                             productLevel: pl,
-                            hasComment: r.Cells[x + 26].FormattedValue !== ''
+                            hasComment: r.Cells[x + 27].FormattedValue !== ''
                         };
                         if (WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableYearlyIsMainLocked']) {
                             result['iconColor'] = '#D12D4A';
@@ -2273,7 +2315,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 4;
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 5;
                         return Repository.rocheBPSPProductsCheckoutGridTableYearlyFunction.getCell(WidgetValue['systemValueProductsYearlyRelativeIndex'], r);
                     },
                     (r, x) => {
@@ -2343,6 +2385,7 @@ app.repository = {
             s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key'));
             s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key'));
             s.push(db.systemValueCheckoutProduct);
+            s.push(Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db));
             return s.join('_').replaceAll(':', '_').replaceAll(' ', '_').replaceAll('/', '_');
         },
         launch: {
@@ -2360,6 +2403,7 @@ app.repository = {
                     product: db.systemValueCheckoutProduct,
                     globalVersion: WidgetValue.systemValueGlobalCompanyVersion,
                     version: WidgetValue.systemValueGlobalCompanyProductPlanVersion,
+                    lineItem: Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db),
                     year1: y1,
                     year2: y1 + 1,
                     year3: y1 + 2,
@@ -2434,6 +2478,7 @@ app.repository = {
                 validationGlobalVersion: WidgetValue.systemValueGlobalCompanyVersion,
                 validationVersion: WidgetValue.systemValueGlobalCompanyProductPlanVersion,
                 validationProduct: WidgetValue.systemValueCheckoutProduct,
+                validationLineItem: Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db),
                 validationMessage: 'First row of excel does not match'
                 //      preProcessTemplate: v('preprocess.choose.value') === false ? 'Template1' : v('preprocess.choose.value')
             };
@@ -2510,7 +2555,8 @@ app.repository = {
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}"},
                                 {"Name": "pSplitMode", "Value": "Monthly"},
-                                {"Name": "pSplitMethod", "Value": "Previous Year"}
+                                {"Name": "pSplitMethod", "Value": "Previous Year"},
+                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}"}
                         ]
                     }`
 
@@ -2529,7 +2575,8 @@ app.repository = {
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}"},
                                 {"Name": "pSplitMode", "Value": "Monthly"},
-                                {"Name": "pSplitMethod", "Value": "Equal"}
+                                {"Name": "pSplitMethod", "Value": "Equal"},
+                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}"}
                         ]
                     }`
 
@@ -2538,7 +2585,7 @@ app.repository = {
     'rocheBPSPProductsCheckoutGridTableMonthlyHeaderText-04': {
         init: {
             execute: (db) => {
-                return {title: db.systemValueGlobalSegmentedControlRelativeYearValue};
+                return {title: db.systemValueGlobalSegmentedControlRelativeYearValue, body: Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)};
             }
         }
     },
@@ -2554,7 +2601,8 @@ app.repository = {
                                 {"Name": "pPeriod", "Value": "${Utils.getGridTableCurrentCell('rocheBPSPProductsCheckoutGridTableMonthly').members[6].Name}"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}"},
-                                {"Name": "pSplitMode", "Value": "Default"}
+                                {"Name": "pSplitMode", "Value": "Default"},
+                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}"}
                         ]
                     }`
             }
@@ -2610,7 +2658,7 @@ app.repository = {
                                     "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}')",
                                     "Dimensions('Products')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
                                     "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}')",
-                                    "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('Final Sales Plan')",
+                                    "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}')",
                                     "Dimensions('Measures Sales Plan by Product')/Hierarchies('Measures Sales Plan by Product')/Elements('Monthly Split Type')"
                                 ]
                             },
@@ -2660,6 +2708,8 @@ app.repository = {
                                     [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
                              MEMBER [Periods].[Periods].[ProductLevel] as 
                                     [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                             MEMBER [Periods].[Periods].[UILevelFormat] as 
+                                    [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} UI Level Format')
                              MEMBER [Periods].[Periods].[zUI CheckOutFlag] as
                                     [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value])
                              MEMBER [Periods].[Periods].[HasComment] as
@@ -2669,7 +2719,7 @@ app.repository = {
                              MEMBER [Periods].[Periods].[zUI CheckOutDateTime] as 
                                     [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime])
                              MEMBER [Periods].[Periods].[zUI Split Flag] as 
-                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Monthly Split Type])
+                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Monthly Split Type])
                         -- Create the first 5 column with information
                              Set FixColumns AS
                              {[Periods].[Periods].[ProductName],
@@ -2684,7 +2734,8 @@ app.repository = {
                         -- query
                         SELECT 
                         --Columns
-                           {Union(Union(FixColumns,{DRILLDOWNMEMBER({[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]},{[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]})},All),{Comment},All)}
+                           {Union({Union(Union(FixColumns,{DRILLDOWNMEMBER({[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]},{[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]})},All),{Comment},All)},
+                           {[Periods].[Periods].[UILevelFormat]})}
                            PROPERTIES [Periods].[Periods].[Caption] ON COLUMNS , 
                         -- rows
                           {StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
@@ -2692,7 +2743,7 @@ app.repository = {
                         FROM [Sales Plan by Product] 
                         WHERE 
                           (
-                           [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
+                           [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}],
                        [Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
                        [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}],
                        [Receivers].[Receivers].[${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}],
@@ -2703,16 +2754,16 @@ app.repository = {
        `,
             parsingControl: {
                 type: 'matrix',
-                length: 21,
+                length: 22,
                 query: [
                     (r, x) => {
-                        let result, pl;
+                        let result, pl, uiLevel = r.Cells[x + 21].FormattedValue;
                         WidgetValue['systemValueMonthlyRelativeIndex'] = x;
 
                         pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: 'gridtable_checkout_hierarchy_bpsp_' + pl,
+                            skin: 'gridtable_checkout_hierarchy_bpsp_' + uiLevel,
                             cellVisible: true,
                             icon: 'icon-badge',
                             members: r.Cells[x].Members,
@@ -3813,6 +3864,8 @@ app.repository = {
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('Element')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialLevel] as 
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('Product Level - Name')
+                                     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[UILevelFormat] as 
+                                            [Materials].[BPSP Budget IP].CurrentMember.Properties('UI Level Format')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS] as 
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('IP DIS Relevant Flag Budget')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment] as
@@ -3828,7 +3881,8 @@ app.repository = {
                                       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialCode]),
                                       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutFlag]),
                                       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutUser]),
-                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutDateTime])}
+                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutDateTime]),
+                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[UILevelFormat])}
                                      Set FinalColumns AS
                                      {([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS]),
                                       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment])}
@@ -3870,17 +3924,17 @@ app.repository = {
                     "}`,
                     parsingControl: {
                         type: 'matrix',
-                        length: 25,
+                        length: 26,
                         query: [
                             (r, x) => {
-                                let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue, skin;
+                                let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue, skin, uiLevel = r.Cells[x + 6].FormattedValue;
                                 WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'] = x;
                                 WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
                                 WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsMainLocked'];
                                 WidgetValue['systemValueRocheBPSPipPlanningGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
 
                                 pl = r.Cells[x + 1].FormattedValue.replace('a', '');
-                                skin = pl === 'IP Node' ? 'gridtable_hierarchy_bpsp_PL6' : 'gridtable_hierarchy_bpsp_' + pl;
+                                skin = 'gridtable_hierarchy_bpsp_' + uiLevel;
                                 if (WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked']) {
                                     skin += '_locked';
                                 }
@@ -3893,6 +3947,7 @@ app.repository = {
                                     checkoutUser: checkoutUser,
                                     checkedOutAt: r.Cells[x + 5].FormattedValue,
                                     productLevel: pl,
+                                    uiLevel: uiLevel,
                                     skin: skin,
                                     cellSkin: WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked'] ? 'locked' : '',
                                     icon: WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
@@ -3923,7 +3978,7 @@ app.repository = {
                             },
 
                             (r, x) => {
-                                return Repository.rocheBPSPipPlanningGridTableMonthly.getCell(r, x, 4);
+                                return Repository.rocheBPSPipPlanningGridTableMonthly.getCell(r, x, 5);
                             },
                             (r, x) => {
                                 return Repository.rocheBPSPipPlanningGridTableMonthly.getCell(r, x, 1);
@@ -4025,10 +4080,10 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return v('rocheBPSPipPlanningGridTableMonthly.cellData').filter(e => ['PL1', 'PL2', 'PL3'].includes(e[0].productLevel)).map(e => {
+                return v('rocheBPSPipPlanningGridTableMonthly.cellData').filter(e => ['01C', '02C', '03C', '01N', '02N', '03N'].includes(e[0].uiLevel)).map(e => {
                     return [{
                         label: e[0].label,
-                        skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].productLevel,
+                        skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].uiLevel,
                         productCode: e[2].title
                     }];
                 });
@@ -4282,6 +4337,8 @@ app.repository = {
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('Element')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialLevel] as 
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('Product Level - Name')
+                                     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[UILevelFormat] as 
+                                            [Materials].[BPSP Budget IP].CurrentMember.Properties('UI Level Format')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS] as 
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('IP DIS Relevant Flag Budget')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment] as
@@ -4297,7 +4354,8 @@ app.repository = {
                                       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialCode]),
                                       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutFlag]),
                                       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutUser]),
-                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutDateTime])}
+                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutDateTime]),
+                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[UILevelFormat])}
                                      Set FinalColumns AS
                                      {([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS]),
                                       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment])}
@@ -4339,19 +4397,20 @@ app.repository = {
                     "}`,
             parsingControl: {
                 type: 'matrix',
-                length: 25,
+                length: 26,
                 query: [
                     (r, x) => {
-                        let result, pl;
+                        let result, pl, uiLevel = r.Cells[x + 6].FormattedValue;
                         WidgetValue['systemValueMonthlyRelativeIndex'] = x;
 
                         pl = r.Cells[x + 1].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: pl === 'IP Node' ? 'gridtable_checkout_hierarchy_bpsp_PL6' : 'gridtable_checkout_hierarchy_bpsp_' + pl,
+                            skin: 'gridtable_checkout_hierarchy_bpsp_' + uiLevel,
                             cellVisible: true,
                             icon: 'icon-badge',
                             members: r.Cells[x].Members,
+                            uiLevel: uiLevel,
                             productLevel: pl
                         };
                         return result;
@@ -4376,7 +4435,7 @@ app.repository = {
                     },
 
                     (r, x) => {
-                        return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthly.getCell(r, x, 4);
+                        return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthly.getCell(r, x, 5);
                     },
                     (r, x) => {
                         return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthly.getCell(r, x, 1);
@@ -7557,13 +7616,17 @@ app.repository = {
                                             [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Element')
                                      MEMBER [Periods].[Periods].[ProductLevel] as 
                                             [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name')
+                                     MEMBER [Periods].[Periods].[UILevelFormat] as 
+                                            [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} UI Level Format')
                                      MEMBER [Periods].[Periods].[HasComment] as
                                             [Sales Plan by Customer].([Periods].[Periods].[${relativeYearValue}],[LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[Final Sales Plan],[Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Comment Flag])
                                 -- Create the first 3 column with information
                                      Set FixColumns AS
                                      {[Periods].[Periods].[ProductName],
                                       [Periods].[Periods].[ProductCaption],
-                                      [Periods].[Periods].[ProductLevel]}
+                                      [Periods].[Periods].[ProductLevel],
+                                      [Periods].[Periods].[UILevelFormat]
+                                      }
                                      Set Comment AS
                                      {[Periods].[Periods].[HasComment]}
                                 SELECT 
@@ -7593,20 +7656,21 @@ app.repository = {
             },
             parsingControl: {
                 type: 'matrix',
-                length: 17,
+                length: 18,
                 query: [
                     (r, x) => {
-                        let result, pl, pc;
+                        let result, pl, pc, uiLevel = r.Cells[x + 3].FormattedValue;
                         WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = x;
                         pc = r.Cells[x + 1].FormattedValue;
                         pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: 'gridtable_hierarchy_bpsp_' + pl,
+                            skin: 'gridtable_hierarchy_bpsp_' + uiLevel,
                             cellVisible: true,
                             icon: 'icon-badge',
                             members: r.Cells[x].Members,
                             productLevel: pl,
+                            uiLevel: uiLevel,
                             productCode: pc
                         };
                         return result;
@@ -7626,7 +7690,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 2;
                         return Repository.rocheBPSPCustomersPlanningGridTableMonthly.getCell(WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'], r);
                     },
                     (r, x) => {
@@ -7853,6 +7917,8 @@ app.repository = {
                                             [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Element')
                                      MEMBER [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductLevel] as 
                                             [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name')
+                                     MEMBER [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[UILevelFormat] as 
+                                            [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} UI Level Format')
                                      MEMBER [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[HasComment] as
                                             [Sales Plan by Customer].([Periods].[Periods].[${relativeYearValue}],[LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[Final Sales Plan],[Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Comment Flag])
                                 -- Create the first 3 column with information
@@ -7862,7 +7928,10 @@ app.repository = {
                                      ([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
                                       [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductCaption]),
                                      ([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
-                                      [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductLevel])}
+                                      [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductLevel]),
+                                      ([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
+                                      [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[UILevelFormat])
+                                      }
                                      Set Comment AS
                                      {([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
                                        [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[HasComment])}
@@ -7891,20 +7960,21 @@ app.repository = {
             },
             parsingControl: {
                 type: 'matrix',
-                length: 24,
+                length: 25,
                 query: [
                     (r, x) => {
-                        let result, pl, pc;
+                        let result, pl, pc, uiLevel = r.Cells[x + 3].FormattedValue;
                         WidgetValue['systemValueCustomersPlanningYearlyRelativeIndex'] = x;
                         pc = r.Cells[x + 1].FormattedValue;
                         pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: 'gridtable_hierarchy_bpsp_' + pl,
+                            skin: 'gridtable_hierarchy_bpsp_' + uiLevel,
                             cellVisible: true,
                             icon: 'icon-badge',
                             members: r.Cells[x].Members,
                             productLevel: pl,
+                            uiLevel: uiLevel,
                             productCode: pc
                         };
                         return result;
@@ -7924,7 +7994,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueCustomersPlanningYearlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningYearlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueCustomersPlanningYearlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningYearlyRelativeIndex'] + 2;
                         return Repository.rocheBPSPCustomersPlanningGridTableYearly.getCell(WidgetValue['systemValueCustomersPlanningYearlyRelativeIndex'], r);
                     },
                     (r, x) => {
