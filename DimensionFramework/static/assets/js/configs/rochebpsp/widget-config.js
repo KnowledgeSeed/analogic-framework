@@ -848,10 +848,66 @@ app.widgetConfig = {
                             width: '100%',
                             widgets: [
                                 {
+                                    id: 'rocheBPSPProductsGridRow2Cell1a',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '20%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPProductsTypeSegmentedControlInfoText',
+                                            type: TextWidget,
+                                            visible: false,
+                                            listen: [
+                                                {
+                                                    event: 'refresh.rocheBPSPProductsTypeSegmentedControl.finished',
+                                                    method: 'refresh'
+                                                }
+                                            ]
+                                        },
+                                         {
+                                            id: 'rocheBPSPProductsTypeSegmentedControl',
+                                            type: SegmentedControlWidget,
+                                            width: '100%',
+                                            skin: 'segmented', 
+                                             listen: [
+                                                 {
+                                                     event: 'switch.rocheBPSPProductsPeriodUnitSegmentedControl.finished',
+                                                     method: 'refresh'
+                                                 },
+                                                 {
+                                                     event: 'choose.rocheBPSPProductsGridRow1Cell2DropBox.finished',
+                                                     method: 'refresh'
+                                                 }
+                                             ],
+                                            marginBottom: 5,
+                                            widgets: [
+
+                                                {
+                                                    id: 'rocheBPSPProductsTypeSegmentedControlItem1',
+                                                    type: SegmentedControlItemWidget,
+                                                    label: 'Marketing Adjustment',
+                                                    action: 'segmentedControlTab1',
+                                                    selected: true,
+                                                    value: 'Base Plan',
+                                                    skin: 'item_without_bg_bpsp'
+                                                },
+                                                {
+                                                    id: 'rocheBPSPProductsTypeSegmentedControlItem2',
+                                                    type: SegmentedControlItemWidget,
+                                                    label: 'Final Sales Plan',
+                                                    action: 'segmentedControlTab2',
+                                                    selected: false,
+                                                    value: 'One Time Event'
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
                                     id: 'rocheBPSPProductsGridRow2Cell1',
                                     type: GridCellWidget,
                                     alignment: 'bottom-right',
-                                    width: '98%',
+                                    width: '78%',
                                     widgets: [
                                         {
                                             id: 'rocheBPSPProductsGridRow2Cell1Button',

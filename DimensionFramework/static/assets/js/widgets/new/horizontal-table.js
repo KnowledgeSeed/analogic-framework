@@ -99,8 +99,7 @@ class HorizontalTableWidget extends Widget {
     }
 
     getTableBody(o, data, dataColumnNames, leftRowWidgets, rightRowWidgets, withState, actionWidth, v) {
-        let i, j, k, l, c = [], d = [], leftActionsNum = 0, rightActionsNum = 0, s = [], mtx = data.cells, len = mtx.length, cells, cell, escapedValue, enabled, len2, columnType = 'string',
-        selectFirstIndex;
+        let i, j, k, c = [], d = [], leftActionsNum = 0, rightActionsNum = 0, s = [], mtx = data.cells, len = mtx.length, cells, cell, escapedValue, enabled, len2, columnType = 'string', selectFirstIndex;
 
         for (i = 0; i < len; ++i) {//content
             enabled = data.leftActionCells.length > 0 && data.leftActionCells[i].length > 0 ? data.leftActionCells[i][0].active : true;
@@ -112,11 +111,15 @@ class HorizontalTableWidget extends Widget {
             len2 = cells.length;
             for (j = 0; j < len2; ++j) {
                 cell = cells[j];
-                if(v.columnTypes){
+
+                if (v.columnTypes) {
                     columnType = v.columnTypes[j];
                 }
+
                 escapedValue = cell.value.replace(/(<([^>]+)>)/ig, "").replace(/"/ig, "");
-                c.push(`<div class="ks-horizontal-table-cell" style="${o.columnWidths && o.columnWidths[j] ? 'flex: 0 0 ' + o.columnWidths[j] + (o.columnWidths[j].indexOf('%') === -1 ? 'px;' : ';') : ''}white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><div class="ks-horizontal-table-cell-inner ${cell.editable ? 'editable' : ''}" data-columntype="${columnType}" data-row="${i}" data-col="${j}" data-ordinal="${cell.ordinal}" data-editable="${cell.editable}" title="${escapedValue}">${cell.value.replace(/</ig, "< ")}</div></div>`);
+                k = cell.color;
+
+                c.push(`<div class="ks-horizontal-table-cell" style="${k ? ('color:' + k + ';') : ''}${o.columnWidths && o.columnWidths[j] ? 'flex: 0 0 ' + o.columnWidths[j] + (o.columnWidths[j].indexOf('%') === -1 ? 'px;' : ';') : ''}white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><div class="ks-horizontal-table-cell-inner ${cell.editable ? 'editable' : ''}" data-columntype="${columnType}" data-row="${i}" data-col="${j}" data-ordinal="${cell.ordinal}" data-editable="${cell.editable}" title="${escapedValue}">${cell.value.replace(/</ig, "< ")}</div></div>`);
 
                 if (data.leftActionCells.length + data.rightActionCells.length > 0 && dataColumnNames[j] !== '' && cell.value.length < 200) {
                     d.push(` data-${dataColumnNames[j]}="${escapedValue}" `);
@@ -129,15 +132,15 @@ class HorizontalTableWidget extends Widget {
                 len2 = cell.length;
                 for (k = 0; k < len2; ++k) {
                     s.push(leftRowWidgets[k].getHtml([], {icon: cell[k].icon, index: i, on: (withState && this.state.radio === i) || cell[k].on === true || (v.selectFirst && i === 0), d: d, active: cell[k].active === true, id: o.id, num: leftActionsNum, actionWidth: actionWidth}));
-                    if(v.selectFirst && i === 0){
+                    if (v.selectFirst && i === 0) {
                         let html = $(s[s.length - 1]), p = html.find('.ks-horizontal-table-row-toggle');
                         WidgetValue[o.id][p.data('action')] = p.data();
                         selectFirstIndex = s.length - 1;
                     }
-                    if(cell[k].on === true){
+                    if (cell[k].on === true) {
                         let html = $(s[s.length - 1]), p = html.find('.ks-horizontal-table-row-toggle');
                         WidgetValue[o.id][p.data('action')] = p.data();
-                        if(v.selectFirst){
+                        if (v.selectFirst) {
                             s[selectFirstIndex] = s[selectFirstIndex].replace('ks-on', '');
                         }
                     }
@@ -274,10 +277,10 @@ class HorizontalTableWidget extends Widget {
                     return $(this).index() === thIndex;
                 }).sortElements(function (a, b) {
                     let aEl = $(a).find('div'), aValue, bValue;
-                    if(aEl.data('columntype') === 'real'){
+                    if (aEl.data('columntype') === 'real') {
                         aValue = Utils.parseNumber(aEl.text());
                         bValue = Utils.parseNumber($(b).find('div').text());
-                    }else{
+                    } else {
                         aValue = aEl.text();
                         bValue = $(b).find('div').text();
                     }
