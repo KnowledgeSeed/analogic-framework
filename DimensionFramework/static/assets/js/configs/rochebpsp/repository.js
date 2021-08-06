@@ -10871,6 +10871,70 @@ app.repository = {
         }
     },
 
+    rocheBPSPAccountHorizontalTable: {
+
+        initCondition: (db) => {
+            let a = Utils.isValueExistingAndNotEmpty('rocheBPSPAccountsGridRow1Cell2DropBox');
+            return a;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+                type: 'POST',
+                body: (db) => {
+                    let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsGridRow1Cell2DropBox', 'key');
+                    let y1 = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']);
+                    let y0 = y1 - 1;
+
+                    return `{"MDX":"
+      					With 
+						  Member [}ElementAttributes_Customers].[}ElementAttributes_Customers].[PrevYear] AS
+						      [Sales Actuals by Customer].( [Periods].[Periods].[${y0}],[Companies].[Companies].[${company}],[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[PL1],
+						      [Receivers].[Receivers].[All Receivers],[Measures Sales Actuals by Customer].[Measures Sales Actuals by Customer].[Rexis Invoice])
+						    Member [}ElementAttributes_Customers].[}ElementAttributes_Customers].[Actual] AS
+						      [Sales Actuals by Customer].( [Periods].[Periods].[${y1}],[Companies].[Companies].[${company}],[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[PL1],
+						      [Receivers].[Receivers].[All Receivers],[Measures Sales Actuals by Customer].[Measures Sales Actuals by Customer].[Rexis Invoice])
+						SELECT 
+                                   {[}ElementAttributes_Customers].[}ElementAttributes_Customers].[Account Name],
+                                   [}ElementAttributes_Customers].[}ElementAttributes_Customers].[Account Number],
+                                   [}ElementAttributes_Customers].[}ElementAttributes_Customers].[PrevYear],
+                                   [}ElementAttributes_Customers].[}ElementAttributes_Customers].[Actual],
+                                   [}ElementAttributes_Customers].[}ElementAttributes_Customers].[Plan Flag]} 
+						  ON COLUMNS , 
+						   {EXCEPT({DRILLDOWNMEMBER({[Customers].[Customers].[ALL CUSTOMERS ${company}]}, {[Customers].[Customers].[ALL CUSTOMERS ${company}]})},{[Customers].[Customers].[ALL CUSTOMERS ${company}]})} 
+						  ON ROWS 
+						FROM [}ElementAttributes_Customers] 
+                  "}`;
+
+                },
+                parsingControl: {
+                    type: 'matrix',
+                    length: 5,
+                    query: [
+
+                        (r, x) => {
+                            return {value: r.Cells[x].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 1].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 2].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 3].FormattedValue};
+                        }, (r, x) => {
+                            return {
+                                active: true,
+                                on: r.Cells[x + 4].FormattedValue === '' ? false : true
+                            };
+                        }
+                    ]
+                }
+
+            },
+    },
+
 
 }
 ;
