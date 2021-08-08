@@ -4327,7 +4327,7 @@ app.repository = {
                                 -- Decide 1st column element
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn] As
                                      IIF('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}'='${db.systemValueGlobalStartingPlanYear}', '([Periods].[Periods].[${Utils.parseNumber(db.systemValueGlobalStartingPlanYear) - 1}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])',
-                                                        '([Periods].[Periods].[${db.systemValueGlobalStartingPlanYear}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])')
+                     rocheBPSPProductReportGridTable                                   '([Periods].[Periods].[${db.systemValueGlobalStartingPlanYear}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])')
                                      Set FirstColumn As
                                      {StrToSet('{'+[LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn]+'}')}
                                 -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
@@ -4932,7 +4932,8 @@ app.repository = {
                                          [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element],
                                          [}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag],
                                          [}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag],
-                                         [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag]} 
+                                         [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag],
+                                         [}ElementAttributes_Materials].[}ElementAttributes_Materials].[UI Level Format]} 
                                       ON COLUMNS , 
                                       -- {TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}],'${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')}
                                           {Filter({TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')},
@@ -4944,14 +4945,14 @@ app.repository = {
                     },
                     parsingControl: {
                         type: 'matrix',
-                        length: 6,
+                        length: 7,
                         query: [
 
 
                             (r, x) => {
                                 return {
                                     label: r.Cells[x].FormattedValue,
-                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x + 1].FormattedValue.replace('a', '')
+                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x + 6].FormattedValue
                                 }
                             },
 
@@ -5061,7 +5062,8 @@ app.repository = {
 								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element],
 								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag],
 								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag],
-								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag]} 
+								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag],
+								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[UI Level Format]} 
 								  ON COLUMNS , 
 								  {Filter({TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')},
 								   Instr(UCASE([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP Name]), '${searchString}') > 0)}
@@ -5071,12 +5073,12 @@ app.repository = {
                     },
                     parsingControl: {
                         type: 'matrix',
-                        length: 6,
+                        length: 7,
                         query: [
                             (r, x) => {
                                 return {
                                     label: r.Cells[x].FormattedValue,
-                                    skin: r.Cells[x + 1].FormattedValue === 'IP Node' ? 'gridtable_hierarchy_bpsp_PL6' : 'gridtable_hierarchy_bpsp_' + r.Cells[x + 1].FormattedValue.replace('a', '')
+                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x + 6].FormattedValue
                                 }
                             },
                             (r, x) => {
@@ -6785,12 +6787,15 @@ app.repository = {
                                 [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
                          MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel] as 
                                 [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                         MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[UILevelFormat] as 
+                                [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} UI Level Format')
                     
                     SELECT 
                     
                        {([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductName]),
                         ([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductCaption]),
                         ([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel]),
+                        ([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[UILevelFormat]),
                          ([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
                          ([Periods].[Periods].[${yearzero}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice YTD]),
                          ([Periods].[Periods].[${yearzero}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
@@ -6821,14 +6826,16 @@ app.repository = {
                     },
                     parsingControl: {
                         type: 'matrix',
-                        length: 13,
+                        length: 14,
                         query: [
 
                             (r, x) => {
+                                let uiLevel = r.Cells[x + 3].FormattedValue;
                                 return {
                                     label: r.Cells[x].FormattedValue,
                                     productLevel: r.Cells[x + 2].FormattedValue.replace('a', ''),
-                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x + 2].FormattedValue.replace('a', '')
+                                    uiLevel: uiLevel,
+                                    skin: 'gridtable_hierarchy_bpsp_' + uiLevel
                                 }
                             },
 
@@ -6839,11 +6846,6 @@ app.repository = {
                             (r, x) => {
                                 return {title: r.Cells[x + 2].FormattedValue}
                             },
-
-                            (r, x) => {
-                                return {title: r.Cells[x + 3].FormattedValue}
-                            },
-
 
                             (r, x) => {
                                 return {title: r.Cells[x + 4].FormattedValue}
@@ -6884,11 +6886,14 @@ app.repository = {
                                 return {title: r.Cells[x + 11].FormattedValue}
                             },
 
+
                             (r, x) => {
                                 return {title: r.Cells[x + 12].FormattedValue}
                             },
 
-
+                            (r, x) => {
+                                return {title: r.Cells[x + 13].FormattedValue}
+                            }
                         ]
                     }
 
@@ -6904,10 +6909,10 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return v('rocheBPSPProductReportGridTable.cellData').filter(e => ['PL1', 'PL2', 'PL3'].includes(e[0].productLevel)).map(e => {
+                return v('rocheBPSPProductReportGridTable.cellData').filter(e => ['01C', '02C', '03C', '01N', '02N', '03N'].includes(e[0].uiLevel)).map(e => {
                     return [{
                         label: e[0].label,
-                        skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].productLevel,
+                        skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].uiLevel,
                         productCode: e[1].title
                     }];
                 });
@@ -9770,7 +9775,7 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     label: r.Cells[x].Members[2].Attributes.Caption,
-                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].Members[2].Attributes['UI Level Format'].replace('a', ''),
+                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].Members[2].Attributes['UI Level Format'],
                                     territoryID: r.Cells[x].Members[2].Attributes['REXIS Territory ID'],
                                     ordinal: x
                                 }
@@ -10689,7 +10694,7 @@ app.repository = {
                                 return {
                                     label: r.Cells[x].Members[1].Attributes['Caption'],
                                     territoryID: r.Cells[x].Members[1].Name,
-                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].FormattedValue.replace('a', '')
+                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].FormattedValue
                                 }
                             },
 
