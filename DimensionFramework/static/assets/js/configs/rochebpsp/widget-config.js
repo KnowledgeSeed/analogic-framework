@@ -20042,6 +20042,7 @@ app.widgetConfig = {
 
                 },
 
+                /*
                 {
                     id: 'rocheBPSPAccountHorizontalTable',
                     type: HorizontalTableWidget,
@@ -20085,6 +20086,8 @@ app.widgetConfig = {
 
                     ]
                 },
+                
+                 */
 
 
             ]
@@ -20241,7 +20244,54 @@ app.widgetConfig = {
                     ]
 
 
-                }]
+                },
+
+                {
+                    id: 'rocheBPSPAccountsOverviewHorizontalTable',
+                    type: HorizontalTableWidget,
+                    title: '',
+                    titleVisible: false,
+                    columnNames: ["Account Name", "Account Number", "Reciver", "Rexis Flag", "Assigment Flag", "Submitted Date Time", "Submitted By", "PY"],
+                    columnWidths: ["20%", "20%", "10%", "5%", "5%", "10%", "10%", "50%"],
+                    searchField: true,
+                    width: '100%',
+                    visible: true,
+                    fadeOutNum: 15,
+                    marginLeft: 10,
+                    marginRight: 10,
+                    hideIfNoData: true,
+                    columnTypes: ['string', 'string', 'string', 'real', 'real', 'real', 'string', 'real'],
+                    listen: [
+                        /*
+                        {event: 'choose.rocheBPSPAccountsGridRow1Cell2DropBox.finished', method: 'refresh'},
+                        {
+                            event: 'init.rocheBPSPAccountsGridRow1Cell2DropBox.finished',
+                            method: 'refresh'
+                        },
+
+                         */
+
+                    ],
+                    isInBox: false,
+                    rightActionsLength: 1,
+                    marginBottom: '20',
+                    marginTop: '20',
+                    widgets: [
+
+                        {
+                            id: 'rocheBPSPAccountHorizontalTableSelectorButton',
+                            type: RadioButtonRowWidget,
+                            action: 'open',
+                            align: 'right',
+                            width: '50px',
+                            position: 1,
+                            MarginRight: '1.1%',
+                            icon: 'icon-grid-single'
+                        },
+
+                    ]
+                },
+            ]
         },
 
     rocheBPSPAccountsTerritories:

@@ -1006,7 +1006,8 @@ app.repository = {
                 length: 18,
                 query: [
                     (r, x) => {
-                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue, uiLevel = r.Cells[x + 17].FormattedValue;
+                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue,
+                            uiLevel = r.Cells[x + 17].FormattedValue;
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'];
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
@@ -1191,7 +1192,10 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return {title: db.systemValueGlobalSegmentedControlRelativeYearValue, body: Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)};
+                return {
+                    title: db.systemValueGlobalSegmentedControlRelativeYearValue,
+                    body: Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)
+                };
             }
         }
     },
@@ -1280,7 +1284,8 @@ app.repository = {
                 length: 22,
                 query: [
                     (r, x) => {
-                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue, uiLevel = r.Cells[x + 21].FormattedValue;
+                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue,
+                            uiLevel = r.Cells[x + 21].FormattedValue;
                         WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
                         WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsMainLocked'];
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
@@ -2585,7 +2590,10 @@ app.repository = {
     'rocheBPSPProductsCheckoutGridTableMonthlyHeaderText-04': {
         init: {
             execute: (db) => {
-                return {title: db.systemValueGlobalSegmentedControlRelativeYearValue, body: Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)};
+                return {
+                    title: db.systemValueGlobalSegmentedControlRelativeYearValue,
+                    body: Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)
+                };
             }
         }
     },
@@ -3927,7 +3935,8 @@ app.repository = {
                         length: 26,
                         query: [
                             (r, x) => {
-                                let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue, skin, uiLevel = r.Cells[x + 6].FormattedValue;
+                                let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue, skin,
+                                    uiLevel = r.Cells[x + 6].FormattedValue;
                                 WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'] = x;
                                 WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
                                 WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsMainLocked'];
@@ -11068,6 +11077,78 @@ app.repository = {
                             return {
                                 active: true,
                                 on: r.Cells[x + 4].FormattedValue === '' ? false : true
+                            };
+                        }
+                    ]
+                }
+
+            },
+    },
+
+    rocheBPSPAccountsOverviewHorizontalTable: {
+        /*
+        initCondition: (db) => {
+            let a = Utils.isValueExistingAndNotEmpty('rocheBPSPAccountsGridRow1Cell2DropBox');
+            return a;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        */
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Consolidated;$expand=Members($select=Name, Attributes/Caption,Attributes/AccountName))`,
+                type: 'POST',
+                body: (db) => {
+                    /*
+                    let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsGridRow1Cell2DropBox', 'key');
+                    let y1 = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']);
+                    let y0 = y1 - 1;
+                    */
+
+                    return `{"MDX":"
+                       SELECT 
+                           {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[REXIS Flag],[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag],[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Submitted DateTime],[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Submitted By],[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[PY]} 
+                          ON COLUMNS , 
+                          NON EMPTY 
+                           {EXCEPT({TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan 1391]}, ALL, RECURSIVE )},{[Customers Plan].[Customers Plan].[All Customers Plan 1391]})}
+                           * {TM1FILTERBYLEVEL({TM1DRILLDOWNMEMBER({[Receivers].[Receivers].[TC_12.2020_1391]}, {[Receivers].[Receivers].[TC_12.2020_1391]}, RECURSIVE )}, 0)} 
+                          ON ROWS 
+                        FROM [Sales Territory to Customer] 
+                        WHERE 
+                          (
+                           [Versions].[Versions].[Live],
+                           [Companies].[Companies].[1391],
+                           [Territories].[Territories].[All Territories]
+                          )
+                  "}`;
+
+                },
+                parsingControl: {
+                    type: 'matrix',
+                    length: 5,
+                    query: [
+
+                        (r, x) => {
+                            return {value: r.Cells[x].Members[3].Attributes['Account Name']};
+                        }, (r, x) => {
+                            return {value: r.Cells[x].Members[3].Attributes.Caption};
+                        }, (r, x) => {
+                            return { value: r.Cells[x].Members[4].Attributes.Caption};
+                        }, (r, x) => {
+                            return {value: r.Cells[x].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 1].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 2].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 3].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 4].FormattedValue};
+                        }, (r, x) => {
+                            return {
+                                active: true,
+                                //on: r.Cells[x + 4].FormattedValue === '' ? false : true
                             };
                         }
                     ]
