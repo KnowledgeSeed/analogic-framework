@@ -1009,8 +1009,889 @@
     margin-top: 1%;
 }
 
+/* new hierarchy */
+
+.ks-button-gridtable_hierarchy_bpsp_00C {
+    margin-left: 10px;
+    width: 100%;
+
+}
+
+.ks-button-gridtable_hierarchy_bpsp_00C .ks-button-icon {
+    color: #001A33;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+.ks-button-gridtable_hierarchy_bpsp_00C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_00C .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.ks-button-gridtable_hierarchy_bpsp_00C_locked {
+    padding-left: 10px;
+    width: 100%;
+
+}
+
+.ks-button-gridtable_hierarchy_bpsp_00C_locked .ks-button-icon {
+    color: #BFD9F2;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+.ks-button-gridtable_hierarchy_bpsp_00C_locked.ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_00C_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01C {
+    padding-left: 30px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01C .ks-button {
+    color: #001A33;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01C .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01C .ks-button-icon {
+    color: #004C99;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01C_locked {
+    padding-left: 30px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01C_locked .ks-button {
+    color: #001A33;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01C_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01C_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01C_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_02C_locked {
+    margin-left: 50px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_02C_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_02C_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_02C_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_02C {
+    padding-left: 50px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_02C .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_02C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_02C .ks-button-icon {
+    color: #0066CC;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_03C_locked {
+    padding-left: 70px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_03C_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_03C_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_03C_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_03C {
+    padding-left: 70px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_03C .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_03C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_03C .ks-button-icon {
+    color: #408CD9;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_04C {
+    padding-left: 90px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_04C .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_04C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_04C .ks-button-icon {
+    color: #80B3E6;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_04C_locked {
+    padding-left: 90px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_04C_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_04C_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_04C_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_05C {
+    padding-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_05C .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_05C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_05C .ks-button-icon {
+    color: #BFD9F2;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_05C_locked {
+    padding-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_05C_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_05C_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_05C_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+.ks-button-gridtable_hierarchy_bpsp_06C {
+    padding-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06C .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06C .ks-button-icon {
+    color: #BFD9F2;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+.ks-button-gridtable_hierarchy_bpsp_07C {
+    padding-left: 130px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_07C .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_07C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_07C .ks-button-icon {
+    color: #BFD9F2;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+.ks-button-gridtable_hierarchy_bpsp_07C_locked {
+    padding-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_07C_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_07C_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_07C_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+/* end new hierarchy */
+
+/* new hierarchy N */
+
+.ks-button-gridtable_hierarchy_bpsp_00N {
+    margin-left: 10px;
+    width: 100%;
+
+}
+
+.ks-button-gridtable_hierarchy_bpsp_00N .ks-button-icon {
+    color: #001A33;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+.ks-button-gridtable_hierarchy_bpsp_00N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_00N .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.ks-button-gridtable_hierarchy_bpsp_00N_locked {
+    padding-left: 10px;
+    width: 100%;
+
+}
+
+.ks-button-gridtable_hierarchy_bpsp_00N_locked .ks-button-icon {
+    color: #BFD9F2;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+.ks-button-gridtable_hierarchy_bpsp_00N_locked.ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_00N_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01N {
+    padding-left: 30px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01N .ks-button {
+    color: #001A33;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01N .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01N .ks-button-icon {
+    color: #004C99;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01N_locked {
+    padding-left: 30px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01N_locked .ks-button {
+    color: #001A33;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01N_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01N_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_01N_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_02N_locked {
+    margin-left: 50px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_02N_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_02N_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_02N_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_02N {
+    padding-left: 50px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_02N .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_02N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_02N .ks-button-icon {
+    color: #0066CC;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_03N_locked {
+    padding-left: 70px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_03N_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_03N_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_03N_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_03N {
+    padding-left: 70px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_03N .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_03N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_03N .ks-button-icon {
+    color: #408CD9;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_04N {
+    padding-left: 90px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_04N .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_04N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_04N .ks-button-icon {
+    color: #80B3E6;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_04N_locked {
+    padding-left: 90px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_04N_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_04N_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_04N_locked .ks-button-icon {
+    color: #BFD9F2;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_05N {
+    padding-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_05N .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_05N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_05N .ks-button-icon {
+    color: #BFD9F2;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_05N_locked {
+    padding-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_05N_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_05N_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_05N_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+.ks-button-gridtable_hierarchy_bpsp_06N {
+    padding-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06N .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06N .ks-button-icon {
+    color: #BFD9F2;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+.ks-button-gridtable_hierarchy_bpsp_07N {
+    padding-left: 130px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_07N .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_07N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_07N .ks-button-icon {
+    color: #BFD9F2;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+.ks-button-gridtable_hierarchy_bpsp_07N_locked {
+    padding-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_07N_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_07N_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_07N_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+/* end new hierarchy N */
 
 /* shortcut */
+
+/* 01C */
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_01C {
+    padding-left: 10px;
+    width: 300px;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_01C:hover {
+    background-color: rgba(191, 217, 242, 0.5);
+    border-radius: 8px;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_01C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_01C .ks-button-label {
+    padding-left: 4px;
+    font-size: 16px;
+    color: #000000;
+    font-family: Imago;
+    width: 100%;
+}
+
+/* 02C */
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_02C {
+    padding-left: 30px;
+    width: 300px;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_02C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_02C:hover {
+    background-color: rgba(191, 217, 242, 0.5);
+    border-radius: 8px;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_02C .ks-button-label {
+    padding-left: 4px;
+    font-size: 16px;
+    color: #000000;
+    font-family: Imago;
+    width: 100%;
+}
+
+/* 03C */
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_03C {
+    padding-left: 50px;
+    width: 300px;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_03C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_03C:hover {
+    background-color: rgba(191, 217, 242, 0.5);
+    border-radius: 8px;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_03C .ks-button-label {
+    padding-left: 4px;
+    font-size: 16px;
+    color: #000000;
+    font-family: Imago;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 01N */
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_01N {
+    padding-left: 10px;
+    width: 300px;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_01N:hover {
+    background-color: rgba(191, 217, 242, 0.5);
+    border-radius: 8px;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_01N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_01N .ks-button-label {
+    padding-left: 4px;
+    font-size: 16px;
+    color: #000000;
+    font-family: Imago;
+    width: 100%;
+}
+
+/* 02N */
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_02N {
+    padding-left: 30px;
+    width: 300px;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_02N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_02N:hover {
+    background-color: rgba(191, 217, 242, 0.5);
+    border-radius: 8px;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_02N .ks-button-label {
+    padding-left: 4px;
+    font-size: 16px;
+    color: #000000;
+    font-family: Imago;
+    width: 100%;
+}
+
+/* 03N */
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_03N {
+    padding-left: 50px;
+    width: 300px;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_03N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_03N:hover {
+    background-color: rgba(191, 217, 242, 0.5);
+    border-radius: 8px;
+}
+
+.ks-button-gridtable_hierarchy_shortcut_bpsp_03N .ks-button-label {
+    padding-left: 4px;
+    font-size: 16px;
+    color: #000000;
+    font-family: Imago;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 /* PL1 */
 
@@ -1694,8 +2575,384 @@
     margin-top: 1%;
 }
 
+.ks-button-gridtable_checkout_hierarchy_bpsp_00C {
+    padding-left: 10px;
+    width: 100%;
 
-.ks-button-gridtable_checkout_hierarchy_bpsp_PL1_locked {
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_00C .ks-button-icon {
+    color: #ED8B00;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_00C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_00C .ks-button-label {
+    padding-left: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_01C {
+    padding-left: 30px;
+    width: 100%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_01C .ks-button {
+    color: #001A33;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_01C .ks-button-label {
+    padding-left: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_01C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_01C .ks-button-icon {
+    color: #ED9518;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_02C {
+    padding-left: 50px;
+    width: 100%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_02C .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_02C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_02C .ks-button-icon {
+    color: #ED9F2F;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_03C {
+    padding-left: 70px;
+    width: 100%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_03C .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_03C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_03C .ks-button-icon {
+    color: #F2A840;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_04C {
+    padding-left: 90px;
+    width: 100%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_04C .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_04C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_04C .ks-button-icon {
+    color: #F6C580;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_05C {
+    padding-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_05C .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_05C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_05C .ks-button-icon {
+    color: #FAE2BF;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_06C {
+    padding-left: 130px;
+    width: 100%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_06C .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_06C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_06C .ks-button-icon {
+    color: #FAE2BF;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_07C {
+    padding-left: 150px;
+    width: 100%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_07C .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_07C .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_07C .ks-button-icon {
+    color: #FAE2BF;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_00N {
+    padding-left: 10px;
+    width: 100%;
+
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_00N .ks-button-icon {
+    color: #ED8B00;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_00N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_00N .ks-button-label {
+    padding-left: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_01N {
+    padding-left: 30px;
+    width: 100%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_01N .ks-button {
+    color: #001A33;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_01N .ks-button-label {
+    padding-left: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_01N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_01N .ks-button-icon {
+    color: #ED9518;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_02N {
+    padding-left: 50px;
+    width: 100%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_02N .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_02N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_02N .ks-button-icon {
+    color: #ED9F2F;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_03N {
+    padding-left: 70px;
+    width: 100%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_03N .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_03N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_03N .ks-button-icon {
+    color: #F2A840;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_04N {
+    padding-left: 90px;
+    width: 100%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_04N .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_04N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_04N .ks-button-icon {
+    color: #F6C580;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_05N {
+    padding-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_05N .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_05N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_05N .ks-button-icon {
+    color: #FAE2BF;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_06N {
+    padding-left: 130px;
+    width: 100%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_06N .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_06N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_06N .ks-button-icon {
+    color: #FAE2BF;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_07N {
+    padding-left: 150px;
+    width: 100%;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_07N .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_07N .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_checkout_hierarchy_bpsp_07N .ks-button-icon {
+    color: #FAE2BF;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+/* .ks-button-gridtable_checkout_hierarchy_bpsp_PL1_locked {
     margin-left: 10px;
     width: 100%;
 
@@ -1855,7 +3112,7 @@
     color: #EFC1D1;
     font-size: 75%;
     margin-top: 1%;
-}
+}*/
 
 /* comment title  */
 

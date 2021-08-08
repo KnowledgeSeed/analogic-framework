@@ -14,13 +14,14 @@ class Validation:
         global_version = request.form.get('validationGlobalVersion')
         version = request.form.get('validationVersion')
         product = request.form.get('validationProduct')
+        line_item = request.form.get('validationLineItem')
 
         file_names = os.listdir(path)
 
         csv = pd.read_csv(os.path.join(path, file_names[0]))
         res = list(csv.to_dict().keys())
 
-        if res[0] != user or res[1] != company or res[2] != receiver or res[3] != global_version or res[4] != version or res[5] != product:
+        if res[0] != user or res[1] != company or res[2] != receiver or res[3] != global_version or res[4] != version or res[5] != product or res[6] != line_item:
             return request.form.get('validationMessage', 'Validation error')
 
         return ''

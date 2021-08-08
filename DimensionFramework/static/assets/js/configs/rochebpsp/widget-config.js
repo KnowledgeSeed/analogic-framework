@@ -859,45 +859,49 @@ app.widgetConfig = {
                                             visible: false,
                                             listen: [
                                                 {
-                                                    event: 'refresh.rocheBPSPProductsTypeSegmentedControl.finished',
-                                                    method: 'refresh'
+                                                    'event': 'choose.rocheBPSPProductsGridRow1Cell2DropBox.finished',
+                                                    'method': 'refreshWithWaitingForEvents',
+                                                    'parameters': [
+                                                        'refresh.rocheBPSPProductsTypeSegmentedControl.finished']
+                                                },
+                                                {
+                                                    'event': 'segmentedControlTab2.rocheBPSPProductsPeriodUnitSegmentedControl.finished',
+                                                    'method': 'refreshWithWaitingForEvent',
+                                                    'parameters': [
+                                                        'refresh.rocheBPSPProductsTypeSegmentedControl.finished']
                                                 }
                                             ]
                                         },
-                                         {
+                                        {
                                             id: 'rocheBPSPProductsTypeSegmentedControl',
                                             type: SegmentedControlWidget,
                                             width: '100%',
-                                            skin: 'segmented', 
-                                             listen: [
-                                                 {
-                                                     event: 'switch.rocheBPSPProductsPeriodUnitSegmentedControl.finished',
-                                                     method: 'refresh'
-                                                 },
-                                                 {
-                                                     event: 'choose.rocheBPSPProductsGridRow1Cell2DropBox.finished',
-                                                     method: 'refresh'
-                                                 }
-                                             ],
+                                            skin: 'segmented',
+                                            listen: [
+                                                {
+                                                    event: 'choose.rocheBPSPProductsGridRow1Cell2DropBox.finished',
+                                                    method: 'refresh'
+                                                }
+                                            ],
                                             marginBottom: 5,
                                             widgets: [
 
                                                 {
                                                     id: 'rocheBPSPProductsTypeSegmentedControlItem1',
                                                     type: SegmentedControlItemWidget,
-                                                    label: 'Marketing Adjustment',
+                                                    label: 'Final Sales Plan',
                                                     action: 'segmentedControlTab1',
                                                     selected: true,
-                                                    value: 'Base Plan',
+                                                    value: 'Final Sales Plan',
                                                     skin: 'item_without_bg_bpsp'
                                                 },
                                                 {
                                                     id: 'rocheBPSPProductsTypeSegmentedControlItem2',
                                                     type: SegmentedControlItemWidget,
-                                                    label: 'Final Sales Plan',
+                                                    label: 'Marketing Adjustment',
                                                     action: 'segmentedControlTab2',
                                                     selected: false,
-                                                    value: 'One Time Event'
+                                                    value: 'Marketing Adjustment'
                                                 }
                                             ]
                                         }
@@ -2302,14 +2306,16 @@ app.widgetConfig = {
                             'method': 'refreshWithWaitingForEvents',
                             'parameters': [
                                 'rendered.rocheBPSPProductsGridRow1Cell3DropBox',
-                                'rendered.rocheBPSPProductsPageInit'
+                                'rendered.rocheBPSPProductsPageInit',
+                                'init.rocheBPSPProductsTypeSegmentedControl.finished'
                             ]
                         },
                         {'event': 'choose.rocheBPSPProductsGridRow1Cell3DropBox.finished', 'method': 'refresh'},
                         {
                             'event': 'choose.rocheBPSPProductsGridRow1Cell2DropBox.finished',
-                            'method': 'refreshWithWaitingForEvent',
-                            'parameters': ['rendered.rocheBPSPProductsGridRow1Cell3DropBox']
+                            'method': 'refreshWithWaitingForEvents',
+                            'parameters': ['rendered.rocheBPSPProductsGridRow1Cell3DropBox',
+                                'refresh.rocheBPSPProductsTypeSegmentedControl.finished']
                         },
                         {'event': 'launch.rocheBPSPProductsCheckoutPopupFocusButton.finished', 'method': 'refresh'},
                         {'event': 'launch.rocheBPSPProductsNoCheckoutPopupFocusButton.finished', 'method': 'refresh'},
@@ -2325,6 +2331,16 @@ app.widgetConfig = {
                         {
                             'event': 'launch.rocheBPSPProductsCommentEditControlPanelSaveButton.finished',
                             'method': 'refresh'
+                        },
+                        {
+                            'event': 'switch.rocheBPSPProductsTypeSegmentedControl.finished',
+                            'method': 'refresh'
+                        },
+                        {
+                            'event': 'segmentedControlTab2.rocheBPSPProductsPeriodUnitSegmentedControl.finished',
+                            'method': 'refreshWithWaitingForEvent',
+                            'parameters': [
+                                'refresh.rocheBPSPProductsTypeSegmentedControl.finished']
                         }
                     ],
                     title: '',
@@ -3608,12 +3624,60 @@ app.widgetConfig = {
                             marginTop: '1%',
                             width: '100%',
                             widgets: [
+                                {
+                                    id: 'rocheBPSPProductsCheckoutGridRow2Cell1a',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '20%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPProductsTypeSegmentedControlInfoText',
+                                            type: TextWidget,
+                                            visible: false,
+                                            listen: [
+                                                {
+                                                    'event': 'segmentedControlTab2.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl.finished',
+                                                    'method': 'refreshWithWaitingForEvent',
+                                                    'parameters': [
+                                                        'refresh.rocheBPSPProductsTypeSegmentedControl.finished']
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            id: 'rocheBPSPProductsTypeSegmentedControl',
+                                            type: SegmentedControlWidget,
+                                            width: '100%',
+                                            skin: 'segmented',
+                                            marginBottom: 5,
+                                            widgets: [
+
+                                                {
+                                                    id: 'rocheBPSPProductsTypeSegmentedControlItem1',
+                                                    type: SegmentedControlItemWidget,
+                                                    label: 'Final Sales Plan',
+                                                    action: 'segmentedControlTab1',
+                                                    selected: true,
+                                                    value: 'Final Sales Plan',
+                                                    skin: 'item_without_bg_bpsp'
+                                                },
+                                                {
+                                                    id: 'rocheBPSPProductsTypeSegmentedControlItem2',
+                                                    type: SegmentedControlItemWidget,
+                                                    label: 'Marketing Adjustment',
+                                                    action: 'segmentedControlTab2',
+                                                    selected: false,
+                                                    value: 'Marketing Adjustment'
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
 
                                 {
                                     id: 'rocheBPSPProductsCheckoutGridRow2Cell1',
                                     type: GridCellWidget,
                                     alignment: 'bottom-right',
-                                    width: '86%',
+                                    width: '66%',
                                     widgets: [
                                         {
                                             id: 'rocheBPSPProductsCheckoutGridRow2Cell1Button',
@@ -4022,6 +4086,9 @@ app.widgetConfig = {
                                             id: 'rocheBPSPProductsCheckoutDistributionEditPopupGridTableButton-01',
                                             type: ButtonWidget,
                                             icon: 'icon-badge',
+                                            borderWidth: false,
+                                            applyMeasuresToSection: true,
+                                            width: '100%',
                                             skin: 'gridtablehierarchy_bpsp',
                                             label: ''
                                         }
@@ -5324,6 +5391,16 @@ app.widgetConfig = {
                         {
                             event: 'launch.rocheBPSPProductsCheckoutGridRow2Cell2Button.finished',
                             method: 'refresh'
+                        },
+                        {
+                            'event': 'switch.rocheBPSPProductsTypeSegmentedControl.finished',
+                            'method': 'refresh'
+                        },
+                        {
+                            'event': 'segmentedControlTab2.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl.finished',
+                            'method': 'refreshWithWaitingForEvent',
+                            'parameters': [
+                                'refresh.rocheBPSPProductsTypeSegmentedControl.finished']
                         }
                     ],
                     title: '',

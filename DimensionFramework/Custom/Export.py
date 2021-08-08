@@ -164,6 +164,7 @@ class Export:
         global_version = request.args['globalVersion']
         version = request.args['version']
         product = request.args['product']
+        line_item = request.args['lineItem']
 
         font_size = 12
         worksheet.protect('ADSBP', {'format_cells': True, 'format_rows': True, 'format_columns': True})
@@ -174,6 +175,7 @@ class Export:
         worksheet.write(0, 3, global_version)
         worksheet.write(0, 4, version)
         worksheet.write(0, 5, product)
+        worksheet.write(0, 6, line_item)
 
         bold = workbook.add_format({'bold': True})
         bold.set_font_name('Imago')
@@ -186,7 +188,7 @@ class Export:
 
         worksheet.write(2, 1, 'Product Code', bold)
         worksheet.write(2, 2, 'PL', bold)
-        worksheet.write(2, 3, 'Final Plan', bold)
+        worksheet.write(2, 3, line_item, bold)
 
         i = 1
         j = 4
@@ -198,9 +200,9 @@ class Export:
             j = j + 1
             i = i + 1
 
-        worksheet.write(2, 16, 'Final Plan', bold)
-        worksheet.write(2, 29, 'Final Plan', bold)
-        worksheet.write(2, 42, 'Final Plan', bold)
+        worksheet.write(2, 16, line_item, bold)
+        worksheet.write(2, 29, line_item, bold)
+        worksheet.write(2, 42, line_item, bold)
 
         # temp
         headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
