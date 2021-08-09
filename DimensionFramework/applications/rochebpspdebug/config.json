@@ -45,7 +45,7 @@
 
 	"defaultUploadStagingFolder" : "\\\\\\\\USER-PC\\\\staging",
 
-	"MainPage" : "rocheBPSPMain",
+	"MainPage" : "rocheBPSPAccountsOverview",
     "pool": {
         "users": ["oravecz.tamas"],
         "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
