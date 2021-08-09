@@ -458,39 +458,45 @@ class Export:
         bold.set_font_name('Imago')
         bold.set_font_size(font_size)
 
-        worksheet.write(3, 4, request.args['year0'], bold)
-        worksheet.write(3, 5, request.args['year1'], bold)
-        worksheet.write(3, 6, request.args['year2'], bold)
-        worksheet.write(3, 7, request.args['year3'], bold)
-        worksheet.write(3, 8, request.args['year4'], bold)
-        worksheet.write(3, 9, request.args['year1'], bold)
-        worksheet.write(3, 10, request.args['year2'], bold)
-        worksheet.write(3, 11, request.args['year3'], bold)
-        worksheet.write(3, 12, request.args['year4'], bold)
+        worksheet.write(3, 4, request.args['yearMinusOne'], bold) # 2019
+        worksheet.write(3, 5, request.args['year0'], bold)
+        worksheet.write(3, 6, request.args['year1'], bold)
+        worksheet.write(3, 7, request.args['year1'], bold) # T0
+        worksheet.write(3, 8, request.args['year2'], bold)
+        worksheet.write(3, 9, request.args['year3'], bold)
+        worksheet.write(3, 10, request.args['year4'], bold)
+        worksheet.write(3, 11, request.args['year1'], bold)
+        worksheet.write(3, 12, request.args['year2'], bold)
+        worksheet.write(3, 13, request.args['year3'], bold)
+        worksheet.write(3, 14, request.args['year4'], bold)
 
         worksheet.write(4, 4, 'Value', bold)
         worksheet.write(4, 5, 'Value', bold)
         worksheet.write(4, 6, 'Value', bold)
         worksheet.write(4, 7, 'Value', bold)
         worksheet.write(4, 8, 'Value', bold)
-        worksheet.write(4, 9, 'Plan Comment', bold)
-        worksheet.write(4, 10, 'Plan Comment', bold)
+        worksheet.write(4, 9, 'Value', bold)
+        worksheet.write(4, 10, 'Value', bold)
         worksheet.write(4, 11, 'Plan Comment', bold)
         worksheet.write(4, 12, 'Plan Comment', bold)
+        worksheet.write(4, 13, 'Plan Comment', bold)
+        worksheet.write(4, 14, 'Plan Comment', bold)
 
         worksheet.write(5, 0, 'Product Name', bold)
         worksheet.write(5, 1, 'Product Code', bold)
         worksheet.write(5, 2, 'Product Level', bold)
         worksheet.write(5, 3, 'Reciver', bold)
-        worksheet.write(5, 4, 'Actual', bold)
-        worksheet.write(5, 5, 'Final Plan', bold)
+        worksheet.write(5, 4, 'Actual', bold) #2019
+        worksheet.write(5, 5, 'Actual', bold)
         worksheet.write(5, 6, 'Final Plan', bold)
-        worksheet.write(5, 7, 'Final Plan', bold)
+        worksheet.write(5, 7, 'T0', bold)
         worksheet.write(5, 8, 'Final Plan', bold)
         worksheet.write(5, 9, 'Final Plan', bold)
         worksheet.write(5, 10, 'Final Plan', bold)
         worksheet.write(5, 11, 'Final Plan', bold)
         worksheet.write(5, 12, 'Final Plan', bold)
+        worksheet.write(5, 13, 'Final Plan', bold)
+        worksheet.write(5, 14, 'Final Plan', bold)
 
         # temp
         headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
@@ -527,7 +533,7 @@ class Export:
         r = 5  # sorok
         c = 0  # oszlopok
         while i < l:
-            if i % 12 == 0:
+            if i % 14 == 0:
                 value = d['Cells'][i]['Value']
                 r = r + 1
                 c = 0

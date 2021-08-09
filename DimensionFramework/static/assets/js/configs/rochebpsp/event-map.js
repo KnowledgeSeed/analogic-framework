@@ -3116,5 +3116,12 @@ app.eventMap = {
         }
     ],
 
+    'launch.rocheBPSPAccountsGridRow2Cell1Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPAccountsOverview'
+        }
+    ],
+
 }
 ;

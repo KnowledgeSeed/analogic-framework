@@ -2075,8 +2075,6 @@
 }
 
 
-
-
 /* green_link_bpsp */
 
 .ks-button-green_link_bpsp .ks-button-label {
@@ -2288,7 +2286,7 @@
     font-size: 25px;
 }
 
-.ks-button-backbuttonrocheBPSP:hover{
+.ks-button-backbuttonrocheBPSP:hover {
     background-color: #bfd9f2;
     border-radius: 8px;
 }
@@ -3280,7 +3278,27 @@
 }
 
 
+/* Mody segmented kinézetű button */
+.ks-button-segmented_ami_button .ks-button {
+    border-radius: 10px;
+    height: 40px;
+}
 
+.ks-button-segmented_ami_button .ks-button-label {
+    background-color: #d8d9d9;
+    color: #585959;
+    font-size: 14px;
+    font-weight: 600;
+    border-right: 1px solid #fff;
+}
+
+/*
+.ks-buttton-segmented .ks-segment.ks-on {
+    background-color: #0066cc;
+    color: #fff;
+}
+
+ */
 
 
 

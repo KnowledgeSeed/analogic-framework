@@ -6530,7 +6530,6 @@ app.widgetConfig = {
                             skin: '',
                             widgets: [
 
-
                                 {
                                     id: 'rocheBPSPipPlanningGridRow2Cell1',
                                     type: GridCellWidget,
@@ -14648,9 +14647,31 @@ app.widgetConfig = {
                                 },
 
                                 {
+                                    id: 'rocheBPSPProductReportGridTableHeaderCell-2019',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '7%',
+                                    alignment: 'bottom-left',
+                                    cellHeaderSkin: 'long_border_bpsp',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPProductReportGridTableHeaderText-2019',
+                                            type: TextWidget,
+                                            title: '2019',
+                                            body: 'Actual',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
                                     id: 'rocheBPSPProductReportGridTableHeaderCell-04',
                                     type: GridTableHeaderCellWidget,
-                                    width: '8%',
+                                    width: '7%',
                                     alignment: 'bottom-left',
                                     cellHeaderSkin: 'long_border_bpsp',
                                     widgets: [
@@ -14672,7 +14693,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductReportGridTableHeaderCell-05',
                                     type: GridTableHeaderCellWidget,
-                                    width: '8%',
+                                    width: '7%',
                                     alignment: 'bottom-left',
                                     cellHeaderSkin: 'long_border_bpsp',
                                     widgets: [
@@ -14703,7 +14724,7 @@ app.widgetConfig = {
                                             id: 'rocheBPSPProductReportGridTableHeaderText-06',
                                             type: TextWidget,
                                             title: '',
-                                            body: 'Final Plan',
+                                            body: 'T0',
                                             skin: 'products_gd_header_bpsp',
                                             titleAlignment: 'start',
                                             marginBottom: 8,
@@ -14714,9 +14735,29 @@ app.widgetConfig = {
                                 },
 
                                 {
+                                    id: 'rocheBPSPProductReportGridTableHeaderCell-2021T0',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '7%',
+                                    cellHeaderSkin: '',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPProductReportGridTableHeaderText-2021T0',
+                                            type: TextWidget,
+                                            body: 'Final Plan',
+                                            skin: 'products_gd_header_bpsp',
+                                            marginBottom: 8,
+                                            marginLeft: 8,
+                                            titleAlignment: 'start',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
                                     id: 'rocheBPSPProductReportGridTableHeaderCell-07',
                                     type: GridTableHeaderCellWidget,
-                                    width: '8%',
+                                    width: '7%',
                                     cellHeaderSkin: 'long_border_bpsp',
                                     alignment: 'bottom-left',
                                     widgets: [
@@ -14738,7 +14779,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductReportGridTableHeaderCell-08',
                                     type: GridTableHeaderCellWidget,
-                                    width: '8%',
+                                    width: '7%',
                                     alignment: 'bottom-left',
                                     cellHeaderSkin: 'long_border_bpsp',
                                     widgets: [
@@ -14760,7 +14801,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductReportGridTableHeaderCell-09',
                                     type: GridTableHeaderCellWidget,
-                                    width: '8%',
+                                    width: '7%',
                                     alignment: 'bottom-left',
                                     cellHeaderSkin: 'long_border_bpsp',
                                     widgets: [
@@ -14782,7 +14823,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductReportGridTableHeaderCell-10',
                                     type: GridTableHeaderCellWidget,
-                                    width: '6.5%',
+                                    width: '4.5%',
                                     alignment: 'bottom-left',
                                     cellHeaderSkin: 'long_border_bpsp',
                                     widgets: [
@@ -14804,7 +14845,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductReportGridTableHeaderCell-11',
                                     type: GridTableHeaderCellWidget,
-                                    width: '5.5%',
+                                    width: '3.5%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
@@ -14824,7 +14865,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductReportGridTableHeaderCell-12',
                                     type: GridTableHeaderCellWidget,
-                                    width: '5.5%',
+                                    width: '3.5%',
                                     alignment: 'bottom-left',
                                     cellHeaderSkin: 'products_gd_header_bpsp',
                                     widgets: [
@@ -14845,7 +14886,7 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPProductReportGridTableHeaderCell-13',
                                     type: GridTableHeaderCellWidget,
-                                    width: '5.5%',
+                                    width: '3.5%',
                                     alignment: 'bottom-left',
                                     widgets: [
 
@@ -14920,9 +14961,27 @@ app.widgetConfig = {
                         },
 
                         {
+                            id: 'rocheBPSPProductReportGridTableCell-2019',
+                            type: GridTableCellWidget,
+                            width: '7%',
+                            alignment: 'center-right',
+                            skin: 'readonly_bpsp',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductReportGridTableText-2019',
+                                    type: TextWidget,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    paddingRight: 8,
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
                             id: 'rocheBPSPProductReportGridTableCell-04',
                             type: GridTableCellWidget,
-                            width: '8%',
+                            width: '7%',
                             alignment: 'center-right',
                             skin: 'readonly_bpsp',
                             widgets: [
@@ -14941,7 +15000,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPProductReportGridTableCell-05',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '8%',
+                            width: '7%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -14974,10 +15033,28 @@ app.widgetConfig = {
                         },
 
                         {
+                            id: 'rocheBPSPProductReportGridTableCell-T02021',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '7%',
+                            skin: 'readonly_bpsp',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPProductReportGridTableText-T02021',
+                                    type: TextWidget,
+                                    paddingRight: 8,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
                             id: 'rocheBPSPProductReportGridTableCell-07',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '8%',
+                            width: '7%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -14995,7 +15072,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPProductReportGridTableCell-08',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '8%',
+                            width: '7%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -15013,7 +15090,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPProductReportGridTableCell-09',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '8%',
+                            width: '7%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -15031,7 +15108,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPProductReportGridTableCell-10',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '6.5%',
+                            width: '4.5%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -15050,7 +15127,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPProductReportGridTableCell-11',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '5.5%',
+                            width: '3.5%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -15068,7 +15145,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPProductReportGridTableCell-12',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '5.5%',
+                            width: '3.5%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -15086,7 +15163,7 @@ app.widgetConfig = {
                             id: 'rocheBPSPProductReportGridTableCell-13',
                             type: GridTableCellWidget,
                             alignment: 'center-right',
-                            width: '5.5%',
+                            width: '3.5%',
                             skin: 'readonly_bpsp',
                             widgets: [
 
@@ -18085,7 +18162,6 @@ app.widgetConfig = {
                                     marginTop: '0',
                                     marginBottom: '0',
                                     alignment: 'center-left',
-                                    width: '78%',
                                     widgets: [
 
                                         {
@@ -18100,9 +18176,28 @@ app.widgetConfig = {
                                     ]
                                 },
 
+                                {
+                                    id: 'rocheBPSPCompanySettingsGridRow1Cell2',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-center',
+                                    width: '73%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPCompanySettingsGridRow1Cell2DropBox',
+                                            type: DropBoxWidget,
+                                            width: '145%',
+                                            skin: 'simple_bold_bpsp',
+                                            marginBottom: 5,
+                                            selectFirst: true,
+                                            backdrop: true
+                                        }
+
+                                    ]
+                                },
+
 
                                 {
-                                    id: 'rocheBPSPCompanySettingsGridRow1Cell5',
+                                    id: 'rocheBPSPCompanySettingsGridRow1Cell3',
                                     type: GridCellWidget,
                                     marginLeft: '5',
                                     marginRight: '0',
@@ -18113,7 +18208,7 @@ app.widgetConfig = {
                                     widgets: [
 
                                         {
-                                            id: 'rocheBPSPCompanySettingsGridRow1Cell5Button',
+                                            id: 'rocheBPSPCompanySettingsGridRow1Cell3Button',
                                             type: ButtonWidget,
                                             label: '',
                                             backgroundColor: '#EBECEC',
@@ -18127,6 +18222,27 @@ app.widgetConfig = {
 
 
                         },
+
+
+                        {
+                            id: 'rocheBPSPCompanySettingsGridRow2',
+                            type: GridRowWidget,
+                            marginTop: '1.3%',
+                            alignment: 'center-center',
+                            width: '100%',
+                            skin: 'bottomborder',
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPCompanySettingsGridRow2Button',
+                                    type: ButtonWidget,
+                                    label: 'Valami',
+                                    action: '',
+                                    icon: 'icon-back-arrow',
+                                    skin: 'segmented_ami_button',
+                                }
+
+                            ]
+                        }
                     ]
 
                 }]
@@ -18217,7 +18333,6 @@ app.widgetConfig = {
 
                                     ]
                                 },
-
 
                                 {
                                     id: 'rocheBPSPSecuritySetupGridRow1Cell3',
@@ -20042,7 +20157,7 @@ app.widgetConfig = {
 
                 },
 
-                /*
+
                 {
                     id: 'rocheBPSPAccountHorizontalTable',
                     type: HorizontalTableWidget,
@@ -20061,10 +20176,15 @@ app.widgetConfig = {
                     listen: [
 
                         {event: 'choose.rocheBPSPAccountsGridRow1Cell2DropBox.finished', method: 'refresh'},
+
+                        {
+                            event: 'choose.rocheBPSPAccountsGridRow2Cell1Button.finished',
+                            method: 'refresh'
+                        },
                         {
                             event: 'init.rocheBPSPAccountsGridRow1Cell2DropBox.finished',
                             method: 'refresh'
-                        },
+                        }
 
                     ],
                     isInBox: false,
@@ -20086,8 +20206,6 @@ app.widgetConfig = {
 
                     ]
                 },
-                
-                 */
 
 
             ]

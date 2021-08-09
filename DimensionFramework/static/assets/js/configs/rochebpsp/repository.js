@@ -4336,7 +4336,7 @@ app.repository = {
                                 -- Decide 1st column element
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn] As
                                      IIF('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}'='${db.systemValueGlobalStartingPlanYear}', '([Periods].[Periods].[${Utils.parseNumber(db.systemValueGlobalStartingPlanYear) - 1}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])',
-                     rocheBPSPProductReportGridTable                                   '([Periods].[Periods].[${db.systemValueGlobalStartingPlanYear}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])')
+                                       '([Periods].[Periods].[${db.systemValueGlobalStartingPlanYear}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])')
                                      Set FirstColumn As
                                      {StrToSet('{'+[LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn]+'}')}
                                 -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
@@ -6772,6 +6772,7 @@ app.repository = {
 
                         let yearzero = Utils.parseNumber(db.systemValueGlobalStartingPlanYear),
                             YearMinusOne = yearzero - 1,
+                            YearMinusTwo = yearzero - 2,
                             YearPlusOne = yearzero + 1,
                             YearPlusTwo = yearzero + 2,
                             YearPlusThree = yearzero + 3,
@@ -6805,8 +6806,12 @@ app.repository = {
                         ([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductCaption]),
                         ([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel]),
                         ([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[UILevelFormat]),
+                        -- 2019 Actual
+                         ([Periods].[Periods].[${YearMinusTwo}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
                          ([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
                          ([Periods].[Periods].[${yearzero}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice YTD]),
+                         -- 2021 T0
+                         ([Periods].[Periods].[${yearzero}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW T0]),
                          ([Periods].[Periods].[${yearzero}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
                          ([Periods].[Periods].[${YearPlusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
                          ([Periods].[Periods].[${YearPlusTwo}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
@@ -6835,7 +6840,7 @@ app.repository = {
                     },
                     parsingControl: {
                         type: 'matrix',
-                        length: 14,
+                        length: 16,
                         query: [
 
                             (r, x) => {
@@ -6902,6 +6907,12 @@ app.repository = {
 
                             (r, x) => {
                                 return {title: r.Cells[x + 13].FormattedValue}
+                            },
+                            (r, x) => {
+                                return {title: r.Cells[x + 14].FormattedValue}
+                            },
+                            (r, x) => {
+                                return {title: r.Cells[x + 15].FormattedValue}
                             }
                         ]
                     }
@@ -7420,8 +7431,9 @@ app.repository = {
                     globalVersion: WidgetValue.systemValueGlobalCompanyVersion,
                     version: WidgetValue.systemValueGlobalCompanyProductPlanVersion,
                     currency: v('rocheBPSPProductReportGridRow1Cell5DropBox.value'),
+                    yearMinusOne: y1 - 2,
                     year0: y1 - 1,
-                    year1: y1,
+                    year1: y1, //2021
                     year2: y1 + 1,
                     year3: y1 + 2,
                     year4: y1 + 3,
@@ -9462,7 +9474,7 @@ app.repository = {
     /* end customer planning */
 
 
-    rocheBPSPCompanySettingsGridRow1Cell5Button: {
+    rocheBPSPCompanySettingsGridRow1Cell3Button: {
         init: {
             execute: (db) => {
                 return {label: db.activeUserName};
@@ -11134,7 +11146,7 @@ app.repository = {
                         }, (r, x) => {
                             return {value: r.Cells[x].Members[3].Attributes.Caption};
                         }, (r, x) => {
-                            return { value: r.Cells[x].Members[4].Attributes.Caption};
+                            return {value: r.Cells[x].Members[4].Attributes.Caption};
                         }, (r, x) => {
                             return {value: r.Cells[x].FormattedValue};
                         }, (r, x) => {
@@ -11155,6 +11167,65 @@ app.repository = {
                 }
 
             },
+    },
+
+
+    rocheBPSPAccountsGridRow2Cell1Button: {
+
+        launch: {
+
+            url: (db) => `/api/v1/Processes('MODULE - UI - Account Maintenance')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => {
+
+                return `{
+                        "Parameters": [
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsGridRow1Cell2DropBox', 'key')}"}
+                        ]
+                    }`;
+            }
+        }
+
+
+    },
+
+
+    rocheBPSPCompanySettingsGridRow1Cell2DropBox: {
+        choose: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPSecuritySetupGridRow1Cell2DropBox.value'));
+            }
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT
+                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]}
+                    ON COLUMNS ,
+                     {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}
+                    ON ROWS
+                    FROM [}ElementAttributes_Companies]
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [], selected = v('systemValueGlobalSelectedCompany');
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    'name': r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: selected === r.Cells[i].FormattedValue
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
     },
 
 
