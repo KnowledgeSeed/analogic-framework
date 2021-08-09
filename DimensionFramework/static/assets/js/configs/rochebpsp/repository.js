@@ -8769,7 +8769,8 @@ app.repository = {
                             {[Measures Sales Plan by Customer Opportunity].[Measures Sales Plan by Customer Opportunity].Members}
                             ON COLUMNS ,
                             NON EMPTY
-                            {TM1FILTERBYLEVEL({ TM1DRILLDOWNMEMBER({[Opportunities].[Opportunities].[All Opportunities]}, ALL, RECURSIVE )}, 0)}
+                             {FILTER({TM1FILTERBYLEVEL({TM1DRILLDOWNMEMBER({[Opportunities].[Opportunities].[All Opportunities]}, ALL, RECURSIVE )}, 0)},
+                             [Opportunities].[Opportunities].CurrentMember.Properties(\\"Customers Plan\\") = \\"${v('systemValueCustomersPlanningCustomerCode')}\\")}
                             ON ROWS
                             FROM [Sales Plan by Customer Opportunity]
                             WHERE
