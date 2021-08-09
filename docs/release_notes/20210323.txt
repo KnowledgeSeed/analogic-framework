@@ -154,3 +154,5 @@ DeleteButtonRow(columnName)
 RadioButtonRow(columnName)
 
 PopupWidget (closeOnClickBackdrop):
+
+FileUploadWidget(showUploadSuccessMessage):

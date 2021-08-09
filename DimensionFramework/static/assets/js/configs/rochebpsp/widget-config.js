@@ -5347,6 +5347,7 @@ app.widgetConfig = {
                             label: 'Upload',
                             fontColor: 'white',
                             skin: 'deepblue_backbutton',
+                            showUploadSuccessMessage: false,
                             maxFileSize: 5,
                             progressVisible: false
                         }
