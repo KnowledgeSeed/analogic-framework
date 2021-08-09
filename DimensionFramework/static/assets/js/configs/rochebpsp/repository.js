@@ -2496,7 +2496,8 @@ app.repository = {
                                 {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}"},
                                 {"Name": "pTargetCube", "Value": "Sales Plan by Product"},
                                 {"Name": "pSelectedProductLevel", "Value": "${v('rocheBPSPProductsCheckoutUploadPopupPlDropbox.value')}"},
-                                {"Name": "pFileName", "Value": "${fileName}"}
+                                {"Name": "pFileName", "Value": "${fileName}"},
+                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}"}
                         ]
                     }`;
             }
