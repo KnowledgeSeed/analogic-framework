@@ -11,6 +11,7 @@ class HorizontalTableWidget extends Widget {
             columnTypes: this.getRealValue('columnTypes', data, false),
             fadeOutNum: this.getRealValue('fadeOutNum', data, 10),
             hideIfNoData: this.getRealValue('hideIfNoData', d, false),
+            multiSelect: this.getRealValue('multiSelect', d, false),
             searchField: this.getRealValue('searchField', data, false),
             selectFirst: this.getRealValue('selectFirst', data, false),
             skin: this.getRealValue('skin', data, 'standard')
@@ -20,7 +21,7 @@ class HorizontalTableWidget extends Widget {
 
         if (!withState) {
             this.state = {};
-            this.value = {rows: data.cells};
+            this.value = {rows: data.cells, multiSelect: v.multiSelect};
         }
 
         if (v.searchField) {
@@ -156,7 +157,19 @@ class HorizontalTableWidget extends Widget {
                 cell = cells[i];
                 len2 = cell.length;
                 for (k = 0; k < len2; ++k) {
-                    s.push(rightRowWidgets[k].getHtml([], {icon: cell[k].icon, index: i, d: d, active: cell[k].active === true, id: o.id, num: rightActionsNum, actionWidth: actionWidth}));
+                    s.push(rightRowWidgets[k].getHtml([], {icon: cell[k].icon, ordinal: cell[k].ordinal, on: (withState && this.state.radio === i) || cell[k].on === true || (v.selectFirst && i === 0), index: i, d: d, active: cell[k].active === true, id: o.id, num: rightActionsNum, actionWidth: actionWidth}));
+                    if (v.selectFirst && i === 0) {
+                        let html = $(s[s.length - 1]), p = html.find('.ks-horizontal-table-row-toggle');
+                        WidgetValue[o.id][p.data('action')] = p.data();
+                        selectFirstIndex = s.length - 1;
+                    }
+                    if (cell[k].on === true) {
+                        let html = $(s[s.length - 1]), p = html.find('.ks-horizontal-table-row-toggle');
+                        WidgetValue[o.id][p.data('action')] = p.data();
+                        if (v.selectFirst) {
+                            s[selectFirstIndex] = s[selectFirstIndex].replace('ks-on', '');
+                        }
+                    }
                     ++rightActionsNum;
                 }
 
@@ -305,11 +318,22 @@ class HorizontalTableWidget extends Widget {
             this.state.radio = w.data('index');
 
             p.closest('.ks-horizontal-table-row').prop('style', '');
-            p.removeClass('ks-on');
-
-            w.addClass('ks-on');
-            w.closest('.ks-horizontal-table-row').prop('style', 'background-color:#bfd9f2;');
-
+            if(this.value.multiSelect === false) {
+                p.removeClass('ks-on');
+                w.addClass('ks-on');
+                w.closest('.ks-horizontal-table-row').prop('style', 'background-color:#bfd9f2;');
+            } else {
+                if(w.hasClass('ks-on')) {
+                    w.removeClass('ks-on');
+                    this.value['selected'] = false;
+                    this.value['selectedOrdinal'] = w.data('ordinal');
+                }else{
+                    w.addClass('ks-on');
+                    this.value['selected'] = true;
+                    this.value['selectedOrdinal'] = w.data('ordinal');
+                    w.closest('.ks-horizontal-table-row').prop('style', 'background-color:#bfd9f2;');
+                }
+            }
             Widget.doHandleSystemEvent(w, e, true);
         });
 

@@ -20041,8 +20041,6 @@ app.widgetConfig = {
 
 
                 },
-
-                /*
                 {
                     id: 'rocheBPSPAccountHorizontalTable',
                     type: HorizontalTableWidget,
@@ -20057,6 +20055,7 @@ app.widgetConfig = {
                     marginLeft: 10,
                     marginRight: 10,
                     hideIfNoData: true,
+                    multiSelect: true,
                     columnTypes: ['string', 'real', 'real', 'real'],
                     listen: [
 
@@ -20067,7 +20066,6 @@ app.widgetConfig = {
                         },
 
                     ],
-                    isInBox: false,
                     rightActionsLength: 1,
                     marginBottom: '20',
                     marginTop: '20',
@@ -20080,16 +20078,11 @@ app.widgetConfig = {
                             align: 'right',
                             width: '50px',
                             position: 1,
-                            MarginRight: '1.1%',
                             icon: 'icon-grid-single'
                         },
 
                     ]
-                },
-                
-                 */
-
-
+                }
             ]
         },
 

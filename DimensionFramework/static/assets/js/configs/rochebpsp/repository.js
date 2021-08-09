@@ -11023,7 +11023,14 @@ app.repository = {
     },
 
     rocheBPSPAccountHorizontalTable: {
-
+        open: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db) => {
+                let vv = v('rocheBPSPAccountHorizontalTable');
+                return `{"Ordinal": ${vv.selectedOrdinal},"Value": \"${vv.selected ? "1" : ""}\"}`
+            }
+        },
         initCondition: (db) => {
             let a = Utils.isValueExistingAndNotEmpty('rocheBPSPAccountsGridRow1Cell2DropBox');
             return a;
@@ -11077,6 +11084,7 @@ app.repository = {
                         }, (r, x) => {
                             return {
                                 active: true,
+                                ordinal: r.Cells[x + 4].Ordinal,
                                 on: r.Cells[x + 4].FormattedValue === '' ? false : true
                             };
                         }
