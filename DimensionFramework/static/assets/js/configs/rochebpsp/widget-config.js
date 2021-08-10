@@ -5347,6 +5347,7 @@ app.widgetConfig = {
                             label: 'Upload',
                             fontColor: 'white',
                             skin: 'deepblue_backbutton',
+                            showUploadSuccessMessage: false,
                             maxFileSize: 5,
                             progressVisible: false
                         }
@@ -20172,6 +20173,7 @@ app.widgetConfig = {
                     marginLeft: 10,
                     marginRight: 10,
                     hideIfNoData: true,
+                    multiSelect: true,
                     columnTypes: ['string', 'real', 'real', 'real'],
                     listen: [
 
@@ -20187,7 +20189,6 @@ app.widgetConfig = {
                         }
 
                     ],
-                    isInBox: false,
                     rightActionsLength: 1,
                     marginBottom: '20',
                     marginTop: '20',
@@ -20200,7 +20201,6 @@ app.widgetConfig = {
                             align: 'right',
                             width: '50px',
                             position: 1,
-                            MarginRight: '1.1%',
                             icon: 'icon-grid-single'
                         },
 

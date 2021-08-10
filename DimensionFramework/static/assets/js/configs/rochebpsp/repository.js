@@ -2501,7 +2501,8 @@ app.repository = {
                                 {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}"},
                                 {"Name": "pTargetCube", "Value": "Sales Plan by Product"},
                                 {"Name": "pSelectedProductLevel", "Value": "${v('rocheBPSPProductsCheckoutUploadPopupPlDropbox.value')}"},
-                                {"Name": "pFileName", "Value": "${fileName}"}
+                                {"Name": "pFileName", "Value": "${fileName}"},
+                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}"}
                         ]
                     }`;
             }
@@ -8933,7 +8934,8 @@ app.repository = {
                             {[Measures Sales Plan by Customer Opportunity].[Measures Sales Plan by Customer Opportunity].Members}
                             ON COLUMNS ,
                             NON EMPTY
-                            {TM1FILTERBYLEVEL({ TM1DRILLDOWNMEMBER({[Opportunities].[Opportunities].[All Opportunities]}, ALL, RECURSIVE )}, 0)}
+                            {FILTER({TM1FILTERBYLEVEL({TM1DRILLDOWNMEMBER({[Opportunities].[Opportunities].[All Opportunities]}, ALL, RECURSIVE )}, 0)},
+                             [Opportunities].[Opportunities].CurrentMember.Properties(\\"Customers Plan\\") = \\"${v('systemValueCustomersPlanningCustomerCode')}\\")}
                             ON ROWS
                             FROM [Sales Plan by Customer Opportunity]
                             WHERE
@@ -11034,7 +11036,14 @@ app.repository = {
     },
 
     rocheBPSPAccountHorizontalTable: {
-
+        open: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db) => {
+                let vv = v('rocheBPSPAccountHorizontalTable');
+                return `{"Ordinal": ${vv.selectedOrdinal},"Value": \"${vv.selected ? "1" : ""}\"}`
+            }
+        },
         initCondition: (db) => {
             let a = Utils.isValueExistingAndNotEmpty('rocheBPSPAccountsGridRow1Cell2DropBox');
             return a;
@@ -11088,6 +11097,7 @@ app.repository = {
                         }, (r, x) => {
                             return {
                                 active: true,
+                                ordinal: r.Cells[x + 4].Ordinal,
                                 on: r.Cells[x + 4].FormattedValue === '' ? false : true
                             };
                         }

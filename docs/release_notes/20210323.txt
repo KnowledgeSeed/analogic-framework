@@ -144,7 +144,7 @@ TextWidget:
 GridCellWidget:
     readonly_green_bpsp
 
-HorizontalTable (hideIfNoData, selectFirst, alignmentIfNumber{left, right, center}):
+HorizontalTable (hideIfNoData, selectFirst, multiSelect):
     customer_planning_bpsp
 
 ActionButtonRowWidget(columnName)
@@ -154,3 +154,5 @@ DeleteButtonRow(columnName)
 RadioButtonRow(columnName)
 
 PopupWidget (closeOnClickBackdrop):
+
+FileUploadWidget(showUploadSuccessMessage):
