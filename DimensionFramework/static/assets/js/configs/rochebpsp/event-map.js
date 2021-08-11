@@ -798,6 +798,10 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPProductsCheckoutUploadPopupUpload'
+        },
+        {
+            action: app.fn.showPopup,
+            argument: 'Upload success'
         }
     ],
     'upload.rocheBPSPProductsCheckoutUploadPopupUpload.error': [
