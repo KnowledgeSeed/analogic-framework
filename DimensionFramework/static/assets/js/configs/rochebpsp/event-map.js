@@ -3127,5 +3127,90 @@ app.eventMap = {
         }
     ],
 
+    'launch.rocheBPSPCompanySettingsCheckedOutGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPSettings'
+        }
+    ],
+
+
+    'launch.rocheBPSPCompanySettingsGrowthGridRow1Cell0Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPSettings'
+        }
+    ],
+
+
+    'launch.rocheBPSPCompanySettingsGridRow2Button2': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPCompanySettingsCheckedOut'
+        }
+    ],
+
+
+    'launch.rocheBPSPCompanySettingsGridRow2Button3': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPCompanySettingsGrowth'
+        }
+    ],
+
+
+    'launch.rocheBPSPCompanySettingsCheckedOutGridRow2Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPCompanySettings'
+        }
+    ],
+
+
+    'launch.rocheBPSPCompanySettingsCheckedOutGridRow2Button3': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPCompanySettingsGrowth'
+        }
+    ],
+
+    'launch.rocheBPSPCompanySettingsGrowthGridRow2Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPCompanySettings'
+        }
+    ],
+
+    'launch.rocheBPSPCompanySettingsGrowthGridRow2Button2': [
+        {
+            action: app.fn.openPage,
+            argument: 'rocheBPSPCompanySettingsCheckedOut'
+        }
+    ],
+
+
+    'segmentedControlTab2.rocheBPSPCompanySettingsCheckedOutGridRow4Cell1SegmentedControl': [
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPCompanySettingsCheckedOutGridTable'
+        }
+    ],
+
+
+    'segmentedControlTab1.rocheBPSPCompanySettingsCheckedOutGridRow4Cell1SegmentedControl': [
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPCompanySettingsCheckedOutGridTable'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning'
+        }
+    ],
+
 }
 ;
