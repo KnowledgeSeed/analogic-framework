@@ -21466,6 +21466,25 @@ app.widgetConfig = {
                                 },
 
                                 {
+                                    id: 'rocheBPSPTerritoriesProductsGridRow1Cell2',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-left',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPTerritoriesProductsGridRow1Cell2Title',
+                                            type: TextWidget,
+                                            title: '',
+                                            width: '100%',
+                                            marginBottom: 15,
+                                            marginLeft: 50,
+                                            titleAlignment: 'start',
+                                            titleFontSize: 18,
+
+                                        }
+                                    ]
+                                },
+
+                                {
                                     id: 'rocheBPSPTerritoriesProductsGridRow1Cell4',
                                     type: GridCellWidget,
                                     marginLeft: '5',
@@ -21492,34 +21511,6 @@ app.widgetConfig = {
 
                         },
 
-                        {
-                            id: 'rocheBPSPTerritoriesProductsGridRow15',
-                            type: GridRowWidget,
-                            marginTop: '1.3%',
-                            alignment: 'center-right',
-                            width: '100%',
-                            widgets: [
-
-                                {
-                                    id: 'rocheBPSPTerritoriesProductsGridRow15Cell1',
-                                    type: GridCellWidget,
-                                    alignment: 'bottom-left',
-                                    width: '21%',
-                                    widgets: [
-                                        {
-                                            id: 'rocheBPSPTerritoriesProductsGridRow15Cell1Title',
-                                            type: TextWidget,
-                                            title: '',
-                                            width: '100%',
-                                            marginBottom: 20,
-                                            titleAlignment: 'start',
-                                            titleFontSize: 26,
-
-                                        }
-                                    ]
-                                }]
-
-                        },
 
                         {
                             id: 'rocheBPSPTerritoriesProductsGridRow2',
