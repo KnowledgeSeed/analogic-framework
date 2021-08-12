@@ -980,12 +980,12 @@ app.repository = {
                                  ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductLevel]),
                                  ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag]),
                                  ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutUser]),
-                                 ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutDateTime])}
+                                 ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutDateTime]),
+                                 ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[UILevelFormat])}
                                  Set Comment AS
                                  {([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[HasComment])}
                             SELECT 
-                              {UNION({UNION(HEAD(UNION(UNION({FixColumns},{ColumnSelectionByUser},All),{DefaultColumnSelection},All),16),{Comment},All)},
-                              {([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[UILevelFormat])})}
+                              {UNION(HEAD(UNION(UNION({FixColumns},{ColumnSelectionByUser},All),{DefaultColumnSelection},All),17),{Comment},All)}
                               PROPERTIES [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Caption] ,[Periods].[Periods].[Caption]  ON COLUMNS , 
                               {StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
                               PROPERTIES [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption] ON ROWS 
@@ -1007,7 +1007,7 @@ app.repository = {
                 query: [
                     (r, x) => {
                         let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue,
-                            uiLevel = r.Cells[x + 17].FormattedValue;
+                            uiLevel = r.Cells[x + 6].FormattedValue;
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'];
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
@@ -1028,7 +1028,7 @@ app.repository = {
                             members: r.Cells[x].Members,
                             productLevel: pl,
                             uiLevel: uiLevel,
-                            hasComment: r.Cells[x + 16].FormattedValue !== ''
+                            hasComment: r.Cells[x + 17].FormattedValue !== ''
                         };
                         if (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked']) {
                             result['iconColor'] = '#D12D4A';
@@ -1054,7 +1054,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 4;
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 5;
                         return {
                             title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
