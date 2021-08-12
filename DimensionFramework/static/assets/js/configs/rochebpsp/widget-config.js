@@ -20461,7 +20461,7 @@ app.widgetConfig = {
                     title: '',
                     titleVisible: false,
                     columnNames: ["Account Name", "Account Number", "Reciver", "Rexis Flag", "Assigment Flag", "Submitted Date Time", "Submitted By", "PY"],
-                    columnWidths: ["20%", "20%", "10%", "5%", "5%", "10%", "10%", "50%"],
+                    columnWidths: ["35%", "10%", "5%", "5%", "5%", "10%", "10%", "15%"],
                     searchField: true,
                     width: '100%',
                     visible: true,
