@@ -162,3 +162,83 @@
 .ks-textarea-commentsource .ks-textarea-input:-moz-placeholder {
     color: #838388;
 }
+
+/* companyMessageTitle*/
+
+.ks-textarea-companyMessageTitle .ks-textarea-title {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 18px;
+    margin-bottom: 8px;
+}
+
+
+.ks-textarea-companyMessageTitle .ks-textarea-field {
+
+}
+
+.ks-textarea-companyMessageTitle .ks-textarea-input {
+    border: 1px solid #b1b3b3;
+    border-radius: 7px;
+    height: 65px;
+    padding: 12px;
+    background-color: #fff;
+    color: #000;
+    display: block;
+    font-size: 16px;
+    width: 500px;
+    -webkit-appearance: none;
+}
+
+.ks-textarea-companyMessageTitle .ks-textarea-input::-webkit-input-placeholder {
+    color: #838388;
+}
+.ks-textarea-companyMessageTitle .ks-textarea-input::-moz-placeholder {
+    color: #838388;
+}
+.ks-textarea-companyMessageTitle .ks-textarea-input:-ms-input-placeholder {
+    color: #838388;
+}
+.ks-textarea-companyMessageTitle .ks-textarea-input:-moz-placeholder {
+    color: #838388;
+}
+
+/* companyMessage*/
+
+.ks-textarea-companyMessage .ks-textarea-title {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 18px;
+    margin-bottom: 8px;
+}
+
+
+.ks-textarea-companyMessage .ks-textarea-field {
+
+}
+
+.ks-textarea-companyMessage .ks-textarea-input {
+    border: 1px solid #b1b3b3;
+    border-radius: 7px;
+    height: 150px;
+    padding: 12px;
+    background-color: #fff;
+    color: #000;
+    display: block;
+    font-size: 16px;
+    width: 500px;
+    -webkit-appearance: none;
+}
+
+.ks-textarea-companyMessage .ks-textarea-input::-webkit-input-placeholder {
+    color: #838388;
+}
+.ks-textarea-companyMessage .ks-textarea-input::-moz-placeholder {
+    color: #838388;
+}
+.ks-textarea-companyMessage .ks-textarea-input:-ms-input-placeholder {
+    color: #838388;
+}
+.ks-textarea-companyMessage .ks-textarea-input:-moz-placeholder {
+    color: #838388;
+}
