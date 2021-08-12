@@ -9,6 +9,15 @@ from flask import session
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
 
+def getMDXJSONByRequest(request, setting):
+    mdx = setting.getMDX(request.args['key'])
+    for k in request.args:
+        mdx = mdx.replace('$' + k, request.args[k].replace('"', '\\"'))
+
+    mdx = '{"MDX"  :"' + mdx + '"}'
+    return mdx
+
+
 class Export:
 
     def __init__(self):
@@ -151,11 +160,7 @@ class Export:
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         worksheet = workbook.add_worksheet()
 
-        mdx = setting.getMDX(request.args['key'])
-        for k in request.args:
-            mdx = mdx.replace('$' + k, request.args[k].replace('"', '\\"'))
-
-        mdx = '{"MDX"  :"' + mdx + '"}'
+        mdx = getMDXJSONByRequest(request, setting)
         #     data = tm1_service.cells.execute_mdx(mdx)
 
         user = request.args['activeUserName']
@@ -274,6 +279,116 @@ class Export:
             c = c + 1
 
         # temp
+
+        workbook.close()
+        output.seek(0)
+        return output
+
+    def rocheCustomerExport(self, request, tm1_service, setting):
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        worksheet = workbook.add_worksheet()
+
+        mdx = getMDXJSONByRequest(request, setting)
+
+        headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
+                                   'Accept-Encoding': 'gzip, deflate, br'}
+        tm1_session_id = setting.getTM1SessionId(session.get('cam_name', ''))
+
+        cookies: dict[str, str] = {"TM1SessionId": tm1_session_id}
+
+        cnf = setting.getConfig()
+
+        target_url = cnf['tm1ApiHostBackend']
+
+        response = requests.request(
+            url=target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable)',
+            method='POST',
+            data=mdx,
+            headers=headers,
+            cookies=cookies,
+            verify=False)
+
+        d = response.json()
+
+        font_size = 12
+        worksheet.protect('ADSBP', {'format_cells': True, 'format_rows': True, 'format_columns': True})
+
+        bold = workbook.add_format({'bold': True})
+        bold.set_font_name('Imago')
+        bold.set_font_size(font_size)
+
+        worksheet.write(1, 3, request.args['year1'], bold)
+        worksheet.write(1, 16, request.args['year2'], bold)
+        worksheet.write(1, 29, request.args['year3'], bold)
+        worksheet.write(1, 42, request.args['year4'], bold)
+
+        worksheet.write(2, 1, 'Product Code', bold)
+        worksheet.write(2, 2, 'PL', bold)
+        worksheet.write(2, 3, 'Year Total', bold)
+
+        i = 1
+        j = 4
+        while i <= 12:
+            worksheet.write(2, j, str(i).zfill(2), bold)
+            worksheet.write(2, j + 13, str(i).zfill(2), bold)
+            worksheet.write(2, j + 26, str(i).zfill(2), bold)
+            worksheet.write(2, j + 39, str(i).zfill(2), bold)
+            j = j + 1
+            i = i + 1
+
+        worksheet.write(2, 16, 'Year Total', bold)
+        worksheet.write(2, 29, 'Year Total', bold)
+        worksheet.write(2, 42, 'Year Total', bold)
+
+        simple = workbook.add_format({'locked': False})
+        simple.set_font_name('Imago')
+        simple.set_font_size(font_size)
+
+        read_only = workbook.add_format()
+        read_only.set_bg_color('#ebecec')
+        read_only.set_font_name('Imago')
+        read_only.set_font_size(font_size)
+
+        l = len(d['Cells'])
+        i = 0
+        r = 2
+        c = 0
+        while i < l:
+            if i % 56 == 0:
+                r = r + 1
+                c = 0
+                pl = d['Cells'][i + 2]['Value']
+                cf = workbook.add_format()
+                cf.set_indent(int(d['Cells'][i + 3]['Value'].replace('C', '').replace('N', '')))
+                cf.set_font_name('Imago')
+                cf.set_font_size(font_size)
+                cf.set_bg_color('#ebecec')
+                value = d['Cells'][i]['Value']
+                if (value == None):
+                    value = 0
+                worksheet.write(r, c, value, cf)
+                c = c + 1
+                i = i + 1
+                value = d['Cells'][i]['Value']
+                if (value == None):
+                    value = 0
+                worksheet.write(r, c, value, read_only)
+                c = c + 1
+                i = i + 1
+                worksheet.write(r, c, pl, read_only)
+                i = i + 1
+            else:
+                value = d['Cells'][i]['Value']
+                if (value == None):
+                    value = 0
+                if d['Cells'][i]['RuleDerived'] == False:
+                    worksheet.write(r, c, value, simple)
+                else:
+                    worksheet.write(r, c, value, read_only)
+
+            i = i + 1
+            c = c + 1
 
         workbook.close()
         output.seek(0)

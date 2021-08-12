@@ -2232,6 +2232,7 @@ app.eventMap = {
             action: app.fn.forceRefreshWidgets,
             argument: [
                 'rocheBPSPCustomersPlanningGridRow2Cell3aCreateOpportunityButton',
+                'rocheBPSPCustomersPlanningMonthlyExcelExport',
                 'rocheBPSPCustomersPlanningGridTableYearly',
                 'rocheBPSPCustomersPlanningGridTableMonthly',
                 'rocheBPSPCustomersPlanningTypeSegmentedControl',

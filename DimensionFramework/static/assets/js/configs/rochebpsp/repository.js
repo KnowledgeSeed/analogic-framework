@@ -957,9 +957,9 @@ app.repository = {
                                  Set PaddingColumns AS
                                  {{TM1SubsetToSet([Periods].[Periods],'zUI Padding Years')}*{[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[DUMMY]}}
                                  Set DefaultColumnSelection AS
-                            {HEAD(UNION({StrToSet([Control].([Measures Control].[Measures Control].[UI ProuctsGridTable DefaultColumnsTuple ${db.systemValueGlobalSegmentedControlRelativeYear}],[Value Type].[Value Type].[String]))},{PaddingColumns},All),10)}
+                                    {HEAD(UNION({StrToSet([Control].([Measures Control].[Measures Control].[UI ProuctsGridTable DefaultColumnsTuple ${db.systemValueGlobalSegmentedControlRelativeYear}],[Value Type].[Value Type].[String]))},{PaddingColumns},All),10)}
                                  Set WidgetSettingByUser AS
-                                 {StrToSet('{'+[zSYS Analogic UI User Data].([}Clients].[}Clients].[${db.activeUserName}],[zSYS Analogic UI Widget].[zSYS Analogic UI Widget].[rocheBPSPProductsGridTableYearly],[zSYS Analogic UI User Data Measure].[zSYS Analogic UI User Data Measure].[sColumnSelectorTuple ${db.systemValueGlobalSegmentedControlRelativeYear}])+'}')}
+                                    {StrToSet('{'+[zSYS Analogic UI User Data].([}Clients].[}Clients].[${db.activeUserName}],[zSYS Analogic UI Widget].[zSYS Analogic UI Widget].[rocheBPSPProductsGridTableYearly],[zSYS Analogic UI User Data Measure].[zSYS Analogic UI User Data Measure].[sColumnSelectorTuple ${db.systemValueGlobalSegmentedControlRelativeYear}])+'}')}
                                  MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ColumnSelectionByUser] AS 
                                  IIF(Count(WidgetSettingByUser)>0,'Head(UNION({WidgetSettingByUser},{PaddingColumns},All),10)','{}')
                                  Set ColumnSelectionByUser AS
@@ -2459,7 +2459,6 @@ app.repository = {
                     const x = acc.find(item => item.name === current.name);
                     if (!x) {
                         return acc.concat([current]);
-                        F
                     } else {
                         return acc;
                     }
@@ -7503,6 +7502,59 @@ app.repository = {
                     ]
                 }
             }
+    },
+    rocheBPSPCustomersPlanningMonthlyExcelExport: {
+        init: {
+            execute: (db) => {
+                return {visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db)};
+            }
+        },
+        getFileName: (db) => {
+            let s = [], fileName;
+            s.push(Utils.getFormattedDate(new Date(), '_', true));
+            s.push(db.activeUserName);
+            s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'));
+            s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),);
+            s.push(v('rocheBPSPCustomersHorizontalTable.open.receiver'));
+            s.push(v('systemValueCustomersPlanningFocused'));
+            s.push(v('systemValueCustomersPlanningCustomerCode'));
+            s.push(v('systemValueCustomersPlanningMonthlyTypeValue'));
+            return s.join('_').replaceAll(':', '_').replaceAll(' ', '_').replaceAll('/', '_');
+        },
+        launch: {
+            download: (db) => {
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                    territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                    version = v('systemValueGlobalCompanyVersion'),
+                    receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                    productVersion = v('systemValueGlobalCompanyProductPlanVersion'),
+                    focusedProduct = v('systemValueCustomersPlanningFocused'),
+                    hasFocusedProduct = focusedProduct !== 'PL1',
+                    customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                    type = v('systemValueCustomersPlanningMonthlyTypeValue'),
+                    y1 = parseInt(db.systemValueGlobalStartingPlanYear),
+                    fileName = Repository.rocheBPSPCustomersPlanningMonthlyExcelExport.getFileName(db);
+                return {
+                    url: 'export?export_key=exportCustomerMonthly&file_name=' + fileName + '.xlsx',
+                    fileName: fileName + '.xlsx',
+                    activeUserName: db.activeUserName,
+                    company: company,
+                    version: version,
+                    territoryCode: territoryCode,
+                    receiver: receiver,
+                    productVersion: productVersion,
+                    customerCode: customerCode,
+                    rows: hasFocusedProduct ? 'FocusedRows' : 'ProductRows',
+                    focusedProduct: focusedProduct,
+                    type: type,
+                    year1: y1,
+                    year2: y1 + 1,
+                    year3: y1 + 2,
+                    year4: y1 + 3,
+                    key: 'exportCustomerMonthly'
+                };
+            }
+        }
     },
     rocheBPSPCustomersPlanningGridTableMonthly: {
         perform: {

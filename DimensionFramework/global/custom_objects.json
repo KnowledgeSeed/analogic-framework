@@ -9,6 +9,11 @@
     "class": "Export",
     "method": "rocheMonthly"
   },
+  "exportCustomerMonthly": {
+    "namespace": "DimensionFramework.Custom.Export",
+    "class": "Export",
+    "method": "rocheCustomerExport"
+  },
   "rocheIpPlanningMonthly": {
     "namespace": "DimensionFramework.Custom.Export",
     "class": "Export",

@@ -16922,6 +16922,27 @@ app.widgetConfig = {
                                             skin: 'blue_link_bpsp '
                                         },
                                         {
+                                            id: 'rocheBPSPCustomersPlanningMonthlyExcelExport',
+                                            type: ButtonWidget,
+                                            label: 'Excel Export',
+                                            width: '100%',
+                                            borderWidth: false,
+                                            fontSize: 14,
+                                            marginRight: 40,
+                                            icon: 'icon-doc-arrow-up',
+                                            skin: 'blue_link_bpsp',
+                                            visible: false
+                                        },
+                                      /*  {
+                                            id: 'rocheBPSPCustomersPlanningMonthlyExcelUpload',
+                                            type: ButtonWidget,
+                                            label: 'Upload excel',
+                                            width: '100%',
+                                            icon: 'icon-columns',
+                                            skin: 'blue_link_columns_bpsp',
+                                            marginLeft: 15
+                                        },*/
+                                        {
                                             id: 'rocheBPSPCustomersPlanningGridRow2Cell3ClearAllButton',
                                             type: ButtonWidget,
                                             label: 'Clear all',

@@ -27,6 +27,63 @@ exportMonthly: >
        [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value]
       )
 
+exportCustomerMonthly: >
+  With
+    --Default mdx to run from JS
+    Set ProductRows As
+    {Filter(
+      {Filter({[Products].[BPSP $productVersion].Members} ,
+      [Sales Territory to Product].([Versions].[Versions].[$version],
+                                    [Companies].[Companies].[$company],
+                                    [Territories].[Territories].[$territoryCode],
+                                    [Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Flag])>0)},
+               [Products].[BPSP Budget].CurrentMember.Properties('BPSP $productVersion Product Level - Name') = 'PL1' or 
+               [Products].[BPSP Budget].CurrentMember.Properties('BPSP $productVersion Product Level - Name') = 'PL2' or 
+               [Products].[BPSP Budget].CurrentMember.Properties('BPSP $productVersion Product Level - Name') = 'PL2a' or 
+               [Products].[BPSP Budget].CurrentMember.Properties('BPSP $productVersion Product Level - Name') = 'PL3'
+              )}   
+    -- mdx to run from JS when user focusing
+    Set FocusedRows As
+    {Filter({TM1DRILLDOWNMEMBER({[Products].[BPSP $productVersion].[$focusedProduct]} , All, Recursive)}
+    ,[Sales Territory to Product].([Versions].[Versions].[$version],
+                                    [Companies].[Companies].[$company],
+                                    [Territories].[Territories].[$territoryCode],
+                                    [Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Flag])>0)}
+    -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
+         MEMBER [Periods].[Periods].[ProductName] as 
+                [Products].[BPSP $productVersion].CurrentMember.Properties('BPSP $productVersion Description')
+         MEMBER [Periods].[Periods].[ProductCaption] as 
+                [Products].[BPSP $productVersion].CurrentMember.Properties('BPSP $productVersion Element')
+         MEMBER [Periods].[Periods].[ProductLevel] as 
+                [Products].[BPSP $productVersion].CurrentMember.Properties('BPSP $productVersion Product Level - Name')
+         MEMBER [Periods].[Periods].[UILevelFormat] as 
+                [Products].[BPSP $productVersion].CurrentMember.Properties('BPSP $productVersion UI Level Format')
+    -- Create the first 3 column with information
+         Set FixColumns AS
+         {[Periods].[Periods].[ProductName],
+          [Periods].[Periods].[ProductCaption],
+          [Periods].[Periods].[ProductLevel],
+          [Periods].[Periods].[UILevelFormat]
+          }
+    SELECT
+         {Union({FixColumns}, 
+               {TM1DRILLDOWNMEMBER({[Periods].[Periods].[$year1], [Periods].[Periods].[$year2], [Periods].[Periods].[$year3], [Periods].[Periods].[$year4]}, ALL, RECURSIVE )}
+         ,All)}
+      ON COLUMNS, 
+       {$rows}
+      ON ROWS 
+    FROM [Sales Plan by Customer] 
+    WHERE 
+      (
+       [Versions].[Versions].[$version],
+       [Receivers].[Receivers].[$receiver],
+       [Territories].[Territories].[$territoryCode],
+       [Companies].[Companies].[$company],
+       [Customers Plan].[Customers Plan].[$customerCode],
+       [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[$type],
+       [Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value]
+      )
+
 exportIpPlanningMonthly: >
   With
     --Checked out Product Element drilled down
