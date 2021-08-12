@@ -3278,31 +3278,261 @@
 }
 
 
-/* Mody segmented kinézetű button */
-.ks-button-segmented_ami_button .ks-button {
-    border-radius: 10px;
-    height: 40px;
+/* Mody company setting oldal választók */
+.ks-button-company_1_1.ks-button {
+    height: 65px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #0066CC;
 }
 
-.ks-button-segmented_ami_button .ks-button-label {
-    background-color: #d8d9d9;
-    color: #585959;
-    font-size: 14px;
+.ks-button-company_1_1 .ks-button-inner {
+    background-color: #0066CC;
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-company_1_1 .ks-button-icon img {
+    float: top;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #FFFFFF;
+}
+
+.ks-button-company_1_1 .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-company_1_1 .ks-button-label {
+    position: relative;
+    top: 20%;
+    left: -3%;
+    color: #FFFFFF;
+    font-size: 16px;
     font-weight: 600;
-    border-right: 1px solid #fff;
 }
 
-/*
-.ks-buttton-segmented .ks-segment.ks-on {
-    background-color: #0066cc;
-    color: #fff;
+.ks-button-company_1_1 .ks-button-icon {
+    position: relative;
+    bottom: 13%;
+    color: #FFFFFF;
+    left: 42%;
 }
 
- */
+
+
+.ks-button-company_1_2.ks-button {
+    height: 65px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #ebecec;
+}
+
+.ks-button-company_1_2 .ks-button-inner {
+    background-color: #ebecec;
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-company_1_2 .ks-button-icon img {
+    float: top;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #585959;
+}
+
+.ks-button-company_1_2 .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-company_1_2 .ks-button-label {
+    position: relative;
+    top: 20%;
+    left: -3%;
+    color: #585959;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.ks-button-company_1_2 .ks-button-icon {
+    position: relative;
+    bottom: 13%;
+    color: #585959;
+    left: 50%;
+}
+
+.ks-button-company_1_3.ks-button {
+    height: 65px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #ebecec;
+}
+
+.ks-button-company_1_3 .ks-button-inner {
+    background-color: #ebecec;
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-company_1_3 .ks-button-icon img {
+    float: top;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #585959;
+}
+
+.ks-button-company_1_3 .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-company_1_3 .ks-button-label {
+    position: relative;
+    top: 20%;
+    left: -3%;
+    color: #585959;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.ks-button-company_1_3 .ks-button-icon {
+    position: relative;
+    bottom: 13%;
+    color: #585959;
+    left: 38%;
+}
+
+
+/* */
+
+.ks-button-company_2_1.ks-button {
+    height: 65px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #ebecec;
+}
+
+.ks-button-company_2_1 .ks-button-inner {
+    background-color: #ebecec;
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-company_2_1 .ks-button-icon img {
+    float: top;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #585959;
+}
+
+.ks-button-company_2_1 .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-company_2_1 .ks-button-label {
+    position: relative;
+    top: 20%;
+    left: -3%;
+    color: #585959;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.ks-button-company_2_1 .ks-button-icon {
+    position: relative;
+    bottom: 13%;
+    color: #585959;
+    left: 42%;
+}
+/*   */
+
+
+.ks-button-company_3_3.ks-button {
+    height: 65px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #0066CC;
+}
+
+.ks-button-company_3_3 .ks-button-inner {
+    background-color: #0066CC;
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-company_3_3 .ks-button-icon img {
+    float: top;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #FFFFFF;
+}
+
+.ks-button-company_3_3 .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-company_3_3 .ks-button-label {
+    position: relative;
+    top: 20%;
+    left: -3%;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.ks-button-company_3_3 .ks-button-icon {
+    position: relative;
+    bottom: 13%;
+    color: #FFFFFF;
+    left: 38%;
+}
 
 
 
+.ks-button-company_2_2.ks-button {
+    height: 65px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #0066CC;
+}
 
+.ks-button-company_2_2 .ks-button-inner {
+    background-color: #0066CC;
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-company_2_2 .ks-button-icon img {
+    float: top;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #FFFFFF;
+}
+
+.ks-button-company_2_2 .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-company_2_2 .ks-button-label {
+    position: relative;
+    top: 20%;
+    left: -3%;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.ks-button-company_2_2 .ks-button-icon {
+    position: relative;
+    bottom: 13%;
+    color: #FFFFFF;
+    left: 50%;
+}
 
 
 
