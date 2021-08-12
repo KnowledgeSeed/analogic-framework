@@ -10469,6 +10469,10 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     value: parseInt(r.Cells[x + 1].FormattedValue) > 0 ? 1 : 0,
+                                    editable: r.Cells[x + 1].FormattedValue === '1' ? true : false,
+                                    cellSkin: r.Cells[x + 1].FormattedValue === '1' ? '' : 'readonly_bpsp',
+                                    skin: r.Cells[x + 1].FormattedValue === '1' ? 'Settings_toggle_bpsp' : 'label_toggle_bpsp',
+                                    titleOn: r.Cells[x + 1].FormattedValue === '1' ? '' : '' + parseInt(r.Cells[x].FormattedValue),
                                 }
                             }
                         ]
@@ -10768,6 +10772,7 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     label: r.Cells[x].Members[1].Attributes['Caption'],
+                                    territoryName: r.Cells[x].Members[1].Attributes['Caption'],
                                     territoryID: r.Cells[x].Members[1].Name,
                                     skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].FormattedValue
                                 }
@@ -10916,10 +10921,10 @@ app.repository = {
                 },
         },
 
-    rocheBPSPTerritoriesProductsGridRow15Cell1Title: {
+    rocheBPSPTerritoriesProductsGridRow1Cell2Title: {
         init: {
             execute: (db) => {
-                return {title: Utils.getGridTableCell('rocheBPSPTerritoriesGridTable', 0).territoryID};
+                return {title: Utils.getGridTableCell('rocheBPSPTerritoriesGridTable', 0).territoryName};
             }
         }
     },
