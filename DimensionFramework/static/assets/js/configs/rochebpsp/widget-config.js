@@ -18418,7 +18418,7 @@ app.widgetConfig = {
                                     widgets: [
 
                                         {
-                                            id: 'rrocheBPSPCompanySettingsGridRow5Cell1MessageInput',
+                                            id: 'rocheBPSPCompanySettingsGridRow5Cell1MessageInput',
                                             type: TextAreaWidget,
                                             title: 'Message',
                                             marginBottom: '30',
@@ -20669,7 +20669,7 @@ app.widgetConfig = {
                     type: HorizontalTableWidget,
                     title: '',
                     titleVisible: false,
-                    columnNames: ["Account Name", "Account Number", "Reciver", "Rexis Flag", "Assigment Flag", "Submitted Date Time", "Submitted By"],
+                    columnNames: ["Account Name", "Account Number", "Reciver", "Rexis Flag", "Assigment Flag", "Flag - Has plan data", "Flag - Has actuals"],
                     columnWidths: ["35%", "10%", "5%", "5%", "5%", "10%", "10%"],
                     searchField: true,
                     width: '100%',
@@ -20680,18 +20680,10 @@ app.widgetConfig = {
                     hideIfNoData: true,
                     columnTypes: ['string', 'string', 'string', 'real', 'real', 'real', 'string'],
                     listen: [
-                        /*
-                        {event: 'choose.rocheBPSPAccountsGridRow1Cell2DropBox.finished', method: 'refresh'},
-                        {
-                            event: 'init.rocheBPSPAccountsGridRow1Cell2DropBox.finished',
-                            method: 'refresh'
-                        },
-
-                         */
-
+                        {event: 'choose.rocheBPSPAccountsOverviewGridRow1Cell2DropBox.finished', method: 'refresh'},
+                        {event: 'init.rocheBPSPAccountsOverviewGridRow1Cell2DropBox.finished', method: 'refresh'},
                     ],
                     isInBox: false,
-                    rightActionsLength: 1,
                     marginBottom: '20',
                     marginTop: '20',
                     widgets: []
@@ -22217,6 +22209,51 @@ app.widgetConfig = {
 
                         },
 
+                        {
+                            id: 'rocheBPSPCompanySettingsCheckedOutGridRow4',
+                            type: GridRowWidget,
+                            marginTop: '1%',
+                            width: '70%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCompanySettingsCheckedOutGridRow4Cell1',
+                                    type: GridCellWidget,
+                                    alignment: 'center-right',
+                                    width: '70%',
+                                    widgets: []
+                                },
+
+
+                                {
+                                    id: 'rocheBPSPCompanySettingsCheckedOutGridRow4Cell2',
+                                    type: GridCellWidget,
+                                    alignment: 'center-left',
+                                    width: '15%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPCompanySettingsCheckedOutGridRow4Cell2Button',
+                                            type: ButtonWidget,
+                                            label: 'Unlock All',
+                                            width: '100%',
+                                            icon: 'icon-unlock',
+                                            marginLeft: '10%',
+                                            iconColor: '#00965E',
+                                            skin: 'gridtable_hierarchy_bpsp_PL2_locked',
+                                            borderWidth: false,
+                                            applyMeasuresToSection: true,
+                                            fontColor: '#00965E',
+                                            fontBold: true,
+                                            action: '',
+                                        }
+
+
+                                    ]
+                                },
+
+                            ]
+                        }
+
                     ]
 
                 },
@@ -22224,7 +22261,6 @@ app.widgetConfig = {
                 {
                     id: 'rocheBPSPCompanySettingsCheckedOutGridTable',
                     type: GridTableWidget,
-                    marginTop: '30',
                     hideIfNoData: true,
                     visible: true,
                     skin: 'products_bpsp',
@@ -22383,6 +22419,7 @@ app.widgetConfig = {
 
                             ]
                         },
+
                         {
                             id: 'rocheBPSPCompanySettingsCheckedOutGridTableCell-01',
                             type: GridTableCellWidget,

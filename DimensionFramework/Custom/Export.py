@@ -573,10 +573,10 @@ class Export:
         bold.set_font_name('Imago')
         bold.set_font_size(font_size)
 
-        worksheet.write(3, 4, request.args['yearMinusOne'], bold) # 2019
+        worksheet.write(3, 4, request.args['yearMinusOne'], bold)  # 2019
         worksheet.write(3, 5, request.args['year0'], bold)
         worksheet.write(3, 6, request.args['year1'], bold)
-        worksheet.write(3, 7, request.args['year1'], bold) # T0
+        worksheet.write(3, 7, request.args['year1'], bold)  # T0
         worksheet.write(3, 8, request.args['year2'], bold)
         worksheet.write(3, 9, request.args['year3'], bold)
         worksheet.write(3, 10, request.args['year4'], bold)
@@ -584,6 +584,10 @@ class Export:
         worksheet.write(3, 12, request.args['year2'], bold)
         worksheet.write(3, 13, request.args['year3'], bold)
         worksheet.write(3, 14, request.args['year4'], bold)
+        worksheet.write(3, 15, request.args['year1'], bold)  # grow rate
+        worksheet.write(3, 16, request.args['year2'], bold)
+        worksheet.write(3, 17, request.args['year3'], bold)
+        worksheet.write(3, 18, request.args['year4'], bold)
 
         worksheet.write(4, 4, 'Value', bold)
         worksheet.write(4, 5, 'Value', bold)
@@ -596,12 +600,16 @@ class Export:
         worksheet.write(4, 12, 'Plan Comment', bold)
         worksheet.write(4, 13, 'Plan Comment', bold)
         worksheet.write(4, 14, 'Plan Comment', bold)
+        worksheet.write(4, 15, request.args['year0'], bold)  # grow rate
+        worksheet.write(4, 16, request.args['year1'], bold)
+        worksheet.write(4, 17, request.args['year2'], bold)
+        worksheet.write(4, 18, request.args['year3'], bold)
 
         worksheet.write(5, 0, 'Product Name', bold)
         worksheet.write(5, 1, 'Product Code', bold)
         worksheet.write(5, 2, 'Product Level', bold)
         worksheet.write(5, 3, 'Reciver', bold)
-        worksheet.write(5, 4, 'Actual', bold) #2019
+        worksheet.write(5, 4, 'Actual', bold)  # 2019
         worksheet.write(5, 5, 'Actual', bold)
         worksheet.write(5, 6, 'Final Plan', bold)
         worksheet.write(5, 7, 'T0', bold)
@@ -612,6 +620,10 @@ class Export:
         worksheet.write(5, 12, 'Final Plan', bold)
         worksheet.write(5, 13, 'Final Plan', bold)
         worksheet.write(5, 14, 'Final Plan', bold)
+        worksheet.write(5, 15, 'Growth rate %', bold)
+        worksheet.write(5, 16, 'Growth rate %', bold)
+        worksheet.write(5, 17, 'Growth rate %', bold)
+        worksheet.write(5, 18, 'Growth rate %', bold)
 
         # temp
         headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
@@ -643,28 +655,78 @@ class Export:
         read_only.set_font_name('Imago')
         read_only.set_font_size(font_size)
 
+        percent_format = workbook.add_format()
+        percent_format.set_font_name('Imago')
+        percent_format.set_font_size(font_size)
+        percent_format.set_num_format(10)
+
         l = len(d['Cells'])
         i = 0  # az összes elem
         r = 5  # sorok
         c = 0  # oszlopok
         while i < l:
-            if i % 14 == 0:
+            if i % 18 == 0:
                 value = d['Cells'][i]['Value']
                 r = r + 1
                 c = 0
                 if (value == None):
-                    value = 0
-                    worksheet.write(r, c, value, simple)
+                    value = '0%'
+                    worksheet.write(r, c, value, percent_format)
                     c = c + 1
                     i = i + 1
                 else:
-                    worksheet.write(r, c, value, simple)
+                    worksheet.write(r, c, value, percent_format)
                     c = c + 1
                     i = i + 1
             if c == 3:
                 reciver = d['Cells'][i]['Members'][3]['Name']
                 worksheet.write(r, c, reciver, simple)
                 c = c + 1
+
+            if c == 15:
+                data = d['Cells'][i]['Value']
+                if (data == None):
+                    value = 0
+                    worksheet.write(r, c, value, percent_format)
+                    c = c + 1
+                    i = i + 1
+                else:
+                    worksheet.write(r, c, data, percent_format)
+                    c = c + 1
+                    i = i + 1
+            if c == 16:
+                data = d['Cells'][i]['Value']
+                if (data == None):
+                    value = 0
+                    worksheet.write(r, c, value, percent_format)
+                    c = c + 1
+                    i = i + 1
+                else:
+                    worksheet.write(r, c, data, percent_format)
+                    c = c + 1
+                    i = i + 1
+            if c == 17:
+                data = d['Cells'][i]['Value']
+                if (data == None):
+                    value = 0
+                    worksheet.write(r, c, value, percent_format)
+                    c = c + 1
+                    i = i + 1
+                else:
+                    worksheet.write(r, c, data, percent_format)
+                    c = c + 1
+                    i = i + 1
+            if c == 18:
+                data = d['Cells'][i]['Value']
+                if (data == None):
+                    value = 0
+                    worksheet.write(r, c, value, percent_format)
+                    c = c + 1
+                    i = i + 1
+                else:
+                    worksheet.write(r, c, data, percent_format)
+                    c = c + 1
+                    i = i + 1
             else:
                 value = d['Cells'][i]['Value']
                 if (value == None):

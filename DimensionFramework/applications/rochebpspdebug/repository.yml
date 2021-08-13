@@ -166,7 +166,12 @@ rocheProductLevelExportMDX: >
        ,([Periods].[Periods].[$year1],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
        ([Periods].[Periods].[$year2],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
        ([Periods].[Periods].[$year3],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
-       ([Periods].[Periods].[$year4],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan])
+       ([Periods].[Periods].[$year4],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+     -- kell bele 4 growth
+      ([Periods].[Periods].[$year1],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan]),
+      ([Periods].[Periods].[$year2],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan]),
+      ([Periods].[Periods].[$year3],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan]),
+      ([Periods].[Periods].[$year4],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan])
       }
       ON COLUMNS ,
       NON EMPTY

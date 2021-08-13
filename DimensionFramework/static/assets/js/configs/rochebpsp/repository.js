@@ -11165,39 +11165,39 @@ app.repository = {
     },
 
     rocheBPSPAccountsOverviewHorizontalTable: {
-        /*
         initCondition: (db) => {
-            let a = Utils.isValueExistingAndNotEmpty('rocheBPSPAccountsGridRow1Cell2DropBox');
+            let a = Utils.isValueExistingAndNotEmpty('rocheBPSPAccountsOverviewGridRow1Cell2DropBox');
             return a;
         },
         initDefault: (db) => {
             return [];
         },
-        */
+
         init:
             {
                 url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Consolidated;$expand=Members($select=Name, Attributes/Caption,Attributes/AccountName))`,
                 type: 'POST',
                 body: (db) => {
-                    /*
-                    let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsGridRow1Cell2DropBox', 'key');
-                    let y1 = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']);
-                    let y0 = y1 - 1;
-                    */
+                    let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsOverviewGridRow1Cell2DropBox', 'key') === false ? Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsGridRow1Cell2DropBox', 'key')
+                        : Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsGridRow1Cell2DropBox', 'key');
 
                     return `{"MDX":"
                        SELECT 
-                           {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[REXIS Flag],[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag],[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Submitted DateTime],[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Submitted By],[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[PY]} 
+                                {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[REXIS Flag],
+                                   [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag],
+                                   [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Flag - Has plan data],
+                                   [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Flag - Has actuals]}
                           ON COLUMNS , 
                           NON EMPTY 
-                           {EXCEPT({TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan 1391]}, ALL, RECURSIVE )},{[Customers Plan].[Customers Plan].[All Customers Plan 1391]})}
-                           * {TM1FILTERBYLEVEL({TM1DRILLDOWNMEMBER({[Receivers].[Receivers].[TC_12.2020_1391]}, {[Receivers].[Receivers].[TC_12.2020_1391]}, RECURSIVE )}, 0)} 
+                           {EXCEPT({TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan ${company}]}, ALL, RECURSIVE )},
+                           {[Customers Plan].[Customers Plan].[All Customers Plan ${company}]})}
+                           * {TM1FILTERBYLEVEL({TM1DRILLDOWNMEMBER({[Receivers].[Receivers].[TC_12.2020_${company}]}, {[Receivers].[Receivers].[TC_12.2020_${company}]}, RECURSIVE )}, 0)} 
                           ON ROWS 
                         FROM [Sales Territory to Customer] 
                         WHERE 
                           (
                            [Versions].[Versions].[Live],
-                           [Companies].[Companies].[1391],
+                           [Companies].[Companies].[${company}],
                            [Territories].[Territories].[All Territories]
                           )
                   "}`;
@@ -11205,7 +11205,7 @@ app.repository = {
                 },
                 parsingControl: {
                     type: 'matrix',
-                    length: 5,
+                    length: 4,
                     query: [
 
                         (r, x) => {
@@ -11219,9 +11219,9 @@ app.repository = {
                         }, (r, x) => {
                             return {value: r.Cells[x + 1].FormattedValue === 0 ? 'No' : 'Yes'};
                         }, (r, x) => {
-                            return {value: r.Cells[x + 2].FormattedValue};
+                            return {value: r.Cells[x + 2].FormattedValue === 0 ? 'No' : 'Yes'};
                         }, (r, x) => {
-                            return {value: r.Cells[x + 3].FormattedValue};
+                            return {value: r.Cells[x + 3].FormattedValue === 0 ? 'No' : 'Yes'};
                         }
                     ]
                 }
@@ -11557,14 +11557,41 @@ app.repository = {
                   )
             "}`,
             parsingControl: {
-                type: 'matrix',
-                length: 1,
-                query: [
-                    (r, x) => {
-                        return {
-                            value: r.Cells[x].FormattedValue,
+                type: 'object',
+                query:
+                    {
+                        value: (r, x) => {
+                            return r.Cells[x].FormattedValue;
                         }
-                    }]
+                    }
+            }
+        }
+    },
+
+    rocheBPSPCompanySettingsGridRow5Cell1MessageInput: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => `{"MDX":"
+                SELECT 
+                   {[Measures Company Information].[Measures Company Information].[Start page message]} 
+                   PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON COLUMNS , 
+                   {[Companies].[Companies].[All Companies Active^1391]} 
+                   PROPERTIES [Companies].[Companies].[Member description]  ON ROWS 
+                FROM [Company Information] 
+                WHERE 
+                  (
+                   [Versions].[Versions].[Live]
+                  )
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        value: (r, x) => {
+                            return r.Cells[x].FormattedValue;
+                        }
+                    }
             }
         }
     },
