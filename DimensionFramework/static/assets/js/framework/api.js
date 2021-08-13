@@ -177,6 +177,8 @@ app.fn.openPageWithStateAndWaitingForEventAndScrollToSection = arg => {
 
 app.fn.removeWidgetValues = widgetIds => widgetIds.forEach(id => WidgetValue[id] = {});
 
+app.fn.skip = arg => arg;
+
 app.fn.removePageValues = pageId => {
     let page = WidgetConfig[pageId], w;
 

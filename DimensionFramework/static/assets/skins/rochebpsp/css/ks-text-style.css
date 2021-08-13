@@ -623,3 +623,14 @@
     width: 100px;
 }
 
+/* segmented */
+
+.ks-text-segmented .ks-text-title {
+    background-color: #0066cc;
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+}
+

@@ -5,6 +5,7 @@ import io
 from TM1py.Utils.Utils import build_pandas_dataframe_from_cellset
 import requests
 from flask import session
+import logging
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
@@ -22,6 +23,9 @@ class Export:
 
     def __init__(self):
         pass
+
+    def getLogger(self):
+        return logging.getLogger(__name__)
 
     def rocheIpPlanningMonthly(self, request, tm1_service, setting):
 

@@ -862,13 +862,15 @@ app.widgetConfig = {
                                                     'event': 'choose.rocheBPSPProductsGridRow1Cell2DropBox.finished',
                                                     'method': 'refreshWithWaitingForEvents',
                                                     'parameters': [
-                                                        'refresh.rocheBPSPProductsTypeSegmentedControl.finished']
+                                                        'refresh.rocheBPSPProductsTypeSegmentedControl.finished'
+                                                    ]
                                                 },
                                                 {
                                                     'event': 'segmentedControlTab2.rocheBPSPProductsPeriodUnitSegmentedControl.finished',
                                                     'method': 'refreshWithWaitingForEvent',
                                                     'parameters': [
-                                                        'refresh.rocheBPSPProductsTypeSegmentedControl.finished']
+                                                        'refresh.rocheBPSPProductsTypeSegmentedControl.finished'
+                                                    ]
                                                 }
                                             ]
                                         },
@@ -3634,12 +3636,20 @@ app.widgetConfig = {
                                             id: 'rocheBPSPProductsTypeSegmentedControlInfoText',
                                             type: TextWidget,
                                             visible: false,
+                                            skin: 'segmented',
                                             listen: [
                                                 {
                                                     'event': 'segmentedControlTab2.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl.finished',
                                                     'method': 'refreshWithWaitingForEvent',
                                                     'parameters': [
                                                         'refresh.rocheBPSPProductsTypeSegmentedControl.finished']
+                                                },
+                                                {
+                                                    'event': 'bodyReady',
+                                                    'method': 'refreshWithWaitingForEvent',
+                                                    'parameters': [
+                                                        'init.rocheBPSPProductsTypeSegmentedControl.finished'
+                                                    ]
                                                 }
                                             ]
                                         },
@@ -5402,6 +5412,13 @@ app.widgetConfig = {
                             'method': 'refreshWithWaitingForEvent',
                             'parameters': [
                                 'refresh.rocheBPSPProductsTypeSegmentedControl.finished']
+                        },
+                        {
+                            'event': 'bodyReady',
+                            'method': 'refreshWithWaitingForEvents',
+                            'parameters': [
+                                'init.rocheBPSPProductsTypeSegmentedControl.finished'
+                            ]
                         }
                     ],
                     title: '',
@@ -16928,20 +16945,22 @@ app.widgetConfig = {
                                             width: '100%',
                                             borderWidth: false,
                                             fontSize: 14,
-                                            marginRight: 40,
                                             icon: 'icon-doc-arrow-up',
                                             skin: 'blue_link_bpsp',
                                             visible: false
+                                        }, {
+                                            id: 'rocheBPSPCustomersPlanningMonthlyExcelUpload',
+                                            type: ButtonWidget,
+                                            label: 'Upload excel',
+                                            width: '100%',
+                                            borderWidth: false,
+                                            fontSize: 14,
+                                            marginRight: 40,
+                                            icon: 'icon-columns',
+                                            skin: 'blue_link_bpsp',
+                                            marginLeft: 15,
+                                            visible: false
                                         },
-                                        /*  {
-                                              id: 'rocheBPSPCustomersPlanningMonthlyExcelUpload',
-                                              type: ButtonWidget,
-                                              label: 'Upload excel',
-                                              width: '100%',
-                                              icon: 'icon-columns',
-                                              skin: 'blue_link_columns_bpsp',
-                                              marginLeft: 15
-                                          },*/
                                         {
                                             id: 'rocheBPSPCustomersPlanningGridRow2Cell3ClearAllButton',
                                             type: ButtonWidget,

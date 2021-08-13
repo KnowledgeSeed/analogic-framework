@@ -834,7 +834,7 @@ app.repository = {
     },
     rocheBPSPProductsTypeSegmentedControlInfoText: {
         initCondition: (db) => {
-            return db.systemValueSegmentedControlPeriodUnit === 'Monthly';
+            return db.systemValueSegmentedControlPeriodUnit === 'Monthly' && v('systemValueCheckoutProduct');
         },
         initDefault: (db) => {
             return {visible: false};
@@ -851,7 +851,6 @@ app.repository = {
     rocheBPSPProductsTypeSegmentedControl: {
         switch: {
             execute: (db) => {
-                L(v('rocheBPSPProductsTypeSegmentedControl.selected'));
                 Utils.setWidgetValue('selectedProductsTypeSegmentedControl', v('rocheBPSPProductsTypeSegmentedControl.selected'));
             }
         },
@@ -880,9 +879,10 @@ app.repository = {
                 query:
                     {
                         visible: (r, x) => {
-                            let marketingAdjustmentVisible = r.Cells[0].FormattedValue !== '',
-                                finalSalesPlanVisible = r.Cells[1].FormattedValue !== '',
-                                visible = finalSalesPlanVisible && marketingAdjustmentVisible,
+                            let checkoutProduct = v('systemValueCheckoutProduct'),
+                                marketingAdjustmentVisible = r.Cells[0].FormattedValue !== '' || !checkoutProduct,
+                                finalSalesPlanVisible = r.Cells[1].FormattedValue !== '' || !checkoutProduct,
+                                visible = (finalSalesPlanVisible && marketingAdjustmentVisible) || !checkoutProduct,
                                 visibleType = '';
 
                             if (marketingAdjustmentVisible && !finalSalesPlanVisible) {
@@ -2688,7 +2688,9 @@ app.repository = {
             }
         },
         initCondition: (db) => {
-            return WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Monthly';
+            return WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Monthly'
+                && v('rocheBPSPProductsTypeSegmentedControl.value') !== false
+                && v('systemValueProductsTypeIsOk') == true;
         },
         initDefault: (db) => {
             return [];
@@ -3788,6 +3790,22 @@ app.repository = {
                     // title: Utils.getGridTableCellByRowAndColumn('rocheBPSPipPlanningGridTableMonthly', 0, 4, 'year'),
                     title: b,
                     body: a === b ? 'T0' : 'Plan'
+                };
+            }
+        }
+    },
+    'rocheBPSPipPlanningGridTableMonthlyHeaderText-06': {
+        initCondition: (db) => {
+            return Utils.isGridTableLoaded('rocheBPSPipPlanningGridTableMonthly');
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                let b = v('systemValueIpPlanningSegmentedControlRelativeYearValue');
+                return {
+                    title: b
                 };
             }
         }
@@ -7503,10 +7521,17 @@ app.repository = {
                 }
             }
     },
+    rocheBPSPCustomersPlanningMonthlyExcelUpload: {
+        init: {
+            execute: (db) => {
+                return {visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db) && Repository.rocheBPSPCustomersPlanning.isFocused()};
+            }
+        }
+    },
     rocheBPSPCustomersPlanningMonthlyExcelExport: {
         init: {
             execute: (db) => {
-                return {visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db)};
+                return {visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db) && Repository.rocheBPSPCustomersPlanning.isFocused()};
             }
         },
         getFileName: (db) => {
@@ -7660,7 +7685,7 @@ app.repository = {
                     focusedProduct = v('systemValueCustomersPlanningFocused'),
                     relativeYear = v('systemValueGlobalSegmentedControlRelativeYear'),
                     relativeYearValue = v('systemValueGlobalSegmentedControlRelativeYearValue'),
-                    hasFocusedProduct = focusedProduct !== 'PL1',
+                    hasFocusedProduct = Repository.rocheBPSPCustomersPlanning.isFocused(),
                     customerCode = v('systemValueCustomersPlanningCustomerCode'),
                     type = v('systemValueCustomersPlanningMonthlyTypeValue')
                 ;
@@ -7954,7 +7979,7 @@ app.repository = {
                     focusedProduct = v('systemValueCustomersPlanningFocused'),
                     relativeYear = v('systemValueGlobalSegmentedControlRelativeYear'),
                     relativeYearValue = v('systemValueGlobalSegmentedControlRelativeYearValue'),
-                    hasFocusedProduct = focusedProduct !== 'PL1',
+                    hasFocusedProduct = Repository.rocheBPSPCustomersPlanning.isFocused(),
                     customerCode = v('systemValueCustomersPlanningCustomerCode')
                 ;
                 return `
@@ -8596,7 +8621,7 @@ app.repository = {
             return Repository.rocheBPSPCustomersPlanning.isYearly(db) ? 'rocheBPSPCustomersPlanningGridTableYearly' : 'rocheBPSPCustomersPlanningGridTableMonthly';
         },
         isFocused: () => {
-            return v('systemValueCustomersPlanningFocused') !== v('systemValueDefaultCustomersPlanningFocused');
+            return v('systemValueIsCustomersPlanningFocused');
         },
         setCustomerSelectorOpenRecord: (db) => {
             let selected = Repository.rocheBPSPCustomersPlanning.getSelectedCustomer(db);
@@ -8709,6 +8734,7 @@ app.repository = {
             execute: (db) => {
                 let table = Repository.rocheBPSPCustomersPlanning.getVisibleGridTable(db);
                 Utils.setWidgetValue('systemValueCustomersPlanningFocused', Utils.getGridTableCell(table, 0).productCode);
+                Utils.setWidgetValue('systemValueIsCustomersPlanningFocused', true);
             }
         }
     },
@@ -8730,6 +8756,7 @@ app.repository = {
         launch: {
             execute: (db) => {
                 Utils.setWidgetValue('systemValueCustomersPlanningFocused', v('systemValueDefaultCustomersPlanningFocused'));
+                Utils.setWidgetValue('systemValueIsCustomersPlanningFocused', false);
             }
         },
         init: {
@@ -8742,6 +8769,7 @@ app.repository = {
         launch: {
             execute: (db) => {
                 Utils.setWidgetValue('systemValueCustomersPlanningFocused', v('systemValueDefaultCustomersPlanningFocused'));
+                Utils.setWidgetValue('systemValueIsCustomersPlanningFocused', false);
             }
         },
         init: {

@@ -200,6 +200,10 @@ app.eventMap = {
     'launch.rocheBPSPProductsCheckoutPopupCheckoutButton.finished': [
         {
             action: app.fn.checkTIResponseStatus,
+            argument: [app.fn.removeWidgetValues, ['rocheBPSPProductsTypeSegmentedControl'], app.fn.skip, '']
+        },
+        {
+            action: app.fn.checkTIResponseStatus,
             argument: [app.fn.openPage, 'rocheBPSPProductsCheckout', app.fn.openPopup, 'rocheBPSPProductsCheckoutWarning']
         }
     ],
@@ -716,11 +720,20 @@ app.eventMap = {
     'launch.rocheBPSPProductsCheckoutGridRow2Cell3Button': [
         {
             action: app.fn.removeWidgetValues,
-            argument: ['rocheBPSPProductsGridTableYearly', 'rocheBPSPProductsGridTableMonthly', 'rocheBPSPProductsCheckoutCopyMergePopupSlider']
+            argument: [
+                'rocheBPSPProductsGridTableYearly',
+                'rocheBPSPProductsGridTableMonthly',
+                'rocheBPSPProductsCheckoutCopyMergePopupSlider',
+                'rocheBPSPProductsTypeSegmentedControl'
+            ]
         },
         {
             action: app.fn.removeSliders,
             argument: ''
+        },
+        {
+            action: app.fn.addSystemValue,
+            argument: ['systemValueCheckoutProduct', false]
         }
     ],
     'launch.rocheBPSPProductsCheckoutGridRow2Cell3Button.finished': [
@@ -2210,6 +2223,10 @@ app.eventMap = {
             argument: ['systemValueCustomersPlanningFocused', 'systemValueDefaultCustomersPlanningFocused']
         },
         {
+            action: app.fn.addSystemValue,
+            argument: ['systemValueIsCustomersPlanningFocused', false]
+        },
+        {
             action: app.fn.removeSliders,
             argument: ''
         }
@@ -2237,6 +2254,7 @@ app.eventMap = {
                 'rocheBPSPCustomersPlanningGridTableMonthly',
                 'rocheBPSPCustomersPlanningTypeSegmentedControl',
                 'rocheBPSPCustomersPlanningGridRow2Cell3ClearAllButton',
+                'rocheBPSPCustomersPlanningMonthlyExcelUpload'
             ]
         }
     ],
@@ -2272,6 +2290,14 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningMonthlyExcelExport'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningMonthlyExcelUpload'
         },
         {
             action: app.fn.togglePopup,
