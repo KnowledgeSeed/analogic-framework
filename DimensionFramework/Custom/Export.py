@@ -5,6 +5,7 @@ import io
 from TM1py.Utils.Utils import build_pandas_dataframe_from_cellset
 import requests
 from flask import session
+import logging
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
@@ -22,6 +23,9 @@ class Export:
 
     def __init__(self):
         pass
+
+    def getLogger(self):
+        return logging.getLogger(__name__)
 
     def rocheIpPlanningMonthly(self, request, tm1_service, setting):
 
@@ -573,10 +577,10 @@ class Export:
         bold.set_font_name('Imago')
         bold.set_font_size(font_size)
 
-        worksheet.write(3, 4, request.args['yearMinusOne'], bold) # 2019
+        worksheet.write(3, 4, request.args['yearMinusOne'], bold)  # 2019
         worksheet.write(3, 5, request.args['year0'], bold)
         worksheet.write(3, 6, request.args['year1'], bold)
-        worksheet.write(3, 7, request.args['year1'], bold) # T0
+        worksheet.write(3, 7, request.args['year1'], bold)  # T0
         worksheet.write(3, 8, request.args['year2'], bold)
         worksheet.write(3, 9, request.args['year3'], bold)
         worksheet.write(3, 10, request.args['year4'], bold)
@@ -601,7 +605,7 @@ class Export:
         worksheet.write(5, 1, 'Product Code', bold)
         worksheet.write(5, 2, 'Product Level', bold)
         worksheet.write(5, 3, 'Reciver', bold)
-        worksheet.write(5, 4, 'Actual', bold) #2019
+        worksheet.write(5, 4, 'Actual', bold)  # 2019
         worksheet.write(5, 5, 'Actual', bold)
         worksheet.write(5, 6, 'Final Plan', bold)
         worksheet.write(5, 7, 'T0', bold)

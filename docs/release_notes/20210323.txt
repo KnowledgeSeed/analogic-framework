@@ -129,6 +129,9 @@ TextBoxWidget:
 DropBoxWidget:
   simple_bold_with_border_bpsp
 
+TextWidget:
+    segmented
+
 
   widgetId probléma: widgetId-08 -> repoban csak 'widgetid-08'
 
