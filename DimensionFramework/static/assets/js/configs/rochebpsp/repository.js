@@ -10497,6 +10497,10 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     value: parseInt(r.Cells[x + 1].FormattedValue) > 0 ? 1 : 0,
+                                    editable: r.Cells[x + 1].FormattedValue === '1' ? true : false,
+                                    cellSkin: r.Cells[x + 1].FormattedValue === '1' ? '' : 'readonly_bpsp',
+                                    skin: r.Cells[x + 1].FormattedValue === '1' ? 'Settings_toggle_bpsp' : 'label_toggle_bpsp',
+                                    titleOn: r.Cells[x + 1].FormattedValue === '1' ? '' : '' + parseInt(r.Cells[x].FormattedValue),
                                 }
                             }
                         ]
@@ -10796,6 +10800,7 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     label: r.Cells[x].Members[1].Attributes['Caption'],
+                                    territoryName: r.Cells[x].Members[1].Attributes['Caption'],
                                     territoryID: r.Cells[x].Members[1].Name,
                                     skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].FormattedValue
                                 }
@@ -10944,10 +10949,10 @@ app.repository = {
                 },
         },
 
-    rocheBPSPTerritoriesProductsGridRow15Cell1Title: {
+    rocheBPSPTerritoriesProductsGridRow1Cell2Title: {
         init: {
             execute: (db) => {
-                return {title: Utils.getGridTableCell('rocheBPSPTerritoriesGridTable', 0).territoryID};
+                return {title: Utils.getGridTableCell('rocheBPSPTerritoriesGridTable', 0).territoryName};
             }
         }
     },
@@ -11238,20 +11243,13 @@ app.repository = {
                         }, (r, x) => {
                             return {value: r.Cells[x].Members[4].Attributes.Caption};
                         }, (r, x) => {
-                            return {value: r.Cells[x].FormattedValue};
+                            return {value: r.Cells[x].FormattedValue === 0 ? 'No' : 'Yes'};
                         }, (r, x) => {
-                            return {value: r.Cells[x + 1].FormattedValue};
+                            return {value: r.Cells[x + 1].FormattedValue === 0 ? 'No' : 'Yes'};
                         }, (r, x) => {
                             return {value: r.Cells[x + 2].FormattedValue};
                         }, (r, x) => {
                             return {value: r.Cells[x + 3].FormattedValue};
-                        }, (r, x) => {
-                            return {value: r.Cells[x + 4].FormattedValue};
-                        }, (r, x) => {
-                            return {
-                                active: true,
-                                //on: r.Cells[x + 4].FormattedValue === '' ? false : true
-                            };
                         }
                     ]
                 }
@@ -11414,43 +11412,40 @@ app.repository = {
 
     rocheBPSPCompanySettingsCheckedOutGridTable:
         {
-            /*
             initCondition: (db) => {
-                let a = Utils.setWidgetValueIfNotExist('systemValueMaterialReturnFromSearch', false);
-                let b = a === false && Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow1Cell2DropBox') && db.systemValueGlobalCompanyProductPlanVersion;
-                Utils.setWidgetValue('systemValueMaterialReturnFromSearch', false);
-                return b;
+                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox');
+                return a;
             },
             initDefault: (db) => {
                 return [];
             },
 
-             */
-
             init:
                 {
-                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption,Attributes/BPSPBudgetUILevelFormat))`,
                     type: 'POST',
                     body: (db) => {
                         let searchString = '';
                         return `{"MDX":"
-                                    
-                          SELECT 
-                           {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedBy],
-                           [Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime]} 
-                           PROPERTIES [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Caption]  ON COLUMNS , 
-                          NON EMPTY 
-                           {DRILLDOWNMEMBER({DRILLDOWNMEMBER({[Products].[BPSP Budget].Members}, {[Products].[BPSP Budget].[P600]})}, {[Products].[BPSP Budget].[P185]})}
-                           * {EXCEPT({TM1DRILLDOWNMEMBER({[Receivers].[Receivers].[All Receivers]}, {[Receivers].[Receivers].[All Receivers]}, RECURSIVE )},{[Receivers].[Receivers].[All Receivers]})}
-                           * {DRILLDOWNMEMBER({DRILLDOWNMEMBER({DRILLDOWNMEMBER({[Periods].[Periods].[All Periods by Year^2019],[Periods].[Periods].[All Periods by Year^2020],[Periods].[Periods].[All Periods by Year^2021],[Periods].[Periods].[All Periods by Year^2022],[Periods].[Periods].[All Periods by Year^2023],[Periods].[Periods].[All Periods by Year^2024],[Periods].[Periods].[All Periods by Year^2025]}, {[Periods].[Periods].[All Periods by Year^2021]})}, {[Periods].[Periods].[All Periods by Year^2022]})}, {[Periods].[Periods].[All Periods by Year^2021]})}
-                           * {[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Growth BW T3],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Growth BW T3^BW T3],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Accuracy BW T3 vs BW Invoice],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Accuracy BW T3 vs BW Invoice^BW Invoice],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Variance Final Plan vs T0],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[BW T0],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Variance Final Plan vs T0^Final Sales Plan],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Variance Final Plan vs T3],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Variance Final Plan vs Total Customer],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Total Customer plan w Marketing Adj],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Marketing Sales Plan Adj],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Customer Sales Plan],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Growth Final Sales Plan],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Growth BW Invoice],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Rexis Invoice],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[BW Invoice YTD],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Plan Reference],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Monthly split],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Split Key],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckoutFlag]} 
-                           PROPERTIES [Products].[BPSP Budget].[Caption] ,[Periods].[Periods].[Caption] ,[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Caption]  ON ROWS 
-                        FROM [Sales Plan by Product] 
-                        WHERE 
-                          (
-                           [Versions].[Versions].[Live],
-                           [Companies].[Companies].[1391]
-                          )
+                                WITH MEMBER [Measures Sales Plan Checkout by Product].[Measures Sales Plan Checkout by Product].[flag]
+                                AS IIF([Measures Sales Plan Checkout by Product].[Measures Sales Plan Checkout by Product].[checkout flag]='1',
+                                [Measures Sales Plan Checkout by Product].[Measures Sales Plan Checkout by Product].[checkout flag],NULL)
+                                SELECT 
+                                   {[Measures Sales Plan Checkout by Product].[Measures Sales Plan Checkout by Product].[userID],
+                                   [Measures Sales Plan Checkout by Product].[Measures Sales Plan Checkout by Product].[DateTime],
+                                   [Measures Sales Plan Checkout by Product].[Measures Sales Plan Checkout by Product].[flag]} 
+                                  ON COLUMNS , 
+                                  NON EMPTY 
+                                   FILTER({[Products].[BPSP Budget].Members}
+                                   * {TM1DRILLDOWNMEMBER({[Receivers].[Receivers].[All Receivers]}, ALL, RECURSIVE )},
+                                   [Measures Sales Plan Checkout by Product].[Measures Sales Plan Checkout by Product].[flag]='1')
+                                  ON ROWS 
+                                FROM [Sales Plan Checkout by Product] 
+                                WHERE 
+                                  (
+                                   [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox', 'key')}],
+                                   [Versions].[Versions].[Live]
+                                  )
                                     "}`;
 
                     },
@@ -11468,7 +11463,7 @@ app.repository = {
                             },
 
                             (r, x) => {
-                                return {title: r.Cells[x].Members[2].Name}
+                                return {title: r.Cells[x].Members[2].Attributes['BPSP Budget UI Level Format'].replace('N', '').replace('C', '')}
                             },
 
                             (r, x) => {
@@ -11497,18 +11492,13 @@ app.repository = {
 
     rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning:
         {
-            /*
             initCondition: (db) => {
-                let a = Utils.setWidgetValueIfNotExist('systemValueMaterialReturnFromSearch', false);
-                let b = a === false && Utils.isValueExistingAndNotEmpty('rocheBPSPMaterialGridRow1Cell2DropBox') && db.systemValueGlobalCompanyProductPlanVersion;
-                Utils.setWidgetValue('systemValueMaterialReturnFromSearch', false);
-                return b;
+                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox');
+                return a;
             },
             initDefault: (db) => {
                 return [];
             },
-
-             */
 
             init:
                 {
@@ -11577,6 +11567,35 @@ app.repository = {
                     }
                 },
         },
+
+    rocheBPSPCompanySettingsGridRow4Cell1MessageInput: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => `{"MDX":"
+                SELECT 
+                   {[Measures Company Information].[Measures Company Information].[Start page message Title]} 
+                   PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON COLUMNS , 
+                   {[Companies].[Companies].[All Companies Active^1391]} 
+                   PROPERTIES [Companies].[Companies].[Member description]  ON ROWS 
+                FROM [Company Information] 
+                WHERE 
+                  (
+                   [Versions].[Versions].[Live]
+                  )
+            "}`,
+            parsingControl: {
+                type: 'matrix',
+                length: 1,
+                query: [
+                    (r, x) => {
+                        return {
+                            value: r.Cells[x].FormattedValue,
+                        }
+                    }]
+            }
+        }
+    },
 
 
 }
