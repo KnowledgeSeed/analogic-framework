@@ -3667,6 +3667,22 @@ app.repository = {
             }
         }
     },
+    'rocheBPSPipPlanningGridTableMonthlyHeaderText-06': {
+        initCondition: (db) => {
+            return Utils.isGridTableLoaded('rocheBPSPipPlanningGridTableMonthly');
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                let b = v('systemValueIpPlanningSegmentedControlRelativeYearValue');
+                return {
+                    title: b
+                };
+            }
+        }
+    },
     'rocheBPSPipPlanningGridTableMonthlyHeaderText-19': {
         initCondition: (db) => {
             return Utils.isGridTableLoaded('rocheBPSPipPlanningGridTableMonthly');
