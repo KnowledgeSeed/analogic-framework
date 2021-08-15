@@ -15663,6 +15663,10 @@ app.widgetConfig = {
             type: PageWidget,
             widgets: [
                 {
+                    id: 'rocheBPSPCustomerPlanningPageInit',
+                    type: ShadowWidget
+                },
+                {
                     id: 'rocheBPSPCustomersPlanningCommentShow',
                     type: ContainerWidget,
                     visible: false,
@@ -15843,6 +15847,97 @@ app.widgetConfig = {
                                 }
                             ]
                         }
+                    ]
+                },
+                
+                {
+                    id: 'rocheBPSPCustomersPlanningUploadPopup',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: true,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    width: '260',
+                    height: 190,
+                    bgScrollable: true,
+                    fixed: true,
+                    behaviour: 'popup',
+                    position: 'bottom',
+                    skin: 'popup_bpsp ',
+                    fadingSpeed: 0,
+                    widgets: [
+                        {
+                            id: 'rocheBPSPCustomersPlanningUploadPopupPopupGrid',
+                            type: GridWidget,
+                            width: 260,
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPCustomersPlanningUploadPopupPopupGridRow1',
+                                    type: GridRowWidget,
+                                    skin: 'bottomborder_columnselector_bpsp',
+                                    paddingTop: 20,
+                                    paddingBottom: 20,
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningUploadPopupPopupGridRow1Cell1',
+                                            type: GridCellWidget,
+                                            width: '50%',
+                                            alignment: 'center-left',
+                                            widgets: [
+                                                {
+                                                    id: 'rocheBPSPCustomersPlanningUploadPopupPopupText',
+                                                    type: TextWidget,
+                                                    paddingLeft: 20,
+                                                    skin: 'popup_header_bpsp',
+                                                    title: 'Upload'
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            id: 'rocheBPSPCustomersPlanningUploadPopupPopupGridRow1Cell4',
+                                            type: GridCellWidget,
+                                            width: '50%',
+                                            alignment: 'center-right',
+                                            widgets: [
+                                                {
+                                                    id: 'rocheBPSPCustomersPlanningUploadPopupCancelButton',
+                                                    type: ButtonWidget,
+                                                    icon: 'icon-x',
+                                                    marginRight: 20,
+                                                    borderWidth: 0,
+                                                    skin: 'blue_icon_bpsp'
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'rocheBPSPCustomersPlanningUploadPopupPlDropbox',
+                            marginTop: 10,
+                            type: DropBoxWidget,
+                            title: 'Select level:',
+                            skin: 'simple_bold_bpsp',
+                            selectFirst: true,
+                            backdrop: true
+                        },
+                        {
+                            id: 'rocheBPSPCustomersPlanningUploadPopupUpload',
+                            type: FileUploadWidget,
+                            marginTop: 20,
+                            marginLeft: 70,
+                            width: 100,
+                            label: 'Upload',
+                            fontColor: 'white',
+                            skin: 'deepblue_backbutton',
+                            showUploadSuccessMessage: false,
+                            maxFileSize: 5,
+                            progressVisible: false
+                        }
+
                     ]
                 },
 
@@ -16941,7 +17036,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPCustomersPlanningMonthlyExcelExport',
                                             type: ButtonWidget,
-                                            label: 'Excel Export',
+                                            label: 'Excel template',
                                             width: '100%',
                                             borderWidth: false,
                                             fontSize: 14,

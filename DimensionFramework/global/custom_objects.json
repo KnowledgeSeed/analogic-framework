@@ -24,6 +24,11 @@
     "class": "Validation",
     "method": "validateExcelImport"
   },
+  "validateCustomerPlanningExcelImport": {
+    "namespace": "DimensionFramework.Custom.Validation",
+    "class": "Validation",
+    "method": "validateCustomerPlanningExcelImport"
+  },
   "cool": {
     "namespace": "DimensionFramework.Custom.BusinessLogic",
     "class": "BusinessLogic",

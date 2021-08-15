@@ -2243,7 +2243,16 @@ app.eventMap = {
             argument: 'rocheBPSPCustomersPlanningPopup'
         }
     ],
-
+    'launch.rocheBPSPCustomersPlanningMonthlyExcelUpload': [
+         {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPCustomersPlanningUploadPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningUploadPopupPlDropbox'
+        }
+    ],
     'switch.rocheBPSPCustomersPlanningPeriodUnitSegmentedControl.finished': [
         {
             action: app.fn.forceRefreshWidgets,
@@ -2256,6 +2265,36 @@ app.eventMap = {
                 'rocheBPSPCustomersPlanningGridRow2Cell3ClearAllButton',
                 'rocheBPSPCustomersPlanningMonthlyExcelUpload'
             ]
+        }
+    ],
+    'launch.rocheBPSPCustomersPlanningUploadPopupCancelButton' : [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCustomersPlanningUploadPopup'
+        }
+    ],
+
+    'upload.rocheBPSPCustomersPlanningUploadPopupUpload.finished': [
+        {
+            action: app.fn.executeRequest,
+            argument: 'request.rocheBPSPCustomersPlanningUploadPopupUpload'
+        }
+    ],
+
+    'request.rocheBPSPCustomersPlanningUploadPopupUpload.finished': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningUploadPopupUpload'
+        },
+        {
+            action: app.fn.showPopup,
+            argument: 'Upload success'
+        }
+    ],
+    'upload.rocheBPSPCustomersPlanningUploadPopupUpload.error': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningUploadPopupUpload'
         }
     ],
     'switch.rocheBPSPCustomersPlanningTypeSegmentedControl.finished': [
