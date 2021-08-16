@@ -22296,7 +22296,6 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPCompanySettingsCheckedOutGridTableHeaderRow',
                             type: GridTableHeaderRowWidget,
-                            height: '90',
                             width: '100%',
                             widgets: [
 
@@ -22591,7 +22590,6 @@ app.widgetConfig = {
                 {
                     id: 'rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning',
                     type: GridTableWidget,
-                    marginTop: '30',
                     hideIfNoData: true,
                     visible: false,
                     skin: 'products_bpsp',
@@ -22608,7 +22606,6 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPCompanySettingsCheckedOutGridTableIPPlanningHeaderRow',
                             type: GridTableHeaderRowWidget,
-                            height: '90',
                             width: '100%',
                             widgets: [
 
@@ -23105,10 +23102,352 @@ app.widgetConfig = {
                                 }
 
                             ]
+                        },
+
+                        {
+                            id: 'rocheBPSPCompanySettingsGrowthGridRow3',
+                            type: GridRowWidget,
+                            marginTop: '1.3%',
+                            alignment: 'center-left',
+                            width: '100%',
+                            height: '100px',
+                            skin: '',
+                            widgets: [
+                                {
+                                    id: 'rocheBPSPCompanySettingsGrowthGridRow3Cell1',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '21%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPCompanySettingsGrowthGridRow3Cell1SearchBox',
+                                            type: TextBoxWidget,
+                                            title: 'Search',
+                                            width: '400',
+                                            skin: 'searchbox',
+                                            titleFontColor: '#747b85',
+                                            textFontSize: '14',
+                                        }
+
+
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCompanySettingsGrowthGridRow3Cell2',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-right',
+                                    marginTop: '2%',
+                                    width: '18%',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox',
+                                            type: DropBoxWidget,
+                                            width: '120%',
+                                            skin: 'simple_bpsp',
+                                            marginBottom: 5,
+                                            selectFirst: true,
+                                            backdrop: true,
+                                            listen: [
+                                                {
+                                                    event: 'choose.rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox.finished',
+                                                    method: 'refresh'
+                                                },
+                                                {
+                                                    event: 'init.rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox.finished',
+                                                    method: 'refresh'
+                                                }
+                                            ]
+
+                                        }
+
+
+                                    ]
+                                },
+                            ]
                         }
                     ]
 
-                }]
+                },
+
+                {
+                    id: 'rocheBPSPCompanySettingsGrowthGridTable',
+                    type: GridTableWidget,
+                    marginTop: '5',
+                    hideIfNoData: true,
+                    visible: true,
+                    skin: 'products_bpsp',
+                    listen: [
+                        {
+                            event: 'choose.rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox.finished',
+                            method: 'refresh'
+                        },
+                        {
+                            event: 'writeEnd.rocheBPSPCompanySettingsGrowthGridRow3Cell1SearchBox.finished',
+                            method: 'refresh'
+                        },
+                        {
+                            event: 'choose.rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox.finished',
+                            method: 'refresh'
+                        },
+                        {
+                            event: 'init.rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox.finished',
+                            method: 'refresh'
+                        },
+                        {
+                            event: 'init.rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox.finished',
+                            method: 'refresh'
+                        }
+
+                    ],
+                    width: '70%',
+                    title: '',
+                    widgets: [
+
+                        {
+                            id: 'rocheBPSPCompanySettingsGrowthGridTableHeaderRow',
+                            type: GridTableHeaderRowWidget,
+                            height: '90',
+                            width: '100%',
+                            widgets: [
+
+
+                                {
+                                    id: 'rocheBPSPCompanySettingsGrowthGridTableHeaderCell-01',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '45%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCompanySettingsGrowthGridTableHeaderCell1Text',
+                                            type: TextWidget,
+                                            width: '100%',
+                                            body: 'Profit center name',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: '10%',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCompanySettingsGrowthGridTableHeaderCell-02',
+                                    type: GridTableHeaderCellWidget,
+                                    alignment: 'bottom-center',
+                                    width: '15%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPCompanySettingsGrowthGridTableHeaderText-02',
+                                            type: TextWidget,
+                                            body: 'Profit center number',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCompanySettingsGrowthGridTableHeaderCell-03',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '10%',
+                                    alignment: 'bottom-center',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCompanySettingsGrowthGridTableHeaderText-03',
+                                            type: TextWidget,
+                                            body: 'Level',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            bodyAlignment: 'center'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCompanySettingsGrowthGridTableHeaderCell-04',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '10%',
+                                    alignment: 'bottom-center',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCompanySettingsGrowthGridTableHeaderText-04',
+                                            type: TextWidget,
+                                            body: '2021',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            bodyAlignment: 'center'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCompanySettingsGrowthGridTableHeaderCell-05',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '10%',
+                                    alignment: 'bottom-center',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCompanySettingsGrowthGridTableHeaderText-05',
+                                            type: TextWidget,
+                                            body: '2022',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            bodyAlignment: 'center'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'rocheBPSPCompanySettingsGrowthGridTableHeaderCell-06',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '10%',
+                                    alignment: 'bottom-center',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCompanySettingsGrowthGridTableHeaderText-06',
+                                            type: TextWidget,
+                                            body: '2023',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            bodyAlignment: 'center'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+
+
+                        {
+                            id: 'rocheBPSPCompanySettingsGrowthGridTableCell-01',
+                            type: GridTableCellWidget,
+                            width: '45%',
+                            alignment: 'center-left',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCompanySettingsGrowthGridTableButton-01',
+                                    type: ButtonWidget,
+                                    width: '100%',
+                                    icon: 'icon-badge',
+                                    borderWidth: false,
+                                    applyMeasuresToSection: true,
+                                    label: '',
+                                    action: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPCompanySettingsGrowthGridTableCell-02',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '15%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCompanySettingsGrowthGridTableText-02',
+                                    type: TextWidget,
+                                    titleAlignment: 'end',
+                                    paddingRight: 8,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    marginLeft: '35%',
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPCompanySettingsGrowthGridTableCell-03',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '10%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCompanySettingsGrowthGridTableText-03',
+                                    type: TextWidget,
+                                    titleAlignment: 'end',
+                                    paddingRight: 8,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    marginLeft: '8%',
+                                    title: '',
+                                }
+                            ]
+                        },
+                        {
+                            id: 'rocheBPSPCompanySettingsGrowthGridTableCell-04',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '10%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCompanySettingsGrowthGridTableText-04',
+                                    type: TextWidget,
+                                    titleAlignment: 'end',
+                                    paddingRight: 8,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    marginLeft: '8%',
+                                    title: '',
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'rocheBPSPCompanySettingsGrowthGridTableCell-05',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '10%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCompanySettingsGrowthGridTableText-05',
+                                    type: TextWidget,
+                                    titleAlignment: 'end',
+                                    paddingRight: 8,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    marginLeft: '8%',
+                                    title: '',
+                                }
+                            ]
+                        },
+                        {
+                            id: 'rocheBPSPCompanySettingsGrowthGridTableCell-06',
+                            type: GridTableCellWidget,
+                            alignment: 'center-right',
+                            width: '10%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCompanySettingsGrowthGridTableText-06',
+                                    type: TextWidget,
+                                    titleAlignment: 'end',
+                                    paddingRight: 8,
+                                    skin: 'products_gd_readonly_bpsp',
+                                    marginLeft: '8%',
+                                    title: '',
+                                }
+                            ]
+                        }
+                    ]
+                },
+
+
+            ]
         },
 
 

@@ -11457,8 +11457,7 @@ app.repository = {
 
                             (r, x) => {
                                 return {
-                                    label: r.Cells[x].Members[2].Attributes.Caption,
-                                    //skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x + 6].FormattedValue
+                                    label: r.Cells[x].Members[2].Attributes.Caption
                                 }
                             },
 
@@ -11618,6 +11617,173 @@ app.repository = {
                     {
                         value: (r, x) => {
                             return r.Cells[x].FormattedValue;
+                        }
+                    }
+            }
+        }
+    },
+
+
+    rocheBPSPCompanySettingsGrowthGridTable:
+        {
+
+            initCondition: (db) => {
+                let b = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox')
+                //&& Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox')
+                return b;
+            },
+            initDefault: (db) => {
+                return [];
+            },
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption,Attributes/BPSPBudgetUILevelFormat))`,
+                    type: 'POST',
+                    body: (db) => {
+
+                        let yearzero = Utils.parseNumber(db.systemValueGlobalStartingPlanYear),
+                            YearPlusOne = yearzero + 1,
+                            YearPlusTwo = yearzero + 2,
+                            YearPlusThree = yearzero + 3,
+                            yearPlusFour = yearzero + 4;
+
+                        let searchString = '';
+                        if (Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGrowthGridRow3Cell1SearchBox')) {
+                            searchString = v('rocheBPSPCompanySettingsGrowthGridRow3Cell1SearchBox.value').toUpperCase();
+                        }
+
+                        let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox', 'key');
+                        let reciver = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox', 'key') === false ? 'All Receivers'
+                            : Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox', 'key');
+
+                        return `{"MDX":"
+                                        With
+                                        MEMBER [Years].[Years].[ProductName] as 
+                                        [Products Flat].[Products Flat].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
+                                        MEMBER [Years].[Years].[ProductCode] as 
+                                        [Products Flat].[Products Flat].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
+                                        MEMBER [Years].[Years].[ProductLevel] as 
+                                        [Products Flat].[Products Flat].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                                        
+                                        SELECT 
+                                           {
+                                           [Years].[Years].[ProductName],
+                                           [Years].[Years].[ProductCode],
+                                           [Years].[Years].[ProductLevel],
+                                           [Years].[Years].[${yearzero}],
+                                           [Years].[Years].[${YearPlusOne}],
+                                           [Years].[Years].[${YearPlusTwo}]
+                                           } 
+                                           
+                                          ON COLUMNS , 
+                                          {FILTER({[Products Flat].[Products Flat].[PL1],
+                                          [Products Flat].[Products Flat].[P225EX_RDC],[Products Flat].[Products Flat].[P2A_100],[Products Flat].[Products Flat].[P305],
+                                          [Products Flat].[Products Flat].[P6],[Products Flat].[Products Flat].[458611],[Products Flat].[Products Flat].[458621],
+                                          [Products Flat].[Products Flat].[458631],[Products Flat].[Products Flat].[458641],[Products Flat].[Products Flat].[458651],
+                                          [Products Flat].[Products Flat].[458360],[Products Flat].[Products Flat].[458400],[Products Flat].[Products Flat].[P15],
+                                          [Products Flat].[Products Flat].[458451],[Products Flat].[Products Flat].[458453],[Products Flat].[Products Flat].[458454],
+                                          [Products Flat].[Products Flat].[458452],[Products Flat].[Products Flat].[458458],[Products Flat].[Products Flat].[458461],
+                                          [Products Flat].[Products Flat].[458455],[Products Flat].[Products Flat].[458459],[Products Flat].[Products Flat].[458456],
+                                          [Products Flat].[Products Flat].[458457],[Products Flat].[Products Flat].[458462],[Products Flat].[Products Flat].[458460],
+                                          [Products Flat].[Products Flat].[458470],[Products Flat].[Products Flat].[P188],[Products Flat].[Products Flat].[459491],
+                                          [Products Flat].[Products Flat].[459492],[Products Flat].[Products Flat].[459493],[Products Flat].[Products Flat].[P184],[Products Flat].[Products Flat].[458855],
+                                          [Products Flat].[Products Flat].[458856],[Products Flat].[Products Flat].[458213],[Products Flat].[Products Flat].[P23],[Products Flat].[Products Flat].[458490],
+                                          [Products Flat].[Products Flat].[458500],[Products Flat].[Products Flat].[458510],[Products Flat].[Products Flat].[P186],[Products Flat].[Products Flat].[458101],[Products Flat].[Products Flat].[458111],[Products Flat].[Products Flat].[459090],[Products Flat].[Products Flat].[P187],[Products Flat].[Products Flat].[458550],[Products Flat].[Products Flat].[458560],[Products Flat].[Products Flat].[458570],[Products Flat].[Products Flat].[P118],[Products Flat].[Products Flat].[459250],[Products Flat].[Products Flat].[459316],[Products Flat].[Products Flat].[459456],[Products Flat].[Products Flat].[458140],[Products Flat].[Products Flat].[458167],[Products Flat].[Products Flat].[458168],[Products Flat].[Products Flat].[459130],[Products Flat].[Products Flat].[P132],[Products Flat].[Products Flat].[P316],[Products Flat].[Products Flat].[458150],[Products Flat].[Products Flat].[458155],[Products Flat].[Products Flat].[458310],[Products Flat].[Products Flat].[458211],[Products Flat].[Products Flat].[P323],[Products Flat].[Products Flat].[458311],[Products Flat].[Products Flat].[458411],[Products Flat].[Products Flat].[P319],[Products Flat].[Products Flat].[458170],[Products Flat].[Products Flat].[458240],[Products Flat].[Products Flat].[458245],[Products Flat].[Products Flat].[458305],[Products Flat].[Products Flat].[P327],[Products Flat].[Products Flat].[458255],[Products Flat].[Products Flat].[P318],[Products Flat].[Products Flat].[458180],[Products Flat].[Products Flat].[458190],[Products Flat].[Products Flat].[458200],[Products Flat].[Products Flat].[458888],[Products Flat].[Products Flat].[458220],[Products Flat].[Products Flat].[458230],[Products Flat].[Products Flat].[458235],[Products Flat].[Products Flat].[P320],[Products Flat].[Products Flat].[458290],[Products Flat].[Products Flat].[P119],[Products Flat].[Products Flat].[459110],[Products Flat].[Products Flat].[459115],[Products Flat].[Products Flat].[459120],[Products Flat].[Products Flat].[P134],[Products Flat].[Products Flat].[459252],[Products Flat].[Products Flat].[459251],[Products Flat].[Products Flat].[459455],[Products Flat].[Products Flat].[459271],[Products Flat].[Products Flat].[P135],[Products Flat].[Products Flat].[459255],[Products Flat].[Products Flat].[459281],[Products Flat].[Products Flat].[459285],[Products Flat].[Products Flat].[P136],[Products Flat].[Products Flat].[459261],[Products Flat].[Products Flat].[459321],[Products Flat].[Products Flat].[459331],[Products Flat].[Products Flat].[458312],[Products Flat].[Products Flat].[P500],[Products Flat].[Products Flat].[P520],[Products Flat].[Products Flat].[458142],[Products Flat].[Products Flat].[458143],[Products Flat].[Products Flat].[458262],[Products Flat].[Products Flat].[458263],[Products Flat].[Products Flat].[458265],[Products Flat].[Products Flat].[458264],
+                                          [Products Flat].[Products Flat].[458322],[Products Flat].[Products Flat].[458693],[Products Flat].[Products Flat].[458699],[Products Flat].[Products Flat].[458552],
+                                          [Products Flat].[Products Flat].[458852],[Products Flat].[Products Flat].[458551],[Products Flat].[Products Flat].[P540],[Products Flat].[Products Flat].[458681],
+                                          [Products Flat].[Products Flat].[458691],[Products Flat].[Products Flat].[458682],[Products Flat].[Products Flat].[458692],[Products Flat].[Products Flat].[P560],
+                                          [Products Flat].[Products Flat].[458854],[Products Flat].[Products Flat].[458871],[Products Flat].[Products Flat].[458872],[Products Flat].[Products Flat].[P310],
+                                          [Products Flat].[Products Flat].[P175],[Products Flat].[Products Flat].[459010],[Products Flat].[Products Flat].[459020],[Products Flat].[Products Flat].[459025],
+                                          [Products Flat].[Products Flat].[458216],[Products Flat].[Products Flat].[458217],[Products Flat].[Products Flat].[458215],[Products Flat].[Products Flat].[P165],
+                                          [Products Flat].[Products Flat].[459440],[Products Flat].[Products Flat].[459445],[Products Flat].[Products Flat].[458214],[Products Flat].[Products Flat].[459011],[Products Flat].[Products Flat].[459012],[Products Flat].[Products Flat].[459022],[Products Flat].[Products Flat].[P195],[Products Flat].[Products Flat].[458070],[Products Flat].[Products Flat].[458090],[Products Flat].[Products Flat].[458940],[Products Flat].[Products Flat].[458950],[Products Flat].[Products Flat].[458955],[Products Flat].[Products Flat].[458010],[Products Flat].[Products Flat].[458011],[Products Flat].[Products Flat].[458012],[Products Flat].[Products Flat].[P128],[Products Flat].[Products Flat].[459210],[Products Flat].[Products Flat].[459220],[Products Flat].[Products Flat].[P2A_200],[Products Flat].[Products Flat].[P600],[Products Flat].[Products Flat].[P4403],[Products Flat].[Products Flat].[458346],[Products Flat].[Products Flat].[458371],[Products Flat].[Products Flat].[P4405],[Products Flat].[Products Flat].[P650],[Products Flat].[Products Flat].[P4404],[Products Flat].[Products Flat].[458225],[Products Flat].[Products Flat].[P4406],[Products Flat].[Products Flat].[458615],[Products Flat].[Products Flat].[P256],[Products Flat].[Products Flat].[P2A12],[Products Flat].[Products Flat].[P257],[Products Flat].[Products Flat].[P40],[Products Flat].[Products Flat].[468670],[Products Flat].[Products Flat].[468740],[Products Flat].[Products Flat].[468690],[Products Flat].[Products Flat].[468760],[Products Flat].[Products Flat].[468661],[Products Flat].[Products Flat].[468761],[Products Flat].[Products Flat].[468771],[Products Flat].[Products Flat].[468772],[Products Flat].[Products Flat].[468970],[Products Flat].[Products Flat].[468975],[Products Flat].[Products Flat].[468990],[Products Flat].[Products Flat].[468610],[Products Flat].[Products Flat].[468710],[Products Flat].[Products Flat].[468625],[Products Flat].[Products Flat].[468725],[Products Flat].[Products Flat].[468790],[Products Flat].[Products Flat].[469350],[Products Flat].[Products Flat].[S0030],[Products Flat].[Products Flat].[P96],[Products Flat].[Products Flat].[468035],[Products Flat].[Products Flat].[468036],[Products Flat].[Products Flat].[468034],[Products Flat].[Products Flat].[468037],[Products Flat].[Products Flat].[S0150],[Products Flat].[Products Flat].[P335],[Products Flat].[Products Flat].[469351],[Products Flat].[Products Flat].[S0160],[Products Flat].[Products Flat].[P330],[Products Flat].[Products Flat].[468023],[Products Flat].[Products Flat].[468024],[Products Flat].[Products Flat].[468031],[Products Flat].[Products Flat].[468025],[Products Flat].[Products Flat].[468027],[Products Flat].[Products Flat].[468032],[Products Flat].[Products Flat].[468028],[Products Flat].[Products Flat].[468033]},
+                                          INSTR([Products Flat].[Products Flat].CurrentMember.Properties('BPSP Budget Description'), '${searchString}')>0)} 
+                                           PROPERTIES [Products Flat].[Products Flat].[Caption]
+                                           ON ROWS 
+                                        FROM [Sales Parameters by Products Flat] 
+                                        WHERE 
+                                          (
+                                           [Companies].[Companies].[${company}],
+                                           [Versions].[Versions].[Live],
+                                           [Receivers].[Receivers].[${reciver}],
+                                           [Measures Sales Parameters by Products Flat].[Measures Sales Parameters by Products Flat].[Growth rate for Products Copy]
+                                          )
+                                    "}`;
+
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 6,
+                        query: [
+
+
+                            (r, x) => {
+                                return {
+                                    label: r.Cells[x].FormattedValue,
+                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x + 2].FormattedValue.replace('a', '')
+                                }
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 1].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 2].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 3].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 4].FormattedValue}
+                            },
+                            (r, x) => {
+                                return {title: r.Cells[x + 5].FormattedValue}
+                            },
+                        ]
+                    }
+                },
+        },
+
+    rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox: {
+        initCondition: (db) => {
+            return v('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox.value');
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "
+
+            SELECT
+               {
+                [}ElementAttributes_Receivers].[}ElementAttributes_Receivers].[Member description],
+                [}ElementAttributes_Receivers].[}ElementAttributes_Receivers].[Receiver - Key]}
+              ON COLUMNS ,
+               {TM1SubsetToSet([Receivers].[Receivers], 'zUI ${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox', 'key')} Report Receivers')}
+              ON ROWS
+            FROM [}ElementAttributes_Receivers]
+
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [];
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    'name': r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: v('rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox.value') === r.Cells[i].FormattedValue
+                                });
+                            }
+                            return result;
                         }
                     }
             }
