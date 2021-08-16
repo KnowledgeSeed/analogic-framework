@@ -4245,6 +4245,22 @@ app.repository = {
             }
         }
     },
+    'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderText-06': {
+        initCondition: (db) => {
+            return Utils.isGridTableLoaded('rocheBPSPIpPlanningCheckoutGridTableMonthly');
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                let b = v('systemValueIpPlanningSegmentedControlRelativeYearValue');
+                return {
+                    title: b
+                };
+            }
+        }
+    },
     'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderText-19': {
         initCondition: (db) => {
             return Utils.isGridTableLoaded('rocheBPSPIpPlanningCheckoutGridTableMonthly');
@@ -7463,6 +7479,40 @@ app.repository = {
 
 
     /* customer planning */
+     rocheBPSPCustomerPlanningPageInit: {
+        initCondition: (db) => {
+            return v('systemValueCustomerPlanningUploadTargetPath') === false;
+        },
+        initDefault: (db) => {
+            return true;
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+                {
+                    "MDX" : "
+                        SELECT
+                            {[Value Type].[Value Type].[String]}
+                         ON COLUMNS ,
+                            {[Measures Control].[Measures Control].[UI Excel upload path Customer]}
+                        ON ROWS
+                        FROM [Control]
+                    "
+                }
+            `,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        value: (r, x) => {
+                            Utils.setWidgetValue('systemValueCustomerPlanningUploadTargetPath', r.Cells[0].FormattedValue)
+                            return true;
+                        }
+                    }
+            }
+        }
+    },
     rocheBPSPCustomersPlanningGridRow1Cell5Button: {
         init: {
             execute: (db) => {
@@ -7578,6 +7628,88 @@ app.repository = {
                     year4: y1 + 3,
                     key: 'exportCustomerMonthly'
                 };
+            }
+        }
+    },
+    rocheBPSPCustomersPlanningUploadPopupPlDropbox: {
+        initCondition: (db) => {
+            let l = v('rocheBPSPCustomersPlanningGridTableMonthly.cellData.length');
+            return l !== false && l !== 0;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            execute: (db) => {
+                return [
+                    {name: 'PL1', key: 1, on: true},
+                    {name: 'PL2', key: 2, on: false},
+                    {name: 'PL3', key: 3, on: false},
+                    {name: 'PL4', key: 4, on: false},
+                    {name: 'PL5', key: 5, on: false},
+                    {name: 'PL6', key: 6, on: false}
+                ]
+            }
+        }
+    },
+    rocheBPSPCustomersPlanningUploadPopupUpload: {
+        upload: (db) => {
+            let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                version = v('systemValueGlobalCompanyVersion'),
+                receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                productVersion = v('systemValueGlobalCompanyProductPlanVersion'),
+                focusedProduct = v('systemValueCustomersPlanningFocused'),
+                customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                type = v('systemValueCustomersPlanningMonthlyTypeValue'),
+                fileName = Repository.rocheBPSPCustomersPlanningMonthlyExcelExport.getFileName(db);
+            Utils.modifyFileName('rocheBPSPCustomersPlanningUploadPopupUpload', fileName);
+            Utils.setWidgetValue('systemValueUploadFileName', fileName + '.csv');
+            return {
+                staging: app.defaultUploadStagingFolder,
+                target: v('systemValueCustomerPlanningUploadTargetPath'),
+                productLevel: v('rocheBPSPCustomersPlanningUploadPopupPlDropbox.value'),
+                validation: 'validateCustomerPlanningExcelImport',
+                validationUser: db.activeUserName,
+                validationCompany: company,
+                validationReceiver: receiver,
+                validationGlobalVersion: version,
+                validationVersion: productVersion,
+                validationProduct: focusedProduct,
+                validationLineItem: type,
+                validationTerritoryCode: territoryCode,
+                validationCustomerCode: customerCode,
+                validationMessage: 'First row of excel does not match'
+                //      preProcessTemplate: v('preprocess.choose.value') === false ? 'Template1' : v('preprocess.choose.value')
+            };
+        },
+        request: {
+            url: (db) => `/api/v1/Processes('MODULE - UI - CSV Upload Post Processing Customer')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => {
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                    territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                    version = v('systemValueGlobalCompanyVersion'),
+                    receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                    productVersion = v('systemValueGlobalCompanyProductPlanVersion'),
+                    focusedProduct = v('systemValueCustomersPlanningFocused'),
+                    customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                    type = v('systemValueCustomersPlanningMonthlyTypeValue'),
+                    fileName = v('systemValueUploadFileName');
+                return `{
+                        "Parameters": [
+                                {"Name": "pUser", "Value": "${db.activeUserName}"},                               
+                                {"Name": "pSelectedProductLevel", "Value": "${v('rocheBPSPCustomersPlanningUploadPopupPlDropbox.value')}"},
+                                {"Name": "pFileName", "Value": "${fileName}"},
+                                {"Name": "pProduct", "Value": "${focusedProduct}"},
+                                {"Name": "pCompany", "Value": "${company}"},
+                                {"Name": "pReceiver", "Value": "${receiver}"},
+                                {"Name": "pTargetCube", "Value": "Base Plan"},
+                                {"Name": "pLineItem", "Value": "${type}"},
+                                {"Name": "pCustomer", "Value": "${customerCode}"},
+                                {"Name": "pTerritories", "Value": "${territoryCode}"},
+                        ]
+                    }`;
             }
         }
     },

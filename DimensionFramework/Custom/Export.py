@@ -318,6 +318,26 @@ class Export:
         font_size = 12
         worksheet.protect('ADSBP', {'format_cells': True, 'format_rows': True, 'format_columns': True})
 
+        user = request.args['activeUserName']
+        company = request.args['company']
+        receiver = request.args['receiver']
+        global_version = request.args['version']
+        version = request.args['productVersion']
+        product = request.args['focusedProduct']
+        line_item = request.args['type']
+        territory_code = request.args['territoryCode']
+        customer_code = request.args['customerCode']
+
+        worksheet.write(0, 0, user)
+        worksheet.write(0, 1, company)
+        worksheet.write(0, 2, receiver)
+        worksheet.write(0, 3, global_version)
+        worksheet.write(0, 4, version)
+        worksheet.write(0, 5, product)
+        worksheet.write(0, 6, line_item)
+        worksheet.write(0, 7, customer_code)
+        worksheet.write(0, 8, territory_code)
+
         bold = workbook.add_format({'bold': True})
         bold.set_font_name('Imago')
         bold.set_font_size(font_size)
