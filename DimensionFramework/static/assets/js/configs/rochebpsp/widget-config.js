@@ -22673,7 +22673,7 @@ app.widgetConfig = {
                             widgets: [
 
                                 {
-                                    id: 'rocheBPSPCompanySettingsCheckedOutGridTableButton-07',
+                                    id: 'rocheBPSPCompanySettingsCheckedOutGridTableButton07',
                                     type: ButtonWidget,
                                     width: '100%',
                                     icon: 'icon-contact-mail',
@@ -22698,7 +22698,7 @@ app.widgetConfig = {
                     id: 'rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning',
                     type: GridTableWidget,
                     hideIfNoData: true,
-                    visible: true,
+                    visible: false,
                     skin: 'products_bpsp',
                     listen: [
                         {
@@ -22715,7 +22715,6 @@ app.widgetConfig = {
                             type: GridTableHeaderRowWidget,
                             width: '100%',
                             widgets: [
-
 
                                 {
                                     id: 'rocheBPSPCompanySettingsCheckedOutGridTableIPPlanningHeaderCell-01',

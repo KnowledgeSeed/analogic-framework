@@ -553,7 +553,7 @@ app.repository = {
                       {"MDX":
                         "SELECT
                            {[}ElementAttributes_}Clients].[}ElementAttributes_}Clients].[Email]}
-                          ON COLUMNS ,
+                          ON COLUMNS,
                            {[}Clients].[}Clients].[${u}]}
                           ON ROWS
                         FROM [}ElementAttributes_}Clients]"}
@@ -11558,9 +11558,11 @@ app.repository = {
                         let searchString = '';
                         return `{"MDX":"
                                   SELECT 
-                           {[Measures Sales Plan Checkout by Product].[Measures Sales Plan Checkout by Product].[checkout user],
+                           {
+                           [Measures Sales Plan Checkout by Product].[Measures Sales Plan Checkout by Product].[checkout user],
                            [Measures Sales Plan Checkout by Product].[Measures Sales Plan Checkout by Product].[checkout datetime],
-                           [Measures Sales Plan Checkout by Product].[Measures Sales Plan Checkout by Product].[checkout flag]} 
+                           [Measures Sales Plan Checkout by Product].[Measures Sales Plan Checkout by Product].[checkout flag]
+                           } 
                           ON COLUMNS , 
                           NON EMPTY 
                           {[Products].[BPSP Budget].Members}
@@ -11684,6 +11686,38 @@ app.repository = {
                     }
                 },
         },
+
+
+    rocheBPSPCompanySettingsCheckedOutGridTableButton07: {
+        launch: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => {
+                let c = Utils.getGridTableCell('rocheBPSPCompanySettingsCheckedOutGridTable', 3),
+                    u = c.title;
+                u = db.activeUserName.split('/')[0] + '/' + u;
+                return `
+                      {"MDX":
+                        "SELECT
+                           {[}ElementAttributes_}Clients].[}ElementAttributes_}Clients].[Email]}
+                          ON COLUMNS,
+                           {[}Clients].[}Clients].[${u}]}
+                          ON ROWS
+                        FROM [}ElementAttributes_}Clients]"}
+                    `;
+            },
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        url: (r, x) => {
+                            return 'mailto:' + r.Cells[0].FormattedValue;
+                        }
+                    }
+            }
+        }
+    },
+
 
     rocheBPSPCompanySettingsGridRow4Cell1MessageInput: {
         initCondition: (db) => {

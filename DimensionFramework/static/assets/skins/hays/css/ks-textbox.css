@@ -1,0 +1,51 @@
+.ks-textbox {
+	display: block;
+}
+
+.ks-textbox-inner {
+	height: 100%;
+}
+
+.ks-textbox-title,
+.ks-textbox-title-secondary,
+.ks-textbox-icon,
+.ks-textbox-divider {
+	display: none;
+}
+
+.ks-textbox.has-title .ks-textbox-title {
+	display: block;
+}
+.ks-textbox.has-title-secondary .ks-textbox-title-secondary {
+	display: inline;
+}
+.ks-textbox.has-icon .ks-textbox-icon,
+.ks-textbox.has-icon .ks-textbox-divider{
+	display: block;
+}
+
+.ks-textbox-field {
+	overflow: hidden;
+}
+
+.ks-textbox-field-inner {
+	-ms-flex-align: center;
+	align-items: center;
+	display: flex;
+	height: 100%;
+	overflow: hidden;
+}
+
+.ks-textbox-input {
+	appearance: none;
+	-webkit-appearance: none;
+	background-color: transparent;
+	border: 0;
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.ks-textbox-field-inner.readonly {
+    background-color: lightgrey;
+}

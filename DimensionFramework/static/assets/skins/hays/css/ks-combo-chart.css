@@ -1,0 +1,9 @@
+.ks-combo-chart-title{
+    display: flex;
+    justify-content: center;
+}
+
+.ks-combo-chart-title h3 {
+    font-size: 14px;
+}
+
