@@ -11413,7 +11413,7 @@ app.repository = {
     rocheBPSPCompanySettingsGridRow1Cell2DropBox: {
         choose: {
             execute: (db) => {
-                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPSecuritySetupGridRow1Cell2DropBox.value'));
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPCompanySettingsGridRow1Cell2DropBox.value'));
             }
         },
         init: {
@@ -11451,7 +11451,7 @@ app.repository = {
     rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox: {
         choose: {
             execute: (db) => {
-                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPSecuritySetupGridRow1Cell2DropBox.value'));
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox.value'));
             }
         },
         init: {
@@ -11490,7 +11490,7 @@ app.repository = {
     rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox: {
         choose: {
             execute: (db) => {
-                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPSecuritySetupGridRow1Cell2DropBox.value'));
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox.value'));
             }
         },
         init: {
@@ -11606,7 +11606,10 @@ app.repository = {
                             },
 
                             (r, x) => {
-                                return {label: 'Contract'}
+                                return {
+                                    label: 'Contract',
+                                    //url: mail
+                                }
                             }
                         ]
                     }
@@ -11795,8 +11798,7 @@ app.repository = {
         {
 
             initCondition: (db) => {
-                let b = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox')
-                //&& Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox')
+                let b = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox') && Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox')
                 return b;
             },
             initDefault: (db) => {
@@ -11820,8 +11822,7 @@ app.repository = {
                         }
 
                         let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox', 'key');
-                        let reciver = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox', 'key') === false ? 'All Receivers'
-                            : Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox', 'key');
+                        let reciver = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox', 'key');
 
                         return `{"MDX":"
                                         With
@@ -11953,7 +11954,8 @@ app.repository = {
 
     rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox: {
         initCondition: (db) => {
-            return v('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox.value');
+            let b = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox')
+            return b;
         },
         initDefault: (db) => {
             return [];
@@ -11964,15 +11966,13 @@ app.repository = {
             body: (db) => `
             {
             "MDX" : "
-            SELECT
-               {
-                [}ElementAttributes_Receivers].[}ElementAttributes_Receivers].[Member description],
-                [}ElementAttributes_Receivers].[}ElementAttributes_Receivers].[Receiver - Key]}
-              ON COLUMNS ,
-              {EXCEPT({TM1SubsetToSet([Receivers].[Receivers], 
-              'zUI ${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox', 'key')} Report Receivers')},{[Receivers].[Receivers].[All Receivers]})} 
-              ON ROWS
-            FROM [}ElementAttributes_Receivers]
+                SELECT 
+                       {[}ElementAttributes_Receivers].[}ElementAttributes_Receivers].[Member description],
+                        [}ElementAttributes_Receivers].[}ElementAttributes_Receivers].[Receiver - Key]} 
+                     ON COLUMNS , 
+                        {Tm1SubsetToset([Receivers].[Receivers],'zUI ${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox', 'key')} Plan Receivers')}
+                     ON ROWS
+                    FROM [}ElementAttributes_Receivers] 
             "}`,
             parsingControl: {
                 type: 'object',
