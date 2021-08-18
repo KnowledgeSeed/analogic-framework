@@ -18522,7 +18522,6 @@ app.widgetConfig = {
                             id: 'rocheBPSPCompanySettingsGridRow8',
                             type: GridRowWidget,
                             marginTop: '2%',
-                            marginLeft: '3%',
                             width: '100%',
                             widgets: [
 
@@ -20486,7 +20485,7 @@ app.widgetConfig = {
                     columnNames: ["Account Name", "Account Number", "2020 Actual", "2021 Actuals"],
                     columnWidths: ["50%", "15%", "15%", "15%"],
                     searchField: true,
-                    width: '80%',
+                    width: '100%',
                     visible: true,
                     fadeOutNum: 15,
                     marginLeft: 10,
@@ -22186,7 +22185,6 @@ app.widgetConfig = {
                             id: 'rocheBPSPCompanySettingsCheckedOutGridRow4',
                             type: GridRowWidget,
                             marginTop: '2%',
-                            marginLeft: '3%',
                             width: '100%',
                             widgets: [
 

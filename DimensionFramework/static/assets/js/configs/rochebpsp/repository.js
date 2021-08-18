@@ -10895,7 +10895,7 @@ app.repository = {
                                        {[Measures Sales Territory to Product].[Measures Sales Territory to Product].[ProductName],
                                        [Measures Sales Territory to Product].[Measures Sales Territory to Product].[ProductCode],
                                        [Measures Sales Territory to Product].[Measures Sales Territory to Product].[ProductLevel],
-                                       [Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Flag]} 
+                                       [Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Input]}
                                        
                                       ON COLUMNS , 
                                          -- {[Products].[BPSP Budget].Members} 
@@ -10940,7 +10940,7 @@ app.repository = {
 
                             (r, x) => {
                                 return {
-                                    value: parseInt(r.Cells[x + 3].FormattedValue) === 0 ? 0 : 1,
+                                    value: r.Cells[x + 3].FormattedValue === '' ? 0 : 1,
                                 }
                             }
 
