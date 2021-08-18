@@ -1,0 +1,53 @@
+.ks-slider-touch {
+    position: absolute;
+    text-align: center;
+}
+
+.ks-slider-touch-track {
+    overflow-y: hidden;
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    white-space: nowrap;
+}
+
+.ks-slider-touch-track-overflow {
+    font-size: 0;
+    overflow: hidden;
+}
+
+.ks-slider-touch .ks-tick {
+    display: inline-block;
+    position: relative;
+}
+
+.ks-slider-touch .ks-tick.ks-big span {
+    position: absolute;
+}
+
+.ks-slider-touch-steppers {
+    display: flex;
+    justify-content: center;
+}
+
+.ks-slider-touch-options-buttons {
+    align-items: center;
+    display: flex;
+}
+
+.ks-slider-triangle {
+    width: 16px;
+    height: 8px;
+    position: absolute;
+    margin-left: -8px;
+}
+
+.ks-slider-touch-options-button {
+    cursor: pointer;
+}
+
+@media screen and (max-width: 767px) {
+    .ks-slider-touch {
+        position: fixed;
+    }
+}
