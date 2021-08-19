@@ -558,6 +558,7 @@ app.widgetConfig = {
                                     ]
                                 }]
                         },
+
                         {
                             id: 'rocheBPSPMainGridRow6',
                             type: GridRowWidget,
@@ -606,7 +607,8 @@ app.widgetConfig = {
                             ]
                         },
                     ]
-                }]
+                }
+                ]
         },
 
     rocheBPSPProducts:
@@ -3021,6 +3023,7 @@ app.widgetConfig = {
                 }
             ]
         },
+
     rocheBPSPProductsCheckout:
         {
             id: 'rocheBPSPProductsCheckout',
