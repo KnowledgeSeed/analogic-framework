@@ -6,6 +6,7 @@ import DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory
 from DimensionFramework.AuthenticationProviders.Base import Base
 from datetime import timedelta
 import logging
+import DimensionFramework.Pivot.Api as PivotApi
 
 app = Flask(__name__)
 site_root = os.path.realpath(os.path.dirname(__file__))
@@ -78,6 +79,11 @@ def exportConfig(instance, config_type):
 def ping(instance):
     return getProvider(instance).ping()
 
+
+@app.route('/middleware', defaults={'instance': 'default'})
+@app.route('/<path:instance>/middleware')
+def middleware(instance):
+    return PivotApi.call()
 
 def getProvider(instance):
     cache = getCache()

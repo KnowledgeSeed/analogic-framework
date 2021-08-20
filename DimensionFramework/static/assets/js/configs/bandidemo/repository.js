@@ -3,6 +3,15 @@
 'use strict';
 
 app.repository = {
+    bandiPivot: {
+        init:
+        {
+            url: db => `/middleware`,
+            type: 'POST',
+            middleware: true,
+            body: db => ''
+        }
+    },
     bandiDemoHorizontalTable: {
         initCondition: (db) => {
             return true;
@@ -15,17 +24,12 @@ app.repository = {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
             type: 'POST',
             body: (db) => `{"MDX":"
-                         SELECT
-                            {[Demo Measure].[Demo Measure].Members}
-                           ON COLUMNS ,
-                            {[Demo Products].[Demo Products].Members}
-                           ON ROWS
-                         FROM [Demo Cube 2]
-                         WHERE
-                           (
-                            [Demo Company].[Demo Company].[Company One],
-                            [Demo Time].[Demo Time].[2021]
-                           )
+                    SELECT
+                       {[Demo Measure].[Demo Measure].Members}
+                      ON COLUMNS ,
+                       {[Demo Products].[Demo Products].Members}
+                      ON ROWS
+                    FROM [Demo Cube]
                   "}`
             ,
             parsingControl: {

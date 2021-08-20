@@ -9,6 +9,10 @@ app.widgetConfig = {
         type: PageWidget,
         widgets: [
             {
+                id: 'bandiPivot',
+                type: PivotWidget
+            },
+            {
                 id: 'bandiDemoHorizontalTable',
                 type: HorizontalTableWidget,
                 title: 'bandiDemoHorizontalTable',
@@ -20,7 +24,7 @@ app.widgetConfig = {
                 fadeOutNum: 15,
                 marginLeft: 10,
                 marginRight: 10,
-                hideIfNoData: true,
+                hideIfNoData: false,
                 listen: [
 
                 ],
