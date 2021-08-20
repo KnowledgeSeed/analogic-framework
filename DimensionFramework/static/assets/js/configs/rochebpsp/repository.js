@@ -515,10 +515,10 @@ app.repository = {
         init: {
             execute: (db) => {
                 let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsGridTableYearly' : 'rocheBPSPProductsGridTableMonthly';
-                return v(g + '.cellData').filter(e => ['PL1', 'PL2', 'PL3'].includes(e[0].productLevel)).map(e => {
+                return v(g + '.cellData').filter(e => ['01C', '02C', '03C', '01N', '02N', '03C'].includes(e[0].uiLevel)).map(e => {
                     return [{
                         label: e[0].label,
-                        skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].productLevel,
+                        skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].uiLevel,
                         productCode: e[1].title
                     }];
                 });
@@ -553,7 +553,7 @@ app.repository = {
                       {"MDX":
                         "SELECT
                            {[}ElementAttributes_}Clients].[}ElementAttributes_}Clients].[Email]}
-                          ON COLUMNS ,
+                          ON COLUMNS,
                            {[}Clients].[}Clients].[${u}]}
                           ON ROWS
                         FROM [}ElementAttributes_}Clients]"}
@@ -834,7 +834,7 @@ app.repository = {
     },
     rocheBPSPProductsTypeSegmentedControlInfoText: {
         initCondition: (db) => {
-            return db.systemValueSegmentedControlPeriodUnit === 'Monthly';
+            return db.systemValueSegmentedControlPeriodUnit === 'Monthly' && v('systemValueCheckoutProduct');
         },
         initDefault: (db) => {
             return {visible: false};
@@ -842,18 +842,23 @@ app.repository = {
         init: {
             execute: (db) => {
                 return {
-                    visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly' && v('systemValueProductsTypeSegmentedControlVisibleType') !== '',
+                    visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly' && v('systemValueProductsTypeSegmentedControlVisibleType') !== false,
                     title: v('systemValueProductsTypeSegmentedControlVisibleType')
                 };
             }
         }
     },
     rocheBPSPProductsTypeSegmentedControl: {
+        switch: {
+            execute: (db) => {
+                Utils.setWidgetValue('selectedProductsTypeSegmentedControl', v('rocheBPSPProductsTypeSegmentedControl.selected'));
+            }
+        },
         initCondition: (db) => {
             return db.systemValueSegmentedControlPeriodUnit === 'Monthly';
         },
         initDefault: (db) => {
-            return {visible: false};  
+            return {visible: false};
         },
         init: {
             url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
@@ -874,16 +879,17 @@ app.repository = {
                 query:
                     {
                         visible: (r, x) => {
-                            let marketingAdjustmentVisible = r.Cells[0].FormattedValue !== '',
-                                finalSalesPlanVisible = r.Cells[1].FormattedValue !== '',
-                                visible = finalSalesPlanVisible && marketingAdjustmentVisible,
+                            let checkoutProduct = v('systemValueCheckoutProduct'),
+                                marketingAdjustmentVisible = r.Cells[0].FormattedValue !== '' || !checkoutProduct,
+                                finalSalesPlanVisible = r.Cells[1].FormattedValue !== '' || !checkoutProduct,
+                                visible = (finalSalesPlanVisible && marketingAdjustmentVisible) || !checkoutProduct,
                                 visibleType = '';
 
-                            if(marketingAdjustmentVisible && !finalSalesPlanVisible){
+                            if (marketingAdjustmentVisible && !finalSalesPlanVisible) {
                                 visibleType = 'Marketing Adjustment';
                             }
 
-                            if(!marketingAdjustmentVisible && finalSalesPlanVisible){
+                            if (!marketingAdjustmentVisible && finalSalesPlanVisible) {
                                 visibleType = 'Final Sales Plan';
                             }
 
@@ -893,9 +899,34 @@ app.repository = {
                             Utils.setWidgetValue('systemValueProductsTypeSegmentedControlVisibleType', visibleType);
                             Utils.setWidgetValue('systemValueProductsTypeIsOk', visibleType !== 'Access denied');
                             return v('systemValueSegmentedControlPeriodUnit') === 'Monthly' && visible;
+                        },
+                        data: (r, x) => {
+                            let vv = v('systemValueProductsTypeSegmentedControlVisibleType'),
+                                selected = vv === false ? v('selectedProductsTypeSegmentedControl') !== false ? v('selectedProductsTypeSegmentedControl') : 'Final Sales Plan' : vv;
+                            return [
+                                {
+                                    selected: 'Final Sales Plan' === selected,
+                                    label: 'Final Sales Plan',
+                                    value: 'Final Sales Plan'
+                                },
+                                {
+                                    selected: 'Marketing Adjustment' === selected,
+                                    label: 'Marketing Adjustment',
+                                    value: 'Marketing Adjustment'
+                                }
+                            ];
                         }
                     }
             }
+        }
+    },
+    rocheBPSPProducts: {
+        getProductsTypeSegmentedControlValue: (db) => {
+            let vv = v('systemValueProductsTypeSegmentedControlVisibleType');
+            if (vv !== false) {
+                return vv;
+            }
+            return v('rocheBPSPProductsTypeSegmentedControl.selected');
         }
     },
     rocheBPSPProductsGridTableYearly: {
@@ -926,9 +957,9 @@ app.repository = {
                                  Set PaddingColumns AS
                                  {{TM1SubsetToSet([Periods].[Periods],'zUI Padding Years')}*{[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[DUMMY]}}
                                  Set DefaultColumnSelection AS
-                            {HEAD(UNION({StrToSet([Control].([Measures Control].[Measures Control].[UI ProuctsGridTable DefaultColumnsTuple ${db.systemValueGlobalSegmentedControlRelativeYear}],[Value Type].[Value Type].[String]))},{PaddingColumns},All),10)}
+                                    {HEAD(UNION({StrToSet([Control].([Measures Control].[Measures Control].[UI ProuctsGridTable DefaultColumnsTuple ${db.systemValueGlobalSegmentedControlRelativeYear}],[Value Type].[Value Type].[String]))},{PaddingColumns},All),10)}
                                  Set WidgetSettingByUser AS
-                                 {StrToSet('{'+[zSYS Analogic UI User Data].([}Clients].[}Clients].[${db.activeUserName}],[zSYS Analogic UI Widget].[zSYS Analogic UI Widget].[rocheBPSPProductsGridTableYearly],[zSYS Analogic UI User Data Measure].[zSYS Analogic UI User Data Measure].[sColumnSelectorTuple ${db.systemValueGlobalSegmentedControlRelativeYear}])+'}')}
+                                    {StrToSet('{'+[zSYS Analogic UI User Data].([}Clients].[}Clients].[${db.activeUserName}],[zSYS Analogic UI Widget].[zSYS Analogic UI Widget].[rocheBPSPProductsGridTableYearly],[zSYS Analogic UI User Data Measure].[zSYS Analogic UI User Data Measure].[sColumnSelectorTuple ${db.systemValueGlobalSegmentedControlRelativeYear}])+'}')}
                                  MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ColumnSelectionByUser] AS 
                                  IIF(Count(WidgetSettingByUser)>0,'Head(UNION({WidgetSettingByUser},{PaddingColumns},All),10)','{}')
                                  Set ColumnSelectionByUser AS
@@ -936,6 +967,7 @@ app.repository = {
                                  MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductName] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
                                  MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductCaption] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
                                  MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductLevel] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                                 MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[UILevelFormat] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} UI Level Format')
                                  MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[HasComment] as
                                         [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Comment Flag])
                                  MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutDateTime] as 
@@ -948,11 +980,12 @@ app.repository = {
                                  ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductLevel]),
                                  ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag]),
                                  ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutUser]),
-                                 ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutDateTime])}
+                                 ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutDateTime]),
+                                 ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[UILevelFormat])}
                                  Set Comment AS
                                  {([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[HasComment])}
                             SELECT 
-                              {UNION(HEAD(UNION(UNION({FixColumns},{ColumnSelectionByUser},All),{DefaultColumnSelection},All),16),{Comment},All)}
+                              {UNION(HEAD(UNION(UNION({FixColumns},{ColumnSelectionByUser},All),{DefaultColumnSelection},All),17),{Comment},All)}
                               PROPERTIES [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Caption] ,[Periods].[Periods].[Caption]  ON COLUMNS , 
                               {StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
                               PROPERTIES [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption] ON ROWS 
@@ -970,10 +1003,11 @@ app.repository = {
        `,
             parsingControl: {
                 type: 'matrix',
-                length: 17,
+                length: 18,
                 query: [
                     (r, x) => {
-                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue;
+                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue,
+                            uiLevel = r.Cells[x + 6].FormattedValue;
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'];
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
@@ -981,7 +1015,7 @@ app.repository = {
                         pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: 'gridtable_hierarchy_bpsp_' + pl + (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? '_locked' : ''),
+                            skin: 'gridtable_hierarchy_bpsp_' + uiLevel + (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? '_locked' : ''),
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
                             icon: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
@@ -993,7 +1027,8 @@ app.repository = {
                             checkedOutAt: r.Cells[x + 5].FormattedValue,
                             members: r.Cells[x].Members,
                             productLevel: pl,
-                            hasComment: r.Cells[x + 16].FormattedValue !== ''
+                            uiLevel: uiLevel,
+                            hasComment: r.Cells[x + 17].FormattedValue !== ''
                         };
                         if (WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsMainLocked']) {
                             result['iconColor'] = '#D12D4A';
@@ -1019,7 +1054,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 4;
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 5;
                         return {
                             title: r.Cells[WidgetValue['systemValueProductsYearlyRelativeIndex']].FormattedValue,
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableYearlyIsLocked'] ? 'locked' : 'readonly_bpsp',
@@ -1157,7 +1192,10 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return {title: db.systemValueGlobalSegmentedControlRelativeYearValue};
+                return {
+                    title: db.systemValueGlobalSegmentedControlRelativeYearValue,
+                    body: Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)
+                };
             }
         }
     },
@@ -1165,7 +1203,8 @@ app.repository = {
         initCondition: (db) => {
             let l = v('rocheBPSPProductsGridRow1Cell3DropBox.value.length') !== false
                 && v('systemValueSegmentedControlPeriodUnit') === 'Monthly'
-                && v('systemValueBackFromCheckinMonthly') === false;
+                && v('systemValueBackFromCheckinMonthly') === false
+                && v('systemValueProductsTypeIsOk') === true;
             Utils.setWidgetValue('systemValueBackFromCheckinMonthly', false);
             return l;
         },
@@ -1190,11 +1229,13 @@ app.repository = {
                              IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
                         -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
                              MEMBER [Periods].[Periods].[ProductName] as 
-                                    [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
+                                    [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
                              MEMBER [Periods].[Periods].[ProductCaption] as 
-                                    [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
+                                    [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
                              MEMBER [Periods].[Periods].[ProductLevel] as 
-                                    [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                                    [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                             MEMBER [Periods].[Periods].[UILevelFormat] as 
+                                    [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} UI Level Format')
                              MEMBER [Periods].[Periods].[zUI CheckOutFlag] as
                                     [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value])
                              MEMBER [Periods].[Periods].[HasComment] as
@@ -1204,7 +1245,7 @@ app.repository = {
                              MEMBER [Periods].[Periods].[zUI CheckOutDateTime] as 
                                     [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime])
                              MEMBER [Periods].[Periods].[zUI Split Flag] as 
-                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Monthly Split Type])
+                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Monthly Split Type])
 
                         -- Create the first 5 column with information
                              Set FixColumns AS
@@ -1220,7 +1261,8 @@ app.repository = {
                         -- query
                         SELECT 
                         --Columns
-                           {Union(Union(FixColumns,{DRILLDOWNMEMBER({[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]},{[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]})},All),{Comment},All)}
+                           {Union({Union(Union(FixColumns,{DRILLDOWNMEMBER({[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]},{[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]})},All),{Comment},All)},
+                           {[Periods].[Periods].[UILevelFormat]})}
                            PROPERTIES [Periods].[Periods].[Caption]ON COLUMNS , 
                         -- rows
                           {StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
@@ -1228,7 +1270,7 @@ app.repository = {
                         FROM [Sales Plan by Product] 
                         WHERE 
                           (
-                           [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
+                           [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}],
                            [Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
                            [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}],
                            [Receivers].[Receivers].[${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}],
@@ -1239,10 +1281,11 @@ app.repository = {
        `,
             parsingControl: {
                 type: 'matrix',
-                length: 21,
+                length: 22,
                 query: [
                     (r, x) => {
-                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue;
+                        let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue,
+                            uiLevel = r.Cells[x + 21].FormattedValue;
                         WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
                         WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsMainLocked'];
                         WidgetValue['systemValueRocheBPSPProductsGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
@@ -1251,7 +1294,7 @@ app.repository = {
                         pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: 'gridtable_hierarchy_bpsp_' + pl + (WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? '_locked' : ''),
+                            skin: 'gridtable_hierarchy_bpsp_' + uiLevel + (WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? '_locked' : ''),
                             cellSkin: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsLocked'] ? 'locked' : '',
                             cellVisible: true,
                             icon: WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
@@ -1263,6 +1306,7 @@ app.repository = {
                             checkedOutAt: r.Cells[x + 5].FormattedValue,
                             members: r.Cells[x].Members,
                             productLevel: pl,
+                            uiLevel: uiLevel,
                             hasComment: r.Cells[x + 19].FormattedValue === ''
                         };
                         if (WidgetValue['systemValueRocheBPSPProductsGridTableMonthlyIsMainLocked']) {
@@ -2109,13 +2153,14 @@ app.repository = {
             url: (db) => `/api/v1/Processes('MODULE - UI - Clear All Inputs')/tm1.ExecuteWithReturn`,
             type: 'POST',
             body: (db) => {
+                let pLineItem = v('systemValueSegmentedControlPeriodUnit') === 'Yearly' ? 'Final Sales Plan' : Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db);
                 return `{
                         "Parameters": [
                                 {"Name": "pVersion", "Value": "${db.systemValueGlobalCompanyVersion}"},
                                 {"Name": "pProduct", "Value": "${db.systemValueCheckoutProduct}"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}"},
-                                {"Name": "pLineItem", "Value": "Final Sales Plan"},
+                                {"Name": "pLineItem", "Value": "${pLineItem}"},
                                 {"Name": "pCube", "Value": "Sales Plan by Product"},
                                 {"Name": "pPeriod", "Value": "${db.systemValueGlobalSegmentedControlRelativeYearValue}"}
                         ]
@@ -2198,6 +2243,7 @@ app.repository = {
                          MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductName] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
                          MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductCaption] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
                          MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductLevel] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                         MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[UILevelFormat] as [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} UI Level Format')
                          MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutDateTime] as 
                                 [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime])
                          MEMBER [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutUser] as 
@@ -2208,18 +2254,19 @@ app.repository = {
                          ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[ProductLevel]),
                          ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag]),
                          ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutUser]),
-                         ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutDateTime])}
+                         ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutDateTime]),
+                         ([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[UILevelFormat])}
                          Set Comment AS
                               {([Measures Sales Plan by Product].[Measures Sales Plan by Product].[Comment Flag],[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan])}
 
-                    SELECT 
+                    SELECT
                         {UNION(
                            HEAD(
                              UNION(
                                UNION({[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value]}*{FixColumns},
                                {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[UI Format]}*{ColumnSelectionByUser},All),
-                               {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[UI Format]}*{DefaultColumnSelection},All),26),
-                                       {Comment},All)}ON COLUMNS , 
+                               {[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[UI Format]}*{DefaultColumnSelection},All),27),
+                                       {Comment},All)}  ON COLUMNS , 
                       {DefaultProductRows} PROPERTIES [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption] ON ROWS 
                     FROM [Sales Plan by Product] 
                     WHERE 
@@ -2234,20 +2281,20 @@ app.repository = {
        `,
             parsingControl: {
                 type: 'matrix',
-                length: 27,
+                length: 28,
                 query: [
                     (r, x) => {
-                        let result, pl;
+                        let result, pl, uiLevel = r.Cells[x + 6].FormattedValue;
                         WidgetValue['systemValueProductsYearlyRelativeIndex'] = x;
                         pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: 'gridtable_checkout_hierarchy_bpsp_' + pl,
+                            skin: 'gridtable_checkout_hierarchy_bpsp_' + uiLevel,
                             cellVisible: true,
                             icon: 'icon-badge',
                             members: r.Cells[x].Members,
                             productLevel: pl,
-                            hasComment: r.Cells[x + 26].FormattedValue !== ''
+                            hasComment: r.Cells[x + 27].FormattedValue !== ''
                         };
                         if (WidgetValue['systemValueRocheBPSPProductsCheckoutGridTableYearlyIsMainLocked']) {
                             result['iconColor'] = '#D12D4A';
@@ -2273,7 +2320,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 4;
+                        WidgetValue['systemValueProductsYearlyRelativeIndex'] = WidgetValue['systemValueProductsYearlyRelativeIndex'] + 5;
                         return Repository.rocheBPSPProductsCheckoutGridTableYearlyFunction.getCell(WidgetValue['systemValueProductsYearlyRelativeIndex'], r);
                     },
                     (r, x) => {
@@ -2343,6 +2390,7 @@ app.repository = {
             s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key'));
             s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key'));
             s.push(db.systemValueCheckoutProduct);
+            s.push(Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db));
             return s.join('_').replaceAll(':', '_').replaceAll(' ', '_').replaceAll('/', '_');
         },
         launch: {
@@ -2360,6 +2408,7 @@ app.repository = {
                     product: db.systemValueCheckoutProduct,
                     globalVersion: WidgetValue.systemValueGlobalCompanyVersion,
                     version: WidgetValue.systemValueGlobalCompanyProductPlanVersion,
+                    lineItem: Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db),
                     year1: y1,
                     year2: y1 + 1,
                     year3: y1 + 2,
@@ -2410,7 +2459,6 @@ app.repository = {
                     const x = acc.find(item => item.name === current.name);
                     if (!x) {
                         return acc.concat([current]);
-                        F
                     } else {
                         return acc;
                     }
@@ -2434,6 +2482,7 @@ app.repository = {
                 validationGlobalVersion: WidgetValue.systemValueGlobalCompanyVersion,
                 validationVersion: WidgetValue.systemValueGlobalCompanyProductPlanVersion,
                 validationProduct: WidgetValue.systemValueCheckoutProduct,
+                validationLineItem: Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db),
                 validationMessage: 'First row of excel does not match'
                 //      preProcessTemplate: v('preprocess.choose.value') === false ? 'Template1' : v('preprocess.choose.value')
             };
@@ -2451,7 +2500,8 @@ app.repository = {
                                 {"Name": "pReceiver", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}"},
                                 {"Name": "pTargetCube", "Value": "Sales Plan by Product"},
                                 {"Name": "pSelectedProductLevel", "Value": "${v('rocheBPSPProductsCheckoutUploadPopupPlDropbox.value')}"},
-                                {"Name": "pFileName", "Value": "${fileName}"}
+                                {"Name": "pFileName", "Value": "${fileName}"},
+                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}"}
                         ]
                     }`;
             }
@@ -2510,7 +2560,8 @@ app.repository = {
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}"},
                                 {"Name": "pSplitMode", "Value": "Monthly"},
-                                {"Name": "pSplitMethod", "Value": "Previous Year"}
+                                {"Name": "pSplitMethod", "Value": "Previous Year"},
+                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}"}
                         ]
                     }`
 
@@ -2529,7 +2580,8 @@ app.repository = {
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}"},
                                 {"Name": "pSplitMode", "Value": "Monthly"},
-                                {"Name": "pSplitMethod", "Value": "Equal"}
+                                {"Name": "pSplitMethod", "Value": "Equal"},
+                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}"}
                         ]
                     }`
 
@@ -2538,7 +2590,10 @@ app.repository = {
     'rocheBPSPProductsCheckoutGridTableMonthlyHeaderText-04': {
         init: {
             execute: (db) => {
-                return {title: db.systemValueGlobalSegmentedControlRelativeYearValue};
+                return {
+                    title: db.systemValueGlobalSegmentedControlRelativeYearValue,
+                    body: Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)
+                };
             }
         }
     },
@@ -2554,7 +2609,8 @@ app.repository = {
                                 {"Name": "pPeriod", "Value": "${Utils.getGridTableCurrentCell('rocheBPSPProductsCheckoutGridTableMonthly').members[6].Name}"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}"},
-                                {"Name": "pSplitMode", "Value": "Default"}
+                                {"Name": "pSplitMode", "Value": "Default"},
+                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}"}
                         ]
                     }`
             }
@@ -2610,7 +2666,7 @@ app.repository = {
                                     "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}')",
                                     "Dimensions('Products')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
                                     "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell3DropBox', 'key')}')",
-                                    "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('Final Sales Plan')",
+                                    "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}')",
                                     "Dimensions('Measures Sales Plan by Product')/Hierarchies('Measures Sales Plan by Product')/Elements('Monthly Split Type')"
                                 ]
                             },
@@ -2632,7 +2688,9 @@ app.repository = {
             }
         },
         initCondition: (db) => {
-            return WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Monthly';
+            return WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Monthly'
+                && v('rocheBPSPProductsTypeSegmentedControl.value') !== false
+                && v('systemValueProductsTypeIsOk') == true;
         },
         initDefault: (db) => {
             return [];
@@ -2660,6 +2718,8 @@ app.repository = {
                                     [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
                              MEMBER [Periods].[Periods].[ProductLevel] as 
                                     [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                             MEMBER [Periods].[Periods].[UILevelFormat] as 
+                                    [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} UI Level Format')
                              MEMBER [Periods].[Periods].[zUI CheckOutFlag] as
                                     [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value])
                              MEMBER [Periods].[Periods].[HasComment] as
@@ -2669,7 +2729,7 @@ app.repository = {
                              MEMBER [Periods].[Periods].[zUI CheckOutDateTime] as 
                                     [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime])
                              MEMBER [Periods].[Periods].[zUI Split Flag] as 
-                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Monthly Split Type])
+                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Monthly Split Type])
                         -- Create the first 5 column with information
                              Set FixColumns AS
                              {[Periods].[Periods].[ProductName],
@@ -2684,7 +2744,8 @@ app.repository = {
                         -- query
                         SELECT 
                         --Columns
-                           {Union(Union(FixColumns,{DRILLDOWNMEMBER({[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]},{[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]})},All),{Comment},All)}
+                           {Union({Union(Union(FixColumns,{DRILLDOWNMEMBER({[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]},{[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]})},All),{Comment},All)},
+                           {[Periods].[Periods].[UILevelFormat]})}
                            PROPERTIES [Periods].[Periods].[Caption] ON COLUMNS , 
                         -- rows
                           {StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])}
@@ -2692,7 +2753,7 @@ app.repository = {
                         FROM [Sales Plan by Product] 
                         WHERE 
                           (
-                           [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
+                           [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}],
                        [Versions].[Versions].[${db.systemValueGlobalCompanyVersion}],
                        [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key')}],
                        [Receivers].[Receivers].[${v('rocheBPSPProductsGridRow1Cell3DropBox.value')}],
@@ -2703,16 +2764,16 @@ app.repository = {
        `,
             parsingControl: {
                 type: 'matrix',
-                length: 21,
+                length: 22,
                 query: [
                     (r, x) => {
-                        let result, pl;
+                        let result, pl, uiLevel = r.Cells[x + 21].FormattedValue;
                         WidgetValue['systemValueMonthlyRelativeIndex'] = x;
 
                         pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: 'gridtable_checkout_hierarchy_bpsp_' + pl,
+                            skin: 'gridtable_checkout_hierarchy_bpsp_' + uiLevel,
                             cellVisible: true,
                             icon: 'icon-badge',
                             members: r.Cells[x].Members,
@@ -3733,6 +3794,22 @@ app.repository = {
             }
         }
     },
+    'rocheBPSPipPlanningGridTableMonthlyHeaderText-06': {
+        initCondition: (db) => {
+            return Utils.isGridTableLoaded('rocheBPSPipPlanningGridTableMonthly');
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                let b = v('systemValueIpPlanningSegmentedControlRelativeYearValue');
+                return {
+                    title: b
+                };
+            }
+        }
+    },
     'rocheBPSPipPlanningGridTableMonthlyHeaderText-19': {
         initCondition: (db) => {
             return Utils.isGridTableLoaded('rocheBPSPipPlanningGridTableMonthly');
@@ -3813,6 +3890,8 @@ app.repository = {
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('Element')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialLevel] as 
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('Product Level - Name')
+                                     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[UILevelFormat] as 
+                                            [Materials].[BPSP Budget IP].CurrentMember.Properties('UI Level Format')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS] as 
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('IP DIS Relevant Flag Budget')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment] as
@@ -3828,7 +3907,8 @@ app.repository = {
                                       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialCode]),
                                       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutFlag]),
                                       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutUser]),
-                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutDateTime])}
+                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutDateTime]),
+                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[UILevelFormat])}
                                      Set FinalColumns AS
                                      {([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS]),
                                       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment])}
@@ -3870,17 +3950,18 @@ app.repository = {
                     "}`,
                     parsingControl: {
                         type: 'matrix',
-                        length: 25,
+                        length: 26,
                         query: [
                             (r, x) => {
-                                let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue, skin;
+                                let result, pl, checkoutUser = r.Cells[x + 4].FormattedValue, skin,
+                                    uiLevel = r.Cells[x + 6].FormattedValue;
                                 WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'] = x;
                                 WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsMainLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 1;
                                 WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 2 || WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsMainLocked'];
                                 WidgetValue['systemValueRocheBPSPipPlanningGridTableYearIsChildrenLocked'] = Utils.parseNumber(r.Cells[x + 3].FormattedValue) === 3;
 
                                 pl = r.Cells[x + 1].FormattedValue.replace('a', '');
-                                skin = pl === 'IP Node' ? 'gridtable_hierarchy_bpsp_PL6' : 'gridtable_hierarchy_bpsp_' + pl;
+                                skin = 'gridtable_hierarchy_bpsp_' + uiLevel;
                                 if (WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked']) {
                                     skin += '_locked';
                                 }
@@ -3893,6 +3974,7 @@ app.repository = {
                                     checkoutUser: checkoutUser,
                                     checkedOutAt: r.Cells[x + 5].FormattedValue,
                                     productLevel: pl,
+                                    uiLevel: uiLevel,
                                     skin: skin,
                                     cellSkin: WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked'] ? 'locked' : '',
                                     icon: WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsMainLocked'] ? 'icon-lock' : 'icon-badge',
@@ -3923,7 +4005,7 @@ app.repository = {
                             },
 
                             (r, x) => {
-                                return Repository.rocheBPSPipPlanningGridTableMonthly.getCell(r, x, 4);
+                                return Repository.rocheBPSPipPlanningGridTableMonthly.getCell(r, x, 5);
                             },
                             (r, x) => {
                                 return Repository.rocheBPSPipPlanningGridTableMonthly.getCell(r, x, 1);
@@ -4025,10 +4107,10 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return v('rocheBPSPipPlanningGridTableMonthly.cellData').filter(e => ['PL1', 'PL2', 'PL3'].includes(e[0].productLevel)).map(e => {
+                return v('rocheBPSPipPlanningGridTableMonthly.cellData').filter(e => ['01C', '02C', '03C', '01N', '02N', '03N'].includes(e[0].uiLevel)).map(e => {
                     return [{
                         label: e[0].label,
-                        skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].productLevel,
+                        skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].uiLevel,
                         productCode: e[2].title
                     }];
                 });
@@ -4163,6 +4245,22 @@ app.repository = {
             }
         }
     },
+    'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderText-06': {
+        initCondition: (db) => {
+            return Utils.isGridTableLoaded('rocheBPSPIpPlanningCheckoutGridTableMonthly');
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                let b = v('systemValueIpPlanningSegmentedControlRelativeYearValue');
+                return {
+                    title: b
+                };
+            }
+        }
+    },
     'rocheBPSPIpPlanningCheckoutGridTableMonthlyHeaderText-19': {
         initCondition: (db) => {
             return Utils.isGridTableLoaded('rocheBPSPIpPlanningCheckoutGridTableMonthly');
@@ -4272,7 +4370,7 @@ app.repository = {
                                 -- Decide 1st column element
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn] As
                                      IIF('${db.systemValueIpPlanningSegmentedControlRelativeYearValue}'='${db.systemValueGlobalStartingPlanYear}', '([Periods].[Periods].[${Utils.parseNumber(db.systemValueGlobalStartingPlanYear) - 1}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])',
-                                                        '([Periods].[Periods].[${db.systemValueGlobalStartingPlanYear}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])')
+                                       '([Periods].[Periods].[${db.systemValueGlobalStartingPlanYear}],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[Actual Quantity])')
                                      Set FirstColumn As
                                      {StrToSet('{'+[LineItems Sales Plan IP].[LineItems Sales Plan IP].[FirstColumn]+'}')}
                                 -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
@@ -4282,6 +4380,8 @@ app.repository = {
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('Element')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialLevel] as 
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('Product Level - Name')
+                                     MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[UILevelFormat] as 
+                                            [Materials].[BPSP Budget IP].CurrentMember.Properties('UI Level Format')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS] as 
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('IP DIS Relevant Flag Budget')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment] as
@@ -4297,7 +4397,8 @@ app.repository = {
                                       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialCode]),
                                       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutFlag]),
                                       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutUser]),
-                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutDateTime])}
+                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[zUI CheckOutDateTime]),
+                                      ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[UILevelFormat])}
                                      Set FinalColumns AS
                                      {([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS]),
                                       ([Periods].[Periods].[2021],[LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment])}
@@ -4339,19 +4440,20 @@ app.repository = {
                     "}`,
             parsingControl: {
                 type: 'matrix',
-                length: 25,
+                length: 26,
                 query: [
                     (r, x) => {
-                        let result, pl;
+                        let result, pl, uiLevel = r.Cells[x + 6].FormattedValue;
                         WidgetValue['systemValueMonthlyRelativeIndex'] = x;
 
                         pl = r.Cells[x + 1].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: pl === 'IP Node' ? 'gridtable_checkout_hierarchy_bpsp_PL6' : 'gridtable_checkout_hierarchy_bpsp_' + pl,
+                            skin: 'gridtable_checkout_hierarchy_bpsp_' + uiLevel,
                             cellVisible: true,
                             icon: 'icon-badge',
                             members: r.Cells[x].Members,
+                            uiLevel: uiLevel,
                             productLevel: pl
                         };
                         return result;
@@ -4376,7 +4478,7 @@ app.repository = {
                     },
 
                     (r, x) => {
-                        return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthly.getCell(r, x, 4);
+                        return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthly.getCell(r, x, 5);
                     },
                     (r, x) => {
                         return Repository.rocheBPSPIpPlanningCheckoutGridTableMonthly.getCell(r, x, 1);
@@ -4873,7 +4975,8 @@ app.repository = {
                                          [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element],
                                          [}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag],
                                          [}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag],
-                                         [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag]} 
+                                         [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag],
+                                         [}ElementAttributes_Materials].[}ElementAttributes_Materials].[UI Level Format]} 
                                       ON COLUMNS , 
                                       -- {TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}],'${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')}
                                           {Filter({TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')},
@@ -4885,14 +4988,14 @@ app.repository = {
                     },
                     parsingControl: {
                         type: 'matrix',
-                        length: 6,
+                        length: 7,
                         query: [
 
 
                             (r, x) => {
                                 return {
                                     label: r.Cells[x].FormattedValue,
-                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x + 1].FormattedValue.replace('a', '')
+                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x + 6].FormattedValue
                                 }
                             },
 
@@ -5002,7 +5105,8 @@ app.repository = {
 								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element],
 								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag],
 								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag],
-								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag]} 
+								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag],
+								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[UI Level Format]} 
 								  ON COLUMNS , 
 								  {Filter({TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')},
 								   Instr(UCASE([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP Name]), '${searchString}') > 0)}
@@ -5012,12 +5116,12 @@ app.repository = {
                     },
                     parsingControl: {
                         type: 'matrix',
-                        length: 6,
+                        length: 7,
                         query: [
                             (r, x) => {
                                 return {
                                     label: r.Cells[x].FormattedValue,
-                                    skin: r.Cells[x + 1].FormattedValue === 'IP Node' ? 'gridtable_hierarchy_bpsp_PL6' : 'gridtable_hierarchy_bpsp_' + r.Cells[x + 1].FormattedValue.replace('a', '')
+                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x + 6].FormattedValue
                                 }
                             },
                             (r, x) => {
@@ -6702,6 +6806,7 @@ app.repository = {
 
                         let yearzero = Utils.parseNumber(db.systemValueGlobalStartingPlanYear),
                             YearMinusOne = yearzero - 1,
+                            YearMinusTwo = yearzero - 2,
                             YearPlusOne = yearzero + 1,
                             YearPlusTwo = yearzero + 2,
                             YearPlusThree = yearzero + 3,
@@ -6726,14 +6831,21 @@ app.repository = {
                                 [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
                          MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel] as 
                                 [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                         MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[UILevelFormat] as 
+                                [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} UI Level Format')
                     
                     SELECT 
                     
                        {([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductName]),
                         ([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductCaption]),
                         ([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel]),
+                        ([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[UILevelFormat]),
+                        -- 2019 Actual
+                         ([Periods].[Periods].[${YearMinusTwo}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
                          ([Periods].[Periods].[${YearMinusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
                          ([Periods].[Periods].[${yearzero}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice YTD]),
+                         -- 2021 T0
+                         ([Periods].[Periods].[${yearzero}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW T0]),
                          ([Periods].[Periods].[${yearzero}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
                          ([Periods].[Periods].[${YearPlusOne}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
                          ([Periods].[Periods].[${YearPlusTwo}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
@@ -6762,14 +6874,16 @@ app.repository = {
                     },
                     parsingControl: {
                         type: 'matrix',
-                        length: 13,
+                        length: 16,
                         query: [
 
                             (r, x) => {
+                                let uiLevel = r.Cells[x + 3].FormattedValue;
                                 return {
                                     label: r.Cells[x].FormattedValue,
                                     productLevel: r.Cells[x + 2].FormattedValue.replace('a', ''),
-                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x + 2].FormattedValue.replace('a', '')
+                                    uiLevel: uiLevel,
+                                    skin: 'gridtable_hierarchy_bpsp_' + uiLevel
                                 }
                             },
 
@@ -6780,11 +6894,6 @@ app.repository = {
                             (r, x) => {
                                 return {title: r.Cells[x + 2].FormattedValue}
                             },
-
-                            (r, x) => {
-                                return {title: r.Cells[x + 3].FormattedValue}
-                            },
-
 
                             (r, x) => {
                                 return {title: r.Cells[x + 4].FormattedValue}
@@ -6825,11 +6934,20 @@ app.repository = {
                                 return {title: r.Cells[x + 11].FormattedValue}
                             },
 
+
                             (r, x) => {
                                 return {title: r.Cells[x + 12].FormattedValue}
                             },
 
-
+                            (r, x) => {
+                                return {title: r.Cells[x + 13].FormattedValue}
+                            },
+                            (r, x) => {
+                                return {title: r.Cells[x + 14].FormattedValue}
+                            },
+                            (r, x) => {
+                                return {title: r.Cells[x + 15].FormattedValue}
+                            }
                         ]
                     }
 
@@ -6845,10 +6963,10 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return v('rocheBPSPProductReportGridTable.cellData').filter(e => ['PL1', 'PL2', 'PL3'].includes(e[0].productLevel)).map(e => {
+                return v('rocheBPSPProductReportGridTable.cellData').filter(e => ['01C', '02C', '03C', '01N', '02N', '03N'].includes(e[0].uiLevel)).map(e => {
                     return [{
                         label: e[0].label,
-                        skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].productLevel,
+                        skin: 'gridtable_hierarchy_shortcut_bpsp_' + e[0].uiLevel,
                         productCode: e[1].title
                     }];
                 });
@@ -7347,8 +7465,9 @@ app.repository = {
                     globalVersion: WidgetValue.systemValueGlobalCompanyVersion,
                     version: WidgetValue.systemValueGlobalCompanyProductPlanVersion,
                     currency: v('rocheBPSPProductReportGridRow1Cell5DropBox.value'),
+                    yearMinusOne: y1 - 2,
                     year0: y1 - 1,
-                    year1: y1,
+                    year1: y1, //2021
                     year2: y1 + 1,
                     year3: y1 + 2,
                     year4: y1 + 3,
@@ -7360,6 +7479,40 @@ app.repository = {
 
 
     /* customer planning */
+    rocheBPSPCustomerPlanningPageInit: {
+        initCondition: (db) => {
+            return v('systemValueCustomerPlanningUploadTargetPath') === false;
+        },
+        initDefault: (db) => {
+            return true;
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+                {
+                    "MDX" : "
+                        SELECT
+                            {[Value Type].[Value Type].[String]}
+                         ON COLUMNS ,
+                            {[Measures Control].[Measures Control].[UI Excel upload path Customer]}
+                        ON ROWS
+                        FROM [Control]
+                    "
+                }
+            `,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        value: (r, x) => {
+                            Utils.setWidgetValue('systemValueCustomerPlanningUploadTargetPath', r.Cells[0].FormattedValue)
+                            return true;
+                        }
+                    }
+            }
+        }
+    },
     rocheBPSPCustomersPlanningGridRow1Cell5Button: {
         init: {
             execute: (db) => {
@@ -7417,6 +7570,148 @@ app.repository = {
                     ]
                 }
             }
+    },
+    rocheBPSPCustomersPlanningMonthlyExcelUpload: {
+        init: {
+            execute: (db) => {
+                return {visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db) && Repository.rocheBPSPCustomersPlanning.isFocused()};
+            }
+        }
+    },
+    rocheBPSPCustomersPlanningMonthlyExcelExport: {
+        init: {
+            execute: (db) => {
+                return {visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db) && Repository.rocheBPSPCustomersPlanning.isFocused()};
+            }
+        },
+        getFileName: (db) => {
+            let s = [], fileName;
+            s.push(Utils.getFormattedDate(new Date(), '_', true));
+            s.push(db.activeUserName);
+            s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'));
+            s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),);
+            s.push(v('rocheBPSPCustomersHorizontalTable.open.receiver'));
+            s.push(v('systemValueCustomersPlanningFocused'));
+            s.push(v('systemValueCustomersPlanningCustomerCode'));
+            s.push(v('systemValueCustomersPlanningMonthlyTypeValue'));
+            return s.join('_').replaceAll(':', '_').replaceAll(' ', '_').replaceAll('/', '_');
+        },
+        launch: {
+            download: (db) => {
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                    territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                    version = v('systemValueGlobalCompanyVersion'),
+                    receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                    productVersion = v('systemValueGlobalCompanyProductPlanVersion'),
+                    focusedProduct = v('systemValueCustomersPlanningFocused'),
+                    hasFocusedProduct = focusedProduct !== 'PL1',
+                    customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                    type = v('systemValueCustomersPlanningMonthlyTypeValue'),
+                    y1 = parseInt(db.systemValueGlobalStartingPlanYear),
+                    fileName = Repository.rocheBPSPCustomersPlanningMonthlyExcelExport.getFileName(db);
+                return {
+                    url: 'export?export_key=exportCustomerMonthly&file_name=' + fileName + '.xlsx',
+                    fileName: fileName + '.xlsx',
+                    activeUserName: db.activeUserName,
+                    company: company,
+                    version: version,
+                    territoryCode: territoryCode,
+                    receiver: receiver,
+                    productVersion: productVersion,
+                    customerCode: customerCode,
+                    rows: hasFocusedProduct ? 'FocusedRows' : 'ProductRows',
+                    focusedProduct: focusedProduct,
+                    type: type,
+                    year1: y1,
+                    year2: y1 + 1,
+                    year3: y1 + 2,
+                    year4: y1 + 3,
+                    key: 'exportCustomerMonthly'
+                };
+            }
+        }
+    },
+    rocheBPSPCustomersPlanningUploadPopupPlDropbox: {
+        initCondition: (db) => {
+            let l = v('rocheBPSPCustomersPlanningGridTableMonthly.cellData.length');
+            return l !== false && l !== 0;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            execute: (db) => {
+                return [
+                    {name: 'PL1', key: 1, on: true},
+                    {name: 'PL2', key: 2, on: false},
+                    {name: 'PL3', key: 3, on: false},
+                    {name: 'PL4', key: 4, on: false},
+                    {name: 'PL5', key: 5, on: false},
+                    {name: 'PL6', key: 6, on: false}
+                ]
+            }
+        }
+    },
+    rocheBPSPCustomersPlanningUploadPopupUpload: {
+        upload: (db) => {
+            let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                version = v('systemValueGlobalCompanyVersion'),
+                receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                productVersion = v('systemValueGlobalCompanyProductPlanVersion'),
+                focusedProduct = v('systemValueCustomersPlanningFocused'),
+                customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                type = v('systemValueCustomersPlanningMonthlyTypeValue'),
+                fileName = Repository.rocheBPSPCustomersPlanningMonthlyExcelExport.getFileName(db);
+            Utils.modifyFileName('rocheBPSPCustomersPlanningUploadPopupUpload', fileName);
+            Utils.setWidgetValue('systemValueUploadFileName', fileName + '.csv');
+            return {
+                staging: app.defaultUploadStagingFolder,
+                target: v('systemValueCustomerPlanningUploadTargetPath'),
+                productLevel: v('rocheBPSPCustomersPlanningUploadPopupPlDropbox.value'),
+                validation: 'validateCustomerPlanningExcelImport',
+                validationUser: db.activeUserName,
+                validationCompany: company,
+                validationReceiver: receiver,
+                validationGlobalVersion: version,
+                validationVersion: productVersion,
+                validationProduct: focusedProduct,
+                validationLineItem: type,
+                validationTerritoryCode: territoryCode,
+                validationCustomerCode: customerCode,
+                validationMessage: 'First row of excel does not match'
+                //      preProcessTemplate: v('preprocess.choose.value') === false ? 'Template1' : v('preprocess.choose.value')
+            };
+        },
+        request: {
+            url: (db) => `/api/v1/Processes('MODULE - UI - CSV Upload Post Processing Customer')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => {
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
+                    territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
+                    version = v('systemValueGlobalCompanyVersion'),
+                    receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
+                    productVersion = v('systemValueGlobalCompanyProductPlanVersion'),
+                    focusedProduct = v('systemValueCustomersPlanningFocused'),
+                    customerCode = v('systemValueCustomersPlanningCustomerCode'),
+                    type = v('systemValueCustomersPlanningMonthlyTypeValue'),
+                    fileName = v('systemValueUploadFileName');
+                return `{
+                        "Parameters": [
+                                {"Name": "pUser", "Value": "${db.activeUserName}"},                               
+                                {"Name": "pSelectedProductLevel", "Value": "${v('rocheBPSPCustomersPlanningUploadPopupPlDropbox.value')}"},
+                                {"Name": "pFileName", "Value": "${fileName}"},
+                                {"Name": "pProduct", "Value": "${focusedProduct}"},
+                                {"Name": "pCompany", "Value": "${company}"},
+                                {"Name": "pReceiver", "Value": "${receiver}"},
+                                {"Name": "pTargetCube", "Value": "Base Plan"},
+                                {"Name": "pLineItem", "Value": "${type}"},
+                                {"Name": "pCustomer", "Value": "${customerCode}"},
+                                {"Name": "pTerritories", "Value": "${territoryCode}"},
+                        ]
+                    }`;
+            }
+        }
     },
     rocheBPSPCustomersPlanningGridTableMonthly: {
         perform: {
@@ -7522,7 +7817,7 @@ app.repository = {
                     focusedProduct = v('systemValueCustomersPlanningFocused'),
                     relativeYear = v('systemValueGlobalSegmentedControlRelativeYear'),
                     relativeYearValue = v('systemValueGlobalSegmentedControlRelativeYearValue'),
-                    hasFocusedProduct = focusedProduct !== 'PL1',
+                    hasFocusedProduct = Repository.rocheBPSPCustomersPlanning.isFocused(),
                     customerCode = v('systemValueCustomersPlanningCustomerCode'),
                     type = v('systemValueCustomersPlanningMonthlyTypeValue')
                 ;
@@ -7557,13 +7852,17 @@ app.repository = {
                                             [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Element')
                                      MEMBER [Periods].[Periods].[ProductLevel] as 
                                             [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name')
+                                     MEMBER [Periods].[Periods].[UILevelFormat] as 
+                                            [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} UI Level Format')
                                      MEMBER [Periods].[Periods].[HasComment] as
                                             [Sales Plan by Customer].([Periods].[Periods].[${relativeYearValue}],[LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[Final Sales Plan],[Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Comment Flag])
                                 -- Create the first 3 column with information
                                      Set FixColumns AS
                                      {[Periods].[Periods].[ProductName],
                                       [Periods].[Periods].[ProductCaption],
-                                      [Periods].[Periods].[ProductLevel]}
+                                      [Periods].[Periods].[ProductLevel],
+                                      [Periods].[Periods].[UILevelFormat]
+                                      }
                                      Set Comment AS
                                      {[Periods].[Periods].[HasComment]}
                                 SELECT 
@@ -7593,20 +7892,21 @@ app.repository = {
             },
             parsingControl: {
                 type: 'matrix',
-                length: 17,
+                length: 18,
                 query: [
                     (r, x) => {
-                        let result, pl, pc;
+                        let result, pl, pc, uiLevel = r.Cells[x + 3].FormattedValue;
                         WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = x;
                         pc = r.Cells[x + 1].FormattedValue;
                         pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: 'gridtable_hierarchy_bpsp_' + pl,
+                            skin: 'gridtable_hierarchy_bpsp_' + uiLevel,
                             cellVisible: true,
                             icon: 'icon-badge',
                             members: r.Cells[x].Members,
                             productLevel: pl,
+                            uiLevel: uiLevel,
                             productCode: pc
                         };
                         return result;
@@ -7626,7 +7926,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'] + 2;
                         return Repository.rocheBPSPCustomersPlanningGridTableMonthly.getCell(WidgetValue['systemValueCustomersPlanningMonthlyRelativeIndex'], r);
                     },
                     (r, x) => {
@@ -7811,7 +8111,7 @@ app.repository = {
                     focusedProduct = v('systemValueCustomersPlanningFocused'),
                     relativeYear = v('systemValueGlobalSegmentedControlRelativeYear'),
                     relativeYearValue = v('systemValueGlobalSegmentedControlRelativeYearValue'),
-                    hasFocusedProduct = focusedProduct !== 'PL1',
+                    hasFocusedProduct = Repository.rocheBPSPCustomersPlanning.isFocused(),
                     customerCode = v('systemValueCustomersPlanningCustomerCode')
                 ;
                 return `
@@ -7853,6 +8153,8 @@ app.repository = {
                                             [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Element')
                                      MEMBER [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductLevel] as 
                                             [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name')
+                                     MEMBER [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[UILevelFormat] as 
+                                            [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} UI Level Format')
                                      MEMBER [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[HasComment] as
                                             [Sales Plan by Customer].([Periods].[Periods].[${relativeYearValue}],[LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[Final Sales Plan],[Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Comment Flag])
                                 -- Create the first 3 column with information
@@ -7862,7 +8164,10 @@ app.repository = {
                                      ([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
                                       [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductCaption]),
                                      ([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
-                                      [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductLevel])}
+                                      [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductLevel]),
+                                      ([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
+                                      [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[UILevelFormat])
+                                      }
                                      Set Comment AS
                                      {([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
                                        [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[HasComment])}
@@ -7891,20 +8196,21 @@ app.repository = {
             },
             parsingControl: {
                 type: 'matrix',
-                length: 24,
+                length: 25,
                 query: [
                     (r, x) => {
-                        let result, pl, pc;
+                        let result, pl, pc, uiLevel = r.Cells[x + 3].FormattedValue;
                         WidgetValue['systemValueCustomersPlanningYearlyRelativeIndex'] = x;
                         pc = r.Cells[x + 1].FormattedValue;
                         pl = r.Cells[x + 2].FormattedValue.replace('a', '');
                         result = {
                             label: r.Cells[x].FormattedValue,
-                            skin: 'gridtable_hierarchy_bpsp_' + pl,
+                            skin: 'gridtable_hierarchy_bpsp_' + uiLevel,
                             cellVisible: true,
                             icon: 'icon-badge',
                             members: r.Cells[x].Members,
                             productLevel: pl,
+                            uiLevel: uiLevel,
                             productCode: pc
                         };
                         return result;
@@ -7924,7 +8230,7 @@ app.repository = {
                         };
                     },
                     (r, x) => {
-                        WidgetValue['systemValueCustomersPlanningYearlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningYearlyRelativeIndex'] + 1;
+                        WidgetValue['systemValueCustomersPlanningYearlyRelativeIndex'] = WidgetValue['systemValueCustomersPlanningYearlyRelativeIndex'] + 2;
                         return Repository.rocheBPSPCustomersPlanningGridTableYearly.getCell(WidgetValue['systemValueCustomersPlanningYearlyRelativeIndex'], r);
                     },
                     (r, x) => {
@@ -8447,7 +8753,7 @@ app.repository = {
             return Repository.rocheBPSPCustomersPlanning.isYearly(db) ? 'rocheBPSPCustomersPlanningGridTableYearly' : 'rocheBPSPCustomersPlanningGridTableMonthly';
         },
         isFocused: () => {
-            return v('systemValueCustomersPlanningFocused') !== v('systemValueDefaultCustomersPlanningFocused');
+            return v('systemValueIsCustomersPlanningFocused');
         },
         setCustomerSelectorOpenRecord: (db) => {
             let selected = Repository.rocheBPSPCustomersPlanning.getSelectedCustomer(db);
@@ -8560,6 +8866,7 @@ app.repository = {
             execute: (db) => {
                 let table = Repository.rocheBPSPCustomersPlanning.getVisibleGridTable(db);
                 Utils.setWidgetValue('systemValueCustomersPlanningFocused', Utils.getGridTableCell(table, 0).productCode);
+                Utils.setWidgetValue('systemValueIsCustomersPlanningFocused', true);
             }
         }
     },
@@ -8581,6 +8888,7 @@ app.repository = {
         launch: {
             execute: (db) => {
                 Utils.setWidgetValue('systemValueCustomersPlanningFocused', v('systemValueDefaultCustomersPlanningFocused'));
+                Utils.setWidgetValue('systemValueIsCustomersPlanningFocused', false);
             }
         },
         init: {
@@ -8593,6 +8901,7 @@ app.repository = {
         launch: {
             execute: (db) => {
                 Utils.setWidgetValue('systemValueCustomersPlanningFocused', v('systemValueDefaultCustomersPlanningFocused'));
+                Utils.setWidgetValue('systemValueIsCustomersPlanningFocused', false);
             }
         },
         init: {
@@ -8837,7 +9146,8 @@ app.repository = {
                             {[Measures Sales Plan by Customer Opportunity].[Measures Sales Plan by Customer Opportunity].Members}
                             ON COLUMNS ,
                             NON EMPTY
-                            {TM1FILTERBYLEVEL({ TM1DRILLDOWNMEMBER({[Opportunities].[Opportunities].[All Opportunities]}, ALL, RECURSIVE )}, 0)}
+                            {FILTER({TM1FILTERBYLEVEL({TM1DRILLDOWNMEMBER({[Opportunities].[Opportunities].[All Opportunities]}, ALL, RECURSIVE )}, 0)},
+                             [Opportunities].[Opportunities].CurrentMember.Properties(\\"Customers Plan\\") = \\"${v('systemValueCustomersPlanningCustomerCode')}\\")}
                             ON ROWS
                             FROM [Sales Plan by Customer Opportunity]
                             WHERE
@@ -9378,7 +9688,7 @@ app.repository = {
     /* end customer planning */
 
 
-    rocheBPSPCompanySettingsGridRow1Cell5Button: {
+    rocheBPSPCompanySettingsGridRow1Cell3Button: {
         init: {
             execute: (db) => {
                 return {label: db.activeUserName};
@@ -9700,7 +10010,7 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     label: r.Cells[x].Members[2].Attributes.Caption,
-                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].Members[2].Attributes['UI Level Format'].replace('a', ''),
+                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].Members[2].Attributes['UI Level Format'],
                                     territoryID: r.Cells[x].Members[2].Attributes['REXIS Territory ID'],
                                     ordinal: x
                                 }
@@ -10319,6 +10629,10 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     value: parseInt(r.Cells[x + 1].FormattedValue) > 0 ? 1 : 0,
+                                    editable: r.Cells[x + 1].FormattedValue === '1' ? true : false,
+                                    cellSkin: r.Cells[x + 1].FormattedValue === '1' ? '' : 'readonly_bpsp',
+                                    skin: r.Cells[x + 1].FormattedValue === '1' ? 'Settings_toggle_bpsp' : 'label_toggle_bpsp',
+                                    titleOn: r.Cells[x + 1].FormattedValue === '1' ? '' : '' + parseInt(r.Cells[x].FormattedValue),
                                 }
                             }
                         ]
@@ -10618,8 +10932,9 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     label: r.Cells[x].Members[1].Attributes['Caption'],
+                                    territoryName: r.Cells[x].Members[1].Attributes['Caption'],
                                     territoryID: r.Cells[x].Members[1].Name,
-                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].FormattedValue.replace('a', '')
+                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x].FormattedValue
                                 }
                             },
 
@@ -10712,7 +11027,7 @@ app.repository = {
                                        {[Measures Sales Territory to Product].[Measures Sales Territory to Product].[ProductName],
                                        [Measures Sales Territory to Product].[Measures Sales Territory to Product].[ProductCode],
                                        [Measures Sales Territory to Product].[Measures Sales Territory to Product].[ProductLevel],
-                                       [Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Flag]} 
+                                       [Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Input]}
                                        
                                       ON COLUMNS , 
                                          -- {[Products].[BPSP Budget].Members} 
@@ -10757,7 +11072,7 @@ app.repository = {
 
                             (r, x) => {
                                 return {
-                                    value: parseInt(r.Cells[x + 3].FormattedValue) === 0 ? 0 : 1,
+                                    value: r.Cells[x + 3].FormattedValue === '' ? 0 : 1,
                                 }
                             }
 
@@ -10766,10 +11081,10 @@ app.repository = {
                 },
         },
 
-    rocheBPSPTerritoriesProductsGridRow15Cell1Title: {
+    rocheBPSPTerritoriesProductsGridRow1Cell2Title: {
         init: {
             execute: (db) => {
-                return {title: Utils.getGridTableCell('rocheBPSPTerritoriesGridTable', 0).territoryID};
+                return {title: Utils.getGridTableCell('rocheBPSPTerritoriesGridTable', 0).territoryName};
             }
         }
     },
@@ -10933,6 +11248,748 @@ app.repository = {
         init: {
             execute: (db) => {
                 return {label: db.activeUserName};
+            }
+        }
+    },
+
+    rocheBPSPAccountHorizontalTable: {
+        open: {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db) => {
+                let vv = v('rocheBPSPAccountHorizontalTable');
+                return `{"Ordinal": ${vv.selectedOrdinal},"Value": \"${vv.selected ? "1" : ""}\"}`
+            }
+        },
+        initCondition: (db) => {
+            let a = Utils.isValueExistingAndNotEmpty('rocheBPSPAccountsGridRow1Cell2DropBox');
+            return a;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+                type: 'POST',
+                body: (db) => {
+                    let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsGridRow1Cell2DropBox', 'key');
+                    let y1 = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']);
+                    let y0 = y1 - 1;
+
+                    return `{"MDX":"
+      					With 
+						  Member [}ElementAttributes_Customers].[}ElementAttributes_Customers].[PrevYear] AS
+						      [Sales Actuals by Customer].( [Periods].[Periods].[${y0}],[Companies].[Companies].[${company}],[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[PL1],
+						      [Receivers].[Receivers].[All Receivers],[Measures Sales Actuals by Customer].[Measures Sales Actuals by Customer].[Rexis Invoice])
+						    Member [}ElementAttributes_Customers].[}ElementAttributes_Customers].[Actual] AS
+						      [Sales Actuals by Customer].( [Periods].[Periods].[${y1}],[Companies].[Companies].[${company}],[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[PL1],
+						      [Receivers].[Receivers].[All Receivers],[Measures Sales Actuals by Customer].[Measures Sales Actuals by Customer].[Rexis Invoice])
+						SELECT 
+                                   {[}ElementAttributes_Customers].[}ElementAttributes_Customers].[Account Name],
+                                   [}ElementAttributes_Customers].[}ElementAttributes_Customers].[Account Number],
+                                   [}ElementAttributes_Customers].[}ElementAttributes_Customers].[PrevYear],
+                                   [}ElementAttributes_Customers].[}ElementAttributes_Customers].[Actual],
+                                   [}ElementAttributes_Customers].[}ElementAttributes_Customers].[Plan Flag]} 
+						  ON COLUMNS , 
+						   {EXCEPT({DRILLDOWNMEMBER({[Customers].[Customers].[ALL CUSTOMERS ${company}]}, {[Customers].[Customers].[ALL CUSTOMERS ${company}]})},{[Customers].[Customers].[ALL CUSTOMERS ${company}]})} 
+						  ON ROWS 
+						FROM [}ElementAttributes_Customers] 
+                  "}`;
+
+                },
+                parsingControl: {
+                    type: 'matrix',
+                    length: 5,
+                    query: [
+
+                        (r, x) => {
+                            return {value: r.Cells[x].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 1].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 2].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 3].FormattedValue};
+                        }, (r, x) => {
+                            return {
+                                active: true,
+                                ordinal: r.Cells[x + 4].Ordinal,
+                                on: r.Cells[x + 4].FormattedValue === '' ? false : true
+                            };
+                        }
+                    ]
+                }
+
+            },
+    },
+
+    rocheBPSPAccountsOverviewHorizontalTable: {
+        initCondition: (db) => {
+            let a = Utils.isValueExistingAndNotEmpty('rocheBPSPAccountsOverviewGridRow1Cell2DropBox');
+            return a;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Consolidated;$expand=Members($select=Name, Attributes/Caption,Attributes/AccountName))`,
+                type: 'POST',
+                body: (db) => {
+                    let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsOverviewGridRow1Cell2DropBox', 'key') === false ? Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsGridRow1Cell2DropBox', 'key')
+                        : Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsGridRow1Cell2DropBox', 'key');
+
+                    return `{"MDX":"
+                       SELECT 
+                                {[Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[REXIS Flag],
+                                   [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Assignment Flag],
+                                   [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Flag - Has plan data],
+                                   [Measures Sales Territory to Customer].[Measures Sales Territory to Customer].[Flag - Has actuals]}
+                          ON COLUMNS , 
+                          NON EMPTY 
+                           {EXCEPT({TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan ${company}]}, ALL, RECURSIVE )},
+                           {[Customers Plan].[Customers Plan].[All Customers Plan ${company}]})}
+                           * {TM1FILTERBYLEVEL({TM1DRILLDOWNMEMBER({[Receivers].[Receivers].[TC_12.2020_${company}]}, {[Receivers].[Receivers].[TC_12.2020_${company}]}, RECURSIVE )}, 0)} 
+                          ON ROWS 
+                        FROM [Sales Territory to Customer] 
+                        WHERE 
+                          (
+                           [Versions].[Versions].[Live],
+                           [Companies].[Companies].[${company}],
+                           [Territories].[Territories].[All Territories]
+                          )
+                  "}`;
+
+                },
+                parsingControl: {
+                    type: 'matrix',
+                    length: 4,
+                    query: [
+
+                        (r, x) => {
+                            return {value: r.Cells[x].Members[3].Attributes['Account Name']};
+                        }, (r, x) => {
+                            return {value: r.Cells[x].Members[3].Attributes.Caption};
+                        }, (r, x) => {
+                            return {value: r.Cells[x].Members[4].Attributes.Caption};
+                        }, (r, x) => {
+                            return {value: r.Cells[x].FormattedValue === 0 ? 'No' : 'Yes'};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 1].FormattedValue === 0 ? 'No' : 'Yes'};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 2].FormattedValue === 0 ? 'No' : 'Yes'};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 3].FormattedValue === 0 ? 'No' : 'Yes'};
+                        }
+                    ]
+                }
+
+            },
+    },
+
+
+    rocheBPSPAccountsGridRow2Cell1Button: {
+
+        launch: {
+
+            url: (db) => `/api/v1/Processes('MODULE - UI - Account Maintenance')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => {
+
+                return `{
+                        "Parameters": [
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsGridRow1Cell2DropBox', 'key')}"}
+                        ]
+                    }`;
+            }
+        }
+
+
+    },
+
+
+    rocheBPSPCompanySettingsGridRow1Cell2DropBox: {
+        choose: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPCompanySettingsGridRow1Cell2DropBox.value'));
+            }
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT
+                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]}
+                    ON COLUMNS ,
+                     {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}
+                    ON ROWS
+                    FROM [}ElementAttributes_Companies]
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [], selected = v('systemValueGlobalSelectedCompany');
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    'name': r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: selected === r.Cells[i].FormattedValue
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
+    },
+
+    rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox: {
+        choose: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox.value'));
+            }
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT
+                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]}
+                    ON COLUMNS ,
+                     {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}
+                    ON ROWS
+                    FROM [}ElementAttributes_Companies]
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [], selected = v('systemValueGlobalSelectedCompany');
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    'name': r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: selected === r.Cells[i].FormattedValue
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
+    },
+
+
+    rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox: {
+        choose: {
+            execute: (db) => {
+                Utils.setWidgetValue('systemValueGlobalSelectedCompany', v('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox.value'));
+            }
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "SELECT
+                        {[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Name],[}ElementAttributes_Companies].[}ElementAttributes_Companies].[Company - Key]}
+                    ON COLUMNS ,
+                     {TM1SubsetToSet([Companies].[Companies], \\"All Active\\")}
+                    ON ROWS
+                    FROM [}ElementAttributes_Companies]
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [], selected = v('systemValueGlobalSelectedCompany');
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    'name': r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: selected === r.Cells[i].FormattedValue
+                                });
+                            }
+                            return result;
+                        }
+                    }
+            }
+        }
+    },
+
+    rocheBPSPCompanySettingsCheckedOutGridRow1Cell3Button: {
+        init: {
+            execute: (db) => {
+                return {label: db.activeUserName};
+            }
+        }
+    },
+
+    rocheBPSPCompanySettingsGrowthGridRow1Cell3Button: {
+        init: {
+            execute: (db) => {
+                return {label: db.activeUserName};
+            }
+        }
+    },
+
+    rocheBPSPCompanySettingsCheckedOutGridTable:
+        {
+            initCondition: (db) => {
+                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox');
+                return a;
+            },
+            initDefault: (db) => {
+                return [];
+            },
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption,Attributes/BPSPBudgetUILevelFormat))`,
+                    type: 'POST',
+                    body: (db) => {
+                        let searchString = '';
+                        return `{"MDX":"
+                                  SELECT 
+                           {
+                           [Measures Sales Plan Checkout by Product].[Measures Sales Plan Checkout by Product].[checkout user],
+                           [Measures Sales Plan Checkout by Product].[Measures Sales Plan Checkout by Product].[checkout datetime],
+                           [Measures Sales Plan Checkout by Product].[Measures Sales Plan Checkout by Product].[checkout flag]
+                           } 
+                          ON COLUMNS , 
+                          NON EMPTY 
+                          {[Products].[BPSP Budget].Members}
+                           * {TM1DRILLDOWNMEMBER({[Receivers].[Receivers].[All Receivers]}, ALL, RECURSIVE )}
+                          ON ROWS 
+                        FROM [Sales Plan Checkout by Product] 
+                        WHERE 
+                          (
+                           [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox', 'key')}],
+                           [Versions].[Versions].[Live]
+                          )
+                                    "}`;
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 3,
+                        query: [
+                            (r, x) => {
+                                return {
+                                    label: r.Cells[x].Members[2].Attributes.Caption
+                                }
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x].Members[2].Attributes['BPSP Budget UI Level Format'].replace('N', '').replace('C', '')}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x].Members[3].Name}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 1].FormattedValue}
+                            },
+                            (r, x) => {
+                                return {label: 'Force Unlock'}
+                            },
+
+                            (r, x) => {
+                                return {
+                                    label: 'Contract',
+                                    //url: mail
+                                }
+                            }
+                        ]
+                    }
+                },
+        },
+
+
+    rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning:
+        {
+            initCondition: (db) => {
+                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox');
+                return a;
+            },
+            initDefault: (db) => {
+                return [];
+            },
+
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption,Attributes/BPSPBudgetIPUILevelFormat))`,
+                    type: 'POST',
+                    body: (db) => {
+                        return `{"MDX":"
+                                    
+                           SELECT 
+                                       {[Measures Sales Plan IP Checkout by Materials].[Measures Sales Plan IP Checkout by Materials].[checkout user],
+                                       [Measures Sales Plan IP Checkout by Materials].[Measures Sales Plan IP Checkout by Materials].[checkout datetime],
+                                       [Measures Sales Plan IP Checkout by Materials].[Measures Sales Plan IP Checkout by Materials].[checkout flag]} 
+                                      ON COLUMNS , 
+                                      NON EMPTY 
+                                      {[Materials].[BPSP Budget IP].Members}
+                                       * {TM1DRILLDOWNMEMBER({[Receivers].[Receivers].[All Receivers]}, ALL, RECURSIVE )}
+                                      ON ROWS 
+                                    FROM [Sales Plan IP Checkout by Material] 
+                                    WHERE 
+                                      (
+                                       [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox', 'key')}],
+                                       [Versions].[Versions].[Live]
+                                      )
+
+                                    "}`;
+
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 3,
+                        query: [
+                            (r, x) => {
+                                return {
+                                    label: r.Cells[x].Members[2].Attributes.Caption
+                                }
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x].Members[2].Attributes['BPSP Budget IP UI Level Format'].replace('N', '').replace('C', '')}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x].Members[3].Name}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 1].FormattedValue}
+                            },
+                            (r, x) => {
+                                return {label: 'Force Unlock'}
+                            },
+
+                            (r, x) => {
+                                return {label: 'Contract'}
+                            }
+                        ]
+                    }
+                },
+        },
+
+
+    rocheBPSPCompanySettingsCheckedOutGridTableButton07: {
+        launch: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => {
+                let c = Utils.getGridTableCell('rocheBPSPCompanySettingsCheckedOutGridTable', 3),
+                    u = c.title;
+                u = db.activeUserName.split('/')[0] + '/' + u;
+                return `
+                      {"MDX":
+                        "SELECT
+                           {[}ElementAttributes_}Clients].[}ElementAttributes_}Clients].[Email]}
+                          ON COLUMNS,
+                           {[}Clients].[}Clients].[${u}]}
+                          ON ROWS
+                        FROM [}ElementAttributes_}Clients]"}
+                    `;
+            },
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        url: (r, x) => {
+                            return 'mailto:' + r.Cells[0].FormattedValue;
+                        }
+                    }
+            }
+        }
+    },
+
+
+    rocheBPSPCompanySettingsGridRow4Cell1MessageInput: {
+        initCondition: (db) => {
+            let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGridRow1Cell2DropBox');
+            return a;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => `{"MDX":"
+                SELECT 
+                   {[Measures Company Information].[Measures Company Information].[Start page message Title]} 
+                   PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON COLUMNS , 
+                   {[Companies].[Companies].[All Companies Active^${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGridRow1Cell2DropBox', 'key')}]} 
+                   PROPERTIES [Companies].[Companies].[Member description]  ON ROWS 
+                FROM [Company Information] 
+                WHERE 
+                  (
+                   [Versions].[Versions].[Live]
+                  )
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        value: (r, x) => {
+                            return r.Cells[x].FormattedValue;
+                        }
+                    }
+            }
+        }
+    },
+
+    rocheBPSPCompanySettingsGridRow5Cell1MessageInput: {
+        initCondition: (db) => {
+            let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGridRow1Cell2DropBox');
+            return a;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => `{"MDX":"
+                SELECT 
+                   {[Measures Company Information].[Measures Company Information].[Start page message]} 
+                   PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON COLUMNS , 
+                   {[Companies].[Companies].[All Companies Active^${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGridRow1Cell2DropBox', 'key')}]} 
+                   PROPERTIES [Companies].[Companies].[Member description]  ON ROWS 
+                FROM [Company Information] 
+                WHERE 
+                  (
+                   [Versions].[Versions].[Live]
+                  )
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        value: (r, x) => {
+                            return r.Cells[x].FormattedValue;
+                        }
+                    }
+            }
+        }
+    },
+
+
+    rocheBPSPCompanySettingsGrowthGridTable:
+        {
+
+            initCondition: (db) => {
+                let b = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox') && Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox')
+                return b;
+            },
+            initDefault: (db) => {
+                return [];
+            },
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Consolidated,RuleDerived,Updateable;$expand=Members($select=Name, Attributes/Caption,Attributes/BPSPBudgetUILevelFormat))`,
+                    type: 'POST',
+                    body: (db) => {
+
+                        let yearzero = Utils.parseNumber(db.systemValueGlobalStartingPlanYear),
+                            YearPlusOne = yearzero + 1,
+                            YearPlusTwo = yearzero + 2,
+                            YearPlusThree = yearzero + 3,
+                            yearPlusFour = yearzero + 4;
+
+                        let searchString = '';
+                        if (Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGrowthGridRow3Cell1SearchBox')) {
+                            searchString = v('rocheBPSPCompanySettingsGrowthGridRow3Cell1SearchBox.value').toUpperCase();
+                        }
+
+                        let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox', 'key');
+                        let reciver = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox', 'key');
+
+                        return `{"MDX":"
+                                        With
+                                        MEMBER [Years].[Years].[ProductName] as 
+                                        [Products Flat].[Products Flat].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Description')
+                                        MEMBER [Years].[Years].[ProductCode] as 
+                                        [Products Flat].[Products Flat].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Element')
+                                        MEMBER [Years].[Years].[ProductLevel] as 
+                                        [Products Flat].[Products Flat].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Product Level - Name')
+                                        
+                                        SELECT 
+                                           {
+                                           [Years].[Years].[ProductName],
+                                           [Years].[Years].[ProductCode],
+                                           [Years].[Years].[ProductLevel],
+                                           [Years].[Years].[${yearzero}],
+                                           [Years].[Years].[${YearPlusOne}],
+                                           [Years].[Years].[${YearPlusTwo}]
+                                           } 
+                                           
+                                          ON COLUMNS , 
+                                          {FILTER({[Products Flat].[Products Flat].[PL1],
+                                          [Products Flat].[Products Flat].[P225EX_RDC],[Products Flat].[Products Flat].[P2A_100],[Products Flat].[Products Flat].[P305],
+                                          [Products Flat].[Products Flat].[P6],[Products Flat].[Products Flat].[458611],[Products Flat].[Products Flat].[458621],
+                                          [Products Flat].[Products Flat].[458631],[Products Flat].[Products Flat].[458641],[Products Flat].[Products Flat].[458651],
+                                          [Products Flat].[Products Flat].[458360],[Products Flat].[Products Flat].[458400],[Products Flat].[Products Flat].[P15],
+                                          [Products Flat].[Products Flat].[458451],[Products Flat].[Products Flat].[458453],[Products Flat].[Products Flat].[458454],
+                                          [Products Flat].[Products Flat].[458452],[Products Flat].[Products Flat].[458458],[Products Flat].[Products Flat].[458461],
+                                          [Products Flat].[Products Flat].[458455],[Products Flat].[Products Flat].[458459],[Products Flat].[Products Flat].[458456],
+                                          [Products Flat].[Products Flat].[458457],[Products Flat].[Products Flat].[458462],[Products Flat].[Products Flat].[458460],
+                                          [Products Flat].[Products Flat].[458470],[Products Flat].[Products Flat].[P188],[Products Flat].[Products Flat].[459491],
+                                          [Products Flat].[Products Flat].[459492],[Products Flat].[Products Flat].[459493],[Products Flat].[Products Flat].[P184],[Products Flat].[Products Flat].[458855],
+                                          [Products Flat].[Products Flat].[458856],[Products Flat].[Products Flat].[458213],[Products Flat].[Products Flat].[P23],[Products Flat].[Products Flat].[458490],
+                                          [Products Flat].[Products Flat].[458500],[Products Flat].[Products Flat].[458510],[Products Flat].[Products Flat].[P186],[Products Flat].[Products Flat].[458101],[Products Flat].[Products Flat].[458111],[Products Flat].[Products Flat].[459090],[Products Flat].[Products Flat].[P187],[Products Flat].[Products Flat].[458550],[Products Flat].[Products Flat].[458560],[Products Flat].[Products Flat].[458570],[Products Flat].[Products Flat].[P118],[Products Flat].[Products Flat].[459250],[Products Flat].[Products Flat].[459316],[Products Flat].[Products Flat].[459456],[Products Flat].[Products Flat].[458140],[Products Flat].[Products Flat].[458167],[Products Flat].[Products Flat].[458168],[Products Flat].[Products Flat].[459130],[Products Flat].[Products Flat].[P132],[Products Flat].[Products Flat].[P316],[Products Flat].[Products Flat].[458150],[Products Flat].[Products Flat].[458155],[Products Flat].[Products Flat].[458310],[Products Flat].[Products Flat].[458211],[Products Flat].[Products Flat].[P323],[Products Flat].[Products Flat].[458311],[Products Flat].[Products Flat].[458411],[Products Flat].[Products Flat].[P319],[Products Flat].[Products Flat].[458170],[Products Flat].[Products Flat].[458240],[Products Flat].[Products Flat].[458245],[Products Flat].[Products Flat].[458305],[Products Flat].[Products Flat].[P327],[Products Flat].[Products Flat].[458255],[Products Flat].[Products Flat].[P318],[Products Flat].[Products Flat].[458180],[Products Flat].[Products Flat].[458190],[Products Flat].[Products Flat].[458200],[Products Flat].[Products Flat].[458888],[Products Flat].[Products Flat].[458220],[Products Flat].[Products Flat].[458230],[Products Flat].[Products Flat].[458235],[Products Flat].[Products Flat].[P320],[Products Flat].[Products Flat].[458290],[Products Flat].[Products Flat].[P119],[Products Flat].[Products Flat].[459110],[Products Flat].[Products Flat].[459115],[Products Flat].[Products Flat].[459120],[Products Flat].[Products Flat].[P134],[Products Flat].[Products Flat].[459252],[Products Flat].[Products Flat].[459251],[Products Flat].[Products Flat].[459455],[Products Flat].[Products Flat].[459271],[Products Flat].[Products Flat].[P135],[Products Flat].[Products Flat].[459255],[Products Flat].[Products Flat].[459281],[Products Flat].[Products Flat].[459285],[Products Flat].[Products Flat].[P136],[Products Flat].[Products Flat].[459261],[Products Flat].[Products Flat].[459321],[Products Flat].[Products Flat].[459331],[Products Flat].[Products Flat].[458312],[Products Flat].[Products Flat].[P500],[Products Flat].[Products Flat].[P520],[Products Flat].[Products Flat].[458142],[Products Flat].[Products Flat].[458143],[Products Flat].[Products Flat].[458262],[Products Flat].[Products Flat].[458263],[Products Flat].[Products Flat].[458265],[Products Flat].[Products Flat].[458264],
+                                          [Products Flat].[Products Flat].[458322],[Products Flat].[Products Flat].[458693],[Products Flat].[Products Flat].[458699],[Products Flat].[Products Flat].[458552],
+                                          [Products Flat].[Products Flat].[458852],[Products Flat].[Products Flat].[458551],[Products Flat].[Products Flat].[P540],[Products Flat].[Products Flat].[458681],
+                                          [Products Flat].[Products Flat].[458691],[Products Flat].[Products Flat].[458682],[Products Flat].[Products Flat].[458692],[Products Flat].[Products Flat].[P560],
+                                          [Products Flat].[Products Flat].[458854],[Products Flat].[Products Flat].[458871],[Products Flat].[Products Flat].[458872],[Products Flat].[Products Flat].[P310],
+                                          [Products Flat].[Products Flat].[P175],[Products Flat].[Products Flat].[459010],[Products Flat].[Products Flat].[459020],[Products Flat].[Products Flat].[459025],
+                                          [Products Flat].[Products Flat].[458216],[Products Flat].[Products Flat].[458217],[Products Flat].[Products Flat].[458215],[Products Flat].[Products Flat].[P165],
+                                          [Products Flat].[Products Flat].[459440],[Products Flat].[Products Flat].[459445],[Products Flat].[Products Flat].[458214],[Products Flat].[Products Flat].[459011],[Products Flat].[Products Flat].[459012],[Products Flat].[Products Flat].[459022],[Products Flat].[Products Flat].[P195],[Products Flat].[Products Flat].[458070],[Products Flat].[Products Flat].[458090],[Products Flat].[Products Flat].[458940],[Products Flat].[Products Flat].[458950],[Products Flat].[Products Flat].[458955],[Products Flat].[Products Flat].[458010],[Products Flat].[Products Flat].[458011],[Products Flat].[Products Flat].[458012],[Products Flat].[Products Flat].[P128],[Products Flat].[Products Flat].[459210],[Products Flat].[Products Flat].[459220],[Products Flat].[Products Flat].[P2A_200],[Products Flat].[Products Flat].[P600],[Products Flat].[Products Flat].[P4403],[Products Flat].[Products Flat].[458346],[Products Flat].[Products Flat].[458371],[Products Flat].[Products Flat].[P4405],[Products Flat].[Products Flat].[P650],[Products Flat].[Products Flat].[P4404],[Products Flat].[Products Flat].[458225],[Products Flat].[Products Flat].[P4406],[Products Flat].[Products Flat].[458615],[Products Flat].[Products Flat].[P256],[Products Flat].[Products Flat].[P2A12],[Products Flat].[Products Flat].[P257],[Products Flat].[Products Flat].[P40],[Products Flat].[Products Flat].[468670],[Products Flat].[Products Flat].[468740],[Products Flat].[Products Flat].[468690],[Products Flat].[Products Flat].[468760],[Products Flat].[Products Flat].[468661],[Products Flat].[Products Flat].[468761],[Products Flat].[Products Flat].[468771],[Products Flat].[Products Flat].[468772],[Products Flat].[Products Flat].[468970],[Products Flat].[Products Flat].[468975],[Products Flat].[Products Flat].[468990],[Products Flat].[Products Flat].[468610],[Products Flat].[Products Flat].[468710],[Products Flat].[Products Flat].[468625],[Products Flat].[Products Flat].[468725],[Products Flat].[Products Flat].[468790],[Products Flat].[Products Flat].[469350],[Products Flat].[Products Flat].[S0030],[Products Flat].[Products Flat].[P96],[Products Flat].[Products Flat].[468035],[Products Flat].[Products Flat].[468036],[Products Flat].[Products Flat].[468034],[Products Flat].[Products Flat].[468037],[Products Flat].[Products Flat].[S0150],[Products Flat].[Products Flat].[P335],[Products Flat].[Products Flat].[469351],[Products Flat].[Products Flat].[S0160],[Products Flat].[Products Flat].[P330],[Products Flat].[Products Flat].[468023],[Products Flat].[Products Flat].[468024],[Products Flat].[Products Flat].[468031],[Products Flat].[Products Flat].[468025],[Products Flat].[Products Flat].[468027],[Products Flat].[Products Flat].[468032],[Products Flat].[Products Flat].[468028],[Products Flat].[Products Flat].[468033]},
+                                          INSTR([Products Flat].[Products Flat].CurrentMember.Properties('BPSP Budget Description'), '${searchString}')>0)} 
+                                           PROPERTIES [Products Flat].[Products Flat].[Caption]
+                                           ON ROWS 
+                                        FROM [Sales Parameters by Products Flat] 
+                                        WHERE 
+                                          (
+                                           [Companies].[Companies].[${company}],
+                                           [Versions].[Versions].[Live],
+                                           [Receivers].[Receivers].[${reciver}],
+                                           [Measures Sales Parameters by Products Flat].[Measures Sales Parameters by Products Flat].[Growth rate for Products Copy]
+                                          )
+                                    "}`;
+
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 6,
+                        query: [
+
+
+                            (r, x) => {
+                                return {
+                                    label: r.Cells[x].FormattedValue,
+                                    skin: 'gridtable_hierarchy_bpsp_' + r.Cells[x + 2].FormattedValue.replace('a', '')
+                                }
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 1].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {title: r.Cells[x + 2].FormattedValue}
+                            },
+
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x + 3].FormattedValue,
+                                    cellSkin: r.Cells[x + 3].RuleDerived === false && r.Cells[x + 3].Consolidated === false ? '' : 'readonly_bpsp',
+                                    editable: r.Cells[x + 3].RuleDerived === false && r.Cells[x + 3].Consolidated === false ? true : false,
+                                }
+                            },
+
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x + 4].FormattedValue,
+                                    cellSkin: r.Cells[x + 4].RuleDerived === false && r.Cells[x + 4].Consolidated === false ? '' : 'readonly_bpsp',
+                                    editable: r.Cells[x + 4].RuleDerived === false && r.Cells[x + 4].Consolidated === false ? true : false,
+                                }
+                            },
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x + 5].FormattedValue,
+                                    cellSkin: r.Cells[x + 5].RuleDerived === false && r.Cells[x + 5].Consolidated === false ? '' : 'readonly_bpsp',
+                                    editable: r.Cells[x + 5].RuleDerived === false && r.Cells[x + 5].Consolidated === false ? true : false,
+                                }
+                            },
+                        ]
+                    }
+                },
+
+            write:
+                {
+                    url: (db) => `/api/v1/Cubes('Sales Parameters by Products Flat')/tm1.Update`,
+                    type: 'POST',
+                    body: (db) => `
+                    {
+                    "Cells": [
+                        {"Tuple@odata.bind": [
+                            "Dimensions('Versions')/Hierarchies('Versions')/Elements('Live')",
+                            
+                            "Dimensions('Measures Sales Parameters by Products Flat')/Hierarchies('Measures Sales Parameters by Products Flat')/Elements('Growth rate for Products Copy')",
+                
+                            "Dimensions('Years')/Hierarchies('Years')/Elements('${db.rocheBPSPCompanySettingsGrowthGridTable.column ? '202' + String(v('rocheBPSPCompanySettingsGrowthGridTable.column') - 2) : '2021'}')", 
+                            
+                            "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox', 'key')}')", 
+                            
+                             "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox', 'key')}')", 
+
+                            "Dimensions('Products Flat')/Hierarchies('Products Flat')/Elements('${db.rocheBPSPCompanySettingsGrowthGridTable.cellData[db.rocheBPSPCompanySettingsGrowthGridTable.row][1].title}')"
+                            ]}],
+                    "Value": "${db.rocheBPSPCompanySettingsGrowthGridTable.write.value ? db.rocheBPSPCompanySettingsGrowthGridTable.write.value : '0'}"
+                    },
+                `
+
+                },
+        },
+
+    rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox: {
+        initCondition: (db) => {
+            let b = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox')
+            return b;
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            body: (db) => `
+            {
+            "MDX" : "
+                SELECT 
+                       {[}ElementAttributes_Receivers].[}ElementAttributes_Receivers].[Member description],
+                        [}ElementAttributes_Receivers].[}ElementAttributes_Receivers].[Receiver - Key]} 
+                     ON COLUMNS , 
+                        {Tm1SubsetToset([Receivers].[Receivers],'zUI ${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox', 'key')} Plan Receivers')}
+                     ON ROWS
+                    FROM [}ElementAttributes_Receivers] 
+            "}`,
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        items: (r, x) => {
+                            let result = [];
+                            for (let i = 0; i < r.Cells.length; i = i + 2) {
+                                result.push({
+                                    'name': r.Cells[i].FormattedValue,
+                                    key: r.Cells[i + 1].FormattedValue,
+                                    on: v('rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox.value') === r.Cells[i].FormattedValue
+                                });
+                            }
+                            return result;
+                        }
+                    }
             }
         }
     },

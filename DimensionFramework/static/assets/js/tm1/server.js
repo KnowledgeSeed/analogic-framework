@@ -27,8 +27,6 @@ Server.download = (p) => {
             return xhr;
         },
         success: function (response, status, xhr) {
-            L(status);
-            L(xhr.status);
             if(xhr.status === 401){
                  if (('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode) && app.handled401 === false) {
                     app.handled401 = true;
@@ -46,7 +44,7 @@ Server.download = (p) => {
             }
         },
         statusCode: {
-            401: function () {L('statusCode 401');
+            401: function () {
                 if (('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode) && app.handled401 === false) {
                     app.handled401 = true;
                     $.cookie("authenticated", 0);

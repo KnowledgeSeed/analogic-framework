@@ -49,16 +49,20 @@ FileUpload.uploadFile = (w, eventMapId, context, event, element) => {
         if (d === 'ok') {
             QB.executeEventMapAction(eventMapId + '.finished', event, element, d);
             v.form = new FormData();
-            app.fn.showPopup(v.uploadSuccessMessage);
+            if(v.showUploadSuccessMessage === true) {
+                app.fn.showPopup(v.uploadSuccessMessage);
+                Loader.stop();
+            }
         } else {
             app.fn.showPopup(d, 600);
             QB.executeEventMapAction(eventMapId + '.error', event, element, d);
+            Loader.stop();
         }
     }).fail(() => {
         app.fn.showPopup('Upload failed');
+        Loader.stop();
     }).always(() => {
         v.form = new FormData();
-        Loader.stop();
     });
 
     return true;

@@ -27,14 +27,16 @@ class FileUploadWidget extends Widget {
             staging: this.getRealValue('staging', d, false),
             skin: this.getRealValue('skin', d, 'standard'),
             target: this.getRealValue('target', d, false),
-            uploadSuccessMessage: this.getRealValue('uploadSuccessMessage', d, 'Upload success')
+            uploadSuccessMessage: this.getRealValue('uploadSuccessMessage', d, 'Upload success'),
+            showUploadSuccessMessage: this.getRealValue('showUploadSuccessMessage', d, true)
         };
 
         this.value = {
             maxFileSize: v.maxFileSize,
             staging: v.staging,
             target: v.target,
-            uploadSuccessMessage: v.uploadSuccessMessage
+            uploadSuccessMessage: v.uploadSuccessMessage,
+            showUploadSuccessMessage: v.showUploadSuccessMessage
         };
 
         let aClass = [], aStyle = this.getWidthAndHeight(d), pStyle = [...aStyle], innerStyle = [], labelStyle = [], dividerStyle = [], imgStyle = [];
