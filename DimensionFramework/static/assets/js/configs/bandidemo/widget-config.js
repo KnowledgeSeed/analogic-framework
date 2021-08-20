@@ -11,7 +11,8 @@ app.widgetConfig = {
             {
                 id: 'bandiPivot',
                 type: PivotWidget
-            },
+            }
+            /*,
             {
                 id: 'bandiDemoHorizontalTable',
                 type: HorizontalTableWidget,
@@ -35,7 +36,7 @@ app.widgetConfig = {
                 widgets: [
 
                 ]
-            }
+            }*/
         ]
     }
 };
