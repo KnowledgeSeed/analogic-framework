@@ -11669,12 +11669,19 @@ app.repository = {
                     url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption,Attributes/BPSPBudgetIPUILevelFormat))`,
                     type: 'POST',
                     body: (db) => {
+                        let u = db.activeUserName.split('/')[0];
                         return `{"MDX":"
-                                    
+                        With
+                        MEMBER [Measures Sales Plan IP Checkout by Materials].[Measures Sales Plan IP Checkout by Materials].[Email] as
+                        [}ElementAttributes_}Clients].([}ElementAttributes_}Clients].[Email],
+                        StrToMember('[}Clients].[${u}/' + [Measures Sales Plan IP Checkout by Materials].[Measures Sales Plan IP Checkout by Materials].[checkout user] + ']'))
                            SELECT 
-                                       {[Measures Sales Plan IP Checkout by Materials].[Measures Sales Plan IP Checkout by Materials].[checkout user],
+                                       {
+                                       [Measures Sales Plan IP Checkout by Materials].[Measures Sales Plan IP Checkout by Materials].[checkout user],
                                        [Measures Sales Plan IP Checkout by Materials].[Measures Sales Plan IP Checkout by Materials].[checkout datetime],
-                                       [Measures Sales Plan IP Checkout by Materials].[Measures Sales Plan IP Checkout by Materials].[checkout flag]} 
+                                       [Measures Sales Plan IP Checkout by Materials].[Measures Sales Plan IP Checkout by Materials].[checkout flag],
+                                       [Measures Sales Plan IP Checkout by Materials].[Measures Sales Plan IP Checkout by Materials].[Email]
+                                       } 
                                       ON COLUMNS , 
                                       NON EMPTY 
                                       {[Materials].[BPSP Budget IP].Members}
@@ -11692,11 +11699,12 @@ app.repository = {
                     },
                     parsingControl: {
                         type: 'matrix',
-                        length: 3,
+                        length: 4,
                         query: [
                             (r, x) => {
                                 return {
-                                    label: r.Cells[x].Members[2].Attributes.Caption
+                                    label: r.Cells[x].Members[2].Attributes.Caption,
+                                    mailTo: r.Cells[x + 3].FormattedValue
                                 }
                             },
 
@@ -12109,6 +12117,49 @@ app.repository = {
     },
 
 
+    rocheBPSPCompanySettingsPopUpGridRow2Cell1Text: {
+        init: {
+            execute: (db) => {
+                let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableCustomer', 0),
+                    y = x.PopUpMessage;
+
+                return {
+                    title: y,
+                    body: '',
+                };
+            }
+        },
+    },
+
+
+    rocheBPSPCompanySettingsPopUpGridRow4Cell1Button: {
+        init: {
+            execute: (db) => {
+                let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableCustomer', 0),
+                    y = x.PopUpOKText;
+
+                return {
+                    label: y,
+                };
+            }
+        },
+    },
+
+
+    rocheBPSPCompanySettingsPopUpGridRow5Cell1Cancel: {
+        init: {
+            execute: (db) => {
+                let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableCustomer', 0),
+                    y = x.PopUpCancelText;
+
+                return {
+                    label: y,
+                };
+            }
+        },
+    },
+
+
     rocheBPSPCompanySettingsGridTableProduct:
         {
             init:
@@ -12176,6 +12227,78 @@ app.repository = {
                     }
                 },
         },
+
+
+    rocheBPSPCompanySettingsProductPopUpGridRow1Cell1Button: {
+        init: {
+            execute: (db) => {
+                let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableProduct', 0),
+                    y = x.ButtonIcon,
+                    z = x.iconColor;
+
+                return {
+                    icon: y,
+                    iconColor: z
+                };
+            }
+        },
+    },
+
+
+    rocheBPSPCompanySettingsProductPopUpGridRow2Cell1Text: {
+        init: {
+            execute: (db) => {
+                let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableProduct', 0),
+                    y = x.PopUpMessage;
+
+                return {
+                    title: y,
+                    body: '',
+                };
+            }
+        },
+    },
+
+
+    rocheBPSPCompanySettingsProductPopUpGridRow4Cell1Button: {
+        init: {
+            execute: (db) => {
+                let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableProduct', 0),
+                    y = x.PopUpOKText;
+
+                return {
+                    label: y,
+                };
+            }
+        },
+
+        launch: {
+            url: (db) => `/api/v1/Processes('MODULE - UI - BPSP - Submission')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) =>
+                `{
+                        "Parameters": [
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'key')}"}
+                        ]
+                    }`
+        }
+
+
+    },
+
+
+    rocheBPSPCompanySettingsProductPopUpGridRow5Cell1Cancel: {
+        init: {
+            execute: (db) => {
+                let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableProduct', 0),
+                    y = x.PopUpCancelText;
+
+                return {
+                    label: y,
+                };
+            }
+        },
+    },
 
 
 }

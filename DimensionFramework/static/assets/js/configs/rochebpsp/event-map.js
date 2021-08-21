@@ -3309,6 +3309,13 @@ app.eventMap = {
             argument: 'rocheBPSPCompanySettingsPopUp'
         }
     ],
+    'launch.rocheBPSPCompanySettingsPopUpGridRow4Cell1Button': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCompanySettingsPopUp'
+        }
+    ],
+
     'launch.rocheBPSPCompanySettingsPopUpGridRow5Cell1Cancel': [
         {
             action: app.fn.togglePopup,
@@ -3316,6 +3323,68 @@ app.eventMap = {
         }
     ],
 
+
+    'launch.rocheBPSPCompanySettingsGridTableProduct_row_0': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPCompanySettingsProductPopUp'
+        }
+    ],
+    'launch.rocheBPSPCompanySettingsProductPopUpGridRow4Cell1Button': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCompanySettingsProductPopUp'
+        }
+    ],
+
+    'launch.rocheBPSPCompanySettingsProductPopUpGridRow5Cell1Cancel': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCompanySettingsProductPopUp'
+        }
+    ],
+
+
+    'launch.rocheBPSPCompanySettingsCheckedOutGridTableHeaderButton06': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPCompanySettingsCheckedOutPopUp'
+        }
+    ],
+    'launch.rocheBPSPCompanySettingsCheckedOutPopUpGridRow4Cell1Button': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCompanySettingsCheckedOutPopUp'
+        }
+    ],
+
+    'launch.rocheBPSPCompanySettingsCheckedOutPopUpGridRow5Cell1Cancel': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCompanySettingsCheckedOutPopUp'
+        }
+    ],
+
+
+    'launch.rocheBPSPCompanySettingsCheckedOutHeaderGridTableCellButton06': [
+        {
+            action: app.fn.openPopup,
+            argument: 'rocheBPSPCompanySettingsCheckedOutPopUp'
+        }
+    ],
+    'launch.rocheBPSPCompanySettingsCheckedOutIPPopUpGridRow4Cell1Button': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCompanySettingsCheckedOutPopUp'
+        }
+    ],
+
+    'launch.rocheBPSPCompanySettingsCheckedOutIPPopUpGridRow5Cell1Cancel': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCompanySettingsCheckedOutPopUp'
+        }
+    ],
 
 }
 ;
