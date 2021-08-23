@@ -11696,7 +11696,10 @@ app.repository = {
                             },
 
                             (r, x) => {
-                                return {label: 'Contact'}
+                                return {
+                                    label: 'Contact',
+                                    url: 'mailto:' + r.Cells[x + 3].FormattedValue
+                                }
                             }
                         ]
                     }

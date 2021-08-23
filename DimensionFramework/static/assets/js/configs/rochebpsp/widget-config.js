@@ -18353,7 +18353,6 @@ app.widgetConfig = {
                                             label: '',
                                             backgroundColor: '#EBECEC',
                                             action: '',
-                                            width: '120px',
                                             icon: 'icon-profile',
                                             skin: 'userpanelmain',
                                         }
@@ -18789,6 +18788,7 @@ app.widgetConfig = {
                                     applyMeasuresToSection: true,
                                     label: '',
                                     action: '',
+                                    iconFontSize: '13',
                                     fontBold: true,
                                 }
                             ]
@@ -22617,7 +22617,6 @@ app.widgetConfig = {
                                             label: '',
                                             backgroundColor: '#EBECEC',
                                             action: '',
-                                            width: '120px',
                                             icon: 'icon-profile',
                                             skin: 'userpanelmain',
                                         }
@@ -23891,7 +23890,6 @@ app.widgetConfig = {
                                             label: '',
                                             backgroundColor: '#EBECEC',
                                             action: '',
-                                            width: '120px',
                                             icon: 'icon-profile',
                                             skin: 'userpanelmain',
                                         }
