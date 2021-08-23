@@ -83,7 +83,7 @@ class ButtonWidget extends Widget {
         this.value = {data: d, paste: v.paste, enabled: v.enabled};
 
         return `
-<a style="${aStyle.join('')}" ${o.confirmMessage2 ? `data-confirmmessage2="${o.confirmMessage2}" ` : ''} ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''} ${v.url ? `target="_blank" href="${v.url}"` : `data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}"`} class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
+<a style="${aStyle.join('')}" ${o.confirmMessage2 ? `data-confirmmessage2="${o.confirmMessage2}" ` : ''} ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''} ${v.url ? `target="_blank" href="${v.url}" data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}" ` : `data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}"`} class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
     <div class="ks-button-inner" style="${innerStyle.join('')}">
         <div class="ks-button-content">
             <div class="ks-button-icon" style="${imgStyle.join('')}">${v.icon !== false ? `<span style="${imgStyle.join('')}" class="${v.icon}"></span>` : ''}</div>

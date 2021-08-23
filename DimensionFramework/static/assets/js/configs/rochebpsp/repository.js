@@ -11587,8 +11587,7 @@ app.repository = {
                         query: [
                             (r, x) => {
                                 return {
-                                    label: r.Cells[x].Members[2].Attributes.Caption,
-                                    email: r.Cells[x + 3].FormattedValue
+                                    label: r.Cells[x].Members[2].Attributes.Caption
                                 }
                             },
 
@@ -11614,44 +11613,13 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     label: 'Contact',
-                                    URL: 'mailto:' + r.Cells[x + 3].FormattedValue
+                                    url: 'mailto:' + r.Cells[x + 3].FormattedValue
                                 }
                             }
                         ]
                     }
                 },
         },
-
-
-    rocheBPSPCompanySettingsCheckedOutGridTableButton07: {
-        init: {
-            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
-            type: 'POST',
-            body: (db) => {
-                let g = 'rocheBPSPCompanySettingsCheckedOutGridTable',
-                    c = Utils.getGridTableCell(g, 0),
-                    u = c.email;
-                return `
-                      {"MDX":
-                        "SELECT
-                           {[}ElementAttributes_}Clients].[}ElementAttributes_}Clients].[Email]}
-                          ON COLUMNS,
-                           {[}Clients].[}Clients].[${u}]}
-                          ON ROWS
-                        FROM [}ElementAttributes_}Clients]"}
-                    `;
-            },
-            parsingControl: {
-                type: 'object',
-                query:
-                    {
-                        url: (r, x) => {
-                            return 'mailto:' + r.Cells[0].FormattedValue;
-                        }
-                    }
-            }
-        }
-    },
 
 
     rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning:
