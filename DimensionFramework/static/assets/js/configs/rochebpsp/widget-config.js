@@ -18324,7 +18324,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPCompanySettingsGridRow1Cell2DropBox',
                                             type: DropBoxWidget,
-                                            width: '145%',
+                                            width: '148%',
                                             skin: 'simple_bold_bpsp',
                                             marginRight: '18%',
                                             marginBottom: 5,
@@ -18512,6 +18512,10 @@ app.widgetConfig = {
                                                 {
                                                     event: 'choose.rocheBPSPCompanySettingsGridRow1Cell2DropBox.finished',
                                                     method: 'refresh'
+                                                },
+                                                {
+                                                    event: 'init.rocheBPSPCompanySettingsGridRow1Cell2DropBox.finished',
+                                                    method: 'refresh'
                                                 }
                                             ]
                                         }
@@ -18549,6 +18553,10 @@ app.widgetConfig = {
                                             listen: [
                                                 {
                                                     event: 'choose.rocheBPSPCompanySettingsGridRow1Cell2DropBox.finished',
+                                                    method: 'refresh'
+                                                },
+                                                {
+                                                    event: 'init.rocheBPSPCompanySettingsGridRow1Cell2DropBox.finished',
                                                     method: 'refresh'
                                                 }
                                             ]
@@ -18671,6 +18679,38 @@ app.widgetConfig = {
                             ]
 
                         },
+
+                        {
+                            id: 'rocheBPSPCompanySettingsGridRow9',
+                            type: GridRowWidget,
+                            marginTop: '2%',
+                            width: '100%',
+                            widgets: [
+
+                                {
+                                    id: 'rocheBPSPCompanySettingsGridRow9Cell1',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-center',
+                                    width: '15%',
+                                    widgets: [
+                                        {
+                                            id: 'rocheBPSPCompanySettingsGridRow9Cell1ProductToggle',
+                                            type: ToggleWidget,
+                                            width: '100%',
+                                            iconOff: 'icon-unlock',
+                                            icon: 'icon-icon-lock',
+                                            titleOn: 'UNLOCK',
+                                            titleOff: 'LOCK',
+                                            value: 0,
+                                            skin: 'company_company_settings_toggle_bpsp'
+                                        },
+                                    ]
+                                },
+                            ]
+
+                        },
+
+
                     ]
 
                 },
@@ -22588,7 +22628,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox',
                                             type: DropBoxWidget,
-                                            width: '145%',
+                                            width: '148%',
                                             skin: 'simple_bold_bpsp',
                                             marginRight: '18%',
                                             marginBottom: 5,
@@ -23092,7 +23132,7 @@ app.widgetConfig = {
                             widgets: [
 
                                 {
-                                    id: 'rocheBPSPCompanySettingsCheckedOutGridTableButton-06',
+                                    id: 'rocheBPSPCompanySettingsCheckedOutGridTableButton06',
                                     type: ButtonWidget,
                                     width: '100%',
                                     icon: 'icon-unlock',
@@ -23412,7 +23452,7 @@ app.widgetConfig = {
                             widgets: [
 
                                 {
-                                    id: 'rocheBPSPCompanySettingsCheckedOutGridTableIPPlanningButton-06',
+                                    id: 'rocheBPSPCompanySettingsCheckedOutGridTableIPPlanningButton06',
                                     type: ButtonWidget,
                                     width: '100%',
                                     icon: 'icon-unlock',
@@ -23588,7 +23628,7 @@ app.widgetConfig = {
                                                     id: 'rocheBPSPCompanySettingsCheckedOutPopUpGridRow4Cell1Button',
                                                     type: ButtonWidget,
                                                     width: '200px',
-                                                    label: 'SAVE',
+                                                    label: 'UNLOCK',
                                                     skin: 'blue_button_bpsp ',
                                                 }]
                                         },]
@@ -23750,7 +23790,7 @@ app.widgetConfig = {
                                                     id: 'rocheBPSPCompanySettingsCheckedOutIPPopUpGridRow4Cell1Button',
                                                     type: ButtonWidget,
                                                     width: '200px',
-                                                    label: 'SAVE',
+                                                    label: 'UNLOCK',
                                                     skin: 'blue_button_bpsp ',
                                                 }]
                                         },]
@@ -23861,7 +23901,7 @@ app.widgetConfig = {
                                         {
                                             id: 'rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox',
                                             type: DropBoxWidget,
-                                            width: '145%',
+                                            width: '148%',
                                             skin: 'simple_bold_bpsp',
                                             marginRight: '18%',
                                             marginBottom: 5,

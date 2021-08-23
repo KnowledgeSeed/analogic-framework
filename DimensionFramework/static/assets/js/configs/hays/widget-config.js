@@ -78,14 +78,6 @@ app.widgetConfig = {
                                         {
                                             id: 'haysMainRow1Cell5Button',
                                             type: ButtonWidget,
-                                            listen: [
-                                                /*
-                                                {
-                                                    event: 'init.rocheBPSPMainApplicationInit.finished',
-                                                    method: 'refresh'
-                                                }
-                                                 */
-                                            ],
                                             backgroundColor: '#EBECEC',
                                             label: 'Josh Smith',
                                             action: '',
@@ -259,7 +251,7 @@ app.widgetConfig = {
                                     widgets: []
                                 }
 
-                                ]
+                            ]
 
 
                         },
@@ -319,7 +311,7 @@ app.widgetConfig = {
                                     widgets: []
                                 }
 
-                                ]
+                            ]
                         },
                         {
                             id: 'haysMainRow8',
@@ -375,7 +367,7 @@ app.widgetConfig = {
                                     widgets: []
                                 }
 
-                                ]
+                            ]
                         }
 
                     ]
@@ -469,7 +461,7 @@ app.widgetConfig = {
                         }
                     ]
                 }
-                ]
+            ]
         },
     haysSettings:
         {
@@ -514,7 +506,7 @@ app.widgetConfig = {
                     ]
 
                 }
-                ]
+            ]
         }
 
 };

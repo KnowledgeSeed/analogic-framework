@@ -11587,7 +11587,8 @@ app.repository = {
                         query: [
                             (r, x) => {
                                 return {
-                                    label: r.Cells[x].Members[2].Attributes.Caption
+                                    label: r.Cells[x].Members[2].Attributes.Caption,
+                                    productCode: r.Cells[x].Members[2].Name
                                 }
                             },
 
@@ -11672,7 +11673,7 @@ app.repository = {
                             (r, x) => {
                                 return {
                                     label: r.Cells[x].Members[2].Attributes.Caption,
-                                    mailTo: r.Cells[x + 3].FormattedValue
+                                    materialCode: r.Cells[x].Members[2].Name
                                 }
                             },
 
@@ -11781,7 +11782,6 @@ app.repository = {
 
     rocheBPSPCompanySettingsGrowthGridTable:
         {
-
             initCondition: (db) => {
                 let b = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGrowthGridRow1Cell2DropBox') && Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGrowthGridRow3Cell2DropBox')
                 return b;
@@ -11829,49 +11829,12 @@ app.repository = {
                                            } 
                                            
                                           ON COLUMNS , 
-                                          {FILTER({[Products Flat].[Products Flat].[PL1],
-                                          [Products Flat].[Products Flat].[P225EX_RDC],[Products Flat].[Products Flat].[P2A_100],[Products Flat].[Products Flat].[P305],
-                                          [Products Flat].[Products Flat].[P6],[Products Flat].[Products Flat].[458611],[Products Flat].[Products Flat].[458621],
-                                          [Products Flat].[Products Flat].[458631],[Products Flat].[Products Flat].[458641],[Products Flat].[Products Flat].[458651],
-                                          [Products Flat].[Products Flat].[458360],[Products Flat].[Products Flat].[458400],[Products Flat].[Products Flat].[P15],
-                                          [Products Flat].[Products Flat].[458451],[Products Flat].[Products Flat].[458453],[Products Flat].[Products Flat].[458454],
-                                          [Products Flat].[Products Flat].[458452],[Products Flat].[Products Flat].[458458],[Products Flat].[Products Flat].[458461],
-                                          [Products Flat].[Products Flat].[458455],[Products Flat].[Products Flat].[458459],[Products Flat].[Products Flat].[458456],
-                                          [Products Flat].[Products Flat].[458457],[Products Flat].[Products Flat].[458462],[Products Flat].[Products Flat].[458460],
-                                          [Products Flat].[Products Flat].[458470],[Products Flat].[Products Flat].[P188],[Products Flat].[Products Flat].[459491],
-                                          [Products Flat].[Products Flat].[459492],[Products Flat].[Products Flat].[459493],[Products Flat].[Products Flat].[P184],[Products Flat].[Products Flat].[458855],
-                                          [Products Flat].[Products Flat].[458856],[Products Flat].[Products Flat].[458213],[Products Flat].[Products Flat].[P23],[Products Flat].[Products Flat].[458490],
-                                          [Products Flat].[Products Flat].[458500],[Products Flat].[Products Flat].[458510],[Products Flat].[Products Flat].[P186],[Products Flat].[Products Flat].[458101],
-                                          [Products Flat].[Products Flat].[458111],[Products Flat].[Products Flat].[459090],[Products Flat].[Products Flat].[P187],[Products Flat].[Products Flat].[458550],
-                                          [Products Flat].[Products Flat].[458560],[Products Flat].[Products Flat].[458570],[Products Flat].[Products Flat].[P118],[Products Flat].[Products Flat].[459250],
-                                          [Products Flat].[Products Flat].[459316],[Products Flat].[Products Flat].[459456],[Products Flat].[Products Flat].[458140],[Products Flat].[Products Flat].[458167],
-                                          [Products Flat].[Products Flat].[458168],[Products Flat].[Products Flat].[459130],[Products Flat].[Products Flat].[P132],[Products Flat].[Products Flat].[P316],
-                                          [Products Flat].[Products Flat].[458150],[Products Flat].[Products Flat].[458155],[Products Flat].[Products Flat].[458310],[Products Flat].[Products Flat].[458211],
-                                          [Products Flat].[Products Flat].[P323],[Products Flat].[Products Flat].[458311],[Products Flat].[Products Flat].[458411],[Products Flat].[Products Flat].[P319],[Products Flat].[Products Flat].[458170],[Products Flat].[Products Flat].[458240],[Products Flat].[Products Flat].[458245],[Products Flat].[Products Flat].[458305],[Products Flat].[Products Flat].[P327],[Products Flat].[Products Flat].[458255],[Products Flat].[Products Flat].[P318],[Products Flat].[Products Flat].[458180],[Products Flat].[Products Flat].[458190],[Products Flat].[Products Flat].[458200],[Products Flat].[Products Flat].[458888],[Products Flat].[Products Flat].[458220],[Products Flat].[Products Flat].[458230],[Products Flat].[Products Flat].[458235],[Products Flat].[Products Flat].[P320],[Products Flat].[Products Flat].[458290],[Products Flat].[Products Flat].[P119],[Products Flat].[Products Flat].[459110],[Products Flat].[Products Flat].[459115],[Products Flat].[Products Flat].[459120],[Products Flat].[Products Flat].[P134],[Products Flat].[Products Flat].[459252],[Products Flat].[Products Flat].[459251],[Products Flat].[Products Flat].[459455],[Products Flat].[Products Flat].[459271],[Products Flat].[Products Flat].[P135],[Products Flat].[Products Flat].[459255],[Products Flat].[Products Flat].[459281],[Products Flat].[Products Flat].[459285],[Products Flat].[Products Flat].[P136],[Products Flat].[Products Flat].[459261],[Products Flat].[Products Flat].[459321],[Products Flat].[Products Flat].[459331],[Products Flat].[Products Flat].[458312],[Products Flat].[Products Flat].[P500],[Products Flat].[Products Flat].[P520],[Products Flat].[Products Flat].[458142],[Products Flat].[Products Flat].[458143],[Products Flat].[Products Flat].[458262],[Products Flat].[Products Flat].[458263],[Products Flat].[Products Flat].[458265],[Products Flat].[Products Flat].[458264],
-                                          [Products Flat].[Products Flat].[458322],[Products Flat].[Products Flat].[458693],[Products Flat].[Products Flat].[458699],[Products Flat].[Products Flat].[458552],
-                                          [Products Flat].[Products Flat].[458852],[Products Flat].[Products Flat].[458551],[Products Flat].[Products Flat].[P540],[Products Flat].[Products Flat].[458681],
-                                          [Products Flat].[Products Flat].[458691],[Products Flat].[Products Flat].[458682],[Products Flat].[Products Flat].[458692],[Products Flat].[Products Flat].[P560],
-                                          [Products Flat].[Products Flat].[458854],[Products Flat].[Products Flat].[458871],[Products Flat].[Products Flat].[458872],[Products Flat].[Products Flat].[P310],
-                                          [Products Flat].[Products Flat].[P175],[Products Flat].[Products Flat].[459010],[Products Flat].[Products Flat].[459020],[Products Flat].[Products Flat].[459025],
-                                          [Products Flat].[Products Flat].[458216],[Products Flat].[Products Flat].[458217],[Products Flat].[Products Flat].[458215],[Products Flat].[Products Flat].[P165],
-                                          [Products Flat].[Products Flat].[459440],[Products Flat].[Products Flat].[459445],[Products Flat].[Products Flat].[458214],[Products Flat].[Products Flat].[459011],
-                                          [Products Flat].[Products Flat].[459012],[Products Flat].[Products Flat].[459022],[Products Flat].[Products Flat].[P195],[Products Flat].[Products Flat].[458070],
-                                          [Products Flat].[Products Flat].[458090],[Products Flat].[Products Flat].[458940],[Products Flat].[Products Flat].[458950],[Products Flat].[Products Flat].[458955],
-                                          [Products Flat].[Products Flat].[458010],[Products Flat].[Products Flat].[458011],[Products Flat].[Products Flat].[458012],[Products Flat].[Products Flat].[P128],
-                                          [Products Flat].[Products Flat].[459210],[Products Flat].[Products Flat].[459220],[Products Flat].[Products Flat].[P2A_200],[Products Flat].[Products Flat].[P600],
-                                          [Products Flat].[Products Flat].[P4403],[Products Flat].[Products Flat].[458346],[Products Flat].[Products Flat].[458371],[Products Flat].[Products Flat].[P4405],
-                                          [Products Flat].[Products Flat].[P650],[Products Flat].[Products Flat].[P4404],[Products Flat].[Products Flat].[458225],[Products Flat].[Products Flat].[P4406],
-                                          [Products Flat].[Products Flat].[458615],[Products Flat].[Products Flat].[P256],[Products Flat].[Products Flat].[P2A12],[Products Flat].[Products Flat].[P257],
-                                          [Products Flat].[Products Flat].[P40],[Products Flat].[Products Flat].[468670],[Products Flat].[Products Flat].[468740],[Products Flat].[Products Flat].[468690],
-                                          [Products Flat].[Products Flat].[468760],[Products Flat].[Products Flat].[468661],[Products Flat].[Products Flat].[468761],[Products Flat].[Products Flat].[468771],
-                                          [Products Flat].[Products Flat].[468772],[Products Flat].[Products Flat].[468970],[Products Flat].[Products Flat].[468975],[Products Flat].[Products Flat].[468990],
-                                          [Products Flat].[Products Flat].[468610],[Products Flat].[Products Flat].[468710],[Products Flat].[Products Flat].[468625],[Products Flat].[Products Flat].[468725],
-                                          [Products Flat].[Products Flat].[468790],[Products Flat].[Products Flat].[469350],[Products Flat].[Products Flat].[S0030],[Products Flat].[Products Flat].[P96],
-                                          [Products Flat].[Products Flat].[468035],[Products Flat].[Products Flat].[468036],[Products Flat].[Products Flat].[468034],[Products Flat].[Products Flat].[468037],
-                                          [Products Flat].[Products Flat].[S0150],[Products Flat].[Products Flat].[P335],[Products Flat].[Products Flat].[469351],[Products Flat].[Products Flat].[S0160],
-                                          [Products Flat].[Products Flat].[P330],[Products Flat].[Products Flat].[468023],[Products Flat].[Products Flat].[468024],[Products Flat].[Products Flat].[468031],
-                                          [Products Flat].[Products Flat].[468025],[Products Flat].[Products Flat].[468027],[Products Flat].[Products Flat].[468032],[Products Flat].[Products Flat].[468028],
-                                          [Products Flat].[Products Flat].[468033]},
+                                       {FILTER({
+                                            TM1FILTERBYLEVEL({EXCEPT({
+                                            TM1DRILLDOWNMEMBER({
+                                            [Products Flat].[Products Flat].[All Products Flat]},
+                                             {[Products Flat].[Products Flat].[All Products Flat]}, RECURSIVE )},{
+                                            [Products Flat].[Products Flat].[All Products Flat]})}, 0)},   
                                           INSTR([Products Flat].[Products Flat].CurrentMember.Properties('BPSP Budget Description'), '${searchString}')>0)} 
                                            PROPERTIES [Products Flat].[Products Flat].[Caption]
                                            ON ROWS 
@@ -12022,16 +11985,8 @@ app.repository = {
                                [Measures Control Company Settings].[Measures Control Company Settings].[Button Color]} 
                               ON COLUMNS , 
                               NON EMPTY 
-                               {[Company Settings Buttons].[Company Settings Buttons].[Button1],
-                               [Company Settings Buttons].[Company Settings Buttons].[Button2],
-                               [Company Settings Buttons].[Company Settings Buttons].[Button3],
-                               [Company Settings Buttons].[Company Settings Buttons].[Button4],
-                               [Company Settings Buttons].[Company Settings Buttons].[Button5],
-                               [Company Settings Buttons].[Company Settings Buttons].[Button6],
-                               [Company Settings Buttons].[Company Settings Buttons].[Button7],
-                               [Company Settings Buttons].[Company Settings Buttons].[Button8],
-                               [Company Settings Buttons].[Company Settings Buttons].[Button9],
-                               [Company Settings Buttons].[Company Settings Buttons].[Button10]} 
+                                    {EXCEPT({[Company Settings Buttons].[Company Settings Buttons].Members},
+                                    {[Company Settings Buttons].[Company Settings Buttons].[Button1]})}
                               ON ROWS 
                             FROM [Control Company Settings] 
                             WHERE 
@@ -12048,13 +12003,13 @@ app.repository = {
                         query: [
                             (r, x) => {
                                 return {
-                                    TIProcess: r.Cells[x].FormattedValue,
-                                    PopUpMessage: r.Cells[x + 1].FormattedValue,
-                                    PopUpOKText: r.Cells[x + 2].FormattedValue,
-                                    PopUpCancelText: r.Cells[x + 3].FormattedValue,
-                                    ButtonText: r.Cells[x + 4].FormattedValue,
-                                    ButtonIcon: r.Cells[x + 5].FormattedValue,
-                                    ButtonColor: r.Cells[x + 6].FormattedValue,
+                                    tiProcess: r.Cells[x].FormattedValue,
+                                    popUpMessage: r.Cells[x + 1].FormattedValue,
+                                    popUpOKText: r.Cells[x + 2].FormattedValue,
+                                    popUpCancelText: r.Cells[x + 3].FormattedValue,
+                                    buttonText: r.Cells[x + 4].FormattedValue,
+                                    buttonIcon: r.Cells[x + 5].FormattedValue,
+                                    buttonColor: r.Cells[x + 6].FormattedValue,
 
                                     label: r.Cells[x + 4].FormattedValue,
                                     icon: r.Cells[x + 5].FormattedValue,
@@ -12076,7 +12031,7 @@ app.repository = {
         init: {
             execute: (db) => {
                 let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableCustomer', 0),
-                    y = x.ButtonIcon,
+                    y = x.buttonIcon,
                     z = x.iconColor;
 
                 return {
@@ -12092,7 +12047,7 @@ app.repository = {
         init: {
             execute: (db) => {
                 let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableCustomer', 0),
-                    y = x.PopUpMessage;
+                    y = x.popUpMessage;
 
                 return {
                     title: y,
@@ -12107,7 +12062,7 @@ app.repository = {
         init: {
             execute: (db) => {
                 let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableCustomer', 0),
-                    y = x.PopUpOKText;
+                    y = x.popUpOKText;
 
                 return {
                     label: y,
@@ -12121,7 +12076,7 @@ app.repository = {
         init: {
             execute: (db) => {
                 let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableCustomer', 0),
-                    y = x.PopUpCancelText;
+                    y = x.popUpCancelText;
 
                 return {
                     label: y,
@@ -12150,16 +12105,8 @@ app.repository = {
                            [Measures Control Company Settings].[Measures Control Company Settings].[Button Color]} 
                           ON COLUMNS , 
                           NON EMPTY 
-                           {[Company Settings Buttons].[Company Settings Buttons].[Button1],
-                           [Company Settings Buttons].[Company Settings Buttons].[Button2],
-                           [Company Settings Buttons].[Company Settings Buttons].[Button3],
-                           [Company Settings Buttons].[Company Settings Buttons].[Button4],
-                           [Company Settings Buttons].[Company Settings Buttons].[Button5],
-                           [Company Settings Buttons].[Company Settings Buttons].[Button6],
-                           [Company Settings Buttons].[Company Settings Buttons].[Button7],
-                           [Company Settings Buttons].[Company Settings Buttons].[Button8],
-                           [Company Settings Buttons].[Company Settings Buttons].[Button9],
-                           [Company Settings Buttons].[Company Settings Buttons].[Button10]} 
+                          {EXCEPT({[Company Settings Buttons].[Company Settings Buttons].Members},
+                          {[Company Settings Buttons].[Company Settings Buttons].[Button1]})}
                           ON ROWS 
                         FROM [Control Company Settings] 
                         WHERE 
@@ -12176,13 +12123,13 @@ app.repository = {
                         query: [
                             (r, x) => {
                                 return {
-                                    TIProcess: r.Cells[x].FormattedValue,
-                                    PopUpMessage: r.Cells[x + 1].FormattedValue,
-                                    PopUpOKText: r.Cells[x + 2].FormattedValue,
-                                    PopUpCancelText: r.Cells[x + 3].FormattedValue,
-                                    ButtonText: r.Cells[x + 4].FormattedValue,
-                                    ButtonIcon: r.Cells[x + 5].FormattedValue,
-                                    ButtonColor: r.Cells[x + 6].FormattedValue,
+                                    tiProcess: r.Cells[x].FormattedValue,
+                                    popUpMessage: r.Cells[x + 1].FormattedValue,
+                                    popUpOKText: r.Cells[x + 2].FormattedValue,
+                                    popUpCancelText: r.Cells[x + 3].FormattedValue,
+                                    buttonText: r.Cells[x + 4].FormattedValue,
+                                    buttonIcon: r.Cells[x + 5].FormattedValue,
+                                    buttonColor: r.Cells[x + 6].FormattedValue,
 
                                     label: r.Cells[x + 4].FormattedValue,
                                     icon: r.Cells[x + 5].FormattedValue,
@@ -12204,7 +12151,7 @@ app.repository = {
         init: {
             execute: (db) => {
                 let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableProduct', 0),
-                    y = x.ButtonIcon,
+                    y = x.buttonIcon,
                     z = x.iconColor;
 
                 return {
@@ -12220,7 +12167,7 @@ app.repository = {
         init: {
             execute: (db) => {
                 let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableProduct', 0),
-                    y = x.PopUpMessage;
+                    y = x.popUpMessage;
 
                 return {
                     title: y,
@@ -12235,7 +12182,7 @@ app.repository = {
         init: {
             execute: (db) => {
                 let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableProduct', 0),
-                    y = x.PopUpOKText;
+                    y = x.popUpOKText;
 
                 return {
                     label: y,
@@ -12262,7 +12209,7 @@ app.repository = {
         init: {
             execute: (db) => {
                 let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableProduct', 0),
-                    y = x.PopUpCancelText;
+                    y = x.popUpCancelText;
 
                 return {
                     label: y,
@@ -12270,6 +12217,153 @@ app.repository = {
             }
         },
     },
+
+
+    rocheBPSPCompanySettingsCheckedOutPopUpGridRow4Cell1Button: {
+        launch: {
+            url: (db) => `/api/v1/Processes('MODULE - UI - Company Settings CheckIn All')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) =>
+                `{
+                        "Parameters": [
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox', 'key')}"},
+                                {"Name": "pMode", "Value": "Products"}
+                        ]
+                    }`
+        }
+    },
+
+    rocheBPSPCompanySettingsCheckedOutIPPopUpGridRow4Cell1Button: {
+        launch: {
+            url: (db) => `/api/v1/Processes('MODULE - UI - Company Settings CheckIn All')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) =>
+                `{
+                        "Parameters": [
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox', 'key')}"},
+                                {"Name": "pMode", "Value": "Materials"}
+                        ]
+                    }`
+        }
+    },
+
+
+    rocheBPSPCompanySettingsCheckedOutGridTableButton06: {
+        launch:
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Products GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => {
+                    return `{
+                        "Parameters": [
+                                {"Name": "pUserID", "Value": "${db.activeUserName}"},
+                                {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPCompanySettingsCheckedOutGridTable', 0).productCode}"},
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox', 'key')}"},
+                                {"Name": "pReceiver", "Value": "${Utils.getGridTableCell('rocheBPSPCompanySettingsCheckedOutGridTable', 2).title}"},
+                                {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"}
+                        ]
+                    }`
+                }
+            },
+    },
+
+
+    rocheBPSPCompanySettingsCheckedOutGridTableIPPlanningButton06: {
+        launch:
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Materials GridTable CheckIn by User')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => {
+                    return `{
+                          "Parameters": [
+                                  {"Name": "pUserID", "Value": "${db.activeUserName}"},
+                                  {"Name": "pMaterial", "Value": "${Utils.getGridTableCell('rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning', 0).materialCode}"},
+                                  {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox', 'key')}"},
+                                  {"Name": "pReceiver", "Value": "${Utils.getGridTableCell('rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning', 2).title}"},
+                                  {"Name": "pVersion", "Value": "${v('systemValueGlobalCompanyVersion')}"}
+                          ]
+                      }`
+                }
+            },
+    },
+
+    rocheBPSPCompanySettingsGridRow6Cell1Button: {
+        launch:
+            {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Company Settings Message')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => {
+                    return `{
+                          "Parameters": [
+                                  {"Name": "pMessage", "Value": "${v('rocheBPSPCompanySettingsGridRow5Cell1MessageInput.value') ? v('rocheBPSPCompanySettingsGridRow5Cell1MessageInput.value') : ''}"},
+                                  {"Name": "pTitle", "Value": "${v('rocheBPSPCompanySettingsGridRow4Cell1MessageInput.value') ? v('rocheBPSPCompanySettingsGridRow4Cell1MessageInput.value') : ''}"},
+                                  {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGridRow1Cell2DropBox', 'key')}"}
+                          ]
+                      }`
+                }
+            },
+    },
+
+
+    rocheBPSPCompanySettingsGridRow9Cell1ProductToggle:
+        {
+
+            initCondition: (db) => {
+                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox')
+            },
+            initDefault: (db) => {
+                return [];
+            },
+            /*
+            switch: {
+                url: (db) => `/api/v1/Processes('MODULE - UI - VALAMI')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => {
+                    return `{
+                            "Parameters": [
+                                    {"Name": "pVersions", "Value": "Live"},
+                                    {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox', 'key')}"},
+                                    {"Name": "pMeasuresCompanyInformation", "Value": "Lock Customer planning"}
+                            ]
+                        }`;
+                }
+            },
+
+             */
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+                    type: 'POST',
+                    body: (db) => {
+                        let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPTerritoriesUsersTitleGridRow1Cell2DropBox', 'key'); //${company}
+                        return `{"MDX":"
+                                        SELECT 
+                                           {[Measures Company Information].[Measures Company Information].[Lock Customer planning]} 
+                                           PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON COLUMNS , 
+                                           {[Companies].[Companies].[All Companies^${company}]} 
+                                           PROPERTIES [Companies].[Companies].[Member description]  ON ROWS 
+                                        FROM [Company Information] 
+                                        WHERE 
+                                          (
+                                           [Versions].[Versions].[Live]
+                                          )
+                                    "}`
+
+
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 1,
+                        query: [
+                            (r, x) => {
+                                return {
+                                    value: parseInt(r.Cells[x].FormattedValue) > 0 ? 1 : 0
+                                }
+                            }
+                        ]
+                    }
+                },
+        },
 
 
 }
