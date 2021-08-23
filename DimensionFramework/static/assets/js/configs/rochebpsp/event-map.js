@@ -3305,6 +3305,15 @@ app.eventMap = {
 
     'launch.rocheBPSPCompanySettingsGridTableCustomer_row_0': [
         {
+            action: app.fn.forceRefreshWidgets,
+            argument: [
+                'rocheBPSPCompanySettingsPopUpGridRow1Cell1Button',
+                'rocheBPSPCompanySettingsPopUpGridRow2Cell1Text',
+                'rocheBPSPCompanySettingsPopUpGridRow4Cell1Button',
+                'rocheBPSPCompanySettingsPopUpGridRow5Cell1Cancel'
+            ]
+        },
+        {
             action: app.fn.openPopup,
             argument: 'rocheBPSPCompanySettingsPopUp'
         }
@@ -3325,6 +3334,15 @@ app.eventMap = {
 
 
     'launch.rocheBPSPCompanySettingsGridTableProduct_row_0': [
+        {
+            action: app.fn.forceRefreshWidgets,
+            argument: [
+                'rocheBPSPCompanySettingsProductPopUpGridRow1Cell1Button',
+                'rocheBPSPCompanySettingsProductPopUpGridRow2Cell1Text',
+                'rocheBPSPCompanySettingsProductPopUpGridRow4Cell1Button',
+                'rocheBPSPCompanySettingsProductPopUpGridRow5Cell1Cancel'
+            ]
+        },
         {
             action: app.fn.openPopup,
             argument: 'rocheBPSPCompanySettingsProductPopUp'

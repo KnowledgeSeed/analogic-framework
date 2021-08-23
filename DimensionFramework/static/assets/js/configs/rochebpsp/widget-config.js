@@ -18843,25 +18843,7 @@ app.widgetConfig = {
                                                     width: '100%',
                                                     borderWidth: false,
                                                     iconFontSize: '24',
-                                                    listen: [
-
-                                                        {
-                                                            'event': 'bodyReady',
-                                                            'method': 'refreshWithWaitingForEvents',
-                                                            'parameters': [
-                                                                'launch.rocheBPSPCompanySettingsGridTableCustomer_row_0.finished'
-                                                            ]
-                                                        },
-                                                        {
-                                                            event: 'launch.rocheBPSPCompanySettingsGridTableCustomer_row_0.finished',
-                                                            method: 'refresh'
-                                                        },
-                                                        {
-                                                            event: 'launch.rocheBPSPCompanySettingsGridTableCustomerButton01.finished',
-                                                            method: 'refresh'
-                                                        },
-
-                                                    ],
+                                                    listen: [],
                                                     applyMeasuresToSection: true,
                                                     action: '',
                                                     fontBold: true,
@@ -18895,26 +18877,6 @@ app.widgetConfig = {
                                                     marginLeft: '0%',
                                                     titleFontWeight: '600',
                                                     marginBottom: 8,
-                                                    body: '',
-                                                    listen: [
-
-                                                        {
-                                                            'event': 'bodyReady',
-                                                            'method': 'refreshWithWaitingForEvents',
-                                                            'parameters': [
-                                                                'launch.rocheBPSPCompanySettingsGridTableCustomer_row_0.finished'
-                                                            ]
-                                                        },
-                                                        {
-                                                            event: 'launch.rocheBPSPCompanySettingsGridTableCustomer_row_0.finished',
-                                                            method: 'refresh'
-                                                        },
-                                                        {
-                                                            event: 'launch.rocheBPSPCompanySettingsGridTableCustomerButton01.finished',
-                                                            method: 'refresh'
-                                                        },
-
-                                                    ],
                                                 }
                                             ]
                                         }
@@ -18970,26 +18932,7 @@ app.widgetConfig = {
                                                     id: 'rocheBPSPCompanySettingsPopUpGridRow4Cell1Button',
                                                     type: ButtonWidget,
                                                     width: '200px',
-                                                    skin: 'blue_button_bpsp ',
-                                                    listen: [
-
-                                                        {
-                                                            'event': 'bodyReady',
-                                                            'method': 'refreshWithWaitingForEvents',
-                                                            'parameters': [
-                                                                'launch.rocheBPSPCompanySettingsGridTableCustomer_row_0.finished'
-                                                            ]
-                                                        },
-                                                        {
-                                                            event: 'launch.rocheBPSPCompanySettingsGridTableCustomer_row_0.finished',
-                                                            method: 'refresh'
-                                                        },
-                                                        {
-                                                            event: 'launch.rocheBPSPCompanySettingsGridTableCustomerButton01.finished',
-                                                            method: 'refresh'
-                                                        },
-
-                                                    ],
+                                                    skin: 'blue_button_bpsp '
                                                 }
                                             ]
                                         }
@@ -19015,26 +18958,7 @@ app.widgetConfig = {
                                                     id: 'rocheBPSPCompanySettingsPopUpGridRow5Cell1Cancel',
                                                     type: ButtonWidget,
                                                     width: '200px',
-                                                    skin: 'white_bg_bpsp',
-                                                    listen: [
-
-                                                        {
-                                                            'event': 'bodyReady',
-                                                            'method': 'refreshWithWaitingForEvents',
-                                                            'parameters': [
-                                                                'launch.rocheBPSPCompanySettingsGridTableCustomer_row_0.finished'
-                                                            ]
-                                                        },
-                                                        {
-                                                            event: 'launch.rocheBPSPCompanySettingsGridTableCustomer_row_0.finished',
-                                                            method: 'refresh'
-                                                        },
-                                                        {
-                                                            event: 'launch.rocheBPSPCompanySettingsGridTableCustomerButton01.finished',
-                                                            method: 'refresh'
-                                                        },
-
-                                                    ],
+                                                    skin: 'white_bg_bpsp'
                                                 }]
                                         },]
                                 },]
@@ -19088,23 +19012,6 @@ app.widgetConfig = {
                                                     width: '100%',
                                                     borderWidth: false,
                                                     iconFontSize: '24',
-                                                    listen: [
-                                                        {
-                                                            'event': 'bodyReady',
-                                                            'method': 'refreshWithWaitingForEvents',
-                                                            'parameters': [
-                                                                'launch.rocheBPSPCompanySettingsGridTableProduct_row_0.finished'
-                                                            ]
-                                                        },
-                                                        {
-                                                            event: 'launch.rocheBPSPCompanySettingsGridTableProduct_row_0.finished',
-                                                            method: 'refresh'
-                                                        },
-                                                        {
-                                                            event: 'launch.rocheBPSPCompanySettingsGridTableProductButton01.finished',
-                                                            method: 'refresh'
-                                                        },
-                                                    ],
                                                     applyMeasuresToSection: true,
                                                     action: '',
                                                     fontBold: true,
@@ -19137,25 +19044,7 @@ app.widgetConfig = {
                                                     titleFontSize: '16',
                                                     marginLeft: '0%',
                                                     titleFontWeight: '600',
-                                                    marginBottom: 8,
-                                                    body: '',
-                                                    listen: [
-                                                        {
-                                                            'event': 'bodyReady',
-                                                            'method': 'refreshWithWaitingForEvents',
-                                                            'parameters': [
-                                                                'launch.rocheBPSPCompanySettingsGridTableProduct_row_0.finished'
-                                                            ]
-                                                        },
-                                                        {
-                                                            event: 'launch.rocheBPSPCompanySettingsGridTableProduct_row_0.finished',
-                                                            method: 'refresh'
-                                                        },
-                                                        {
-                                                            event: 'launch.rocheBPSPCompanySettingsGridTableProductButton01.finished',
-                                                            method: 'refresh'
-                                                        },
-                                                    ],
+                                                    marginBottom: 8
                                                 }
                                             ]
                                         }
@@ -19211,24 +19100,7 @@ app.widgetConfig = {
                                                     id: 'rocheBPSPCompanySettingsProductPopUpGridRow4Cell1Button',
                                                     type: ButtonWidget,
                                                     width: '200px',
-                                                    skin: 'blue_button_bpsp ',
-                                                    listen: [
-                                                        {
-                                                            'event': 'bodyReady',
-                                                            'method': 'refreshWithWaitingForEvents',
-                                                            'parameters': [
-                                                                'launch.rocheBPSPCompanySettingsGridTableProduct_row_0.finished'
-                                                            ]
-                                                        },
-                                                        {
-                                                            event: 'launch.rocheBPSPCompanySettingsGridTableProduct_row_0.finished',
-                                                            method: 'refresh'
-                                                        },
-                                                        {
-                                                            event: 'launch.rocheBPSPCompanySettingsGridTableProductButton01.finished',
-                                                            method: 'refresh'
-                                                        },
-                                                    ],
+                                                    skin: 'blue_button_bpsp '
                                                 }
                                             ]
                                         }
@@ -19254,24 +19126,7 @@ app.widgetConfig = {
                                                     id: 'rocheBPSPCompanySettingsProductPopUpGridRow5Cell1Cancel',
                                                     type: ButtonWidget,
                                                     width: '200px',
-                                                    skin: 'white_bg_bpsp',
-                                                    listen: [
-                                                        {
-                                                            'event': 'bodyReady',
-                                                            'method': 'refreshWithWaitingForEvents',
-                                                            'parameters': [
-                                                                'launch.rocheBPSPCompanySettingsGridTableProduct_row_0.finished'
-                                                            ]
-                                                        },
-                                                        {
-                                                            event: 'launch.rocheBPSPCompanySettingsGridTableProduct_row_0.finished',
-                                                            method: 'refresh'
-                                                        },
-                                                        {
-                                                            event: 'launch.rocheBPSPCompanySettingsGridTableProductButton01.finished',
-                                                            method: 'refresh'
-                                                        },
-                                                    ],
+                                                    skin: 'white_bg_bpsp'
                                                 }]
                                         },]
                                 },]
