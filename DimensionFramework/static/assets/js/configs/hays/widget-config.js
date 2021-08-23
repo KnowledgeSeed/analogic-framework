@@ -142,7 +142,7 @@ app.widgetConfig = {
                                 {
                                     id: 'haysMainRow3Cell1',
                                     type: GridCellWidget,
-                                    marginLeft: '10',
+                                    marginLeft: '0',
                                     marginRight: '0',
                                     marginTop: '0',
                                     alignment: 'top-right',
@@ -178,7 +178,7 @@ app.widgetConfig = {
                                 {
                                     id: 'haysMainRow3Cell3',
                                     type: GridCellWidget,
-                                    marginLeft: '5',
+                                    marginLeft: '10',
                                     marginRight: '0',
                                     marginTop: '1%',
                                     alignment: 'top-center',
@@ -228,7 +228,7 @@ app.widgetConfig = {
                                 {
                                     id: 'haysMainRow3Cell4',
                                     type: GridCellWidget,
-                                    marginLeft: '10',
+                                    marginLeft: '5',
                                     marginRight: '0',
                                     marginTop: '0',
                                     alignment: 'top-right',
