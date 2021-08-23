@@ -382,5 +382,139 @@ app.widgetConfig = {
                 }
 
             ]
+        },
+
+    haysArbeitsberichtPivot:
+        {
+            id: 'haysArbeitsberichtPivot',
+            type: PageWidget,
+            widgets: [
+
+                {
+                    id: 'haysArbeitsberichtPivot',
+                    type: GridWidget,
+                    marginLeft: '10',
+                    marginRight: '10',
+                    width: '100%',
+                    widgets: [
+                        {
+                            id: 'haysArbeitsberichtPivotGridRow1',
+                            type: GridRowWidget,
+                            visible: true,
+                            marginTop: '1%',
+                            width: '100%',
+                            skin: 'bottomborder_bpsp',
+                            widgets: [
+
+                                {
+                                    id: 'haysArbeitsberichtPivotGridRow1Cell0',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-center',
+                                    width: '3%',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysArbeitsberichtPivotGridRow1Cell0Button',
+                                            type: ButtonWidget,
+                                            label: '',
+                                            width: '50',
+                                            icon: 'icon-back-arrow',
+                                            skin: 'backbuttonrocheBPSP',
+                                            height: '50'
+                                        }]
+                                }]
+                        }]
+                }]
+        },
+
+    haysZEGBericht:
+        {
+            id: 'haysZEGBericht',
+            type: PageWidget,
+            widgets: [
+
+                {
+                    id: 'haysZEGBericht',
+                    type: GridWidget,
+                    marginLeft: '10',
+                    marginRight: '10',
+                    width: '100%',
+                    widgets: [
+                        {
+                            id: 'haysZEGBerichtGridRow1',
+                            type: GridRowWidget,
+                            visible: true,
+                            marginTop: '1%',
+                            width: '100%',
+                            skin: 'bottomborder_bpsp',
+                            widgets: [
+
+                                {
+                                    id: 'haysZEGBerichtGridRow1Cell0',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-center',
+                                    width: '3%',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysZEGBerichtGridRow1Cell0Button',
+                                            type: ButtonWidget,
+                                            label: '',
+                                            width: '50',
+                                            icon: 'icon-back-arrow',
+                                            skin: 'backbuttonrocheBPSP',
+                                            height: '50'
+                                        }]
+                                }]
+                        }
+                    ]
+                }
+                ]
+        },
+    haysSettings:
+        {
+            id: 'haysSettings',
+            type: PageWidget,
+            widgets: [
+
+                {
+                    id: 'haysSettings',
+                    type: GridWidget,
+                    marginLeft: '10',
+                    marginRight: '10',
+                    width: '100%',
+                    widgets: [
+                        {
+                            id: 'haysSettingsGridRow1',
+                            type: GridRowWidget,
+                            visible: true,
+                            marginTop: '1%',
+                            width: '100%',
+                            skin: 'bottomborder_bpsp',
+                            widgets: [
+
+                                {
+                                    id: 'haysSettingsGridRow1Cell0',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom-center',
+                                    width: '3%',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysSettingsGridRow1Cell0Button',
+                                            type: ButtonWidget,
+                                            label: '',
+                                            width: '50',
+                                            icon: 'icon-back-arrow',
+                                            skin: 'backbuttonrocheBPSP',
+                                            height: '50'
+                                        }]
+                                }]
+                        }
+                    ]
+
+                }
+                ]
         }
+
 };
