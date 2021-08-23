@@ -8,7 +8,7 @@ app.eventMap = {
             argument: 'haysArbeitsberichtPivot'
         }
     ],
-    'launch.haysArbeitsberichtPivotGridRow1Cell0Button': [
+    'launch.haysArbeitsberichtPivotGridRow2Cell1Button': [
         {
             action: app.fn.openPage,
             argument: 'haysMain'
@@ -20,7 +20,7 @@ app.eventMap = {
             argument: 'haysZEGBericht'
         }
     ],
-    'launch.haysZEGBerichtGridRow1Cell0Button': [
+    'launch.haysZEGBerichtGridRow1Cell1Button': [
         {
             action: app.fn.openPage,
             argument: 'haysMain'
@@ -32,7 +32,7 @@ app.eventMap = {
             argument: 'haysSettings'
         }
     ],
-    'launch.haysSettingsGridRow1Cell0Button': [
+    'launch.haysSettingsGridRow2Cell1Button': [
         {
             action: app.fn.openPage,
             argument: 'haysMain'

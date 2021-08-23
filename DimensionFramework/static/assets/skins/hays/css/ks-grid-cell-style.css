@@ -85,3 +85,7 @@
     border-left: 0px;
 }
 
+.ks-grid-cell-bottomborder.ks-grid-cell {
+	border-bottom: 2px solid #D8D9D9;
+	padding-bottom: 1%;
+}
