@@ -5,20 +5,20 @@
     border-radius: 30px;
 }
 
-.ks-button-haysmain .ks-button-icon {
+.ks-button-haysmain_blue .ks-button-icon {
     color: white;
     font-size: 70px;
 }
 
-.ks-button-haysmain .ks-button-content {
+.ks-button-haysmain_blue .ks-button-content {
     height: 110%
 }
 
-.ks-button-haysmain:hover {
+.ks-button-haysmain_blue:hover {
     background-color: #004C99
 }
 
-.ks-button-haysmain:active {
+.ks-button-haysmain_blue:active {
     background-color: #004C99;
     /* box-shadow: 0 5px #666;
      transform: translateY(4px);*/
@@ -30,20 +30,20 @@
     border-radius: 30px;
 }
 
-.ks-button-haysmain .ks-button-icon {
+.ks-button-haysmain_grey .ks-button-icon {
     color: white;
     font-size: 70px;
 }
 
-.ks-button-haysmain .ks-button-content {
+.ks-button-haysmain_grey .ks-button-content {
     height: 110%
 }
 
-.ks-button-haysmain:hover {
+.ks-button-haysmain_grey:hover {
     background-color: #A9A9A9
 }
 
-.ks-button-haysmain:active {
+.ks-button-haysmain_grey:active {
     background-color: #A9A9A9;
     /* box-shadow: 0 5px #666;
      transform: translateY(4px);*/
@@ -55,20 +55,20 @@
     border-radius: 30px;
 }
 
-.ks-button-haysmain .ks-button-icon {
+.ks-button-haysmain_red .ks-button-icon {
     color: white;
     font-size: 70px;
 }
 
-.ks-button-haysmain .ks-button-content {
+.ks-button-haysmain_red .ks-button-content {
     height: 110%
 }
 
-.ks-button-haysmain:hover {
+.ks-button-haysmain_red:hover {
     background-color: #FF3B30
 }
 
-.ks-button-haysmain:active {
+.ks-button-haysmain_red:active {
     background-color: #FF3B30;
     /* box-shadow: 0 5px #666;
      transform: translateY(4px);*/
@@ -80,20 +80,20 @@
     border-radius: 30px;
 }
 
-.ks-button-haysmain .ks-button-icon {
+.ks-button-haysmain_green .ks-button-icon {
     color: white;
     font-size: 70px;
 }
 
-.ks-button-haysmain .ks-button-content {
+.ks-button-haysmain_green .ks-button-content {
     height: 110%
 }
 
-.ks-button-haysmain:hover {
+.ks-button-haysmain_green:hover {
     background-color: #20C997
 }
 
-.ks-button-haysmain:active {
+.ks-button-haysmain_green:active {
     background-color: #20C997;
     /* box-shadow: 0 5px #666;
      transform: translateY(4px);*/
@@ -129,11 +129,13 @@
 
 
 .ks-button-userpanelmain_hays.ks-button:hover {
-    height: 30px;
+    height: 40px;
     padding: 1px;
+    width: 115px;
     border-radius: 6px;
     background-color: #ebecec;
-}
+    top: 30px;
+    left: 1785px;}
 
 .ks-button-userpanelmain_hays.ks-button-inner:hover {
     background-color: #ebecec;

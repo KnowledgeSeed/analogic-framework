@@ -57,7 +57,7 @@ app.widgetConfig = {
                                     marginRight: '0',
                                     marginTop: '0',
                                     alignment: 'top-right',
-                                    width: '80%',
+                                    width: '75%',
                                     skin: '',
                                     height: '0',
                                     widgets: []
@@ -68,21 +68,22 @@ app.widgetConfig = {
                                     id: 'haysMainRow1Cell3',
                                     type: GridCellWidget,
                                     marginLeft: '5',
-                                    marginRight: '0',
-                                    marginTop: '1%',
-                                    alignment: 'top-center',
-                                    width: '10%',
+                                    marginRight: '20px',
+                                    marginTop: '30px',
+                                    width: '15%',
                                     height: '0',
                                     widgets: [
 
                                         {
                                             id: 'haysMainRow1Cell5Button',
                                             type: ButtonWidget,
-                                            backgroundColor: '#EBECEC',
+                                            backgroundColor: '#F2F2F2',
                                             label: 'Josh Smith',
                                             action: '',
-                                            width: '100%',
+                                            width: '115px',
+                                            height: '40px',
                                             icon: 'icon-profile',
+                                            fontSize: 14,
                                             skin: 'userpanelmain_hays',
                                         }
                                     ]
@@ -705,7 +706,7 @@ app.widgetConfig = {
                                             height: '35'
                                         }]
                                 },
-                            {
+                                {
                                     id: 'haysArbeitsberichtPivotGridRow1Cell2',
                                     type: GridCellWidget,
                                     alignment: 'top-center',
@@ -752,25 +753,73 @@ app.widgetConfig = {
                                         {
                                             id: 'haysArbeitsberichtPivotGridRow1Cell4Button',
                                             type: ButtonWidget,
-                                            listen: [
-                                                /*
-                                                {
-                                                    event: 'init.rocheBPSPMainApplicationInit.finished',
-                                                    method: 'refresh'
-                                                }
-                                                 */
-                                            ],
-                                            backgroundColor: '#EBECEC',
+                                            backgroundColor: '#F2F2F2',
                                             label: 'Josh Smith',
                                             action: '',
-                                            width: '100%',
+                                            width: '115px',
+                                            height: '40px',
                                             icon: 'icon-profile',
-                                            skin: 'userpanelmain_bpsp',
+                                            fontSize: 14,
+                                            skin: 'userpanelmain_hays',
                                         }
                                     ]
                                 }
                             ]
-                        }]
+                        },
+                        {
+                            id: 'haysArbeitsberichtPivotGridRow2',
+                            type: GridRowWidget,
+                            marginTop: '1.3%',
+                            marginBottom: '0%',
+                            width: '100%',
+                            height: '30%',
+                            widgets: [
+
+                                {
+                                    id: 'haysArbeitsberichtPivotGridRow2Cell1',
+                                    type: GridCellWidget,
+                                    marginLeft: '10',
+                                    marginRight: '0',
+                                    marginTop: '0',
+                                    alignment: 'top-right',
+                                    width: '15%',
+                                    skin: '',
+                                    height: '50px',
+                                    widgets: []
+                                },
+                            {
+                                    id: 'haysArbeitsberichtPivotGridRow2Cell2',
+                                    type: GridCellWidget,
+                                    marginLeft: '10',
+                                    marginRight: '0',
+                                    marginTop: '0',
+                                    alignment: 'top-right',
+                                    width: '20%',
+                                    skin: 'greyfon',
+                                    height: '80px',
+                                    widgets: [
+                                        {
+                                            id: 'haysArbeitsberichtPivotGridRow2Cell2Button',
+                                            type: ButtonWidget,
+                                            backgroundColor: '#F2F2F2',
+                                            label: 'Type',
+                                            action: '',
+                                            width: '240px',
+                                            height: '40px',
+                                            icon: '',
+                                            fontSize: 16,
+                                            skin: 'userpanelmain_hays',
+                                        },
+                                        {
+                                            id: 'haysArbeitsberichtPivotGridRow2Cell2Dropbox',
+                                            type: DropBoxWidget,
+                                            skin: 'deepblue_multiselect'
+                                        }
+                                    ]
+
+                            }]
+                    }]
+
                 }]
         },
 
@@ -860,20 +909,14 @@ app.widgetConfig = {
                                         {
                                             id: 'haysZEGBerichtGridRow1Cell4Button',
                                             type: ButtonWidget,
-                                            listen: [
-                                                /*
-                                                {
-                                                    event: 'init.rocheBPSPMainApplicationInit.finished',
-                                                    method: 'refresh'
-                                                }
-                                                 */
-                                            ],
-                                            backgroundColor: '#EBECEC',
+                                            backgroundColor: '#F2F2F2',
                                             label: 'Josh Smith',
                                             action: '',
-                                            width: '100%',
+                                            width: '115px',
+                                            height: '40px',
                                             icon: 'icon-profile',
-                                            skin: 'userpanelmain_bpsp',
+                                            fontSize: 14,
+                                            skin: 'userpanelmain_hays',
                                         }
                                     ]
                                 }
@@ -957,20 +1000,14 @@ app.widgetConfig = {
                                         {
                                             id: 'haysSettingsGridRow1Cell3Button',
                                             type: ButtonWidget,
-                                            listen: [
-                                                /*
-                                                {
-                                                    event: 'init.rocheBPSPMainApplicationInit.finished',
-                                                    method: 'refresh'
-                                                }
-                                                 */
-                                            ],
-                                            backgroundColor: '#EBECEC',
+                                            backgroundColor: '#F2F2F2',
                                             label: 'Josh Smith',
                                             action: '',
-                                            width: '100%',
+                                            width: '115px',
+                                            height: '40px',
                                             icon: 'icon-profile',
-                                            skin: 'userpanelmain_bpsp',
+                                            fontSize: 14,
+                                            skin: 'userpanelmain_hays',
                                         }
                                     ]
                                 }

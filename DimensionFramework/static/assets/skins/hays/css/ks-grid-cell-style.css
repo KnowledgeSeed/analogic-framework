@@ -3,3 +3,10 @@
     border-top: 2px solid #D8D9D9;
     padding-bottom: 5%;
 }
+
+.ks-grid-cell-greyfon {
+    background-color: #F2F2F2;
+    border: 1px solid #F2F2F2;
+    border-radius: 5px;
+}
+

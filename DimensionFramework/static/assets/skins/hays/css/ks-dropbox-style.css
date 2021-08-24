@@ -1,0 +1,93 @@
+.ks-dropbox-deepblue_multiselect .ks-dropbox-field {
+    border: 1px solid #8d8d8d;
+    border-radius: 5px;
+    height: 40px;
+}
+
+.ks-dropbox-deepblue_multiselect .ks-dropbox-title {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.ks-dropbox-deepblue_multiselect .ks-dropbox-input {
+    font-size: 16px;
+    padding: 0 10px;
+}
+
+.ks-dropbox-deepblue_multiselect .ks-dropbox-input::-webkit-input-placeholder {
+    color: #838388;
+}
+
+.ks-dropbox-deepblue_multiselect .ks-dropbox-input::-moz-placeholder {
+    color: #838388;
+}
+
+.ks-dropbox-deepblue_multiselect .ks-dropbox-input:-ms-input-placeholder {
+    color: #838388;
+}
+
+.ks-dropbox-deepblue_multiselect .ks-dropbox-input:-moz-placeholder {
+    color: #838388;
+}
+
+.ks-dropbox-deepblue_multiselect .ks-dropbox-icon {
+    border-radius: 4px;
+    height: 40px;
+    margin: 0 5px;
+    width: 40px;
+    display: block;
+}
+
+.ks-dropbox-deepblue_multiselect .ks-dropbox-icon:after {
+    border-top: 7px solid #747b85;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+}
+
+.ks-dropbox-deepblue_multiselect .ks-dropbox-panel {
+
+
+    border: 1px solid #8d8d8d;
+    border-radius: 5px;
+    margin-top: 2px;
+    padding: 2px;
+    left: 8px;
+    right: 8px;
+    background-color: #fff;
+}
+
+.ks-dropbox-deepblue_multiselect .ks-dropbox-panel-item {
+    border-radius: 4px;
+    height: 40px;
+    padding: 0 10px;
+}
+
+.ks-dropbox-deepblue_multiselect .ks-dropbox-panel-item:hover {
+    background-color: #bfd9f2;
+}
+
+.ks-dropbox-deepblue_multiselect .ks-dropbox-panel-item.on:hover {
+    background-color: #0066cc;
+}
+
+.ks-dropbox-deepblue_multiselect .ks-dropbox-panel-item-separator {
+    width: 10px;
+}
+
+.ks-dropbox-deepblue_multiselect .ks-dropbox-panel-item-text {
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.ks-dropbox-deepblue_multiselect .ks-dropbox-panel-item-icon,
+.ks-dropbox-deepblue_multiselect .ks-dropbox-panel-item-separator {
+    display: block;
+}
+
+.ks-dropbox-deepblue_dropbox .ks-dropbox-panel-inner {
+    background-color: #fff;
+}
