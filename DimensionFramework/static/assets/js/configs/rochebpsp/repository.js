@@ -1975,7 +1975,7 @@ app.repository = {
     rocheBPSPProductsCheckoutGridRow2Cell1bButton: {
         init: {
             execute: (db) => {
-                return {visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly' &&  v('systemValueProductsTypeIsOk') === true};
+                return {visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly' && v('systemValueProductsTypeIsOk') === true};
             }
         }
     },
@@ -11341,8 +11341,7 @@ app.repository = {
                 url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue,Consolidated;$expand=Members($select=Name, Attributes/Caption,Attributes/AccountName))`,
                 type: 'POST',
                 body: (db) => {
-                    let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsOverviewGridRow1Cell2DropBox', 'key') === false ? Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsGridRow1Cell2DropBox', 'key')
-                        : Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsGridRow1Cell2DropBox', 'key');
+                    let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsOverviewGridRow1Cell2DropBox', 'key');
 
                     return `{"MDX":"
                        SELECT 
