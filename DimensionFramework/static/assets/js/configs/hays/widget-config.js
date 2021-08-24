@@ -913,7 +913,7 @@ app.widgetConfig = {
                                             width: '50',
                                             icon: 'icon-menu',
                                             skin: 'backbuttonrocheBPSP',
-                                            height: '35'
+                                            height: '45'
                                         }]
                                 },
                                 {
