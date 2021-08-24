@@ -866,8 +866,11 @@ app.repository = {
             body: (db) => {
                 let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key');
                 return `{"MDX":"
+                  AS IIF([}Groups].[}Groups].[${company} SalesMarketing] <> '' OR [}Groups].[}Groups].[ADMIN] <> '' OR [}Groups].[}Groups].[Support 1L] <> '' ,'Write','')
+                    MEMBER [}Groups].[}Groups].[Finance Flag]
+                    AS IIF([}Groups].[}Groups].[${company} SalesFinance] <> '' OR [}Groups].[}Groups].[ADMIN] <> '' OR [}Groups].[}Groups].[Support 1L] <> '' ,'Write','')
                   SELECT 
-                    {[}Groups].[}Groups].[${company} SalesMarketing],[}Groups].[}Groups].[${company} SalesFinance]} 
+                    {[}Groups].[}Groups].[Marketing Flag],[}Groups].[}Groups].[Finance Flag]} 
                   ON COLUMNS , 
                     {[}Clients].[}Clients].[${db.activeUser}]} 
                     PROPERTIES [}Clients].[}Clients].[}TM1_DefaultDisplayValue]  ON ROWS 
@@ -11072,7 +11075,7 @@ app.repository = {
 
                             (r, x) => {
                                 return {
-                                    value: r.Cells[x + 3].FormattedValue === '' ? 0 : 1,
+                                    value: r.Cells[x + 3].FormattedValue === '1' ? 1 : 0,
                                 }
                             }
 
