@@ -1972,7 +1972,7 @@ app.repository = {
     rocheBPSPProductsCheckoutGridRow2Cell1bButton: {
         init: {
             execute: (db) => {
-                return {visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly'};
+                return {visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly' &&  v('systemValueProductsTypeIsOk') === true};
             }
         }
     },
@@ -2380,7 +2380,7 @@ app.repository = {
     rocheBPSPProductsCheckoutGridRow2Cell1aButton: {
         init: {
             execute: (db) => {
-                return {visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly'};
+                return {visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly' && v('systemValueProductsTypeIsOk') === true};
             }
         },
         getFileName: (db) => {
