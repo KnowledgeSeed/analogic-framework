@@ -3373,6 +3373,24 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPCompanySettingsCheckedOutPopUp'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCompanySettingsCheckedOutGridTable'
+        }
+    ],
+
+    'launch.rocheBPSPCompanySettingsCheckedOutGridTable_row_5': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCompanySettingsCheckedOutGridTable'
+        }
+    ],
+
+    'launch.rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning_row_5': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning'
         }
     ],
 
@@ -3387,22 +3405,38 @@ app.eventMap = {
     'launch.rocheBPSPCompanySettingsCheckedOutHeaderGridTableCellButton06': [
         {
             action: app.fn.openPopup,
-            argument: 'rocheBPSPCompanySettingsCheckedOutPopUp'
+            argument: 'rocheBPSPCompanySettingsCheckedOutIPPopUp'
         }
     ],
     'launch.rocheBPSPCompanySettingsCheckedOutIPPopUpGridRow4Cell1Button': [
         {
             action: app.fn.togglePopup,
-            argument: 'rocheBPSPCompanySettingsCheckedOutPopUp'
+            argument: 'rocheBPSPCompanySettingsCheckedOutIPPopUp'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning'
         }
     ],
 
     'launch.rocheBPSPCompanySettingsCheckedOutIPPopUpGridRow5Cell1Cancel': [
         {
             action: app.fn.togglePopup,
-            argument: 'rocheBPSPCompanySettingsCheckedOutPopUp'
+            argument: 'rocheBPSPCompanySettingsCheckedOutIPPopUp'
         }
     ],
+
+
+    'launch.rocheBPSPCompanySettingsGridRow6Cell1Button': [
+        {
+            action: app.fn.forceRefreshWidgets,
+            argument: [
+                'rocheBPSPCompanySettingsGridRow4Cell1MessageInput',
+                'rocheBPSPCompanySettingsGridRow5Cell1MessageInput'
+            ]
+        },
+    ],
+
 
 }
 ;
