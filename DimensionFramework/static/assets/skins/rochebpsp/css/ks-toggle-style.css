@@ -523,7 +523,7 @@
     display: block;
 }
 
-.ks-toggle-Settings_toggle_bpsp.ks-toggle.ks-on .ks-toggle-inner{
+.ks-toggle-Settings_toggle_bpsp.ks-toggle.ks-on .ks-toggle-inner {
     justify-content: flex-start;
 }
 
@@ -540,11 +540,11 @@
 }
 
 .ks-toggle-label_toggle_bpsp.ks-toggle .ks-toggle-icon-on {
-    display:none;
+    display: none;
 }
 
 .ks-toggle-label_toggle_bpsp.ks-toggle .ks-toggle-icon-off {
-    display:none;
+    display: none;
 }
 
 .ks-toggle-label_toggle_bpsp.ks-toggle {
@@ -582,7 +582,6 @@
 .ks-toggle-label_toggle_bpsp.ks-toggle.ks-on .ks-toggle-icon-on {
     display: none;
 }
-
 
 
 /* Settings_readonly_toggle_bpsp */
@@ -643,32 +642,40 @@
     display: block;
 }
 
-.ks-toggle-Settings_readonly_toggle_bpsp.ks-toggle.ks-on .ks-toggle-inner{
+.ks-toggle-Settings_readonly_toggle_bpsp.ks-toggle.ks-on .ks-toggle-inner {
     justify-content: flex-start;
 }
 
 
-
-/* company_company_settings_toggle_bpsp */
-
-.ks-toggle-company_settings_toggle_bpsp .ks-toggle-label-on {
-}
+/* company_settings_toggle_bpsp */
 
 .ks-toggle-company_settings_toggle_bpsp .ks-toggle-label-off {
+    padding-left: 15%;
+    color: #00965E;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.ks-toggle-company_settings_toggle_bpsp .ks-toggle-label-on {
+    padding-left: 15%;
+    color: #0066CC;
+    font-size: 16px;
+    font-weight: bold;
 }
 
 .ks-toggle-company_settings_toggle_bpsp.ks-toggle .ks-toggle-icon-on {
+    display: none;
     color: #0066CC;
     cursor: pointer;
-    font-size: 15px;
-    padding-left: 15%;
+    font-size: 16px;
 }
 
 .ks-toggle-company_settings_toggle_bpsp.ks-toggle .ks-toggle-icon-off {
-    color: #C5C6C6;
+    color: #00965E;
     cursor: pointer;
-    font-size: 15px;
-    padding-left: 60%;
+    font-size: 16px;
+    padding-right: 15%;
+    display: contents;
 }
 
 .ks-toggle-company_settings_toggle_bpsp.ks-toggle {
@@ -676,35 +683,13 @@
     height: 30px;
 }
 
-
-.ks-toggle-company_settings_toggle_bpsp .ks-toggle-icon span {
-    display: block;
-}
-
-.ks-toggle-company_settings_toggle_bpsp .ks-toggle-label {
-    display: none;
-}
-
-
 .ks-toggle-company_settings_toggle_bpsp.ks-toggle.ks-on .ks-toggle-icon-off {
     display: none;
-}
-
-.ks-toggle-company_settings_toggle_bpsp.ks-toggle .ks-toggle-icon-on {
-    display: none;
-    justify-content: flex-start;
-}
-
-.ks-toggle-company_settings_toggle_bpsp.ks-toggle .ks-toggle-icon-off {
-    display: block;
-    justify-content: flex-end;
-    padding-right: 5px;
 }
 
 .ks-toggle-company_settings_toggle_bpsp.ks-toggle.ks-on .ks-toggle-icon-on {
     display: block;
 }
 
-.ks-toggle-company_settings_toggle_bpsp.ks-toggle.ks-on .ks-toggle-inner{
-    justify-content: flex-start;
-}
+
+

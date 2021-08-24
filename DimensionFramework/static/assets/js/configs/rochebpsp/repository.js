@@ -11982,7 +11982,9 @@ app.repository = {
                                [Measures Control Company Settings].[Measures Control Company Settings].[PopUp CANCEL Text],
                                [Measures Control Company Settings].[Measures Control Company Settings].[Button text],
                                [Measures Control Company Settings].[Measures Control Company Settings].[Button Icon],
-                               [Measures Control Company Settings].[Measures Control Company Settings].[Button Color]} 
+                               [Measures Control Company Settings].[Measures Control Company Settings].[Button Color],
+                               [Measures Control Company Settings].[Measures Control Company Settings].[pFunction]
+                               } 
                               ON COLUMNS , 
                               NON EMPTY 
                                     {EXCEPT({[Company Settings Buttons].[Company Settings Buttons].Members},
@@ -11999,7 +12001,7 @@ app.repository = {
                     },
                     parsingControl: {
                         type: 'matrix',
-                        length: 7,
+                        length: 8,
                         query: [
                             (r, x) => {
                                 return {
@@ -12010,6 +12012,7 @@ app.repository = {
                                     buttonText: r.Cells[x + 4].FormattedValue,
                                     buttonIcon: r.Cells[x + 5].FormattedValue,
                                     buttonColor: r.Cells[x + 6].FormattedValue,
+                                    pFunction: r.Cells[x + 7].FormattedValue,
 
                                     label: r.Cells[x + 4].FormattedValue,
                                     icon: r.Cells[x + 5].FormattedValue,
@@ -12069,6 +12072,24 @@ app.repository = {
                 };
             }
         },
+
+        launch: {
+            url: (db) => `/api/v1/Processes('MODULE - UI - Company Settings Control')/tm1.ExecuteWithReturn`,
+            type: 'POST',
+            body: (db) => {
+                let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableCustomer', 0),
+                    y = x.pFunction;
+
+                return `{
+                            "Parameters": [
+                                    {"Name": "pModule", "Value": "Customer"},
+                                    {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGridRow1Cell2DropBox', 'key')}"},
+                                    {"Name": "pFunction", "Value": "${y}"}
+                            ]
+                        }`;
+            }
+        }
+
     },
 
 
@@ -12102,7 +12123,9 @@ app.repository = {
                            [Measures Control Company Settings].[Measures Control Company Settings].[PopUp CANCEL Text],
                            [Measures Control Company Settings].[Measures Control Company Settings].[Button text],
                            [Measures Control Company Settings].[Measures Control Company Settings].[Button Icon],
-                           [Measures Control Company Settings].[Measures Control Company Settings].[Button Color]} 
+                           [Measures Control Company Settings].[Measures Control Company Settings].[Button Color],
+                           [Measures Control Company Settings].[Measures Control Company Settings].[pFunction]
+                           } 
                           ON COLUMNS , 
                           NON EMPTY 
                           {EXCEPT({[Company Settings Buttons].[Company Settings Buttons].Members},
@@ -12119,7 +12142,7 @@ app.repository = {
                     },
                     parsingControl: {
                         type: 'matrix',
-                        length: 7,
+                        length: 8,
                         query: [
                             (r, x) => {
                                 return {
@@ -12130,6 +12153,7 @@ app.repository = {
                                     buttonText: r.Cells[x + 4].FormattedValue,
                                     buttonIcon: r.Cells[x + 5].FormattedValue,
                                     buttonColor: r.Cells[x + 6].FormattedValue,
+                                    pFunction: r.Cells[x + 7].FormattedValue,
 
                                     label: r.Cells[x + 4].FormattedValue,
                                     icon: r.Cells[x + 5].FormattedValue,
@@ -12191,14 +12215,20 @@ app.repository = {
         },
 
         launch: {
-            url: (db) => `/api/v1/Processes('MODULE - UI - BPSP - Submission')/tm1.ExecuteWithReturn`,
+            url: (db) => `/api/v1/Processes('MODULE - UI - Company Settings Control')/tm1.ExecuteWithReturn`,
             type: 'POST',
-            body: (db) =>
-                `{
-                        "Parameters": [
-                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'key')}"}
-                        ]
-                    }`
+            body: (db) => {
+                let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableProduct', 0),
+                    y = x.pFunction;
+
+                return `{
+                            "Parameters": [
+                                    {"Name": "pModule", "Value": "Product"},
+                                    {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGridRow1Cell2DropBox', 'key')}"},
+                                    {"Name": "pFunction", "Value": "${y}"}
+                            ]
+                        }`;
+            }
         }
 
 
@@ -12305,37 +12335,89 @@ app.repository = {
     },
 
 
-    rocheBPSPCompanySettingsGridRow9Cell1ProductToggle:
+    rocheBPSPCompanySettingsGridRow9Cell2ProductToggle:
         {
 
             initCondition: (db) => {
-                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox')
+                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGridRow1Cell2DropBox')
             },
             initDefault: (db) => {
                 return [];
             },
-            /*
             switch: {
-                url: (db) => `/api/v1/Processes('MODULE - UI - VALAMI')/tm1.ExecuteWithReturn`,
+                url: (db) => `/api/v1/Processes('MODULE - UI - Company Settings Control')/tm1.ExecuteWithReturn`,
                 type: 'POST',
                 body: (db) => {
                     return `{
                             "Parameters": [
-                                    {"Name": "pVersions", "Value": "Live"},
-                                    {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox', 'key')}"},
-                                    {"Name": "pMeasuresCompanyInformation", "Value": "Lock Customer planning"}
+                                    {"Name": "pModule", "Value": "Product"},
+                                    {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGridRow1Cell2DropBox', 'key')}"},
+                                    {"Name": "pFunction", "Value": "Lock"}
                             ]
                         }`;
                 }
             },
-
-             */
             init:
                 {
                     url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
                     type: 'POST',
                     body: (db) => {
-                        let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPTerritoriesUsersTitleGridRow1Cell2DropBox', 'key'); //${company}
+                        let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGridRow1Cell2DropBox', 'key'); //${company}
+                        return `{"MDX":"
+                                        SELECT 
+                                           {[Measures Company Information].[Measures Company Information].[Lock  planning]} 
+                                           PROPERTIES [Measures Company Information].[Measures Company Information].[Caption]  ON COLUMNS , 
+                                           {[Companies].[Companies].[All Companies^${company}]} 
+                                           PROPERTIES [Companies].[Companies].[Member description]  ON ROWS 
+                                        FROM [Company Information] 
+                                        WHERE 
+                                          (
+                                           [Versions].[Versions].[Live]
+                                          )
+                                    "}`
+
+
+                    },
+                    parsingControl: {
+                        type: 'object',
+                        query: {
+                            value: (r, x) => {
+                                return parseInt(r.Cells[x].FormattedValue) > 0 ? 1 : 0
+
+                            }
+                        }
+                    }
+                },
+        },
+
+    rocheBPSPCompanySettingsGridRow9Cell1CustomerToggle:
+        {
+
+            initCondition: (db) => {
+                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGridRow1Cell2DropBox')
+            },
+            initDefault: (db) => {
+                return [];
+            },
+            switch: {
+                url: (db) => `/api/v1/Processes('MODULE - UI - Company Settings Control')/tm1.ExecuteWithReturn`,
+                type: 'POST',
+                body: (db) => {
+                    return `{
+                            "Parameters": [
+                                    {"Name": "pModule", "Value": "Customer"},
+                                    {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGridRow1Cell2DropBox', 'key')}"},
+                                    {"Name": "pFunction", "Value": "Lock"}
+                            ]
+                        }`;
+                }
+            },
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+                    type: 'POST',
+                    body: (db) => {
+                        let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGridRow1Cell2DropBox', 'key'); //${company}
                         return `{"MDX":"
                                         SELECT 
                                            {[Measures Company Information].[Measures Company Information].[Lock Customer planning]} 
@@ -12352,15 +12434,13 @@ app.repository = {
 
                     },
                     parsingControl: {
-                        type: 'matrix',
-                        length: 1,
-                        query: [
-                            (r, x) => {
-                                return {
-                                    value: parseInt(r.Cells[x].FormattedValue) > 0 ? 1 : 0
-                                }
+                        type: 'object',
+                        query: {
+                            value: (r, x) => {
+                                return parseInt(r.Cells[x].FormattedValue) > 0 ? 1 : 0
+
                             }
-                        ]
+                        }
                     }
                 },
         },

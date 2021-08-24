@@ -3287,7 +3287,15 @@ app.eventMap = {
         {
             action: app.fn.hideWidget,
             argument: 'rocheBPSPCompanySettingsGridTableCustomer'
-        }
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPCompanySettingsGridRow9Cell2ProductToggle'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPCompanySettingsGridRow9Cell1CustomerToggle'
+        },
     ],
 
 
@@ -3299,6 +3307,14 @@ app.eventMap = {
         {
             action: app.fn.hideWidget,
             argument: 'rocheBPSPCompanySettingsGridTableProduct'
+        },
+        {
+            action: app.fn.showWidget,
+            argument: 'rocheBPSPCompanySettingsGridRow9Cell1CustomerToggle'
+        },
+        {
+            action: app.fn.hideWidget,
+            argument: 'rocheBPSPCompanySettingsGridRow9Cell2ProductToggle'
         }
     ],
 

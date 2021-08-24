@@ -18690,24 +18690,57 @@ app.widgetConfig = {
                                 {
                                     id: 'rocheBPSPCompanySettingsGridRow9Cell1',
                                     type: GridCellWidget,
-                                    alignment: 'bottom-center',
+                                    alignment: 'bottom-left',
+                                    marginLeft: '12%',
                                     width: '15%',
                                     widgets: [
                                         {
-                                            id: 'rocheBPSPCompanySettingsGridRow9Cell1ProductToggle',
+                                            id: 'rocheBPSPCompanySettingsGridRow9Cell1CustomerToggle',
                                             type: ToggleWidget,
                                             width: '100%',
                                             iconOff: 'icon-unlock',
+                                            titleOff: 'UNLOCK',
                                             icon: 'icon-icon-lock',
-                                            titleOn: 'UNLOCK',
-                                            titleOff: 'LOCK',
+                                            titleOn: 'LOCK',
                                             value: 0,
-                                            skin: 'company_company_settings_toggle_bpsp'
+                                            listen: [
+                                                {
+                                                    event: 'choose.rocheBPSPCompanySettingsGridRow1Cell2DropBox.finished',
+                                                    method: 'refresh'
+                                                },
+                                                {
+                                                    event: 'init.rocheBPSPCompanySettingsGridRow1Cell2DropBox.finished',
+                                                    method: 'refresh'
+                                                }
+                                            ],
+                                            skin: 'company_settings_toggle_bpsp'
+                                        },
+
+                                        {
+                                            id: 'rocheBPSPCompanySettingsGridRow9Cell2ProductToggle',
+                                            type: ToggleWidget,
+                                            width: '100%',
+                                            visible: false,
+                                            iconOff: 'icon-unlock',
+                                            titleOff: 'UNLOCK',
+                                            icon: 'icon-icon-lock',
+                                            titleOn: 'LOCK',
+                                            value: 0,
+                                            listen: [
+                                                {
+                                                    event: 'choose.rocheBPSPCompanySettingsGridRow1Cell2DropBox.finished',
+                                                    method: 'refresh'
+                                                },
+                                                {
+                                                    event: 'init.rocheBPSPCompanySettingsGridRow1Cell2DropBox.finished',
+                                                    method: 'refresh'
+                                                }
+                                            ],
+                                            skin: 'company_settings_toggle_bpsp'
                                         },
                                     ]
                                 },
                             ]
-
                         },
 
 
