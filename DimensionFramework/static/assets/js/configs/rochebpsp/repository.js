@@ -866,6 +866,7 @@ app.repository = {
             body: (db) => {
                 let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsGridRow1Cell2DropBox', 'key');
                 return `{"MDX":"
+                  WITH MEMBER [}Groups].[}Groups].[Marketing Flag]
                   AS IIF([}Groups].[}Groups].[${company} SalesMarketing] <> '' OR [}Groups].[}Groups].[ADMIN] <> '' OR [}Groups].[}Groups].[Support 1L] <> '' ,'Write','')
                     MEMBER [}Groups].[}Groups].[Finance Flag]
                     AS IIF([}Groups].[}Groups].[${company} SalesFinance] <> '' OR [}Groups].[}Groups].[ADMIN] <> '' OR [}Groups].[}Groups].[Support 1L] <> '' ,'Write','')
