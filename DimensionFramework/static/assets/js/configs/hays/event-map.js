@@ -8,7 +8,7 @@ app.eventMap = {
             argument: 'haysArbeitsberichtPivot'
         }
     ],
-    'launch.haysArbeitsberichtPivotGridRow2Cell1Button': [
+    'launch.haysArbeitsberichtPivotGridRow1Cell1Button': [
         {
             action: app.fn.openPage,
             argument: 'haysMain'
