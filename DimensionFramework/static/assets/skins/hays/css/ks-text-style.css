@@ -1,0 +1,24 @@
+/* template10*/
+
+.ks-text-menu .ks-text-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ks-text-menu .ks-text-body {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* template10*/
+.ks-text-deepblue_menu .ks-text-title {
+    font-weight: bold;
+}
+
+.ks-text-deepblue_menu .ks-text-body {
+    font-weight: bold;
+    margin-bottom: 5px;
+}

@@ -83,7 +83,7 @@ app.widgetConfig = {
                                             action: '',
                                             width: '100%',
                                             icon: 'icon-profile',
-                                            skin: 'userpanelmain_bpsp',
+                                            skin: 'userpanelmain_hays',
                                         }
                                     ]
                                 }
@@ -185,7 +185,7 @@ app.widgetConfig = {
                                             width: '145',
                                             icon: 'icon-menu',
                                             fontColor: 'white',
-                                            skin: 'rochemain',
+                                            skin: 'haysmain_blue',
                                             height: '145'
                                         }
                                     ]
@@ -209,7 +209,7 @@ app.widgetConfig = {
                                             width: '145',
                                             icon: 'icon-menu',
                                             fontColor: 'white',
-                                            skin: 'rochemain',
+                                            skin: 'haysmain_blue',
                                             height: '145'
                                         }
                                     ]
@@ -233,7 +233,7 @@ app.widgetConfig = {
                                             width: '145',
                                             icon: 'icon-menu',
                                             fontColor: 'white',
-                                            skin: 'rochemain',
+                                            skin: 'haysmain_red',
                                             height: '145'
                                         }
                                     ]
@@ -397,7 +397,7 @@ app.widgetConfig = {
                                             width: '145',
                                             icon: 'icon-menu',
                                             fontColor: 'white',
-                                            skin: 'rochemain',
+                                            skin: 'haysmain_red',
                                             height: '145'
                                         }
                                     ]
@@ -421,7 +421,7 @@ app.widgetConfig = {
                                             width: '145',
                                             icon: 'icon-menu',
                                             fontColor: 'white',
-                                            skin: 'rochemain',
+                                            skin: 'haysmain_green',
                                             paddingRight: '2%',
                                             height: '145'
                                         }
@@ -583,7 +583,7 @@ app.widgetConfig = {
                                             width: '145',
                                             icon: 'icon-menu',
                                             fontColor: 'white',
-                                            skin: 'rochemain',
+                                            skin: 'haysmain_grey',
                                             paddingRight: '2%',
                                             height: '145'
                                         }

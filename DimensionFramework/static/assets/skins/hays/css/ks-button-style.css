@@ -1,0 +1,161 @@
+/* haysmain-blue menu icon */
+.ks-button-haysmain_blue.ks-button {
+    height: 150px;
+    background-color: #007BFF;
+    border-radius: 30px;
+}
+
+.ks-button-haysmain .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-haysmain .ks-button-content {
+    height: 110%
+}
+
+.ks-button-haysmain:hover {
+    background-color: #004C99
+}
+
+.ks-button-haysmain:active {
+    background-color: #004C99;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+/* haysmain-grey menu icon */
+.ks-button-haysmain_grey.ks-button {
+    height: 150px;
+    background-color: #A9A9A9;
+    border-radius: 30px;
+}
+
+.ks-button-haysmain .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-haysmain .ks-button-content {
+    height: 110%
+}
+
+.ks-button-haysmain:hover {
+    background-color: #A9A9A9
+}
+
+.ks-button-haysmain:active {
+    background-color: #A9A9A9;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+/* haysmain-red menu icon */
+.ks-button-haysmain_red.ks-button {
+    height: 150px;
+    background-color: #FF3B30;
+    border-radius: 30px;
+}
+
+.ks-button-haysmain .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-haysmain .ks-button-content {
+    height: 110%
+}
+
+.ks-button-haysmain:hover {
+    background-color: #FF3B30
+}
+
+.ks-button-haysmain:active {
+    background-color: #FF3B30;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+/* haysmain-green menu icon */
+.ks-button-haysmain_green.ks-button {
+    height: 150px;
+    background-color: #20C997;
+    border-radius: 30px;
+}
+
+.ks-button-haysmain .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-haysmain .ks-button-content {
+    height: 110%
+}
+
+.ks-button-haysmain:hover {
+    background-color: #20C997
+}
+
+.ks-button-haysmain:active {
+    background-color: #20C997;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* rochemain_disabled menu icon */
+.ks-button-haysmain_disabled.ks-button {
+    height: 150px;
+    background-color: #ebecec;
+    border-radius: 30px;
+}
+
+.ks-button-haysmain_disabled .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-haysmain_disabled .ks-button-content {
+    height: 110%
+}
+
+.ks-button-haysmain_disabled:hover {
+    background-color: #ebecec;
+}
+
+.ks-button-haysmain_disabled:active {
+    background-color: #ebecec;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* */
+
+
+.ks-button-userpanelmain_hays.ks-button:hover {
+    height: 30px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #ebecec;
+}
+
+.ks-button-userpanelmain_hays.ks-button-inner:hover {
+    background-color: #ebecec;
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-userpanelmain_hays.ks-button-icon:hover,
+.ks-button-userpanelmain_hays.ks-button-icon img:hover {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #171515;
+}
+
+.ks-button-userpanelmain_hays.ks-button-divider:hover {
+    width: 10px;
+}
+
+.ks-button-userpanelmain_hays.ks-button-label:hover {
+    color: #171515;
+    font-size: 16px;
+    font-weight: 600;
+}
