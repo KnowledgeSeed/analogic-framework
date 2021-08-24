@@ -761,11 +761,11 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutGridRow2Cell1Button'
         },
         {
-            action: app.fn.showWidget,
+            action: app.fn.forceRefresh,
             argument: 'rocheBPSPProductsCheckoutGridRow2Cell1aButton'
         },
         {
-            action: app.fn.showWidget,
+            action: app.fn.forceRefresh,
             argument: 'rocheBPSPProductsCheckoutGridRow2Cell1bButton'
         },
         {
@@ -787,11 +787,11 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutGridRow2Cell1Button'
         },
         {
-            action: app.fn.hideWidget,
+            action: app.fn.forceRefresh,
             argument: 'rocheBPSPProductsCheckoutGridRow2Cell1aButton'
         },
         {
-            action: app.fn.hideWidget,
+            action: app.fn.forceRefresh,
             argument: 'rocheBPSPProductsCheckoutGridRow2Cell1bButton'
         },
         {

@@ -400,7 +400,7 @@ class Export:
                 worksheet.write(r, c, value, read_only)
                 c = c + 1
                 i = i + 1
-                worksheet.write(r, c, pl, read_only)
+                worksheet.write(r, c, pl.replace('PL', '').replace('a', ''), read_only)
                 i = i + 1
             else:
                 value = d['Cells'][i]['Value']
