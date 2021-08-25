@@ -884,8 +884,8 @@ app.repository = {
                     {
                         visible: (r, x) => {
                             let checkoutProduct = v('systemValueCheckoutProduct'),
-                                marketingAdjustmentVisible = /*r.Cells[0].FormattedValue !== ''*/ false || !checkoutProduct,
-                                finalSalesPlanVisible = /*r.Cells[1].FormattedValue !== ''*/ false || !checkoutProduct,
+                                marketingAdjustmentVisible = r.Cells[0].FormattedValue !== '' || !checkoutProduct,
+                                finalSalesPlanVisible = r.Cells[1].FormattedValue !== '' || !checkoutProduct,
                                 visible = (finalSalesPlanVisible && marketingAdjustmentVisible) || !checkoutProduct,
                                 visibleType = '';
 
