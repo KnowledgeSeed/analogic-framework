@@ -59,7 +59,7 @@ class Validation:
         validation_message += validateParameter('product', res[5], product)
         validation_message += validateParameter('line item', res[6], line_item)
         validation_message += validateParameter('customer code', res[7], customer_code)
-        validation_message += validateParameter('territory code', res[6], territory_code)
+        validation_message += validateParameter('territory code', res[8], territory_code)
 
         if validation_message != '':
             return request.form.get('validationMessage', 'Validation error') + '<br/>' + validation_message

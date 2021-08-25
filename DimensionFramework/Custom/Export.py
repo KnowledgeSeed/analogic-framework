@@ -407,7 +407,10 @@ class Export:
                 if (value == None):
                     value = 0
                 if d['Cells'][i]['RuleDerived'] == False:
-                    worksheet.write(r, c, value, simple)
+                    if line_item == 'Final Sales Plan' and d['Cells'][i]['Consolidated'] == True:
+                        worksheet.write(r, c, value, read_only)
+                    else:
+                        worksheet.write(r, c, value, simple)
                 else:
                     worksheet.write(r, c, value, read_only)
 

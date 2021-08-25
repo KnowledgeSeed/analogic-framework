@@ -159,4 +159,219 @@
     color: #171515;
     font-size: 16px;
     font-weight: 600;
+
 }
+/* hierarhcy button KAM Forecasting */
+
+.ks-button-hierarchy_button.ks-button {
+    background-color: #F2F2F2;
+    height: 40px;
+    border-radius: 8px;
+    width: 100px;
+}
+
+.ks-button-hierarchy_button .ks-button-label {
+    color: #6C757D;
+    font-size: 14px;
+    font-weight: normal;
+    margin-right: 2px;
+    margin-left: 6px;
+
+}
+
+.ks-button-hierarchy_button.ks-button-icon {
+    color: #fff;
+    font-size: 16px;
+    margin-right: 2px;
+    margin-left: 4px;
+}
+/* button double triange */
+.ks-button-triangle_button.ks-button {
+    width: 100px;
+  height: 40px;
+  position: relative;
+  background: #F2F2F2;
+    border-radius: 5px;
+}
+.ks-button-triangle_button.ks-button:after{
+    content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 0;
+  border-left: 5px solid white;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+      border-radius: 5px;
+}
+.ks-button-triangle_button.ks-button:before{
+   content: "";
+  position: absolute;
+  right: -38px;
+  bottom: 0;
+  width: 40px;
+  height: 0;
+  border-left: 9px solid #F2F2F2;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+      border-radius: 5px;
+
+}
+.ks-button-triangle_button .ks-button-label {
+    color: #6C757D;
+    font-size: 14px;
+    font-weight: normal;
+    margin-right: 2px;
+    margin-left: 6px;
+}
+
+/* button rightblue triange */
+.ks-button-rightbluetriangle_button.ks-button {
+    width: 100px;
+  height: 40px;
+  position: relative;
+  background: #F2F2F2;
+    border-radius: 5px;
+}
+.ks-button-righttriangle_button.ks-button:after{
+    content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 0;
+  border-left: 5px solid white;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+      border-radius: 5px;
+
+}
+.ks-button-righttriangle_button .ks-button-label {
+    color: #6C757D;
+    font-size: 14px;
+    font-weight: normal;
+    margin-right: 2px;
+    margin-left: 6px;
+}
+/* button rightblue triange */
+.ks-button-rightbluetriangle_button.ks-button {
+    width: 100px;
+  height: 40px;
+  position: relative;
+  background: #5AAAFF;
+    border-radius: 5px;
+}
+.ks-button-rightbluetriangle_button.ks-button:after{
+    content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 0;
+  border-left: 5px solid white;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+      border-radius: 5px;
+
+}
+.ks-button-rightbluetriangle_button .ks-button-label {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: normal;
+    margin-right: 2px;
+    margin-left: 6px;
+}
+/* button left triange */
+.ks-button-lefttriangle_button.ks-button {
+    width: 100px;
+  height: 40px;
+  position: relative;
+  background: #F2F2F2;
+    border-radius: 5px;
+}
+.ks-button-lefttriangle_button.ks-button:before{
+   content: "";
+  position: absolute;
+  right: -38px;
+  bottom: 0;
+  width: 40px;
+  height: 0;
+  border-left: 9px solid #F2F2F2;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+      border-radius: 5px;
+
+}
+.ks-button-lefttriangle_button .ks-button-label {
+    color: #6C757D;
+    font-size: 14px;
+    font-weight: normal;
+    margin-right: 2px;
+    margin-left: 6px;
+}
+/* material_hays  button */
+
+.ks-button-material_hays.ks-button {
+    background-color: #0066CC;
+    height: 40px;
+    border-radius: 7px;
+    width: 130px;
+}
+
+.ks-button-material_hays .ks-button-label {
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 2px;
+    margin-left: 6px;
+}
+
+.ks-button-material_hays .ks-button-icon {
+    color: #fff;
+    font-size: 16px;
+    margin-right: 2px;
+    margin-left: 4px;
+}
+
+.ks-button-material_hays:hover {
+    background-color: #004C99
+}
+
+.ks-button-material_hays:active {
+    background-color: #004C99;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+/* material_hayslight button */
+
+.ks-button-material_hayslight.ks-button {
+    background-color: #E3F1FF;
+    height: 40px;
+    border-radius: 7px;
+    width: 130px;
+}
+
+.ks-button-material_hayslight .ks-button-label {
+    color: #007BFF;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 2px;
+    margin-left: 6px;
+}
+
+.ks-button-material_hayslight .ks-button-icon {
+    color: #fff;
+    font-size: 16px;
+    margin-right: 2px;
+    margin-left: 4px;
+}
+
+
+
+
+
+
+
+
+
