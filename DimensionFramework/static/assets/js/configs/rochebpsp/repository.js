@@ -1981,7 +1981,7 @@ app.repository = {
                         db.systemValueSegmentedControlPeriodUnit === 'Monthly' &&
                         v('systemValueProductsTypeIsOk') === true &&
                         v('rocheBPSPProductsTypeSegmentedControl.value') !== false
-                    };
+                };
             }
         }
     },
@@ -2394,7 +2394,7 @@ app.repository = {
                         db.systemValueSegmentedControlPeriodUnit === 'Monthly' &&
                         v('systemValueProductsTypeIsOk') === true &&
                         v('rocheBPSPProductsTypeSegmentedControl.value') !== false
-                    };
+                };
             }
         },
         getFileName: (db) => {
@@ -7591,7 +7591,7 @@ app.repository = {
                 let d = v('systemValueCustomersPlanningMonthlyTypeValue');
                 return {
                     visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db) &&
-                        Repository.rocheBPSPCustomersPlanning.isFocused() && (d === 'Base Plan' || d === 'One Time Event' )
+                        Repository.rocheBPSPCustomersPlanning.isFocused() && (d === 'Base Plan' || d === 'One Time Event')
                 };
             }
         }
@@ -12311,7 +12311,7 @@ app.repository = {
                 body: (db) => {
                     return `{
                         "Parameters": [
-                                {"Name": "pUserID", "Value": "${db.activeUserName}"},
+                                {"Name": "pUserID", "Value": "${db.activeUserName.split('/')[0]}/${Utils.getGridTableCell('rocheBPSPCompanySettingsCheckedOutGridTable', 3).title}"},
                                 {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPCompanySettingsCheckedOutGridTable', 0).productCode}"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${Utils.getGridTableCell('rocheBPSPCompanySettingsCheckedOutGridTable', 2).title}"},
