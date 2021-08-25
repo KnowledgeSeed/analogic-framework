@@ -1,51 +1,51 @@
 {
   "davidCustom1": {
-    "namespace": "DimensionFramework.Custom.Export",
+    "namespace": "DimensionFramework.Customer.Roche.Export",
     "class": "Export",
     "method": "davidExport1"
   },
   "rocheMonthly": {
-    "namespace": "DimensionFramework.Custom.Export",
+    "namespace": "DimensionFramework.Customer.Roche.Export",
     "class": "Export",
     "method": "rocheMonthly"
   },
   "exportCustomerMonthly": {
-    "namespace": "DimensionFramework.Custom.Export",
+    "namespace": "DimensionFramework.Customer.Hays.Export",
     "class": "Export",
     "method": "rocheCustomerExport"
   },
   "rocheIpPlanningMonthly": {
-    "namespace": "DimensionFramework.Custom.Export",
+    "namespace": "DimensionFramework.Customer.Roche.Export",
     "class": "Export",
     "method": "rocheIpPlanningMonthly"
   },
   "validateExcelImport": {
-    "namespace": "DimensionFramework.Custom.Validation",
+    "namespace": "DimensionFramework.Customer.Roche.Validation",
     "class": "Validation",
     "method": "validateExcelImport"
   },
   "validateCustomerPlanningExcelImport": {
-    "namespace": "DimensionFramework.Custom.Validation",
+    "namespace": "DimensionFramework.Customer.Roche.Validation",
     "class": "Validation",
     "method": "validateCustomerPlanningExcelImport"
   },
   "cool": {
-    "namespace": "DimensionFramework.Custom.BusinessLogic",
+    "namespace": "DimensionFramework.Customer.Roche.BusinessLogic",
     "class": "BusinessLogic",
     "method": "doSomethingCool"
   },
   "rocheProductLevelExport": {
-    "namespace": "DimensionFramework.Custom.Export",
+    "namespace": "DimensionFramework.Customer.Roche.Export",
     "class": "Export",
     "method": "rocheProductLevelExport"
   },
   "rocheMaterialMaintenanceExport": {
-    "namespace": "DimensionFramework.Custom.Export",
+    "namespace": "DimensionFramework.Customer.Roche.Export",
     "class": "Export",
     "method": "rocheMaterialMaintenanceExport"
   },
   "rocheMaterialMaintenanceByIpNodeExport": {
-    "namespace": "DimensionFramework.Custom.Export",
+    "namespace": "DimensionFramework.Customer.Roche.Export",
     "class": "Export",
     "method": "rocheMaterialMaintenanceByIpNodeExport"
   }
