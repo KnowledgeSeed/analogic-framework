@@ -18700,9 +18700,9 @@ app.widgetConfig = {
                                             type: ToggleWidget,
                                             width: 200,
                                             iconOff: 'icon-unlock',
-                                            titleOff: 'Open for planning',
+                                            titleOff: 'Open for submission',
                                             icon: 'icon-icon-lock',
-                                            titleOn: 'Locked for planning',
+                                            titleOn: 'Locked for submission',
                                             value: 0,
                                             listen: [
                                                 {
@@ -18762,11 +18762,10 @@ app.widgetConfig = {
                     type: GridTableWidget,
                     hideIfNoData: true,
                     visible: true,
-                    skin: 'company_settings_bpsp',
+                    skin: 'products_bpsp',
                     listen: [],
                     width: '30%',
                     marginBottom: '10%',
-                    marginTop: '2%',
                     title: '',
                     widgets: [
 
@@ -18775,7 +18774,28 @@ app.widgetConfig = {
                             type: GridTableHeaderRowWidget,
                             width: '100%',
                             height: 0,
-                            widgets: []
+                            widgets: [
+                                 {
+                                    id: 'rocheBPSPCompanySettingsGridTableCustomerHeaderCell-01',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '100%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCompanySettingsGridTableCustomerHeaderCell1Text',
+                                            type: TextWidget,
+                                            width: '100%',
+                                            body: 'Control Actions',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: '30%',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                }
+                            ]
                         },
                         {
                             id: 'rocheBPSPCompanySettingsGridTableCustomerCell-01',
@@ -18804,10 +18824,9 @@ app.widgetConfig = {
                     type: GridTableWidget,
                     hideIfNoData: true,
                     visible: false,
-                    skin: 'company_settings_bpsp',
+                    skin: 'products_bpsp',
                     listen: [],
                     width: '30%',
-                    marginTop: '2%',
                     marginBottom: '10%',
                     title: '',
                     widgets: [
@@ -18817,7 +18836,28 @@ app.widgetConfig = {
                             type: GridTableHeaderRowWidget,
                             width: '100%',
                             height: 0,
-                            widgets: []
+                            widgets: [
+                                 {
+                                    id: 'rocheBPSPCompanySettingsGridTableProductHeaderCell-01',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '100%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'rocheBPSPCompanySettingsGridTableProductHeaderCell1Text',
+                                            type: TextWidget,
+                                            width: '100%',
+                                            body: 'Control Actions',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: '30%',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                }
+                            ]
                         },
                         {
                             id: 'rocheBPSPCompanySettingsGridTableProductCell-01',
