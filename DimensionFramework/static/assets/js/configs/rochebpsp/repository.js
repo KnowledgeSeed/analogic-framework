@@ -884,8 +884,8 @@ app.repository = {
                     {
                         visible: (r, x) => {
                             let checkoutProduct = v('systemValueCheckoutProduct'),
-                                marketingAdjustmentVisible = r.Cells[0].FormattedValue !== '' || !checkoutProduct,
-                                finalSalesPlanVisible = r.Cells[1].FormattedValue !== '' || !checkoutProduct,
+                                marketingAdjustmentVisible = /*r.Cells[0].FormattedValue !== ''*/ false || !checkoutProduct,
+                                finalSalesPlanVisible = /*r.Cells[1].FormattedValue !== ''*/ false || !checkoutProduct,
                                 visible = (finalSalesPlanVisible && marketingAdjustmentVisible) || !checkoutProduct,
                                 visibleType = '';
 
@@ -1976,7 +1976,12 @@ app.repository = {
     rocheBPSPProductsCheckoutGridRow2Cell1bButton: {
         init: {
             execute: (db) => {
-                return {visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly' && v('systemValueProductsTypeIsOk') === true};
+                return {
+                    visible:
+                        db.systemValueSegmentedControlPeriodUnit === 'Monthly' &&
+                        v('systemValueProductsTypeIsOk') === true &&
+                        v('rocheBPSPProductsTypeSegmentedControl.value') !== false
+                    };
             }
         }
     },
@@ -2384,7 +2389,12 @@ app.repository = {
     rocheBPSPProductsCheckoutGridRow2Cell1aButton: {
         init: {
             execute: (db) => {
-                return {visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly' && v('systemValueProductsTypeIsOk') === true};
+                return {
+                    visible:
+                        db.systemValueSegmentedControlPeriodUnit === 'Monthly' &&
+                        v('systemValueProductsTypeIsOk') === true &&
+                        v('rocheBPSPProductsTypeSegmentedControl.value') !== false
+                    };
             }
         },
         getFileName: (db) => {
@@ -7578,14 +7588,22 @@ app.repository = {
     rocheBPSPCustomersPlanningMonthlyExcelUpload: {
         init: {
             execute: (db) => {
-                return {visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db) && Repository.rocheBPSPCustomersPlanning.isFocused()};
+                let d = v('systemValueCustomersPlanningMonthlyTypeValue');
+                return {
+                    visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db) &&
+                        Repository.rocheBPSPCustomersPlanning.isFocused() && (d === 'Base Plan' || d === 'One Time Event' )
+                };
             }
         }
     },
     rocheBPSPCustomersPlanningMonthlyExcelExport: {
         init: {
             execute: (db) => {
-                return {visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db) && Repository.rocheBPSPCustomersPlanning.isFocused()};
+                let d = v('systemValueCustomersPlanningMonthlyTypeValue');
+                return {
+                    visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db) &&
+                        Repository.rocheBPSPCustomersPlanning.isFocused()
+                };
             }
         },
         getFileName: (db) => {

@@ -3706,7 +3706,22 @@ app.widgetConfig = {
                                             label: 'Excel Template',
                                             width: '100%',
                                             icon: 'icon-doc-arrow-up',
-                                            skin: 'blue_link_columns_bpsp'
+                                            skin: 'blue_link_columns_bpsp',
+                                            listen: [
+                                                {
+                                                    'event': 'segmentedControlTab2.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl.finished',
+                                                    'method': 'refreshWithWaitingForEvent',
+                                                    'parameters': [
+                                                        'refresh.rocheBPSPProductsTypeSegmentedControl.finished']
+                                                },
+                                                {
+                                                    'event': 'bodyReady',
+                                                    'method': 'refreshWithWaitingForEvents',
+                                                    'parameters': [
+                                                        'init.rocheBPSPProductsTypeSegmentedControl.finished'
+                                                    ]
+                                                }
+                                            ]
                                         },
                                         {
                                             id: 'rocheBPSPProductsCheckoutGridRow2Cell1bButton',
@@ -3715,7 +3730,22 @@ app.widgetConfig = {
                                             width: '100%',
                                             icon: 'icon-columns',
                                             skin: 'blue_link_columns_bpsp',
-                                            marginLeft: 15
+                                            marginLeft: 15,
+                                            listen: [
+                                                {
+                                                    'event': 'segmentedControlTab2.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl.finished',
+                                                    'method': 'refreshWithWaitingForEvent',
+                                                    'parameters': [
+                                                        'refresh.rocheBPSPProductsTypeSegmentedControl.finished']
+                                                },
+                                                {
+                                                    'event': 'bodyReady',
+                                                    'method': 'refreshWithWaitingForEvents',
+                                                    'parameters': [
+                                                        'init.rocheBPSPProductsTypeSegmentedControl.finished'
+                                                    ]
+                                                }
+                                            ]
                                         }
 
                                     ]
