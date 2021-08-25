@@ -11354,7 +11354,9 @@ app.repository = {
                           NON EMPTY 
                            {EXCEPT({TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan ${company}]}, ALL, RECURSIVE )},
                            {[Customers Plan].[Customers Plan].[All Customers Plan ${company}]})}
-                           * {TM1FILTERBYLEVEL({TM1DRILLDOWNMEMBER({[Receivers].[Receivers].[TC_12.2020_${company}]}, {[Receivers].[Receivers].[TC_12.2020_${company}]}, RECURSIVE )}, 0)} 
+                           * 
+                           {TM1SUBSETTOSET( [Receivers], 'zUI ${company} Plan Receivers')}
+                           
                           ON ROWS 
                         FROM [Sales Territory to Customer] 
                         WHERE 
@@ -11990,8 +11992,8 @@ app.repository = {
                                } 
                               ON COLUMNS , 
                               NON EMPTY 
-                                    {EXCEPT({[Company Settings Buttons].[Company Settings Buttons].Members},
-                                    {[Company Settings Buttons].[Company Settings Buttons].[Button1]})}
+                                    {[Company Settings Buttons].[Company Settings Buttons].Members}
+                                  
                               ON ROWS 
                             FROM [Control Company Settings] 
                             WHERE 
@@ -12076,8 +12078,10 @@ app.repository = {
             }
         },
 
+
+        //url: (db) => `/api/v1/Processes('MODULE - UI - Company Settings Control')/tm1.ExecuteWithReturn`,
         launch: {
-            url: (db) => `/api/v1/Processes('MODULE - UI - Company Settings Control')/tm1.ExecuteWithReturn`,
+            url: (db) => `/api/v1/Processes('${Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableCustomer', 0).tiProcess}')/tm1.ExecuteWithReturn`,
             type: 'POST',
             body: (db) => {
                 let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableCustomer', 0),
@@ -12131,8 +12135,8 @@ app.repository = {
                            } 
                           ON COLUMNS , 
                           NON EMPTY 
-                          {EXCEPT({[Company Settings Buttons].[Company Settings Buttons].Members},
-                          {[Company Settings Buttons].[Company Settings Buttons].[Button1]})}
+                          {[Company Settings Buttons].[Company Settings Buttons].Members}
+                        
                           ON ROWS 
                         FROM [Control Company Settings] 
                         WHERE 
@@ -12218,7 +12222,7 @@ app.repository = {
         },
 
         launch: {
-            url: (db) => `/api/v1/Processes('MODULE - UI - Company Settings Control')/tm1.ExecuteWithReturn`,
+            url: (db) => `/api/v1/Processes('${Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableProduct', 0).tiProcess}')/tm1.ExecuteWithReturn`,
             type: 'POST',
             body: (db) => {
                 let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableProduct', 0),
@@ -12342,7 +12346,8 @@ app.repository = {
         {
 
             initCondition: (db) => {
-                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGridRow1Cell2DropBox')
+                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGridRow1Cell2DropBox');
+                return a;
             },
             initDefault: (db) => {
                 return [];
