@@ -12397,7 +12397,8 @@ app.repository = {
         {
 
             initCondition: (db) => {
-                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGridRow1Cell2DropBox')
+                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGridRow1Cell2DropBox');
+                return a;
             },
             initDefault: (db) => {
                 return [];
