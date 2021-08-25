@@ -382,7 +382,6 @@
     background-color: white;
     top: 0;
     z-index: 2;
-    height: 0px;
 }
 
 .ks-grid-table-company_settings_bpsp .ks-grid-table-row {
@@ -431,7 +430,7 @@
 }
 
 .ks-grid-table-company_settings_bpsp .ks-grid-table-head .ks-grid-table-row {
-    height: 0px;
+    height: 30px;
 }
 
 .ks-grid-table-company_settings_bpsp .ks-grid-table-cell {
