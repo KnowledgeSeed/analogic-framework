@@ -47,7 +47,7 @@ app.eventMap = {
     ],
     'launch.haysKamForecastingGridRow1Cell1Button': [
         {
-             action: app.fn.openPage,
+            action: app.fn.openPage,
             argument: 'haysMain'
         }
     ],
@@ -57,9 +57,9 @@ app.eventMap = {
             argument: 'haysForecastingHierarchy'
         }
     ],
-      'launch.haysForecastingHierarchyGridRow1Cell1Button': [
+    'launch.haysForecastingHierarchyGridRow1Cell1Button': [
         {
-             action: app.fn.openPage,
+            action: app.fn.openPage,
             argument: 'haysMain'
         }
     ],
@@ -71,13 +71,59 @@ app.eventMap = {
     ],
     'launch.haysArbeitsberichtGridRow1Cell1Button': [
         {
-             action: app.fn.openPage,
+            action: app.fn.openPage,
             argument: 'haysMain'
         }
-    ]
+    ],
+
+    'launch.haysKamForecastingGridRow2Cell4Button1': [
+        {
+            action: app.fn.openPopup,
+            argument: 'haysKamForecastingDepartmentPopUp'
+        }
+    ],
+
+    'launch.haysKamForecastingGridRow2Cell2Button1': [
+        {
+            action: app.fn.openPopup,
+            argument: 'haysKamForecastingBusinessPopUp'
+        }
+    ],
+
+    'launch.haysKamForecastingGridRow2Cell3Button1': [
+        {
+            action: app.fn.openPopup,
+            argument: 'haysKamForecastingAreaPopUp'
+        }
+    ],
+
+    'launch.haysKamForecastingGridRow2Cell5Button1': [
+        {
+            action: app.fn.openPopup,
+            argument: 'haysKamForecastingTeamPopUp'
+        }
+    ],
 
 
+    'launch.haysKamForecastingBusinessPopUpGridTable_row_0': [
+        {
+            action: app.fn.openPopup,
+            argument: 'haysKamForecastingAreaPopUp'
+        }
+    ],
 
+    'launch.haysKamForecastingAreaPopUpGridTable_row_0': [
+        {
+            action: app.fn.openPopup,
+            argument: 'haysKamForecastingDepartmentPopUp'
+        }
+    ],
 
+    'launch.haysKamForecastingDepartmentPopUpGridTable_row_0': [
+        {
+            action: app.fn.openPopup,
+            argument: 'haysKamForecastingTeamPopUp'
+        }
+    ],
 
 };

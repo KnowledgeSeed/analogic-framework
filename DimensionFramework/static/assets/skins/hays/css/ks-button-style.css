@@ -23,6 +23,7 @@
     /* box-shadow: 0 5px #666;
      transform: translateY(4px);*/
 }
+
 /* haysmain-grey menu icon */
 .ks-button-haysmain_grey.ks-button {
     height: 150px;
@@ -48,6 +49,7 @@
     /* box-shadow: 0 5px #666;
      transform: translateY(4px);*/
 }
+
 /* haysmain-red menu icon */
 .ks-button-haysmain_red.ks-button {
     height: 150px;
@@ -161,6 +163,7 @@
     font-weight: 600;
 
 }
+
 /* hierarhcy button KAM Forecasting */
 
 .ks-button-hierarchy_button.ks-button {
@@ -185,39 +188,43 @@
     margin-right: 2px;
     margin-left: 4px;
 }
+
 /* button double triange */
 .ks-button-triangle_button.ks-button {
     width: 100px;
-  height: 40px;
-  position: relative;
-  background: #F2F2F2;
+    height: 40px;
+    position: relative;
+    background: #F2F2F2;
     border-radius: 5px;
 }
-.ks-button-triangle_button.ks-button:after{
+
+.ks-button-triangle_button.ks-button:after {
     content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 40px;
-  height: 0;
-  border-left: 5px solid white;
-  border-top: 20px solid transparent;
-  border-bottom: 20px solid transparent;
-      border-radius: 5px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 0;
+    border-left: 5px solid white;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-radius: 5px;
 }
-.ks-button-triangle_button.ks-button:before{
-   content: "";
-  position: absolute;
-  right: -38px;
-  bottom: 0;
-  width: 40px;
-  height: 0;
-  border-left: 9px solid #F2F2F2;
-  border-top: 20px solid transparent;
-  border-bottom: 20px solid transparent;
-      border-radius: 5px;
+
+.ks-button-triangle_button.ks-button:before {
+    content: "";
+    position: absolute;
+    right: -38px;
+    bottom: 0;
+    width: 40px;
+    height: 0;
+    border-left: 9px solid #F2F2F2;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-radius: 5px;
 
 }
+
 .ks-button-triangle_button .ks-button-label {
     color: #6C757D;
     font-size: 14px;
@@ -229,24 +236,26 @@
 /* button rightblue triange */
 .ks-button-rightbluetriangle_button.ks-button {
     width: 100px;
-  height: 40px;
-  position: relative;
-  background: #F2F2F2;
+    height: 40px;
+    position: relative;
+    background: #F2F2F2;
     border-radius: 5px;
 }
-.ks-button-righttriangle_button.ks-button:after{
+
+.ks-button-righttriangle_button.ks-button:after {
     content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 40px;
-  height: 0;
-  border-left: 5px solid white;
-  border-top: 20px solid transparent;
-  border-bottom: 20px solid transparent;
-      border-radius: 5px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 0;
+    border-left: 5px solid white;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-radius: 5px;
 
 }
+
 .ks-button-righttriangle_button .ks-button-label {
     color: #6C757D;
     font-size: 14px;
@@ -254,27 +263,30 @@
     margin-right: 2px;
     margin-left: 6px;
 }
+
 /* button rightblue triange */
 .ks-button-rightbluetriangle_button.ks-button {
     width: 100px;
-  height: 40px;
-  position: relative;
-  background: #5AAAFF;
+    height: 40px;
+    position: relative;
+    background: #5AAAFF;
     border-radius: 5px;
 }
-.ks-button-rightbluetriangle_button.ks-button:after{
+
+.ks-button-rightbluetriangle_button.ks-button:after {
     content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 40px;
-  height: 0;
-  border-left: 5px solid white;
-  border-top: 20px solid transparent;
-  border-bottom: 20px solid transparent;
-      border-radius: 5px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 0;
+    border-left: 5px solid white;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-radius: 5px;
 
 }
+
 .ks-button-rightbluetriangle_button .ks-button-label {
     color: #FFFFFF;
     font-size: 14px;
@@ -282,27 +294,30 @@
     margin-right: 2px;
     margin-left: 6px;
 }
+
 /* button left triange */
 .ks-button-lefttriangle_button.ks-button {
     width: 100px;
-  height: 40px;
-  position: relative;
-  background: #F2F2F2;
+    height: 40px;
+    position: relative;
+    background: #F2F2F2;
     border-radius: 5px;
 }
-.ks-button-lefttriangle_button.ks-button:before{
-   content: "";
-  position: absolute;
-  right: -38px;
-  bottom: 0;
-  width: 40px;
-  height: 0;
-  border-left: 9px solid #F2F2F2;
-  border-top: 20px solid transparent;
-  border-bottom: 20px solid transparent;
-      border-radius: 5px;
+
+.ks-button-lefttriangle_button.ks-button:before {
+    content: "";
+    position: absolute;
+    right: -38px;
+    bottom: 0;
+    width: 40px;
+    height: 0;
+    border-left: 9px solid #F2F2F2;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-radius: 5px;
 
 }
+
 .ks-button-lefttriangle_button .ks-button-label {
     color: #6C757D;
     font-size: 14px;
@@ -310,6 +325,7 @@
     margin-right: 2px;
     margin-left: 6px;
 }
+
 /* material_hays  button */
 
 .ks-button-material_hays.ks-button {
@@ -343,6 +359,7 @@
     /* box-shadow: 0 5px #666;
      transform: translateY(4px);*/
 }
+
 /* material_hayslight button */
 
 .ks-button-material_hayslight.ks-button {
@@ -368,7 +385,25 @@
 }
 
 
+/* departurement_popup button */
 
+.ks-button-departurement_popup.ks-button {
+}
+
+.ks-button-departurement_popup .ks-button-label {
+    font-weight: bold;
+}
+
+.ks-button-departurement_popup .ks-button-icon {
+    font-size: 16px;
+    margin-left: 26%;
+    margin-top: 2%;
+}
+
+.ks-button-departurement_popup:hover {
+    background-color: rgba(0, 123, 255, 0.5);
+    border-radius: 5px;
+}
 
 
 
