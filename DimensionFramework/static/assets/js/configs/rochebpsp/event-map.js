@@ -762,14 +762,6 @@ app.eventMap = {
         },
         {
             action: app.fn.forceRefresh,
-            argument: 'rocheBPSPProductsCheckoutGridRow2Cell1aButton'
-        },
-        {
-            action: app.fn.forceRefresh,
-            argument: 'rocheBPSPProductsCheckoutGridRow2Cell1bButton'
-        },
-        {
-            action: app.fn.forceRefresh,
             argument: 'rocheBPSPProductsTypeSegmentedControl'
         }
     ],
@@ -785,14 +777,6 @@ app.eventMap = {
         {
             action: app.fn.showWidget,
             argument: 'rocheBPSPProductsCheckoutGridRow2Cell1Button'
-        },
-        {
-            action: app.fn.forceRefresh,
-            argument: 'rocheBPSPProductsCheckoutGridRow2Cell1aButton'
-        },
-        {
-            action: app.fn.forceRefresh,
-            argument: 'rocheBPSPProductsCheckoutGridRow2Cell1bButton'
         },
         {
             action: app.fn.forceRefresh,
@@ -2289,6 +2273,14 @@ app.eventMap = {
         {
             action: app.fn.showPopup,
             argument: 'Upload success'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningHeaderInfoGridTable'
         }
     ],
     'upload.rocheBPSPCustomersPlanningUploadPopupUpload.error': [
@@ -2301,6 +2293,10 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningMonthlyExcelUpload'
         }
     ],
     'launch.rocheBPSPCustomersPlanningGridTableYearly_row_0': [

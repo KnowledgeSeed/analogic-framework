@@ -1976,7 +1976,12 @@ app.repository = {
     rocheBPSPProductsCheckoutGridRow2Cell1bButton: {
         init: {
             execute: (db) => {
-                return {visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly' && v('systemValueProductsTypeIsOk') === true};
+                return {
+                    visible:
+                        db.systemValueSegmentedControlPeriodUnit === 'Monthly' &&
+                        v('systemValueProductsTypeIsOk') === true &&
+                        v('rocheBPSPProductsTypeSegmentedControl.value') !== false
+                };
             }
         }
     },
@@ -2384,7 +2389,12 @@ app.repository = {
     rocheBPSPProductsCheckoutGridRow2Cell1aButton: {
         init: {
             execute: (db) => {
-                return {visible: db.systemValueSegmentedControlPeriodUnit === 'Monthly' && v('systemValueProductsTypeIsOk') === true};
+                return {
+                    visible:
+                        db.systemValueSegmentedControlPeriodUnit === 'Monthly' &&
+                        v('systemValueProductsTypeIsOk') === true &&
+                        v('rocheBPSPProductsTypeSegmentedControl.value') !== false
+                };
             }
         },
         getFileName: (db) => {
@@ -7578,14 +7588,22 @@ app.repository = {
     rocheBPSPCustomersPlanningMonthlyExcelUpload: {
         init: {
             execute: (db) => {
-                return {visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db) && Repository.rocheBPSPCustomersPlanning.isFocused()};
+                let d = v('systemValueCustomersPlanningMonthlyTypeValue');
+                return {
+                    visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db) &&
+                        Repository.rocheBPSPCustomersPlanning.isFocused() && (d === 'Base Plan' || d === 'One Time Event')
+                };
             }
         }
     },
     rocheBPSPCustomersPlanningMonthlyExcelExport: {
         init: {
             execute: (db) => {
-                return {visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db) && Repository.rocheBPSPCustomersPlanning.isFocused()};
+                let d = v('systemValueCustomersPlanningMonthlyTypeValue');
+                return {
+                    visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db) &&
+                        Repository.rocheBPSPCustomersPlanning.isFocused()
+                };
             }
         },
         getFileName: (db) => {
@@ -7645,14 +7663,16 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return [
-                    {name: 'PL1', key: 1, on: true},
-                    {name: 'PL2', key: 2, on: false},
-                    {name: 'PL3', key: 3, on: false},
-                    {name: 'PL4', key: 4, on: false},
-                    {name: 'PL5', key: 5, on: false},
-                    {name: 'PL6', key: 6, on: false}
-                ]
+                return v('rocheBPSPCustomersPlanningGridTableMonthly.cellData').map(function (e) {
+                    return {name: e[2].title, key: e[2].title.replace('PL', '').replace('a',''), on: false}
+                }).reduce((acc, current) => {
+                    const x = acc.find(item => item.name === current.name);
+                    if (!x) {
+                        return acc.concat([current]);
+                    } else {
+                        return acc;
+                    }
+                }, []);
             }
         }
     },
@@ -7708,7 +7728,6 @@ app.repository = {
                                 {"Name": "pProduct", "Value": "${focusedProduct}"},
                                 {"Name": "pCompany", "Value": "${company}"},
                                 {"Name": "pReceiver", "Value": "${receiver}"},
-                                {"Name": "pTargetCube", "Value": "Base Plan"},
                                 {"Name": "pLineItem", "Value": "${type}"},
                                 {"Name": "pCustomer", "Value": "${customerCode}"},
                                 {"Name": "pTerritories", "Value": "${territoryCode}"},
@@ -10723,13 +10742,13 @@ app.repository = {
 
         launch: {
 
-            url: (db) => `/api/v1/Processes('MODULE - UI - Territory to User Update')/tm1.ExecuteWithReturn`,
+            url: (db) => `/api/v1/Processes('MODULE - UI - Account to Territory Update')/tm1.ExecuteWithReturn`,
             type: 'POST',
             body: (db) => {
 
                 return `{
                         "Parameters": [
-                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPTerritoriesUsersTitleGridRow1Cell2DropBox', 'key')}"}
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox', 'key')}"}
                         ]
                     }`;
             }
@@ -11354,7 +11373,9 @@ app.repository = {
                           NON EMPTY 
                            {EXCEPT({TM1DRILLDOWNMEMBER({[Customers Plan].[Customers Plan].[All Customers Plan ${company}]}, ALL, RECURSIVE )},
                            {[Customers Plan].[Customers Plan].[All Customers Plan ${company}]})}
-                           * {TM1FILTERBYLEVEL({TM1DRILLDOWNMEMBER({[Receivers].[Receivers].[TC_12.2020_${company}]}, {[Receivers].[Receivers].[TC_12.2020_${company}]}, RECURSIVE )}, 0)} 
+                           * 
+                           {TM1SUBSETTOSET( [Receivers], 'zUI ${company} Plan Receivers')}
+                           
                           ON ROWS 
                         FROM [Sales Territory to Customer] 
                         WHERE 
@@ -11990,8 +12011,8 @@ app.repository = {
                                } 
                               ON COLUMNS , 
                               NON EMPTY 
-                                    {EXCEPT({[Company Settings Buttons].[Company Settings Buttons].Members},
-                                    {[Company Settings Buttons].[Company Settings Buttons].[Button1]})}
+                                    {[Company Settings Buttons].[Company Settings Buttons].Members}
+                                  
                               ON ROWS 
                             FROM [Control Company Settings] 
                             WHERE 
@@ -12076,8 +12097,10 @@ app.repository = {
             }
         },
 
+
+        //url: (db) => `/api/v1/Processes('MODULE - UI - Company Settings Control')/tm1.ExecuteWithReturn`,
         launch: {
-            url: (db) => `/api/v1/Processes('MODULE - UI - Company Settings Control')/tm1.ExecuteWithReturn`,
+            url: (db) => `/api/v1/Processes('${Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableCustomer', 0).tiProcess}')/tm1.ExecuteWithReturn`,
             type: 'POST',
             body: (db) => {
                 let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableCustomer', 0),
@@ -12131,8 +12154,8 @@ app.repository = {
                            } 
                           ON COLUMNS , 
                           NON EMPTY 
-                          {EXCEPT({[Company Settings Buttons].[Company Settings Buttons].Members},
-                          {[Company Settings Buttons].[Company Settings Buttons].[Button1]})}
+                          {[Company Settings Buttons].[Company Settings Buttons].Members}
+                        
                           ON ROWS 
                         FROM [Control Company Settings] 
                         WHERE 
@@ -12218,7 +12241,7 @@ app.repository = {
         },
 
         launch: {
-            url: (db) => `/api/v1/Processes('MODULE - UI - Company Settings Control')/tm1.ExecuteWithReturn`,
+            url: (db) => `/api/v1/Processes('${Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableProduct', 0).tiProcess}')/tm1.ExecuteWithReturn`,
             type: 'POST',
             body: (db) => {
                 let x = Utils.getGridTableCell('rocheBPSPCompanySettingsGridTableProduct', 0),
@@ -12289,7 +12312,7 @@ app.repository = {
                 body: (db) => {
                     return `{
                         "Parameters": [
-                                {"Name": "pUserID", "Value": "${db.activeUserName}"},
+                                {"Name": "pUserID", "Value": "${db.activeUserName.split('/')[0]}/${Utils.getGridTableCell('rocheBPSPCompanySettingsCheckedOutGridTable', 3).title}"},
                                 {"Name": "pProduct", "Value": "${Utils.getGridTableCell('rocheBPSPCompanySettingsCheckedOutGridTable', 0).productCode}"},
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${Utils.getGridTableCell('rocheBPSPCompanySettingsCheckedOutGridTable', 2).title}"},
@@ -12342,7 +12365,8 @@ app.repository = {
         {
 
             initCondition: (db) => {
-                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGridRow1Cell2DropBox')
+                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGridRow1Cell2DropBox');
+                return a;
             },
             initDefault: (db) => {
                 return [];
@@ -12397,7 +12421,8 @@ app.repository = {
         {
 
             initCondition: (db) => {
-                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGridRow1Cell2DropBox')
+                let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGridRow1Cell2DropBox');
+                return a;
             },
             initDefault: (db) => {
                 return [];

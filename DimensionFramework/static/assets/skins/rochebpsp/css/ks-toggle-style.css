@@ -650,14 +650,14 @@
 /* company_settings_toggle_bpsp */
 
 .ks-toggle-company_settings_toggle_bpsp .ks-toggle-label-off {
-    padding-left: 15%;
+    padding-left: 5%;
     color: #00965E;
     font-size: 16px;
     font-weight: bold;
 }
 
 .ks-toggle-company_settings_toggle_bpsp .ks-toggle-label-on {
-    padding-left: 15%;
+    padding-left: 5%;
     color: #0066CC;
     font-size: 16px;
     font-weight: bold;
@@ -674,7 +674,7 @@
     color: #00965E;
     cursor: pointer;
     font-size: 16px;
-    padding-right: 15%;
+    padding-right: 5%;
     display: contents;
 }
 
