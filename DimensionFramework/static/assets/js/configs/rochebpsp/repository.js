@@ -10741,13 +10741,13 @@ app.repository = {
 
         launch: {
 
-            url: (db) => `/api/v1/Processes('MODULE - UI - Territory to User Update')/tm1.ExecuteWithReturn`,
+            url: (db) => `/api/v1/Processes('MODULE - UI - Account to Territory Update')/tm1.ExecuteWithReturn`,
             type: 'POST',
             body: (db) => {
 
                 return `{
                         "Parameters": [
-                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPTerritoriesUsersTitleGridRow1Cell2DropBox', 'key')}"}
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPAccountsTerritoriesGridRow1Cell2DropBox', 'key')}"}
                         ]
                     }`;
             }
