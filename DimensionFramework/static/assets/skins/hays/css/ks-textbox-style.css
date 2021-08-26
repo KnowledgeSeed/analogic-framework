@@ -1,0 +1,54 @@
+/* searchbox skin*/
+
+.ks-textbox-searchbox .ks-textbox-title {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+
+.ks-textbox-searchbox .ks-textbox-field {
+    background-color: #fff;
+    border: 1px solid #b1b3b3;
+    border-radius: 7px;
+    height: 40px;
+}
+
+.ks-textbox-searchbox .ks-textbox-input {
+    font-size: 16px;
+    padding: 0 10px;
+}
+
+.ks-textbox-searchbox .ks-textbox-input::-webkit-input-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-searchbox .ks-textbox-input::-moz-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-searchbox .ks-textbox-input:-ms-input-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-searchbox .ks-textbox-input:-moz-placeholder {
+    color: #838388;
+}
+
+
+.ks-textbox-searchbox .ks-textbox-icon {
+    display: flex;
+    margin-left: 10px;
+
+}
+
+.ks-textbox-searchbox .ks-textbox-icon::before {
+    font-family: 'analogic' !important;
+    content: "\e934";
+    color: #000;
+    cursor: pointer;
+    font-size: 20px;
+
+}

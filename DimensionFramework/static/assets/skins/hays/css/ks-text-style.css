@@ -22,3 +22,35 @@
     font-weight: bold;
     margin-bottom: 5px;
 }
+.ks-text-filter_button .ks-text-inner {
+    
+}
+.ks-text-filter_button .ks-text-title {
+    font-weight: normal;
+    color: #343A40;
+    font-size: 16px;
+    margin-bottom: 12px;
+    margin-top: 12px;
+    margin-left: 25px;
+}
+
+.ks-text-filter_button .ks-text-icon {
+    float: left;
+    position: relative;
+}
+
+.ks-text-filter_text .ks-text-title {
+    font-weight: normal;
+    color: #343A40;
+    font-size: 13px;
+    margin-bottom: 13px;
+    margin-top: 14px;
+    position: absolute;
+}
+.ks-text-filter_text .ks-text-icon {
+    float: right;
+    margin-bottom: 13px;
+    margin-top: 14px;
+    position: relative;
+    margin-left: 120px;
+}

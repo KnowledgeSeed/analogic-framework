@@ -126,26 +126,127 @@
      transform: translateY(4px);*/
 }
 
-/* */
-
-
-.ks-button-userpanelmain_hays.ks-button:hover {
-    height: 40px;
+/* user name*/
+.ks-button-userpanelmain_hays.ks-button {
+    height: 30px;
     padding: 1px;
-    width: 115px;
     border-radius: 6px;
-    background-color: #ebecec;
-    top: 30px;
-    left: 1785px;}
+    background-color: #F2F2F2;
+}
 
-.ks-button-userpanelmain_hays.ks-button-inner:hover {
-    background-color: #ebecec;
+.ks-button-userpanelmain_hays .ks-button-inner {
+    background-color: #F2F2F2;
     border-radius: 6px;
     padding: 0 25px 0 10px;
 }
 
-.ks-button-userpanelmain_hays.ks-button-icon:hover,
-.ks-button-userpanelmain_hays.ks-button-icon img:hover {
+.ks-button-userpanelmain_hays .ks-button-icon,
+.ks-button-userpanelmain_hays .ks-button-icon img {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #585959;
+}
+
+.ks-button-userpanelmain_hays .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-userpanelmain_hays .ks-button-label {
+    color: #585959;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* filter button*/
+
+.ks-button-filter_hays.ks-button {
+    height: 30px;
+    padding: 1px;
+    border-radius: 20px;
+    background-color: #F2F2F2;
+    position: relative;
+
+}
+
+.ks-button-filter_hays .ks-button-inner {
+    background-color: #F2F2F2;
+    border-radius: 20px;
+    padding: 0 25px 0 10px;
+    float: left;
+}
+
+.ks-button-filter_hays .ks-button-icon,
+.ks-button-filter_hays .ks-button-icon img {
+    float: left;
+    font-size: 20px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #585959;
+}
+
+.ks-button-filter_hays .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-filter_hays .ks-button-label {
+    color: #343A40;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* filter container button*/
+
+.ks-button-filter_container_button.ks-button {
+    height: 30px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #FFFFFF;
+    position: relative;
+}
+
+.ks-button-filter_container_button .ks-button-inner {
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+    float: left;
+}
+
+.ks-button-filter_container_button .ks-button-icon,
+.ks-button-filter_container_button .ks-button-icon img {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #585959;
+}
+
+.ks-button-filter_container_button .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-filter_container_button .ks-button-label {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 600;
+    float: left;
+}
+
+/* */
+
+
+.ks-button-filter_container_button.ks-button:hover {
+    background-color: #E3F1FF;
+}
+
+.ks-button-filter_container_button.ks-button-inner:hover {
+    background-color: #E3F1FF;
+    border-radius: 8px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-filter_container_button.ks-button-icon:hover,
+.ks-button-filter_container_button.ks-button-icon img:hover {
     float: left;
     font-size: 21px;
     margin-top: 4px;
@@ -153,11 +254,11 @@
     color: #171515;
 }
 
-.ks-button-userpanelmain_hays.ks-button-divider:hover {
+.ks-button-filter_container_button.ks-button-divider:hover {
     width: 10px;
 }
 
-.ks-button-userpanelmain_hays.ks-button-label:hover {
+.ks-button-filter_container_button.ks-button-label:hover {
     color: #171515;
     font-size: 16px;
     font-weight: 600;

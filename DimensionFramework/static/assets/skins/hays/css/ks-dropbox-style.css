@@ -1,6 +1,6 @@
 .ks-dropbox-deepblue_multiselect .ks-dropbox-field {
     border: 1px solid #8d8d8d;
-    border-radius: 5px;
+    border-radius: 8px;
     height: 40px;
 }
 
@@ -51,7 +51,7 @@
 
 
     border: 1px solid #8d8d8d;
-    border-radius: 5px;
+    border-radius: 8px;
     margin-top: 2px;
     padding: 2px;
     left: 8px;
@@ -70,7 +70,7 @@
 }
 
 .ks-dropbox-deepblue_multiselect .ks-dropbox-panel-item.on:hover {
-    background-color: #0066cc;
+    background-color: #E3F1FF;
 }
 
 .ks-dropbox-deepblue_multiselect .ks-dropbox-panel-item-separator {
@@ -79,8 +79,10 @@
 
 .ks-dropbox-deepblue_multiselect .ks-dropbox-panel-item-text {
     color: #000;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
+    font-family: 'Gotham Narrow', sans-serif;
+
 }
 
 .ks-dropbox-deepblue_multiselect .ks-dropbox-panel-item-icon,

@@ -1,0 +1,18 @@
+/* filter */
+.ks-container-popup_hays.ks-container-backdrop {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.ks-container-popup_hays.ks-container {
+    border-radius: 8px;
+}
+
+.ks-container-popup_hays .ks-container-content {
+    padding: 0px;
+}
+
+.ks-container-popup_hays .div-x{
+    color: #0066CC;
+    font-size: 12px;
+    margin-right: 8px;
+}
