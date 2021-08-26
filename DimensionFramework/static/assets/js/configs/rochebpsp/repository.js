@@ -7663,14 +7663,16 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                return [
-                    {name: 'PL1', key: 1, on: true},
-                    {name: 'PL2', key: 2, on: false},
-                    {name: 'PL3', key: 3, on: false},
-                    {name: 'PL4', key: 4, on: false},
-                    {name: 'PL5', key: 5, on: false},
-                    {name: 'PL6', key: 6, on: false}
-                ]
+                return v('rocheBPSPCustomersPlanningGridTableMonthly.cellData').map(function (e) {
+                    return {name: e[2].title, key: e[2].title.replace('PL', '').replace('a',''), on: false}
+                }).reduce((acc, current) => {
+                    const x = acc.find(item => item.name === current.name);
+                    if (!x) {
+                        return acc.concat([current]);
+                    } else {
+                        return acc;
+                    }
+                }, []);
             }
         }
     },
@@ -7726,7 +7728,6 @@ app.repository = {
                                 {"Name": "pProduct", "Value": "${focusedProduct}"},
                                 {"Name": "pCompany", "Value": "${company}"},
                                 {"Name": "pReceiver", "Value": "${receiver}"},
-                                {"Name": "pTargetCube", "Value": "Base Plan"},
                                 {"Name": "pLineItem", "Value": "${type}"},
                                 {"Name": "pCustomer", "Value": "${customerCode}"},
                                 {"Name": "pTerritories", "Value": "${territoryCode}"},
