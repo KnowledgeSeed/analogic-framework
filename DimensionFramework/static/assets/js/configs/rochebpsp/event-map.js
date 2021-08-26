@@ -2273,6 +2273,14 @@ app.eventMap = {
         {
             action: app.fn.showPopup,
             argument: 'Upload success'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningHeaderInfoGridTable'
         }
     ],
     'upload.rocheBPSPCustomersPlanningUploadPopupUpload.error': [
