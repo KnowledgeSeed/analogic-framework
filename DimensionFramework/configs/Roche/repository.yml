@@ -1,0 +1,236 @@
+exportMonthly: >
+  With
+       Set DefaultProductRows AS
+       {TM1DRILLDOWNMEMBER({[Products].[BPSP $productPlanVersion].[$product]}, ALL, RECURSIVE )}
+       MEMBER [Periods].[Periods].[ProductName] as
+              [Products].[BPSP $productPlanVersion].CurrentMember.Properties('BPSP $productPlanVersion Description')
+       MEMBER [Periods].[Periods].[ProductCaption] as
+              [Products].[BPSP $productPlanVersion].CurrentMember.Properties('BPSP $productPlanVersion Element')
+       MEMBER [Periods].[Periods].[ProductLevel] as
+              [Products].[BPSP $productPlanVersion].CurrentMember.Properties('BPSP $productPlanVersion Product Level - Name')
+       Set FixColumns AS
+       {[Periods].[Periods].[ProductName],
+        [Periods].[Periods].[ProductCaption],
+        [Periods].[Periods].[ProductLevel]}
+    SELECT
+       {Union(FixColumns,{DRILLDOWNMEMBER({[Periods].[Periods].[$year1],[Periods].[Periods].[$year2],[Periods].[Periods].[$year3],[Periods].[Periods].[$year4]},{[Periods].[Periods].[$year1],[Periods].[Periods].[$year2],[Periods].[Periods].[$year3],[Periods].[Periods].[$year4]})},All)}
+       PROPERTIES [Periods].[Periods].[Caption] ON COLUMNS ,
+      {DefaultProductRows}
+      PROPERTIES [Products].[BPSP $productPlanVersion].[BPSP $productPlanVersion Caption] ON ROWS
+    FROM [Sales Plan by Product]
+    WHERE
+      (
+       [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[$lineItem],
+       [Versions].[Versions].[$companyVersion],
+       [Companies].[Companies].[$company],
+       [Receivers].[Receivers].[$receiver],
+       [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value]
+      )
+
+exportCustomerMonthly: >
+  With
+    --Default mdx to run from JS
+    Set ProductRows As
+    {Filter(
+      {Filter({[Products].[BPSP $productVersion].Members} ,
+      [Sales Territory to Product].([Versions].[Versions].[$version],
+                                    [Companies].[Companies].[$company],
+                                    [Territories].[Territories].[$territoryCode],
+                                    [Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Flag])>0)},
+               [Products].[BPSP Budget].CurrentMember.Properties('BPSP $productVersion Product Level - Name') = 'PL1' or 
+               [Products].[BPSP Budget].CurrentMember.Properties('BPSP $productVersion Product Level - Name') = 'PL2' or 
+               [Products].[BPSP Budget].CurrentMember.Properties('BPSP $productVersion Product Level - Name') = 'PL2a' or 
+               [Products].[BPSP Budget].CurrentMember.Properties('BPSP $productVersion Product Level - Name') = 'PL3'
+              )}   
+    -- mdx to run from JS when user focusing
+    Set FocusedRows As
+    {Filter({TM1DRILLDOWNMEMBER({[Products].[BPSP $productVersion].[$focusedProduct]} , All, Recursive)}
+    ,[Sales Territory to Product].([Versions].[Versions].[$version],
+                                    [Companies].[Companies].[$company],
+                                    [Territories].[Territories].[$territoryCode],
+                                    [Measures Sales Territory to Product].[Measures Sales Territory to Product].[Assignment Flag])>0)}
+    -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)     
+         MEMBER [Periods].[Periods].[ProductName] as 
+                [Products].[BPSP $productVersion].CurrentMember.Properties('BPSP $productVersion Description')
+         MEMBER [Periods].[Periods].[ProductCaption] as 
+                [Products].[BPSP $productVersion].CurrentMember.Properties('BPSP $productVersion Element')
+         MEMBER [Periods].[Periods].[ProductLevel] as 
+                [Products].[BPSP $productVersion].CurrentMember.Properties('BPSP $productVersion Product Level - Name')
+         MEMBER [Periods].[Periods].[UILevelFormat] as 
+                [Products].[BPSP $productVersion].CurrentMember.Properties('BPSP $productVersion UI Level Format')
+    -- Create the first 3 column with information
+         Set FixColumns AS
+         {[Periods].[Periods].[ProductName],
+          [Periods].[Periods].[ProductCaption],
+          [Periods].[Periods].[ProductLevel],
+          [Periods].[Periods].[UILevelFormat]
+          }
+    SELECT
+         {Union({FixColumns}, 
+               {TM1DRILLDOWNMEMBER({[Periods].[Periods].[$year1], [Periods].[Periods].[$year2], [Periods].[Periods].[$year3], [Periods].[Periods].[$year4]}, ALL, RECURSIVE )}
+         ,All)}
+      ON COLUMNS, 
+       {$rows}
+      ON ROWS 
+    FROM [Sales Plan by Customer] 
+    WHERE 
+      (
+       [Versions].[Versions].[$version],
+       [Receivers].[Receivers].[$receiver],
+       [Territories].[Territories].[$territoryCode],
+       [Companies].[Companies].[$company],
+       [Customers Plan].[Customers Plan].[$customerCode],
+       [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[$type],
+       [Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value]
+      )
+
+exportIpPlanningMonthly: >
+  With
+    --Checked out Product Element drilled down
+
+    Set DefaultProductRows AS
+    {Intersect({TM1DRILLDOWNMEMBER({[Materials].[BPSP $productPlanVersion IP].[$material]}, ALL, RECURSIVE )},
+    {TM1SubsetToSet([Materials].[BPSP $productPlanVersion IP],'$company')})}
+
+    -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)
+
+    MEMBER [Periods].[Periods].[IP Name] as
+      [Materials].[BPSP $productPlanVersion IP].CurrentMember.Properties('BPSP $productPlanVersion IP Name')
+    MEMBER [Periods].[Periods].[IP Code] as
+      [Materials].[BPSP $productPlanVersion IP].CurrentMember.Properties('Element')
+    MEMBER [Periods].[Periods].[Level] as
+      [Materials].[BPSP $productPlanVersion IP].CurrentMember.Properties('Product Level - Name')
+
+    -- Create the first 3 column with information
+
+    Set FixColumns AS
+    {([Periods].[Periods].[IP Name]),
+     ([Periods].[Periods].[IP Code]),
+     ([Periods].[Periods].[Level])}
+    Set DataColumns As
+    {DRILLDOWNMEMBER({[Periods].[Periods].[$year1],[Periods].[Periods].[$year2]},{[Periods].[Periods].[$year1],[Periods].[Periods].[$year2]})}
+    -- query
+    SELECT
+    --Columns
+      {Union(FixColumns,DataColumns,All)}
+      PROPERTIES [Periods].[Periods].[Caption] ON COLUMNS ,
+    -- Rows
+      {TM1FILTERBYLEVEL({[Instrument Types].[Instrument Types].Members}, 0)}*
+      {TM1FILTERBYLEVEL({[Contract Types].[Contract Types].Members}, 0)}*
+      {DefaultProductRows}
+      PROPERTIES [Instrument Types].[Instrument Types].[Caption],[Contract Types].[Contract Types].[Caption],[Materials].[BPSP $productPlanVersion IP].[BPSP $productPlanVersion IP Caption] ON ROWS
+    FROM [Sales Plan IP]
+    WHERE
+    (
+      [LineItems Sales Plan IP].[LineItems Sales Plan IP].[Final Quantity Plan],
+      [Versions].[Versions].[$companyVersion],
+      [Companies].[Companies].[$company],
+      [Receivers].[Receivers].[$receiver],
+      [Measures Sales Plan IP].[Measures Sales Plan IP].[Value]
+    )
+
+
+rocheProductLevelExportMDX: >
+  With
+    --Create deault subset for the rows
+    Set DefaultProductRows AS
+    {TM1DRILLDOWNMEMBER({[Products].[BPSP $productPlanVersion].[PL1]}, ALL, RECURSIVE )}
+    --Create deault subset for the rows by Receiver
+       Set DefaultReceiversRows AS
+       {TM1DRILLDOWNMEMBER({[Receivers].[Receivers].[All Receivers]}, ALL, RECURSIVE )}
+    -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)
+       MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductName] as
+              [Products].[BPSP $productPlanVersion].CurrentMember.Properties('BPSP $productPlanVersion Description')
+       MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductCaption] as
+              [Products].[BPSP $productPlanVersion].CurrentMember.Properties('BPSP $productPlanVersion Element')
+       MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel] as
+              [Products].[BPSP $productPlanVersion].CurrentMember.Properties('BPSP $productPlanVersion Product Level - Name')
+       MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[DUMMY] AS 'DUMMY'
+       MEMBER [Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment] as
+              [Sales Report by Product].([Currency Keys].[Currency Keys].[Local],
+              [LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan],
+              [Measures Sales Report by Product].[Measures Sales Report by Product].[Comment])
+      SELECT
+     {([Periods].[Periods].[2020],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductName]),
+      ([Periods].[Periods].[2020],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductCaption]),
+      ([Periods].[Periods].[2020],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductLevel]),
+       -- itt a 2019
+       ([Periods].[Periods].[$yearMinusOne],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+       ([Periods].[Periods].[$year0],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
+       ([Periods].[Periods].[$year1],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+     -- eza 2021 TO
+       ([Periods].[Periods].[$year1],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW T0]),
+       ([Periods].[Periods].[$year2],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+       ([Periods].[Periods].[$year3],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+       ([Periods].[Periods].[$year4],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan])
+       ,([Periods].[Periods].[$year1],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+       ([Periods].[Periods].[$year2],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+       ([Periods].[Periods].[$year3],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+       ([Periods].[Periods].[$year4],[Measures Sales Report by Product].[Measures Sales Report by Product].[PlanComment],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Final Sales Plan]),
+     -- kell bele 4 growth
+      ([Periods].[Periods].[$year1],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan]),
+      ([Periods].[Periods].[$year2],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan]),
+      ([Periods].[Periods].[$year3],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan]),
+      ([Periods].[Periods].[$year4],[Measures Sales Report by Product].[Measures Sales Report by Product].[Value],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[Growth Final Sales Plan])
+      }
+      ON COLUMNS ,
+      NON EMPTY
+      {DefaultReceiversRows}*{DefaultProductRows}
+     ON ROWS
+     FROM [Sales Report by Product]
+    WHERE
+    ([Versions].[Versions].[$companyVersion],
+     [Companies].[Companies].[$company],
+     [Currency Keys].[Currency Keys].[$currency])
+
+rocheMaterialMaintenanceExportMDX: >
+  With
+    Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag] As
+    IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL6',1,0)
+    -- IP Node and has no pland Data then deletable
+    Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag] As
+    IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
+        [Material Information by Company].([ Companies].[ Companies].[$company],
+        [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) = 0,1,0)
+    -- IP Node and has pland Data then go to plan
+    Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag] As
+    IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
+        [Material Information by Company].([ Companies].[ Companies].[$company],
+        [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) <> 0,1,0)
+    SELECT
+       {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP $productPlanVersion Name],
+        [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name],
+         [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element]}
+      ON COLUMNS ,
+      -- {TM1SubsetToSet([Materials].[BPSP $productPlanVersion],'$company MM')}
+
+          {Filter({TM1SubsetToSet([Materials].[BPSP $productPlanVersion], '$company MM')},
+                 Instr(UCASE([Materials].[BPSP $productPlanVersion].[BPSP $productPlanVersion Name]), '') > 0)}
+      ON ROWS
+    FROM [}ElementAttributes_Materials]
+
+rocheMaterialMaintenanceByIpNodeExportMDX: >
+  With
+    -- IP Node then add dummy flag
+    Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag] As
+    IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='IP Node',1,0)
+    -- IP Node and has no pland Data then deletable
+    Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag] As
+    IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
+    [Material Information by Company].([ Companies].[ Companies].[$company],
+    [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) = 0,1,0)
+    -- IP Node and has pland Data then go to plan
+    Member[}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag] As
+    IIF([}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name]='PL8' AND
+    [Material Information by Company].([ Companies].[ Companies].[$company],
+    [Measures Material Information by Company].[Measures Material Information by Company].[Flag - Has plan data]) <> 0,1,0)
+    SELECT
+    {[}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP $productPlanVersion IP Name],
+    [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Product Level - Name],
+    [}ElementAttributes_Materials].[}ElementAttributes_Materials].[Element]}
+    ON COLUMNS ,
+    {Filter({TM1SubsetToSet([Materials].[BPSP $productPlanVersion IP], '$company MM')},
+    Instr(UCASE([Materials].[BPSP $productPlanVersion IP].[BPSP $productPlanVersion IP Name]), '') > 0)}
+    PROPERTIES [Materials].[BPSP $productPlanVersion IP].[Caption]  ON ROWS
+    FROM [}ElementAttributes_Materials]
+

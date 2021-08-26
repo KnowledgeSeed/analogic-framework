@@ -1,0 +1,7 @@
+{
+  "rocheMonthly": {
+    "namespace": "DimensionFramework.Customer.Hays.Export",
+    "class": "Export",
+    "method": "rocheMonthly"
+  }
+}
