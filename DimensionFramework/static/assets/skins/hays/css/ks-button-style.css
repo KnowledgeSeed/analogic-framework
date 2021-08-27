@@ -469,7 +469,21 @@
     margin-right: 2px;
     margin-left: 4px;
 }
+/*Ira backbutton*/
+.ks-button-backbuttonhays.ks-button {
+    color: #347CF6;
+    font-size: 25px;
+    font-weight: bold;
+}
 
+.ks-button-backbuttonhays span {
+    font-size: 25px;
+}
+
+.ks-button-backbuttonhays:hover {
+    background-color: #bfd9f2;
+    border-radius: 8px;
+}
 
 
 
