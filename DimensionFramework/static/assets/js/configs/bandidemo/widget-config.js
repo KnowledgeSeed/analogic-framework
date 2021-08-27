@@ -10,7 +10,7 @@ app.widgetConfig = {
         widgets: [
             {
                 id: 'bandiPivot',
-                type: PivotWidget
+                type: PivotTableWidget
             }
             /*,
             {
