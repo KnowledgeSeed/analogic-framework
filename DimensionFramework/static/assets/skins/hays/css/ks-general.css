@@ -12,6 +12,18 @@
 }
 
 @font-face {
+  font-family: 'icomoon';
+  src:  url('../fonts/icomoon.eot?rp6e2e');
+  src:  url('../fonts/icomoon.eot?rp6e2e#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf?rp6e2e') format('truetype'),
+    url('../fonts/icomoon.woff?rp6e2e') format('woff'),
+    url('../fonts/icomoon.svg?rp6e2e#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
     font-family: 'Gotham Narrow';
     src: url('../fonts/GothamNarrow-Medium.eot');
     src: url('../fonts/GothamNarrow-Medium.eot?#iefix') format('embedded-opentype'),
@@ -168,4 +180,7 @@
 }
 .icon-user:before {
     content: "\e911";
+}
+.icon-chevron-right:before {
+  content: "\e916";
 }
