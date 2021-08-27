@@ -184,7 +184,7 @@ app.eventMap = {
     'launch.haysKamForecastingGridRow4Cell2Button': [
         {
             action: app.fn.openPopup,
-            argument: 'haysKamForecastingPontPopUp'
+            argument: 'haysKamForecastingPointPopUp'
         }
     ]
 

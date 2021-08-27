@@ -704,7 +704,7 @@ app.widgetConfig = {
                             {
                                 id: 'haysKamForecastingGridRow1Cell2',
                                 type: GridCellWidget,
-                                alignment: 'top-left',
+                                alignment: 'bottom-left',
                                 width: '25%',
                                 widgets: [
 
@@ -714,6 +714,7 @@ app.widgetConfig = {
                                         title: 'KAM Forecasting',
                                         width: '100%',
                                         skin: 'menu',
+                                        marginLeft: '5px',
                                         titleAlignment: 'top',
                                         titleFontSize: 30,
                                         titleFontColor: '#000000',
@@ -1190,7 +1191,7 @@ app.widgetConfig = {
                                         type: ButtonWidget,
                                         width: '40px',
                                         height: '40px',
-                                        skin: 'pont_button',
+                                        skin: 'point_button',
                                         icon: 'icon-badge'
                                     }
                                 ]
@@ -1477,70 +1478,73 @@ app.widgetConfig = {
             },
 
             {
-                id: 'haysKamForecastingPontPopUp',
+                id: 'haysKamForecastingPointPopUp',
                 type: ContainerWidget,
                 anchorVisible: false,
                 anchorOnClick: true,
                 backdrop: true,
                 visible: false,
                 closeBtn: false,
-                width: '190',
-                height: '250px',
+                width: '240',
+                height: '140px',
                 bgScrollable: true,
                 fixed: true,
                 heightFixed: false,
                 behaviour: 'popup',
                 skin: 'departurement_popup_hays',
                 fadingSpeed: 0,
-                position: 'bottom',
+                position: 'right',
                 widgets: [
                     {
-                        id: 'haysKamForecastingPontPopUpCell1',
+                        id: 'haysKamForecastingPointPopUpCell1',
                         type: GridCellWidget,
                         alignment: 'bottom-left',
                         width: '100%',
                         widgets: [
                             {
-                                id: 'haysKamForecastingPontPopUpCell1Button1',
+                                id: 'haysKamForecastingPointPopUpCell1Button1',
                                 type: ButtonWidget,
                                 width: '100%',
                                 label: 'Clear All Filters',
-                                icon: 'icon-user',
-                                height: '40px'
+                                icon: 'icon-clear',
+                                height: '40px',
+                                skin: 'point_popup_clearbutton'
 
                             }
                         ]
                     },
                     {
-                        id: 'haysKamForecastingPontPopUpCell2',
+                        id: 'haysKamForecastingPointPopUpCell2',
                         type: GridCellWidget,
                         alignment: 'bottom-left',
                         width: '100%',
                         widgets: [
                             {
-                                id: 'haysKamForecastingPontPopUpCell2Button1',
+                                id: 'haysKamForecastingPointPopUpCell2Button1',
                                 type: ButtonWidget,
                                 width: '100%',
                                 label: 'Save as Filter Preset',
                                 icon: 'icon-user',
-                                height: '40px'
+                                height: '40px',
+                                skin: 'point_popup_savebutton'
 
                             }
                         ]
                     },
                     {
-                        id: 'haysKamForecastingPontPopUpCell3',
+                        id: 'haysKamForecastingPointPopUpCell3',
                         type: GridCellWidget,
                         alignment: 'bottom-left',
                         width: '100%',
                         widgets: [
                             {
-                                id: 'haysKamForecastingPontPopUpCell3Button1',
+                                id: 'haysKamForecastingPointPopUpCell3Button1',
                                 type: ButtonWidget,
                                 width: '100%',
                                 label: 'Load Filter Preset',
                                 icon: 'icon-user',
-                                height: '40px'
+                                height: '40px',
+                                skin: 'point_popup_loadbutton'
 
                             }
                         ]
