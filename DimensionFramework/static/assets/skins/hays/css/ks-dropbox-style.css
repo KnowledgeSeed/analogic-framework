@@ -493,3 +493,103 @@
     width: 190px;
     float: left;
 }
+
+/*project status dropbox */
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-field {
+    border: 1px solid #8d8d8d;
+    border-radius: 8px;
+    height: 40px;
+    display: none;
+}
+
+.ks-dropbox-filter_selector_projectstatus  .ks-dropbox-title {
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+    text-align: left;
+}
+
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-input {
+    font-size: 16px;
+    padding: 0 10px;
+}
+
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-input::-webkit-input-placeholder {
+    color: #838388;
+}
+
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-input::-moz-placeholder {
+    color: #838388;
+}
+
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-input:-ms-input-placeholder {
+    color: #838388;
+}
+
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-input:-moz-placeholder {
+    color: #838388;
+}
+
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-icon {
+    border-radius: 4px;
+    height: 40px;
+    margin: 0 5px;
+    width: 40px;
+    display: block;
+}
+
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-icon:after {
+    border-top: 7px solid #747b85;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+}
+
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-panel {
+    border-radius: 5px;
+    margin-top: 2px;
+    padding: 2px;
+    left: 8px;
+    right: 8px;
+    background-color: #fff;
+    display: block !important;
+}
+
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-panel-item {
+    border-radius: 4px;
+    height: 40px;
+    padding: 0 10px;
+}
+
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-panel-item:hover {
+    background-color: rgba(220, 235, 250, 0.5);
+}
+
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-panel-item.on:hover {
+    background-color: rgba(220, 235, 250, 0.5);
+}
+
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-panel-item-separator {
+    width: 10px;
+}
+
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-panel-item-text {
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-panel-item-icon,
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-panel-item-separator {
+    display: block;
+}
+
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-panel {
+    position: unset;
+}
+
+.ks-dropbox-filter_selector_projectstatus .ks-dropbox-panel-inner {
+    width: 190px;
+    float: left;
+}
