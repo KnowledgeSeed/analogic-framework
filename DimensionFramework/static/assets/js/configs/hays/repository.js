@@ -146,6 +146,7 @@ app.repository = {
                     }
                 },
         },
+
     haysKamForecastingGridTable: {
         init: {
             execute: (db) => {
@@ -153,35 +154,35 @@ app.repository = {
                     [
                         {
                             title: 'Businesspartner',
-                            icon: 'icon-person',
+                            icon: 'icon-user',
                             iconColor: '#6F42C1',
                             skin: 'filter_button',
                             cellSkin: 'top_greyfon'
                         },
                         {
                             title: 'Type',
-                            icon: 'icon-circle-grid-4',
+                            icon: 'icon-user',
                             skin: 'filter_button',
                             iconColor: '#28A745',
                             cellSkin: 'greyfon'
                         },
                         {
                             title: 'Account',
-                            icon: 'icon-rectangle-stack-fill',
+                            icon: 'icon-user',
                             skin: 'filter_button',
                             iconColor: '#E98300',
                             cellSkin: 'top_greyfon'
                         },
                         {
                             title: 'Location',
-                            icon: 'icon-location',
+                            icon: 'icon-user',
                             skin: 'filter_button',
                             iconColor: '#E83E8C',
                             cellSkin: 'top_greyfon'
                         },
                         {
                             title: 'Project status',
-                            icon: 'icon-calendar',
+                            icon: 'icon-user',
                             skin: 'filter_button',
                             iconColor: '#007BFF',
                             cellSkin: 'top_greyfon'
@@ -191,7 +192,7 @@ app.repository = {
                         {
                             title: 'valami',
                             skin: 'filter_text',
-                            icon: 'icon-x-circle',
+                            icon: 'icon-clear',
                             iconColor: '#A9A9A9',
                             cellSkin: 'bottom_greyfon'
                         },
@@ -205,21 +206,21 @@ app.repository = {
                         {
                             title: 'valami',
                             skin: 'filter_text',
-                            icon: 'icon-x-circle',
+                            icon: 'icon-clear',
                             iconColor: '#A9A9A9',
                             cellSkin: 'bottom_greyfon'
                         },
                         {
                             title: 'valami',
                             skin: 'filter_text',
-                            icon: 'icon-x-circle',
+                            icon: 'icon-clear',
                             iconColor: '#A9A9A9',
                             cellSkin: 'bottom_greyfon'
                         },
                         {
                             title: 'valami',
                             skin: 'filter_text',
-                            icon: 'icon-x-circle',
+                            icon: 'icon-clear',
                             iconColor: '#A9A9A9',
                             cellSkin: 'bottom_greyfon'
                         }
@@ -229,5 +230,29 @@ app.repository = {
             }
 
         }
-    }
+    },
+    haysKamForecastingFilterPopUpDropdown: {
+        initCondition: (db) => {
+            return Utils.isGridTableLoaded('haysKamForecastingGridTable');
+        },
+        init: {
+            execute: (db) => {
+                let selectedTitle = Utils.getGridTableCurrentCell('haysKamForecastingGridTable').title;
+                let skin = 'filter_selector_' + selectedTitle.replace(' ', '_').toLowerCase();
+                let result = [];
+                result = {
+                    skin: skin,
+                    items: [
+                        {name: selectedTitle + '1', on: false},
+                        {name: selectedTitle + '2', on: false},
+                        {name: selectedTitle + '3', on: true},
+                        {name: selectedTitle + '4', on: false},
+                        {name: selectedTitle + '5', on: false},
+                        {name: selectedTitle + '6', on: true},
+                    ]
+                };
+                return result;
+            }
+        }
+    },
 };
