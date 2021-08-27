@@ -147,6 +147,28 @@ app.repository = {
                 },
         },
 
+    haysKamForecasting: {
+        updateHayKamForecastingGridTableCell: (gridTableId, actualRow, actualColumn) => {
+            let gridTableData = v(gridTableId), cellOriginalValue = gridTableData.cellData[actualRow][actualColumn];
+            if (actualColumn != gridTableData.column) {
+                return cellOriginalValue;
+            }
+            let dropDownValue = v('haysKamForecastingFilterPopUpDropdown.value');
+            if (actualRow == 1) {
+                cellOriginalValue['title'] = dropDownValue;
+
+            }
+            if (dropDownValue === '') {
+                //skin változtatás:
+                //cellOriginalValue['skin'] = actualRow == 0 ? 'első_sor_text_nek_a_skinje' : 'második_sor_text_nek_a_skinje';
+            } else {
+                //skin változtatás:
+                //cellOriginalValue['skin'] = actualRow == 0 ? 'első_sor_text_nek_a_skinje_van_kiválasztott_érték' : 'második_sor_text_nek_a_skinje_van_kiválasztott_érték';
+            }
+
+            return cellOriginalValue;
+        }
+    },
     haysKamForecastingGridTable: {
         init: {
             execute: (db) => {
@@ -229,6 +251,31 @@ app.repository = {
                 return result;
             }
 
+        },
+        refresh_col_0: {
+            execute: (db, widgetId, extraParams) => {
+                return Repository.haysKamForecasting.updateHayKamForecastingGridTableCell(widgetId, extraParams.row, extraParams.col);
+            }
+        },
+        refresh_col_1: {
+            execute: (db, widgetId, extraParams) => {
+                return Repository.haysKamForecasting.updateHayKamForecastingGridTableCell(widgetId, extraParams.row, extraParams.col);
+            }
+        },
+        refresh_col_2: {
+            execute: (db, widgetId, extraParams) => {
+                return Repository.haysKamForecasting.updateHayKamForecastingGridTableCell(widgetId, extraParams.row, extraParams.col);
+            }
+        },
+        refresh_col_3: {
+            execute: (db, widgetId, extraParams) => {
+                return Repository.haysKamForecasting.updateHayKamForecastingGridTableCell(widgetId, extraParams.row, extraParams.col);
+            }
+        },
+        refresh_col_4: {
+            execute: (db, widgetId, extraParams) => {
+                return Repository.haysKamForecasting.updateHayKamForecastingGridTableCell(widgetId, extraParams.row, extraParams.col);
+            }
         }
     },
     haysKamForecastingFilterPopUpDropdown: {
@@ -237,20 +284,21 @@ app.repository = {
         },
         init: {
             execute: (db) => {
-                let selectedTitle = Utils.getGridTableCurrentCell('haysKamForecastingGridTable').title;
-                let skin = 'filter_selector_' + selectedTitle.replace(' ', '_').toLowerCase();
-                let result = [];
-                result = {
-                    skin: skin,
-                    items: [
-                        {name: selectedTitle + '1', on: false},
-                        {name: selectedTitle + '2', on: false},
-                        {name: selectedTitle + '3', on: true},
-                        {name: selectedTitle + '4', on: false},
-                        {name: selectedTitle + '5', on: false},
-                        {name: selectedTitle + '6', on: true},
-                    ]
-                };
+                let gridTableData = v('haysKamForecastingGridTable'),
+                    selectedTitle = Utils.getGridTableCurrentCell('haysKamForecastingGridTable').title,
+                    skin = 'filter_selector_' + selectedTitle.replace(' ', '_').toLowerCase(),
+                    selectedItems = Utils.getGridTableCellByRowAndColumn('haysKamForecastingGridTable', 1, gridTableData.column, 'title').split(',');
+                    let result = {
+                        skin: skin,
+                        items: [
+                            {name: selectedTitle + '1', on: selectedItems.includes(selectedTitle + '1')},
+                            {name: selectedTitle + '2', on: selectedItems.includes(selectedTitle + '2')},
+                            {name: selectedTitle + '3', on: selectedItems.includes(selectedTitle + '3')},
+                            {name: selectedTitle + '4', on: selectedItems.includes(selectedTitle + '4')},
+                            {name: selectedTitle + '5', on: selectedItems.includes(selectedTitle + '5')},
+                            {name: selectedTitle + '6', on: selectedItems.includes(selectedTitle + '6')}
+                        ]
+                    };
                 return result;
             }
         }
