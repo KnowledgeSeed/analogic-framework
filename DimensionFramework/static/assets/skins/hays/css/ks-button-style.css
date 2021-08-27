@@ -198,75 +198,6 @@
     font-weight: 600;
 }
 
-/* filter container button*/
-
-.ks-button-filter_container_button.ks-button {
-    height: 30px;
-    padding: 1px;
-    border-radius: 6px;
-    background-color: #FFFFFF;
-    position: relative;
-}
-
-.ks-button-filter_container_button .ks-button-inner {
-    border-radius: 6px;
-    padding: 0 25px 0 10px;
-    float: left;
-}
-
-.ks-button-filter_container_button .ks-button-icon,
-.ks-button-filter_container_button .ks-button-icon img {
-    float: left;
-    font-size: 21px;
-    margin-top: 4px;
-    margin-right: 8px;
-    color: #585959;
-}
-
-.ks-button-filter_container_button .ks-button-divider {
-    width: 10px;
-}
-
-.ks-button-filter_container_button .ks-button-label {
-    color: #000000;
-    font-size: 16px;
-    font-weight: 600;
-    float: left;
-}
-
-/* */
-
-
-.ks-button-filter_container_button.ks-button:hover {
-    background-color: #E3F1FF;
-}
-
-.ks-button-filter_container_button.ks-button-inner:hover {
-    background-color: #E3F1FF;
-    border-radius: 8px;
-    padding: 0 25px 0 10px;
-}
-
-.ks-button-filter_container_button.ks-button-icon:hover,
-.ks-button-filter_container_button.ks-button-icon img:hover {
-    float: left;
-    font-size: 21px;
-    margin-top: 4px;
-    margin-right: 8px;
-    color: #171515;
-}
-
-.ks-button-filter_container_button.ks-button-divider:hover {
-    width: 10px;
-}
-
-.ks-button-filter_container_button.ks-button-label:hover {
-    color: #171515;
-    font-size: 16px;
-    font-weight: 600;
-
-}
-
 /* hierarhcy button KAM Forecasting */
 
 .ks-button-hierarchy_button.ks-button {
@@ -522,26 +453,230 @@
     border-radius: 5px;
 }
 /* ... button in filters row*/
-.ks-button-pont_button.ks-button {
+.ks-button-point_button.ks-button {
     height: 40px;
     width: 40px;
     border-radius: 20px;
     background-color: #F2F2F2;
 }
 
-.ks-button-pont_button .ks-button-inner {
+.ks-button-point_button .ks-button-inner {
     background-color: #F2F2F2;
     border-radius: 20px;
 }
 
-.ks-button-pont_button .ks-button-icon,
-.ks-button-pont_button .ks-button-icon img {
+.ks-button-point_button .ks-button-icon,
+.ks-button-point_button .ks-button-icon img {
     font-size: 20px;
     color: #6C757D;
 }
 
+/*point popup clear all filters button buttons*/
+
+.ks-button-point_popup_clearbutton.ks-button {
+    height: 30px;
+    width: 90px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #FFFFFF;
+    position: relative;
+}
+
+.ks-button-point_popup_clearbutton .ks-button-inner {
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+    float: left;
+}
+
+.ks-button-point_popup_clearbutton .ks-button-icon,
+.ks-button-point_popup_clearbutton .ks-button-icon img {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #DC3545;
+}
+
+.ks-button-point_popup_clearbutton .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-point_popup_clearbutton .ks-button-label {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 600;
+    float: left;
+}
+
+/* */
 
 
+.ks-button-point_popup_clearbutton.ks-button:hover {
+    background-color: #E3F1FF;
+}
 
+.ks-button-point_popup_clearbutton.ks-button-inner:hover {
+    background-color: #E3F1FF;
+    border-radius: 8px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-point_popup_clearbutton.ks-button-icon:hover,
+.ks-button-point_popup_clearbutton.ks-button-icon img:hover {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #171515;
+}
+
+.ks-button-point_popup_clearbutton.ks-button-divider:hover {
+    width: 10px;
+}
+
+.ks-button-point_popup_clearbutton.ks-button-label:hover {
+    color: #171515;
+    font-size: 16px;
+    font-weight: 600;
+
+}
+/*point popup save all filters button buttons*/
+
+.ks-button-point_popup_savebutton.ks-button {
+    height: 30px;
+    width: 90px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #FFFFFF;
+    position: relative;
+}
+
+.ks-button-point_popup_savebutton .ks-button-inner {
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+    float: left;
+}
+
+.ks-button-point_popup_savebutton .ks-button-icon,
+.ks-button-point_popup_savebutton .ks-button-icon img {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #28A745;
+}
+
+.ks-button-point_popup_savebutton .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-point_popup_savebutton .ks-button-label {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 600;
+    float: left;
+}
+
+/* */
+
+
+.ks-button-point_popup_savebutton.ks-button:hover {
+    background-color: #E3F1FF;
+}
+
+.ks-button-point_popup_savebutton.ks-button-inner:hover {
+    background-color: #E3F1FF;
+    border-radius: 8px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-point_popup_savebutton.ks-button-icon:hover,
+.ks-button-point_popup_savebutton.ks-button-icon img:hover {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #171515;
+}
+
+.ks-button-point_popup_savebutton.ks-button-divider:hover {
+    width: 10px;
+}
+
+.ks-button-point_popup_savebutton.ks-button-label:hover {
+    color: #171515;
+    font-size: 16px;
+    font-weight: 600;
+
+}
+/*point popup load all filters button buttons*/
+
+.ks-button-point_popup_loadbutton.ks-button {
+    height: 30px;
+    width: 90px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #FFFFFF;
+    position: relative;
+}
+
+.ks-button-point_popup_loadbutton .ks-button-inner {
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+    float: left;
+}
+
+.ks-button-point_popup_loadbutton .ks-button-icon,
+.ks-button-point_popup_loadbutton .ks-button-icon img {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #007BFF;
+}
+
+.ks-button-point_popup_loadbutton .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-point_popup_loadbutton .ks-button-label {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 600;
+    float: left;
+}
+
+/* */
+
+
+.ks-button-point_popup_loadbutton.ks-button:hover {
+    background-color: #E3F1FF;
+}
+
+.ks-button-point_popup_loadbutton.ks-button-inner:hover {
+    background-color: #E3F1FF;
+    border-radius: 8px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-point_popup_loadbutton.ks-button-icon:hover,
+.ks-button-point_popup_loadbutton.ks-button-icon img:hover {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #171515;
+}
+
+.ks-button-point_popup_loadbutton.ks-button-divider:hover {
+    width: 10px;
+}
+
+.ks-button-point_popup_loadbutton.ks-button-label:hover {
+    color: #171515;
+    font-size: 16px;
+    font-weight: 600;
+
+}
 
 
