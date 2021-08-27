@@ -7664,7 +7664,7 @@ app.repository = {
         init: {
             execute: (db) => {
                 return v('rocheBPSPCustomersPlanningGridTableMonthly.cellData').map(function (e) {
-                    return {name: e[2].title, key: e[2].title.replace('PL', '').replace('a',''), on: false}
+                    return {name: e[2].title, key: e[2].title.replace('PL', '').replace('a', ''), on: false}
                 }).reduce((acc, current) => {
                     const x = acc.find(item => item.name === current.name);
                     if (!x) {
@@ -11399,13 +11399,13 @@ app.repository = {
                         }, (r, x) => {
                             return {value: r.Cells[x].Members[4].Attributes.Caption};
                         }, (r, x) => {
-                            return {value: r.Cells[x].FormattedValue === 0 ? 'No' : 'Yes'};
+                            return {value: parseInt(r.Cells[x].FormattedValue) === 0 ? 'No' : 'Yes'};
                         }, (r, x) => {
-                            return {value: r.Cells[x + 1].FormattedValue === 0 ? 'No' : 'Yes'};
+                            return {value: parseInt(r.Cells[x + 1].FormattedValue) === 0 ? 'No' : 'Yes'};
                         }, (r, x) => {
-                            return {value: r.Cells[x + 2].FormattedValue === 0 ? 'No' : 'Yes'};
+                            return {value: parseInt(r.Cells[x + 2].FormattedValue) === 0 ? 'No' : 'Yes'};
                         }, (r, x) => {
-                            return {value: r.Cells[x + 3].FormattedValue === 0 ? 'No' : 'Yes'};
+                            return {value: parseInt(r.Cells[x + 3].FormattedValue) === 0 ? 'No' : 'Yes'};
                         }
                     ]
                 }
