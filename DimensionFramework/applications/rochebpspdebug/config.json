@@ -28,5 +28,6 @@
       "oravecz.tamas"
     ],
     "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
-  }
+  },
+  "middlewareConfig": "Roche"
 }
