@@ -77,7 +77,7 @@ WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';
          /*end customer planning */
 
 
-        Render.showPage(WidgetValue['redirect'] !== null ? WidgetValue['redirect'] : app.MainPage);
+        Render.showPage(WidgetValue['redirect'] !== null ? WidgetValue['redirect'] : 'haysKamForecasting');
 
         WidgetValue['redirect'] = null;
     }

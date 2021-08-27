@@ -126,4 +126,66 @@ app.eventMap = {
         }
     ],
 
+    'perform.haysKamForecastingGridTable_0_0': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'haysKamForecastingFilterPopUpDropdown'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'haysKamForecastingFilterPopUp'
+        }
+    ],
+
+    'perform.haysKamForecastingGridTable_0_1': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'haysKamForecastingFilterPopUpDropdown'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'haysKamForecastingFilterPopUp'
+        }
+    ],
+
+    'perform.haysKamForecastingGridTable_0_2': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'haysKamForecastingFilterPopUpDropdown'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'haysKamForecastingFilterPopUp'
+        }
+    ],
+
+    'perform.haysKamForecastingGridTable_0_3': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'haysKamForecastingFilterPopUpDropdown'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'haysKamForecastingFilterPopUp'
+        }
+    ],
+
+    'perform.haysKamForecastingGridTable_0_4': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'haysKamForecastingFilterPopUpDropdown'
+        },
+        {
+            action: app.fn.openPopup,
+            argument: 'haysKamForecastingFilterPopUp'
+        }
+    ],
+
+    'launch.haysKamForecastingGridRow4Cell2Button': [
+        {
+            action: app.fn.openPopup,
+            argument: 'haysKamForecastingPontPopUp'
+        }
+    ]
+
 };

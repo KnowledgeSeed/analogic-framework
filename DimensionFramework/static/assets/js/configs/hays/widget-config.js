@@ -1044,7 +1044,7 @@ app.widgetConfig = {
                             {
                                 id: 'haysKamForecastingGridTable',
                                 type: GridTableWidget,
-                                width: '140%',
+                                width: '120%',
                                 title: '',
                                 visible: true,
                                 widgets: [
@@ -1175,6 +1175,22 @@ app.widgetConfig = {
                                                 width: '100%'
                                             }
                                         ]
+                                    }
+                                ]
+                            },
+                            {
+                                id: 'haysKamForecastingGridRow4Cell2',
+                                type: GridCellWidget,
+                                width: '30%',
+                                alignment: 'top-center',
+                                widgets: [
+                                    {
+                                        id: 'haysKamForecastingGridRow4Cell2Button',
+                                        type: ButtonWidget,
+                                        width: '40px',
+                                        height: '40px',
+                                        skin: 'pont_button',
+                                        icon: 'icon-badge'
                                     }
                                 ]
                             }
@@ -1416,6 +1432,68 @@ app.widgetConfig = {
                     },
                 ]
             },
+
+            {
+                id: 'haysKamForecastingFilterPopUp',
+                type: ContainerWidget,
+                anchorVisible: false,
+                anchorOnClick: true,
+                backdrop: true,
+                visible: false,
+                closeBtn: false,
+                width: '190',
+                bgScrollable: true,
+                fixed: true,
+                heightFixed: false,
+                behaviour: 'popup',
+                skin: 'departurement_popup_hays',
+                fadingSpeed: 0,
+                position: 'bottom',
+                widgets: [
+                    {
+                        id: 'haysKamForecastingFilterPopUpCell1',
+                        type: GridCellWidget,
+                        alignment: 'bottom-left',
+                        width: '21%',
+                        widgets: [
+                            {
+                                id: 'haysKamForecastingFilterPopUpCell1SearchBox',
+                                type: TextBoxWidget,
+                                width: '170px',
+                                skin: 'searchbox',
+                                titleFontColor: '#747b85',
+                                textFontSize: '14',
+                            }
+                        ]
+                    },
+                    {
+                        id: 'haysKamForecastingFilterPopUpDropdown',
+                        type: DropBoxWidget,
+                        multiSelect: true,
+                        skin: 'filter_selector'
+                    }
+                ]
+            },
+
+            {
+                id: 'haysKamForecastingPontPopUp',
+                type: ContainerWidget,
+                anchorVisible: false,
+                anchorOnClick: true,
+                backdrop: true,
+                visible: false,
+                closeBtn: false,
+                width: '190',
+                height: '250px',
+                bgScrollable: true,
+                fixed: true,
+                heightFixed: false,
+                behaviour: 'popup',
+                skin: 'departurement_popup_hays',
+                fadingSpeed: 0,
+                position: 'bottom',
+                widgets: []
+            }
 
         ]
     },

@@ -521,6 +521,24 @@
     background-color: rgba(0, 123, 255, 0.5);
     border-radius: 5px;
 }
+/* ... button in filters row*/
+.ks-button-pont_button.ks-button {
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+    background-color: #F2F2F2;
+}
+
+.ks-button-pont_button .ks-button-inner {
+    background-color: #F2F2F2;
+    border-radius: 20px;
+}
+
+.ks-button-pont_button .ks-button-icon,
+.ks-button-pont_button .ks-button-icon img {
+    font-size: 20px;
+    color: #6C757D;
+}
 
 
 
