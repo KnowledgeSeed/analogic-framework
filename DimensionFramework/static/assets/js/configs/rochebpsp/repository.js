@@ -9214,7 +9214,12 @@ app.repository = {
     rocheBPSPCustomersPlanningGridRow2Cell3ClearAllButton: {
         init: {
             execute: (db) => {
-                return {label: Repository.rocheBPSPCustomersPlanning.isYearly(db) ? 'Clear all' : 'Clear table'};
+                return {
+                    label: Repository.rocheBPSPCustomersPlanning.isYearly(db) ? 'Clear all' : 'Clear table',
+                    visible: Repository.rocheBPSPCustomersPlanning.isYearly(db) ||
+                        v('systemValueCustomersPlanningMonthlyType') === 'Base Plan' ||
+                        v('systemValueCustomersPlanningMonthlyType') === 'One Time Event'
+                };
             }
         },
         launch:

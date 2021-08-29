@@ -97,7 +97,7 @@ app.fn.openPageWithState = page => {
             El.body.off('bodyReady');
 
             if (page.length > 1) {
-                for (let i = 1; i < page.length; ++i) {L(page[i]);
+                for (let i = 1; i < page.length; ++i) {
                     app.fn.forceRefresh(page[i]);
                 }
             }

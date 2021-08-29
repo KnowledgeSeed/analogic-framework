@@ -5,7 +5,7 @@ app.eventMap = {
     'launch.rocheBPSPMainGridRow3Cell1Button': [
         {
             action: app.fn.openPageWithState,
-            argument: 'rocheBPSPCustomers'
+            argument: ['rocheBPSPCustomers', 'rocheBPSPCustomersTerritorySelector', 'rocheBPSPCustomersHorizontalTable', 'rocheBPSPCustomersHeaderInfoGridTable']
         }
     ],
 

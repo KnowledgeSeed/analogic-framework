@@ -17099,7 +17099,10 @@ app.widgetConfig = {
                                             confirmMessage2: 'Are you sure you want to delete all input for this Year?',
                                             width: '100%',
                                             icon: 'icon-x-square-outline',
-                                            skin: 'red_link_x_bpsp'
+                                            skin: 'red_link_x_bpsp',
+                                            listen: [
+                                               {'event': 'switch.rocheBPSPCustomersPlanningTypeSegmentedControl.finished', 'method': 'refresh'}
+                                            ]
                                         },
                                         {
                                             id: 'rocheBPSPCustomersPlanningGridRow2Cell3SubmitButton',
