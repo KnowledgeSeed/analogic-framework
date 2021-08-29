@@ -37,8 +37,7 @@ class SettingManager:
         return self.getInstanceCacheKey(self.CONFIG)
 
     def getRepositoryCacheKey(self):
-        cnf = self.getConfig()
-        return cnf['middlewareConfig'] + '_' + self.REPOSITORY
+        return self.getMiddlewareConfig() + '_' + self.REPOSITORY
 
     def getTm1SessionIdCacheKey(self):
         return self.getInstanceCacheKey(self.TM1SessionId)
@@ -110,7 +109,8 @@ class SettingManager:
         return mdx[key]
 
     def getCustomObjectDescription(self, key):
-        classes = self.getJsonSetting(self.getClassesCacheKey(), 'custom_objects', False, 'global')
+        classes = self.getJsonSetting(self.getClassesCacheKey(), 'custom_objects', False,
+                                      os.path.join('configs', self.getMiddlewareConfig()))
         return classes[key]
 
     def setTM1SessionId(self, tm1_session_id, suffix=''):
@@ -147,7 +147,7 @@ class SettingManager:
 
     def getMiddlewareConfig(self):
         cnf = self.getConfig()
-        return cnf['middlewareConfig']
+        return cnf['applicationConfigFolder']
 
     def getPoolCamNamespace(self):
         password = self.getPassword()
