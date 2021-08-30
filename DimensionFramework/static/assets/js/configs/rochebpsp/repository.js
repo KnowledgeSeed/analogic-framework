@@ -9358,7 +9358,7 @@ app.repository = {
                 ;
                 return `{"MDX":"
                         SELECT
-                            {[Measures Sales Plan by Customer Opportunity Split].[Measures Sales Plan by Customer Opportunity Split].Members}
+                            {[Measures Sales Plan by Customer Opportunity Split].[Measures Sales Plan by Customer Opportunity Split].[Split]}
                             ON COLUMNS ,
                             {FILTER(
                             {FILTER(
@@ -9452,7 +9452,7 @@ app.repository = {
                     version = v('systemValueGlobalCompanyVersion'),
                     opportunity = v('systemValueCustomerPlanningSelectedOpportunitiy');
                 return `{"MDX":"SELECT
-                       {[Measures Sales Plan by Customer Opportunity Split].[Measures Sales Plan by Customer Opportunity Split].Members} 
+                       {[Measures Sales Plan by Customer Opportunity Split].[Measures Sales Plan by Customer Opportunity Split].[Split]} 
                     ON COLUMNS ,
                        {TM1FILTERBYLEVEL({[Products].[BPSP Budget].Members}, 5)} 
                     ON ROWS
