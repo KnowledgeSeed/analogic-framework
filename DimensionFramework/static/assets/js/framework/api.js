@@ -5,47 +5,75 @@ app.widgetValue = WidgetValue;
 
 app.fn.handleListener = Listeners.handle;
 
-app.fn.showWidgets = ids => ids.forEach(app.fn.showWidget);
+app.fn.showWidgets = function showWidgets(ids){
+    ids.forEach(app.fn.showWidget);
+}
 
-app.fn.showWidget = id => $('#' + id).show().addClass('forcedByEventMap');
+app.fn.showWidget = function showWidgets(id){
+    $('#' + id).show().addClass('forcedByEventMap');
+}
 
-app.fn.hideWidgets = ids => ids.forEach(app.fn.hideWidget);
+app.fn.hideWidgets = function hideWidgets(ids){
+    ids.forEach(app.fn.hideWidget);
+}
 
-app.fn.hideWidget = id => $('#' + id).hide().addClass('forcedByEventMap');
+app.fn.hideWidget = function hideWidgets(id){
+    $('#' + id).hide().addClass('forcedByEventMap');
+}
 
-app.fn.toggleWidgets = ids => ids.forEach(app.fn.toggleWidget);
+app.fn.toggleWidgets = function toggleWidgets(ids){
+    ids.forEach(app.fn.toggleWidget);
+}
 
-app.fn.toggleWidget = id => $('#' + id).toggle().addClass('forcedByEventMap');
+app.fn.toggleWidget = function toggleWidget(id){
+    $('#' + id).toggle().addClass('forcedByEventMap');
+}
 
-app.fn.fadeOutWidget = id => $('#' + id).fadeOut(300).addClass('forcedByEventMap');
+app.fn.fadeOutWidget = function fadeOutWidget(id){
+    $('#' + id).fadeOut(300).addClass('forcedByEventMap');
+}
 
-app.fn.fadeInWidget = id => $('#' + id).fadeIn(300).addClass('forcedByEventMap');
+app.fn.fadeInWidget = function fadeInWidget(id){
+    $('#' + id).fadeIn(300).addClass('forcedByEventMap');
+}
 
-app.fn.changeSegmentedControlSelection = tabId => $('#' + tabId).addClass('on').closest('section').parent().closest('section').find('.segment').removeClass('on');
+app.fn.changeSegmentedControlSelection = function changeSegmentedControlSelection(tabId){
+    $('#' + tabId).addClass('on').closest('section').parent().closest('section').find('.segment').removeClass('on');
+}
 
-app.fn.resetRadioButtons = id => $('#' + id).find('.widget-radio').removeClass('on').closest('tr').attr('style', '');
+app.fn.resetRadioButtons = function resetRadioButtons(id)  {
+    $('#' + id).find('.widget-radio').removeClass('on').closest('tr').attr('style', '');
+}
 
-app.fn.scrollTo = Utils.scrollTo;
+app.fn.scrollTo = function scrollTo() {
+    Utils.scrollTo;
+}
 
-app.fn.jumpTo = id => window.location.href = '#' + id;
+app.fn.jumpTo = function jumpTo(id) {
+    window.location.href = '#' + id;
+}
 
-app.fn.openPage = page => Render.showPage(page);
+app.fn.openPage = function openPage(page) {
+    Render.showPage(page);
+}
 
-app.fn.backToMain = () => Render.showPage(app.MainPage);
+app.fn.backToMain = function backToMain() {
+    Render.showPage(app.MainPage);
+}
 
-app.fn.openPrevPage = () => {
+app.fn.openPrevPage = function openPrevPage() {
     if (PageState.previous !== '') {
         Render.showPage(PageState.previous);
     }
 };
 
-app.fn.openPrevPageWithState = () => {
+app.fn.openPrevPageWithState = function openPrevPageWithState() {
     if (PageState.previous !== '') {
         Render.showPage(PageState.previous, true);
     }
 };
 
-app.fn.openPageWithWaitingForEvent = arg => {
+app.fn.openPageWithWaitingForEvent = function openPageWithWaitingForEvent(arg) {
     if (!Array.isArray(arg) || arg.length < 2) {
         alert('openPageWithWaitingForEvent has 2 mandatory argument: ["eventName", "pageId"] !');
 
@@ -57,7 +85,7 @@ app.fn.openPageWithWaitingForEvent = arg => {
     El.body.on(arg[0], () => Render.showPage(arg[1]));
 };
 
-app.fn.openPageAndScrollToSection = arg => {
+app.fn.openPageAndScrollToSection = function openPageAndScrollToSection(arg) {
     Render.showPage(arg[0]);
 
     El.body.on('bodyReady', () => {
@@ -66,7 +94,7 @@ app.fn.openPageAndScrollToSection = arg => {
     });
 };
 
-app.fn.openPageWithWaitingForEventAndScrollToSection = arg => {
+app.fn.openPageWithWaitingForEventAndScrollToSection = function openPageWithWaitingForEventAndScrollToSection(arg) {
     if (!Array.isArray(arg) || arg.length < 3) {
         alert('openPageWithWaitingForEventAndScrollToSection has 3 mandatory argument: ["eventName", "pageId", "section"] !');
 
@@ -84,7 +112,7 @@ app.fn.openPageWithWaitingForEventAndScrollToSection = arg => {
     });
 };
 
-app.fn.openPageWithState = page => {
+app.fn.openPageWithState = function openPageWithState(page) {
     if (Array.isArray(page)) {
         if (PageState[page[0]]) {
             Render.showPage(page[0], true);
@@ -111,7 +139,7 @@ app.fn.openPageWithState = page => {
     }
 };
 
-app.fn.openPageWithStateAndScrollToSection = arg => {
+app.fn.openPageWithStateAndScrollToSection = function openPageWithStateAndScrollToSection(arg) {
     Render.showPage(arg[0], true);
 
     El.body.on('bodyReady', () => {
@@ -126,7 +154,7 @@ app.fn.openPageWithStateAndScrollToSection = arg => {
     });
 };
 
-app.fn.openPageWithStateAndWaitingForEvent = arg => {
+app.fn.openPageWithStateAndWaitingForEvent = function openPageWithStateAndWaitingForEvent(arg) {
     if (!Array.isArray(arg) || arg.length < 2) {
         alert('openPageWithStateAndWaitingForEvent has 2 mandatory argument: ["eventName", "pageId"] !');
 
@@ -150,7 +178,7 @@ app.fn.openPageWithStateAndWaitingForEvent = arg => {
     });
 };
 
-app.fn.openPageWithStateAndWaitingForEventAndScrollToSection = arg => {
+app.fn.openPageWithStateAndWaitingForEventAndScrollToSection = function openPageWithStateAndWaitingForEventAndScrollToSection(arg) {
     if (!Array.isArray(arg) || arg.length < 3) {
         alert('openPageWithStateAndWaitingForEventAndScrollToSection has 3 mandatory argument: ["eventName", "pageId", "sectionName"] !');
 
@@ -175,11 +203,15 @@ app.fn.openPageWithStateAndWaitingForEventAndScrollToSection = arg => {
     });
 };
 
-app.fn.removeWidgetValues = widgetIds => widgetIds.forEach(id => WidgetValue[id] = {});
+app.fn.removeWidgetValues = function removeWidgetValues(widgetIds) {
+    widgetIds.forEach(id => WidgetValue[id] = {});
+}
 
-app.fn.skip = arg => arg;
+app.fn.skip = function skip (arg) {
+    return arg;
+}
 
-app.fn.removePageValues = pageId => {
+app.fn.removePageValues = function removePageValues(pageId) {
     let page = WidgetConfig[pageId], w;
 
     for (w of page.widgets) {
@@ -188,49 +220,65 @@ app.fn.removePageValues = pageId => {
     }
 };
 
-app.fn.removeValuesRecursively = widgets => {
+app.fn.removeValuesRecursively = function removeValuesRecursively(widgets) {
     for (let w of widgets || []) {
         WidgetValue[w.id] = {};
         app.fn.removeValuesRecursively(w.widgets);
     }
 };
 
-app.fn.showToolTipsChanged = () => $('.ks-button-info').toggle(WidgetValue.ShowTooltips === true);
+app.fn.showToolTipsChanged = function showToolTipsChanged() {
+    $('.ks-button-info').toggle(WidgetValue.ShowTooltips === true);
+}
 
-app.fn.forceRefresh = widgetId => El.body.triggerHandler('forcerefresh.' + widgetId);
+app.fn.forceRefresh = function forceRefresh(widgetId){
+    El.body.triggerHandler('forcerefresh.' + widgetId);
+}
 
-app.fn.forceRefreshWidgets =  widgetIds => widgetIds.forEach(widgetId => El.body.triggerHandler('forcerefresh.' + widgetId));
+app.fn.forceRefreshWidgets = function forceRefreshWidgets(widgetIds) {
+    widgetIds.forEach(widgetId => El.body.triggerHandler('forcerefresh.' + widgetId));
+}
 
-app.fn.forceRefreshWithDelay = (argument) => {
+app.fn.forceRefreshWithDelay = function forceRefreshWithDelay(argument) {
     setTimeout(function(){ El.body.triggerHandler('forcerefresh.' + argument[0]); }, argument[1]);
 };
 
-app.fn.goToUrl = url => window.location.href = url;
+app.fn.goToUrl = function goToUrl(url){
+    window.location.href = url;
+}
 
-app.fn.goToUrlNewTab = url => {
+app.fn.goToUrlNewTab = function goToUrlNewTab(url) {
     let win = window.open(url, '_blank');
     win.focus();
 };
 
-app.fn.showPopup = (c, w = false) => app.popup.show(c, w);
+app.fn.showPopup = function showPopup(c, w = false) {
+    app.popup.show(c, w);
+}
 
-app.fn.changeSystemValue = arg => WidgetValue[arg[0]] = v(arg[1]) === 1;
+app.fn.changeSystemValue = function changeSystemValue(arg) {
+    WidgetValue[arg[0]] = v(arg[1]) === 1;
+}
 
-app.fn.addSystemValue = arg => WidgetValue[arg[0]] = arg[1];
+app.fn.addSystemValue = function addSystemValue (arg) {
+    WidgetValue[arg[0]] = arg[1];
+}
 
-app.fn.addSystemValueByVal = arg => WidgetValue[arg[0]] = v(arg[1]);
+app.fn.addSystemValueByVal = function addSystemValueByVal(arg) {
+    WidgetValue[arg[0]] = v(arg[1]);
+}
 
-app.fn.addGridTableSystemValue = arg => {
+app.fn.addGridTableSystemValue = function addGridTableSystemValue(arg) {
     let systemValueName = 'systemValue' + arg[0], gridTableValues = v(arg[1]);
 
     WidgetValue[systemValueName] = gridTableValues.cellData[gridTableValues.row][arg[2]][arg[3]];
 }
 
-app.fn.addGridTableCurrentRowSystemValue = arg => {
+app.fn.addGridTableCurrentRowSystemValue = function addGridTableCurrentRowSystemValue(arg) {
     WidgetValue['systemValue' + arg[0]] = Utils.getGridTableCell(arg[1], arg[2])[arg[3]];
 };
 
-app.fn.increaseWidgetValue = arg => {
+app.fn.increaseWidgetValue = function increaseWidgetValue(arg) {
     let k = arg[0] + '.value';
 
     if (v(k) && v(arg[2]) && v(k) < v(arg[2])) {
@@ -238,7 +286,7 @@ app.fn.increaseWidgetValue = arg => {
     }
 };
 
-app.fn.decreaseWidgetValue = arg => {
+app.fn.decreaseWidgetValue = function decreaseWidgetValue(arg) {
     let k = arg[0] + '.value';
 
     if (v(k) && v(k) > arg[2]) {
@@ -246,7 +294,7 @@ app.fn.decreaseWidgetValue = arg => {
     }
 };
 
-app.fn.resetWidgetValue = arg => {
+app.fn.resetWidgetValue = function resetWidgetValue(arg) {
     let k = arg[0] + '.value';
 
     if (v(k)) {
@@ -254,7 +302,7 @@ app.fn.resetWidgetValue = arg => {
     }
 };
 
-app.fn.setWidgetValue = arg => {
+app.fn.setWidgetValue = function setWidgetValue(arg) {
     let k = arg[0] + '.value';
 
     if (v(k) && v(arg[1])) {
@@ -262,7 +310,7 @@ app.fn.setWidgetValue = arg => {
     }
 };
 
-app.fn.removePageState = ids => {
+app.fn.removePageState = function removePageState(ids) {
     for (let id of ids) {
         if (PageState[id]) {
             delete PageState[id];
@@ -270,7 +318,7 @@ app.fn.removePageState = ids => {
     }
 };
 
-app.fn.openPopup = (argument, ev, element) => {
+app.fn.openPopup = function openPopup(argument, ev, element)  {
     const c = PopupWidget.popupsByIds[argument];
 
     if (c.isAnchorOnClick()) {
@@ -280,7 +328,7 @@ app.fn.openPopup = (argument, ev, element) => {
     c.open();
 };
 
-app.fn.togglePopup = (argument, ev, element) => {
+app.fn.togglePopup = function togglePopup(argument, ev, element){
     const c = PopupWidget.popupsByIds[argument];
 
     if (c.isAnchorOnClick()) {
@@ -290,7 +338,7 @@ app.fn.togglePopup = (argument, ev, element) => {
     c.toggle();
 };
 
-app.fn.showInfoWidget = arg => {
+app.fn.showInfoWidget = function showInfoWidget(arg) {
     if (!Array.isArray(arg) || arg.length < 2) {
         alert('showInfoWidget has 2 mandatory argument: ["infoPopupId", {repository data structure}] !');
 
@@ -309,7 +357,7 @@ app.fn.showInfoWidget = arg => {
     app.fn.fadeInWidget(arg[0], 300);
 };
 
-app.fn.toggleInfoWidget = arg => {
+app.fn.toggleInfoWidget = function toggleInfoWidget(arg) {
     if (!Array.isArray(arg) || arg.length < 2) {
         alert('toggleInfoWidget has 2 mandatory argument: ["infoPopupId", {repository data structure}] !');
 
@@ -329,11 +377,11 @@ app.fn.toggleInfoWidget = arg => {
     }
 };
 
-app.fn.pastToGridTableText = (argument, ev, element) => {
+app.fn.pastToGridTableText = function pastToGridTableText(argument, ev, element) {
     TextWidget.paste($('#' + WidgetValue['rightclick']), ev);
 };
 
-app.fn.checkTIResponseStatus = (argument, ev, element, response) => {
+app.fn.checkTIResponseStatus = function checkTIResponseStatus(argument, ev, element, response) {
     if (!Array.isArray(argument) || argument.length < 2) {
         alert('checkResponseStatus has 2 mandatory argument!');
         return;
@@ -365,7 +413,7 @@ app.fn.checkTIResponseStatus = (argument, ev, element, response) => {
     }
 };
 
-app.fn.conditionalGridTablePopup = (argument, ev, element) => {
+app.fn.conditionalGridTablePopup = function conditionalGridTablePopup(argument, ev, element) {
     let currentCell = Utils.getGridTableCurrentCell(element.data('id').split('_')[0]), i, j;
     for (i = 0; i < argument.length; ++i) {
         if (currentCell[argument[i].conditionKey] || argument[i].conditionKey === 'else') {
@@ -386,7 +434,7 @@ app.fn.conditionalGridTablePopup = (argument, ev, element) => {
     }
 }
 
-app.fn.increasePage = (widgetId) => {
+app.fn.increasePage = function increasePage(widgetId) {
     if (WidgetState[widgetId].page) {
         WidgetState[widgetId]['page'] = WidgetState[widgetId]['page'] + 1;
     } else {
@@ -397,7 +445,7 @@ app.fn.increasePage = (widgetId) => {
     El.body.triggerHandler('page.' + widgetId);
 };
 
-app.fn.decreasePage = (widgetId) => {
+app.fn.decreasePage = function decreasePage(widgetId) {
     if (WidgetState[widgetId].page) {
         WidgetState[widgetId]['page'] = WidgetState[widgetId]['page'] - 1;
     }
@@ -408,19 +456,19 @@ app.fn.decreasePage = (widgetId) => {
     El.body.triggerHandler('page.' + widgetId);
 };
 
-app.fn.jumpToFirstPage = (widgetId) => {
+app.fn.jumpToFirstPage = function jumpToFirstPage(widgetId) {
     app.fn.copyChangedCells(widgetId, (WidgetState[widgetId]['page'] - 1)  * WidgetState[widgetId].maxRows * WidgetState[widgetId].col  );
     WidgetState[widgetId]['page'] = 1;
     El.body.triggerHandler('page.' + widgetId);
 };
 
-app.fn.jumpToLastPage = (widgetId) => {
+app.fn.jumpToLastPage = function jumpToLastPage(widgetId) {
     app.fn.copyChangedCells(widgetId, (WidgetState[widgetId]['page'] - 1 )  * WidgetState[widgetId].maxRows * WidgetState[widgetId].col );
     WidgetState[widgetId]['page'] = Utils.getGridTableActualAndLastPage(widgetId).maxPage;
     El.body.triggerHandler('page.' + widgetId);
 };
 
-app.fn.copyChangedCells = (widgetId, start) => {
+app.fn.copyChangedCells = function copyChangedCells(widgetId, start) {
     let changedCells = $('#' + widgetId).find('.ks-grid-table-content .ks-grid-table-cell'), i = 0;
     while(i < changedCells.length){
         WidgetState[widgetId]['widgets'][start + i] = changedCells[i].outerHTML;
@@ -428,11 +476,11 @@ app.fn.copyChangedCells = (widgetId, start) => {
     }
 };
 
-app.fn.executeRequest = (eventMapId) => {
+app.fn.executeRequest = function executeRequest(eventMapId) {
     QB.writeData(eventMapId, {}, {});
 };
 
-app.fn.removeSliders = () => {
+app.fn.removeSliders = function removeSliders() {
     SliderWidget.slidersByIds = [];
     SliderWidget.isDocEventsHaveBeenBound = false;
 };

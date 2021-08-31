@@ -14,7 +14,6 @@ class EventMapExport extends Export {
     parseEventMapContent(eventMapContent) {
         let line, exportableDataByEventMapKeys = {}, comment, commentsForStatement = [], commentStartKey;
         let lastEventMapKey, statement, eventMapKey, eventMapArray, exportData = [], i, d, v, len, args, a;
-        let specialActions = ['app.fn.conditionalGridTablePopup', 'app.fn.checkTIResponseStatus'];
 
         for (line of eventMapContent.replace(/\n/g, '\r').split('\r')) {
             commentStartKey = line.indexOf('//');
@@ -61,23 +60,52 @@ class EventMapExport extends Export {
 
             for (i = 0; i < len; ++i) {
                 args = eventMapArray[i].argument || [];
-L(eventMapArray);
                 if ('string' === typeof args) {
                     args = [args];
                 }
-L(args);L(d);
-                exportData.push([
-                    v[0],
-                    v[1],
-                    v.length > 2 ? v[2] : '',
-                    i + 1,
-                    d.actions[i],
-                    this.toString(args[0]),
-                    this.toString(args[1]),
-                    this.toString(args[2]),
-                    this.toString(args[3]),
-                    d.comments.join(',')
-                ]);
+                if(d.actions[i] === 'app.fn.conditionalGridTablePopup'){
+                    let conditions = [], j, condition, k;
+                    for(j = 0; j < args.length; ++j){
+                        condition = {
+                           conditionKey: args[j].conditionKey,
+                            actions : []
+                        };
+                        for(k = 0; k < args[j].actions.length; ++k){
+                            condition.actions.push(
+                                {
+                                    action: 'app.fn.' + args[j].actions[k].action.name,
+                                    argument: args[j].actions[k].argument
+                                }
+                            )
+                        }
+                        conditions.push(condition);
+                    }
+                    exportData.push([
+                        v[0],
+                        v[1],
+                        v.length > 2 ? v[2] : '',
+                        i + 1,
+                        d.actions[i],
+                        JSON.stringify(conditions),
+                        '',
+                        '',
+                        '',
+                        d.comments.join(',')
+                    ]);
+                }else {
+                    exportData.push([
+                        v[0],
+                        v[1],
+                        v.length > 2 ? v[2] : '',
+                        i + 1,
+                        d.actions[i],
+                        this.toString(args[0]),
+                        this.toString(args[1]),
+                        this.toString(args[2]),
+                        this.toString(args[3]),
+                        d.comments.join(',')
+                    ]);
+                }
             }
         }
 
@@ -89,7 +117,7 @@ L(args);L(d);
             return '';
         }
 
-        return 'string' === typeof e ? e :  'function' === typeof e ? e.name : JSON.stringify(e);
+        return 'string' === typeof e ? e :  'function' === typeof e ? 'app.fn.' + e.name : JSON.stringify(e);
     }
 }
 ;
