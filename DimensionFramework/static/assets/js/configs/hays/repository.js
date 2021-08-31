@@ -11,15 +11,12 @@ app.repository = {
                     type: 'POST',
                     body: (db) => {
                         return `{"MDX":"
-                        SELECT 
-                           {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Department]} 
-                          ON COLUMNS , 
-                          NON EMPTY 
-                           {[Organization Units].[Organization Units].Members} 
-                          ON ROWS 
-                        FROM [}ElementAttributes_Organization Units] 
-
-
+                            SELECT 
+                               {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                              ON COLUMNS , 
+                               {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 2)} 
+                              ON ROWS 
+                            FROM [}ElementAttributes_Organization Units] 
                                     "}`;
 
                     },
@@ -47,15 +44,12 @@ app.repository = {
                     type: 'POST',
                     body: (db) => {
                         return `{"MDX":"
-                        SELECT 
-                           {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Department]} 
-                          ON COLUMNS , 
-                          NON EMPTY 
-                           {[Organization Units].[Organization Units].Members} 
-                          ON ROWS 
-                        FROM [}ElementAttributes_Organization Units] 
-
-
+                                SELECT 
+                                   {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                                  ON COLUMNS , 
+                                   {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 4)} 
+                                  ON ROWS 
+                                FROM [}ElementAttributes_Organization Units] 
                                     "}`;
 
                     },
@@ -83,13 +77,13 @@ app.repository = {
                     type: 'POST',
                     body: (db) => {
                         return `{"MDX":"
-                        SELECT 
-                           {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Department]} 
-                          ON COLUMNS , 
-                          NON EMPTY 
-                           {[Organization Units].[Organization Units].Members} 
-                          ON ROWS 
-                        FROM [}ElementAttributes_Organization Units] 
+                            SELECT 
+                               {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                              ON COLUMNS , 
+                               {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 3)} 
+                              ON ROWS 
+                            FROM [}ElementAttributes_Organization Units] 
+
 
 
                                     "}`;
@@ -119,15 +113,13 @@ app.repository = {
                     type: 'POST',
                     body: (db) => {
                         return `{"MDX":"
-                        SELECT 
-                           {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Department]} 
-                          ON COLUMNS , 
-                          NON EMPTY 
-                           {[Organization Units].[Organization Units].Members} 
-                          ON ROWS 
-                        FROM [}ElementAttributes_Organization Units] 
-
-
+                                SELECT 
+                                   {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                                  ON COLUMNS , 
+                                  NON EMPTY 
+                                   {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 0)} 
+                                  ON ROWS 
+                                FROM [}ElementAttributes_Organization Units] 
                                     "}`;
 
                     },
@@ -288,17 +280,17 @@ app.repository = {
                     selectedTitle = Utils.getGridTableCurrentCell('haysKamForecastingGridTable').title,
                     skin = 'filter_selector_' + selectedTitle.replace(' ', '_').toLowerCase(),
                     selectedItems = Utils.getGridTableCellByRowAndColumn('haysKamForecastingGridTable', 1, gridTableData.column, 'title').split(',');
-                    let result = {
-                        skin: skin,
-                        items: [
-                            {name: selectedTitle + '1', on: selectedItems.includes(selectedTitle + '1')},
-                            {name: selectedTitle + '2', on: selectedItems.includes(selectedTitle + '2')},
-                            {name: selectedTitle + '3', on: selectedItems.includes(selectedTitle + '3')},
-                            {name: selectedTitle + '4', on: selectedItems.includes(selectedTitle + '4')},
-                            {name: selectedTitle + '5', on: selectedItems.includes(selectedTitle + '5')},
-                            {name: selectedTitle + '6', on: selectedItems.includes(selectedTitle + '6')}
-                        ]
-                    };
+                let result = {
+                    skin: skin,
+                    items: [
+                        {name: selectedTitle + '1', on: selectedItems.includes(selectedTitle + '1')},
+                        {name: selectedTitle + '2', on: selectedItems.includes(selectedTitle + '2')},
+                        {name: selectedTitle + '3', on: selectedItems.includes(selectedTitle + '3')},
+                        {name: selectedTitle + '4', on: selectedItems.includes(selectedTitle + '4')},
+                        {name: selectedTitle + '5', on: selectedItems.includes(selectedTitle + '5')},
+                        {name: selectedTitle + '6', on: selectedItems.includes(selectedTitle + '6')}
+                    ]
+                };
                 return result;
             }
         }

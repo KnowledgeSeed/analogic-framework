@@ -127,63 +127,216 @@
     white-space: nowrap;
 }
 
+.icon-circle1:before {
+  content: "\e900";
+}
+.icon-circle:before {
+  content: "\e901";
+}
+.icon-alert:before {
+  content: "\e902";
+}
+.icon-arrow-jump-circle:before {
+  content: "\e903";
+}
+.icon-arrow-left:before {
+  content: "\e904";
+}
+.icon-arrow-right:before {
+  content: "\e905";
+}
 .icon-arrow-swap:before {
-    content: "\e900";
+  content: "\e906";
 }
 .icon-arrow-to-top:before {
-    content: "\e901";
+  content: "\e907";
+}
+.icon-arrow-undo:before {
+  content: "\e908";
 }
 .icon-badge:before {
-    content: "\e902";
+  content: "\e909";
+}
+.icon-calendar:before {
+  content: "\e90a";
+}
+.icon-card:before {
+  content: "\e90b";
+}
+.icon-c-circle:before {
+  content: "\e90c";
 }
 .icon-check-intermediate:before {
-    content: "\e903";
+  content: "\e90d";
 }
 .icon-check-off:before {
-    content: "\e904";
+  content: "\e90e";
 }
 .icon-check-on:before {
-    content: "\e905";
+  content: "\e90f";
+}
+.icon-check-rectangle:before {
+  content: "\e910";
 }
 .icon-chevron-close-horizontal:before {
-    content: "\e906";
+  content: "\e911";
 }
 .icon-chevron-close-vertical:before {
-    content: "\e907";
+  content: "\e912";
+}
+.icon-chevron-down:before {
+  content: "\e913";
 }
 .icon-chevron-open-horizontal:before {
-    content: "\e908";
+  content: "\e914";
 }
 .icon-chevron-open-vertical:before {
-    content: "\e909";
-}
-.icon-clear:before {
-    content: "\e90a";
-}
-.icon-columns:before {
-    content: "\e90b";
-}
-.icon-ellipsis:before {
-    content: "\e90c";
-}
-.icon-menu:before {
-    content: "\e90d";
-}
-.icon-rows:before {
-    content: "\e90e";
-}
-.icon-tray-arrow-down:before {
-    content: "\e90f";
-}
-.icon-tray-files:before {
-    content: "\e910";
-}
-.icon-user:before {
-    content: "\e911";
+  content: "\e915";
 }
 .icon-chevron-right:before {
   content: "\e916";
 }
+.icon-circle-grid-4:before {
+  content: "\e917";
+}
+.icon-clear:before {
+  content: "\e918";
+}
+.icon-columns:before {
+  content: "\e919";
+}
+.icon-comment:before {
+  content: "\e91a";
+}
+.icon-comment-on:before {
+  content: "\e91b";
+}
+.icon-copy:before {
+  content: "\e91c";
+}
+.icon-cube-front-back:before {
+  content: "\e91d";
+}
+.icon-details-list:before {
+  content: "\e91e";
+}
+.icon-edit:before {
+  content: "\e91f";
+}
+.icon-edit-circle:before {
+  content: "\e920";
+}
+.icon-ellipsis:before {
+  content: "\e921";
+}
+.icon-envelope:before {
+  content: "\e922";
+}
+.icon-folder:before {
+  content: "\e923";
+}
+.icon-forward:before {
+  content: "\e924";
+}
+.icon-glasses:before {
+  content: "\e925";
+}
+.icon-hays:before {
+  content: "\e926";
+}
+.icon-location:before {
+  content: "\e927";
+}
+.icon-menu:before {
+  content: "\e928";
+}
+.icon-minus-circle:before {
+  content: "\e929";
+}
+.icon-p-circle:before {
+  content: "\e92a";
+}
+.icon-people-3:before {
+  content: "\e92b";
+}
+.icon-people-3-fill:before {
+  content: "\e92c";
+}
 .icon-people-square-stack:before {
   content: "\e92d";
+}
+.icon-percent:before {
+  content: "\e92e";
+}
+.icon-percent-target:before {
+  content: "\e92f";
+}
+.icon-person:before {
+  content: "\e930";
+}
+.icon-plane-circle:before {
+  content: "\e931";
+}
+.icon-plus-circle:before {
+  content: "\e932";
+}
+.icon-rectangle-stack:before {
+  content: "\e933";
+}
+.icon-rectangle-stack-fill:before {
+  content: "\e934";
+}
+.icon-rewind:before {
+  content: "\e935";
+}
+.icon-rows:before {
+  content: "\e936";
+}
+.icon-s-circle:before {
+  content: "\e937";
+}
+.icon-search:before {
+  content: "\e938";
+}
+.icon-settings:before {
+  content: "\e939";
+}
+.icon-star-circle:before {
+  content: "\e93a";
+}
+.icon-table:before {
+  content: "\e93b";
+}
+.icon-t-circle:before {
+  content: "\e93c";
+}
+.icon-time-back-arrow:before {
+  content: "\e93d";
+}
+.icon-trash:before {
+  content: "\e93e";
+}
+.icon-trash-circle:before {
+  content: "\e93f";
+}
+.icon-trash-fill:before {
+  content: "\e940";
+}
+.icon-tray-arrow-down:before {
+  content: "\e941";
+}
+.icon-tray-files:before {
+  content: "\e942";
+}
+.icon-user:before {
+  content: "\e943";
+}
+.icon-x:before {
+  content: "\e944";
+}
+.icon-x-circle:before {
+  content: "\e945";
+}
+.icon-x-rectangle:before {
+  content: "\e946";
 }

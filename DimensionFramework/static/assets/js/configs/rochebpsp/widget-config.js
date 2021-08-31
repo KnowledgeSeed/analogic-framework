@@ -15242,8 +15242,8 @@ app.widgetConfig = {
                 {
                     id: 'rocheBPSPProductReportChart',
                     type: ComboChartWidget,
-                    width: '2000',
-                    height: '1000',
+                    width: '1830',
+                    height: '640',
                     visible: false,
                     title: '',
                     listen: [
@@ -15288,7 +15288,7 @@ app.widgetConfig = {
                     xAxesGridLinesDrawBorder: true,
                     xAxesGridLinesDrawOnChartArea: true,
                     xAxesGridLinesColor: '#c3ced5',
-                    xAxesTicksFontSize: 12,
+                    xAxesTicksFontSize: 14,
                     xAxesTicksFontFamily: 'imago, sans',
                     xAxesTicksBegintAtZero: false,
                     xAxesTicksPadding: 10,
@@ -15303,7 +15303,7 @@ app.widgetConfig = {
                     leftYAxesGridLinesDrawBorder: true,
                     leftYAxesGridLinesColor: '#c3ced5',
                     leftYAxesGridLinesDrawOnChartArea: true,
-                    leftYAxesLabelFontSize: 12,
+                    leftYAxesLabelFontSize: 18,
                     leftYAxesLabelFontFamily: 'imago, sans',
                     leftYAxesLabelFontStyle: 'normal',
                     leftYAxesLabelPadding: 10,
@@ -15325,7 +15325,7 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPProductReportProductSelectorChartButton',
                             type: ButtonWidget,
-                            marginTop: 10,
+                            marginTop: '150%',
                             listen: [
                                 {
                                     'event': 'bodyReady',
@@ -17109,7 +17109,10 @@ app.widgetConfig = {
                                             icon: 'icon-x-square-outline',
                                             skin: 'red_link_x_bpsp',
                                             listen: [
-                                               {'event': 'switch.rocheBPSPCustomersPlanningTypeSegmentedControl.finished', 'method': 'refresh'}
+                                                {
+                                                    'event': 'switch.rocheBPSPCustomersPlanningTypeSegmentedControl.finished',
+                                                    'method': 'refresh'
+                                                }
                                             ]
                                         },
                                         {
@@ -18816,7 +18819,7 @@ app.widgetConfig = {
                             width: '100%',
                             height: 0,
                             widgets: [
-                                 {
+                                {
                                     id: 'rocheBPSPCompanySettingsGridTableCustomerHeaderCell-01',
                                     type: GridTableHeaderCellWidget,
                                     width: '100%',
@@ -18878,7 +18881,7 @@ app.widgetConfig = {
                             width: '100%',
                             height: 0,
                             widgets: [
-                                 {
+                                {
                                     id: 'rocheBPSPCompanySettingsGridTableProductHeaderCell-01',
                                     type: GridTableHeaderCellWidget,
                                     width: '100%',
