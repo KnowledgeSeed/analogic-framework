@@ -813,6 +813,10 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutUploadPopupUpload'
         },
         {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutUploadPopup'
+        },
+        {
             action: app.fn.showPopup,
             argument: 'Upload success'
         }
@@ -2341,8 +2345,12 @@ app.eventMap = {
     ],
     'launch.rocheBPSPCustomersPlanningGridTableMonthlyHeaderReturnFromFocus.finished': [
         {
-            action: app.fn.forceRefresh,
-            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+            action: app.fn.forceRefreshWidgets,
+            argument: [
+                'rocheBPSPCustomersPlanningGridTableMonthly',
+                'rocheBPSPCustomersPlanningMonthlyExcelExport',
+                'rocheBPSPCustomersPlanningMonthlyExcelUpload'
+            ]
         }
     ],
     'launch.rocheBPSPCustomersPlanningGridTableYearlyHeaderReturnFromFocus.finished': [

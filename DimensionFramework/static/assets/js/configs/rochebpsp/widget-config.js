@@ -3715,6 +3715,10 @@ app.widgetConfig = {
                                                         'refresh.rocheBPSPProductsTypeSegmentedControl.finished']
                                                 },
                                                 {
+                                                    'event': 'segmentedControlTab1.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl.finished',
+                                                    'method': 'refresh'
+                                                },
+                                                {
                                                     'event': 'bodyReady',
                                                     'method': 'refreshWithWaitingForEvents',
                                                     'parameters': [
@@ -3732,6 +3736,10 @@ app.widgetConfig = {
                                             skin: 'blue_link_columns_bpsp',
                                             marginLeft: 15,
                                             listen: [
+                                                {
+                                                    'event': 'segmentedControlTab1.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl.finished',
+                                                    'method': 'refresh'
+                                                },
                                                 {
                                                     'event': 'segmentedControlTab2.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl.finished',
                                                     'method': 'refreshWithWaitingForEvent',
@@ -15649,15 +15657,15 @@ app.widgetConfig = {
                     type: HorizontalTableWidget,
                     title: '',
                     titleVisible: false,
-                    columnNames: ["Customer", "Code", "Receiver", "2020 Actuals", "2021 Final", "2022 Plan", "Submitted"],
-                    columnWidths: ["35%", "10%", "10%", "10%", "10%", "10%", "10%"],
+                    columnNames: ["Customer", "Code", "Receiver", "2020 Actuals", "2021 Final", "2022 Plan", "Submitted By", "Submitted"],
+                    columnWidths: ["35%", "8%", "5%", "10%", "10%", "10%", "10%", "7%"],
                     searchField: true,
                     visible: true,
                     fadeOutNum: 13,
                     marginLeft: 10,
                     marginRight: 10,
                     hideIfNoData: true,
-                    columnTypes: ['string', 'string', 'string', 'real', 'real', 'real', 'string'],
+                    columnTypes: ['string', 'string', 'string', 'real', 'real', 'real', 'string', 'string'],
                     listen: [
                         {
                             event: 'refresh.rocheBPSPCustomersTerritorySelector.finished',
