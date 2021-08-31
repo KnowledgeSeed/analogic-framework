@@ -13,7 +13,8 @@ class EventMapExport extends Export {
 
     parseEventMapContent(eventMapContent) {
         let line, exportableDataByEventMapKeys = {}, comment, commentsForStatement = [], commentStartKey;
-        let lastEventMapKey, statement, eventMapKey, eventMapArray, exportData = [], i, d, v, len, args;
+        let lastEventMapKey, statement, eventMapKey, eventMapArray, exportData = [], i, d, v, len, args, a;
+        let specialActions = ['app.fn.conditionalGridTablePopup', 'app.fn.checkTIResponseStatus'];
 
         for (line of eventMapContent.replace(/\n/g, '\r').split('\r')) {
             commentStartKey = line.indexOf('//');
@@ -29,7 +30,8 @@ class EventMapExport extends Export {
             }
 
             if (-1 !== statement.indexOf('action:')) {
-                exportableDataByEventMapKeys[lastEventMapKey].actions.push(statement.slice(7, -1).trim());
+                a = statement.slice(7, -1).trim();
+                exportableDataByEventMapKeys[lastEventMapKey].actions.push(a);
 
                 continue;
             }
@@ -41,8 +43,8 @@ class EventMapExport extends Export {
                 continue;
             }
 
-            v = statement.match(/^['|"](\w+\.\w+)['|"]/) || [];
-            if (2 === v.length) {
+            v = statement.match(/^['|"](\w+\.\w+(\.\w+)?)['|"]/) || [];
+            if (3 === v.length) {
                 lastEventMapKey = v[1];
 
                 exportableDataByEventMapKeys[lastEventMapKey] = {comments: commentsForStatement, actions: []};
@@ -52,20 +54,22 @@ class EventMapExport extends Export {
         for (eventMapKey in exportableDataByEventMapKeys) {
             d = exportableDataByEventMapKeys[eventMapKey];
             eventMapArray = Utils.getObjectValueByDotSeparatedKeys(app.eventMap, eventMapKey);
+            L(eventMapArray);
 
             v = eventMapKey.split('.');
             len = eventMapArray.length;
 
             for (i = 0; i < len; ++i) {
                 args = eventMapArray[i].argument || [];
-
+L(eventMapArray);
                 if ('string' === typeof args) {
                     args = [args];
                 }
-
+L(args);L(d);
                 exportData.push([
                     v[0],
                     v[1],
+                    v.length > 2 ? v[2] : '',
                     i + 1,
                     d.actions[i],
                     this.toString(args[0]),
@@ -85,7 +89,7 @@ class EventMapExport extends Export {
             return '';
         }
 
-        return 'string' === typeof e ? e : JSON.stringify(e);
+        return 'string' === typeof e ? e :  'function' === typeof e ? e.name : JSON.stringify(e);
     }
 }
 ;
