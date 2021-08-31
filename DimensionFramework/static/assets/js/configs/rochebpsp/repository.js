@@ -7370,8 +7370,10 @@ app.repository = {
                 });
                  */
                 return {
-                    //label: v('systemValueCustomerReportFocusedProduct') === '' ? 'PL1'  :  v('systemValueCustomerReportFocusedProduct')
-                    label: Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0) === false ? 'DIVISION DIAGNOSTICS' : Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0).label
+                    label: Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0).label === true ? Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0).label :
+                        Utils.getGridTableCell('rocheBPSPProductReportGridTable', 0).label === true ? Utils.getGridTableCell('rocheBPSPProductReportGridTable', 0).label :
+                            'DIVISION DIAGNOSTICS'
+
                 };
             }
         }
