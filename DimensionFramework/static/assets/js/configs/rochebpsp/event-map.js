@@ -813,6 +813,10 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutUploadPopupUpload'
         },
         {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutUploadPopup'
+        },
+        {
             action: app.fn.showPopup,
             argument: 'Upload success'
         }
@@ -2241,13 +2245,13 @@ app.eventMap = {
         {
             action: app.fn.forceRefreshWidgets,
             argument: [
-                'rocheBPSPCustomersPlanningGridRow2Cell3aCreateOpportunityButton',
                 'rocheBPSPCustomersPlanningMonthlyExcelExport',
                 'rocheBPSPCustomersPlanningGridTableYearly',
                 'rocheBPSPCustomersPlanningGridTableMonthly',
                 'rocheBPSPCustomersPlanningTypeSegmentedControl',
                 'rocheBPSPCustomersPlanningGridRow2Cell3ClearAllButton',
-                'rocheBPSPCustomersPlanningMonthlyExcelUpload'
+                'rocheBPSPCustomersPlanningMonthlyExcelUpload',
+                'rocheBPSPCustomersPlanningGridRow2Cell3aCreateOpportunityButton'
             ]
         }
     ],
@@ -2341,8 +2345,12 @@ app.eventMap = {
     ],
     'launch.rocheBPSPCustomersPlanningGridTableMonthlyHeaderReturnFromFocus.finished': [
         {
-            action: app.fn.forceRefresh,
-            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+            action: app.fn.forceRefreshWidgets,
+            argument: [
+                'rocheBPSPCustomersPlanningGridTableMonthly',
+                'rocheBPSPCustomersPlanningMonthlyExcelExport',
+                'rocheBPSPCustomersPlanningMonthlyExcelUpload'
+            ]
         }
     ],
     'launch.rocheBPSPCustomersPlanningGridTableYearlyHeaderReturnFromFocus.finished': [
@@ -2763,6 +2771,10 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningHeaderInfoGridTable'
         }
     ],
     'launch.rocheBPSPCustomersPlanningGridRow2Cell3SubmitButton.finished': [
