@@ -132,12 +132,13 @@
     color: #838388;
 }
 
-.ks-dropbox-filter_selector_businesspartner .ks-dropbox-icon {
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-icon-on {
     border-radius: 4px;
     height: 40px;
     margin: 0 5px;
     width: 40px;
     display: block;
+
 }
 
 .ks-dropbox-filter_selector_businesspartner .ks-dropbox-icon:after {
