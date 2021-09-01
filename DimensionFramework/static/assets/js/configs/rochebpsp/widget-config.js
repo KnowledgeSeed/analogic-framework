@@ -14624,7 +14624,7 @@ app.widgetConfig = {
                         {
                             'event': 'launch.rocheBPSPProductReportGridTableHeaderReturnFromFocus.finished',
                             'method': 'refresh'
-                        }
+                        },
 
 
                     ],
@@ -15265,6 +15265,20 @@ app.widgetConfig = {
                             'method': 'refreshWithWaitingForEvent',
                             'parameters': ['rendered.rocheBPSPProductReportGridRow1Cell3DropBox', 'rendered.rocheBPSPProductReportPageInit']
                         },
+
+
+                        {
+                            event: 'launch.rocheBPSPProductReportMaterialSelectorShortcutPopupGridTableButton01.finished',
+                            method: 'refresh'
+                        },
+                        {
+                            event: 'launch.rocheBPSPProductReportMaterialSelectorPopopInChartGridTableButton01.finished',
+                            method: 'refresh'
+                        },
+                        {
+                            'event': 'launch.rocheBPSPProductReportGridTableHeaderReturnFromFocus.finished',
+                            'method': 'refresh'
+                        }
                     ],
                     datasets: [{
                         "type": "line",
@@ -15325,32 +15339,48 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPProductReportProductSelectorChartButton',
                             type: ButtonWidget,
-                            marginTop: '150%',
+                            marginTop: '270px',
                             listen: [
                                 {
                                     'event': 'bodyReady',
                                     'method': 'refreshWithWaitingForEvents',
                                     'parameters': [
-                                        'rendered.rocheBPSPProductReportGridTable'
+                                        'rendered.rocheBPSPProductReportGridRow1Cell3DropBox',
+                                        'rendered.rocheBPSPProductReportGridRow1Cell5DropBox',
+                                        'rendered.rocheBPSPProductReportPageInit'
                                     ]
                                 },
                                 {
+                                    'event': 'choose.rocheBPSPProductReportGridRow1Cell3DropBox.finished',
+                                    'method': 'refresh'
+                                },
+
+                                {
+                                    'event': 'choose.rocheBPSPProductReportGridRow1Cell5DropBox.finished',
+                                    'method': 'refresh'
+                                },
+
+                                {
                                     'event': 'choose.rocheBPSPProductReportGridRow1Cell2DropBox.finished',
                                     'method': 'refreshWithWaitingForEvent',
-                                    'parameters': ['rendered.rocheBPSPProductReportGridTable']
+                                    'parameters': ['rendered.rocheBPSPProductReportGridRow1Cell3DropBox', 'rendered.rocheBPSPProductReportPageInit']
+                                },
+
+
+                                {
+                                    event: 'launch.rocheBPSPProductReportMaterialSelectorShortcutPopupGridTableButton01.finished',
+                                    method: 'refresh'
                                 },
                                 {
-                                    'event': 'launch.rocheBPSPProductReportMaterialSelectorShortcutPopupGridTableButton01.finished',
-                                    'method': 'refresh'
-                                },
-                                {
-                                    'event': 'launch.rocheBPSPProductReportMaterialSelectorShortcutPopupGridTable_row_0.finished',
-                                    'method': 'refresh'
+                                    event: 'launch.rocheBPSPProductReportMaterialSelectorPopopInChartGridTableButton01.finished',
+                                    method: 'refresh'
                                 },
                                 {
                                     'event': 'launch.rocheBPSPProductReportGridTableHeaderReturnFromFocus.finished',
                                     'method': 'refresh'
-                                }
+                                },
+
+
                             ],
                             fontBold: true,
                             fontSize: '16'
