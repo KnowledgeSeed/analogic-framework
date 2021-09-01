@@ -10976,7 +10976,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '800',
+                    height: '800',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -11232,7 +11232,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '800',
+                    height: '800',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -11372,7 +11372,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '800',
+                    height: '800',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -11461,7 +11461,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '800',
+                    height: '800',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -11707,7 +11707,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '800',
+                    height: '800',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -11796,7 +11796,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '800',
+                    height: '800',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -12047,7 +12047,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '800',
+                    height: '800',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -12951,7 +12951,7 @@ app.widgetConfig = {
                             alignment: 'center-center',
                             widgets: [
                                 {
-                                    id: 'RocheBPSPMaterialsAddMaterialClipboardCell-01',
+                                    id: 'RocheBPSPMaterialsAddMaterialClipboardCell-01Toggle',
                                     type: ToggleWidget,
                                     width: '100%',
                                     iconOff: 'icon-check-off',
@@ -12971,7 +12971,7 @@ app.widgetConfig = {
                             widgets: [
 
                                 {
-                                    id: 'RocheBPSPMaterialsAddMaterialClipboardCell-02',
+                                    id: 'RocheBPSPMaterialsAddMaterialClipboardCell-02Toggle',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     marginLeft: 8,
@@ -13461,7 +13461,7 @@ app.widgetConfig = {
 
 
                                 {
-                                    id: 'RocheBPSPMaterialsAddMaterialSearchCell-01',
+                                    id: 'RocheBPSPMaterialsAddMaterialSearchCell-01Toggle',
                                     type: ToggleWidget,
                                     width: '100%',
                                     iconOff: 'icon-check-off',
@@ -13480,7 +13480,7 @@ app.widgetConfig = {
                             widgets: [
 
                                 {
-                                    id: 'RocheBPSPMaterialsAddMaterialSearchCell-02',
+                                    id: 'RocheBPSPMaterialsAddMaterialSearchCell-02Toggle',
                                     type: TextWidget,
                                     skin: 'material_gd_readonly_left_bpsp',
                                     marginLeft: 8,
@@ -18935,7 +18935,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '600',
+                    height: '600',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -19105,7 +19105,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '600',
+                    height: '600',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -19989,7 +19989,7 @@ app.widgetConfig = {
                             widgets: [
 
                                 {
-                                    id: 'rocheBPSPTerritoriesGridTableCell-02',
+                                    id: 'rocheBPSPTerritoriesGridTableCellText-02',
                                     type: TextWidget,
                                     titleAlignment: 'center',
                                     paddingRight: 1,
@@ -23596,7 +23596,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '600',
+                    height: '600',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -23758,7 +23758,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '600',
+                    height: '600',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
