@@ -525,7 +525,6 @@ app.repository = {
             }
         }
     },
-
     rocheBPSPProductsProductSelectorShortcutPopupGridTableButton01: {
         launch:
             {
@@ -585,8 +584,20 @@ app.repository = {
             }
         }
     },
-
-    rocheBPSPProductsForGridTableYearlyHeaderCellTemplate: {
+    'rocheBPSPProductsGridTableYearlyHeaderText-04': {
+        initCondition: (db) => {
+            return Repository.rocheBPSPProducts.initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository.rocheBPSPProducts.executeForTextFirstCol(3);
+            }
+        }
+    },
+    'rocheBPSPProductsGridTableYearlyHeaderCell-05': {
         initCondition: () => {
             return Repository.rocheBPSPProducts.initCondition();
         },
@@ -600,8 +611,7 @@ app.repository = {
             }
         }
     },
-
-    rocheBPSPProductsForGridTableYearlyHeaderTextTemplate: {
+    'rocheBPSPProductsGridTableYearlyHeaderText-05': {
         initCondition: () => {
             return Repository.rocheBPSPProducts.initCondition();
         },
@@ -616,90 +626,68 @@ app.repository = {
         }
     },
 
-    'rocheBPSPProductsGridTableYearlyHeaderText-04': {
-        initCondition: (db) => {
-            return Repository.rocheBPSPProducts.initCondition();
-        },
-        initDefault: (db) => {
-            return {};
-        },
-        init: {
-            execute: (db) => {
-                return Repository.rocheBPSPProducts.executeForTextFirstCol(3);
-            }
-        }
-    },
-
-    'rocheBPSPProductsGridTableYearlyHeaderCell-05': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
-    },
-
-    'rocheBPSPProductsGridTableYearlyHeaderText-05': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
-    },
-
     'rocheBPSPProductsGridTableYearlyHeaderCell-06': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderCell-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderText-06': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderText-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderCell-07': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderCell-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderText-07': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderText-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderCell-08': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderCell-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderText-08': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderText-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderCell-09': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderCell-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderText-09': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderText-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderCell-10': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderCell-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderText-10': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderText-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderCell-11': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderCell-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderText-11': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderText-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderCell-12': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderCell-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderText-12': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderText-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderCell-13': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderCell-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderText-13': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderText-05'
     },
 
     rocheBPSPProductsGridTableYearlyHeaderText13: {
@@ -3783,16 +3771,16 @@ app.repository = {
     },
     rocheBPSPipPlanning: {
         getGridTableMonthlyCell: (r, x, inc) => {
-                WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'] = WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'] + inc;
-                let i = WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'];
-                return {
-                    title: r.Cells[i].FormattedValue,
-                    cellSkin: WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                    year: r.Cells[i].Members[7].Name,
-                    applyMeasuresToSection: true,
-                    width: '100%'
-                };
-            },
+            WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'] = WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'] + inc;
+            let i = WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'];
+            return {
+                title: r.Cells[i].FormattedValue,
+                cellSkin: WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                year: r.Cells[i].Members[7].Name,
+                applyMeasuresToSection: true,
+                width: '100%'
+            };
+        },
         getCheckoutGridTableMonthlyCell: (r, x, inc) => {
             WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + inc;
             let c = r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']],
@@ -4725,7 +4713,7 @@ app.repository = {
         }
     },
     rocheBPSPIpPlanningCheckoutGridRow2Cell1aButton: {
-        
+
         launch: {
             download: (db) => {
                 let y1 = parseInt(db.systemValueGlobalStartingPlanYear),
