@@ -413,8 +413,22 @@ app.fn.checkTIResponseStatus = function checkTIResponseStatus(argument, ev, elem
     }
 };
 
+app.fn.conditionalHorizontalTableEventHandlerExecution = function conditionalHorizontalTableEventHandlerExecution(argument, ev, element) {
+    L(v(element.data('id')));L(element.data('id'));
+    let widgetId = element.data('id'),
+        action = element.data('action'),
+        row = v(widgetId)[action].rowindex,
+        currentCell = v(widgetId).rows[row][0];
+    app.fn.conditionalExecution(argument, ev, element, currentCell);
+};
+
 app.fn.conditionalGridTablePopup = function conditionalGridTablePopup(argument, ev, element) {
-    let currentCell = Utils.getGridTableCurrentCell(element.data('id').split('_')[0]), i, j;
+    let currentCell = Utils.getGridTableCurrentCell(element.data('id').split('_')[0]);
+    app.fn.conditionalExecution(argument, ev, element, currentCell);
+}
+
+app.fn.conditionalExecution = (argument, ev, element, currentCell) => {
+    let  i, j;
     for (i = 0; i < argument.length; ++i) {
         if (currentCell[argument[i].conditionKey] || argument[i].conditionKey === 'else') {
             let conditionKeyResult;
@@ -432,7 +446,7 @@ app.fn.conditionalGridTablePopup = function conditionalGridTablePopup(argument, 
             }
         }
     }
-}
+};
 
 app.fn.increasePage = function increasePage(widgetId) {
     if (WidgetState[widgetId].page) {

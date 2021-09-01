@@ -45,7 +45,9 @@ app.repository = {
                                 Utils.setWidgetValueByOther('systemValueIpPlanningFocusedProduct', 'systemValueIpPlanningFocusedProductDefault');
                                 Utils.setWidgetValueIfNotExist('systemValueGlobalSelectedCompany', false);
                                 Utils.setWidgetValue('systemValueCustomerReportFocusedProductDefault', 'PL1');
+                                Utils.setWidgetValue('systemValueCustomerReportFocusedProductNameDefault', 'DIVISION DIAGNOSTICS');
                                 Utils.setWidgetValueByOther('systemValueCustomerReportFocusedProduct', 'systemValueCustomerReportFocusedProductDefault');
+                                Utils.setWidgetValueByOther('systemValueCustomerReportFocusedProductName', 'systemValueCustomerReportFocusedProductNameDefault');
                                 Utils.setWidgetValueIfNotExist('systemValueCustomerPlanningSegmentedControlPeriodUnit', 'Yearly');
                                 Utils.setWidgetValueIfNotExist('systemValueCustomersPlanningMonthlyType', 'Base Plan');
                                 Utils.setWidgetValueIfNotExist('systemValueCustomersPlanningMonthlyTypeValue', 'Base Plan');
@@ -525,7 +527,6 @@ app.repository = {
             }
         }
     },
-
     rocheBPSPProductsProductSelectorShortcutPopupGridTableButton01: {
         launch:
             {
@@ -585,8 +586,20 @@ app.repository = {
             }
         }
     },
-
-    rocheBPSPProductsForGridTableYearlyHeaderCellTemplate: {
+    'rocheBPSPProductsGridTableYearlyHeaderText-04': {
+        initCondition: (db) => {
+            return Repository.rocheBPSPProducts.initCondition();
+        },
+        initDefault: (db) => {
+            return {};
+        },
+        init: {
+            execute: (db) => {
+                return Repository.rocheBPSPProducts.executeForTextFirstCol(3);
+            }
+        }
+    },
+    'rocheBPSPProductsGridTableYearlyHeaderCell-05': {
         initCondition: () => {
             return Repository.rocheBPSPProducts.initCondition();
         },
@@ -600,8 +613,7 @@ app.repository = {
             }
         }
     },
-
-    rocheBPSPProductsForGridTableYearlyHeaderTextTemplate: {
+    'rocheBPSPProductsGridTableYearlyHeaderText-05': {
         initCondition: () => {
             return Repository.rocheBPSPProducts.initCondition();
         },
@@ -616,90 +628,68 @@ app.repository = {
         }
     },
 
-    'rocheBPSPProductsGridTableYearlyHeaderText-04': {
-        initCondition: (db) => {
-            return Repository.rocheBPSPProducts.initCondition();
-        },
-        initDefault: (db) => {
-            return {};
-        },
-        init: {
-            execute: (db) => {
-                return Repository.rocheBPSPProducts.executeForTextFirstCol(3);
-            }
-        }
-    },
-
-    'rocheBPSPProductsGridTableYearlyHeaderCell-05': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
-    },
-
-    'rocheBPSPProductsGridTableYearlyHeaderText-05': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
-    },
-
     'rocheBPSPProductsGridTableYearlyHeaderCell-06': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderCell-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderText-06': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderText-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderCell-07': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderCell-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderText-07': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderText-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderCell-08': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderCell-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderText-08': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderText-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderCell-09': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderCell-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderText-09': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderText-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderCell-10': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderCell-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderText-10': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderText-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderCell-11': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderCell-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderText-11': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderText-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderCell-12': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderCell-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderText-12': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderText-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderCell-13': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderCellTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderCell-05'
     },
 
     'rocheBPSPProductsGridTableYearlyHeaderText-13': {
-        reference: 'rocheBPSPProductsForGridTableYearlyHeaderTextTemplate'
+        reference: 'rocheBPSPProductsGridTableYearlyHeaderText-05'
     },
 
     rocheBPSPProductsGridTableYearlyHeaderText13: {
@@ -3783,16 +3773,16 @@ app.repository = {
     },
     rocheBPSPipPlanning: {
         getGridTableMonthlyCell: (r, x, inc) => {
-                WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'] = WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'] + inc;
-                let i = WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'];
-                return {
-                    title: r.Cells[i].FormattedValue,
-                    cellSkin: WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked'] ? 'locked' : 'readonly_bpsp',
-                    year: r.Cells[i].Members[7].Name,
-                    applyMeasuresToSection: true,
-                    width: '100%'
-                };
-            },
+            WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'] = WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'] + inc;
+            let i = WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyRelativeIndex'];
+            return {
+                title: r.Cells[i].FormattedValue,
+                cellSkin: WidgetValue['systemValueRocheBPSPipPlanningGridTableMonthlyIsLocked'] ? 'locked' : 'readonly_bpsp',
+                year: r.Cells[i].Members[7].Name,
+                applyMeasuresToSection: true,
+                width: '100%'
+            };
+        },
         getCheckoutGridTableMonthlyCell: (r, x, inc) => {
             WidgetValue['systemValueMonthlyRelativeIndex'] = WidgetValue['systemValueMonthlyRelativeIndex'] + inc;
             let c = r.Cells[WidgetValue['systemValueMonthlyRelativeIndex']],
@@ -4725,7 +4715,7 @@ app.repository = {
         }
     },
     rocheBPSPIpPlanningCheckoutGridRow2Cell1aButton: {
-        
+
         launch: {
             download: (db) => {
                 let y1 = parseInt(db.systemValueGlobalStartingPlanYear),
@@ -6597,7 +6587,6 @@ app.repository = {
                        [Measures Sales Report by Product].[Measures Sales Report by Product].[Value]
                       )
 
-
                     "}`;
                     },
                     parsingControl: {
@@ -6782,6 +6771,7 @@ app.repository = {
             launch: {
                 execute: (db) => {
                     Utils.setWidgetValue('systemValueCustomerReportFocusedProduct', db.systemValueCustomerReportFocusedProductDefault);
+                    Utils.setWidgetValue('systemValueCustomerReportFocusedProductName', db.systemValueCustomerReportFocusedProductNameDefault);
                 }
             }
         },
@@ -6790,6 +6780,7 @@ app.repository = {
             {
                 execute: (db) => {
                     Utils.setWidgetValue('systemValueCustomerReportFocusedProduct', Utils.getGridTableCell('rocheBPSPProductReportGridTable', 1).title);
+                    Utils.setWidgetValue('systemValueCustomerReportFocusedProductName', Utils.getGridTableCell('rocheBPSPProductReportGridTable', 0).label);
                 }
             }
     },
@@ -6798,6 +6789,7 @@ app.repository = {
             {
                 execute: (db) => {
                     WidgetValue['systemValueCustomerReportFocusedProduct'] = Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorShortcutPopupGridTable', 0).productCode;
+                    WidgetValue['systemValueCustomerReportFocusedProductName'] = Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorShortcutPopupGridTable', 0).label;
                 }
             },
     },
@@ -6820,8 +6812,6 @@ app.repository = {
                 url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
                 type: 'POST',
                 body: (db) => {
-                    let selectedProduct = Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0) === false ? 'PL1' :
-                        Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0).productCode;
                     let yearzero = Utils.parseNumber(db.systemValueGlobalStartingPlanYear),
                         YearMinusOne = yearzero - 1,
                         YearPlusOne = yearzero + 1,
@@ -6835,7 +6825,7 @@ app.repository = {
                          {[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[PL1]}
                     --Create deault subset for the Rows by systemValueGlobalCompanyProductPlanVersion and systemValueGlobalCompanyFocusedElement
                          Set FocusedOnProductRows AS
-                         {[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[${selectedProduct}]}
+                         {[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[${db.systemValueCustomerReportFocusedProduct}]}
                     --Decide which rowSet to use
                          MEMBER [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused] AS 
                          IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
@@ -6957,7 +6947,7 @@ app.repository = {
                          {[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[PL1]}
                     --Create deault subset for the Rows by systemValueGlobalCompanyProductPlanVersion and systemValueGlobalCompanyFocusedElement
                          Set FocusedOnProductRows AS
-                         {[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[${selectedProduct}]}
+                         {[Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[${db.systemValueCustomerReportFocusedProduct}]}
                     --Decide which rowSet to use
                          MEMBER [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused] AS 
                          IIF(Count(FocusedOnProductRows)=0,'DefaultProductRows','FocusedOnProductRows')
@@ -6968,10 +6958,7 @@ app.repository = {
                                 SELECT
                                StrToSet([Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[ProductIsFocused])
                                PROPERTIES [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} Caption]
-                              
-        
-                   
-                   
+
                    ON COLUMNS ,
                                      {
                                          ([Periods].[Periods].[${YearMinusOne + '01'}],[LineItems Sales Report by Product].[LineItems Sales Report by Product].[BW Invoice]),
@@ -7065,10 +7052,7 @@ app.repository = {
         init: {
             execute: (db) => {
                 return {
-                    label: Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0).label === true ? Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0).label :
-                        Utils.getGridTableCell('rocheBPSPProductReportGridTable', 0).label === true ? Utils.getGridTableCell('rocheBPSPProductReportGridTable', 0).label :
-                            'DIVISION DIAGNOSTICS'
-
+                    label: db.systemValueCustomerReportFocusedProductName
                 };
             }
         }
@@ -7132,10 +7116,8 @@ app.repository = {
         launch:
             {
                 execute: (db) => {
-                    Utils.setWidgetValue('systemValueCustomerReportChartValue', {
-                        productName: Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0).label,
-                        productCode: Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0).productCode
-                    });
+                    WidgetValue['systemValueCustomerReportFocusedProduct'] = Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0).productCode;
+                    WidgetValue['systemValueCustomerReportFocusedProductName'] = Utils.getGridTableCell('rocheBPSPProductReportMaterialSelectorPopopInChartGridTable', 0).label;
                 }
             },
     },
