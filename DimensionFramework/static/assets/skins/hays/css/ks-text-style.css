@@ -1,4 +1,4 @@
-/* template10*/
+/* menu text*/
 
 .ks-text-menu .ks-text-title {
     font-weight: bold;
@@ -53,4 +53,20 @@
     margin-top: 14px;
     position: relative;
     margin-left: 120px;
+}
+
+/* settings text*/
+
+.ks-text-settings.ks-text-title {
+    font-weight: normal;
+    margin-bottom: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 37px;
+}
+
+.ks-text-menu-settings.ks-text-body {
+    font-weight: normal;
+    margin-bottom: 5px;
 }

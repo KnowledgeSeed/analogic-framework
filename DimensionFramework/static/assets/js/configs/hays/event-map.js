@@ -33,7 +33,7 @@ app.eventMap = {
             argument: 'haysSettings'
         }
     ],
-    'launch.haysSettingsGridRow2Cell1Button': [
+    'launch.haysSettingsGridRow2Cell2Button': [
         {
             action: app.fn.openPage,
             argument: 'haysMain'
@@ -83,6 +83,32 @@ app.eventMap = {
         }
     ],
     'launch.haysVersionGridRow1Cell1Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'haysMain'
+        }
+    ],
+
+    'launch.haysSettingsGridRow3Cell2Button': [
+        {
+            action: app.fn.openPageWithState,
+            argument: 'haysUserGroups'
+        }
+    ],
+    'launch.haysUserGroupsGridRow1Cell1Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'haysMain'
+        }
+    ],
+
+    'launch.haysUserGroupsGridRow3Cell1Button': [
+        {
+            action: app.fn.openPageWithState,
+            argument: 'haysUserGroupHierarchy'
+        }
+    ],
+    'launch.haysUserGroupHierarchyGridRow1Cell1Button': [
         {
             action: app.fn.openPage,
             argument: 'haysMain'
