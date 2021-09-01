@@ -26,7 +26,8 @@ app.eventMap = {
             argument: 'haysMain'
         }
     ],
-    'launch.haysMainRow7Cell2Button': [
+
+    'launch.haysMainRow8Cell2Button': [
         {
             action: app.fn.openPageWithState,
             argument: 'haysSettings'
@@ -70,6 +71,18 @@ app.eventMap = {
         }
     ],
     'launch.haysArbeitsberichtGridRow1Cell1Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'haysMain'
+        }
+    ],
+    'launch.haysKamForecastingGridRow2Cell7Button1': [
+        {
+            action: app.fn.openPageWithState,
+            argument: 'haysVersion'
+        }
+    ],
+    'launch.haysVersionGridRow1Cell1Button': [
         {
             action: app.fn.openPage,
             argument: 'haysMain'

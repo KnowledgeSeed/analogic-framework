@@ -206,18 +206,14 @@
     border-radius: 8px;
     width: 100px;
 }
-
 .ks-button-hierarchy_button .ks-button-label {
-    color: #6C757D;
     font-size: 14px;
     font-weight: normal;
     margin-right: 2px;
     margin-left: 6px;
-
 }
-
-.ks-button-hierarchy_button.ks-button-icon {
-    color: #fff;
+.ks-button-hierarchy_button .ks-button-icon {
+    color: #007BFF;
     font-size: 16px;
     margin-right: 2px;
     margin-left: 4px;
@@ -365,7 +361,7 @@
 .ks-button-material_hays.ks-button {
     background-color: #0066CC;
     height: 40px;
-    border-radius: 7px;
+    border-radius: 8px;
     width: 130px;
 }
 
@@ -399,7 +395,7 @@
 .ks-button-material_hayslight.ks-button {
     background-color: #E3F1FF;
     height: 40px;
-    border-radius: 7px;
+    border-radius: 8px;
     width: 130px;
 }
 
@@ -412,7 +408,7 @@
 }
 
 .ks-button-material_hayslight .ks-button-icon {
-    color: #fff;
+    color: #007BFF;
     font-size: 16px;
     margin-right: 2px;
     margin-left: 4px;
@@ -420,17 +416,17 @@
 /*Ira backbutton*/
 .ks-button-backbuttonhays.ks-button {
     color: #347CF6;
-    font-size: 25px;
-    font-weight: bold;
+    font-size: 20px;
+    font-weight: normal;
 }
 
 .ks-button-backbuttonhays span {
-    font-size: 25px;
+    font-size: 20px;
 }
 
 .ks-button-backbuttonhays:hover {
-    background-color: #bfd9f2;
-    border-radius: 8px;
+    background-color: #E3F1FF;
+    border-radius: 4px;
 }
 
 /* departurement_popup button */
@@ -467,8 +463,8 @@
 
 .ks-button-point_button .ks-button-icon,
 .ks-button-point_button .ks-button-icon img {
-    font-size: 20px;
     color: #6C757D;
+    font-size: 5px;
 }
 
 /*point popup clear all filters button buttons*/
