@@ -2063,9 +2063,23 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPProductReportMaterialSelectorPopopInChartGridTable'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportChart'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportProductSelectorChartButton'
         }
     ],
 
+    'launch.rocheBPSPProductReportMaterialSelectorShortcutPopupGridTableButton01': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportProductSelectorChartButton'
+        }
+    ],
 
     'launch.rocheBPSPProductReportMaterialSelectorShortcutPopupGridTable_row_0': [
         {
@@ -2168,6 +2182,14 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPProductReportCheckoutPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportChart'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportProductSelectorChartButton'
         }
     ],
 
