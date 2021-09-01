@@ -53,7 +53,6 @@ class EventMapExport extends Export {
         for (eventMapKey in exportableDataByEventMapKeys) {
             d = exportableDataByEventMapKeys[eventMapKey];
             eventMapArray = Utils.getObjectValueByDotSeparatedKeys(app.eventMap, eventMapKey);
-            L(eventMapArray);
 
             v = eventMapKey.split('.');
             len = eventMapArray.length;
@@ -90,6 +89,12 @@ class EventMapExport extends Export {
                         '',
                         '',
                         '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
                         d.comments.join(',')
                     ]);
                 }else {
@@ -103,6 +108,12 @@ class EventMapExport extends Export {
                         this.toString(args[1]),
                         this.toString(args[2]),
                         this.toString(args[3]),
+                        this.toString(args[4]),
+                        this.toString(args[5]),
+                        this.toString(args[6]),
+                        this.toString(args[7]),
+                        this.toString(args[8]),
+                        this.toString(args[9]),
                         d.comments.join(',')
                     ]);
                 }
