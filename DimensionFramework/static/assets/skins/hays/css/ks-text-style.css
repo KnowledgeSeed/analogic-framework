@@ -22,9 +22,8 @@
     font-weight: bold;
     margin-bottom: 5px;
 }
-.ks-text-filter_button .ks-text-inner {
 
-}
+/*filter button*/
 .ks-text-filter_button .ks-text-title {
     font-weight: normal;
     color: #343A40;
@@ -39,6 +38,7 @@
     position: relative;
 }
 
+/*filter text*/
 .ks-text-filter_text .ks-text-title {
     font-weight: normal;
     color: #343A40;
@@ -69,4 +69,29 @@
 .ks-text-menu-settings.ks-text-body {
     font-weight: normal;
     margin-bottom: 5px;
+}
+
+/*delete popup text*/
+
+.ks-text-delete .ks-text-title {
+    font-weight: bold;
+    color: #000000;
+    font-size: 16px;
+    alignment: center;
+}
+.ks-text-delete .ks-text-icon {
+   alignment: center;
+    color: #DC3545;
+    font-size: 20px;
+    margin-left: 55px;
+}
+
+/*delete popup text line 2*/
+
+.ks-text-delete_message .ks-text-title {
+    font-weight: bold;
+    color: #000000;
+    font-size: 13px;
+    align-items: center;
+    white-space: nowrap;
 }

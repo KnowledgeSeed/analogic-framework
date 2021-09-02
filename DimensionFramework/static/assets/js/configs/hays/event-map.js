@@ -165,6 +165,13 @@ app.eventMap = {
         }
     ],
 
+     'launch.haysUserGroupHierarchyGridRow2Cell2Button': [
+        {
+            action: app.fn.openPopup,
+            argument: 'haysUserGroupHierarchyDeleteDataGridTablePopup'
+        }
+    ],
+
     'perform.haysKamForecastingGridTable_0_0': [
         {
             action: app.fn.forceRefresh,
@@ -225,6 +232,13 @@ app.eventMap = {
             action: app.fn.openPopup,
             argument: 'haysKamForecastingPointPopUp'
         }
-    ]
+    ],
+
+    'launch.haysUserGroupHierarchylDeleteDataGridTablePopupGridRow4Cell1Button': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'haysUserGroupHierarchyDeleteDataGridTablePopup'
+        }
+    ],
 
 };
