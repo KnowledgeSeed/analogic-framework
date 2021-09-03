@@ -33,7 +33,7 @@ app.eventMap = {
             argument: 'haysSettings'
         }
     ],
-    'launch.haysSettingsGridRow2Cell1Button': [
+    'launch.haysSettingsGridRow2Cell2Button': [
         {
             action: app.fn.openPage,
             argument: 'haysMain'
@@ -89,6 +89,32 @@ app.eventMap = {
         }
     ],
 
+    'launch.haysSettingsGridRow3Cell2Button': [
+        {
+            action: app.fn.openPageWithState,
+            argument: 'haysUserGroups'
+        }
+    ],
+    'launch.haysUserGroupsGridRow1Cell1Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'haysMain'
+        }
+    ],
+
+    'launch.haysUserGroupsGridRow3Cell1Button': [
+        {
+            action: app.fn.openPageWithState,
+            argument: 'haysUserGroupHierarchy'
+        }
+    ],
+    'launch.haysUserGroupHierarchyGridRow1Cell1Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'haysMain'
+        }
+    ],
+
     'launch.haysKamForecastingGridRow2Cell4Button1': [
         {
             action: app.fn.openPopup,
@@ -136,6 +162,13 @@ app.eventMap = {
         {
             action: app.fn.openPopup,
             argument: 'haysKamForecastingTeamPopUp'
+        }
+    ],
+
+     'launch.haysUserGroupHierarchyGridRow2Cell2Button': [
+        {
+            action: app.fn.openPopup,
+            argument: 'haysUserGroupHierarchyDeleteDataGridTablePopup'
         }
     ],
 
@@ -199,6 +232,13 @@ app.eventMap = {
             action: app.fn.openPopup,
             argument: 'haysKamForecastingPointPopUp'
         }
-    ]
+    ],
+
+    'launch.haysUserGroupHierarchylDeleteDataGridTablePopupGridRow4Cell1Button': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'haysUserGroupHierarchyDeleteDataGridTablePopup'
+        }
+    ],
 
 };

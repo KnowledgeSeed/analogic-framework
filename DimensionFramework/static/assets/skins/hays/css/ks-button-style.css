@@ -26,7 +26,8 @@
 
 /* haysmain-grey menu icon */
 .ks-button-haysmain_grey.ks-button {
-    height: 150px;
+    height: 145px;
+    widgt: 145px;
     background-color: #A9A9A9;
     border-radius: 30px;
 }
@@ -109,12 +110,12 @@
     border-radius: 30px;
 }
 
-.ks-button-haysmain_disabled .ks-button-icon {
+.ks-button-haysmain_disabled.ks-button-icon {
     color: white;
     font-size: 70px;
 }
 
-.ks-button-haysmain_disabled .ks-button-content {
+.ks-button-haysmain_disabled.ks-button-content {
     height: 110%
 }
 
@@ -124,6 +125,33 @@
 
 .ks-button-haysmain_disabled:active {
     background-color: #ebecec;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* haysmain-grey menu icon */
+.ks-button-settings_grey_menu.ks-button {
+    height: 145px;
+    widgt: 145px;
+    background-color: #A9A9A9;
+    border-radius: 30px;
+}
+
+.ks-button-settings_grey_menu .ks-button-icon {
+    color: white;
+    font-size: 50px;
+}
+
+.ks-button-settings_grey_menu .ks-button-content {
+    height: 110%
+}
+
+.ks-button-settings_grey_menu:hover {
+    background-color: #A9A9A9
+}
+
+.ks-button-settings_grey_menu:active {
+    background-color: #A9A9A9;
     /* box-shadow: 0 5px #666;
      transform: translateY(4px);*/
 }
@@ -359,7 +387,7 @@
 /* material_hays  button */
 
 .ks-button-material_hays.ks-button {
-    background-color: #0066CC;
+    background-color: #007BFF;
     height: 40px;
     border-radius: 8px;
     width: 130px;
@@ -381,11 +409,11 @@
 }
 
 .ks-button-material_hays:hover {
-    background-color: #004C99
+    background-color: #0066CC
 }
 
 .ks-button-material_hays:active {
-    background-color: #004C99;
+    background-color: #0066CC;
     /* box-shadow: 0 5px #666;
      transform: translateY(4px);*/
 }
@@ -413,6 +441,31 @@
     margin-right: 2px;
     margin-left: 4px;
 }
+
+/* material_haysred button */
+
+.ks-button-material_haysred.ks-button {
+    background-color: rgba(220, 53, 69, 0.3);
+    height: 40px;
+    border-radius: 8px;
+    width: 130px;
+}
+
+.ks-button-material_haysred .ks-button-label {
+    color: rgba(220, 53, 69, 1);
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 2px;
+    margin-left: 6px;
+    appearance: none;
+}
+.ks-button-material_haysred .ks-button-icon {
+    color: rgba(220, 53, 69, 1);
+    font-size: 16px;
+    margin-right: 2px;
+    margin-left: 4px;
+}
+
 /*Ira backbutton*/
 .ks-button-backbuttonhays.ks-button {
     color: #347CF6;
@@ -625,7 +678,7 @@
 .ks-button-point_popup_loadbutton .ks-button-icon,
 .ks-button-point_popup_loadbutton .ks-button-icon img {
     float: left;
-    font-size: 21px;
+    font-size: 18px;
     margin-top: 4px;
     margin-right: 8px;
     color: #007BFF;
@@ -658,7 +711,7 @@
 .ks-button-point_popup_loadbutton.ks-button-icon:hover,
 .ks-button-point_popup_loadbutton.ks-button-icon img:hover {
     float: left;
-    font-size: 21px;
+    font-size: 18px;
     margin-top: 4px;
     margin-right: 8px;
     color: #171515;
@@ -673,6 +726,42 @@
     font-size: 16px;
     font-weight: 600;
 
+}
+
+/* delete popup light blue button */
+
+.ks-button-delete_hayslight.ks-button {
+    background-color: #E3F1FF;
+    height: 40px;
+    border-radius: 8px;
+    width: 105px;
+}
+
+.ks-button-delete_hayslight .ks-button-label {
+    color: #007BFF;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 2px;
+    margin-left: 6px;
+}
+
+
+/* delete popup red button */
+
+.ks-button-delete_haysred.ks-button {
+    background-color: #DC3545;
+    height: 40px;
+    border-radius: 8px;
+    width: 105px;
+}
+
+.ks-button-delete_haysred .ks-button-label {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 2px;
+    margin-left: 6px;
+    appearance: none;
 }
 
 
