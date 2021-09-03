@@ -234,12 +234,14 @@
     border-radius: 8px;
     width: 100px;
 }
+
 .ks-button-hierarchy_button .ks-button-label {
     font-size: 14px;
     font-weight: normal;
     margin-right: 2px;
     margin-left: 6px;
 }
+
 .ks-button-hierarchy_button .ks-button-icon {
     color: #007BFF;
     font-size: 16px;
@@ -459,6 +461,7 @@
     margin-left: 6px;
     appearance: none;
 }
+
 .ks-button-material_haysred .ks-button-icon {
     color: rgba(220, 53, 69, 1);
     font-size: 16px;
@@ -489,6 +492,7 @@
 
 .ks-button-departurement_popup .ks-button-label {
     font-weight: bold;
+    width: 80px;
 }
 
 .ks-button-departurement_popup .ks-button-icon {
@@ -501,6 +505,7 @@
     background-color: rgba(0, 123, 255, 0.5);
     border-radius: 5px;
 }
+
 /* ... button in filters row*/
 .ks-button-point_button.ks-button {
     height: 40px;
@@ -589,6 +594,7 @@
     font-weight: 600;
 
 }
+
 /*point popup save all filters button buttons*/
 
 .ks-button-point_popup_savebutton.ks-button {
@@ -658,6 +664,7 @@
     font-weight: 600;
 
 }
+
 /*point popup load all filters button buttons*/
 
 .ks-button-point_popup_loadbutton.ks-button {

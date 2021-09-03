@@ -225,6 +225,26 @@ app.eventMap = {
             action: app.fn.openPopup,
             argument: 'haysKamForecastingPointPopUp'
         }
+    ],
+
+    'switch.Level1hierarchy': [
+        {
+            action: app.fn.showWidget,
+            argument: 'haysForecastingHierarchyGrid2Row_01_02'
+        }
+    ],
+    'switch.Level2hierarchy': [
+        {
+            action: app.fn.showWidget,
+            argument: 'haysForecastingHierarchyGrid2Row_01_03'
+        }
+    ],
+
+    'switch.Level3hierarchy': [
+        {
+            action: app.fn.showWidget,
+            argument: 'haysForecastingHierarchyGrid2Row_01_04'
+        }
     ]
 
 };

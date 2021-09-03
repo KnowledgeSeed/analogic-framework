@@ -1149,7 +1149,7 @@ app.widgetConfig = {
                     backdrop: true,
                     visible: false,
                     closeBtn: false,
-                    width: '170',
+                    width: '130',
                     heiht: '600',
                     bgScrollable: true,
                     fixed: true,
@@ -1207,7 +1207,7 @@ app.widgetConfig = {
                     backdrop: true,
                     visible: false,
                     closeBtn: false,
-                    width: '170',
+                    width: '130',
                     heiht: '600',
                     bgScrollable: true,
                     fixed: true,
@@ -1265,7 +1265,7 @@ app.widgetConfig = {
                     backdrop: true,
                     visible: false,
                     closeBtn: false,
-                    width: '170',
+                    width: '130',
                     heiht: '600',
                     bgScrollable: true,
                     fixed: true,
@@ -1323,7 +1323,7 @@ app.widgetConfig = {
                     backdrop: true,
                     visible: false,
                     closeBtn: false,
-                    width: '170',
+                    width: '130',
                     heiht: '600',
                     bgScrollable: true,
                     fixed: true,
@@ -1599,7 +1599,190 @@ app.widgetConfig = {
                             ]
                         }
                     ]
-                }
+                },
+
+                {
+                    id: 'haysForecastingHierarchyGrid2',
+                    type: GridWidget,
+                    marginTop: '50',
+                    width: '100%',
+                    widgets: [
+
+                        {
+                            id: 'haysForecastingHierarchyGrid2Row_01',
+                            type: GridRowWidget,
+                            height: '100%',
+                            widgets: [
+                                {
+                                    id: 'haysForecastingHierarchyGrid2Row_01_01',
+                                    type: GridCellWidget,
+                                    alignment: 'top-center',
+                                    width: '300',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysForecastingHierarchyGrid2Level1GridTable',
+                                            type: GridTableWidget,
+                                            width: '300',
+                                            listen: [],
+                                            skin: 'hierarchyGridTable_hays',
+                                            title: '',
+                                            widgets: [
+                                                {
+                                                    id: 'haysForecastingHierarchyGrid2Level1GridTableCell_02',
+                                                    type: GridTableCellWidget,
+                                                    alignment: 'center-right',
+                                                    skin: 'hierarchyCellBorder_hays',
+                                                    widgets: [
+
+                                                        {
+                                                            id: 'haysForecastingHierarchyGrid2Level1GridTableToggle1',
+                                                            type: ToggleWidget,
+                                                            titleOff: '',
+                                                            titleOn: '',
+                                                            action: 'launch',
+                                                            visible: true,
+                                                            width: '300',
+                                                            groupId: 'Level1hierarchy',
+                                                            icon: 'icon-chevron-right',
+                                                            skin: 'hierarchyToggle_hays',
+                                                            height: '60',
+                                                            iconOff: 'icon-chevron-right',
+                                                        }
+                                                    ]
+                                                }]
+                                        }]
+                                },
+
+                                {
+                                    id: 'haysForecastingHierarchyGrid2Row_01_02',
+                                    type: GridCellWidget,
+                                    visible: false,
+                                    alignment: 'top-center',
+                                    width: '300',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysForecastingHierarchyGrid2Level2GridTable',
+                                            type: GridTableWidget,
+                                            width: '300',
+                                            listen: [],
+                                            skin: 'hierarchyGridTable_hays',
+                                            title: '',
+                                            widgets: [
+                                                {
+                                                    id: 'haysForecastingHierarchyGrid2Level2GridTableCell_02',
+                                                    type: GridTableCellWidget,
+                                                    alignment: 'center-left',
+                                                    skin: 'hierarchyCellBorder_hays',
+                                                    widgets: [
+
+                                                        {
+                                                            id: 'haysForecastingHierarchyGrid2Level2GridTableToggle1',
+                                                            type: ToggleWidget,
+                                                            titleOff: '',
+                                                            titleOn: '',
+                                                            action: 'launch',
+                                                            visible: true,
+                                                            width: '300',
+                                                            groupId: 'Level2hierarchy',
+                                                            icon: 'icon-chevron-right',
+                                                            skin: 'hierarchyToggle_hays',
+                                                            height: '60',
+                                                            iconOff: 'icon-chevron-right',
+                                                        }
+                                                    ]
+                                                }]
+                                        }]
+                                },
+
+                                {
+                                    id: 'haysForecastingHierarchyGrid2Row_01_03',
+                                    type: GridCellWidget,
+                                    alignment: 'top-center',
+                                    visible: false,
+                                    width: '300',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysForecastingHierarchyGrid2Level3GridTable',
+                                            type: GridTableWidget,
+                                            width: '300',
+                                            listen: [],
+                                            skin: 'hierarchyGridTable_hays',
+                                            title: '',
+                                            widgets: [
+                                                {
+                                                    id: 'haysForecastingHierarchyGrid2Level3GridTableCell_02',
+                                                    type: GridTableCellWidget,
+                                                    skin: 'hierarchyCellBorder_hays',
+                                                    alignment: 'center-left',
+                                                    widgets: [
+
+                                                        {
+                                                            id: 'haysForecastingHierarchyGrid2Level3GridTableToggle1',
+                                                            type: ToggleWidget,
+                                                            titleOff: '',
+                                                            titleOn: '',
+                                                            action: 'launch',
+                                                            visible: true,
+                                                            width: '300',
+                                                            groupId: 'Level3hierarchy',
+                                                            icon: 'icon-chevron-right',
+                                                            skin: 'hierarchyToggle_hays',
+                                                            height: '60',
+                                                            iconOff: 'icon-chevron-right',
+                                                        }
+                                                    ]
+                                                }]
+                                        }]
+                                },
+
+                                {
+                                    id: 'haysForecastingHierarchyGrid2Row_01_04',
+                                    type: GridCellWidget,
+                                    visible: false,
+                                    alignment: 'top-center',
+                                    width: '300',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysForecastingHierarchyGrid2Level4GridTable',
+                                            type: GridTableWidget,
+                                            width: '300',
+                                            listen: [],
+                                            skin: 'hierarchyGridTable_hays',
+                                            title: '',
+                                            widgets: [
+                                                {
+                                                    id: 'haysForecastingHierarchyGrid2Level4GridTableCell_02',
+                                                    type: GridTableCellWidget,
+                                                    skin: 'hierarchyCellBorder_hays',
+                                                    alignment: 'center-left',
+                                                    widgets: [
+
+                                                        {
+                                                            id: 'haysForecastingHierarchyGrid2Level4GridTableToggle1',
+                                                            type: ToggleWidget,
+                                                            titleOff: '',
+                                                            titleOn: '',
+                                                            action: 'launch',
+                                                            visible: true,
+                                                            width: '300',
+                                                            groupId: 'Level4hierarchy',
+                                                            icon: 'icon-chevron-right',
+                                                            skin: 'hierarchyToggle_hays',
+                                                            height: '60',
+                                                            iconOff: 'icon-chevron-right',
+                                                        }
+                                                    ]
+                                                }]
+                                        }]
+                                },
+
+                            ]
+                        }]
+                },
             ]
 
 
