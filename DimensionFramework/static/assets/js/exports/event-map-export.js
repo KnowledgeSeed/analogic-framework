@@ -62,7 +62,8 @@ class EventMapExport extends Export {
                 if ('string' === typeof args) {
                     args = [args];
                 }
-                if(d.actions[i] === 'app.fn.conditionalGridTablePopup'){
+                if(d.actions[i] === 'app.fn.conditionalGridTablePopup' ||
+                    d.actions[i] === 'app.fn.conditionalHorizontalTableEventHandlerExecution'){
                     let conditions = [], j, condition, k;
                     for(j = 0; j < args.length; ++j){
                         condition = {
