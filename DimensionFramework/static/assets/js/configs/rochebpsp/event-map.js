@@ -830,13 +830,13 @@ app.eventMap = {
     'write.rocheBPSPProductsCheckoutGridTableMonthly.finished': [
         {
             action: app.fn.executeRequest,
-            argument: 'writeMonthlySplitType.rocheBPSPProductsCheckoutGridTableMonthly'
+            argument: 'request.rocheBPSPProductsCheckoutGridTableMonthly'
         }
     ],
     'pastelast.rocheBPSPProductsCheckoutGridTableMonthly.finished': [
         {
             action: app.fn.executeRequest,
-            argument: 'writeMonthlySplitType.rocheBPSPProductsCheckoutGridTableMonthly'
+            argument: 'request.rocheBPSPProductsCheckoutGridTableMonthly'
         }
     ],
     'launch.rocheBPSPProductsCheckoutGridTableMonthly_row_4': [
@@ -1463,7 +1463,7 @@ app.eventMap = {
     'launchpaste.rocheBPSPAddMaterialGridRow3Cell2Button.finished': [
         {
             action: app.fn.executeRequest,
-            argument: 'insert.rocheBPSPAddMaterialGridRow3Cell2Button'
+            argument: 'request.rocheBPSPAddMaterialGridRow3Cell2Button'
         }
     ],
 

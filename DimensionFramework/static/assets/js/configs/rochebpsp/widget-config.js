@@ -5419,7 +5419,7 @@ app.widgetConfig = {
                             'method': 'refresh'
                         },
                         {
-                            'event': 'writeMonthlySplitType.rocheBPSPProductsCheckoutGridTableMonthly.finished',
+                            'event': 'request.rocheBPSPProductsCheckoutGridTableMonthly.finished',
                             'method': 'refreshWithTimeout',
                             'parameters': [1500]
                         },
@@ -12367,7 +12367,7 @@ app.widgetConfig = {
                                             skin: 'blue_link_columns_bpsp',
                                             listen: [
                                                 {
-                                                    'event': 'insert.rocheBPSPAddMaterialGridRow3Cell2Button.finished',
+                                                    'event': 'request.rocheBPSPAddMaterialGridRow3Cell2Button.finished',
                                                     'method': 'refresh'
                                                 }
                                             ]
