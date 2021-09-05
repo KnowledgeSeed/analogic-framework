@@ -165,7 +165,7 @@ app.eventMap = {
         }
     ],
 
-     'launch.haysUserGroupHierarchyGridRow2Cell2Button': [
+    'launch.haysUserGroupHierarchyGridRow2Cell2Button': [
         {
             action: app.fn.openPopup,
             argument: 'haysUserGroupHierarchyDeleteDataGridTablePopup'
@@ -252,7 +252,7 @@ app.eventMap = {
             action: app.fn.showWidget,
             argument: 'haysForecastingHierarchyGrid2Row_01_04'
         }
-    ]
+    ],
 
     'launch.haysUserGroupHierarchylDeleteDataGridTablePopupGridRow4Cell1Button': [
         {
