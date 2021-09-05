@@ -814,7 +814,7 @@ app.widgetConfig = {
                                             type: ButtonWidget,
                                             label: 'Business Unit 1',
                                             action: '',
-                                            width: '130',
+                                            width: '110',
                                             marginTop: '20',
                                             marginBottom: '20',
                                             skin: 'triangle_button',
@@ -860,7 +860,7 @@ app.widgetConfig = {
                                             type: ButtonWidget,
                                             label: 'Department 1',
                                             action: '',
-                                            width: '120',
+                                            width: '100',
                                             marginTop: '20',
                                             marginBottom: '20',
                                             skin: 'triangle_button',
@@ -917,10 +917,10 @@ app.widgetConfig = {
                                 {
                                     id: 'haysKamForecastingGridRow2Cell7',
                                     type: GridCellWidget,
-                                    marginLeft: '1',
+                                    marginLeft: '25',
                                     marginTop: '0',
                                     marginBottom: '0',
-                                    width: '9%',
+                                    width: '15%',
                                     alignment: 'center-left',
                                     widgets: [
 
@@ -947,7 +947,7 @@ app.widgetConfig = {
                                     marginLeft: '1',
                                     marginTop: '0',
                                     marginBottom: '0',
-                                    width: '39.4%',
+                                    width: '32%',
                                     alignment: 'center-left',
                                     widgets: []
                                 },
@@ -1150,7 +1150,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '130',
-                    heiht: '600',
+                    height: '600',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -1208,7 +1208,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '130',
-                    heiht: '600',
+                    height: '600',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -1266,7 +1266,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '130',
-                    heiht: '600',
+                    height: '600',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -1324,7 +1324,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '130',
-                    heiht: '600',
+                    height: '600',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -1984,7 +1984,7 @@ app.widgetConfig = {
                                             type: ButtonWidget,
                                             label: 'Business Unit 1',
                                             action: '',
-                                            width: '130',
+                                            width: '110',
                                             marginTop: '20',
                                             marginBottom: '20',
                                             skin: 'triangle_button',
@@ -2030,7 +2030,7 @@ app.widgetConfig = {
                                             type: ButtonWidget,
                                             label: 'Department 1',
                                             action: '',
-                                            width: '120',
+                                            width: '100',
                                             marginTop: '20',
                                             marginBottom: '20',
                                             skin: 'triangle_button',
@@ -2225,8 +2225,170 @@ app.widgetConfig = {
                                     ]
                                 }
                             ]
-                        }]
-                }]
+                        },
+
+                        {
+                            id: 'haysArbeitsberichtPivotGridRow2',
+                            type: GridRowWidget,
+                            marginTop: '1.3%',
+                            width: '100%',
+                            skin: '',
+                            widgets: [
+
+                                {
+                                    id: 'haysArbeitsberichtPivotGridRow2Cell1',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '5.5%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysArbeitsberichtPivotGridRow2Cell1Button1',
+                                            type: ButtonWidget,
+                                            label: 'HAYS',
+                                            action: '',
+                                            width: '100px',
+                                            height: '40px',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'lefttriangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysArbeitsberichtPivotGridRow2Cell2',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '7.2%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysArbeitsberichtPivotGridRow2Cell2Button1',
+                                            type: ButtonWidget,
+                                            label: 'Business Unit 1',
+                                            action: '',
+                                            width: '110',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'triangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysArbeitsberichtPivotGridRow2Cell3',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '5.6%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysArbeitsberichtPivotGridRow2Cell3Button1',
+                                            type: ButtonWidget,
+                                            label: 'Area A',
+                                            action: '',
+                                            width: '100',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'triangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysArbeitsberichtPivotGridRow2Cell4',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '6.7%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysArbeitsberichtPivotGridRow2Cell4Button1',
+                                            type: ButtonWidget,
+                                            label: 'Department 1',
+                                            action: '',
+                                            width: '100',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'triangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysArbeitsberichtPivotGridRow2Cell5',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '5.6%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysArbeitsberichtPivotGridRow2Cell5Button1',
+                                            type: ButtonWidget,
+                                            label: 'Team A',
+                                            action: '',
+                                            width: '100',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'triangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysArbeitsberichtPivotGridRow2Cell6',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '8%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysArbeitsberichtPivotGridRow6Cell2Button1',
+                                            type: ButtonWidget,
+                                            label: 'Adam Foreman',
+                                            action: '',
+                                            width: '135',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'rightbluetriangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysArbeitsberichtPivotGridRow2Cell8',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '68.4%',
+                                    alignment: 'center-left',
+                                    widgets: []
+                                },
+                            ]
+                        },
+                    ]
+                }
+            ]
         },
 
     haysZEGBericht:
@@ -2334,7 +2496,167 @@ app.widgetConfig = {
                                     ]
                                 }
                             ]
-                        }
+                        },
+
+                        {
+                            id: 'haysZEGBerichtGridRow2',
+                            type: GridRowWidget,
+                            marginTop: '1.3%',
+                            width: '100%',
+                            skin: '',
+                            widgets: [
+
+                                {
+                                    id: 'haysZEGBerichtPivotGridRow2Cell1',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '5.5%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysZEGBerichtPivotGridRow2Cell1Button1',
+                                            type: ButtonWidget,
+                                            label: 'HAYS',
+                                            action: '',
+                                            width: '100px',
+                                            height: '40px',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'lefttriangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysZEGBerichtPivotGridRow2Cell2',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '7.2%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysZEGBerichtGridRow2Cell2Button1',
+                                            type: ButtonWidget,
+                                            label: 'Business Unit 1',
+                                            action: '',
+                                            width: '110',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'triangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysZEGBerichtGridRow2Cell3',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '5.6%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysZEGBerichtGridRow2Cell3Button1',
+                                            type: ButtonWidget,
+                                            label: 'Area A',
+                                            action: '',
+                                            width: '100',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'triangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysZEGBerichtGridRow2Cell4',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '6.7%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysZEGBerichtGridRow2Cell4Button1',
+                                            type: ButtonWidget,
+                                            label: 'Department 1',
+                                            action: '',
+                                            width: '100',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'triangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysZEGBerichtGridRow2Cell5',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '5.6%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysZEGBerichtGridRow2Cell5Button1',
+                                            type: ButtonWidget,
+                                            label: 'Team A',
+                                            action: '',
+                                            width: '100',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'triangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysZEGBerichtGridRow2Cell6',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '8%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysZEGBerichtGridRow6Cell2Button1',
+                                            type: ButtonWidget,
+                                            label: 'Adam Foreman',
+                                            action: '',
+                                            width: '135',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'rightbluetriangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysZEGBerichtGridRow2Cell8',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '68.4%',
+                                    alignment: 'center-left',
+                                    widgets: []
+                                },
+                            ]
+                        },
                     ]
                 }
             ]
@@ -3083,7 +3405,145 @@ app.widgetConfig = {
                             ]
                         },
                     ]
-                }
+                },
+
+                {
+                    id: 'haysUserGroupHierarchyDeleteDataGridTablePopup',
+                    type: ContainerWidget,
+                    anchorVisible: false,
+                    anchorOnClick: false,
+                    backdrop: true,
+                    visible: false,
+                    closeBtn: false,
+                    width: '240',
+                    height: '200',
+                    bgScrollable: true,
+                    fixed: true,
+                    heightFixed: false,
+                    behaviour: 'popup',
+                    position: 'top',
+                    skin: '',
+                    fadingSpeed: 0,
+                    offset: 260,
+                    widgets: [
+                        {
+                            id: 'haysUserGroupHierarchyDeleteDataGridTablePopupGrid',
+                            type: GridWidget,
+                            width: '100%',
+                            widgets: [
+                                {
+                                    id: 'haysUserGroupHierarchylDeleteDataGridTablePopupGridRow1',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    marginTop: '4%',
+                                    paddingBottom: 10,
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'haysUserGroupHierarchyDeleteDataGridTablePopupGridRow1Cell1',
+                                            type: GridCellWidget,
+                                            width: '100%',
+                                            alignment: 'center-center',
+                                            widgets: [
+                                                {
+                                                    id: 'haysUserGroupHierarchyDeleteDataGridTablePopupGridRow1Cell1Text',
+                                                    type: TextWidget,
+                                                    fontBold: true,
+                                                    fontSize: 16,
+                                                    skin: 'delete',
+                                                    title: 'Delete User Group',
+                                                    icon: 'icon-trash'
+                                                },
+                                            ]
+                                        }
+                                        ,
+
+                                    ]
+                                },
+
+                                {
+                                    id: 'haysUserGroupHierarchylDeleteDataGridTablePopupGridRow2',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    width: '100%',
+                                    marginLeft: '30%',
+                                    widgets: [
+                                        {
+                                            id: 'haysUserGroupHierarchylDeleteDataGridTablePopupGridRow2Text',
+                                            type: TextWidget,
+                                            title: 'Are you sure?',
+                                            skin: 'delete_message'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'haysUserGroupHierarchylDeleteDataGridTablePopupGridRow3',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    width: '100%',
+                                    marginLeft: '10%',
+                                    widgets: [
+                                        {
+                                            id: 'haysUserGroupHierarchylDeleteDataGridTablePopupGridRow3Text',
+                                            type: TextWidget,
+                                            title: 'The action cannot be undone.',
+                                            skin: 'delete_message'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'haysUserGroupHierarchylDeleteDataGridTablePopupGridRow4',
+                                    type: GridRowWidget,
+                                    skin: '',
+                                    marginTop: '4%',
+                                    paddingBottom: 10,
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'haysUserGroupHierarchylDeleteDataGridTablePopupGridRow4Cell1',
+                                            type: GridCellWidget,
+                                            width: '40%',
+                                            marginLeft: '15px',
+                                            height: '50px',
+                                            widgets: [
+                                                {
+                                                    id: 'haysUserGroupHierarchylDeleteDataGridTablePopupGridRow4Cell1Button',
+                                                    type: ButtonWidget,
+                                                    height: '40px',
+                                                    label: 'Cancel',
+                                                    skin: 'delete_hayslight'
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            id: 'haysUserGroupHierarchylDeleteDataGridTablePopupGridRow4Cell2',
+                                            type: GridCellWidget,
+                                            width: '40%',
+                                            marginLeft: '80px',
+                                            marginRight: '10px',
+                                            height: '50px',
+                                            widgets: [
+                                                {
+                                                    id: 'haysUserGroupHierarchylDeleteDataGridTablePopupGridRow4Cell2Button',
+                                                    type: ButtonWidget,
+                                                    height: '40px',
+                                                    label: 'Delete',
+                                                    skin: 'delete_haysred'
+                                                }
+                                            ]
+
+
+                                        }
+                                    ]
+                                }
+
+                            ]
+                        },
+
+                    ]
+                },
             ]
         }
 

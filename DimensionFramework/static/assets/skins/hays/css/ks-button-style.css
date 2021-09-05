@@ -735,4 +735,40 @@
 
 }
 
+/* delete popup light blue button */
+
+.ks-button-delete_hayslight.ks-button {
+    background-color: #E3F1FF;
+    height: 40px;
+    border-radius: 8px;
+    width: 105px;
+}
+
+.ks-button-delete_hayslight .ks-button-label {
+    color: #007BFF;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 2px;
+    margin-left: 6px;
+}
+
+
+/* delete popup red button */
+
+.ks-button-delete_haysred.ks-button {
+    background-color: #DC3545;
+    height: 40px;
+    border-radius: 8px;
+    width: 105px;
+}
+
+.ks-button-delete_haysred .ks-button-label {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 2px;
+    margin-left: 6px;
+    appearance: none;
+}
+
 
