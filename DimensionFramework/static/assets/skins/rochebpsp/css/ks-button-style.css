@@ -1348,7 +1348,6 @@
     margin-top: 1%;
 }
 
-
 .ks-button-gridtable_hierarchy_bpsp_07C_locked {
     padding-left: 110px;
     width: 100%;
@@ -1733,6 +1732,54 @@
 }
 
 .ks-button-gridtable_hierarchy_bpsp_07N_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+/*MOdy jav 09 06 */
+.ks-button-gridtable_hierarchy_bpsp_06N_locked {
+    padding-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06N_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06N_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06N_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06C_locked {
+    padding-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06C_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06C_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06C_locked .ks-button-icon {
     color: #EFC1D1;
     font-size: 75%;
     margin-top: 1%;
@@ -2324,8 +2371,6 @@
 .ks-button-comment_Off_GT_bpsp .ks-button-content {
     height: 110%
 }
-
-
 
 
 /* gridtable check out hierarchy */

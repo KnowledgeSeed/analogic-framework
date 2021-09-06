@@ -3856,7 +3856,9 @@ app.repository = {
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialLevel] as 
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('Product Level - Name')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[UILevelFormat] as 
-                                            [Materials].[BPSP Budget IP].CurrentMember.Properties('UI Level Format')
+                                            --[Materials].[BPSP Budget IP].CurrentMember.Properties('UI Level Format')
+                                            [Materials].[BPSP Budget IP].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP UI Level Format')
+                                            
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS] as 
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('IP DIS Relevant Flag Budget')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment] as
@@ -4296,7 +4298,8 @@ app.repository = {
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[MaterialLevel] as 
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('Product Level - Name')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[UILevelFormat] as 
-                                            [Materials].[BPSP Budget IP].CurrentMember.Properties('UI Level Format')
+                                            --[Materials].[BPSP Budget IP].CurrentMember.Properties('UI Level Format')
+                                            [Materials].[BPSP Budget IP].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} UI Level Format')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS] as 
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('IP DIS Relevant Flag Budget')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment] as
@@ -4798,7 +4801,7 @@ app.repository = {
                                          [}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag],
                                          [}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag],
                                          [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag],
-                                         [}ElementAttributes_Materials].[}ElementAttributes_Materials].[UI Level Format]} 
+                                         [}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} UI Level Format]} 
                                       ON COLUMNS , 
                                       -- {TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}],'${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')}
                                           {Filter({TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')},
@@ -4925,7 +4928,7 @@ app.repository = {
 								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[AddDummyFlag],
 								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[DeleteFlag],
 								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[NextFlag],
-								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[UI Level Format]} 
+								   [}ElementAttributes_Materials].[}ElementAttributes_Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} UI Level Format]} 
 								  ON COLUMNS , 
 								  {Filter({TM1SubsetToSet([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP], '${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key')} MM')},
 								   Instr(UCASE([Materials].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP Name]), '${searchString}') > 0)}
