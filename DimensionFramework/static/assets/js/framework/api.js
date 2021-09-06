@@ -414,7 +414,6 @@ app.fn.checkTIResponseStatus = function checkTIResponseStatus(argument, ev, elem
 };
 
 app.fn.conditionalHorizontalTableEventHandlerExecution = function conditionalHorizontalTableEventHandlerExecution(argument, ev, element) {
-    L(v(element.data('id')));L(element.data('id'));
     let widgetId = element.data('id'),
         action = element.data('action'),
         row = v(widgetId)[action].rowindex,

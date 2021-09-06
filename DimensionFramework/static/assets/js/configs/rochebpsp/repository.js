@@ -1921,7 +1921,7 @@ app.repository = {
         switch: {
             url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
             type: 'PATCH',
-            body: (db, cell, widgetValue) => {
+            body: (db, cell, widgetValue, row, col) => {
                 return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
             }
         },
@@ -2181,20 +2181,18 @@ app.repository = {
     },
     rocheBPSPProductsCheckoutGridTableYearly: {
         perform: {
-            validation: (db, cell, widgetValue) => {
+            validation: (db, cell, widgetValue, row, col) => {
                 return {success: cell.copyMerge === false};
             },
-            url: (db, cell, widgetValue) => {
+            url: (db, cell, widgetValue, row, col) => {
                 if (Utils.getPropertyOrFunctionValue(cell, 'distributionEdit')) {
                     return `/api/v1/Processes('MODULE - UI - Products Yearly Prepare Split')/tm1.ExecuteWithReturn`;
                 } else {
                     return `/api/v1/Processes('MODULE - UI - Sales Plan by Product Split ')/tm1.ExecuteWithReturn`;
                 }
             },
-            type: (db, cell, widgetValue) => {
-                return 'POST';
-            },
-            body: (db, cell, widgetValue) => {
+            type: 'POST',
+            body: (db, cell, widgetValue, row, col) => {
                 let pLineItem = Utils.getGridTableCurrentCell('rocheBPSPProductsCheckoutGridTableYearly').members[6].Name;
                 Utils.setWidgetValue('systemValueProductCheckoutGridTableYearlyPLineItem', pLineItem);
                 if (Utils.getPropertyOrFunctionValue(cell, 'distributionEdit')) {
@@ -2582,7 +2580,7 @@ app.repository = {
         perform: {
             url: (db) => `/api/v1/Processes('MODULE - UI - Sales Plan by Product Split')/tm1.ExecuteWithReturn`,
             type: 'POST',
-            body: (db, cell, widgetValue) => {
+            body: (db, cell, widgetValue, row, col) => {
                 return `{
                         "Parameters": [
                                 {"Name": "pValue", "Value": "${Utils.parseNumber(v('rocheBPSPProductsCheckoutGridTableMonthly.value'))}"},
@@ -2629,7 +2627,7 @@ app.repository = {
                 ]`;
             }
         },
-        writeMonthlySplitType: {
+        request: {
             url: (db) => `/api/v1/Cubes('Sales Plan by Product')/tm1.Update`,
             type: 'POST',
             body: (db) => {
@@ -4252,21 +4250,21 @@ app.repository = {
         pastelast: {
             url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
             type: 'PATCH',
-            body: (db, cell, widgetValue) => {
+            body: (db, cell, widgetValue, row, col) => {
                 return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
             }
         },
         paste: {
             url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
             type: 'PATCH',
-            body: (db, cell, widgetValue) => {
+            body: (db, cell, widgetValue, row, col) => {
                 return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
             }
         },
         write: {
             url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
             type: 'PATCH',
-            body: (db, cell, widgetValue) => {
+            body: (db, cell, widgetValue, row, col) => {
                 return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
             }
         },
@@ -5333,7 +5331,7 @@ app.repository = {
                 return Repository.rocheBPSPAddMaterialRemoveClipBoard.launch.body(db);
             }
         },
-        insert: {
+        request: {
             url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
             type: 'PATCH',
             body: (db) => {
@@ -5360,7 +5358,7 @@ app.repository = {
             switch: {
                 url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
                 type: 'PATCH',
-                body: (db, cell, widgetValue) => {
+                body: (db, cell, widgetValue, row, col) => {
                     return `{"Ordinal": ${widgetValue.ordinal},"Value": \"${widgetValue.value}\"}`
                 }
             },
@@ -7390,13 +7388,11 @@ app.repository = {
     },
     rocheBPSPCustomersPlanningGridTableMonthly: {
         perform: {
-            url: (db, cell, widgetValue) => {
+            url: (db, cell, widgetValue, row, col) => {
                 return `/api/v1/Processes('MODULE - UI - Sales Plan by Customer Split')/tm1.ExecuteWithReturn`;
             },
-            type: (db, cell, widgetValue) => {
-                return 'POST';
-            },
-            body: (db, cell, widgetValue) => {
+            type: 'POST',
+            body: (db, cell, widgetValue, row, col) => {
                 let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
                     territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
                     receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),
@@ -7629,16 +7625,14 @@ app.repository = {
     },
     rocheBPSPCustomersPlanningGridTableYearly: {
         perform: {
-            validation: (db, cell, widgetValue) => {
+            validation: (db, cell, widgetValue, row, col) => {
                 return {success: cell.copyMerge === false && cell.distributionEdit === false};
             },
-            url: (db, cell, widgetValue) => {
+            url: (db, cell, widgetValue, row, col) => {
                 return `/api/v1/Processes('MODULE - UI - Sales Plan by Customer Split')/tm1.ExecuteWithReturn`;
             },
-            type: (db, cell, widgetValue) => {
-                return 'POST';
-            },
-            body: (db, cell, widgetValue) => {
+            type: 'POST',
+            body: (db, cell, widgetValue, row, col) => {
                 let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersCompanySelector', 'key'),
                     territoryCode = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersTerritorySelector', 'key'),
                     receiver = v('rocheBPSPCustomersHorizontalTable.open.receiver'),

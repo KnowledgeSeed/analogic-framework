@@ -295,4 +295,142 @@ app.repository = {
             }
         }
     },
-};
+
+    haysForecastingHierarchyGrid2Level1GridTable:
+        {
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => {
+                        return `{"MDX":"
+                                SELECT 
+                                   {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                                  ON COLUMNS , 
+                                   {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 4)} 
+                                  ON ROWS 
+                                FROM [}ElementAttributes_Organization Units] 
+                                    "}`;
+
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 1,
+                        query: [
+                            (r, x) => {
+                                return {
+                                    titleOn: r.Cells[x].FormattedValue,
+                                    titleOff: r.Cells[x].FormattedValue,
+                                }
+                            }
+
+
+                        ]
+                    }
+                },
+        },
+
+    haysForecastingHierarchyGrid2Level2GridTable:
+        {
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => {
+                        return `{"MDX":"
+                            SELECT 
+                               {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                              ON COLUMNS , 
+                               {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 3)} 
+                              ON ROWS 
+                            FROM [}ElementAttributes_Organization Units] 
+                                    "}`;
+
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 1,
+                        query: [
+                            (r, x) => {
+                                return {
+                                    titleOn: r.Cells[x].FormattedValue,
+                                    titleOff: r.Cells[x].FormattedValue,
+                                }
+                            }
+
+
+                        ]
+                    }
+                },
+        },
+
+    haysForecastingHierarchyGrid2Level3GridTable:
+        {
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => {
+                        return `{"MDX":"
+                            SELECT 
+                               {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                              ON COLUMNS , 
+                               {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 2)} 
+                              ON ROWS 
+                            FROM [}ElementAttributes_Organization Units] 
+                                    "}`;
+
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 1,
+                        query: [
+                            (r, x) => {
+                                return {
+                                    titleOn: r.Cells[x].FormattedValue,
+                                    titleOff: r.Cells[x].FormattedValue
+                                }
+                            }
+
+
+                        ]
+                    }
+                },
+        },
+
+    haysForecastingHierarchyGrid2Level4GridTable:
+        {
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => {
+                        return `{"MDX":"
+                                SELECT 
+                                   {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                                  ON COLUMNS , 
+                                  NON EMPTY 
+                                   {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 0)} 
+                                  ON ROWS 
+                                FROM [}ElementAttributes_Organization Units] 
+                                    "}`;
+
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 1,
+                        query: [
+                            (r, x) => {
+                                return {
+                                    titleOn: r.Cells[x].FormattedValue,
+                                    titleOff: r.Cells[x].FormattedValue
+                                }
+                            }
+
+
+                        ]
+                    }
+                },
+        },
+
+}

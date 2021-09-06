@@ -5,25 +5,35 @@
     border-top: 3px solid #dfecf8;
     border-bottom: 3px solid #dfecf8;
 }
+
 /*all borders circle*/
-.ks-grid-table-cell-greyfon .ks-grid-table-cell-content{
+.ks-grid-table-cell-greyfon .ks-grid-table-cell-content {
     background-color: #F2F2F2;
     border: 1px solid #F2F2F2;
     border-radius: 20px;
     margin-left: 10px;
 }
+
 /*bottom borders circle*/
-.ks-grid-table-cell-bottom_greyfon .ks-grid-table-cell-content{
+.ks-grid-table-cell-bottom_greyfon .ks-grid-table-cell-content {
     background-color: #F2F2F2;
     border: 1px solid #F2F2F2;
     border-radius: 0 0 20px 20px;
     margin-left: 10px;
 }
+
 /*top borders circle*/
-.ks-grid-table-cell-top_greyfon .ks-grid-table-cell-content{
+.ks-grid-table-cell-top_greyfon .ks-grid-table-cell-content {
     background-color: #F2F2F2;
     border-bottom: 2px solid #E1E1E1;
     border-radius: 20px 20px 0 0;
     margin-left: 10px;
     opacity: 1;
+}
+
+
+/*MOdy 09 03  hierarchyCellBorder_hays*/
+.ks-grid-table-cell-hierarchyCellBorder_hays .ks-grid-table-cell-content {
+    border-right: 1px solid #c3ced5;
+    border-left: 1px solid #c3ced5;
 }

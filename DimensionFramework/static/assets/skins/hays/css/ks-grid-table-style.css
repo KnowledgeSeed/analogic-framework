@@ -1,16 +1,13 @@
-.ks-grid-table-filters_table .ks-grid-table-row {
-    width: 100%;
+/*Mody 09 02 hierarchyGridTable_hays   */
+.ks-grid-table-hierarchyGridTable_hays .ks-grid-table-row {
+    border-bottom: 1px solid #c3ced5;
+    height: 60px;
 }
 
-.ks-grid-table-filters_table .ks-grid-table-head {
-    width: 100%;
+.ks-grid-table-hierarchyGridTable_hays .ks-grid-table-cell {
+    padding: 0px !important;
 }
 
-
-.ks-grid-table-filters_table .ks-grid-table-title {
-    width: 100%;
-}
-
-.ks-grid-table-filters_table .ks-general{
-    width: 100%;
+.ks-grid-table-hierarchyGridTable_hays .ks-grid-table-cell {
+    border-right: 0px solid #c3ced5;
 }
