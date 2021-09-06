@@ -152,7 +152,7 @@ app.repository = {
             }
             if (dropDownValue === '') {
                 //skin változtatás:
-                cellOriginalValue['skin'] = actualRow == 0 ? 'első_sor_text_nek_a_skinje' : 'második_sor_text_nek_a_skinje';
+                cellOriginalValue['skin'] = actualRow == 0 ? 'filter_button_circle' : 'második_sor_text_nek_a_skinje';
             } else {
                 //skin változtatás:
                 cellOriginalValue['skin'] = actualRow == 0 ? 'filter_button' : 'filter_text';
@@ -170,73 +170,58 @@ app.repository = {
                             title: 'Businesspartner',
                             icon: 'icon-person',
                             iconColor: '#6F42C1',
-                            skin: 'filter_button',
-                            cellSkin: 'greyfon'
+                            skin: 'filter_button_circle',
                         },
                         {
                             title: 'Type',
                             icon: 'icon-circle-grid-4',
-                            skin: 'filter_button',
+                            skin: 'filter_button_circle',
                             iconColor: '#28A745',
-                            cellSkin: 'greyfon'
                         },
                         {
                             title: 'Account',
                             icon: 'icon-rectangle-stack-fill',
-                            skin: 'filter_button',
+                            skin: 'filter_button_circle',
                             iconColor: '#E98300',
-                            cellSkin: 'greyfon'
                         },
                         {
                             title: 'Location',
                             icon: 'icon-location',
-                            skin: 'filter_button',
+                            skin: 'filter_button_circle',
                             iconColor: '#E83E8C',
-                            cellSkin: 'greyfon'
                         },
                         {
                             title: 'Project status',
                             icon: 'icon-calendar',
-                            skin: 'filter_button',
+                            skin: 'filter_button_circle',
                             iconColor: '#007BFF',
-                            cellSkin: 'greyfon'
                         }
                     ],
                     [
                         {
                             title: '',
-                            skin: 'filter_text',
-                            icon: '',
-                            iconColor: '#A9A9A9',
-                            cellSkin: ''
+                            skin: '',
+                            icon: ''
                         },
                         {
                             title: '',
-                            skin: 'filter_text',
-                            icon: '',
-                            iconColor: '#A9A9A9',
-                            cellSkin: ''
+                            skin: '',
+                            icon: ''
                         },
                         {
                             title: '',
-                            skin: 'filter_text',
-                            icon: '',
-                            iconColor: '#A9A9A9',
-                            cellSkin: ''
+                            skin: '',
+                            icon: ''
                         },
                         {
                             title: '',
-                            skin: 'filter_text',
-                            icon: '',
-                            iconColor: '#A9A9A9',
-                            cellSkin: ''
+                            skin: '',
+                            icon: ''
                         },
                         {
                             title: '',
-                            skin: 'filter_text',
-                            icon: '',
-                            iconColor: '#A9A9A9',
-                            cellSkin: ''
+                            skin: '',
+                            icon: ''
                         }
                     ]
                 ];
