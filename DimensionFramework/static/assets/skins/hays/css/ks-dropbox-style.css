@@ -102,7 +102,7 @@
     display: none;
 }
 
-.ks-dropbox-filter_selector_businesspartner  .ks-dropbox-title {
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-title {
     font-size: 16px;
     font-weight: normal;
     line-height: 16px;
@@ -116,7 +116,11 @@
     padding: 0 10px;
 }
 
-.ks-dropbox-filter_selector_businesspartner .ks-dropbox-input::-webkit-input-placeholder {
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-panel-item-icon,
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-panel-item-separator {
+    display: block;
+}
+.ks-dropbox-filter_selector_businesspartner.ks-dropbox-input::-webkit-input-placeholder {
     color: #838388;
 }
 
@@ -130,21 +134,6 @@
 
 .ks-dropbox-filter_selector_businesspartner .ks-dropbox-input:-moz-placeholder {
     color: #838388;
-}
-
-.ks-dropbox-filter_selector_businesspartner .ks-dropbox-icon-on {
-    border-radius: 4px;
-    height: 40px;
-    margin: 0 5px;
-    width: 40px;
-    display: block;
-
-}
-
-.ks-dropbox-filter_selector_businesspartner .ks-dropbox-icon:after {
-    border-top: 7px solid #747b85;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
 }
 
 .ks-dropbox-filter_selector_businesspartner .ks-dropbox-panel {
@@ -181,10 +170,6 @@
     font-weight: 600;
 }
 
-.ks-dropbox-filter_selector_businesspartner .ks-dropbox-panel-item-icon,
-.ks-dropbox-filter_selector_businesspartner .ks-dropbox-panel-item-separator {
-    display: block;
-}
 
 .ks-dropbox-filter_selector_businesspartner .ks-dropbox-panel {
     position: unset;
@@ -194,6 +179,7 @@
     width: 190px;
     float: left;
 }
+
 
 /*type dropbox */
 .ks-dropbox-filter_selector_type .ks-dropbox-field {

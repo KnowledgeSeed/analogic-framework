@@ -1,39 +1,39 @@
 /* searchbox skin*/
 
 .ks-textbox-searchbox .ks-textbox-title {
-    font-size: 16px;
-    font-weight: normal;
+    font-size: 14px;
+    font-weight: bold;
     line-height: 16px;
     margin-bottom: 5px;
     display: block;
 }
 
+
 .ks-textbox-searchbox .ks-textbox-field {
     background-color: #fff;
-    border: 1px solid #A9A9A9;
-    border-radius: 8px;
+    border: 1px solid #b1b3b3;
+    border-radius: 7px;
     height: 40px;
 }
 
 .ks-textbox-searchbox .ks-textbox-input {
     font-size: 16px;
-    padding: 0 10px;
 }
 
 .ks-textbox-searchbox .ks-textbox-input::-webkit-input-placeholder {
-    color: #A9A9A9;
+    color: #838388;
 }
 
 .ks-textbox-searchbox .ks-textbox-input::-moz-placeholder {
-    color: #A9A9A9;
+    color: #838388;
 }
 
 .ks-textbox-searchbox .ks-textbox-input:-ms-input-placeholder {
-    color: #A9A9A9;
+    color: #838388;
 }
 
 .ks-textbox-searchbox .ks-textbox-input:-moz-placeholder {
-    color: #A9A9A9;
+    color: #838388;
 }
 
 
@@ -44,8 +44,7 @@
 }
 
 .ks-textbox-searchbox .ks-textbox-icon::before {
-    content: "\e938";
-    color: #A9A9A9;
+    color: #000;
     cursor: pointer;
     font-size: 20px;
 

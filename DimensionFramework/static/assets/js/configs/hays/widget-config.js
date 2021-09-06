@@ -1050,6 +1050,7 @@ app.widgetConfig = {
                                     width: '80%',
                                     title: '',
                                     applyMeasuresToSection: true,
+                                    skin: 'filters_table',
                                     widgets: [
                                         {
                                             id: 'haysKamForecastingGridTableRow2Cell1',
@@ -1411,7 +1412,7 @@ app.widgetConfig = {
                             id: 'haysKamForecastingFilterPopUpDropdown',
                             type: DropBoxWidget,
                             multiSelect: true,
-                            skin: 'filter_selector'
+                            icon: 'icon-check-off'
                         }
                     ]
                 },
@@ -1592,6 +1593,63 @@ app.widgetConfig = {
                                             width: '100%',
                                             icon: 'icon-user',
                                             skin: 'userpanelmain_hays',
+                                        }
+                                    ]
+                                }
+
+                            ]
+                        },
+
+                        {
+                            id: 'haysForecastingHierarchyGridRow2',
+                            type: GridRowWidget,
+                            marginTop: '1.3%',
+                            marginBottom: '0%',
+                            width: '100%',
+                            height: '10%',
+                            widgets: [
+                                {
+                                    id: 'haysForecastingHierarchyGridRow2Cell1',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom',
+                                    marginTop: '7px',
+                                    marginLeft: '1%',
+                                    width: '30%',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysForecastingHierarchyGridRow2Cell1Search',
+                                            type: TextBoxWidget,
+                                            width: '400',
+                                            defaultText: 'Search...',
+                                            skin: 'searchbox',
+                                            height: '40'
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'haysForecastingHierarchyGridRow1Cell2',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom',
+                                    width: '65%',
+                                    widgets: []
+                                },
+                                {
+                                    id: 'haysForecastingHierarchyGridRow1Cell3',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom',
+                                    width: '15%',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysForecastingHierarchyGridRow1Cell4Button',
+                                            type: ButtonWidget,
+                                            label: 'Open Selected',
+                                            icon: 'icon-rows',
+                                            skin: 'material_hays',
+                                            marginTop: '7%',
+                                            marginLeft: '30%',
+                                            width: '120%'
                                         }
                                     ]
                                 }
@@ -2827,6 +2885,209 @@ app.widgetConfig = {
                                 }
 
                             ]
+                        },
+
+                        {
+                            id: 'haysVersionGridRow2',
+                            type: GridRowWidget,
+                            marginTop: '1.3%',
+                            width: '100%',
+                            skin: '',
+                            widgets: [
+
+                                {
+                                    id: 'haysVersionGridRow2Cell1',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '5.5%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysVersionGridRow2Cell1Button1',
+                                            type: ButtonWidget,
+                                            label: 'HAYS',
+                                            action: '',
+                                            width: '100px',
+                                            height: '40px',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'lefttriangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysVersionGridRow2Cell2',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '7.2%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysVersionGridRow2Cell2Button1',
+                                            type: ButtonWidget,
+                                            label: 'Business Unit 1',
+                                            action: '',
+                                            width: '110',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'triangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysVersionGridRow2Cell3',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '5.6%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysVersionGridRow2Cell3Button1',
+                                            type: ButtonWidget,
+                                            label: 'Area A',
+                                            action: '',
+                                            width: '100',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'triangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysVersionGridRow2Cell4',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '6.7%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysVersionGridRow2Cell4Button1',
+                                            type: ButtonWidget,
+                                            label: 'Department 1',
+                                            action: '',
+                                            width: '100',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'triangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysVersionGridRow2Cell5',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '5.6%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysVersionGridRow2Cell5Button1',
+                                            type: ButtonWidget,
+                                            label: 'Team A',
+                                            action: '',
+                                            width: '100',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'triangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysVersionGridRow2Cell6',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '8%',
+                                    alignment: 'center-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysVersionGridRow6Cell2Button1',
+                                            type: ButtonWidget,
+                                            label: 'Adam Foreman',
+                                            action: '',
+                                            width: '135',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'rightbluetriangle_button',
+                                        },
+
+                                    ]
+                                },
+                                {
+                                    id: 'haysVersionGridRow2Cell7',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '9%',
+                                    alignment: 'center-left',
+                                    widgets: []
+                                },
+
+
+                                {
+                                    id: 'haysVersionGridRow2Cell8',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '39.4%',
+                                    alignment: 'center-left',
+                                    widgets: []
+                                },
+                            ]
+                        },
+
+                        {
+                            id: 'haysUserGroupsGridRow3',
+                            type: GridRowWidget,
+                            marginTop: '0',
+                            marginBottom: '0%',
+                            width: '100%',
+                            height: '10%',
+                            widgets: [
+                                {
+                                    id: 'haysUserGroupsGridRow3Cell1',
+                                    type: GridCellWidget,
+                                    alignment: 'bottom',
+                                    marginTop: '0',
+                                    marginLeft: '1%',
+                                    width: '25%',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysUserGroupsGridRow3Cell1Search',
+                                            type: TextBoxWidget,
+                                            width: '371',
+                                            defaultText: 'Search...',
+                                            skin: 'searchbox',
+                                            height: '40',
+                                            icon: 'icon-search'
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 }
@@ -2959,7 +3220,7 @@ app.widgetConfig = {
                                             id: 'haysUserGroupsGridRow2Cell1Search',
                                             type: TextBoxWidget,
                                             width: '400',
-                                            defaultText: 'Search',
+                                            defaultText: 'Search...',
                                             skin: 'searchbox',
                                             height: '40'
                                         }
@@ -2982,7 +3243,7 @@ app.widgetConfig = {
                                     alignment: 'bottom',
                                     marginTop: '7px',
                                     marginLeft: '1%',
-                                    width: '3%',
+                                    width: '25%',
                                     widgets: [
 
                                         {
