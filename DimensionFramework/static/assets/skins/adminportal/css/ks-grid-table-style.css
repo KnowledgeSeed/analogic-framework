@@ -76,3 +76,86 @@
     border-left: 1px solid #f4f2ed;
 
 }
+
+/* hr simulation */
+
+.ks-grid-table-hrsimulation .ks-grid-table-row {
+    border-bottom: 1px solid #c3ced5;
+    height: 60px;
+}
+
+.ks-grid-table-hrsimulation .ks-grid-table-cell {
+    padding: 5px;
+}
+
+.ks-grid-table-hrsimulation .ks-grid-table-cell {
+    border-right: 2px solid #c3ced5;
+}
+
+.ks-grid-table-hrsimulation .ks-grid-table-content {
+	max-height: 500px;
+	overflow-y: scroll;
+}
+
+/* hr selector */
+
+.ks-grid-table-hrselector .ks-grid-table-row {
+    border-bottom: 1px solid #c3ced5;
+    border-right: 0px solid;
+    border-left: 0px solid;
+    height: 60px;
+}
+
+.ks-grid-table-hrselector .ks-grid-table-cell {
+    padding: 0px !important;
+}
+
+.ks-grid-table-hrselector .ks-grid-table-cell {
+    border-right: 0px solid #c3ced5;
+}
+
+
+
+/* hrnoheader */
+
+.ks-grid-table-hrnoheader .ks-grid-table-row {
+    border-bottom: 1px solid #c3ced5;
+    height: 60px;
+}
+
+.ks-grid-table-hrnoheader .ks-grid-table-cell {
+    padding: 5px;
+}
+
+.ks-grid-table-hrnoheader .ks-grid-table-cell {
+    border-right: 2px solid #c3ced5;
+}
+.ks-grid-table-hrnoheader .ks-grid-table-head {
+    display: none;
+}
+
+.ks-grid-table-hrnoheader .ks-grid-table-content {
+    max-height: 500px;
+    overflow-y: scroll;
+}
+/* */
+
+/* hr name list */
+
+.ks-grid-table-hrnamelist .ks-grid-table-row {
+    border-bottom: 1px solid #c3ced5;
+    height: 60px;
+}
+
+.ks-grid-table-hrnamelist .ks-grid-table-cell {
+    padding: 5px;
+}
+
+.ks-grid-table-hrnamelist .ks-grid-table-cell {
+    border-right: 2px solid #c3ced5;
+}
+
+.ks-grid-table-hrnamelist .ks-grid-table-content {
+    max-height: 400px;
+    overflow-y: scroll;
+}

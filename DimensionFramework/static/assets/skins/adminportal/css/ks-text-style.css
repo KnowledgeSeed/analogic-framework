@@ -10,6 +10,9 @@
     border-width: 0px;
     width: 100%;
     color: #007aff;
+    align-self: flex-end;
+    justify-content: flex-end;
+    text-align: right;
 }
 
 .ks-text-template1 .ks-text-title-input::-moz-selection {
@@ -227,11 +230,18 @@
 /*light text*/
 
 .ks-text-lighttext .ks-text-title {
-    font-weight: 200;
+    font-weight: 300;
     margin-bottom: 4px;
 }
 
 .ks-text-lighttext .ks-text-body {
     font-weight: 100;
 
+}
+
+.ks-text-grouptitle .ks-text-title-input {
+    font-weight: 600;
+    border-width: 0px;
+    width: 100%;
+    color: #007aff;
 }

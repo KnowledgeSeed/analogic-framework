@@ -227,27 +227,396 @@
         line-height: 2px;
 }
 
+/* HR tervezo skinjei */
 
-.ks-button-deepblue_backbutton.ks-button {
-    background-color: #0066cc;
-    border-radius: 7px;
+
+.ks-button-hrmenu1.ks-button {
+    background-color: #e5f1ff;
+    height: 150px;
+    border-radius: 10px;
+    width: 150px;
+}
+
+.ks-button-hrmenu1 .ks-button-icon {
+    color: #007aff;
+    font-size: 70px;
+}
+
+.ks-button-hrmenu2.ks-button {
+    background-color: #e5f1ff;
+    height: 150px;
+    border-radius: 3px;
+    width: 150px;
+}
+
+.ks-button-hrmenu2 .ks-button-icon {
+    color: #007aff;
+    font-size: 70px;
+}
+
+
+.ks-button-settingsbutton.ks-button {
+    background-color:#f1f3f5;
+    height: 150px;
+    border-radius: 10px;
+    width: 150px;
+}
+
+.ks-button-settingsbutton .ks-button-icon {
+    color: #747b85;
+    font-size: 70px;
+}
+
+.ks-button-backbuttonhr.ks-button {
     height: 40px;
     width: 40px;
 }
 
-.ks-button-deepblue_backbutton .ks-button-icon {
-    color: white;
-    font-size: 19px;
+.ks-button-backbuttonhr .ks-button-icon {
+    font-size: 25px;
+    color:#007aff;
 }
 
-.ks-button-backbutton.ks-button {
-    background-color: #0066cc;
-    border-radius: 7px;
+/* HR tervezo jobb felső accaount skinje */
+.ks-button-userpanelhr.ks-button {
+    height: 30px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #f1f3f5;
+}
+
+.ks-button-userpanelhr .ks-button-inner {
+    background-color: #f1f3f5;
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-userpanelhr .ks-button-icon,
+.ks-button-userpanelhr .ks-button-icon img {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #747b85;
+}
+
+.ks-button-userpanelhr .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-userpanelhr.ks-button {
+    height: 30px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #f1f3f5;
+}
+
+.ks-button-userpanelhr .ks-button-inner {
+    background-color: #f1f3f5;
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-userpanelhr .ks-button-icon,
+.ks-button-userpanelhr .ks-button-icon img {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #747b85;
+}
+
+.ks-button-userpanelhr .ks-button-divider {
+    width: 10px;
+}
+
+/* */
+/* HR tervezo Business Plan- Business Plan Simulation skinje */
+.ks-button-businesspanelhr.ks-button {
+    height: 30px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #ffffff;
+}
+
+.ks-button-businesspanelhr .ks-button-inner {
+    background-color: #ffffff;
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-businesspanelhr .ks-button-icon,
+.ks-button-businesspanelhr .ks-button-icon img {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 1px;
+    color: #747b85;
+}
+
+.ks-button-businesspanelhr .ks-button-divider {
+    width: 10px;
+}
+.ks-button-businesspanelhr .ks-button-label {
+	color: #747b85;
+	font-weight: bold;
+}
+
+
+.ks-button-sidemenuBtn.ks-button {
+    background-color: #d8d9d9;
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
     height: 40px;
-    width: 40px;
+    line-height: 40px;
+    margin-bottom: 1px;
+    padding-left: 45px;
+    white-space: nowrap;
+    width: 170px;
+    -webkit-transition: 0.5s all;
+    -moz-transition: 0.5s all;
+    -o-transition: 0.5s all;
+    -ms-transition: 0.5s all;
+    transition: 0.5s all;
 }
 
-.ks-button-backbutton .ks-button-icon {
-    color: white;
-    font-size: 19px;
+.ks-button-sidemenuBtn .ks-button-label {
+    color: #000;
+    cursor: pointer;
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    padding-left: 5px;
+}
+
+.ks-button-sidemenuBtn .ks-button-content {
+    padding-left: 18px;
+}
+
+.ks-button-hasevent .ks-button-icon {
+	font-size: 20px;
+	color: #007aff;
+}
+
+.ks-button-infobutton .ks-button-icon {
+	font-size: 18px;
+	color: #007aff;
+}
+
+.ks-button-selectorbutton .ks-button-icon {
+	font-size: 18px;
+	color: #dee1e5;
+}
+
+/* analogic popup button */
+
+.ks-button-analogicpopupflip .ks-button-icon {
+	font-size: 18px;
+	color: #007aff;
+	transform: scaleX(-1);
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    -ms-transform: scaleX(-1);
+}
+/* */
+/* HR tervező add button */
+.ks-button-addposition .ks-button-icon {
+        color: #007aff;
+        font-size: 25px;
+}
+/* */
+
+/* HR tervező simualtion tablazat */
+.ks-button-event .ks-button-content {
+	width: 30px;
+	height: 30px;
+}
+
+.ks-button-event .ks-button-icon {
+	font-size: 20px;
+	color: #939290;
+}
+
+.ks-button-hasevent .ks-button-icon {
+	font-size: 20px;
+	color: #007aff;
+}
+
+.ks-button-editedstatus .ks-button-icon {
+    font-size: 20px;
+    color: #FF9500;
+}
+
+.ks-button-cancelicon .ks-button-icon {
+	font-size: 16px;
+	color: #007aff;
+	margin-right: 10px;
+}
+
+.ks-button-cancelicon .ks-button-content {
+	background-color: #e5f1ff;
+    border-radius: 3px;
+    font-size: 14px;
+    height: 30px;
+    width: 100px;
+
+}
+
+.ks-button-cancelicon .ks-button-label{
+	color: #007aff;
+	font-size: 14px;
+}
+
+
+.ks-button-saveicon .ks-button-icon {
+	font-size: 16px;
+	color: #ffffff;
+	margin-right: 10px;
+}
+
+.ks-button-saveicon .ks-button-content {
+	background-color: #007aff;
+    border-radius: 3px;
+    font-size: 14px;
+    height: 30px;
+    width: 100px;
+
+}
+
+.ks-button-saveicon .ks-button-label{
+	color: #ffffff;
+	font-size: 14px;
+}
+
+.ks-button-reportcolor .ks-button {
+	background-color: #007aff;
+    height: 30px;
+    width: 8px;
+
+}
+
+.ks-button-reportcolor .ks-button-inner {
+	background-color: #007aff;
+    height: 30px;
+    width: 8px;
+
+}
+.ks-button-textbutton .ks-button-label {
+    font-weight: bold;
+}
+
+.ks-button-textbuttonlight .ks-button-label {
+    font-weight: 300;
+}
+/* */
+
+/* HR tervező cancel button */
+.ks-button-hrcancelbutton .ks-button-icon {
+        color: #808080;
+        font-size: 18px;
+        line-height: 2px;
+        padding: 6px;
+}
+/* */
+/* HR tervező kicsi add button */
+.ks-button-hrsmalladbutton .ks-button-icon {
+        color: #007aff;
+        font-size: 18px;
+        line-height: 2px;
+        padding: 6px;
+}
+
+.ks-button-hrsmalladbutton_od .ks-button-icon {
+        color: #007aff;
+        font-size: 22px;
+        line-height: 2px;
+        padding: 6px;
+}
+/* */
+/* HR tervező simtype */
+.ks-button-hrsimtype.ks-button {
+    height: 40px;
+    border-radius: 5px;
+    width: 250px;
+}
+
+.ks-button-hrsimtype .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-hrsimtype.ks-button:hover {
+    background-color: #f1f3f5;
+}
+
+.ks-button-hrsimtype .ks-button-label {
+    color: #000000;
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.ks-button-hrsimtype .ks-button-icon {
+    color: #000000;
+    font-size: 22px;
+    margin-right: 30px;
+    margin-left: 10px;
+}
+
+/* */
+/* HR tervező remove button */
+.ks-button-hrremove.ks-button {
+    height: 40px;
+    border-radius: 5px;
+    width: 250px;
+}
+
+.ks-button-hrremove .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-hrremove .ks-button-label {
+    color: #ff0000;
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.ks-button-hrremove .ks-button-icon {
+    color: #ff0000;
+    font-size: 22px;
+    margin-right: 30px;
+    margin-left: 10px;
+}
+/* */
+/* analogic popupcancel button */
+
+.ks-button-analogicpopupcancel.ks-button {
+	background-color: #e7e7e7;
+	height: 40px;
+        border-radius: 5px;
+        width: 200px;
+}
+
+.ks-button-analogicpopupcancel .ks-button-label {
+	color: #a5a5a5;
+	font-size: 14px;
+}
+/* */
+
+/* analogic breakdown icon */
+
+.ks-button-breakdown .ks-button-icon {
+    font-size: 18px;
+    color: #939290;
+}
+
+/* telekom breakdown on icon */
+
+.ks-button-breakdownon .ks-button-icon {
+    font-size: 18px;
+    color: #007aff;
 }

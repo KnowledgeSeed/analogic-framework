@@ -62,8 +62,7 @@
 
 .ks-dropbox-panel {
     left: 0;
-    overflow-y: auto;
-    max-height: 600px;
+    overflow: hidden;
     position: absolute;
     right: 0;
     top: 100%;
@@ -98,4 +97,8 @@
 
 .ks-dropbox-panel-item.on {
     background-color: #006cf8;
+}
+
+.ks-dropbox-field.readonly{
+    background-color: lightgrey;
 }

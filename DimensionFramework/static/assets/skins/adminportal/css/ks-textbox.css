@@ -45,3 +45,7 @@
 	height: 100%;
 	width: 100%;
 }
+
+.ks-textbox-field-inner.readonly {
+    background-color: lightgrey;
+}
