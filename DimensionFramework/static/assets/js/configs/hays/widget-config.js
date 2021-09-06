@@ -1045,75 +1045,81 @@ app.widgetConfig = {
                             height: '100px',
                             widgets: [
                                 {
-                                    id: 'haysKamForecastingGridTable',
-                                    type: GridTableWidget,
-                                    width: '80%',
-                                    title: '',
-                                    applyMeasuresToSection: true,
-                                    skin: 'filters_table',
+                                    id: 'haysKamForecastingGridRow4Cell1',
+                                    type: GridCellWidget,
+                                    width: '75%',
+                                    alignment: 'top-left',
                                     widgets: [
                                         {
-                                            id: 'haysKamForecastingGridTableRow2Cell1',
-                                            type: GridTableCellWidget,
-                                            width: '20%',
+                                            id: 'haysKamForecastingGridTable',
+                                            type: GridTableWidget,
+                                            width: '100%',
+                                            title: '',
                                             widgets: [
                                                 {
-                                                    id: 'haysKamForecastingGridTableRow2Cell1Text',
-                                                    type: TextWidget,
-                                                    width: '100%',
-                                                    depends: [{'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'}]
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            id: 'haysKamForecastingGridTableRow2Cell2',
-                                            type: GridTableCellWidget,
-                                            width: '20%',
-                                            widgets: [
+                                                    id: 'haysKamForecastingGridTableRowCell1',
+                                                    type: GridTableCellWidget,
+                                                    width: '20%',
+                                                    widgets: [
+                                                        {
+                                                            id: 'haysKamForecastingGridTableRowCell1Text',
+                                                            type: TextWidget,
+                                                            width: '100%',
+                                                            depends: [{'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'}]
+                                                        }
+                                                    ]
+                                                },
                                                 {
-                                                    id: 'haysKamForecastingGridTableRow2Cell2Text',
-                                                    type: TextWidget,
-                                                    width: '100%',
-                                                    depends: [{'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'}]
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            id: 'haysKamForecastingGridTableRow2Cell1',
-                                            type: GridTableCellWidget,
-                                            width: '20%',
-                                            widgets: [
+                                                    id: 'haysKamForecastingGridTableRowCell2',
+                                                    type: GridTableCellWidget,
+                                                    width: '20%',
+                                                    widgets: [
+                                                        {
+                                                            id: 'haysKamForecastingGridTableRowCell2Text',
+                                                            type: TextWidget,
+                                                            width: '100%',
+                                                            depends: [{'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'}]
+                                                        }
+                                                    ]
+                                                },
                                                 {
-                                                    id: 'haysKamForecastingGridTableRow2Cell3Text',
-                                                    type: TextWidget,
-                                                    width: '100%',
-                                                    depends: [{'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'}]
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            id: 'haysKamForecastingGridTableRow2Cell4',
-                                            type: GridTableCellWidget,
-                                            width: '20%',
-                                            widgets: [
+                                                    id: 'haysKamForecastingGridTableRowCell1',
+                                                    type: GridTableCellWidget,
+                                                    width: '20%',
+                                                    widgets: [
+                                                        {
+                                                            id: 'haysKamForecastingGridTableRowCell3Text',
+                                                            type: TextWidget,
+                                                            width: '100%',
+                                                            depends: [{'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'}]
+                                                        }
+                                                    ]
+                                                },
                                                 {
-                                                    id: 'haysKamForecastingGridTableRow2Cell4Text',
-                                                    type: TextWidget,
-                                                    width: '100%',
-                                                    depends: [{'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'}]
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            id: 'haysKamForecastingGridTableRow2Cell5',
-                                            type: GridTableCellWidget,
-                                            width: '20%',
-                                            widgets: [
+                                                    id: 'haysKamForecastingGridTableRowCell4',
+                                                    type: GridTableCellWidget,
+                                                    width: '20%',
+                                                    widgets: [
+                                                        {
+                                                            id: 'haysKamForecastingGridTableRow2Cell4Text',
+                                                            type: TextWidget,
+                                                            width: '100%',
+                                                            depends: [{'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'}]
+                                                        }
+                                                    ]
+                                                },
                                                 {
-                                                    id: 'haysKamForecastingGridTableRow2Cell5Text',
-                                                    type: TextWidget,
-                                                    width: '100%',
-                                                    depends: [{'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'}]
+                                                    id: 'haysKamForecastingGridTableRowCell5',
+                                                    type: GridTableCellWidget,
+                                                    width: '20%',
+                                                    widgets: [
+                                                        {
+                                                            id: 'haysKamForecastingGridTableRowCell5Text',
+                                                            type: TextWidget,
+                                                            width: '100%',
+                                                            depends: [{'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'}]
+                                                        }
+                                                    ]
                                                 }
                                             ]
                                         }
@@ -1122,7 +1128,7 @@ app.widgetConfig = {
                                 {
                                     id: 'haysKamForecastingGridRow4Cell2',
                                     type: GridCellWidget,
-                                    width: '20%',
+                                    width: '25%',
                                     alignment: 'top-left',
                                     widgets: [
                                         {
@@ -1160,27 +1166,9 @@ app.widgetConfig = {
                     position: 'bottom',
                     widgets: [
                         {
-                            id: 'haysKamForecastingFilterPopUpCell1',
-                            type: GridCellWidget,
-                            alignment: 'bottom-left',
-                            width: '21%',
-                            widgets: [
-                                {
-                                    id: 'haysKamForecastingFilterPopUpCell1SearchBox',
-                                    type: TextBoxWidget,
-                                    width: '170px',
-                                    skin: 'searchbox',
-                                    defaultText: 'Search',
-                                    titleFontColor: '#747b85',
-                                    textFontSize: '14',
-                                }
-                            ]
-                        },
-                        {
                             id: 'haysKamForecastingFilterPopUpDropdown',
                             type: DropBoxWidget,
-                            multiSelect: true,
-                            icon: 'icon-check-off'
+                            multiSelect: true
                         }
                     ]
                 },
