@@ -152,10 +152,10 @@ app.repository = {
             }
             if (dropDownValue === '') {
                 //skin változtatás:
-                //cellOriginalValue['skin'] = actualRow == 0 ? 'első_sor_text_nek_a_skinje' : 'második_sor_text_nek_a_skinje';
+                cellOriginalValue['skin'] = actualRow == 0 ? 'első_sor_text_nek_a_skinje' : 'második_sor_text_nek_a_skinje';
             } else {
                 //skin változtatás:
-                //cellOriginalValue['skin'] = actualRow == 0 ? 'első_sor_text_nek_a_skinje_van_kiválasztott_érték' : 'második_sor_text_nek_a_skinje_van_kiválasztott_érték';
+                cellOriginalValue['skin'] = actualRow == 0 ? 'filter_button' : 'filter_text';
             }
 
             return cellOriginalValue;
@@ -171,7 +171,7 @@ app.repository = {
                             icon: 'icon-person',
                             iconColor: '#6F42C1',
                             skin: 'filter_button',
-                            cellSkin: 'top_greyfon'
+                            cellSkin: 'greyfon'
                         },
                         {
                             title: 'Type',
@@ -185,30 +185,30 @@ app.repository = {
                             icon: 'icon-rectangle-stack-fill',
                             skin: 'filter_button',
                             iconColor: '#E98300',
-                            cellSkin: 'top_greyfon'
+                            cellSkin: 'greyfon'
                         },
                         {
                             title: 'Location',
                             icon: 'icon-location',
                             skin: 'filter_button',
                             iconColor: '#E83E8C',
-                            cellSkin: 'top_greyfon'
+                            cellSkin: 'greyfon'
                         },
                         {
                             title: 'Project status',
                             icon: 'icon-calendar',
                             skin: 'filter_button',
                             iconColor: '#007BFF',
-                            cellSkin: 'top_greyfon'
+                            cellSkin: 'greyfon'
                         }
                     ],
                     [
                         {
-                            title: 'valami',
+                            title: '',
                             skin: 'filter_text',
-                            icon: 'icon-clear',
+                            icon: '',
                             iconColor: '#A9A9A9',
-                            cellSkin: 'bottom_greyfon'
+                            cellSkin: ''
                         },
                         {
                             title: '',
@@ -218,25 +218,25 @@ app.repository = {
                             cellSkin: ''
                         },
                         {
-                            title: 'valami',
+                            title: '',
                             skin: 'filter_text',
-                            icon: 'icon-clear',
+                            icon: '',
                             iconColor: '#A9A9A9',
-                            cellSkin: 'bottom_greyfon'
+                            cellSkin: ''
                         },
                         {
-                            title: 'valami',
+                            title: '',
                             skin: 'filter_text',
-                            icon: 'icon-clear',
+                            icon: '',
                             iconColor: '#A9A9A9',
-                            cellSkin: 'bottom_greyfon'
+                            cellSkin: ''
                         },
                         {
-                            title: 'valami',
+                            title: '',
                             skin: 'filter_text',
-                            icon: 'icon-clear',
+                            icon: '',
                             iconColor: '#A9A9A9',
-                            cellSkin: 'bottom_greyfon'
+                            cellSkin: ''
                         }
                     ]
                 ];
@@ -283,16 +283,154 @@ app.repository = {
                 let result = {
                     skin: skin,
                     items: [
-                        {name: selectedTitle + '1', on: selectedItems.includes(selectedTitle + '1')},
-                        {name: selectedTitle + '2', on: selectedItems.includes(selectedTitle + '2')},
-                        {name: selectedTitle + '3', on: selectedItems.includes(selectedTitle + '3')},
-                        {name: selectedTitle + '4', on: selectedItems.includes(selectedTitle + '4')},
-                        {name: selectedTitle + '5', on: selectedItems.includes(selectedTitle + '5')},
-                        {name: selectedTitle + '6', on: selectedItems.includes(selectedTitle + '6')}
+                        {name: ' ' + selectedTitle + '1', on: selectedItems.includes(selectedTitle + '1')},
+                        {name: ' ' + selectedTitle + '2', on: selectedItems.includes(selectedTitle + '2')},
+                        {name: ' ' + selectedTitle + '3', on: selectedItems.includes(selectedTitle + '3')},
+                        {name: ' ' + selectedTitle + '4', on: selectedItems.includes(selectedTitle + '4')},
+                        {name: ' ' + selectedTitle + '5', on: selectedItems.includes(selectedTitle + '5')},
+                        {name: ' ' + selectedTitle + '6', on: selectedItems.includes(selectedTitle + '6')}
                     ]
                 };
                 return result;
             }
         }
     },
-};
+
+    haysForecastingHierarchyGrid2Level1GridTable:
+        {
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => {
+                        return `{"MDX":"
+                                SELECT 
+                                   {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                                  ON COLUMNS , 
+                                   {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 4)} 
+                                  ON ROWS 
+                                FROM [}ElementAttributes_Organization Units] 
+                                    "}`;
+
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 1,
+                        query: [
+                            (r, x) => {
+                                return {
+                                    titleOn: r.Cells[x].FormattedValue,
+                                    titleOff: r.Cells[x].FormattedValue,
+                                }
+                            }
+
+
+                        ]
+                    }
+                },
+        },
+
+    haysForecastingHierarchyGrid2Level2GridTable:
+        {
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => {
+                        return `{"MDX":"
+                            SELECT 
+                               {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                              ON COLUMNS , 
+                               {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 3)} 
+                              ON ROWS 
+                            FROM [}ElementAttributes_Organization Units] 
+                                    "}`;
+
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 1,
+                        query: [
+                            (r, x) => {
+                                return {
+                                    titleOn: r.Cells[x].FormattedValue,
+                                    titleOff: r.Cells[x].FormattedValue,
+                                }
+                            }
+
+
+                        ]
+                    }
+                },
+        },
+
+    haysForecastingHierarchyGrid2Level3GridTable:
+        {
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => {
+                        return `{"MDX":"
+                            SELECT 
+                               {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                              ON COLUMNS , 
+                               {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 2)} 
+                              ON ROWS 
+                            FROM [}ElementAttributes_Organization Units] 
+                                    "}`;
+
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 1,
+                        query: [
+                            (r, x) => {
+                                return {
+                                    titleOn: r.Cells[x].FormattedValue,
+                                    titleOff: r.Cells[x].FormattedValue
+                                }
+                            }
+
+
+                        ]
+                    }
+                },
+        },
+
+    haysForecastingHierarchyGrid2Level4GridTable:
+        {
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => {
+                        return `{"MDX":"
+                                SELECT 
+                                   {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                                  ON COLUMNS , 
+                                  NON EMPTY 
+                                   {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 0)} 
+                                  ON ROWS 
+                                FROM [}ElementAttributes_Organization Units] 
+                                    "}`;
+
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 1,
+                        query: [
+                            (r, x) => {
+                                return {
+                                    titleOn: r.Cells[x].FormattedValue,
+                                    titleOff: r.Cells[x].FormattedValue
+                                }
+                            }
+
+
+                        ]
+                    }
+                },
+        },
+
+}

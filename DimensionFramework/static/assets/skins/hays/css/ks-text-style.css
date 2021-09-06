@@ -45,14 +45,15 @@
     font-size: 13px;
     margin-bottom: 13px;
     margin-top: 14px;
-    float: left;
+    margin-left: 30px;
 }
 .ks-text-filter_text .ks-text-icon {
     float: right;
+    width: 18px;
+    height: 19px;
     margin-bottom: 13px;
     margin-top: 14px;
-    position: relative;
-    margin-left: 120px;
+    margin-right: 10px;
 }
 
 /* settings text*/

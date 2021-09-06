@@ -6,7 +6,7 @@
 .ks-container-departurement_popup_hays.ks-container {
     border-radius: 7px;
     top: 22%;
-    left: 22%;
+    left: 21%;
 }
 
 .ks-container-departurement_popup_hays .ks-container-content {
@@ -22,7 +22,7 @@
 .ks-container-business_popup_hays.ks-container {
     border-radius: 7px;
     top: 22%;
-    left: 9%;
+    left: 7%;
 }
 
 .ks-container-business_popup_hays .ks-container-content {
@@ -37,7 +37,7 @@
 .ks-container-area_popup_hays.ks-container {
     border-radius: 7px;
     top: 22%;
-    left: 16%;
+    left: 14%;
 }
 
 .ks-container-area_popup_hays .ks-container-content {
@@ -51,7 +51,7 @@
 
 .ks-container-team_popup_hays.ks-container {
     border-radius: 7px;
-    top: 22%;
+    top: 46%;
     left: 28%;
 }
 
@@ -72,7 +72,7 @@
     padding: 0px;
 }
 
-.ks-container-popup_hays .div-x{
+.ks-container-popup_hays .div-x {
     color: #0066CC;
     font-size: 12px;
     margin-right: 8px;

@@ -1,0 +1,13 @@
+/*Mody 09 02 hierarchyGridTable_hays   */
+.ks-grid-table-hierarchyGridTable_hays .ks-grid-table-row {
+    border-bottom: 1px solid #c3ced5;
+    height: 60px;
+}
+
+.ks-grid-table-hierarchyGridTable_hays .ks-grid-table-cell {
+    padding: 0px !important;
+}
+
+.ks-grid-table-hierarchyGridTable_hays .ks-grid-table-cell {
+    border-right: 0px solid #c3ced5;
+}
