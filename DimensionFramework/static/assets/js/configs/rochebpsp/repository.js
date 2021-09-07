@@ -4299,7 +4299,7 @@ app.repository = {
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('Product Level - Name')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[UILevelFormat] as 
                                             --[Materials].[BPSP Budget IP].CurrentMember.Properties('UI Level Format')
-                                            [Materials].[BPSP Budget IP].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} UI Level Format')
+                                            [Materials].[BPSP Budget IP].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} IP UI Level Format')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[DIS] as 
                                             [Materials].[BPSP Budget IP].CurrentMember.Properties('IP DIS Relevant Flag Budget')
                                      MEMBER [LineItems Sales Plan IP].[LineItems Sales Plan IP].[HasComment] as
@@ -7294,7 +7294,8 @@ app.repository = {
                     receiver: receiver,
                     productVersion: productVersion,
                     customerCode: customerCode,
-                    rows: hasFocusedProduct ? 'FocusedRows' : 'ProductRows',
+                    //rows: hasFocusedProduct ? 'FocusedRows' : 'ProductRows',
+                    rows: 'FocusedRows',
                     focusedProduct: focusedProduct,
                     type: type,
                     year1: y1,
