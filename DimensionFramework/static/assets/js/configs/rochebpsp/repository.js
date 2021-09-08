@@ -10705,18 +10705,20 @@ app.repository = {
             }
         }
     },
-    rocheBPSPMaterialGridRow4Cell3ExportButton: {
+    rocheBPSPMaterial: {
         getFileName: (db) => {
             let s = [], fileName;
             s.push(Utils.getFormattedDate(new Date(), '_', true));
             s.push(db.activeUserName);
             s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key'));
             return s.join('_').replaceAll(':', '_').replaceAll(' ', '_').replaceAll('/', '_');
-        },
+        }
+    },
+    rocheBPSPMaterialGridRow4Cell3ExportButton: {
         launch: {
             download: (db) => {
                 let y1 = parseInt(db.systemValueGlobalStartingPlanYear),
-                    fileName = Repository.rocheBPSPMaterialGridRow4Cell3ExportButton.getFileName(db);
+                    fileName = Repository.rocheBPSPMaterial.getFileName(db);
                 return {
                     url: 'export?export_key=rocheMaterialMaintenanceExport&file_name=' + fileName + '.xlsx',   // custom_object json
                     fileName: fileName + '.xlsx',
@@ -10733,17 +10735,10 @@ app.repository = {
         }
     },
     rocheBPSPMaterialGridRow4Cell3ExportByIpNodeButton: {
-        getFileName: (db) => {
-            let s = [], fileName;
-            s.push(Utils.getFormattedDate(new Date(), '_', true));
-            s.push(db.activeUserName);
-            s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPMaterialGridRow1Cell2DropBox', 'key'));
-            return s.join('_').replaceAll(':', '_').replaceAll(' ', '_').replaceAll('/', '_');
-        },
         launch: {
             download: (db) => {
                 let y1 = parseInt(db.systemValueGlobalStartingPlanYear),
-                    fileName = Repository.rocheBPSPMaterialGridRow4Cell3ExportButton.getFileName(db);
+                    fileName = Repository.rocheBPSPMaterial.getFileName(db);
                 return {
                     url: 'export?export_key=rocheMaterialMaintenanceByIpNodeExport&file_name=' + fileName + '.xlsx',   // custom_object json
                     fileName: fileName + '.xlsx',
