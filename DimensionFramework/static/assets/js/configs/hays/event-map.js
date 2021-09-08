@@ -122,7 +122,7 @@ app.eventMap = {
         }
     ],
 
-    'perform.haysKamForecastingGridTable_0_0.finished': [
+    'text_click.haysKamForecastingGridTable_0_0.finished': [
         {
             action: app.fn.forceRefresh,
             argument: 'haysKamForecastingFilterPopUpDropdown'
@@ -133,7 +133,7 @@ app.eventMap = {
         }
     ],
 
-    'perform.haysKamForecastingGridTable_0_1.finished': [
+    'text_click.haysKamForecastingGridTable_0_1.finished': [
         {
             action: app.fn.forceRefresh,
             argument: 'haysKamForecastingFilterPopUpDropdown'
@@ -144,7 +144,7 @@ app.eventMap = {
         }
     ],
 
-    'perform.haysKamForecastingGridTable_0_2.finished': [
+    'text_click.haysKamForecastingGridTable_0_2.finished': [
         {
             action: app.fn.forceRefresh,
             argument: 'haysKamForecastingFilterPopUpDropdown'
@@ -155,7 +155,7 @@ app.eventMap = {
         }
     ],
 
-    'perform.haysKamForecastingGridTable_0_3.finished': [
+    'text_click.haysKamForecastingGridTable_0_3.finished': [
         {
             action: app.fn.forceRefresh,
             argument: 'haysKamForecastingFilterPopUpDropdown'
@@ -166,7 +166,7 @@ app.eventMap = {
         }
     ],
 
-    'perform.haysKamForecastingGridTable_0_4.finished': [
+    'text_click.haysKamForecastingGridTable_0_4.finished': [
         {
             action: app.fn.forceRefresh,
             argument: 'haysKamForecastingFilterPopUpDropdown'
@@ -208,6 +208,13 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'haysUserGroupHierarchyDeleteDataGridTablePopup'
+        }
+    ],
+
+    'launch.haysKamForecastingGridRow2Cell0Button1': [
+        {
+            action: app.fn.openPage,
+            argument: 'haysForecastingHierarchy'
         }
     ],
 
