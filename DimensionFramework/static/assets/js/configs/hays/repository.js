@@ -59,7 +59,7 @@ app.repository = {
                             iconCustomEventName: 'text_click'
                         },
                         {
-                            title: 'Project status',
+                            title: 'Time Focus',
                             icon: 'icon-calendar',
                             skin: 'filter_button_circle',
                             iconColor: '#007BFF',
