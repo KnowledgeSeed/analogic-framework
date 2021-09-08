@@ -3,142 +3,6 @@
 'use strict';
 
 app.repository = {
-    haysKamForecastingDepartmentPopUpGridTable:
-        {
-            init:
-                {
-                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
-                    type: 'POST',
-                    body: (db) => {
-                        return `{"MDX":"
-                            SELECT 
-                               {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
-                              ON COLUMNS , 
-                               {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 2)} 
-                              ON ROWS 
-                            FROM [}ElementAttributes_Organization Units] 
-                                    "}`;
-
-                    },
-                    parsingControl: {
-                        type: 'matrix',
-                        length: 1,
-                        query: [
-                            (r, x) => {
-                                return {
-                                    label: r.Cells[x].FormattedValue
-                                }
-                            }
-
-
-                        ]
-                    }
-                },
-        },
-
-    haysKamForecastingBusinessPopUpGridTable:
-        {
-            init:
-                {
-                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
-                    type: 'POST',
-                    body: (db) => {
-                        return `{"MDX":"
-                                SELECT 
-                                   {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
-                                  ON COLUMNS , 
-                                   {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 4)} 
-                                  ON ROWS 
-                                FROM [}ElementAttributes_Organization Units] 
-                                    "}`;
-
-                    },
-                    parsingControl: {
-                        type: 'matrix',
-                        length: 1,
-                        query: [
-                            (r, x) => {
-                                return {
-                                    label: r.Cells[x].FormattedValue
-                                }
-                            }
-
-
-                        ]
-                    }
-                },
-        },
-
-    haysKamForecastingAreaPopUpGridTable:
-        {
-            init:
-                {
-                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
-                    type: 'POST',
-                    body: (db) => {
-                        return `{"MDX":"
-                            SELECT 
-                               {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
-                              ON COLUMNS , 
-                               {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 3)} 
-                              ON ROWS 
-                            FROM [}ElementAttributes_Organization Units] 
-
-
-
-                                    "}`;
-
-                    },
-                    parsingControl: {
-                        type: 'matrix',
-                        length: 1,
-                        query: [
-                            (r, x) => {
-                                return {
-                                    label: r.Cells[x].FormattedValue
-                                }
-                            }
-
-
-                        ]
-                    }
-                },
-        },
-
-    haysKamForecastingTeamPopUpGridTable:
-        {
-            init:
-                {
-                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
-                    type: 'POST',
-                    body: (db) => {
-                        return `{"MDX":"
-                                SELECT 
-                                   {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
-                                  ON COLUMNS , 
-                                  NON EMPTY 
-                                   {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 0)} 
-                                  ON ROWS 
-                                FROM [}ElementAttributes_Organization Units] 
-                                    "}`;
-
-                    },
-                    parsingControl: {
-                        type: 'matrix',
-                        length: 1,
-                        query: [
-                            (r, x) => {
-                                return {
-                                    label: r.Cells[x].FormattedValue
-                                }
-                            }
-
-
-                        ]
-                    }
-                },
-        },
-
     haysKamForecasting: {
         updateHayKamForecastingGridTableCell: (gridTableId, actualRow, actualColumn) => {
             let gridTableData = v(gridTableId), cellOriginalValue = gridTableData.cellData[actualRow][actualColumn];
@@ -324,6 +188,18 @@ app.repository = {
     },
     haysForecastingHierarchyGrid2Level1GridTable:
         {
+            refresh_col_0: {
+                execute: (db, widgetId, extraParams) => {
+                    let gridTableData = v(widgetId),
+                        cellOriginalValue = gridTableData.cellData[extraParams.row][extraParams.column];
+                    if (extraParams.row == gridTableData.row) {
+                        cellOriginalValue['value'] = '1';
+                    }
+                    L(cellOriginalValue);
+                    return cellOriginalValue;
+                }
+            },
+
             init:
                 {
                     url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
@@ -348,6 +224,9 @@ app.repository = {
                                     titleOn: r.Cells[x].FormattedValue,
                                     titleOff: r.Cells[x].FormattedValue,
                                 }
+                            },
+                            (r, x) => {
+                                return {}
                             }
 
 
