@@ -172,7 +172,7 @@ app.eventMap = {
         }
     ],
 
-    'perform.haysKamForecastingGridTable_0_0': [
+    'perform.haysKamForecastingGridTable_0_0.finished': [
         {
             action: app.fn.forceRefresh,
             argument: 'haysKamForecastingFilterPopUpDropdown'
@@ -183,7 +183,7 @@ app.eventMap = {
         }
     ],
 
-    'perform.haysKamForecastingGridTable_0_1': [
+    'perform.haysKamForecastingGridTable_0_1.finished': [
         {
             action: app.fn.forceRefresh,
             argument: 'haysKamForecastingFilterPopUpDropdown'
@@ -194,7 +194,7 @@ app.eventMap = {
         }
     ],
 
-    'perform.haysKamForecastingGridTable_0_2': [
+    'perform.haysKamForecastingGridTable_0_2.finished': [
         {
             action: app.fn.forceRefresh,
             argument: 'haysKamForecastingFilterPopUpDropdown'
@@ -205,7 +205,7 @@ app.eventMap = {
         }
     ],
 
-    'perform.haysKamForecastingGridTable_0_3': [
+    'perform.haysKamForecastingGridTable_0_3.finished': [
         {
             action: app.fn.forceRefresh,
             argument: 'haysKamForecastingFilterPopUpDropdown'
@@ -216,7 +216,7 @@ app.eventMap = {
         }
     ],
 
-    'perform.haysKamForecastingGridTable_0_4': [
+    'perform.haysKamForecastingGridTable_0_4.finished': [
         {
             action: app.fn.forceRefresh,
             argument: 'haysKamForecastingFilterPopUpDropdown'

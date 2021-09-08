@@ -145,14 +145,14 @@ app.repository = {
             if (actualColumn != gridTableData.column) {
                 return cellOriginalValue;
             }
-            let dropDownValue = v('haysKamForecastingFilterPopUpDropdown.value');
+            let dropDownValue = v('haysKamForecastingFilterPopUpDropdown.value') ? v('haysKamForecastingFilterPopUpDropdown.value') : '';
             if (actualRow == 1) {
                 cellOriginalValue['title'] = dropDownValue;
 
             }
-            if (dropDownValue === '') {
+            if (dropDownValue === "") {
                 //skin változtatás:
-                cellOriginalValue['skin'] = actualRow == 0 ? 'filter_button_circle' : 'második_sor_text_nek_a_skinje';
+                cellOriginalValue['skin'] = actualRow == 0 ? 'filter_button_circle' : 'filter_text_disabled';
             } else {
                 //skin változtatás:
                 cellOriginalValue['skin'] = actualRow == 0 ? 'filter_button' : 'filter_text';
@@ -280,7 +280,43 @@ app.repository = {
             }
         }
     },
-
+    haysKamForecastingGridTableRowCell1Text: {
+        perform: {
+            execute: (db) => {
+                if (v('haysKamForecastingGridTable.row') == 1) {
+                    WidgetValue['haysKamForecastingFilterPopUpDropdown']['value'] = '';
+                }
+            }
+        }
+    },
+    haysKamForecastingGridTableRowCell2Text: {
+        perform: {
+            execute: (db) => {
+                Repository.haysKamForecastingGridTableRowCell1Text.perform.execute(db);
+            }
+        }
+    },
+    haysKamForecastingGridTableRowCell3Text: {
+        perform: {
+            execute: (db) => {
+                Repository.haysKamForecastingGridTableRowCell1Text.perform.execute(db);
+            }
+        }
+    },
+    haysKamForecastingGridTableRowCell4Text: {
+        perform: {
+            execute: (db) => {
+                Repository.haysKamForecastingGridTableRowCell1Text.perform.execute(db);
+            }
+        }
+    },
+    haysKamForecastingGridTableRowCell5Text: {
+        perform: {
+            execute: (db) => {
+                Repository.haysKamForecastingGridTableRowCell1Text.perform.execute(db);
+            }
+        }
+    },
     haysForecastingHierarchyGrid2Level1GridTable:
         {
             init:

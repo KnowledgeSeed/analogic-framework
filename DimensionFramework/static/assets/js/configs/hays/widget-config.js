@@ -1065,7 +1065,10 @@ app.widgetConfig = {
                                                             id: 'haysKamForecastingGridTableRowCell1Text',
                                                             type: TextWidget,
                                                             width: '100%',
-                                                            depends: [{'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'}]
+                                                            depends: [
+                                                                {'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'},
+                                                                {'event': 'perform.haysKamForecastingGridTableRowCell1Text.finished'}
+                                                            ]
                                                         }
                                                     ]
                                                 },
@@ -1078,7 +1081,10 @@ app.widgetConfig = {
                                                             id: 'haysKamForecastingGridTableRowCell2Text',
                                                             type: TextWidget,
                                                             width: '100%',
-                                                            depends: [{'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'}]
+                                                            depends: [
+                                                                {'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'},
+                                                                {'event': 'perform.haysKamForecastingGridTableRowCell2Text.finished'}
+                                                            ]
                                                         }
                                                     ]
                                                 },
@@ -1091,7 +1097,10 @@ app.widgetConfig = {
                                                             id: 'haysKamForecastingGridTableRowCell3Text',
                                                             type: TextWidget,
                                                             width: '100%',
-                                                            depends: [{'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'}]
+                                                            depends: [
+                                                                {'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'},
+                                                                {'event': 'perform.haysKamForecastingGridTableRowCell3Text.finished'}
+                                                            ]
                                                         }
                                                     ]
                                                 },
@@ -1104,7 +1113,10 @@ app.widgetConfig = {
                                                             id: 'haysKamForecastingGridTableRow2Cell4Text',
                                                             type: TextWidget,
                                                             width: '100%',
-                                                            depends: [{'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'}]
+                                                            depends: [
+                                                                {'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'},
+                                                                {'event': 'perform.haysKamForecastingGridTableRowCell4Text.finished'}
+                                                            ]
                                                         }
                                                     ]
                                                 },
@@ -1117,7 +1129,10 @@ app.widgetConfig = {
                                                             id: 'haysKamForecastingGridTableRowCell5Text',
                                                             type: TextWidget,
                                                             width: '100%',
-                                                            depends: [{'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'}]
+                                                            depends: [
+                                                                {'event': 'choose.haysKamForecastingFilterPopUpDropdown.finished'},
+                                                                {'event': 'perform.haysKamForecastingGridTableRowCell5Text.finished'}
+                                                            ]
                                                         }
                                                     ]
                                                 }
@@ -3253,8 +3268,7 @@ app.widgetConfig = {
                                             width: '371',
                                             defaultText: 'Search...',
                                             skin: 'searchbox',
-                                            height: '40',
-                                            icon: 'icon-search'
+                                            height: '40'
                                         }
                                     ]
                                 }

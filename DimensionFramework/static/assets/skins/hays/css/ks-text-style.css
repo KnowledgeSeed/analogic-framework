@@ -100,6 +100,32 @@
     color: #A9A9A9;
 }
 
+/*filter text when nothing is chosen*/
+.ks-text-filter_text_disabled .ks-text-inner {
+    width: 220px;
+    background-color: #FFFFFF;
+    border-radius: 0 0 20px 20px;
+    margin-right: 10px;
+}
+
+.ks-text-filter_text_disabled .ks-text-title {
+    font-weight: normal;
+    color: #FFFFFF;
+    font-size: 13px;
+    padding-top: 10px;
+    margin-left: 15px;
+    padding-bottom: 13px;
+    margin-right: 48px;
+}
+.ks-text-filter_text_disabled .ks-text-icon:before  {
+    float: right;
+    width: 18px;
+    height: 19px;
+    margin-bottom: 13px;
+    margin-top: 14px;
+    margin-right: 10px;
+}
+
 /* settings text*/
 
 .ks-text-settings.ks-text-title {
