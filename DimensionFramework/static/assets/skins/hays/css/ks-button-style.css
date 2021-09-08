@@ -1,6 +1,6 @@
 /* haysmain-blue menu icon */
 .ks-button-haysmain_blue.ks-button {
-    height: 150px;
+    height: 145px;
     background-color: #007BFF;
     border-radius: 30px;
 }
@@ -53,7 +53,7 @@
 
 /* haysmain-red menu icon */
 .ks-button-haysmain_red.ks-button {
-    height: 150px;
+    height: 145x;
     background-color: #FF3B30;
     border-radius: 30px;
 }
@@ -79,7 +79,7 @@
 
 /* haysmain-green menu icon */
 .ks-button-haysmain_green.ks-button {
-    height: 150px;
+    height: 145px;
     background-color: #20C997;
     border-radius: 30px;
 }
@@ -103,9 +103,35 @@
      transform: translateY(4px);*/
 }
 
+/* haysmain-purple menu icon */
+.ks-button-haysmain_purple.ks-button {
+    height: 145px;
+    background-color: #6F42C1;
+    border-radius: 30px;
+}
+
+.ks-button-haysmain_purple .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-haysmain_purple .ks-button-content {
+    height: 110%;
+}
+
+.ks-button-haysmain_purple:hover {
+    background-color: #6F42C1;
+}
+
+.ks-button-haysmain_purple:active {
+    background-color: #6F42C1;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
 /* rochemain_disabled menu icon */
 .ks-button-haysmain_disabled.ks-button {
-    height: 150px;
+    height: 145px;
     background-color: #ebecec;
     border-radius: 30px;
 }
