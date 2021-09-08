@@ -17,3 +17,23 @@
     background-color: #0066cc;
     color: #fff;
 }
+
+/* Segmented By hierarchy or sales channel - light */
+.ks-segmented-segmented_light .ks-segmented {
+    border-radius: 30px;
+    height: 40px;
+    width: 130px;
+    border-left: 2px solid #F2F2F2;
+}
+
+.ks-segmented-segmented_light .ks-segment {
+    background-color: #FFFFFF;
+    color: #6C757D;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.ks-segmented-segmented_light .ks-segment.ks-on {
+    background-color: #FFFFFF;
+    color: #007BFF;
+}

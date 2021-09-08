@@ -1734,7 +1734,7 @@ app.widgetConfig = {
                                     id: 'haysArbeitsberichtGridRow1Cell2',
                                     type: GridCellWidget,
                                     alignment: 'top-left',
-                                    width: '25%',
+                                    width: '17%',
                                     widgets: [
 
                                         {
@@ -1754,7 +1754,7 @@ app.widgetConfig = {
                                     marginRight: '0',
                                     marginTop: '0',
                                     alignment: 'top-right',
-                                    width: '16%',
+                                    width: '14%',
                                     skin: '',
                                     height: '0',
                                     widgets: []
@@ -1763,7 +1763,7 @@ app.widgetConfig = {
                                     id: 'haysArbeitsberichtGridRow1Cell4',
                                     type: GridCellWidget,
                                     alignment: 'center',
-                                    width: '15%',
+                                    width: '20%',
                                     widgets: [
 
                                         {
@@ -1771,7 +1771,7 @@ app.widgetConfig = {
                                             type: SegmentedControlWidget,
                                             width: '100%',
                                             skin: 'segmented',
-                                            marginBottom: 5,
+                                            marginBottom: '5px',
                                             widgets: [
 
                                                 {
@@ -1779,10 +1779,45 @@ app.widgetConfig = {
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab1',
                                                     selected: true,
-                                                    label: 'By Search History',
+                                                    label: 'Classic View',
                                                 },
                                                 {
                                                     id: 'haysArbeitsberichtSegmentedControlItem2',
+                                                    type: SegmentedControlItemWidget,
+                                                    action: 'segmentedControlTab2',
+                                                    selected: false,
+                                                    label: 'Pivot View',
+                                                }
+                                            ]
+                                        }
+                                    ]
+
+                                },
+                                {
+                                    id: 'haysArbeitsberichtGridRow1Cell5',
+                                    type: GridCellWidget,
+                                    alignment: 'center',
+                                    width: '18%',
+                                    skin: 'leftborder',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysArbeitsberichtBySegmentedControl',
+                                            type: SegmentedControlWidget,
+                                            width: '100%',
+                                            skin: 'segmented_light',
+                                            marginBottom: 5,
+                                            widgets: [
+
+                                                {
+                                                    id: 'haysArbeitsberichtBySegmentedControlItem1',
+                                                    type: SegmentedControlItemWidget,
+                                                    action: 'segmentedControlTab1',
+                                                    selected: true,
+                                                    label: 'By Sales Channel',
+                                                },
+                                                {
+                                                    id: 'haysArbeitsberichtBySegmentedControlItem2',
                                                     type: SegmentedControlItemWidget,
                                                     action: 'segmentedControlTab2',
                                                     selected: false,
@@ -1794,19 +1829,19 @@ app.widgetConfig = {
 
                                 },
                                 {
-                                    id: 'haysArbeitsberichtGridRow1Cell5',
+                                    id: 'haysArbeitsberichtGridRow1Cell6',
                                     type: GridCellWidget,
                                     marginLeft: '10',
                                     marginRight: '0',
                                     marginTop: '0',
                                     alignment: 'top-right',
-                                    width: '31%',
+                                    width: '18%',
                                     skin: '',
                                     height: '0',
                                     widgets: []
                                 },
                                 {
-                                    id: 'haysArbeitsberichtGridRow1Cell6',
+                                    id: 'haysArbeitsberichtGridRow1Cell7',
                                     type: GridCellWidget,
                                     marginLeft: '5',
                                     marginRight: '0',
@@ -1853,7 +1888,7 @@ app.widgetConfig = {
                                     marginLeft: '1',
                                     marginTop: '0',
                                     marginBottom: '0',
-                                    width: '5.5%',
+                                    width: '7%',
                                     alignment: 'center-left',
                                     widgets: [
 
@@ -1877,7 +1912,7 @@ app.widgetConfig = {
                                     marginLeft: '1',
                                     marginTop: '0',
                                     marginBottom: '0',
-                                    width: '7.2%',
+                                    width: '7.5%',
                                     alignment: 'center-left',
                                     widgets: [
 
@@ -1900,7 +1935,7 @@ app.widgetConfig = {
                                     marginLeft: '1',
                                     marginTop: '0',
                                     marginBottom: '0',
-                                    width: '5.6%',
+                                    width: '7%',
                                     alignment: 'center-left',
                                     widgets: [
 
@@ -1923,7 +1958,7 @@ app.widgetConfig = {
                                     marginLeft: '1',
                                     marginTop: '0',
                                     marginBottom: '0',
-                                    width: '6.7%',
+                                    width: '7%',
                                     alignment: 'center-left',
                                     widgets: [
 
@@ -1946,7 +1981,7 @@ app.widgetConfig = {
                                     marginLeft: '1',
                                     marginTop: '0',
                                     marginBottom: '0',
-                                    width: '5.6%',
+                                    width: '6%',
                                     alignment: 'center-left',
                                     widgets: [
 
@@ -1969,7 +2004,7 @@ app.widgetConfig = {
                                     marginLeft: '1',
                                     marginTop: '0',
                                     marginBottom: '0',
-                                    width: '8%',
+                                    width: '9.5%',
                                     alignment: 'center-left',
                                     widgets: [
 
@@ -1992,11 +2027,24 @@ app.widgetConfig = {
                                     marginLeft: '1',
                                     marginTop: '0',
                                     marginBottom: '0',
-                                    width: '9%',
+                                    width: '13%',
                                     alignment: 'center-left',
-                                    widgets: []
-                                },
+                                    widgets: [
 
+                                        {
+                                            id: 'haysKamForecastingGridRow2Cell7Button1',
+                                            type: ButtonWidget,
+                                            label: 'Version: July Revision B',
+                                            action: '',
+                                            width: '191',
+                                            fontColor: '#6C757D',
+                                            icon: 'icon-rectangle-stack',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'hierarchy_button',
+                                        }
+                                    ]
+                                },
 
                                 {
                                     id: 'haysArbeitsberichtGridRow2Cell8',
@@ -2004,10 +2052,44 @@ app.widgetConfig = {
                                     marginLeft: '1',
                                     marginTop: '0',
                                     marginBottom: '0',
-                                    width: '39.4%',
+                                    width: '3%',
                                     alignment: 'center-left',
                                     widgets: []
                                 },
+                                {
+                                    id: 'haysArbeitsberichtGridRow2Cell9',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '10%',
+                                    alignment: 'center-left',
+                                    widgets: [
+                                        {
+                                            id: 'haysKamForecastingGridRow2Cell7Button1',
+                                            type: ButtonWidget,
+                                            label: 'Compare to ...',
+                                            action: '',
+                                            width: '132',
+                                            fontColor: '#6C757D',
+                                            icon: 'icon-rectangle-stack',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'hierarchy_button_grey',
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'haysArbeitsberichtGridRow2Cell9',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '30%',
+                                    alignment: 'center-left',
+                                    widgets: []
+                                },
+
 
 
                             ]

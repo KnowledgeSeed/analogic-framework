@@ -249,6 +249,31 @@
     margin-left: 4px;
 }
 
+/* hierarhcy button Arbeitsbericht compare to ... */
+
+.ks-button-hierarchy_button_grey.ks-button {
+    background-color: #F2F2F2;
+    height: 40px;
+    border-radius: 8px;
+    width: 100px;
+}
+
+.ks-button-hierarchy_button_grey .ks-button-label {
+    font-size: 14px;
+    font-weight: normal;
+    margin-right: 2px;
+    margin-left: 6px;
+    color: #6C757D;
+}
+
+.ks-button-hierarchy_button_grey .ks-button-icon {
+    color: #6C757D;
+    font-size: 16px;
+    margin-right: 2px;
+    margin-left: 4px;
+}
+
+
 /* button double triange */
 .ks-button-triangle_button.ks-button {
     width: 100px;
