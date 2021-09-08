@@ -1110,7 +1110,7 @@ app.widgetConfig = {
                                                     width: '20%',
                                                     widgets: [
                                                         {
-                                                            id: 'haysKamForecastingGridTableRow2Cell4Text',
+                                                            id: 'haysKamForecastingGridTableRowCell4Text',
                                                             type: TextWidget,
                                                             width: '100%',
                                                             depends: [
