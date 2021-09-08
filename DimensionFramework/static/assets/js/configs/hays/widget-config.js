@@ -1471,7 +1471,7 @@ app.widgetConfig = {
                                     id: 'haysForecastingHierarchyGrid2Row_01_01',
                                     type: GridCellWidget,
                                     alignment: 'top-center',
-                                    width: '300',
+                                    width: '310',
                                     widgets: [
 
                                         {
@@ -1561,7 +1561,7 @@ app.widgetConfig = {
                                     type: GridCellWidget,
                                     visible: false,
                                     alignment: 'top-center',
-                                    width: '300',
+                                    width: '310',
                                     widgets: [
 
                                         {
@@ -1573,28 +1573,62 @@ app.widgetConfig = {
                                             title: '',
                                             widgets: [
                                                 {
-                                                    id: 'haysForecastingHierarchyGrid2Level2GridTableCell_02',
+                                                    id: 'haysForecastingHierarchyGrid2Level2GridTableCell01',
                                                     type: GridTableCellWidget,
                                                     alignment: 'center-left',
                                                     skin: 'hierarchyCellBorder_hays',
                                                     widgets: [
 
                                                         {
-                                                            id: 'haysForecastingHierarchyGrid2Level2GridTableToggle1',
+                                                            id: 'haysForecastingHierarchyGrid2Level1GridTableCell01Toggle',
                                                             type: ToggleWidget,
                                                             titleOff: '',
                                                             titleOn: '',
                                                             action: 'launch',
                                                             visible: true,
-                                                            width: '300',
-                                                            groupId: 'Level2hierarchy',
+                                                            width: '250px',
+                                                            icon: 'icon-check-on',
+                                                            skin: 'hierarchyToggle_hays',
+                                                            height: '60',
+                                                            iconOff: 'icon-check-off',
+                                                            depends: [
+                                                                {
+                                                                    event: 'switch.haysForecastingHierarchyGrid2Level2GridTable_row_1.finished'
+                                                                }
+                                                            ]
+                                                        },
+                                                    ]
+                                                },
+
+                                                {
+                                                    id: 'haysForecastingHierarchyGrid2Level2GridTableCell02',
+                                                    type: GridTableCellWidget,
+                                                    alignment: 'center-right',
+                                                    skin: 'hierarchyCellBorder_hays',
+                                                    width: '50',
+                                                    widgets: [
+
+                                                        {
+                                                            id: 'haysForecastingHierarchyGrid2Level2GridTableCell02Toggle',
+                                                            type: ToggleWidget,
+                                                            action: 'launch',
+                                                            visible: true,
+                                                            width: '50px',
                                                             icon: 'icon-chevron-right',
                                                             skin: 'hierarchyToggle_hays',
                                                             height: '60',
                                                             iconOff: 'icon-chevron-right',
+                                                            depends: [
+                                                                {
+                                                                    event: 'switch.haysForecastingHierarchyGrid2Level2GridTable_row_0.finished'
+                                                                }
+                                                            ]
                                                         }
                                                     ]
-                                                }]
+                                                }
+
+
+                                            ]
                                         }]
                                 },
 
@@ -1602,8 +1636,8 @@ app.widgetConfig = {
                                     id: 'haysForecastingHierarchyGrid2Row_01_03',
                                     type: GridCellWidget,
                                     alignment: 'top-center',
+                                    width: '310',
                                     visible: false,
-                                    width: '300',
                                     widgets: [
 
                                         {
@@ -1615,37 +1649,72 @@ app.widgetConfig = {
                                             title: '',
                                             widgets: [
                                                 {
-                                                    id: 'haysForecastingHierarchyGrid2Level3GridTableCell_02',
+                                                    id: 'haysForecastingHierarchyGrid2Level3GridTableCell01',
                                                     type: GridTableCellWidget,
-                                                    skin: 'hierarchyCellBorder_hays',
                                                     alignment: 'center-left',
+                                                    width: '250',
+                                                    skin: 'hierarchyCellBorder_hays',
                                                     widgets: [
 
                                                         {
-                                                            id: 'haysForecastingHierarchyGrid2Level3GridTableToggle1',
+                                                            id: 'haysForecastingHierarchyGrid2Level3GridTableCell01Toggle',
                                                             type: ToggleWidget,
                                                             titleOff: '',
                                                             titleOn: '',
                                                             action: 'launch',
                                                             visible: true,
-                                                            width: '300',
-                                                            groupId: 'Level3hierarchy',
+                                                            width: '250px',
+                                                            icon: 'icon-check-on',
+                                                            skin: 'hierarchyToggle_hays',
+                                                            height: '60',
+                                                            iconOff: 'icon-check-off',
+                                                            depends: [
+                                                                {
+                                                                    event: 'switch.haysForecastingHierarchyGrid2Level3GridTable_row_1.finished'
+                                                                }
+                                                            ]
+                                                        },
+                                                    ]
+                                                },
+
+                                                {
+                                                    id: 'haysForecastingHierarchyGrid2Level3GridTableCell02',
+                                                    type: GridTableCellWidget,
+                                                    alignment: 'center-right',
+                                                    skin: 'hierarchyCellBorder_hays',
+                                                    width: '50',
+                                                    widgets: [
+
+                                                        {
+                                                            id: 'haysForecastingHierarchyGrid2Level3GridTableCell02Toggle',
+                                                            type: ToggleWidget,
+                                                            action: 'launch',
+                                                            visible: true,
+                                                            width: '50px',
                                                             icon: 'icon-chevron-right',
                                                             skin: 'hierarchyToggle_hays',
                                                             height: '60',
                                                             iconOff: 'icon-chevron-right',
+                                                            depends: [
+                                                                {
+                                                                    event: 'switch.haysForecastingHierarchyGrid2Level3GridTable_row_0.finished'
+                                                                }
+                                                            ]
                                                         }
                                                     ]
-                                                }]
+                                                }
+
+
+                                            ]
                                         }]
                                 },
 
                                 {
                                     id: 'haysForecastingHierarchyGrid2Row_01_04',
                                     type: GridCellWidget,
-                                    visible: false,
                                     alignment: 'top-center',
-                                    width: '300',
+                                    visible: false,
+                                    width: '310',
                                     widgets: [
 
                                         {
@@ -1657,30 +1726,66 @@ app.widgetConfig = {
                                             title: '',
                                             widgets: [
                                                 {
-                                                    id: 'haysForecastingHierarchyGrid2Level4GridTableCell_02',
+                                                    id: 'haysForecastingHierarchyGrid2Level4GridTableCell01',
                                                     type: GridTableCellWidget,
-                                                    skin: 'hierarchyCellBorder_hays',
                                                     alignment: 'center-left',
+                                                    width: '250',
+                                                    skin: 'hierarchyCellBorder_hays',
                                                     widgets: [
 
                                                         {
-                                                            id: 'haysForecastingHierarchyGrid2Level4GridTableToggle1',
+                                                            id: 'haysForecastingHierarchyGrid2Level4GridTableCell01Toggle',
                                                             type: ToggleWidget,
                                                             titleOff: '',
                                                             titleOn: '',
                                                             action: 'launch',
                                                             visible: true,
-                                                            width: '300',
-                                                            groupId: 'Level4hierarchy',
+                                                            width: '250px',
+                                                            icon: 'icon-check-on',
+                                                            skin: 'hierarchyToggle_hays',
+                                                            height: '60',
+                                                            iconOff: 'icon-check-off',
+                                                            depends: [
+                                                                {
+                                                                    event: 'switch.haysForecastingHierarchyGrid2Level4GridTable_row_1.finished'
+                                                                }
+                                                            ]
+                                                        },
+                                                    ]
+                                                },
+
+                                                {
+                                                    id: 'haysForecastingHierarchyGrid2Level4GridTableCell02',
+                                                    type: GridTableCellWidget,
+                                                    alignment: 'center-right',
+                                                    skin: 'hierarchyCellBorder_hays',
+                                                    width: '50',
+                                                    widgets: [
+
+                                                        {
+                                                            id: 'haysForecastingHierarchyGrid2Level4GridTableCell02Toggle',
+                                                            type: ToggleWidget,
+                                                            action: 'launch',
+                                                            visible: true,
+                                                            width: '50px',
                                                             icon: 'icon-chevron-right',
                                                             skin: 'hierarchyToggle_hays',
                                                             height: '60',
                                                             iconOff: 'icon-chevron-right',
+                                                            depends: [
+                                                                {
+                                                                    event: 'switch.haysForecastingHierarchyGrid2Level4GridTable_row_0.finished'
+                                                                }
+                                                            ]
                                                         }
                                                     ]
-                                                }]
+                                                }
+
+
+                                            ]
                                         }]
                                 },
+
 
                             ]
                         }]
@@ -2089,7 +2194,6 @@ app.widgetConfig = {
                                     alignment: 'center-left',
                                     widgets: []
                                 },
-
 
 
                             ]

@@ -184,20 +184,20 @@ app.eventMap = {
         }
     ],
 
-    'switch.Level1hierarchy': [
+    'switch.haysForecastingHierarchyGrid2Level1GridTable': [
         {
             action: app.fn.showWidget,
             argument: 'haysForecastingHierarchyGrid2Row_01_02'
         }
     ],
-    'switch.Level2hierarchy': [
+    'switch.haysForecastingHierarchyGrid2Level2GridTable': [
         {
             action: app.fn.showWidget,
             argument: 'haysForecastingHierarchyGrid2Row_01_03'
         }
     ],
 
-    'switch.Level3hierarchy': [
+    'switch.haysForecastingHierarchyGrid2Level3GridTable': [
         {
             action: app.fn.showWidget,
             argument: 'haysForecastingHierarchyGrid2Row_01_04'
