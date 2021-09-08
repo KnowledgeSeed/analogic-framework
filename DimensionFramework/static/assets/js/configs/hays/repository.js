@@ -191,7 +191,7 @@ app.repository = {
                             iconColor: '#E83E8C',
                         },
                         {
-                            title: 'Project status',
+                            title: 'Time Focus',
                             icon: 'icon-calendar',
                             skin: 'filter_button_circle',
                             iconColor: '#007BFF',

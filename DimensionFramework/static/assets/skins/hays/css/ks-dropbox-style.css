@@ -510,14 +510,14 @@
     float: left;
 }
 
-/*project status dropbox */
-.ks-dropbox-filter_selector_project_status .ks-dropbox-field {
+/*time focus dropbox */
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-field {
     border: 1px solid #A9A9A9;
     border-radius: 8px;
     height: 40px;
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-title {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-title {
     font-size: 16px;
     font-weight: normal;
     line-height: 16px;
@@ -526,7 +526,7 @@
     text-align: left;
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-input {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-input {
     font-size: 16px;
     padding: 0 10px;
     float: right;
@@ -534,29 +534,29 @@
     margin-left: 20px;
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-input::-webkit-input-placeholder {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-input::-webkit-input-placeholder {
     color: #FFFFFF;
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-input::-moz-placeholder {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-input::-moz-placeholder {
     color: #FFFFFF;
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-input:-ms-input-placeholder {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-input:-ms-input-placeholder {
     color: #FFFFFF;
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-input:-moz-placeholder {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-input:-moz-placeholder {
     color: #FFFFFF;
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-icon {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-icon {
     display: flex;
     float: left;
     margin-right: 140px;
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-icon:before {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-icon:before {
     width: 20px;
     display: flex;
     content: "\e938";
@@ -564,7 +564,7 @@
     margin-top: 10px;
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-panel {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-panel {
     border-radius: 5px;
     margin-top: 2px;
     padding: 2px;
@@ -574,40 +574,40 @@
     display: block !important;
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-panel-item {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-panel-item {
     border-radius: 4px;
     height: 40px;
     padding: 0 10px;
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-panel-item:hover {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-panel-item:hover {
     background-color: rgba(220, 235, 250, 0.5);
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-panel-item.on:hover {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-panel-item.on:hover {
     background-color: rgba(220, 235, 250, 0.5);
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-panel-item-separator {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-panel-item-separator {
     width: 10px;
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-panel-item-text {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-panel-item-text {
     color: #000;
     font-size: 14px;
     font-weight: 600;
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-panel-item-icon,
-.ks-dropbox-filter_selector_project_status .ks-dropbox-panel-item-separator {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-panel-item-icon,
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-panel-item-separator {
     display: block;
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-panel {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-panel {
     position: unset;
 }
 
-.ks-dropbox-filter_selector_project_status .ks-dropbox-panel-inner {
+.ks-dropbox-filter_selector_time_focus .ks-dropbox-panel-inner {
     width: 190px;
     float: left;
 }
