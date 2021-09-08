@@ -38,14 +38,11 @@ app.widgetConfig = {
                                     widgets: [
 
                                         {
-                                            id: 'haysMainRow1Cell1Text',
-                                            type: TextWidget,
-                                            title: 'HAYS',
-                                            width: '100px',
-                                            height: '26,65',
-                                            titleFontColor: '#092E74',
-                                            titleFontSize: '26',
-                                            titleAlignment: 'center'
+                                            id: 'haysMainRow1Cell1Logo',
+                                            type: ImageWidget,
+                                            fileName: 'hays_logo.png',
+                                            width: 100,
+                                            height: 30
                                         }
                                     ]
                                 },
@@ -92,7 +89,7 @@ app.widgetConfig = {
                         {
                             id: 'haysMainGridRow2',
                             type: GridRowWidget,
-                            marginTop: '2%',
+                            marginTop: '1.5%',
                             width: '100%',
                             widgets: [
                                 {
@@ -102,7 +99,7 @@ app.widgetConfig = {
                                     marginRight: '0',
                                     marginTop: '0',
                                     alignment: 'top-right',
-                                    width: '28%',
+                                    width: '32%',
                                     skin: '',
                                     height: '18%',
                                     widgets: []
@@ -113,7 +110,7 @@ app.widgetConfig = {
                                     type: GridCellWidget,
                                     marginLeft: '10',
                                     marginRight: '0',
-                                    alignment: 'top-center',
+                                    alignment: 'top-left',
                                     width: '15%',
                                     widgets: [
 
@@ -128,6 +125,7 @@ app.widgetConfig = {
                                             title: 'Forecasting',
                                             skin: 'menu',
                                             titleFontSize: 24,
+                                            titleFontWeight: 100
                                         }
                                     ]
 
@@ -139,7 +137,6 @@ app.widgetConfig = {
                                     marginRight: '0',
                                     marginTop: '0',
                                     alignment: 'top-right',
-                                    width: '57%',
                                     skin: '',
                                     height: '18%',
                                     widgets: []
@@ -150,7 +147,7 @@ app.widgetConfig = {
                         {
                             id: 'haysMainRow3',
                             type: GridRowWidget,
-                            marginTop: '1.6%',
+                            marginTop: '0.75%',
                             marginBottom: '0%',
                             width: '100%',
                             widgets: [
@@ -207,9 +204,9 @@ app.widgetConfig = {
                                             label: '',
                                             action: '',
                                             width: '145',
-                                            icon: 'icon-people-square-stack',
+                                            icon: 'icon-cube-front-back',
                                             fontColor: 'white',
-                                            skin: 'haysmain_blue',
+                                            skin: 'haysmain_red',
                                             height: '145'
                                         }
                                     ]
@@ -231,9 +228,9 @@ app.widgetConfig = {
                                             label: '',
                                             action: '',
                                             width: '145',
-                                            icon: 'icon-table',
+                                            icon: 'icon-percent-target',
                                             fontColor: 'white',
-                                            skin: 'haysmain_red',
+                                            skin: 'haysmain_green',
                                             height: '145'
                                         }
                                     ]
@@ -310,7 +307,7 @@ app.widgetConfig = {
                                         {
                                             id: 'haysMainRow4Cell3Text',
                                             type: TextWidget,
-                                            title: 'KAM FC as Leader',
+                                            title: 'Arbeitsbericht',
                                             width: '100%',
                                             skin: 'menu',
                                             titleAlignment: 'center',
@@ -333,7 +330,7 @@ app.widgetConfig = {
                                         {
                                             id: 'haysMainRow4Cell4Text',
                                             type: TextWidget,
-                                            title: 'Arbeitsbericht',
+                                            title: 'ZEG Bericht',
                                             width: '100%',
                                             skin: 'menu',
                                             titleAlignment: 'center',
@@ -359,7 +356,7 @@ app.widgetConfig = {
 
                         },
 
-                        {
+                       /* {
                             id: 'haysMainRow5',
                             type: GridRowWidget,
                             marginTop: '1.3%',
@@ -442,8 +439,8 @@ app.widgetConfig = {
 
                             ]
 
-                        },
-                        {
+                        },*/
+                       /* {
                             id: 'haysMainRow6',
                             type: GridRowWidget,
                             marginTop: '1.3%',
@@ -519,11 +516,12 @@ app.widgetConfig = {
                                     widgets: []
                                 }
                             ]
-                        },
+                        },*/
                         {
                             id: 'haysMainRow7',
                             type: GridRowWidget,
                             width: '100%',
+                            marginTop: '1%',
                             widgets: [
                                 {
                                     id: 'haysMainRow7Cell1',
@@ -543,6 +541,64 @@ app.widgetConfig = {
                                     id: 'haysMainRow7Cell3',
                                     type: GridCellWidget,
                                     width: '34%',
+                                    widgets: []
+                                }
+
+                            ]
+                        },
+                          {
+                            id: 'haysMainGridRow75',
+                            type: GridRowWidget,
+                            width: '100%',
+                              marginBottom: '0.75%',
+                            widgets: [
+                                {
+                                    id: 'haysMainRow75Cell1',
+                                    type: GridCellWidget,
+                                    marginLeft: '10',
+                                    marginRight: '0',
+                                    marginTop: '0',
+                                    alignment: 'top-right',
+                                    width: '32%',
+                                    skin: '',
+                                    height: '18%',
+                                    widgets: []
+                                },
+
+                                {
+                                    id: 'haysMainGridRow75Cell2',
+                                    type: GridCellWidget,
+                                    marginLeft: '10',
+                                    marginRight: '0',
+                                    alignment: 'top-left',
+                                    width: '15%',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysMainGridRow75Cell2Text',
+                                            type: TextWidget,
+                                            width: '100%',
+                                            height: '24 px',
+                                            titleAlignment: 'left',
+                                            titleFontColor: '#A9A9A9',
+                                            fontfamily: 'Gotham Narrow',
+                                            title: 'Sales Management',
+                                            skin: 'menu',
+                                            titleFontSize: 24,
+                                            titleFontWeight: 100
+                                        }
+                                    ]
+
+                                },
+                                {
+                                    id: 'haysMainRow75Cell3',
+                                    type: GridCellWidget,
+                                    marginLeft: '10',
+                                    marginRight: '0',
+                                    marginTop: '0',
+                                    alignment: 'top-right',
+                                    skin: '',
+                                    height: '18%',
                                     widgets: []
                                 }
 
@@ -581,9 +637,9 @@ app.widgetConfig = {
                                             label: '',
                                             action: '',
                                             width: '145',
-                                            icon: 'icon-settings',
+                                            icon: 'icon-user',
                                             fontColor: 'white',
-                                            skin: 'haysmain_grey',
+                                            skin: 'haysmain_purple',
                                             paddingRight: '2%',
                                             height: '145'
                                         }
@@ -635,7 +691,7 @@ app.widgetConfig = {
                                         {
                                             id: 'haysMainGridRow9Cell2Text',
                                             type: TextWidget,
-                                            title: 'Settings',
+                                            title: 'Headcount',
                                             width: '100%',
                                             skin: 'menu',
                                             titleAlignment: 'center',
@@ -646,6 +702,145 @@ app.widgetConfig = {
                                 },
                                 {
                                     id: 'haysMainGridRow9Cell3',
+                                    type: GridCellWidget,
+                                    marginLeft: '5',
+                                    marginRight: '0',
+                                    marginTop: '1%',
+                                    alignment: 'top-center',
+                                    width: '58%',
+                                    height: '6%',
+                                    widgets: []
+                                }
+
+                            ]
+                        },
+                        {
+                            id: 'haysMainRow10',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginTop: '1%',
+                            widgets: [
+                                {
+                                    id: 'haysMainRow10Cell1',
+                                    type: GridCellWidget,
+                                    width: '30%',
+                                    skin: '',
+                                    widgets: []
+                                },
+                                {
+                                    id: 'haysMainRow10Cell2',
+                                    type: GridCellWidget,
+                                    width: '36%',
+                                    skin: 'topborder',
+                                    widgets: []
+                                },
+                                {
+                                    id: 'haysMainRow10Cell3',
+                                    type: GridCellWidget,
+                                    width: '34%',
+                                    widgets: []
+                                }
+
+                            ]
+                        },
+                        {
+                            id: 'haysMainRow11',
+                            type: GridRowWidget,
+                            marginBottom: '0%',
+                            width: '100%',
+                            widgets: [
+                                {
+                                    id: 'haysMainRow11Cell1',
+                                    type: GridCellWidget,
+                                    marginLeft: '10',
+                                    marginRight: '0',
+                                    marginTop: '1%',
+                                    alignment: 'top-right',
+                                    width: '30%',
+                                    skin: '',
+                                    widgets: []
+                                },
+                                {
+                                    id: 'haysMainRow11Cell2',
+                                    type: GridCellWidget,
+                                    marginLeft: '5',
+                                    marginRight: '0',
+                                    marginTop: '1%',
+                                    alignment: 'top-center',
+                                    width: '12%',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysMainRow11Cell2Button',
+                                            type: ButtonWidget,
+                                            label: '',
+                                            action: '',
+                                            width: '145',
+                                            icon: 'icon-settings',
+                                            fontColor: 'white',
+                                            skin: 'haysmain_grey',
+                                            paddingRight: '2%',
+                                            height: '145'
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'haysMainRow11Cell3',
+                                    type: GridCellWidget,
+                                    marginLeft: '5',
+                                    marginRight: '0',
+                                    marginTop: '1%',
+                                    alignment: 'top-left',
+                                    width: '58%',
+                                    widgets: []
+                                }
+
+                            ]
+                        },
+                        {
+                            id: 'haysMainGridRow12',
+                            type: GridRowWidget,
+                            marginTop: '1.3%',
+                            marginBottom: '0%',
+                            width: '100%',
+                            widgets: [
+                                {
+                                    id: 'haysMainGridRow12Cell1',
+                                    type: GridCellWidget,
+                                    marginLeft: '10',
+                                    marginRight: '0',
+                                    marginTop: '0',
+                                    alignment: 'top-right',
+                                    width: '30%',
+                                    skin: '',
+                                    height: '6%',
+                                    widgets: []
+                                },
+                                {
+                                    id: 'haysMainGridRow12Cell2',
+                                    type: GridCellWidget,
+                                    marginLeft: '5',
+                                    marginRight: '0',
+                                    marginTop: '1%',
+                                    alignment: 'top-center',
+                                    width: '12%',
+                                    height: '6%',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysMainGridRow12Cell2Text',
+                                            type: TextWidget,
+                                            title: 'Settings',
+                                            width: '100%',
+                                            skin: 'menu',
+                                            titleAlignment: 'center',
+                                            titleFontSize: 16,
+                                            titleFontColor: '#000000',
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'haysMainGridRow12Cell3',
                                     type: GridCellWidget,
                                     marginLeft: '5',
                                     marginRight: '0',
