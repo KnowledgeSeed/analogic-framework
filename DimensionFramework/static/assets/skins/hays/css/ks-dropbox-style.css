@@ -101,7 +101,7 @@
     height: 40px;
 }
 
-.ks-dropbox-filter_selector_businesspartner  .ks-dropbox-title {
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-title {
     font-size: 16px;
     font-weight: normal;
     line-height: 16px;
@@ -113,6 +113,9 @@
 .ks-dropbox-filter_selector_businesspartner .ks-dropbox-input {
     font-size: 16px;
     padding: 0 10px;
+    float: right;
+    width: 85%;
+    margin-left: 20px;
 }
 
 .ks-dropbox-filter_selector_businesspartner .ks-dropbox-input::-webkit-input-placeholder {
@@ -133,10 +136,12 @@
 
 .ks-dropbox-filter_selector_businesspartner .ks-dropbox-icon {
     display: flex;
+    float: left;
+    margin-right: 140px;
 }
 
 .ks-dropbox-filter_selector_businesspartner .ks-dropbox-icon:before {
-    width: 40px;
+    width: 20px;
     display: flex;
     content: "\e938";
     font-family: hays;
@@ -199,7 +204,7 @@
     height: 40px;
 }
 
-.ks-dropbox-filter_selector_type  .ks-dropbox-title {
+.ks-dropbox-filter_selector_type .ks-dropbox-title {
     font-size: 16px;
     font-weight: normal;
     line-height: 16px;
@@ -211,6 +216,9 @@
 .ks-dropbox-filter_selector_type .ks-dropbox-input {
     font-size: 16px;
     padding: 0 10px;
+    float: right;
+    width: 85%;
+    margin-left: 20px;
 }
 
 .ks-dropbox-filter_selector_type .ks-dropbox-input::-webkit-input-placeholder {
@@ -231,10 +239,13 @@
 
 .ks-dropbox-filter_selector_type .ks-dropbox-icon {
     display: flex;
+    float: left;
+    margin-right: 140px;
 }
 
-.ks-dropbox-filter_selector_type .ks-dropbox-icon::before {
-    width: 40px;
+.ks-dropbox-filter_selector_type .ks-dropbox-icon:before {
+    width: 20px;
+    display: flex;
     content: "\e938";
     font-family: hays;
     margin-top: 10px;
@@ -295,7 +306,7 @@
     height: 40px;
 }
 
-.ks-dropbox-filter_selector_account  .ks-dropbox-title {
+.ks-dropbox-filter_selector_account .ks-dropbox-title {
     font-size: 16px;
     font-weight: normal;
     line-height: 16px;
@@ -307,6 +318,9 @@
 .ks-dropbox-filter_selector_account .ks-dropbox-input {
     font-size: 16px;
     padding: 0 10px;
+    float: right;
+    width: 85%;
+    margin-left: 20px;
 }
 
 .ks-dropbox-filter_selector_account .ks-dropbox-input::-webkit-input-placeholder {
@@ -327,10 +341,12 @@
 
 .ks-dropbox-filter_selector_account .ks-dropbox-icon {
     display: flex;
+    float: left;
+    margin-right: 140px;
 }
 
-.ks-dropbox-filter_selector_account .ks-dropbox-icon:before{
-    width: 40px;
+.ks-dropbox-filter_selector_account .ks-dropbox-icon:before {
+    width: 20px;
     display: flex;
     content: "\e938";
     font-family: hays;
@@ -392,7 +408,7 @@
     height: 40px;
 }
 
-.ks-dropbox-filter_selector_location  .ks-dropbox-title {
+.ks-dropbox-filter_selector_location .ks-dropbox-title {
     font-size: 16px;
     font-weight: normal;
     line-height: 16px;
@@ -404,6 +420,9 @@
 .ks-dropbox-filter_selector_location .ks-dropbox-input {
     font-size: 16px;
     padding: 0 10px;
+    float: right;
+    width: 85%;
+    margin-left: 20px;
 }
 
 .ks-dropbox-filter_selector_location .ks-dropbox-input::-webkit-input-placeholder {
@@ -424,10 +443,12 @@
 
 .ks-dropbox-filter_selector_location .ks-dropbox-icon {
     display: flex;
+    float: left;
+    margin-right: 140px;
 }
 
 .ks-dropbox-filter_selector_location .ks-dropbox-icon:before {
-    width: 40px;
+    width: 20px;
     display: flex;
     content: "\e938";
     font-family: hays;
@@ -467,6 +488,7 @@
     font-size: 14px;
     font-weight: 600;
 }
+
 .ks-dropbox-filter_selector_location .ks-dropbox-panel-item-checkbox:before {
     content: "\e90e";
     font-family: hays;
@@ -507,6 +529,9 @@
 .ks-dropbox-filter_selector_project_status .ks-dropbox-input {
     font-size: 16px;
     padding: 0 10px;
+    float: right;
+    width: 85%;
+    margin-left: 20px;
 }
 
 .ks-dropbox-filter_selector_project_status .ks-dropbox-input::-webkit-input-placeholder {
@@ -527,10 +552,12 @@
 
 .ks-dropbox-filter_selector_project_status .ks-dropbox-icon {
     display: flex;
+    float: left;
+    margin-right: 140px;
 }
 
 .ks-dropbox-filter_selector_project_status .ks-dropbox-icon:before {
-    width: 40px;
+    width: 20px;
     display: flex;
     content: "\e938";
     font-family: hays;
