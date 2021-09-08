@@ -1,4 +1,4 @@
-/* departurement_popup_hays */
+/* departurement_popup_hays ez már nincs benne de hátha kell majd valamikor*/
 .ks-container-departurement_popup_hays.ks-container-backdrop {
     background-color: rgba(155, 9, 9, 0);
 }
@@ -13,51 +13,6 @@
     padding: 5px;
 }
 
-
-/* business_popup_hays */
-.ks-container-business_popup_hays.ks-container-backdrop {
-    background-color: rgba(155, 9, 9, 0);
-}
-
-.ks-container-business_popup_hays.ks-container {
-    border-radius: 7px;
-    top: 22%;
-    left: 7%;
-}
-
-.ks-container-business_popup_hays .ks-container-content {
-    padding: 5px;
-}
-
-/* area_popup_hays */
-.ks-container-area_popup_hays.ks-container-backdrop {
-    background-color: rgba(155, 9, 9, 0);
-}
-
-.ks-container-area_popup_hays.ks-container {
-    border-radius: 7px;
-    top: 22%;
-    left: 14%;
-}
-
-.ks-container-area_popup_hays .ks-container-content {
-    padding: 5px;
-}
-
-/* team_popup_hays */
-.ks-container-team_popup_hays.ks-container-backdrop {
-    background-color: rgba(155, 9, 9, 0);
-}
-
-.ks-container-team_popup_hays.ks-container {
-    border-radius: 7px;
-    top: 46%;
-    left: 28%;
-}
-
-.ks-container-team_popup_hays .ks-container-content {
-    padding: 5px;
-}
 
 /* filter */
 .ks-container-popup_hays.ks-container-backdrop {

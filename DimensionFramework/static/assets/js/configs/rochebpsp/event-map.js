@@ -498,6 +498,10 @@ app.eventMap = {
         {
             action: app.fn.executeRequest,
             argument: 'request.rocheBPSPProductsCheckoutUploadPopupUpload'
+        },
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutUploadPopup'
         }
     ],
     'launch.rocheBPSPProductsCheckoutGridRow1Cell4Button': [
@@ -514,6 +518,14 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutInfoPopup'
         }
     ],
+
+    'upload.rocheBPSPProductsCheckoutUploadPopupUpload': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutUploadPopup'
+        }
+    ],
+
     'launch.rocheBPSPProductsCheckoutInfoPopupCancelButton': [
         {
             action: app.fn.togglePopup,
@@ -3481,6 +3493,20 @@ app.eventMap = {
                 'rocheBPSPCompanySettingsGridRow5Cell1MessageInput'
             ]
         },
+    ],
+
+    'upload.rocheBPSPCustomersPlanningUploadPopupUpload': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCustomersPlanningUploadPopup'
+        }
+    ],
+
+    'upload.rocheBPSPIpPlanningCheckoutUploadPopupUpload': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningCheckoutUploadPopup'
+        }
     ],
 
 

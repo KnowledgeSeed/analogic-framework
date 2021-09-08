@@ -115,56 +115,6 @@ app.eventMap = {
         }
     ],
 
-    'launch.haysKamForecastingGridRow2Cell4Button1': [
-        {
-            action: app.fn.openPopup,
-            argument: 'haysKamForecastingDepartmentPopUp'
-        }
-    ],
-
-    'launch.haysKamForecastingGridRow2Cell2Button1': [
-        {
-            action: app.fn.openPopup,
-            argument: 'haysKamForecastingBusinessPopUp'
-        }
-    ],
-
-    'launch.haysKamForecastingGridRow2Cell3Button1': [
-        {
-            action: app.fn.openPopup,
-            argument: 'haysKamForecastingAreaPopUp'
-        }
-    ],
-
-    'launch.haysKamForecastingGridRow2Cell5Button1': [
-        {
-            action: app.fn.openPopup,
-            argument: 'haysKamForecastingTeamPopUp'
-        }
-    ],
-
-
-    'launch.haysKamForecastingBusinessPopUpGridTable_row_0': [
-        {
-            action: app.fn.openPopup,
-            argument: 'haysKamForecastingAreaPopUp'
-        }
-    ],
-
-    'launch.haysKamForecastingAreaPopUpGridTable_row_0': [
-        {
-            action: app.fn.openPopup,
-            argument: 'haysKamForecastingDepartmentPopUp'
-        }
-    ],
-
-    'launch.haysKamForecastingDepartmentPopUpGridTable_row_0': [
-        {
-            action: app.fn.openPopup,
-            argument: 'haysKamForecastingTeamPopUp'
-        }
-    ],
-
     'launch.haysUserGroupHierarchyGridRow2Cell2Button': [
         {
             action: app.fn.openPopup,
