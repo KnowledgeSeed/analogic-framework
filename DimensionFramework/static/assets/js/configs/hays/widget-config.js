@@ -1504,7 +1504,7 @@ app.widgetConfig = {
                                                             iconOff: 'icon-check-off',
                                                             depends: [
                                                                 {
-                                                                    event: 'switch.haysForecastingHierarchyGrid2Level1GridTable'
+                                                                    event: 'switch.haysForecastingHierarchyGrid2Level1GridTable_row_1.finished'
                                                                 }
                                                             ]
                                                         },
@@ -1531,7 +1531,7 @@ app.widgetConfig = {
                                                             iconOff: 'icon-chevron-right',
                                                             depends: [
                                                                 {
-                                                                    event: 'switch.haysForecastingHierarchyGrid2Level1GridTable'
+                                                                    event: 'switch.haysForecastingHierarchyGrid2Level1GridTable_row_0.finished'
                                                                 }
                                                             ]
                                                         },

@@ -186,17 +186,26 @@ app.repository = {
             }
         }
     },
+    haysForecastingHierarchy: {
+        getAkarmi: (gridTableId, actualRow, actualColumn) => {
+            let gridTableData = v(gridTableId),
+                cellOriginalValue = gridTableData.cellData[actualRow][actualColumn];
+            if (actualRow == gridTableData.row) {
+                cellOriginalValue['value'] = '1';
+            }
+            return cellOriginalValue;
+        }
+    },
     haysForecastingHierarchyGrid2Level1GridTable:
         {
             refresh_col_0: {
                 execute: (db, widgetId, extraParams) => {
-                    let gridTableData = v(widgetId),
-                        cellOriginalValue = gridTableData.cellData[extraParams.row][extraParams.column];
-                    if (extraParams.row == gridTableData.row) {
-                        cellOriginalValue['value'] = '1';
-                    }
-                    L(cellOriginalValue);
-                    return cellOriginalValue;
+                    return Repository.haysForecastingHierarchy.getAkarmi(widgetId, extraParams.row, extraParams.col);
+                }
+            },
+            refresh_col_1: {
+                execute: (db, widgetId, extraParams) => {
+                    return Repository.haysForecastingHierarchy.getAkarmi(widgetId, extraParams.row, extraParams.col);
                 }
             },
 
