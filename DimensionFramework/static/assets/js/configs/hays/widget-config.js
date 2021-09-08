@@ -776,6 +776,31 @@ app.widgetConfig = {
                             widgets: [
 
                                 {
+                                    id: 'haysKamForecastingGridRow2Cell0',
+                                    type: GridCellWidget,
+                                    marginLeft: '1',
+                                    marginTop: '0',
+                                    marginBottom: '0',
+                                    width: '4%',
+                                    alignment: 'center-center',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysKamForecastingGridRow2Cell0Button1',
+                                            type: ButtonWidget,
+                                            icon: 'icon-table',
+                                            action: '',
+                                            width: '50px',
+                                            height: '40px',
+                                            marginTop: '20',
+                                            marginBottom: '20',
+                                            skin: 'material_hayslight',
+                                        },
+
+                                    ]
+                                },
+
+                                {
                                     id: 'haysKamForecastingGridRow2Cell1',
                                     type: GridCellWidget,
                                     marginLeft: '1',
@@ -947,7 +972,7 @@ app.widgetConfig = {
                                     marginLeft: '1',
                                     marginTop: '0',
                                     marginBottom: '0',
-                                    width: '32%',
+                                    width: '28%',
                                     alignment: 'center-left',
                                     widgets: []
                                 },
@@ -1458,28 +1483,76 @@ app.widgetConfig = {
                                             title: '',
                                             widgets: [
                                                 {
-                                                    id: 'haysForecastingHierarchyGrid2Level1GridTableCell_02',
+                                                    id: 'haysForecastingHierarchyGrid2Level1GridTableCell01',
                                                     type: GridTableCellWidget,
-                                                    alignment: 'center-right',
+                                                    alignment: 'center-left',
+                                                    width: '250',
                                                     skin: 'hierarchyCellBorder_hays',
                                                     widgets: [
 
                                                         {
-                                                            id: 'haysForecastingHierarchyGrid2Level1GridTableToggle1',
+                                                            id: 'haysForecastingHierarchyGrid2Level1GridTableCell01Toggle',
                                                             type: ToggleWidget,
                                                             titleOff: '',
                                                             titleOn: '',
                                                             action: 'launch',
                                                             visible: true,
-                                                            width: '300',
-                                                            groupId: 'Level1hierarchy',
+                                                            width: '250px',
+                                                            icon: 'icon-check-on',
+                                                            skin: 'hierarchyToggle_hays',
+                                                            height: '60',
+                                                            iconOff: 'icon-check-off',
+                                                            depends: [
+                                                                {
+                                                                    event: 'switch.haysForecastingHierarchyGrid2Level1GridTable'
+                                                                }
+                                                            ]
+                                                        },
+                                                    ]
+                                                },
+
+                                                {
+                                                    id: 'haysForecastingHierarchyGrid2Level1GridTableCell02',
+                                                    type: GridTableCellWidget,
+                                                    alignment: 'center-right',
+                                                    skin: 'hierarchyCellBorder_hays',
+                                                    width: '50',
+                                                    widgets: [
+
+                                                        {
+                                                            id: 'haysForecastingHierarchyGrid2Level1GridTableCell02Toggle',
+                                                            type: ToggleWidget,
+                                                            action: 'launch',
+                                                            visible: true,
+                                                            width: '50px',
                                                             icon: 'icon-chevron-right',
                                                             skin: 'hierarchyToggle_hays',
                                                             height: '60',
                                                             iconOff: 'icon-chevron-right',
-                                                        }
+                                                            depends: [
+                                                                {
+                                                                    event: 'switch.haysForecastingHierarchyGrid2Level1GridTable'
+                                                                }
+                                                            ]
+                                                        },
+
+                                                        /*
+                                                        {
+                                                            id: 'haysForecastingHierarchyGrid2Level1GridTableCell02Button',
+                                                            type: ButtonWidget,
+                                                            width: '100%',
+                                                            icon: 'icon-chevron-right',
+                                                            iconColor: '#007BFF',
+                                                            //iconFontSize:,
+                                                            height: '60'
+                                                        },
+
+                                                         */
                                                     ]
-                                                }]
+                                                }
+
+
+                                            ]
                                         }]
                                 },
 

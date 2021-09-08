@@ -211,4 +211,11 @@ app.eventMap = {
         }
     ],
 
+    'launch.haysKamForecastingGridRow2Cell0Button1': [
+        {
+            action: app.fn.openPage,
+            argument: 'haysForecastingHierarchy'
+        }
+    ],
+
 };
