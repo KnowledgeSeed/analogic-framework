@@ -7,14 +7,14 @@
 
 .ks-segmented-segmented .ks-segment {
     background-color: #d8d9d9;
-    color: #585959;
+    color: #000000;
     font-size: 14px;
     font-weight: 600;
     border-right: 1px solid #fff;
 }
 
 .ks-segmented-segmented .ks-segment.ks-on {
-    background-color: #0066cc;
+    background-color: #007BFF;
     color: #fff;
 }
 

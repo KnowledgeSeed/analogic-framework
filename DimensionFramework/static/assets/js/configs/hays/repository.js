@@ -234,7 +234,7 @@ app.repository = {
                     body: (db) => {
                         return `{"MDX":"
                                 SELECT 
-                                   {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                                   {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Caption]} 
                                   ON COLUMNS , 
                                    {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 4)} 
                                   ON ROWS 
@@ -282,7 +282,7 @@ app.repository = {
                     body: (db) => {
                         return `{"MDX":"
                             SELECT 
-                               {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                               {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Caption]} 
                               ON COLUMNS , 
                                {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 3)} 
                               ON ROWS 
@@ -330,7 +330,7 @@ app.repository = {
                     body: (db) => {
                         return `{"MDX":"
                             SELECT 
-                               {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                               {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Caption]} 
                               ON COLUMNS , 
                                {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 2)} 
                               ON ROWS 
@@ -378,7 +378,7 @@ app.repository = {
                     body: (db) => {
                         return `{"MDX":"
                                 SELECT 
-                                   {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                                   {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Caption]} 
                                   ON COLUMNS , 
                                   NON EMPTY 
                                    {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 0)} 

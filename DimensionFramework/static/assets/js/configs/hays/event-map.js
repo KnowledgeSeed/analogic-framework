@@ -27,7 +27,7 @@ app.eventMap = {
         }
     ],
 
-    'launch.haysMainRow8Cell2Button': [
+    'launch.haysMainRow11Cell2Button': [
         {
             action: app.fn.openPageWithState,
             argument: 'haysSettings'
@@ -42,8 +42,8 @@ app.eventMap = {
 
     'launch.haysMainRow3Cell2Button': [
         {
-            action: app.fn.openPageWithState,
-            argument: 'haysKamForecasting'
+            action: app.fn.togglePopup,
+            argument: 'haysMainKAMPopup'
         }
     ],
     'launch.haysKamForecastingGridRow1Cell1Button': [
@@ -55,7 +55,7 @@ app.eventMap = {
     'launch.haysMainRow3Cell3Button': [
         {
             action: app.fn.openPageWithState,
-            argument: 'haysForecastingHierarchy'
+            argument: 'haysArbeitsbericht'
         }
     ],
     'launch.haysForecastingHierarchyGridRow1Cell1Button': [
@@ -67,7 +67,7 @@ app.eventMap = {
     'launch.haysMainRow3Cell4Button': [
         {
             action: app.fn.openPageWithState,
-            argument: 'haysArbeitsbericht'
+            argument: 'haysZEGBericht'
         }
     ],
     'launch.haysArbeitsberichtGridRow1Cell1Button': [
@@ -86,6 +86,18 @@ app.eventMap = {
         {
             action: app.fn.openPage,
             argument: 'haysMain'
+        }
+    ],
+    'launch.haysMainKAMPopupButton1': [
+        {
+            action: app.fn.openPageWithState,
+            argument: 'haysKamForecasting'
+        }
+    ],
+    'launch.haysMainKAMPopupButton2': [
+        {
+            action: app.fn.openPageWithState,
+            argument: 'haysForecastingHierarchy'
         }
     ],
 
@@ -213,7 +225,7 @@ app.eventMap = {
 
     'launch.haysKamForecastingGridRow2Cell0Button1': [
         {
-            action: app.fn.openPage,
+            action: app.fn.openPageWithState,
             argument: 'haysForecastingHierarchy'
         }
     ],

@@ -14,10 +14,6 @@
     height: 110%
 }
 
-.ks-button-haysmain_blue:hover {
-    background-color: #004C99
-}
-
 .ks-button-haysmain_blue:active {
     background-color: #004C99;
     /* box-shadow: 0 5px #666;
@@ -824,3 +820,20 @@
 }
 
 
+/* popup button */
+.ks-button-popupbutton .ks-button-icon {
+        color: #007BFF;
+        font-size: 18px;
+        line-height: 2px;
+        padding: 20px;
+        max-height: fit-content !important;
+}
+
+.ks-button-popupbutton:hover {
+    background-color: #E3F1FF;
+    border-radius: 5px;
+}
+
+.ks-button-popupbutton .ks-button-content {
+        justify-content: normal !important;
+}
