@@ -31,6 +31,7 @@
     background-color: #f2f2f2;
     border-radius: 20px;
     margin-right: 10px;
+    cursor: pointer;
 }
 .ks-text-filter_button_circle .ks-text-title {
     font-weight: normal;

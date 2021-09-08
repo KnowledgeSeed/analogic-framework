@@ -171,37 +171,42 @@ app.repository = {
                             icon: 'icon-person',
                             iconColor: '#6F42C1',
                             skin: 'filter_button_circle',
+                            iconCustomEventName: 'text_click'
                         },
                         {
                             title: 'Type',
                             icon: 'icon-circle-grid-4',
                             skin: 'filter_button_circle',
                             iconColor: '#28A745',
+                            iconCustomEventName: 'text_click'
                         },
                         {
                             title: 'Account',
                             icon: 'icon-rectangle-stack-fill',
                             skin: 'filter_button_circle',
                             iconColor: '#E98300',
+                            iconCustomEventName: 'text_click'
                         },
                         {
                             title: 'Location',
                             icon: 'icon-location',
                             skin: 'filter_button_circle',
                             iconColor: '#E83E8C',
+                            iconCustomEventName: 'text_click'
                         },
                         {
                             title: 'Project status',
                             icon: 'icon-calendar',
                             skin: 'filter_button_circle',
                             iconColor: '#007BFF',
+                            iconCustomEventName: 'text_click'
                         }
                     ],
                     [
                         {
                             title: '',
                             skin: '',
-                            icon: ''
+                            icon: '',
                         },
                         {
                             title: '',
@@ -268,12 +273,12 @@ app.repository = {
                 let result = {
                     skin: skin,
                     items: [
-                        {name: ' ' + selectedTitle + '1', on: selectedItems.includes(selectedTitle + '1')},
-                        {name: ' ' + selectedTitle + '2', on: selectedItems.includes(selectedTitle + '2')},
-                        {name: ' ' + selectedTitle + '3', on: selectedItems.includes(selectedTitle + '3')},
-                        {name: ' ' + selectedTitle + '4', on: selectedItems.includes(selectedTitle + '4')},
-                        {name: ' ' + selectedTitle + '5', on: selectedItems.includes(selectedTitle + '5')},
-                        {name: ' ' + selectedTitle + '6', on: selectedItems.includes(selectedTitle + '6')}
+                        {name: ' ' + selectedTitle + '1', on: selectedItems.includes(' ' + selectedTitle + '1')},
+                        {name: ' ' + selectedTitle + '2', on: selectedItems.includes(' ' + selectedTitle + '2')},
+                        {name: ' ' + selectedTitle + '3', on: selectedItems.includes(' ' + selectedTitle + '3')},
+                        {name: ' ' + selectedTitle + '4', on: selectedItems.includes(' ' + selectedTitle + '4')},
+                        {name: ' ' + selectedTitle + '5', on: selectedItems.includes(' ' + selectedTitle + '5')},
+                        {name: ' ' + selectedTitle + '6', on: selectedItems.includes(' ' + selectedTitle + '6')}
                     ]
                 };
                 return result;
