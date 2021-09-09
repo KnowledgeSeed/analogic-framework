@@ -38,11 +38,11 @@
 
 @font-face {
     font-family: 'hays';
-    src:  url('../fonts/hays.eot?jxols');
-    src:  url('../fonts/hays.eot?jxols#iefix') format('embedded-opentype'),
-        url('../fonts/hays.ttf?jxols') format('truetype'),
-        url('../fonts/hays.woff?jxols') format('woff'),
-        url('../fonts/hays.svg?jxols#hays') format('svg');
+    src:  url('../fonts/hays.eot?j4cc4fq');
+    src:  url('../fonts/hays.eot?j4cc4fq#iefix') format('embedded-opentype'),
+        url('../fonts/hays.ttf?j4cc4fq') format('truetype'),
+        url('../fonts/hays.woff?j4cc4fq') format('woff'),
+        url('../fonts/hays.svg?j4cc4fq#hays') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -127,10 +127,10 @@
     white-space: nowrap;
 }
 
-.icon-circle1:before {
+.icon-circle:before {
   content: "\e900";
 }
-.icon-circle:before {
+.icon-circle1:before {
   content: "\e901";
 }
 .icon-alert:before {
@@ -157,13 +157,13 @@
 .icon-badge:before {
   content: "\e909";
 }
-.icon-calendar:before {
+.icon-c-circle:before {
   content: "\e90a";
 }
 .icon-card:before {
   content: "\e90b";
 }
-.icon-c-circle:before {
+.icon-calendar:before {
   content: "\e90c";
 }
 .icon-check-intermediate:before {
@@ -181,112 +181,112 @@
 .icon-chevron-close-horizontal:before {
   content: "\e911";
 }
-.icon-chevron-close-vertical:before {
+.icon-chevron-down:before {
   content: "\e912";
 }
-.icon-chevron-down:before {
+.icon-chevron-open-horizontal:before {
   content: "\e913";
 }
-.icon-chevron-open-horizontal:before {
+.icon-chevron-right:before {
   content: "\e914";
 }
 .icon-chevron-open-vertical:before {
   content: "\e915";
 }
-.icon-chevron-right:before {
+.icon-circle-grid-4:before {
   content: "\e916";
 }
-.icon-circle-grid-4:before {
+.icon-chevron-close-vertical:before {
   content: "\e917";
 }
 .icon-clear:before {
   content: "\e918";
 }
-.icon-columns:before {
+.icon-copy:before {
   content: "\e919";
 }
-.icon-comment:before {
+.icon-columns:before {
   content: "\e91a";
 }
-.icon-comment-on:before {
+.icon-comment:before {
   content: "\e91b";
 }
-.icon-copy:before {
+.icon-cube-front-back:before {
   content: "\e91c";
 }
-.icon-cube-front-back:before {
+.icon-details-list:before {
   content: "\e91d";
 }
-.icon-details-list:before {
+.icon-comment-on:before {
   content: "\e91e";
 }
-.icon-edit:before {
+.icon-edit-circle:before {
   content: "\e91f";
 }
-.icon-edit-circle:before {
+.icon-edit:before {
   content: "\e920";
 }
-.icon-ellipsis:before {
+.icon-envelope:before {
   content: "\e921";
 }
-.icon-envelope:before {
+.icon-ellipsis:before {
   content: "\e922";
 }
-.icon-folder:before {
+.icon-filter-circle:before {
   content: "\e923";
 }
-.icon-forward:before {
+.icon-hays:before {
   content: "\e924";
 }
-.icon-glasses:before {
+.icon-location:before {
   content: "\e925";
 }
-.icon-hays:before {
+.icon-glasses:before {
   content: "\e926";
 }
-.icon-location:before {
+.icon-folder:before {
   content: "\e927";
 }
-.icon-menu:before {
+.icon-forward:before {
   content: "\e928";
 }
 .icon-minus-circle:before {
   content: "\e929";
 }
-.icon-p-circle:before {
+.icon-menu:before {
   content: "\e92a";
 }
-.icon-people-3:before {
+.icon-p-circle:before {
   content: "\e92b";
 }
 .icon-people-3-fill:before {
   content: "\e92c";
 }
-.icon-people-square-stack:before {
+.icon-people-3:before {
   content: "\e92d";
 }
-.icon-percent:before {
+.icon-percent-target:before {
   content: "\e92e";
 }
-.icon-percent-target:before {
+.icon-people-square-stack:before {
   content: "\e92f";
 }
-.icon-person:before {
+.icon-percent:before {
   content: "\e930";
 }
-.icon-plane-circle:before {
+.icon-person:before {
   content: "\e931";
 }
-.icon-plus-circle:before {
+.icon-plane-circle:before {
   content: "\e932";
 }
-.icon-rectangle-stack:before {
+.icon-rectangle-stack-fill:before {
   content: "\e933";
 }
-.icon-rectangle-stack-fill:before {
+.icon-rewind:before {
   content: "\e934";
 }
-.icon-rewind:before {
+.icon-rectangle-stack:before {
   content: "\e935";
 }
 .icon-rows:before {
@@ -295,43 +295,43 @@
 .icon-s-circle:before {
   content: "\e937";
 }
-.icon-search:before {
+.icon-plus-circle:before {
   content: "\e938";
 }
-.icon-settings:before {
+.icon-search:before {
   content: "\e939";
 }
-.icon-star-circle:before {
+.icon-settings:before {
   content: "\e93a";
 }
-.icon-table:before {
+.icon-star-circle:before {
   content: "\e93b";
 }
-.icon-t-circle:before {
+.icon-time-back-arrow:before {
   content: "\e93c";
 }
-.icon-time-back-arrow:before {
+.icon-trash-circle:before {
   content: "\e93d";
 }
-.icon-trash:before {
+.icon-trash-fill:before {
   content: "\e93e";
 }
-.icon-trash-circle:before {
+.icon-table:before {
   content: "\e93f";
 }
-.icon-trash-fill:before {
+.icon-t-circle:before {
   content: "\e940";
 }
 .icon-tray-arrow-down:before {
   content: "\e941";
 }
-.icon-tray-files:before {
+.icon-trash:before {
   content: "\e942";
 }
-.icon-user:before {
+.icon-tray-files:before {
   content: "\e943";
 }
-.icon-x:before {
+.icon-user:before {
   content: "\e944";
 }
 .icon-x-circle:before {
@@ -339,4 +339,7 @@
 }
 .icon-x-rectangle:before {
   content: "\e946";
+}
+.icon-x:before {
+  content: "\e947";
 }
