@@ -187,25 +187,43 @@ app.repository = {
         }
     },
     haysForecastingHierarchy: {
-        getAkarmi: (gridTableId, actualRow, actualColumn) => {
+        getToggleOne: (gridTableId, actualRow, actualColumn) => {
             let gridTableData = v(gridTableId),
                 cellOriginalValue = gridTableData.cellData[actualRow][actualColumn];
             if (actualRow == gridTableData.row) {
-                cellOriginalValue['value'] = '1';
+                if (cellOriginalValue['value'] === '1') {
+                    cellOriginalValue['value'] = '0'
+                } else {
+                    cellOriginalValue['value'] = '1'
+                }
             }
             return cellOriginalValue;
-        }
+        },
+
+        getToggleTwo: (gridTableId, actualRow, actualColumn) => {
+            let gridTableData = v(gridTableId),
+                cellOriginalValue = gridTableData.cellData[actualRow][actualColumn];
+            if (actualRow == gridTableData.row) {
+                if (cellOriginalValue['value'] === '1') {
+                    cellOriginalValue['value'] = '0'
+                } else {
+                    cellOriginalValue['value'] = '1'
+                }
+            }
+            return cellOriginalValue;
+        },
+
     },
     haysForecastingHierarchyGrid2Level1GridTable:
         {
             refresh_col_0: {
                 execute: (db, widgetId, extraParams) => {
-                    return Repository.haysForecastingHierarchy.getAkarmi(widgetId, extraParams.row, extraParams.col);
+                    return Repository.haysForecastingHierarchy.getToggleOne(widgetId, extraParams.row, extraParams.col);
                 }
             },
             refresh_col_1: {
                 execute: (db, widgetId, extraParams) => {
-                    return Repository.haysForecastingHierarchy.getAkarmi(widgetId, extraParams.row, extraParams.col);
+                    return Repository.haysForecastingHierarchy.getToggleTwo(widgetId, extraParams.row, extraParams.col);
                 }
             },
 
@@ -216,7 +234,7 @@ app.repository = {
                     body: (db) => {
                         return `{"MDX":"
                                 SELECT 
-                                   {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                                   {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Caption]} 
                                   ON COLUMNS , 
                                    {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 4)} 
                                   ON ROWS 
@@ -246,6 +264,17 @@ app.repository = {
 
     haysForecastingHierarchyGrid2Level2GridTable:
         {
+
+            refresh_col_0: {
+                execute: (db, widgetId, extraParams) => {
+                    return Repository.haysForecastingHierarchy.getToggleOne(widgetId, extraParams.row, extraParams.col);
+                }
+            },
+            refresh_col_1: {
+                execute: (db, widgetId, extraParams) => {
+                    return Repository.haysForecastingHierarchy.getToggleTwo(widgetId, extraParams.row, extraParams.col);
+                }
+            },
             init:
                 {
                     url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
@@ -253,7 +282,7 @@ app.repository = {
                     body: (db) => {
                         return `{"MDX":"
                             SELECT 
-                               {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                               {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Caption]} 
                               ON COLUMNS , 
                                {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 3)} 
                               ON ROWS 
@@ -270,6 +299,9 @@ app.repository = {
                                     titleOn: r.Cells[x].FormattedValue,
                                     titleOff: r.Cells[x].FormattedValue,
                                 }
+                            },
+                            (r, x) => {
+                                return {}
                             }
                         ]
                     }
@@ -278,6 +310,17 @@ app.repository = {
 
     haysForecastingHierarchyGrid2Level3GridTable:
         {
+            refresh_col_0: {
+                execute: (db, widgetId, extraParams) => {
+                    return Repository.haysForecastingHierarchy.getToggleOne(widgetId, extraParams.row, extraParams.col);
+                }
+            },
+            refresh_col_1: {
+                execute: (db, widgetId, extraParams) => {
+                    return Repository.haysForecastingHierarchy.getToggleTwo(widgetId, extraParams.row, extraParams.col);
+                }
+            },
+
             init:
                 {
                     url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
@@ -285,7 +328,7 @@ app.repository = {
                     body: (db) => {
                         return `{"MDX":"
                             SELECT 
-                               {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                               {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Caption]} 
                               ON COLUMNS , 
                                {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 2)} 
                               ON ROWS 
@@ -302,6 +345,9 @@ app.repository = {
                                     titleOn: r.Cells[x].FormattedValue,
                                     titleOff: r.Cells[x].FormattedValue
                                 }
+                            },
+                            (r, x) => {
+                                return {}
                             }
 
 
@@ -312,6 +358,17 @@ app.repository = {
 
     haysForecastingHierarchyGrid2Level4GridTable:
         {
+
+            refresh_col_0: {
+                execute: (db, widgetId, extraParams) => {
+                    return Repository.haysForecastingHierarchy.getToggleOne(widgetId, extraParams.row, extraParams.col);
+                }
+            },
+            refresh_col_1: {
+                execute: (db, widgetId, extraParams) => {
+                    return Repository.haysForecastingHierarchy.getToggleTwo(widgetId, extraParams.row, extraParams.col);
+                },
+            },
             init:
                 {
                     url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
@@ -319,7 +376,7 @@ app.repository = {
                     body: (db) => {
                         return `{"MDX":"
                                 SELECT 
-                                   {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Sales channel]} 
+                                   {[}ElementAttributes_Organization Units].[}ElementAttributes_Organization Units].[Caption]} 
                                   ON COLUMNS , 
                                   NON EMPTY 
                                    {TM1FILTERBYLEVEL({[Organization Units].[Organization Units].Members}, 0)} 
@@ -337,6 +394,9 @@ app.repository = {
                                     titleOn: r.Cells[x].FormattedValue,
                                     titleOff: r.Cells[x].FormattedValue
                                 }
+                            },
+                            (r, x) => {
+                                return {}
                             }
 
 

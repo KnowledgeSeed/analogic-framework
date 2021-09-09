@@ -489,13 +489,6 @@
     font-weight: 600;
 }
 
-.ks-dropbox-filter_selector_location .ks-dropbox-panel-item-checkbox:before {
-    content: "\e90e";
-    font-family: hays;
-    color: #ff274e;
-    font-size: 16px;
-}
-
 .ks-dropbox-filter_selector_location .ks-dropbox-panel-item-icon,
 .ks-dropbox-filter_selector_location .ks-dropbox-panel-item-separator {
     display: block;

@@ -32,12 +32,14 @@
     border-radius: 20px;
     margin-right: 10px;
     cursor: pointer;
+    padding-top: 2px;
+    padding-left: 5px;
 }
 .ks-text-filter_button_circle .ks-text-title {
     font-weight: normal;
     color: #343A40;
     font-size: 16px;
-    padding-top: 10px;
+    padding-top: 8px;
 }
 
 .ks-text-filter_button_circle .ks-text-icon {
@@ -56,12 +58,14 @@
     border-radius: 20px 20px 0 0;
     margin-right: 10px;
     border-bottom: 2px solid #E1E1E1;
+    padding-top: 2px;
+    padding-left: 5px;
 }
 .ks-text-filter_button .ks-text-title {
     font-weight: normal;
     color: #343A40;
     font-size: 16px;
-    padding-top: 10px;
+    padding-top: 8px;
 }
 
 .ks-text-filter_button .ks-text-icon {

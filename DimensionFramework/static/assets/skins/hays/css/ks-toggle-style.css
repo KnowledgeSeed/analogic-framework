@@ -3,14 +3,14 @@
 .ks-toggle-hierarchyToggle_hays.ks-toggle .ks-toggle-icon-on {
     color: #007BFF;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 16px;
     order: 0;
 }
 
 .ks-toggle-hierarchyToggle_hays.ks-toggle .ks-toggle-icon-off {
     color: #007BFF;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 16px;
     order: 0;
 }
 
@@ -24,14 +24,13 @@
 
 .ks-toggle-hierarchyToggle_hays .ks-toggle-icon span {
     display: block;
-    margin-left: 10px;
+    margin-left: 15px;
 }
 
 .ks-toggle-hierarchyToggle_hays .ks-toggle-label {
     color: #000;
     display: block;
-    font-size: 17px;
-    font-weight: bold;
+    font-size: 15px;
     margin-left: 10px;
 }
 
