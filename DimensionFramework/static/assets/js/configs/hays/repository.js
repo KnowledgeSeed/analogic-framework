@@ -271,8 +271,6 @@ app.repository = {
                                     titleOff: r.Cells[x].FormattedValue,
                                 }
                             }
-
-
                         ]
                     }
                 },
