@@ -3539,14 +3539,14 @@ app.widgetConfig = {
                             },
                         ]
                     },
-
                     {
                         id: 'haysVersionHorizontalTable',
                         type: HorizontalTableWidget,
                         title: '',
+                        width: '80%',
                         titleVisible: false,
                         columnNames: ["Version Title", "Type", "Last Update", "Created", "Created By", "Shared With"],
-                        columnWidths: ["15%", "15%", "15%", "15%", "15%", "15%"],
+                        columnWidths: ["16%", "16%", "16%", "16%", "16%", "16%"],
                         searchField: true,
                         visible: true,
                         fadeOutNum: 13,
@@ -3588,9 +3588,8 @@ app.widgetConfig = {
                                 MarginRight: '1.1%',
                                 icon: 'icon-arrow-right'
                             }
-
                         ]
-                    },
+                    }
                 ]
         }
     ,
