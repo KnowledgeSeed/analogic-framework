@@ -1348,7 +1348,6 @@
     margin-top: 1%;
 }
 
-
 .ks-button-gridtable_hierarchy_bpsp_07C_locked {
     padding-left: 110px;
     width: 100%;
@@ -1733,6 +1732,54 @@
 }
 
 .ks-button-gridtable_hierarchy_bpsp_07N_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+
+/*MOdy jav 09 06 */
+.ks-button-gridtable_hierarchy_bpsp_06N_locked {
+    padding-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06N_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06N_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06N_locked .ks-button-icon {
+    color: #EFC1D1;
+    font-size: 75%;
+    margin-top: 1%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06C_locked {
+    padding-left: 110px;
+    width: 100%;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06C_locked .ks-button-label {
+    padding-left: 4px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06C_locked .ks-button-content {
+    justify-content: flex-start !important;
+}
+
+.ks-button-gridtable_hierarchy_bpsp_06C_locked .ks-button-icon {
     color: #EFC1D1;
     font-size: 75%;
     margin-top: 1%;
@@ -2323,81 +2370,6 @@
 
 .ks-button-comment_Off_GT_bpsp .ks-button-content {
     height: 110%
-}
-
-
-/* userpanelmain_bpsp */
-
-
-.ks-button-userpanelmain_bpsp.ks-button {
-    height: 30px;
-    padding: 1px;
-    border-radius: 6px;
-    background-color: #ebecec;
-}
-
-.ks-button-userpanelmain_bpsp .ks-button-inner {
-    background-color: #ebecec;
-    border-radius: 6px;
-    padding: 0 25px 0 10px;
-}
-
-.ks-button-userpanelmain_bpsp .ks-button-icon,
-.ks-button-userpanelmain .ks-button-icon img {
-    float: left;
-    font-size: 21px;
-    margin-top: 4px;
-    margin-right: 8px;
-    color: #585959;
-}
-
-.ks-button-userpanelmain_bpsp .ks-button-divider {
-    width: 10px;
-}
-
-.ks-button-userpanelmain_bpsp .ks-button-label {
-    color: #585959;
-    font-size: 16px;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-
-/* */
-
-
-.ks-button-userpanelmain_bpsp.ks-button:hover {
-    height: 30px;
-    padding: 1px;
-    border-radius: 6px;
-    background-color: #ebecec;
-}
-
-.ks-button-userpanelmain_bpsp .ks-button-inner:hover {
-    background-color: #ebecec;
-    border-radius: 6px;
-    padding: 0 25px 0 10px;
-}
-
-.ks-button-userpanelmain_bpsp .ks-button-icon:hover,
-.ks-button-userpanelmain .ks-button-icon img:hover {
-    float: left;
-    font-size: 21px;
-    margin-top: 4px;
-    margin-right: 8px;
-    color: #171515;
-}
-
-.ks-button-userpanelmain_bpsp .ks-button-divider:hover {
-    width: 10px;
-}
-
-.ks-button-userpanelmain_bpsp .ks-button-label:hover {
-    color: #171515;
-    font-size: 16px;
-    font-weight: 600;
 }
 
 

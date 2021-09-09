@@ -153,6 +153,7 @@ class DropBoxWidget extends Widget {
                 }
                 w.items[clickedItem.index()].on = checkbox.prop("checked");
                 w.value = $.grep(w.items, (item, i) => item.on).map(item => item.name).join();
+            //    clickedItem.toggleClass('on');
             } else {
                 itemHolder.find('.ks-dropbox-panel-item').removeClass('on').each(function () {
                     w.items[$(this).index()].on = $(this).hasClass('on');

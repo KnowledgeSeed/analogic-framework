@@ -110,3 +110,203 @@
 .ks-toggle-riskfinancial .ks-toggle .ks-toggle-icon-off {
 	src: url('../images/circle_no_tick.svg');
 }
+
+/*selector toggle*/
+
+.ks-toggle-selectortoggle.ks-toggle .ks-toggle-icon-on{
+    color: #007aff;
+    cursor: pointer;
+    font-size: 18px;
+    order: 0;
+}
+
+.ks-toggle-selectortoggle.ks-toggle .ks-toggle-icon-off{
+    color: #007aff;
+    cursor: pointer;
+    font-size: 18px;
+    order: 0;
+}
+
+.ks-toggle-selectortoggle.ks-toggle {
+    height: 60px;
+}
+
+.ks-toggle-selectortoggle.ks-toggle.ks-on {
+    background-color: #f1f3f5;
+}
+
+.ks-toggle-selectortoggle .ks-toggle-icon span {
+    display: block;
+    margin-left: 10px;
+}
+
+.ks-toggle-selectortoggle .ks-toggle-label {
+    color: #000;
+    display: block;
+    font-size: 16px;
+    font-weight: 200;
+    margin-left: 10px;
+}
+
+.ks-toggle-selectortoggle.ks-toggle.ks-on .ks-toggle-icon-off {
+    display: none;
+}
+.ks-toggle-selectortoggle.ks-toggle .ks-toggle-icon-on {
+    display: none;
+}
+.ks-toggle-selectortoggle.ks-toggle .ks-toggle-icon-off {
+    display: block;
+}
+.ks-toggle-selectortoggle.ks-toggle.ks-on .ks-toggle-icon-on {
+    display: block;
+}
+
+
+/*selector toggle 2*/
+
+.ks-toggle-selectortoggleiconright.ks-toggle .ks-toggle-icon-on{
+    color: #e5e7ea;
+    cursor: pointer;
+    font-size: 18px;
+    order: 1;
+}
+
+.ks-toggle-selectortoggleiconright.ks-toggle .ks-toggle-icon-off{
+    color: #e5e7ea;
+    cursor: pointer;
+    font-size: 18px;
+    order: 1;
+}
+
+.ks-toggle-selectortoggleiconright.ks-toggle {
+    height: 60px;
+}
+
+.ks-toggle-selectortoggleiconright.ks-toggle.ks-on {
+    background-color: #f1f3f5;
+}
+
+.ks-toggle-selectortoggleiconright .ks-toggle-icon span {
+    display: block;
+    margin-right: 10px;
+}
+
+.ks-toggle-selectortoggleiconright .ks-toggle-label {
+    color: #000;
+    display: block;
+    font-size: 16px;
+    font-weight: 200;
+    margin-left: 10px;
+}
+
+.ks-toggle-selectortoggleiconright.ks-toggle.ks-on .ks-toggle-icon-off {
+    display: none;
+}
+.ks-toggle-selectortoggleiconright.ks-toggle .ks-toggle-icon-on {
+    display: none;
+}
+.ks-toggle-selectortoggleiconright.ks-toggle .ks-toggle-icon-off {
+    display: block;
+}
+.ks-toggle-selectortoggleiconright.ks-toggle.ks-on .ks-toggle-icon-on {
+    display: block;
+}
+
+/* FilterType icon*/
+
+
+.ks-toggle-filtertypeicon.ks-toggle .ks-toggle-icon-on{
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.ks-toggle-filtertypeicon.ks-toggle .ks-toggle-icon-off{
+    color: #007aff;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.ks-toggle-filtertypeicon.ks-toggle {
+    height: 40px;
+    border-radius: 5px;
+}
+
+.ks-toggle-filtertypeicon .ks-toggle-icon span {
+    display: block;
+}
+
+.ks-toggle-filtertypeicon.ks-toggle.ks-on {
+    background-color: #007aff;
+}
+
+.ks-toggle-filtertypeicon .ks-toggle-label {
+    color: #007aff;
+    display: block;
+    font-size: 18px;
+    font-weight: 200;
+    text-align: center;
+}
+
+.ks-toggle-filtertypeicon .ks-toggle-label-on {
+    color: #ffffff;
+}
+.ks-toggle-filtertypeicon.ks-toggle.ks-on .ks-toggle-icon-off {
+    display: none;
+}
+.ks-toggle-filtertypeicon.ks-toggle .ks-toggle-icon-on {
+    display: none;
+}
+.ks-toggle-filtertypeicon.ks-toggle .ks-toggle-icon-off {
+    display: block;
+}
+.ks-toggle-filtertypeicon.ks-toggle.ks-on .ks-toggle-icon-on {
+    display: block;
+}
+
+/* IconText*/
+
+
+.ks-toggle-icontext.ks-toggle .ks-toggle-icon-on{
+    color: #007aff;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.ks-toggle-icontext.ks-toggle .ks-toggle-icon-off{
+    color: #dee1e5;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.ks-toggle-icontext.ks-toggle {
+    height: 40px;
+    border-radius: 5px;
+}
+
+.ks-toggle-icontext .ks-toggle-icon span {
+    display: block;
+}
+
+
+.ks-toggle-icontext .ks-toggle-label {
+    color: #000000;
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: left;
+    margin-left: 20px;
+}
+
+.ks-toggle-icontext.ks-toggle.ks-on .ks-toggle-icon-off {
+    display: none;
+}
+.ks-toggle-icontext.ks-toggle .ks-toggle-icon-on {
+    display: none;
+}
+.ks-toggle-icontext.ks-toggle .ks-toggle-icon-off {
+    display: block;
+}
+.ks-toggle-icontext.ks-toggle.ks-on .ks-toggle-icon-on {
+    display: block;
+}

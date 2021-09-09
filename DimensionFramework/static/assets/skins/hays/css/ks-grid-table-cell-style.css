@@ -1,74 +1,32 @@
-.ks-grid-table-cell-standard section {
-    width: 100%;
-}
-
-.ks-grid-table-cell-simpanelstart .ks-grid-table-cell-content {
-    background-color: #fff;
-    border-left: 3px solid #dfecf8;
-    border-top: 3px solid #dfecf8;
-    border-bottom: 3px solid #dfecf8;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    height: 80px;
-    width: 100%;
-}
-
-
 .ks-grid-table-cell-simpanel .ks-grid-table-cell-content {
     background-color: #fff;
-    height: 80px;
+    height: 40px;
     width: 100%;
     border-top: 3px solid #dfecf8;
     border-bottom: 3px solid #dfecf8;
 }
 
-
-.ks-grid-table-cell-simpanelend .ks-grid-table-cell-content {
-    background-color: #fff;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-    height: 80px;
-    width: 100%;
-    border-top: 3px solid #dfecf8;
-    border-bottom: 3px solid #dfecf8;
-    border-right: 3px solid #dfecf8;
-
+/*all borders circle*/
+.ks-grid-table-cell-greyfon .ks-grid-table-cell-content {
+    background-color: #F2F2F2;
+    border: 1px solid #F2F2F2;
+    border-radius: 20px;
+    margin-left: 10px;
 }
 
-/* ote */
-
-.ks-grid-table-cell-readonly_bpsp {
-    background-color: rgba(235, 236, 236, 0.4);
-    opacity: 90%;
+/*bottom borders circle*/
+.ks-grid-table-cell-bottom_greyfon .ks-grid-table-cell-content {
+    background-color: #F2F2F2;
+    border: 1px solid #F2F2F2;
+    border-radius: 0 0 20px 20px;
+    margin-left: 10px;
 }
 
-.ks-grid-table-cell-readonly_green_bpsp {
-    background-color: #BFE5D7;
-    opacity: 50%;
+/*top borders circle*/
+.ks-grid-table-cell-top_greyfon .ks-grid-table-cell-content {
+    background-color: #F2F2F2;
+    border-bottom: 2px solid #E1E1E1;
+    border-radius: 20px 20px 0 0;
+    margin-left: 10px;
+    opacity: 1;
 }
-
-
-.ks-grid-table-cell-locked {
-    background-color: rgba(239, 193, 209, 0.5);;
-}
-
-.ks-grid-table-cell-customer_right_border {
-    border-right: 1px solid #B1B3B3;
-}
-
-
-/* end ote */
-
-/* mody */
-
-
-.ks-grid-table-cell-setting_readonly_bpsp {
-    background-color: rgba(235, 236, 236, 0.4);
-    opacity: 90%;
-}
-
-.ks-grid-table-cell-setting_readonly_bpsp .ks-pos-center-right.ks-grid-table-cell-content {
-    align-items: center;
-    justify-content: flex-end;
-}
-/* end mody */

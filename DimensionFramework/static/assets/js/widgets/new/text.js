@@ -12,7 +12,7 @@ class TextWidget extends Widget {
             bodyFontSize: this.getRealValue('bodyFontSize', d, false),
             bodyFontWeight: this.getRealValue('bodyFontWeight', d, false),
             bodyAlignment: this.getRealValue('bodyAlignment', d, false),
-            draggable: this.getRealValue('draggable', d, false),
+            iconCustomEventName: this.getRealValue('iconCustomEventName', d, false),
             editable: this.getRealValue('editable', d, false),
             icon: this.getRealValue('icon', d, false),
             iconColor: this.getRealValue('iconColor', d, false),
@@ -54,8 +54,8 @@ class TextWidget extends Widget {
 
         return `
 <div class="ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}" style="${mainDivStyle.join('')}">
-    <div class="ks-text-inner">
-        ${v.icon !== false ? `<div class="ks-text-icon" data-id="${o.id}" data-action="perform" data-ordinal="${v.ordinal}"><span style="${iconStyles.join('')}" class="${v.icon}"></span></div>` : ''}
+    <div class="ks-text-inner" data-id="${o.id}" data-action="text_click" data-ordinal="${v.ordinal}">
+        ${v.icon !== false ? `<div class="ks-text-icon" data-id="${o.id}" data-action="${v.iconCustomEventName ? v.iconCustomEventName : 'perform'}" data-ordinal="${v.ordinal}"><span style="${iconStyles.join('')}" class="${v.icon}"></span></div>` : ''}
         <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title ? Utils.stripHtml(v.title) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title ? v.title : ''}</div>
         ${v.body ? `<div class="ks-text-body" style="${bodyStyles.join('')}">${v.body}</div>` : ''}
     </div>
@@ -64,13 +64,18 @@ class TextWidget extends Widget {
 
     initEventHandlers(section) {
         const o = this.options;
-        if (o.draggable === true) {
-            section.draggable({revert: "invalid"});
-        }
 
         if (this.value.editable || this.value.performable) {
             TextWidget.addEdit(section, o, this.amIOnAGridTable());
         }
+
+        section.find('.ks-text-inner').on('click', (e) => {
+            let s = $(e.currentTarget);
+            Widget.doHandleSystemEvent(s, e);
+            if (this.amIOnAGridTable()) {
+                Widget.doHandleGridTableSystemEvent(s, e);
+            }
+        });
 
         section.find('.ks-text-icon').on('click', (e) => {
             let s = $(e.currentTarget), pDiv = s.closest('.ks-text');
