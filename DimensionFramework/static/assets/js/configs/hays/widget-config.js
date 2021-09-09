@@ -3701,22 +3701,68 @@ app.widgetConfig = {
                                 ]
                             },
 
-                            {
-                                id: 'haysUserGroupsGridRow2',
-                                type: GridRowWidget,
-                                marginTop: '1.3%',
-                                marginBottom: '0%',
-                                width: '100%',
-                                height: '10%',
-                                widgets: [
-                                    {
-                                        id: 'haysUserGroupsGridRow2Cell1',
-                                        type: GridCellWidget,
-                                        alignment: 'bottom',
-                                        marginTop: '7px',
-                                        marginLeft: '1%',
-                                        width: '3%',
-                                        widgets: [
+                {
+                    id: 'haysUserGroupsGridRow15',
+                    type: GridRowWidget,
+                    marginTop: '1.3%',
+                    marginBottom: '0%',
+                    width: '100%',
+                    height: '10%',
+                    widgets: [
+                        {
+                            id: 'haysUserGroupsGridRow15Cell1',
+                            type: GridCellWidget,
+                            alignment: 'bottom',
+                            marginTop: '7px',
+                            marginLeft: '1%',
+                            width: '15%',
+                            widgets: [
+
+                               {
+                                    id: 'haysUserGroupsGridRow15SegmentedControl',
+                                    type: SegmentedControlWidget,
+                                    width: '100%',
+                                    skin: 'segmented',
+                                    marginBottom: '5px',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysUserGroupsGridRow15SegmentedControlItem1',
+                                            type: SegmentedControlItemWidget,
+                                            action: 'segmentedControlTab1',
+                                            selected: true,
+                                            label: 'By Groups',
+                                        },
+                                        {
+                                            id: 'haysUserGroupsGridRow15SegmentedControlItem2',
+                                            type: SegmentedControlItemWidget,
+                                            action: 'segmentedControlTab2',
+                                            selected: false,
+                                            label: 'By Versions',
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+
+                {
+                    id: 'haysUserGroupsGridRow2',
+                    type: GridRowWidget,
+                    marginTop: '1.3%',
+                    marginBottom: '0%',
+                    width: '100%',
+                    height: '10%',
+                    widgets: [
+                        {
+                            id: 'haysUserGroupsGridRow2Cell1',
+                            type: GridCellWidget,
+                            alignment: 'bottom',
+                            marginTop: '7px',
+                            marginLeft: '1%',
+                            width: '3%',
+                            widgets: [
 
                                             {
                                                 id: 'haysUserGroupsGridRow2Cell1Search',
@@ -3764,7 +3810,251 @@ app.widgetConfig = {
                         ]
                     }
                 ]
-        }
+        },
+        {
+                    id: 'haysUserGroupsByGroupsGridTable',
+                    type: GridTableWidget,
+                    hideIfNoData: true,
+                    visible: true,
+                    skin: 'settings_hays',
+                    listen: [
+
+                    ],
+                    width: '35%',
+                    title: '',
+                    widgets: [
+
+                        {
+                            id: 'haysUserGroupsByGroupsGridTableHeaderRow',
+                            type: GridTableHeaderRowWidget,
+                            height: '90',
+                            width: '100%',
+                            widgets: [
+
+
+                                {
+                                    id: 'haysUserGroupsByGroupsGridTableHeaderCell-01',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '50.3%',
+                                    alignment: 'bottom-left',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysUserGroupsByGroupsGridTableHeaderCell1Text',
+                                            type: TextWidget,
+                                            width: '100%',
+                                            body: '',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: '10%',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'haysUserGroupsByGroupsGridTableHeaderCell-02',
+                                    type: GridTableHeaderCellWidget,
+                                    alignment: 'bottom-center',
+                                    width: '10%',
+                                    widgets: [
+                                        {
+                                            id: 'haysUserGroupsByGroupsGridTableHeaderText-02',
+                                            type: TextWidget,
+                                            body: 'ADMIN',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'haysUserGroupsByGroupsGridTableHeaderCell-03',
+                                    type: GridTableHeaderCellWidget,
+                                    width: '10%',
+                                    alignment: 'bottom-center',
+                                    widgets: [
+
+                                        {
+                                            id: 'haysUserGroupsByGroupsGridTableHeaderText-03',
+                                            type: TextWidget,
+                                            body: 'Read',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            bodyAlignment: 'center'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'haysUserGroupsByGroupsGridTableHeaderCell-04',
+                                    type: GridTableHeaderCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '10%',
+                                    widgets: [
+                                        {
+                                            id: 'haysUserGroupsByGroupsGridTableHeaderCellText-04',
+                                            type: TextWidget,
+                                            body: 'Write',
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: '15px',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                {
+                                    id: 'haysUserGroupsByGroupsGridTableHeaderCell-05',
+                                    type: GridTableHeaderCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '10%',
+                                    widgets: [
+                                        {
+                                            id: 'haysUserGroupsByGroupsGridTableHeaderCellText-05',
+                                            type: TextWidget,
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: '15px',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                                 {
+                                    id: 'haysUserGroupsByGroupsGridTableHeaderCell-06',
+                                    type: GridTableHeaderCellWidget,
+                                    alignment: 'bottom-left',
+                                    width: '10%',
+                                    widgets: [
+                                        {
+                                            id: 'haysUserGroupsByGroupsGridTableHeaderCellText-06',
+                                            type: TextWidget,
+                                            skin: 'products_gd_header_bpsp',
+                                            titleAlignment: 'start',
+                                            marginBottom: 8,
+                                            marginLeft: '15px',
+                                            bodyAlignment: 'start'
+                                        }
+                                    ]
+                                },
+
+                            ]
+                        },
+
+
+                        {
+                            id: 'haysUserGroupsByGroupsGridTableCell-01',
+                            type: GridTableCellWidget,
+                            width: '50%',
+                            alignment: 'center-left',
+                            widgets: [
+
+                                {
+                                    id: 'haysUserGroupsByGroupsGridTableText-01',
+                                    type: TextWidget,
+                                    titleAlignment: 'start',
+                                    width: 400,
+                                    marginLeft: 15,
+                                }
+                            ]
+                        },
+
+                        {
+                            id: 'haysUserGroupsByGroupsGridTableCell-02',
+                            type: GridTableCellWidget,
+                            alignment: 'center-center',
+                            width: '10%',
+                            widgets: [
+                                {
+                                    id: 'haysUserGroupsByGroupsGridTableCell2Toggle',
+                                    type: ToggleWidget,
+                                    width: '100%',
+                                    iconOff: 'icon-x-rectangle',
+                                    icon: 'icon-check-rectangle',
+                                    value: 0,
+                                    skin: 'switch_hays'
+                                },
+                            ]
+                        },
+
+                        {
+                            id: 'haysUserGroupsByGroupsGridTableCell-03',
+                            type: GridTableCellWidget,
+                            alignment: 'center-center',
+                            width: '10%',
+                            widgets: [
+                                 {
+                                    id: 'haysUserGroupsByGroupsGridTableCell3Toggle',
+                                    type: ToggleWidget,
+                                    width: '100%',
+                                    iconOff: 'icon-x-rectangle',
+                                    icon: 'icon-check-rectangle',
+                                    value: 0,
+                                    skin: 'switch_hays'
+                                },
+                            ]
+                        },
+
+                        {
+                            id: 'haysUserGroupsByGroupsGridTableCell-04',
+                            type: GridTableCellWidget,
+                            alignment: 'center-center',
+                            width: '10%',
+                            widgets: [
+                                {
+                                    id: 'haysUserGroupsByGroupsGridTableCell4Toggle',
+                                    type: ToggleWidget,
+                                    width: '100%',
+                                    iconOff: 'icon-x-rectangle',
+                                    icon: 'icon-check-rectangle',
+                                    value: 0,
+                                    skin: 'switch_hays'
+                                },
+                            ]
+                        },
+
+                        {
+                            id: 'haysUserGroupsByGroupsGridTableCell-05',
+                            type: GridTableCellWidget,
+                            alignment: 'center-center',
+                            width: '10%',
+                            widgets: [
+                                {
+                                    id: 'haysUserGroupsByGroupsGridTableCell5Button',
+                                    type: ButtonWidget,
+                                    width: '100%',
+                                    icon: 'icon-trash',
+                                    skin: 'gridtableicon'
+                                },
+                            ]
+                        },
+
+                         {
+                            id: 'haysUserGroupsByGroupsGridTableCell-6',
+                            type: GridTableCellWidget,
+                            alignment: 'center-center',
+                            width: '10%',
+                            widgets: [
+                                {
+                                    id: 'haysUserGroupsByGroupsGridTableCell6Button',
+                                    type: ButtonWidget,
+                                    width: '100%',
+                                    icon: 'icon-chevron-right',
+                                    skin: 'gridtableicon'
+                                },
+                            ]
+                        },
+
+
+                    ]
+                },
     ,
 
     haysUserGroupHierarchy:

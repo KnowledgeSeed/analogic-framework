@@ -404,7 +404,73 @@ app.repository = {
 
                         ]
                     }
-                },
+                }
         },
+
+    haysUserGroupsByGroupsGridTable:
+        {
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => {
+                        return `{"MDX":"
+                                SELECT 
+                                   {[Measures User Groups].[Measures User Groups].Members}  
+                                  ON COLUMNS , 
+                                   {[}Groups].[}Groups].Members}  
+                                  ON ROWS 
+                                FROM [User Groups] 
+                                WHERE 
+                                  (
+                                   [Versions].[Versions].[Live],
+                                   [Organization Units].[Organization Units].[ENTERPRISE],
+                                   [Employee].[Employee].[Employee 1],
+                                   [Projects].[Projects].[All Projects]
+                                  )
+                                    "}`;
+
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 3,
+                        query: [
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x].Members[4].Name
+                                }
+                            },
+                            (r, x) => {
+                                return {
+                                    value: r.Cells[x].FormattedValue
+                                }
+                            },
+                            (r, x) => {
+                                return {
+                                    value: r.Cells[x].FormattedValue
+                                }
+                            },
+                            (r, x) => {
+                                return {
+                                    value: r.Cells[x].FormattedValue
+                                }
+                            },
+                            (r, x) => {
+                                return {
+                                }
+                            },
+                            (r, x) => {
+                                return {
+                                }
+                            },
+
+
+
+                        ]
+                    }
+                },
+
+
+        }
 
 }
