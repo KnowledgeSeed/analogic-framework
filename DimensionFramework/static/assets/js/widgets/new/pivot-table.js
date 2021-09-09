@@ -1,4 +1,4 @@
-/* global Sortable */
+/* global Sortable, Utils, WidgetValue */
 
 'use strict';
 class PivotTableWidget extends Widget {
@@ -18,8 +18,6 @@ class PivotTableWidget extends Widget {
                         </div>
                     </div>
                 </div>
-
-                <div class="ks-pivot-table-control-row"><div id="dimensionHolder" class="ks-pivot-table-tag-holder"></div></div>
 
                 <div class="ks-pivot-table-control-row"><div id="dimensionSlicer" class="ks-pivot-table-tag-holder"><div class="ks-pivot-table-tag-holder-icon"><span class="icon-columns"></span></div></div></div>
 
@@ -41,19 +39,6 @@ class PivotTableWidget extends Widget {
     }
 
     initDimensions(section) {
-        const colors = ['e83e8c', '6f42c1', 'e98300', '46c997', '1d7bff', '3aa745', 'fac107'];
-        let dimName, hierarchy, h = [], i = 0;
-
-        for (dimName in this.value) {
-            for (hierarchy of this.value[dimName]) {
-                // has-next, has-prev
-                h.push('<div class="ks-pivot-table-tag"><div class="ks-pivot-table-tag-color" style="background-color: #', colors[i % colors.length], ';"></div><h3 class="ellipsis">', dimName, '</h3><h4 class="ellipsis">', hierarchy.name, '</h4></div>');
-                ++i;
-            }
-        }
-
-        this.initSortable($('#dimensionHolder').html(h.join('')));
-
         this.initSortable($('#dimensionSlicer'));
 
         this.initSortable($('#dimensionRowHolder'));
@@ -75,10 +60,32 @@ class PivotTableWidget extends Widget {
         Sortable.create(div[0], {
             group: 1,
             draggable: '.ks-pivot-table-tag',
-            //onAdd:
+            filter: '.ks-pivot-table-tag-dropdown',
+            preventOnFilter: false,
+            onAdd: e => this.elementReplaced(e)
         });
     }
 
+    elementReplaced(e) {
+        const id = e.target.id, v = ['dimensionRowHolder', 'dimensionColHolder'];
 
+        if (v.includes(id) && v.includes(e.from.id)) {
+            return;
+        }
+
+        e = $(e.item);
+
+        e.children('.ks-pivot-table-tag-dropdown').remove();
+
+        const a = e.children('h3'), dimName = e.data('dimension'), hierarchyName = e.data('hierarchy');
+
+        if ('dimensionSlicer' === id) {
+            a.html(hierarchyName).next().html(e.data('selected_member'));
+        } else {
+
+        }
+    }
 }
 ;
+
+

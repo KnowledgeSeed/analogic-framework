@@ -30,7 +30,7 @@ def call():
     d = {}
 
     for dim_name in dim_names:
-        d[dim_name] = []
+        d[dim_name] = {}
         dim = tm1.dimensions.get(dim_name)
         for hierarchy in dim.hierarchies:
             elements = []
@@ -46,7 +46,7 @@ def call():
                 #2. slow method
                 #subset = tm1.subsets.get(subset_name, dim_name, hierarchy.name)
                 #subsets.append(subset_name + ' (' + str(len(subset.elements)) + ')')
-            d[dim_name].append({'name': hierarchy.name, 'defaultMember': hierarchy.default_member, 'elements': elements, 'subsets': hierarchy.subsets})
+            d[dim_name][hierarchy.name] = {'defaultMember': hierarchy.default_member, 'elements': elements, 'subsets': hierarchy.subsets}
 
 
     # for dim_name in dim_names:

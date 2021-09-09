@@ -127,7 +127,7 @@
     padding: 10px;
     position: absolute;
     top: 90%;
-    width: 240px;
+    width: max-content;
     z-index: 9;
 }
 
