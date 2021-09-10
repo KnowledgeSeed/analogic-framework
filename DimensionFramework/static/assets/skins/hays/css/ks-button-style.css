@@ -837,3 +837,10 @@
 .ks-button-popupbutton .ks-button-content {
         justify-content: normal !important;
 }
+
+
+/* gridtable icon button */
+.ks-button-gridtableicon .ks-button-icon {
+        color: #007BFF;
+        font-size: 15px;
+}
