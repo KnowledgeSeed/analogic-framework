@@ -1746,18 +1746,18 @@ app.widgetConfig = {
                                                     {
                                                         id: 'haysForecastingHierarchyGrid2Level1GridTableCell01',
                                                         type: GridTableCellWidget,
-                                                        alignment: 'center-left',
-                                                        width: '250',
-                                                        skin: 'hierarchyCellBorder_hays',
+                                                        alignment: 'center-center',
+                                                        width: '10%',
+                                                        skin: 'hierarchyCell_hays',
                                                         widgets: [
 
                                                             {
-                                                                id: 'haysForecastingHierarchyGrid2Level1GridTableCell01Toggle',
+                                                                id: 'haysForecastingHierarchyGrid2Level1GridTableCell01Button',
                                                                 type: ButtonWidget,
                                                                 visible: true,
-                                                                width: '246',
-                                                                icon: 'icon-check-on',
-                                                                skin: 'skin0',
+                                                                width: '100%',
+                                                                icon: 'icon-check-off',
+                                                                skin: 'Hierarchy_Off_Hays',
                                                                 height: '60',
                                                                 depends: [
                                                                     {
@@ -1774,17 +1774,18 @@ app.widgetConfig = {
                                                     {
                                                         id: 'haysForecastingHierarchyGrid2Level1GridTableCell02',
                                                         type: GridTableCellWidget,
-                                                        alignment: 'center-right',
-                                                        skin: 'hierarchyCellBorder_hays',
-                                                        width: '50',
+                                                        alignment: 'center-center',
+                                                        skin: 'hierarchyCell_hays',
+                                                        width: '90%',
                                                         widgets: [
 
                                                             {
-                                                                id: 'haysForecastingHierarchyGrid2Level1GridTableCell02Toggle',
+                                                                id: 'haysForecastingHierarchyGrid2Level1GridTableCell02Text',
                                                                 type: TextWidget,
                                                                 visible: true,
+                                                                width: '100%',
                                                                 icon: 'icon-chevron-right',
-                                                                skin: 'skin0',
+                                                                skin: 'Hierarchy_Off_Hays',
                                                                 height: '60',
                                                                 iconCustomEventName: 'text_click',
                                                                 depends: [

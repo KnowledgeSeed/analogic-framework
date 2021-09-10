@@ -30,3 +30,8 @@
     margin-left: 10px;
     opacity: 1;
 }
+
+/*  hierarchyCell_hays  */
+.ks-grid-table-hierarchyCell_hays .ks-grid-table-cell-content {
+    display: contents;
+}

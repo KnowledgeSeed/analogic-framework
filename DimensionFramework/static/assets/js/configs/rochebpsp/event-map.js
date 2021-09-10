@@ -3427,7 +3427,7 @@ app.eventMap = {
             argument: 'rocheBPSPCompanySettingsCheckedOutPopUp'
         }
     ],
-    'launch.rocheBPSPCompanySettingsCheckedOutPopUpGridRow4Cell1Button': [
+    'launch.rocheBPSPCompanySettingsCheckedOutPopUpGridRow4Cell1Button.finished': [
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPCompanySettingsCheckedOutPopUp'
@@ -3438,14 +3438,21 @@ app.eventMap = {
         }
     ],
 
-    'launch.rocheBPSPCompanySettingsCheckedOutGridTable_row_5': [
+    'launch.rocheBPSPCompanySettingsCheckedOutGridTable_row_5.finished': [
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPCompanySettingsCheckedOutGridTable'
         }
     ],
 
-    'launch.rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning_row_5': [
+    'launch.rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning_row_5.finished': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning'
+        }
+    ],
+
+    'launch.rocheBPSPCompanySettingsCheckedOutGridTableIPPlanningButton06.finished': [
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning'
@@ -3466,7 +3473,7 @@ app.eventMap = {
             argument: 'rocheBPSPCompanySettingsCheckedOutIPPopUp'
         }
     ],
-    'launch.rocheBPSPCompanySettingsCheckedOutIPPopUpGridRow4Cell1Button': [
+    'launch.rocheBPSPCompanySettingsCheckedOutIPPopUpGridRow4Cell1Button.finished': [
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPCompanySettingsCheckedOutIPPopUp'

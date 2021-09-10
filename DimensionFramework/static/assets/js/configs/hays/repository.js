@@ -191,10 +191,10 @@ app.repository = {
             let gridTableData = v(gridTableId),
                 cellOriginalValue = gridTableData.cellData[actualRow][actualColumn];
             if (actualRow == gridTableData.row) {
-                if (cellOriginalValue['skin'] === 'skin1') {
-                    cellOriginalValue['skin'] = 'skin0'
+                if (cellOriginalValue['skin'] === 'Hierarchy_On_Hays') {
+                    cellOriginalValue['skin'] = 'Hierarchy_Off_Hays'
                 } else {
-                    cellOriginalValue['skin'] = 'skin1'
+                    cellOriginalValue['skin'] = 'Hierarchy_On_Hays'
                 }
             }
             return cellOriginalValue;

@@ -11810,7 +11810,7 @@ app.repository = {
                 `{
                         "Parameters": [
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox', 'key')}"},
-                                {"Name": "pMode", "Value": "Products"}
+                                {"Name": "pModule", "Value": "Products"}
                         ]
                     }`
         }
@@ -11823,7 +11823,7 @@ app.repository = {
                 `{
                         "Parameters": [
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox', 'key')}"},
-                                {"Name": "pMode", "Value": "Materials"}
+                                {"Name": "pModule", "Value": "Materials"}
                         ]
                     }`
         }
@@ -11854,7 +11854,7 @@ app.repository = {
                 body: (db) => {
                     return `{
                           "Parameters": [
-                                  {"Name": "pUserID", "Value": "${db.activeUserName}"},
+                                  {"Name": "pUserID", "Value": "${db.activeUserName.split('/')[0]}/${Utils.getGridTableCell('rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning', 3).title}"},
                                   {"Name": "pMaterial", "Value": "${Utils.getGridTableCell('rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning', 0).materialCode}"},
                                   {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox', 'key')}"},
                                   {"Name": "pReceiver", "Value": "${Utils.getGridTableCell('rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning', 2).title}"},

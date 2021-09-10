@@ -49,7 +49,7 @@
 
 /* haysmain-red menu icon */
 .ks-button-haysmain_red.ks-button {
-    height: 145x;
+    height: 145px;
     background-color: #FF3B30;
     border-radius: 30px;
 }
@@ -822,11 +822,11 @@
 
 /* popup button */
 .ks-button-popupbutton .ks-button-icon {
-        color: #007BFF;
-        font-size: 18px;
-        line-height: 2px;
-        padding: 20px;
-        max-height: fit-content !important;
+    color: #007BFF;
+    font-size: 18px;
+    line-height: 2px;
+    padding: 20px;
+    max-height: fit-content !important;
 }
 
 .ks-button-popupbutton:hover {
@@ -835,12 +835,30 @@
 }
 
 .ks-button-popupbutton .ks-button-content {
-        justify-content: normal !important;
+    justify-content: normal !important;
 }
 
 
 /* gridtable icon button */
 .ks-button-gridtableicon .ks-button-icon {
-        color: #007BFF;
-        font-size: 15px;
+    color: #007BFF;
+    font-size: 15px;
+}
+
+/* 09 10 Mody Hierarchy_On_Hays */
+.ks-button-Hierarchy_On_Hays.ks-button {
+    background-color: #E3F1FF;
+}
+
+.ks-button-Hierarchy_On_Hays .ks-button-icon {
+    color: #007BFF;
+    font-size: 15px;
+}
+
+.ks-button-Hierarchy_Off_Hays.ks-button {
+}
+
+.ks-button-Hierarchy_Off_Hays .ks-button-icon {
+    color: #007BFF;
+    font-size: 15px;
 }
