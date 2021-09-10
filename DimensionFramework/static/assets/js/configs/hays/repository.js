@@ -191,23 +191,10 @@ app.repository = {
             let gridTableData = v(gridTableId),
                 cellOriginalValue = gridTableData.cellData[actualRow][actualColumn];
             if (actualRow == gridTableData.row) {
-                if (cellOriginalValue['value'] === '1') {
-                    cellOriginalValue['value'] = '0'
+                if (cellOriginalValue['skin'] === 'skin1') {
+                    cellOriginalValue['skin'] = 'skin0'
                 } else {
-                    cellOriginalValue['value'] = '1'
-                }
-            }
-            return cellOriginalValue;
-        },
-
-        getToggleTwo: (gridTableId, actualRow, actualColumn) => {
-            let gridTableData = v(gridTableId),
-                cellOriginalValue = gridTableData.cellData[actualRow][actualColumn];
-            if (actualRow == gridTableData.row) {
-                if (cellOriginalValue['value'] === '1') {
-                    cellOriginalValue['value'] = '0'
-                } else {
-                    cellOriginalValue['value'] = '1'
+                    cellOriginalValue['skin'] = 'skin1'
                 }
             }
             return cellOriginalValue;
@@ -223,7 +210,7 @@ app.repository = {
             },
             refresh_col_1: {
                 execute: (db, widgetId, extraParams) => {
-                    return Repository.haysForecastingHierarchy.getToggleTwo(widgetId, extraParams.row, extraParams.col);
+                    return Repository.haysForecastingHierarchy.getToggleOne(widgetId, extraParams.row, extraParams.col);
                 }
             },
 
@@ -247,13 +234,12 @@ app.repository = {
                         length: 1,
                         query: [
                             (r, x) => {
-                                return {
-                                    titleOn: r.Cells[x].FormattedValue,
-                                    titleOff: r.Cells[x].FormattedValue,
-                                }
+                                return {}
                             },
                             (r, x) => {
-                                return {}
+                                return {
+                                    title: r.Cells[x].FormattedValue
+                                }
                             }
 
 
