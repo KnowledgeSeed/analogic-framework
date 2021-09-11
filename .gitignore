@@ -12,9 +12,13 @@ minified*.*
 logs
 *.log
 DimensionFramework/applications/*
+!DimensionFramework/applications/.placeholder
 DimensionFramework/configs/*
+!DimensionFramework/configs/.placeholder
 DimensionFramework/Customer/*
+!DimensionFramework/Customer/.placeholder
 DimensionFramework/static/assets/skins/*
+!DimensionFramework/static/assets/skins/.placeholder
 DimensionFramework/static/assets/js/configs/*
 !DimensionFramework/static/assets/js/configs/dummy
 !DimensionFramework/static/assets/js/configs/default
