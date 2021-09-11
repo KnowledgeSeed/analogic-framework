@@ -28,7 +28,10 @@ Listeners.handle = ev => {
     } else if('refreshWithTimeout' === m) {
         let seconds = ev.data.parameters[0];
         setTimeout(function(){ Render.renderWidget(ev); }, seconds);
-    }  else if ('refreshWithWaitingForEvents' === m) {
+    } else if('refreshWithStateAndTimeout' === m) {
+        let seconds = ev.data.parameters[0];
+        setTimeout(function(){ Render.renderWidget(ev, null, null, true); }, seconds);
+    }   else if ('refreshWithWaitingForEvents' === m) {
         let events = ev.data.parameters;
         let widgetId = ev.data.options.id, i;
         WidgetValue[widgetId + 'eventsfired'] = events.map((e) => {return {name: e, fired: false};});

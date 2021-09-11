@@ -19,6 +19,11 @@
     "class": "Export",
     "method": "rocheIpPlanningMonthly"
   },
+  "validateIpPlanningExcelImport": {
+    "namespace": "DimensionFramework.Custom.Validation",
+    "class": "Validation",
+    "method": "validateIpPlanningExcelImport"
+  },
   "validateExcelImport": {
     "namespace": "DimensionFramework.Customer.rochebpsp.Validation",
     "class": "Validation",

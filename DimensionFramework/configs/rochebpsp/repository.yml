@@ -137,7 +137,10 @@ rocheProductLevelExportMDX: >
     {TM1DRILLDOWNMEMBER({[Products].[BPSP $productPlanVersion].[PL1]}, ALL, RECURSIVE )}
     --Create deault subset for the rows by Receiver
        Set DefaultReceiversRows AS
-       {TM1DRILLDOWNMEMBER({[Receivers].[Receivers].[All Receivers]}, ALL, RECURSIVE )}
+
+      -- {TM1DRILLDOWNMEMBER({[Receivers].[Receivers].[All Receivers]}, ALL, RECURSIVE )}
+     {TM1SUBSETTOSET( [Receivers], 'zUI $company Plan Receivers')}
+
     -- Compress MDX result size with creating measures from Product Attributes for the query (decrease size from 3MB to 50KB)
        MEMBER [LineItems Sales Report by Product].[LineItems Sales Report by Product].[ProductName] as
               [Products].[BPSP $productPlanVersion].CurrentMember.Properties('BPSP $productPlanVersion Description')

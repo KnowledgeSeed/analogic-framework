@@ -3715,6 +3715,10 @@ app.widgetConfig = {
                                                         'refresh.rocheBPSPProductsTypeSegmentedControl.finished']
                                                 },
                                                 {
+                                                    'event': 'segmentedControlTab1.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl.finished',
+                                                    'method': 'refresh'
+                                                },
+                                                {
                                                     'event': 'bodyReady',
                                                     'method': 'refreshWithWaitingForEvents',
                                                     'parameters': [
@@ -3732,6 +3736,10 @@ app.widgetConfig = {
                                             skin: 'blue_link_columns_bpsp',
                                             marginLeft: 15,
                                             listen: [
+                                                {
+                                                    'event': 'segmentedControlTab1.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl.finished',
+                                                    'method': 'refresh'
+                                                },
                                                 {
                                                     'event': 'segmentedControlTab2.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl.finished',
                                                     'method': 'refreshWithWaitingForEvent',
@@ -5411,7 +5419,7 @@ app.widgetConfig = {
                             'method': 'refresh'
                         },
                         {
-                            'event': 'writeMonthlySplitType.rocheBPSPProductsCheckoutGridTableMonthly.finished',
+                            'event': 'request.rocheBPSPProductsCheckoutGridTableMonthly.finished',
                             'method': 'refreshWithTimeout',
                             'parameters': [1500]
                         },
@@ -10968,7 +10976,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '800',
+                    height: '800',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -11224,7 +11232,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '800',
+                    height: '800',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -11364,7 +11372,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '800',
+                    height: '800',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -11453,7 +11461,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '800',
+                    height: '800',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -11699,7 +11707,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '800',
+                    height: '800',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -11788,7 +11796,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '800',
+                    height: '800',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -12039,7 +12047,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '800',
+                    height: '800',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -12359,7 +12367,7 @@ app.widgetConfig = {
                                             skin: 'blue_link_columns_bpsp',
                                             listen: [
                                                 {
-                                                    'event': 'insert.rocheBPSPAddMaterialGridRow3Cell2Button.finished',
+                                                    'event': 'request.rocheBPSPAddMaterialGridRow3Cell2Button.finished',
                                                     'method': 'refresh'
                                                 }
                                             ]
@@ -12943,7 +12951,7 @@ app.widgetConfig = {
                             alignment: 'center-center',
                             widgets: [
                                 {
-                                    id: 'RocheBPSPMaterialsAddMaterialClipboardCell-01',
+                                    id: 'RocheBPSPMaterialsAddMaterialClipboardCell-01Toggle',
                                     type: ToggleWidget,
                                     width: '100%',
                                     iconOff: 'icon-check-off',
@@ -12963,7 +12971,7 @@ app.widgetConfig = {
                             widgets: [
 
                                 {
-                                    id: 'RocheBPSPMaterialsAddMaterialClipboardCell-02',
+                                    id: 'RocheBPSPMaterialsAddMaterialClipboardCell-02Toggle',
                                     type: TextWidget,
                                     skin: 'products_gd_readonly_bpsp',
                                     marginLeft: 8,
@@ -13453,7 +13461,7 @@ app.widgetConfig = {
 
 
                                 {
-                                    id: 'RocheBPSPMaterialsAddMaterialSearchCell-01',
+                                    id: 'RocheBPSPMaterialsAddMaterialSearchCell-01Toggle',
                                     type: ToggleWidget,
                                     width: '100%',
                                     iconOff: 'icon-check-off',
@@ -13472,7 +13480,7 @@ app.widgetConfig = {
                             widgets: [
 
                                 {
-                                    id: 'RocheBPSPMaterialsAddMaterialSearchCell-02',
+                                    id: 'RocheBPSPMaterialsAddMaterialSearchCell-02Toggle',
                                     type: TextWidget,
                                     skin: 'material_gd_readonly_left_bpsp',
                                     marginLeft: 8,
@@ -14616,7 +14624,7 @@ app.widgetConfig = {
                         {
                             'event': 'launch.rocheBPSPProductReportGridTableHeaderReturnFromFocus.finished',
                             'method': 'refresh'
-                        }
+                        },
 
 
                     ],
@@ -15234,8 +15242,8 @@ app.widgetConfig = {
                 {
                     id: 'rocheBPSPProductReportChart',
                     type: ComboChartWidget,
-                    width: '2000',
-                    height: '1000',
+                    width: '1830',
+                    height: '640',
                     visible: false,
                     title: '',
                     listen: [
@@ -15257,6 +15265,20 @@ app.widgetConfig = {
                             'method': 'refreshWithWaitingForEvent',
                             'parameters': ['rendered.rocheBPSPProductReportGridRow1Cell3DropBox', 'rendered.rocheBPSPProductReportPageInit']
                         },
+
+
+                        {
+                            event: 'launch.rocheBPSPProductReportMaterialSelectorShortcutPopupGridTableButton01.finished',
+                            method: 'refresh'
+                        },
+                        {
+                            event: 'launch.rocheBPSPProductReportMaterialSelectorPopopInChartGridTableButton01.finished',
+                            method: 'refresh'
+                        },
+                        {
+                            'event': 'launch.rocheBPSPProductReportGridTableHeaderReturnFromFocus.finished',
+                            'method': 'refresh'
+                        }
                     ],
                     datasets: [{
                         "type": "line",
@@ -15280,7 +15302,7 @@ app.widgetConfig = {
                     xAxesGridLinesDrawBorder: true,
                     xAxesGridLinesDrawOnChartArea: true,
                     xAxesGridLinesColor: '#c3ced5',
-                    xAxesTicksFontSize: 12,
+                    xAxesTicksFontSize: 14,
                     xAxesTicksFontFamily: 'imago, sans',
                     xAxesTicksBegintAtZero: false,
                     xAxesTicksPadding: 10,
@@ -15295,7 +15317,7 @@ app.widgetConfig = {
                     leftYAxesGridLinesDrawBorder: true,
                     leftYAxesGridLinesColor: '#c3ced5',
                     leftYAxesGridLinesDrawOnChartArea: true,
-                    leftYAxesLabelFontSize: 12,
+                    leftYAxesLabelFontSize: 18,
                     leftYAxesLabelFontFamily: 'imago, sans',
                     leftYAxesLabelFontStyle: 'normal',
                     leftYAxesLabelPadding: 10,
@@ -15317,32 +15339,48 @@ app.widgetConfig = {
                         {
                             id: 'rocheBPSPProductReportProductSelectorChartButton',
                             type: ButtonWidget,
-                            marginTop: 10,
+                            marginTop: '270px',
                             listen: [
                                 {
                                     'event': 'bodyReady',
                                     'method': 'refreshWithWaitingForEvents',
                                     'parameters': [
-                                        'rendered.rocheBPSPProductReportGridTable'
+                                        'rendered.rocheBPSPProductReportGridRow1Cell3DropBox',
+                                        'rendered.rocheBPSPProductReportGridRow1Cell5DropBox',
+                                        'rendered.rocheBPSPProductReportPageInit'
                                     ]
                                 },
                                 {
+                                    'event': 'choose.rocheBPSPProductReportGridRow1Cell3DropBox.finished',
+                                    'method': 'refresh'
+                                },
+
+                                {
+                                    'event': 'choose.rocheBPSPProductReportGridRow1Cell5DropBox.finished',
+                                    'method': 'refresh'
+                                },
+
+                                {
                                     'event': 'choose.rocheBPSPProductReportGridRow1Cell2DropBox.finished',
                                     'method': 'refreshWithWaitingForEvent',
-                                    'parameters': ['rendered.rocheBPSPProductReportGridTable']
+                                    'parameters': ['rendered.rocheBPSPProductReportGridRow1Cell3DropBox', 'rendered.rocheBPSPProductReportPageInit']
+                                },
+
+
+                                {
+                                    event: 'launch.rocheBPSPProductReportMaterialSelectorShortcutPopupGridTableButton01.finished',
+                                    method: 'refresh'
                                 },
                                 {
-                                    'event': 'launch.rocheBPSPProductReportMaterialSelectorShortcutPopupGridTableButton01.finished',
-                                    'method': 'refresh'
-                                },
-                                {
-                                    'event': 'launch.rocheBPSPProductReportMaterialSelectorShortcutPopupGridTable_row_0.finished',
-                                    'method': 'refresh'
+                                    event: 'launch.rocheBPSPProductReportMaterialSelectorPopopInChartGridTableButton01.finished',
+                                    method: 'refresh'
                                 },
                                 {
                                     'event': 'launch.rocheBPSPProductReportGridTableHeaderReturnFromFocus.finished',
                                     'method': 'refresh'
-                                }
+                                },
+
+
                             ],
                             fontBold: true,
                             fontSize: '16'
@@ -15649,15 +15687,15 @@ app.widgetConfig = {
                     type: HorizontalTableWidget,
                     title: '',
                     titleVisible: false,
-                    columnNames: ["Customer", "Code", "Receiver", "2020 Actuals", "2021 Final", "2022 Plan", "Submitted"],
-                    columnWidths: ["35%", "10%", "10%", "10%", "10%", "10%", "10%"],
+                    columnNames: ["Customer", "Code", "Receiver", "2020 Actuals", "2021 Final", "2022 Plan", "Submitted By", "Submitted"],
+                    columnWidths: ["35%", "8%", "5%", "10%", "10%", "10%", "10%", "7%"],
                     searchField: true,
                     visible: true,
-                    fadeOutNum: 15,
+                    fadeOutNum: 13,
                     marginLeft: 10,
                     marginRight: 10,
                     hideIfNoData: true,
-                    columnTypes: ['string', 'string', 'string', 'real', 'real', 'real', 'string'],
+                    columnTypes: ['string', 'string', 'string', 'real', 'real', 'real', 'string', 'string'],
                     listen: [
                         {
                             event: 'refresh.rocheBPSPCustomersTerritorySelector.finished',
@@ -17099,7 +17137,13 @@ app.widgetConfig = {
                                             confirmMessage2: 'Are you sure you want to delete all input for this Year?',
                                             width: '100%',
                                             icon: 'icon-x-square-outline',
-                                            skin: 'red_link_x_bpsp'
+                                            skin: 'red_link_x_bpsp',
+                                            listen: [
+                                                {
+                                                    'event': 'switch.rocheBPSPCustomersPlanningTypeSegmentedControl.finished',
+                                                    'method': 'refresh'
+                                                }
+                                            ]
                                         },
                                         {
                                             id: 'rocheBPSPCustomersPlanningGridRow2Cell3SubmitButton',
@@ -18805,7 +18849,7 @@ app.widgetConfig = {
                             width: '100%',
                             height: 0,
                             widgets: [
-                                 {
+                                {
                                     id: 'rocheBPSPCompanySettingsGridTableCustomerHeaderCell-01',
                                     type: GridTableHeaderCellWidget,
                                     width: '100%',
@@ -18867,7 +18911,7 @@ app.widgetConfig = {
                             width: '100%',
                             height: 0,
                             widgets: [
-                                 {
+                                {
                                     id: 'rocheBPSPCompanySettingsGridTableProductHeaderCell-01',
                                     type: GridTableHeaderCellWidget,
                                     width: '100%',
@@ -18921,7 +18965,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '600',
+                    height: '600',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -19091,7 +19135,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '600',
+                    height: '600',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -19975,7 +20019,7 @@ app.widgetConfig = {
                             widgets: [
 
                                 {
-                                    id: 'rocheBPSPTerritoriesGridTableCell-02',
+                                    id: 'rocheBPSPTerritoriesGridTableCellText-02',
                                     type: TextWidget,
                                     titleAlignment: 'center',
                                     paddingRight: 1,
@@ -21373,7 +21417,7 @@ app.widgetConfig = {
                     title: '',
                     titleVisible: false,
                     columnNames: ["Account Name", "Account Number", "Reciver", "Rexis Flag", "Assigment Flag", "Flag - Has plan data", "Flag - Has actuals"],
-                    columnWidths: ["45%", "20%", "5%", "5%", "5%", "10%", "10%"],
+                    columnWidths: ["40%", "15%", "5%", "10%", "10%", "10%", "10%"],
                     searchField: true,
                     width: '95%',
                     visible: true,
@@ -23582,7 +23626,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '600',
+                    height: '600',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,
@@ -23744,7 +23788,7 @@ app.widgetConfig = {
                     visible: false,
                     closeBtn: false,
                     width: '400',
-                    heiht: '600',
+                    height: '600',
                     bgScrollable: true,
                     fixed: true,
                     heightFixed: false,

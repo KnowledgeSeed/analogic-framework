@@ -5,7 +5,7 @@ app.eventMap = {
     'launch.rocheBPSPMainGridRow3Cell1Button': [
         {
             action: app.fn.openPageWithState,
-            argument: 'rocheBPSPCustomers'
+            argument: ['rocheBPSPCustomers', 'rocheBPSPCustomersTerritorySelector', 'rocheBPSPCustomersHorizontalTable', 'rocheBPSPCustomersHeaderInfoGridTable']
         }
     ],
 
@@ -498,6 +498,10 @@ app.eventMap = {
         {
             action: app.fn.executeRequest,
             argument: 'request.rocheBPSPProductsCheckoutUploadPopupUpload'
+        },
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutUploadPopup'
         }
     ],
     'launch.rocheBPSPProductsCheckoutGridRow1Cell4Button': [
@@ -514,6 +518,14 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutInfoPopup'
         }
     ],
+
+    'upload.rocheBPSPProductsCheckoutUploadPopupUpload': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutUploadPopup'
+        }
+    ],
+
     'launch.rocheBPSPProductsCheckoutInfoPopupCancelButton': [
         {
             action: app.fn.togglePopup,
@@ -813,6 +825,10 @@ app.eventMap = {
             argument: 'rocheBPSPProductsCheckoutUploadPopupUpload'
         },
         {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPProductsCheckoutUploadPopup'
+        },
+        {
             action: app.fn.showPopup,
             argument: 'Upload success'
         }
@@ -826,13 +842,13 @@ app.eventMap = {
     'write.rocheBPSPProductsCheckoutGridTableMonthly.finished': [
         {
             action: app.fn.executeRequest,
-            argument: 'writeMonthlySplitType.rocheBPSPProductsCheckoutGridTableMonthly'
+            argument: 'request.rocheBPSPProductsCheckoutGridTableMonthly'
         }
     ],
     'pastelast.rocheBPSPProductsCheckoutGridTableMonthly.finished': [
         {
             action: app.fn.executeRequest,
-            argument: 'writeMonthlySplitType.rocheBPSPProductsCheckoutGridTableMonthly'
+            argument: 'request.rocheBPSPProductsCheckoutGridTableMonthly'
         }
     ],
     'launch.rocheBPSPProductsCheckoutGridTableMonthly_row_4': [
@@ -1459,7 +1475,7 @@ app.eventMap = {
     'launchpaste.rocheBPSPAddMaterialGridRow3Cell2Button.finished': [
         {
             action: app.fn.executeRequest,
-            argument: 'insert.rocheBPSPAddMaterialGridRow3Cell2Button'
+            argument: 'request.rocheBPSPAddMaterialGridRow3Cell2Button'
         }
     ],
 
@@ -2059,9 +2075,23 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPProductReportMaterialSelectorPopopInChartGridTable'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportChart'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportProductSelectorChartButton'
         }
     ],
 
+    'launch.rocheBPSPProductReportMaterialSelectorShortcutPopupGridTableButton01': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportProductSelectorChartButton'
+        }
+    ],
 
     'launch.rocheBPSPProductReportMaterialSelectorShortcutPopupGridTable_row_0': [
         {
@@ -2164,6 +2194,14 @@ app.eventMap = {
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPProductReportCheckoutPopup'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportChart'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPProductReportProductSelectorChartButton'
         }
     ],
 
@@ -2241,13 +2279,13 @@ app.eventMap = {
         {
             action: app.fn.forceRefreshWidgets,
             argument: [
-                'rocheBPSPCustomersPlanningGridRow2Cell3aCreateOpportunityButton',
                 'rocheBPSPCustomersPlanningMonthlyExcelExport',
                 'rocheBPSPCustomersPlanningGridTableYearly',
                 'rocheBPSPCustomersPlanningGridTableMonthly',
                 'rocheBPSPCustomersPlanningTypeSegmentedControl',
                 'rocheBPSPCustomersPlanningGridRow2Cell3ClearAllButton',
-                'rocheBPSPCustomersPlanningMonthlyExcelUpload'
+                'rocheBPSPCustomersPlanningMonthlyExcelUpload',
+                'rocheBPSPCustomersPlanningGridRow2Cell3aCreateOpportunityButton'
             ]
         }
     ],
@@ -2273,6 +2311,14 @@ app.eventMap = {
         {
             action: app.fn.showPopup,
             argument: 'Upload success'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningHeaderInfoGridTable'
         }
     ],
     'upload.rocheBPSPCustomersPlanningUploadPopupUpload.error': [
@@ -2333,8 +2379,12 @@ app.eventMap = {
     ],
     'launch.rocheBPSPCustomersPlanningGridTableMonthlyHeaderReturnFromFocus.finished': [
         {
-            action: app.fn.forceRefresh,
-            argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+            action: app.fn.forceRefreshWidgets,
+            argument: [
+                'rocheBPSPCustomersPlanningGridTableMonthly',
+                'rocheBPSPCustomersPlanningMonthlyExcelExport',
+                'rocheBPSPCustomersPlanningMonthlyExcelUpload'
+            ]
         }
     ],
     'launch.rocheBPSPCustomersPlanningGridTableYearlyHeaderReturnFromFocus.finished': [
@@ -2755,6 +2805,10 @@ app.eventMap = {
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPCustomersPlanningGridTableMonthly'
+        },
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCustomersPlanningHeaderInfoGridTable'
         }
     ],
     'launch.rocheBPSPCustomersPlanningGridRow2Cell3SubmitButton.finished': [
@@ -3373,7 +3427,7 @@ app.eventMap = {
             argument: 'rocheBPSPCompanySettingsCheckedOutPopUp'
         }
     ],
-    'launch.rocheBPSPCompanySettingsCheckedOutPopUpGridRow4Cell1Button': [
+    'launch.rocheBPSPCompanySettingsCheckedOutPopUpGridRow4Cell1Button.finished': [
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPCompanySettingsCheckedOutPopUp'
@@ -3384,14 +3438,21 @@ app.eventMap = {
         }
     ],
 
-    'launch.rocheBPSPCompanySettingsCheckedOutGridTable_row_5': [
+    'launch.rocheBPSPCompanySettingsCheckedOutGridTable_row_5.finished': [
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPCompanySettingsCheckedOutGridTable'
         }
     ],
 
-    'launch.rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning_row_5': [
+    'launch.rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning_row_5.finished': [
+        {
+            action: app.fn.forceRefresh,
+            argument: 'rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning'
+        }
+    ],
+
+    'launch.rocheBPSPCompanySettingsCheckedOutGridTableIPPlanningButton06.finished': [
         {
             action: app.fn.forceRefresh,
             argument: 'rocheBPSPCompanySettingsCheckedOutGridTableIPPlanning'
@@ -3412,7 +3473,7 @@ app.eventMap = {
             argument: 'rocheBPSPCompanySettingsCheckedOutIPPopUp'
         }
     ],
-    'launch.rocheBPSPCompanySettingsCheckedOutIPPopUpGridRow4Cell1Button': [
+    'launch.rocheBPSPCompanySettingsCheckedOutIPPopUpGridRow4Cell1Button.finished': [
         {
             action: app.fn.togglePopup,
             argument: 'rocheBPSPCompanySettingsCheckedOutIPPopUp'
@@ -3439,6 +3500,20 @@ app.eventMap = {
                 'rocheBPSPCompanySettingsGridRow5Cell1MessageInput'
             ]
         },
+    ],
+
+    'upload.rocheBPSPCustomersPlanningUploadPopupUpload': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPCustomersPlanningUploadPopup'
+        }
+    ],
+
+    'upload.rocheBPSPIpPlanningCheckoutUploadPopupUpload': [
+        {
+            action: app.fn.togglePopup,
+            argument: 'rocheBPSPIpPlanningCheckoutUploadPopup'
+        }
     ],
 
 

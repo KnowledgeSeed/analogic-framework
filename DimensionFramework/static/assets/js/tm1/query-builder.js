@@ -3,7 +3,7 @@
 'use strict';
 const QB = {};
 
-QB.loadData = (argument, type, useDefaultData = false, path = 'init') => {
+QB.loadData = (argument, type, useDefaultData = false, path = 'init', extraParams = {}) => {
     if (useDefaultData) {
         return Auth.loadDefault(type);
     }
@@ -26,7 +26,7 @@ QB.loadData = (argument, type, useDefaultData = false, path = 'init') => {
             return QB.executeMDXs(argument, path);
         }
 
-        return QB.executeMDX(argument, path);
+        return QB.executeMDX(argument, path, extraParams);
     }
 
     if (r && r.state) {
@@ -49,7 +49,7 @@ QB.loadData = (argument, type, useDefaultData = false, path = 'init') => {
 
 QB.refreshGridCellData = (argument, type) => {
     let t = argument.split('_');
-    return QB.loadData(t[0], type, false, 'refresh_col_' + t[2]);
+    return QB.loadData(t[0], type, false, 'refresh_col_' + t[2], {row: t[1], col: t[2]});
 };
 
 QB.loadComment = repositoryId => {
@@ -73,9 +73,9 @@ QB.loadComment = repositoryId => {
     return $.Deferred().resolve('');
 };
 
-QB.loadFromWidgetValue = (arg, repositoryId) => {
+QB.loadFromWidgetValue = (arg, repositoryId, extraParams = {}) => {
     if (arg.execute) {
-        return $.Deferred().resolve(arg.execute(WidgetValue, repositoryId));
+        return $.Deferred().resolve(arg.execute(WidgetValue, repositoryId, extraParams));
     }
 
     return $.Deferred().resolve(arg(WidgetValue, repositoryId));//TODO remove, back compatibility
@@ -138,6 +138,8 @@ QB.executeMDXs = (repositoryId, path) => {
                     d.push(QB.processResult(t, r));
                 } else if (t.type === 'list') {
                     d.push(QB.processResultAsList(t, r));
+                } else if (t.type === 'script') {
+                    return t.script(r);
                 } else {
                     d.push(QB.processResultAsObject(t.query, r));
                 }
@@ -156,7 +158,7 @@ QB.executeMDXs = (repositoryId, path) => {
     });
 };
 
-QB.executeMDX = (repositoryId, path) => {
+QB.executeMDX = (repositoryId, path, extraParams = {}) => {
     let r = Repository[repositoryId], p = r[path];
 
     if (r.reference) {
@@ -165,7 +167,7 @@ QB.executeMDX = (repositoryId, path) => {
     }
 
     if (p && p.execute) {
-        return QB.loadFromWidgetValue(p, repositoryId);
+        return QB.loadFromWidgetValue(p, repositoryId, extraParams);
     }
 
 
@@ -189,6 +191,9 @@ QB.executeMDX = (repositoryId, path) => {
             } else if (t.type === 'list') {
                 El.body.triggerHandler('processdata.' + repositoryId + '.finished');
                 return QB.processResultAsList(t, data);
+            } else if (t.type === 'script') {
+                El.body.triggerHandler('processdata.' + repositoryId + '.finished');
+                return t.script(data);
             } else {
                 El.body.triggerHandler('processdata.' + repositoryId + '.finished');
                 return QB.processResultAsObject(t.query, data);

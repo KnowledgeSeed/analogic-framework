@@ -51,3 +51,30 @@
 	background-color: #007aff;
 	color: #fff;
 }
+
+/*HR skin*/
+
+.ks-segmented-hrsegmented.ks-segmented {
+	border: 1px solid #007aff;
+	border-radius: 5px;
+	height: 30px;
+}
+
+.ks-segmented-hrsegmented .ks-segment {
+	color: #007aff;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.ks-segmented-hrsegmented .ks-segment {
+	border-left: 1px solid #007aff;
+}
+
+.ks-segmented-hrsegmented .ks-segment:first-child {
+	border-left: 1px solid #007aff;
+}
+
+.ks-segmented-hrsegmented .ks-segment.ks-on {
+	background-color: #007aff;
+	color: #fff;
+}
