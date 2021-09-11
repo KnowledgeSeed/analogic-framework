@@ -289,23 +289,10 @@ app.repository = {
             let gridTableData = v(gridTableId),
                 cellOriginalValue = gridTableData.cellData[actualRow][actualColumn];
             if (actualRow == gridTableData.row) {
-                if (cellOriginalValue['value'] === '1') {
-                    cellOriginalValue['value'] = '0'
+                if (cellOriginalValue['skin'] === 'Hierarchy_On_Hays') {
+                    cellOriginalValue['skin'] = 'Hierarchy_Off_Hays'
                 } else {
-                    cellOriginalValue['value'] = '1'
-                }
-            }
-            return cellOriginalValue;
-        },
-
-        getToggleTwo: (gridTableId, actualRow, actualColumn) => {
-            let gridTableData = v(gridTableId),
-                cellOriginalValue = gridTableData.cellData[actualRow][actualColumn];
-            if (actualRow == gridTableData.row) {
-                if (cellOriginalValue['value'] === '1') {
-                    cellOriginalValue['value'] = '0'
-                } else {
-                    cellOriginalValue['value'] = '1'
+                    cellOriginalValue['skin'] = 'Hierarchy_On_Hays'
                 }
             }
             return cellOriginalValue;
@@ -321,7 +308,7 @@ app.repository = {
             },
             refresh_col_1: {
                 execute: (db, widgetId, extraParams) => {
-                    return Repository.haysForecastingHierarchy.getToggleTwo(widgetId, extraParams.row, extraParams.col);
+                    return Repository.haysForecastingHierarchy.getToggleOne(widgetId, extraParams.row, extraParams.col);
                 }
             },
 
@@ -345,13 +332,12 @@ app.repository = {
                         length: 1,
                         query: [
                             (r, x) => {
-                                return {
-                                    titleOn: r.Cells[x].FormattedValue,
-                                    titleOff: r.Cells[x].FormattedValue,
-                                }
+                                return {}
                             },
                             (r, x) => {
-                                return {}
+                                return {
+                                    title: r.Cells[x].FormattedValue
+                                }
                             }
 
 
@@ -500,7 +486,73 @@ app.repository = {
 
                         ]
                     }
-                },
+                }
         },
+
+    haysUserGroupsByGroupsGridTable:
+        {
+            init:
+                {
+                    url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+                    type: 'POST',
+                    body: (db) => {
+                        return `{"MDX":"
+                                SELECT 
+                                   {[Measures User Groups].[Measures User Groups].Members}  
+                                  ON COLUMNS , 
+                                   {[}Groups].[}Groups].Members}  
+                                  ON ROWS 
+                                FROM [User Groups] 
+                                WHERE 
+                                  (
+                                   [Versions].[Versions].[Live],
+                                   [Organization Units].[Organization Units].[ENTERPRISE],
+                                   [Employee].[Employee].[Employee 1],
+                                   [Projects].[Projects].[All Projects]
+                                  )
+                                    "}`;
+
+                    },
+                    parsingControl: {
+                        type: 'matrix',
+                        length: 3,
+                        query: [
+                            (r, x) => {
+                                return {
+                                    title: r.Cells[x].Members[4].Name
+                                }
+                            },
+                            (r, x) => {
+                                return {
+                                    value: r.Cells[x].FormattedValue
+                                }
+                            },
+                            (r, x) => {
+                                return {
+                                    value: r.Cells[x].FormattedValue
+                                }
+                            },
+                            (r, x) => {
+                                return {
+                                    value: r.Cells[x].FormattedValue
+                                }
+                            },
+                            (r, x) => {
+                                return {
+                                }
+                            },
+                            (r, x) => {
+                                return {
+                                }
+                            },
+
+
+
+                        ]
+                    }
+                },
+
+
+        }
 
 }

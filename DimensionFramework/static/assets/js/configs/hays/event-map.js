@@ -27,6 +27,19 @@ app.eventMap = {
         }
     ],
 
+    'launch.haysMainRow8Cell2Button': [
+        {
+            action: app.fn.openPageWithState,
+            argument: 'haysHeadcount'
+        }
+    ],
+    'launch.haysHeadcountGridRow1Cell1Button': [
+        {
+            action: app.fn.openPage,
+            argument: 'haysMain'
+        }
+    ],
+
     'launch.haysMainRow11Cell2Button': [
         {
             action: app.fn.openPageWithState,
@@ -47,18 +60,6 @@ app.eventMap = {
         }
     ],
     'launch.haysKamForecastingGridRow1Cell1Button': [
-        {
-            action: app.fn.openPage,
-            argument: 'haysMain'
-        }
-    ],
-    'launch.haysMainRow3Cell3Button': [
-        {
-            action: app.fn.openPageWithState,
-            argument: 'haysArbeitsbericht'
-        }
-    ],
-    'launch.haysForecastingHierarchyGridRow1Cell1Button': [
         {
             action: app.fn.openPage,
             argument: 'haysMain'
@@ -227,6 +228,12 @@ app.eventMap = {
         {
             action: app.fn.openPageWithState,
             argument: 'haysForecastingHierarchy'
+        }
+    ],
+    'launch.haysHeadcountGridRow3Cell2Button': [
+        {
+            action: app.fn.openPopup,
+            argument: 'haysHeadcountPointPopUp'
         }
     ],
 
