@@ -13,3 +13,8 @@ logs
 *.log
 DimensionFramework/applications/*
 DimensionFramework/configs/*
+DimensionFramework/Customer/*
+DimensionFramework/static/assets/skins/*
+DimensionFramework/static/assets/js/configs/*
+!DimensionFramework/static/assets/js/configs/dummy
+!DimensionFramework/static/assets/js/configs/default
