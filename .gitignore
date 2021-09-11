@@ -11,3 +11,5 @@ venv
 minified*.*
 logs
 *.log
+DimensionFramework/applications/*
+DimensionFramework/configs/*
