@@ -15,15 +15,13 @@ app.repository = {
 
             }
             if (dropDownValue === "") {
-                //skin változtatás:
                 cellOriginalValue['skin'] = actualRow == 0 ? 'filter_button_circle' : 'filter_text_disabled';
             } else {
-                //skin változtatás:
                 cellOriginalValue['skin'] = actualRow == 0 ? 'filter_button' : 'filter_text';
             }
-
             return cellOriginalValue;
-        }
+        },
+
     },
     haysKamForecastingGridTable: {
         init: {
@@ -185,6 +183,106 @@ app.repository = {
                 Repository.haysKamForecastingGridTableRowCell1Text.perform.execute(db);
             }
         }
+    },
+    haysKamForecastingForecastPhases: {
+        init: {
+            execute: (db) => {
+                return [
+                    [
+                        {title: 'Forecast Phases', cellWidth: '8%'},
+                        {
+                            label: '',
+                            cellWidth: '2%',
+                            icon: 'icon-time-back-arrow'
+                        },
+                        {
+                            label: 'Actual',
+                            cellWidth: '30%'
+                        },
+                        {
+                            label: 'Active Forecast',
+                            cellWidth: '30%'
+                        },
+                        {
+                            label: 'Passive Forecast',
+                            cellWidth: '30%'
+                        }
+                    ]
+                ];
+            }
+        }
+    },
+    haysKamForecastingForecast: {
+        init: {
+
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => {
+                return `{"MDX":"
+                                SELECT 
+                                               {TM1SubsetToSet([Periods].[Fiscal Year], \\"Current Forecast Period\\")}  
+                                              ON COLUMNS , 
+                                              NON EMPTY 
+                                               {([Organization Units].[Organization Units].[Team NKT],[Key Account Managers].[Key Account Managers].[All Key Account Managers],[Fee Earners].[Fee Earners].[All Fee Earners],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team NKT],[Key Account Managers].[Key Account Managers].[KAM1],[Fee Earners].[Fee Earners].[All Fee Earners],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team NKT],[Key Account Managers].[Key Account Managers].[KAM1],[Fee Earners].[Fee Earners].[BP1],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team NKT],[Key Account Managers].[Key Account Managers].[KAM1],[Fee Earners].[Fee Earners].[BP1],[Projects].[Projects].[Project001]),
+                                                 ([Organization Units].[Organization Units].[Team NKT],[Key Account Managers].[Key Account Managers].[KAM1],[Fee Earners].[Fee Earners].[BP2],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team NKT],[Key Account Managers].[Key Account Managers].[KAM1],[Fee Earners].[Fee Earners].[BP2],[Projects].[Projects].[Project002]),
+                                                 ([Organization Units].[Organization Units].[Team NKT],[Key Account Managers].[Key Account Managers].[KAM1],[Fee Earners].[Fee Earners].[BP3],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team NKT],[Key Account Managers].[Key Account Managers].[KAM1],[Fee Earners].[Fee Earners].[BP3],[Projects].[Projects].[Project003]),
+                                                 ([Organization Units].[Organization Units].[Team NKT],[Key Account Managers].[Key Account Managers].[KAM2],[Fee Earners].[Fee Earners].[All Fee Earners],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team NKT],[Key Account Managers].[Key Account Managers].[KAM2],[Fee Earners].[Fee Earners].[BP4],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team NKT],[Key Account Managers].[Key Account Managers].[KAM2],[Fee Earners].[Fee Earners].[BP4],[Projects].[Projects].[Project004]),
+                                                 ([Organization Units].[Organization Units].[Team NKT],[Key Account Managers].[Key Account Managers].[KAM2],[Fee Earners].[Fee Earners].[BP5],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team NKT],[Key Account Managers].[Key Account Managers].[KAM2],[Fee Earners].[Fee Earners].[BP5],[Projects].[Projects].[Project005]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[All Key Account Managers],[Fee Earners].[Fee Earners].[All Fee Earners],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM3],[Fee Earners].[Fee Earners].[All Fee Earners],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM3],[Fee Earners].[Fee Earners].[BP6],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM3],[Fee Earners].[Fee Earners].[BP6],[Projects].[Projects].[Project006]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM3],[Fee Earners].[Fee Earners].[BP7],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM3],[Fee Earners].[Fee Earners].[BP7],[Projects].[Projects].[Project007]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM3],[Fee Earners].[Fee Earners].[BP8],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM3],[Fee Earners].[Fee Earners].[BP8],[Projects].[Projects].[Project008]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM4],[Fee Earners].[Fee Earners].[All Fee Earners],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM4],[Fee Earners].[Fee Earners].[BP9],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM4],[Fee Earners].[Fee Earners].[BP9],[Projects].[Projects].[Project009]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM4],[Fee Earners].[Fee Earners].[BP10],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM4],[Fee Earners].[Fee Earners].[BP10],[Projects].[Projects].[Project010]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM5],[Fee Earners].[Fee Earners].[All Fee Earners],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM5],[Fee Earners].[Fee Earners].[BP11],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM5],[Fee Earners].[Fee Earners].[BP11],[Projects].[Projects].[Project011]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM5],[Fee Earners].[Fee Earners].[BP12],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM5],[Fee Earners].[Fee Earners].[BP12],[Projects].[Projects].[Project012]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM5],[Fee Earners].[Fee Earners].[BP13],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM5],[Fee Earners].[Fee Earners].[BP13],[Projects].[Projects].[Project013]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM5],[Fee Earners].[Fee Earners].[BP14],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM5],[Fee Earners].[Fee Earners].[BP14],[Projects].[Projects].[Project014]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM5],[Fee Earners].[Fee Earners].[BP15],[Projects].[Projects].[All Projects]),
+                                                 ([Organization Units].[Organization Units].[Team MRG],[Key Account Managers].[Key Account Managers].[KAM5],[Fee Earners].[Fee Earners].[BP15],[Projects].[Projects].[Project015])
+                                               }
+                                              PROPERTIES [Key Account Managers].[Key Account Managers].[Caption] ,[Fee Earners].[Fee Earners].[Caption] 
+                                              ON ROWS 
+                                            FROM [Sales by Channel] 
+                                            WHERE 
+                                              (
+                                               [Versions].[Versions].[Version1],
+                                               [Currencies].[Currencies].[EUR],
+                                               [Lineitems Sales by Channel].[Lineitems Sales by Channel].[Net Fees],
+                                               [Measures Sales by Channel].[Measures Sales by Channel].[Value]
+                                              )
+                                    "}`;
+
+            },
+            parsingControl: {
+                type: 'script',
+                script: (data) => {
+                    L(data);
+                    return [[]];
+                }
+            }
+        }
+
     },
     haysForecastingHierarchy: {
         getToggleOne: (gridTableId, actualRow, actualColumn) => {

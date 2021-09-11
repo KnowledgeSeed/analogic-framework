@@ -49,7 +49,7 @@
 
 /* haysmain-red menu icon */
 .ks-button-haysmain_red.ks-button {
-    height: 145x;
+    height: 145px;
     background-color: #FF3B30;
     border-radius: 30px;
 }
@@ -836,4 +836,19 @@
 
 .ks-button-popupbutton .ks-button-content {
         justify-content: normal !important;
+}
+
+/* kam_forecasting_header */
+.ks-button-kam_forecasting_header .ks-button-label {
+    color: white;
+    font-size: 12px;
+    padding-left: 10px;
+}
+
+.ks-button-kam_forecasting_header .ks-button-inner{
+    border-radius: 6px;
+}
+
+.ks-button-kam_forecasting_header .ks-button-content{
+    justify-content: flex-start !important;
 }
