@@ -63,7 +63,22 @@
     border-radius: 12px;
     display: flex;
     padding: 10px;
+    padding-right: 40px;
+    position: relative;
     width: 100%;
+}
+
+.ks-pivot-table-add-tag {
+    color: #007BFF;
+    cursor: pointer;
+    font-size: 22px;
+    height: 22px;
+    line-height: 22px;
+    margin-top: -10px;
+    position: absolute;
+    right: 15px;
+    text-decoration: none;
+    top: 50%;
 }
 
 .ks-pivot-table-tag {
@@ -119,63 +134,14 @@
     font-size: 10px;
 }
 
-.ks-pivot-table-tag-dropdown {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0px 6px 24px rgba(0, 0, 0, 0.16);
-    left: -15px;
-    padding: 10px;
+.ks-pivot-table-tag .icon-x-circle {
+    color: #A9A9A9;
+    font-size: 16px;
+    height: 16px;
+    margin-top: -8px;
     position: absolute;
-    top: 90%;
-    width: max-content;
-    z-index: 9;
-}
-
-.ks-pivot-table-tag-dropdown-search {
-    background-color: #fff;
-    border: 1px solid rgba(169, 169, 169, 1);
-    border-radius: 8px;
-    height: 40px;
-    margin-bottom: 20px;
-}
-
-.ks-pivot-table-tag-dropdown-search input {
-    background-color: transparent;
-    border: 0;
-    display: block;
-    font-size: 16px;
-    height: 100%;
-    padding: 0 20px 0 40px;
-    width: 100%;
-}
-
-.ks-pivot-table-tag-dropdown-row {
-    border-radius: 8px;
-    color: #000;
-    font-size: 16px;
-    line-height: 40px;
-    height: 40px;
-}
-
-.ks-pivot-table-tag-dropdown-row:hover {
-    background-color: #e5f2ff;
-}
-
-.ks-pivot-table-tag-dropdown-row.all-row {
-    border-bottom: 1px solid #E1E1E1;
-    border-radius: 0;
-}
-
-.ks-pivot-table-tag-dropdown-row.all-row:hover {
-    background-color: transparent;
-}
-
-.ks-pivot-table-tag-dropdown-row-icon {
-    float: left;
-    font-size: 14px;
-    line-height: 40px;
-    text-align: center;
-    width: 40px;
+    right: 13px;
+    top: 50%;
 }
 
 .ks-pivot-table-tag-switch {
@@ -402,4 +368,250 @@
     font-weight: 500;
     padding-right: 4px;
     text-align: right;
+}
+
+.ks-pivot-tag-add-holder {
+    align-items: stretch;
+    align-content: stretch;
+    display: flex;
+}
+
+.ks-pivot-tag-add-col {
+    align-self: stretch;
+    border-right: 10px solid #f2f2f2;
+    width: 20%;
+}
+
+.ks-pivot-tag-add-item {
+    border-bottom: 1px solid #e1e1e1;
+    color: #000;
+    cursor: pointer;
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+    padding: 11px 30px 11px 20px;
+    position: relative;
+}
+
+.checkable-col .ks-pivot-tag-add-item {
+    padding-left: 40px;
+}
+
+.ks-pivot-tag-add-item.title-item {
+    color: #A9A9A9;
+}
+
+.ks-pivot-tag-add-item.title-item .icon-ellipsis {
+    color: #1d7bff;
+    cursor: pointer;
+    font-size: 4px;
+    line-height: 40px;
+    margin-top: -20px;
+    position: absolute;
+    right: 0px;
+    text-align: center;
+    top: 50%;
+    width: 40px;
+}
+
+.ks-pivot-tag-add-item.title-item .icon-ellipsis .ks-pivot-table-presets-dropdown {
+    left: 0;
+}
+
+.ks-pivot-tag-add-item.ks-on {
+    background-color: #e3f1ff;
+}
+
+.ks-pivot-tag-add-item .icon-chevron-right {
+    color: #007BFF;
+    font-size: 13px;
+    line-height: 20px;
+    margin-top: -10px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+}
+
+.ks-pivot-tag-add-item .icon-check-off,
+.ks-pivot-tag-add-item .icon-check-on,
+.ks-pivot-tag-add-item .icon-check-intermediate {
+    color: #1d7bff;
+    font-size: 16px;
+    left: 0px;
+    height: 40px;
+    line-height: 39px;
+    margin-top: -20px;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    width: 40px;
+}
+
+.ks-pivot-tag-add-controls {
+    align-items: flex-end;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+    padding: 0 10px;
+}
+
+.ks-pivot-tag-color-dropdown-holder {
+    width: 260px;
+}
+
+.ks-pivot-tag-color-dropdown-holder label {
+    color: #000000;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 15px;
+    margin-bottom: 5px;
+}
+
+.ks-pivot-tag-color-dropdown {
+    border: 1px solid #A9A9A9;
+    border-radius: 8px;
+    color: #000000;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: normal;
+    height: 40px;
+    line-height: 38px;
+    padding: 0 40px;
+    position: relative;
+}
+
+.ks-pivot-tag-color-dropdown:after {
+    border-top: 5px solid #000;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    content: "";
+    margin-top: -2.5px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+}
+
+.ks-pivot-tag-color-dropdown .ks-pivot-tag-color-icon {
+    border-radius: 50%;
+    height: 16px;
+    left: 12px;
+    margin-top: -8px;
+    position: absolute;
+    top: 50%;
+    width: 16px;
+}
+
+.ks-pivot-tag-color-dropdown-chooser {
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0px 6px 24px #00000029;
+    display: flex;
+    flex-wrap: wrap;
+    left: -1px;
+    padding: 15px 1px 1px 15px;
+    position: absolute;
+    top: 38px;
+    z-index: 9;
+    width: 280px;
+}
+
+.ks-pivot-tag-color-dropdown-chooser-item {
+    border-radius: 8px;
+    color: #FFFFFF;
+    font-size: 12px;
+    height: 30px;
+    line-height: 32px;
+    margin: 0 14px 14px 0;
+    text-align: center;
+    width: 30px;
+}
+
+.ks-pivot-tag-button-holder {
+    display: flex;
+}
+
+.ks-pivot-btn {
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    height: 40px;
+    line-height: 40px;
+    margin-left: 10px;
+    text-align: center;
+    text-decoration: none;
+    width: 105px;
+}
+
+.ks-pivot-btn.btn-red {
+    background-color: #fbeaec;
+    color: #DC3545;
+}
+.ks-pivot-btn.btn-blue-light {
+    background-color: #e5f2ff;
+    color: #007BFF;
+}
+.ks-pivot-btn.btn-blue {
+    background-color: #007BFF;
+    color: #FFFFFF;
+}
+
+.ks-pivot-btn.disabled {
+    opacity: 0.5;
+}
+
+.ks-pivot-tag-add-popup {
+    z-index: 9999;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0px 6px 24px #00000029;
+    left: 50%;
+    padding: 0px 10px 20px;
+    position: fixed;
+    top: 50%;
+    width: 280px;
+    transform: translate(-50%, -50%);
+}
+
+.ks-pivot-tag-add-popup h3 {
+    border-bottom: 1px solid #e1e1e1;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.ks-pivot-tag-add-popup label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 15px;
+    margin-bottom: 5px;
+}
+
+.ks-pivot-tag-add-popup input {
+    border: 1px solid #A9A9A9;
+    border-radius: 8px;
+    color: #000000;
+    display: block;
+    font-size: 13px;
+    font-weight: normal;
+    height: 40px;
+    margin-bottom: 20px;
+    padding: 0 10px;
+    width: 100%;
+}
+
+.ks-pivot-tag-add-popup .error {
+    border: 2px solid red;
+}
+
+.ks-pivot-tag-add-popup-button-holder {
+    justify-content: center;
+    display: flex;
+}
+
+.ks-pivot-tag-add-popup-button-holder .ks-pivot-btn {
+    margin: 0 5px;
 }

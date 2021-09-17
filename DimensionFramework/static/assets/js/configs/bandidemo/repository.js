@@ -7,7 +7,8 @@ app.repository = {
         init:
         {
             url: db => `/middleware`,
-            type: 'POST',
+            method: 'POST',
+            dataType: 'json',
             middleware: true,
             body: db => ''
         }

@@ -1,4 +1,4 @@
-/* global app, El, Doc, Intl, WidgetValue*/
+/* global app, El, Doc, Intl, WidgetValue, WidgetState */
 
 'use strict';
 
@@ -233,7 +233,7 @@ const Utils = {
         return result;
     },
     getArrayWithValues(arrayLength, value) {
-        return Array.from({length: arrayLength}, () => value)
+        return Array.from({length: arrayLength}, () => value);
     },
     getOrdinalValuePairs(ordinalsArray, values) {
         if (!ordinalsArray || !values) {
@@ -325,7 +325,7 @@ const Utils = {
         return Utils.parseNumber(value.replace('%', '')) / 100;
     },
     filterUnique(arr) {
-        return arr.filter((v, i, a) => a.indexOf(v) === i)
+        return arr.filter((v, i, a) => a.indexOf(v) === i);
     },
     create_UUID() {
         let dt = new Date().getTime();
@@ -364,7 +364,7 @@ const Utils = {
         }
         return `{
                    "Parameters": [
-                       ${parameters.join(',')}                    
+                       ${parameters.join(',')}
                    ]
                 }`;
     },

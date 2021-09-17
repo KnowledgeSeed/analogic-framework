@@ -1,6 +1,6 @@
 import os
 import redis
-from flask import Flask, session
+from flask import Flask, session, request
 from flask_caching import Cache
 import DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory
 from DimensionFramework.AuthenticationProviders.Base import Base
@@ -80,10 +80,15 @@ def ping(instance):
     return getProvider(instance).ping()
 
 
-@app.route('/middleware', defaults={'instance': 'default'})
+@app.route('/middleware', defaults={'instance': 'default'}, methods=['GET', 'POST'])
 @app.route('/<path:instance>/middleware')
 def middleware(instance):
-    return PivotApi.call()
+    dimension_name = request.values.get('dimension_name')
+    hierarchy_name = request.values.get('hierarchy_name')
+    subset_name = request.values.get('subset_name')
+    element_names = request.values.getlist('element_names[]')
+    subset_name_to_remove = request.values.get('subset_name_to_remove')
+    return PivotApi.call(dimension_name, hierarchy_name, subset_name, element_names, subset_name_to_remove)
 
 def getProvider(instance):
     cache = getCache()
