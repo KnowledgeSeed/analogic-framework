@@ -105,7 +105,7 @@ QB.executeMDXs = (repositoryId, path) => {
     for (p of Repository[repositoryId][path]) {
         u = QB.getUrl(p);
         if (p.execute) {
-            deffered.push($.Deferred().resolve(p.execute(WidgetValue)));
+            deffered.push($.Deferred().resolve(p.execute(WidgetValue, repositoryId)));
             isQuery.push(false);
         } else {
             body = p.body(WidgetValue);
