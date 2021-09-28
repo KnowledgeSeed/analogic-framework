@@ -148,8 +148,9 @@ class Widget {
                 });
             }
         }
-
-       // Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
+        if(new o.type(o).amIOnAGridTable()){
+            Listeners.push({options: o, method: 'refreshGridCell', eventName: 'forcerefresh.' + o.id, handler: h});
+        }
 
         //rekurzív renderelés, adatbetöltéssel
 

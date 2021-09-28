@@ -139,7 +139,7 @@ QB.executeMDXs = (repositoryId, path) => {
                 } else if (t.type === 'list') {
                     d.push(QB.processResultAsList(t, r));
                 } else if (t.type === 'script') {
-                    return t.script(r);
+                    return t.script(r, repositoryId);
                 } else {
                     d.push(QB.processResultAsObject(t.query, r));
                 }
@@ -193,7 +193,7 @@ QB.executeMDX = (repositoryId, path, extraParams = {}) => {
                 return QB.processResultAsList(t, data);
             } else if (t.type === 'script') {
                 El.body.triggerHandler('processdata.' + repositoryId + '.finished');
-                return t.script(data);
+                return t.script(data, repositoryId);
             } else {
                 El.body.triggerHandler('processdata.' + repositoryId + '.finished');
                 return QB.processResultAsObject(t.query, data);
