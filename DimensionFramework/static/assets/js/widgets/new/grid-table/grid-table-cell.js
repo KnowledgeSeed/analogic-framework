@@ -12,10 +12,14 @@ class GridTableCellWidget extends Widget {
             cellVisible: this.getRealValue('cellVisible', data, true),
             skin: this.getRealValue('skin', data, 'standard'),
             cellSkin: this.getRealValue('cellSkin', data, false),
+            cellWidth: this.getRealValue('cellWidth', data, false),
             width: this.getRealValue('width', data, 30)
         };
-
-        let mainDivStyle = this.getGeneralStyles(data, {}, 'cell-');
+        let defaults = {};
+        if(v.cellWidth !== false){
+            defaults['width'] = v.cellWidth;
+        }
+        let mainDivStyle = this.getGeneralStyles(data, defaults, 'cell-');
 
         v.cellBackgroundColor && mainDivStyle.push(`background-color:${v.cellBackgroundColor};`);
 

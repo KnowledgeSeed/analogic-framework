@@ -49,14 +49,29 @@ class Render {
 
                     if (!refresh) {
                         for (i of Listeners) {
-                            El.body.on(i.eventName, {options: i.options, method: i.method, parameters: i.parameters}, i.handler);
+                            El.body.on(i.eventName, {
+                                options: i.options,
+                                method: i.method,
+                                parameters: i.parameters
+                            }, i.handler);
                         }
                         El.body.trigger('bodyReady');//backward compatibility
-                        if(!withState) {
+                        if (!withState) {
                             widget.initFinished();
                         }
                     } else {
-                        if(!withState) {
+                        for (i of Listeners.filter(e => e.method === 'refreshGridCell' && e.options.id.includes(holder.attr('id')))) {
+                            let event = i.eventName.split('.')[0];
+                            if ($._data(El.body[0], "events")[event].filter(e => e.data.method === 'refreshGridCell' &&
+                                e.data.options.id === i.options.id).length === 0) {
+                                El.body.on(i.eventName, {
+                                    options: i.options,
+                                    method: i.method,
+                                    parameters: i.parameters
+                                }, i.handler);
+                            }
+                        }
+                        if (!withState) {
                             El.body.trigger('rendered.' + widgetId);//backward compatibility
                             widget.refreshFinished();
                         }

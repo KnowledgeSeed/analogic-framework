@@ -37,7 +37,7 @@ class SettingManager:
         return self.getInstanceCacheKey(self.CONFIG)
 
     def getRepositoryCacheKey(self):
-        return self.getInstanceCacheKey(self.REPOSITORY)
+        return self.getMiddlewareConfig() + '_' + self.REPOSITORY
 
     def getTm1SessionIdCacheKey(self):
         return self.getInstanceCacheKey(self.TM1SessionId)
@@ -73,7 +73,8 @@ class SettingManager:
         return os.path.join(cnf['host'], cnf['subpath'], self.instance, route)
 
     def getRepository(self):
-        return self.getYamlSetting(self.getRepositoryCacheKey(), 'repository')
+        return self.getYamlSetting(self.getRepositoryCacheKey(), 'repository', False,
+                                   os.path.join('configs', self.getMiddlewareConfig()))
 
     def getMDX(self, key):
         repository = self.getRepository()
@@ -108,7 +109,8 @@ class SettingManager:
         return mdx[key]
 
     def getCustomObjectDescription(self, key):
-        classes = self.getJsonSetting(self.getClassesCacheKey(), 'custom_objects', False, 'global')
+        classes = self.getJsonSetting(self.getClassesCacheKey(), 'custom_objects', False,
+                                      os.path.join('configs', self.getMiddlewareConfig()))
         return classes[key]
 
     def setTM1SessionId(self, tm1_session_id, suffix=''):
@@ -142,6 +144,10 @@ class SettingManager:
     def getAppCamNamespace(self):
         cnf = self.getConfig()
         return cnf['camNamespace']
+
+    def getMiddlewareConfig(self):
+        cnf = self.getConfig()
+        return cnf['applicationConfigFolder']
 
     def getPoolCamNamespace(self):
         password = self.getPassword()

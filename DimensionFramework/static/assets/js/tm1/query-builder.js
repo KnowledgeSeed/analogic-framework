@@ -109,7 +109,7 @@ QB.executeMDXs = (repositoryId, path) => {
     for (p of Repository[repositoryId][path]) {
         u = QB.getUrl(p);
         if (p.execute) {
-            deffered.push($.Deferred().resolve(p.execute(WidgetValue)));
+            deffered.push($.Deferred().resolve(p.execute(WidgetValue, repositoryId)));
             isQuery.push(false);
         } else {
             body = p.body(WidgetValue);
@@ -142,6 +142,8 @@ QB.executeMDXs = (repositoryId, path) => {
                     d.push(QB.processResult(t, r));
                 } else if (t.type === 'list') {
                     d.push(QB.processResultAsList(t, r));
+                } else if (t.type === 'script') {
+                    return t.script(r, repositoryId);
                 } else {
                     d.push(QB.processResultAsObject(t.query, r));
                 }
@@ -193,6 +195,9 @@ QB.executeMDX = (repositoryId, path, extraParams = {}) => {
             } else if (t.type === 'list') {
                 El.body.triggerHandler('processdata.' + repositoryId + '.finished');
                 return QB.processResultAsList(t, data);
+            } else if (t.type === 'script') {
+                El.body.triggerHandler('processdata.' + repositoryId + '.finished');
+                return t.script(data, repositoryId);
             } else {
                 El.body.triggerHandler('processdata.' + repositoryId + '.finished');
                 return QB.processResultAsObject(t.query, data);
