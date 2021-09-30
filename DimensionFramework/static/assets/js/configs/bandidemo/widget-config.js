@@ -10,7 +10,8 @@ app.widgetConfig = {
         widgets: [
             {
                 id: 'bandiPivot',
-                type: PivotTableWidget
+                type: PivotTableWidget,
+                cellLimit: 1000000
             }
             /*,
             {

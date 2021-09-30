@@ -88,7 +88,7 @@
     height: 40px;
     margin-right: 10px;
     min-width: 120px;
-    padding: 7px 20px 7px 32px;;
+    padding: 7px 40px 7px 32px;
     position: relative;
 }
 
@@ -152,6 +152,7 @@
     line-height: 40px;
     text-align: center;
     width: 40px;
+    cursor: pointer;
 }
 
 .ks-pivot-table-tag-switch span {
@@ -402,7 +403,7 @@
     color: #A9A9A9;
 }
 
-.ks-pivot-tag-add-item.title-item .icon-ellipsis {
+.ks-pivot-tag-add-item.title-item .icon-ellipsis, .ks-pivot-tag-add-item.title-item .icon-envelope {
     color: #1d7bff;
     cursor: pointer;
     font-size: 4px;
@@ -415,7 +416,12 @@
     width: 40px;
 }
 
-.ks-pivot-tag-add-item.title-item .icon-ellipsis .ks-pivot-table-presets-dropdown {
+.ks-pivot-tag-add-item.title-item .icon-envelope {
+    right: 30px;
+    font-size: 15px;
+}
+
+.ks-pivot-tag-add-item.title-item .icon-ellipsis .ks-pivot-table-presets-dropdown, .ks-pivot-tag-add-item.title-item .icon-envelope .ks-pivot-table-presets-dropdown {
     left: 0;
 }
 
