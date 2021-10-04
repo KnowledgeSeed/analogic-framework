@@ -4,12 +4,12 @@
 class TornadoChartWidget extends Widget {
 
     getHtml(widgets, data) {
-        const o = this.options, d = data.data, demo = [{leftValue: -19452.07, leftColor: '#ab47bc', rightValue: 30453.73, rightColor: '#e040fb', legendLabel: 'Legend 1'}, {leftValue: -2239.34, leftColor: '#1e66b5', rightValue: 5385.57, rightColor: '#007aff', legendLabel: 'Legend 2'}, {leftValue: -1373.56, leftColor: '#4e6f0e', rightValue: 5469.78, rightColor: '#6ba100', legendLabel: 'Legend 3'}, {leftValue: 339.74, leftColor: '#c7790c', rightValue: 5048.17, rightColor: '#ff9500', legendLabel: 'Legend 4'}, {leftValue: 2553.18, leftColor: '#2c90bd', rightValue: 4841.15, rightColor: '#40c4ff', legendLabel: 'Legend 5'}];
+        const o = this.options, d = data, demo = [{leftValue: -19452.07, leftColor: '#ab47bc', rightValue: 30453.73, rightColor: '#e040fb', legendLabel: 'Legend 1'}, {leftValue: -2239.34, leftColor: '#1e66b5', rightValue: 5385.57, rightColor: '#007aff', legendLabel: 'Legend 2'}, {leftValue: -1373.56, leftColor: '#4e6f0e', rightValue: 5469.78, rightColor: '#6ba100', legendLabel: 'Legend 3'}, {leftValue: 339.74, leftColor: '#c7790c', rightValue: 5048.17, rightColor: '#ff9500', legendLabel: 'Legend 4'}, {leftValue: 2553.18, leftColor: '#2c90bd', rightValue: 4841.15, rightColor: '#40c4ff', legendLabel: 'Legend 5'}];
 
         const h = [], xMin = this.getRealValue('xMin', d, -30000), xMax = this.getRealValue('xMax', d, 50000), range = (xMax - xMin);
 
         const v = {
-            dataset: $.extend(true, [], o.dataset || [], data.dataset || demo),
+            dataset: $.extend(true, [], data.dataset || [], o.dataset || demo),
             xAxisLabel: this.getRealValue('xAxisLabel', d),
             baseValue: this.getRealValue('baseValue', d, 3500),
             legendVisible: this.getRealValue('legendVisible', d, true),
@@ -20,7 +20,8 @@ class TornadoChartWidget extends Widget {
 
         this.value = v;
 
-        const step = range / (this.getRealValue('gridLinesNum', d, 9) - 1);
+        let step = range / (this.getRealValue('gridLinesNum', d, 9) - 1);
+        step = step === 0 ? 1 : step;
 
         for (let i = xMin; i <= xMax + 1; i += step) {
             h.push('<div class="ks-tornado-x-line"><div class="ks-tornado-x-line-label">', Utils.precisionRound(i, 1), '<\/div><\/div>');
@@ -28,7 +29,7 @@ class TornadoChartWidget extends Widget {
 
         return `
 <div style="${this.getGeneralStyles(d).join('')}">
-    <div class="ks-tornado">
+    <div class="ks-tornado ks-tornado-${v.skin}">
         <div class="ks-tornado-inner">
             <div class="ks-tornado-x-holder">
                 <div class="ks-tornado-content-holder">
@@ -107,24 +108,6 @@ class TornadoChartWidget extends Widget {
     }
 
     processData(data) {
-        if (data) {
-            let d = {data: {}}, i, j;
-
-            for (j = 0; j < data.length; ++j) {
-                if (j < 1) {
-                    d.data = data[j];
-                } else {
-                    d.dataset = [];
-
-                    for (i = 0; i < data[j].length; ++i) {
-                        d.dataset.push(data[j][i][0]);
-                    }
-                }
-            }
-
-            return d;
-        }
-
         return data;
     }
 }
