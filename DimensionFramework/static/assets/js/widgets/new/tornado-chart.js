@@ -28,7 +28,7 @@ class TornadoChartWidget extends Widget {
         }
 
         return `
-<div style="${this.getGeneralStyles(d).join('')}">
+<div class="ks-tornado-outer ks-tornado-outer-${v.skin}" style="${this.getGeneralStyles(d).join('')}">
     <div class="ks-tornado ks-tornado-${v.skin}">
         <div class="ks-tornado-inner">
             <div class="ks-tornado-x-holder">
@@ -78,9 +78,9 @@ class TornadoChartWidget extends Widget {
 
         for (d of v.dataset) {
             c = d.leftColor;
-            b = 'background-color: ' + c + ';';
+            b = 'color: ' + c + ';';
 
-            h.push('<div class="ks-legend-item"><div class="ks-legend-item-inner"><div class="ks-legend-icon" style="border-color: ', c, ';', b, '"><\/div><div class="ks-legend-label" style="background-color: ', c, ';">', d.legendLabel, '<\/div><\/div><\/div>');
+            h.push('<div class="ks-legend-item"><div class="ks-legend-item-inner"><div class="ks-legend-icon" style="color: ', c, ';', b, '"><\/div><div class="ks-legend-label" style="color: ', c, ';">', d.legendLabel, '<\/div><\/div><\/div>');
         }
 
         h.push('<\/div><\/div>');
@@ -89,7 +89,7 @@ class TornadoChartWidget extends Widget {
     }
 
     initEventHandlers(section) {
-        const v = this.value, mainDiv = section.children(), divs = mainDiv.children(), legendDiv = divs.eq(1), p = mainDiv.width() / v.range;
+        const v = this.value, mainDiv = section.children(), divs = mainDiv.children(), legendDiv = divs.eq(1), p = mainDiv.children().width() / v.range;
         const baseLines = mainDiv.find('.ks-tornado-x-baseline,.ks-tornado-bar-baseline'), h = [], base = v.baseValue;
 
         divs.eq(0).height(mainDiv.height() - legendDiv.outerHeight(true));

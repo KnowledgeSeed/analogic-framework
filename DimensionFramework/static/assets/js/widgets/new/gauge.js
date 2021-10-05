@@ -14,6 +14,7 @@ class GaugeWidget extends Widget {
         const v = {
             canvasId: this.options.id + 'Canvas',
             values: this.getRealValue('values', d),
+            valueLabels: this.getRealValue('valueLabels', d, []),
             labels: this.getRealValue('labels', d),
             minRange: this.getRealValue('minRange', d),
             maxRange: this.getRealValue('maxRange', d),
@@ -30,7 +31,7 @@ class GaugeWidget extends Widget {
 
         for (let i = 0; i < v.labels.length; ++i) {
             labelsHtml.push('<div class="ks-gauge-label">', v.labels[i], '<\/div>');
-            valuesHtml.push('<div class="ks-gauge-label ks-gauge-value" style="color: ', v.colors[i], '">', v.values[i].toFixed(1), '<\/div>');
+            valuesHtml.push('<div class="ks-gauge-label ks-gauge-value" style="color: ', v.colors[i], '">', v.valueLabels.length > i ? v.valueLabels[i] : v.values[i].toFixed(1), '<\/div>');
         }
 
         GaugeWidget.chartDataByIds = GaugeWidget.chartDataByIds || {};

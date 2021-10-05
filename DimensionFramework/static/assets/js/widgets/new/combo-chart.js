@@ -166,20 +166,22 @@ class ComboChartWidget extends Widget {
                 ds = datasets[i];
                 e = d[j][i];
 
-                if (v.plot && ds.type === 'line') {
-                    ds.data.push(e);
-                    ds.xAxisID = 'lineAxisX';
-                } else {
-                    s = e.value === '' ? '0' : Utils.parseNumber(e.value);
-                    ds.data.push(s);
-                }
-
-                if (v.customLabelsForYAxes) {
-                    if (!ds.customLabels) {
-                        ds.customLabels = [];
+                if(e) {
+                    if (v.plot && ds.type === 'line') {
+                        ds.data.push(e);
+                        ds.xAxisID = 'lineAxisX';
+                    } else {
+                        s = e.value === '' ? '0' : Utils.parseNumber(e.value);
+                        ds.data.push(s);
                     }
 
-                    ds.customLabels.push(e.label);
+                    if (v.customLabelsForYAxes) {
+                        if (!ds.customLabels) {
+                            ds.customLabels = [];
+                        }
+
+                        ds.customLabels.push(e.label);
+                    }
                 }
             }
         }
