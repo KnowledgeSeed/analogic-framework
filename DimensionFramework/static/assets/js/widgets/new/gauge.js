@@ -170,7 +170,7 @@ Chart.controllers.gauge = Chart.controllers.doughnut.extend({
 
         let i, m;
 
-        for (i = min; i <= max; i += step) {
+        for (i = min; i <= max + min; i += step) {
             labels.push(Math.round(i));
         }
 
