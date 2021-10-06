@@ -89,7 +89,8 @@ class GaugeWidget extends Widget {
 
             datasets.push({
                 data: [v - min, max - v],
-                backgroundColor: [colors[i], '#F3F4F6']
+                backgroundColor: [colors[i], '#F3F4F6'],
+                originalValue: values[i]
             });
         }
 
@@ -131,7 +132,7 @@ $.extend(Chart.defaults.gauge, {
     cutoutPercentage: 65,
     circumference: 3.19,
     rotation: 9.41,
-    events: [],
+  //  events: [],
     plugins: {
         datalabels: {
             display: false
@@ -154,8 +155,13 @@ $.extend(Chart.defaults.gauge, {
         display: false
     },
     tooltips: {
-        enabled: false
-    }
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    let label = data.datasets[tooltipItem.datasetIndex].originalValue;
+                    return label;
+                }
+            }
+        }
 });
 
 Chart.controllers.gauge = Chart.controllers.doughnut.extend({
