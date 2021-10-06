@@ -442,13 +442,22 @@ class PivotTableWidget extends Widget {
             return;
         }
 
+        const subset = (isTaintedHolderSlicer ? cols.eq(2).children('.ks-on') : cols.eq(2).children().has('.icon-check-on')).data('name');
+
+        if (!subset) {
+            app.popup.show('SUBSET ERROR!');
+            L(cols);
+            app.cols = cols;
+
+            return;
+        }
+
         if (isTaintedHolderSlicer) {
             this.holders.eq(0).children(cardSelector).remove();
         } else {
             this.holders.slice(1).children(cardSelector).remove();
         }
 
-        const subset = (isTaintedHolderSlicer ? cols.eq(2).children('.ks-on') : cols.eq(2).children().has('.icon-check-on')).data('name');
         const hex = this.colorDropdown.data('hex');
         const h = ['<div class="ks-pivot-table-tag" data-alias_attr_name="', aliasAttrName, '" data-dimension="', dimension, '" data-hierarchy="', hierarchy, '" data-subset="', subset, '"', 'data-element="', element, '"', ' data-hex="', hex, '"><div class="ks-pivot-table-tag-color" style="background-color: #', hex, ';"></div><h3>', dimension, '</h3><h4>', (isTaintedHolderSlicer ? element : subset), '</h4><span class="icon-x-circle"></span></div>'];
 
@@ -819,7 +828,7 @@ class PivotTableWidget extends Widget {
 
         const postParams = Repository[this.options.id].init;
 
-        postParams.data.selected_subsets = JSON.stringify(d);
+        postParams.data.selected_cards = JSON.stringify(d);
 
         $.when(MiddleWare.call(postParams)).then(d => this.renderPivotTable(d));
     }

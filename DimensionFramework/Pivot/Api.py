@@ -4,7 +4,7 @@ from TM1py.Objects import Subset
 import json
 
 
-def call(dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_subsets=None):
+def call(dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None):
     address = "https://kseed-dc1.knowledgeseed.local:5125/haysapi"
     namespace = "knowledgeseed"
     user = "tm1py"
@@ -25,14 +25,13 @@ def call(dimension_name=None, hierarchy_name=None, subset_name=None, element_nam
 
     data = {}
 
-    if selected_subsets:
-        d = json.loads(selected_subsets)
-        mdx = create_mdx(cube_name, d)
+    if selected_cards:
+        selected_cards_data = json.loads(selected_cards)
+        mdx = create_mdx(cube_name, selected_cards_data)
         cell_count = tm1.cells.execute_mdx_cellcount(mdx)
         data = {}
         if cell_count < 2000000:
-            #cell_properties=['Value', 'Ordinal']
-            data = get_pivot_data(tm1.cells.execute_mdx_raw(mdx, elem_properties=['Type']))
+            data = get_pivot_data(tm1, mdx, selected_cards_data)
         return jsonify({'mdx': mdx, 'cell_count': cell_count, 'data': data})
     elif element_names:
         new_subset = Subset(subset_name, dimension_name, hierarchy_name, subset_name, None, element_names)
@@ -89,6 +88,23 @@ def get_alias_attribute_names(hierarchy):
 
 
 def create_mdx(cube_name, selected_subsets):
+    return """SELECT 
+{EXCEPT({[Periods].[Fiscal Year].[202101],[Periods].[Fiscal Year].[202102],[Periods].[Fiscal Year].[202103],[Periods].[Fiscal Year].[202104],[Periods].[Fiscal Year].[202105],[Periods].[Fiscal Year].[202106],[Periods].[Fiscal Year].[2021],[Periods].[Fiscal Year].[202107],[Periods].[Fiscal Year].[202108],[Periods].[Fiscal Year].[202109],[Periods].[Fiscal Year].[202110],[Periods].[Fiscal Year].[202111],[Periods].[Fiscal Year].[202112],[Periods].[Fiscal Year].[202201],[Periods].[Fiscal Year].[202202],[Periods].[Fiscal Year].[202203],[Periods].[Fiscal Year].[202204],[Periods].[Fiscal Year].[202205],[Periods].[Fiscal Year].[202206],[Periods].[Fiscal Year].[2023],[Periods].[Fiscal Year].[2022]},{[Periods].[Fiscal Year].[2023]})} 
+PROPERTIES [Periods].[Fiscal Year].[Caption]  ON COLUMNS , 
+{[Projects].[Projects].[Project_T00000001],[Projects].[Projects].[Project_T00000002]}
+* {[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Total Net Fees],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Net Fee 1],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Bestand Net Fee 1],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Veränderung Net Fee 1],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Veränderung Net Fee 1 override],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Net Fee 2],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Bestand Net Fee 2],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Veränderung Net Fee 2],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Net Fee 3],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Bestand Net Fee 3],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Veränderung Net Fee 3]} 
+ON ROWS 
+FROM [Sales by Channel] 
+WHERE 
+(
+[Versions].[Versions].[Forecast],
+[Currencies].[Currencies].[EUR],
+[Organization Units].[Organization Units].[Org_unit_general],
+[Key Account Managers].[Key Account Managers].[KAM00000019],
+[Business Partners].[Business Partners].[TS00000001],
+[Measures Sales by Channel].[Measures Sales by Channel].[Value]
+)"""
+
     mdx = 'SELECT '
     props = ''
     i = 0
@@ -128,44 +144,69 @@ def create_mdx(cube_name, selected_subsets):
     return mdx
 
 
-def get_pivot_data(raw_data):
-    cols = []
-    tuples = raw_data['Axes'][0]['Tuples']
-    last_names = [0] * len(tuples[0]['Members'])
+def get_pivot_data(tm1, mdx, selected_cards_data):
+    alias_attribute_names = {}
+    alias_attribute_names_by_axis_and_member_ids = [[], []]
 
-    for t in tuples:
-        col = []
-        names = []
-        i = 0
-        for m in t['Members']:
-            name = m['Name']
-            if last_names[i] != name:
-                col.append([name, 1 if 'Consolidated' == m['Element']['Type'] else 0])
-            else:
-                col.append(0)
-            names.append(name)
-            i += 1
-        last_names = names
-        cols.append(col)
+    for type in selected_cards_data:
+        if 'slices' == type:
+            continue
 
-    rows = []
-    tuples = raw_data['Axes'][1]['Tuples']
-    last_names = [0] * len(tuples[0]['Members'])
-    for t in tuples:
-        row = []
-        names = []
-        i = 0
-        for m in t['Members']:
-            name = m['Name']
-            if last_names[i] != name:
-                row.append([name, 1 if 'Consolidated' == m['Element']['Type'] else 0])
-            else:
-                row.append(0)
-            names.append(name)
-            i += 1
-        last_names = names
-        rows.append(row)
+        i = 0 if 'cols' == type else 1
 
-    cells = list(map(lambda c: c['Value'], raw_data['Cells']))
+        for d in selected_cards_data[type]:
+            alias_attr_name = d['alias_attr_name']
+            if alias_attr_name:
+                alias_attribute_names_by_axis_and_member_ids[i].append(alias_attr_name)
+                alias_attribute_names[alias_attr_name.replace(' ', '')] = 1
+
+    alias_attribute_names = "Attributes/" + ",Attributes/".join(alias_attribute_names.keys())
+
+    cellset_id = tm1.cells.create_cellset(mdx)
+
+    url = f"""/api/v1/Cellsets('{cellset_id}')?
+$expand=
+Axes(
+  $expand=Tuples(
+    $expand=Members(
+      $select=Name,{alias_attribute_names};
+      $expand=Element($select=Type;$expand=Components($select=Name))
+    )
+  )
+), 
+Cells(
+    $select=FormattedValue
+)""".replace('\n', '')
+
+    raw_data = tm1._tm1_rest.GET(url).json()
+    cols = get_pivot_header_data(raw_data['Axes'][0]['Tuples'], alias_attribute_names_by_axis_and_member_ids[0])
+    rows = get_pivot_header_data(raw_data['Axes'][1]['Tuples'], alias_attribute_names_by_axis_and_member_ids[1])
+    cells = list(map(lambda c: c['FormattedValue'], raw_data['Cells']))
 
     return {'rows': rows, 'cols': cols, 'cells': cells}
+
+
+def get_pivot_header_data(tuples, alias_attribute_names_by_member_ids):
+    data = []
+    last_names = [0] * len(tuples[0]['Members'])
+
+    for t in tuples:
+        d = []
+        names = []
+        i = 0
+        for m in t['Members']:
+            name = m['Name']
+            alias = m['Attributes'][alias_attribute_names_by_member_ids[i]]
+            if last_names[i] != name:
+                if 'Consolidated' == m['Element']['Type']:
+                    d.append([alias, 1, name, list(map(lambda c: c['Name'], m['Element']['Components']))])
+                else:
+                    d.append([alias, 0])
+            else:
+                d.append(0)
+            names.append(name)
+            i += 1
+        last_names = names
+        data.append(d)
+
+    return data
