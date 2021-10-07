@@ -139,7 +139,7 @@ QB.executeMDXs = (repositoryId, path) => {
                 } else if (t.type === 'list') {
                     d.push(QB.processResultAsList(t, r));
                 } else if (t.type === 'script') {
-                    return t.script(r, repositoryId);
+                    d.push(t.script(r, repositoryId));
                 } else {
                     d.push(QB.processResultAsObject(t.query, r));
                 }
