@@ -20,7 +20,9 @@ class GaugeWidget extends Widget {
             maxRange: this.getRealValue('maxRange', d),
             colors: this.getRealValue('colors', d),
             title: this.getRealValue('title', d, ''),
-            fontFamily: this.getRealValue('fontFamily', d, 'imago')
+            fontFamily: this.getRealValue('fontFamily', d, 'imago'),
+            skin: this.getRealValue('skin', d, 'standard')
+
         };
 
         if (v.maxRange === 0) {
@@ -38,7 +40,7 @@ class GaugeWidget extends Widget {
         GaugeWidget.chartDataByIds[v.canvasId] = {minRange: v.minRange, maxRange: v.maxRange, fontFamily: v.fontFamily};
 
         return `
-<div class="ks-gauge" style="${this.getGeneralStyles(d).join('')}">
+<div class="ks-gauge ks-gauge-${v.skin}" style="${this.getGeneralStyles(d).join('')}">
     <div class="ks-gauge-inner">
         <div class="ks-gauge-title">
             <div class="ks-gauge-title-content">${v.title}</div>
