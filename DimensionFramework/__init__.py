@@ -89,7 +89,8 @@ def middleware(instance):
     element_names = request.values.getlist('element_names[]')
     subset_name_to_remove = request.values.get('subset_name_to_remove')
     selected_cards = request.values.get('selected_cards')
-    return PivotApi.call(dimension_name, hierarchy_name, subset_name, element_names, subset_name_to_remove, selected_cards)
+    expand_element = request.values.get('expand_element')
+    return PivotApi.call(dimension_name, hierarchy_name, subset_name, element_names, subset_name_to_remove, selected_cards, expand_element)
 
 def getProvider(instance):
     cache = getCache()

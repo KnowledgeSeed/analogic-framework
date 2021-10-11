@@ -4,7 +4,7 @@ from TM1py.Objects import Subset
 import json
 
 
-def call(dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None):
+def call(dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, expand_element=None):
     address = "https://kseed-dc1.knowledgeseed.local:5125/haysapi"
     namespace = "knowledgeseed"
     user = "tm1py"
@@ -27,7 +27,7 @@ def call(dimension_name=None, hierarchy_name=None, subset_name=None, element_nam
 
     if selected_cards:
         selected_cards_data = json.loads(selected_cards)
-        mdx = create_mdx(cube_name, selected_cards_data)
+        mdx = create_mdx(cube_name, selected_cards_data, expand_element)
         cell_count = tm1.cells.execute_mdx_cellcount(mdx)
         data = {}
         if cell_count < 2000000:
@@ -87,56 +87,43 @@ def get_alias_attribute_names(hierarchy):
     return d
 
 
-def create_mdx(cube_name, selected_subsets):
-    return """SELECT 
-{EXCEPT({[Periods].[Fiscal Year].[202101],[Periods].[Fiscal Year].[202102],[Periods].[Fiscal Year].[202103],[Periods].[Fiscal Year].[202104],[Periods].[Fiscal Year].[202105],[Periods].[Fiscal Year].[202106],[Periods].[Fiscal Year].[2021],[Periods].[Fiscal Year].[202107],[Periods].[Fiscal Year].[202108],[Periods].[Fiscal Year].[202109],[Periods].[Fiscal Year].[202110],[Periods].[Fiscal Year].[202111],[Periods].[Fiscal Year].[202112],[Periods].[Fiscal Year].[202201],[Periods].[Fiscal Year].[202202],[Periods].[Fiscal Year].[202203],[Periods].[Fiscal Year].[202204],[Periods].[Fiscal Year].[202205],[Periods].[Fiscal Year].[202206],[Periods].[Fiscal Year].[2023],[Periods].[Fiscal Year].[2022]},{[Periods].[Fiscal Year].[2023]})} 
-PROPERTIES [Periods].[Fiscal Year].[Caption]  ON COLUMNS , 
-{[Projects].[Projects].[Project_T00000001],[Projects].[Projects].[Project_T00000002]}
-* {[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Total Net Fees],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Net Fee 1],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Bestand Net Fee 1],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Veränderung Net Fee 1],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Veränderung Net Fee 1 override],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Net Fee 2],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Bestand Net Fee 2],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Veränderung Net Fee 2],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Net Fee 3],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Bestand Net Fee 3],[Lineitems Sales by Channel].[Lineitems Sales by Channel].[Temp Veränderung Net Fee 3]} 
-ON ROWS 
-FROM [Sales by Channel] 
-WHERE 
-(
-[Versions].[Versions].[Forecast],
-[Currencies].[Currencies].[EUR],
-[Organization Units].[Organization Units].[Org_unit_general],
-[Key Account Managers].[Key Account Managers].[KAM00000019],
-[Business Partners].[Business Partners].[TS00000001],
-[Measures Sales by Channel].[Measures Sales by Channel].[Value]
-)"""
-
+def create_mdx(cube_name, selected_cards_data, expand_element=None):
     mdx = 'SELECT '
     props = ''
     i = 0
 
-    for d in selected_subsets['cols']:
+    for d in selected_cards_data['cols']:
         s = '[' + d['dimension'] + '].[' + d['hierarchy'] + '].['
         mdx += (' * ' if i else '') + '{StrToSet("{' + s + d['subset'] + ']}")}'
-        props += (', ' if i else '') + s + d['alias_attr_name'] + ']'
+        #props += (', ' if i else '') + s + d['alias_attr_name'] + ']'
         i += 1
 
-    mdx += ' PROPERTIES ' + props + ' ON COLUMNS'
-    props = ''
-    i = 0
+    mdx += ((' PROPERTIES ' + props) if props else ' ') + ' ON COLUMNS'
 
     #if selected_subsets['rows']:
     #    mdx += ', NON EMPTY '
 
-    for d in selected_subsets['rows']:
-        s = '[' + d['dimension'] + '].[' + d['hierarchy'] + '].['
-        mdx += (' * ' if i else ', ') + '{StrToSet("{' + s + d['subset'] + ']}")}'
-        props += (', ' if i else '') + s + d['alias_attr_name'] + ']'
-        i += 1
-
-    if props:
-        mdx += ' PROPERTIES ' + props + ' ON ROWS'
+    if expand_element:
+        d = json.loads(expand_element)
+        s = d['dimension'] + '].[' + d['hierarchy'] + '].[' + d['member']
+        mdx += ', {DRILLDOWNMEMBER({[' + s + ']}, {[' + s + ']})} ON ROWS'
+    else:
+        props = ''
+        i = 0
+        for d in selected_cards_data['rows']:
+            s = '[' + d['dimension'] + '].[' + d['hierarchy'] + '].['
+            mdx += (' * ' if i else ', ') + '{StrToSet("{' + s + d['subset'] + ']}")}'
+            #props += (', ' if i else '') + s + d['alias_attr_name'] + ']'
+            i += 1
+        if i:
+            mdx += ((' PROPERTIES ' + props) if props else ' ') + ' ON ROWS'
 
     mdx += ' FROM [' + cube_name + ']'
 
-    if selected_subsets['slices']:
+    if selected_cards_data['slices']:
         mdx += ' WHERE ('
         i = 0
-        for d in selected_subsets['slices']:
+        for d in selected_cards_data['slices']:
             mdx += (', ' if i else '') + '[' + d['dimension'] + '].[' + d['hierarchy'] + '].[' + str(d['element']) + ']'
             i += 1
         mdx += ')'
@@ -170,7 +157,10 @@ Axes(
   $expand=Tuples(
     $expand=Members(
       $select=Name,{alias_attribute_names};
-      $expand=Element($select=Type;$expand=Components($select=Name))
+      $expand=Element(
+          $select=Type,Level;
+          $expand=Components($select=Name)
+      )
     )
   )
 ), 
@@ -196,12 +186,12 @@ def get_pivot_header_data(tuples, alias_attribute_names_by_member_ids):
         i = 0
         for m in t['Members']:
             name = m['Name']
-            alias = m['Attributes'][alias_attribute_names_by_member_ids[i]]
+            alias = m['Attributes'][alias_attribute_names_by_member_ids[i]] if i in alias_attribute_names_by_member_ids else name
             if last_names[i] != name:
                 if 'Consolidated' == m['Element']['Type']:
-                    d.append([alias, 1, name, list(map(lambda c: c['Name'], m['Element']['Components']))])
+                    d.append([alias, name, list(map(lambda c: c['Name'], m['Element']['Components']))])
                 else:
-                    d.append([alias, 0])
+                    d.append([alias, name])
             else:
                 d.append(0)
             names.append(name)
