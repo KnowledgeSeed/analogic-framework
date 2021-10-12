@@ -14,12 +14,15 @@ class GaugeWidget extends Widget {
         const v = {
             canvasId: this.options.id + 'Canvas',
             values: this.getRealValue('values', d),
+            valueLabels: this.getRealValue('valueLabels', d, []),
             labels: this.getRealValue('labels', d),
             minRange: this.getRealValue('minRange', d),
             maxRange: this.getRealValue('maxRange', d),
             colors: this.getRealValue('colors', d),
             title: this.getRealValue('title', d, ''),
-            fontFamily: this.getRealValue('fontFamily', d, 'imago')
+            fontFamily: this.getRealValue('fontFamily', d, 'imago'),
+            skin: this.getRealValue('skin', d, 'standard')
+
         };
 
         if (v.maxRange === 0) {
@@ -30,14 +33,14 @@ class GaugeWidget extends Widget {
 
         for (let i = 0; i < v.labels.length; ++i) {
             labelsHtml.push('<div class="ks-gauge-label">', v.labels[i], '<\/div>');
-            valuesHtml.push('<div class="ks-gauge-label ks-gauge-value" style="color: ', v.colors[i], '">', v.values[i].toFixed(1), '<\/div>');
+            valuesHtml.push('<div class="ks-gauge-label ks-gauge-value" style="color: ', v.colors[i], '">', v.valueLabels.length > i ? v.valueLabels[i] : v.values[i].toFixed(1), '<\/div>');
         }
 
         GaugeWidget.chartDataByIds = GaugeWidget.chartDataByIds || {};
         GaugeWidget.chartDataByIds[v.canvasId] = {minRange: v.minRange, maxRange: v.maxRange, fontFamily: v.fontFamily};
 
         return `
-<div class="ks-gauge" style="${this.getGeneralStyles(d).join('')}">
+<div class="ks-gauge ks-gauge-${v.skin}" style="${this.getGeneralStyles(d).join('')}">
     <div class="ks-gauge-inner">
         <div class="ks-gauge-title">
             <div class="ks-gauge-title-content">${v.title}</div>
@@ -88,7 +91,8 @@ class GaugeWidget extends Widget {
 
             datasets.push({
                 data: [v - min, max - v],
-                backgroundColor: [colors[i], '#F3F4F6']
+                backgroundColor: [colors[i], '#F3F4F6'],
+                originalValue: values[i]
             });
         }
 
@@ -130,7 +134,7 @@ $.extend(Chart.defaults.gauge, {
     cutoutPercentage: 65,
     circumference: 3.19,
     rotation: 9.41,
-    events: [],
+  //  events: [],
     plugins: {
         datalabels: {
             display: false
@@ -153,8 +157,13 @@ $.extend(Chart.defaults.gauge, {
         display: false
     },
     tooltips: {
-        enabled: false
-    }
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    let label = data.datasets[tooltipItem.datasetIndex].originalValue;
+                    return label;
+                }
+            }
+        }
 });
 
 Chart.controllers.gauge = Chart.controllers.doughnut.extend({
@@ -169,7 +178,7 @@ Chart.controllers.gauge = Chart.controllers.doughnut.extend({
 
         let i, m;
 
-        for (i = min; i <= max; i += step) {
+        for (i = min; i <= max + min; i += step) {
             labels.push(Math.round(i));
         }
 
