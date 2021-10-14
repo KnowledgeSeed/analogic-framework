@@ -125,13 +125,13 @@ class ToggleWidget extends Widget {
         let parentRow = s.closest('.ks-grid-table-row'), nextRows = parentRow.nextAll('.ks-grid-table-row');
         let currentPadding = parseInt(s.css('padding-left')), nrp, i = 0, r, t;
 
-        L(s, currentPadding, toggleIndex);
+        //L(s, currentPadding, toggleIndex);
 
         if (nextRows.length > 0) {
             r = $(nextRows[0]);
             nrp = parseInt(ToggleWidget.getActaulToggle(r, toggleIndex).css('padding-left'));
 
-            L(nrp);
+            //L(nrp);
 
             while (nrp > currentPadding && i < nextRows.length) {
                 isActive ? ToggleWidget.hide(r, fade) : ToggleWidget.show(r, fade);
