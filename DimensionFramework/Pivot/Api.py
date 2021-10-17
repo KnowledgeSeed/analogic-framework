@@ -179,6 +179,7 @@ Cells(
 def get_pivot_header_data(tuples, alias_attribute_names_by_member_ids):
     data = []
     last_names = [0] * len(tuples[0]['Members'])
+    alias_attribute_names_len = len(alias_attribute_names_by_member_ids)
 
     for t in tuples:
         d = []
@@ -186,7 +187,7 @@ def get_pivot_header_data(tuples, alias_attribute_names_by_member_ids):
         i = 0
         for m in t['Members']:
             name = m['Name']
-            alias = m['Attributes'][alias_attribute_names_by_member_ids[i]] if i in alias_attribute_names_by_member_ids else name
+            alias = m['Attributes'][alias_attribute_names_by_member_ids[i]] if i < alias_attribute_names_len else name
             if last_names[i] != name:
                 if 'Consolidated' == m['Element']['Type']:
                     d.append([alias, name, list(map(lambda c: c['Name'], m['Element']['Components']))])
