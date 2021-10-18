@@ -20,6 +20,8 @@ class SliderWidget extends Widget {
             valueDivider: this.getRealValue('valueDivider', d, 1),
             unit: this.getRealValue('unit', d, ''),
             updateableWidgetId: this.getRealValue('updateableWidgetId', d, false),
+            updateableWidgetValueHandler: this.getRealValue('updateableWidgetValueHandler', d, false),
+            countSliderValue: this.getRealValue('countSliderValue', d, false),
             css: {
                 tooltip: {
                     'font-size': this.getRealValue('trackValueFontSize', d),
@@ -126,8 +128,10 @@ class SliderWidget extends Widget {
     }
 
     createSlider(section) {
-        const id = section.prop('id'), isTouchMode = app.isTouched, sliderDiv = section.find('.ks-slider'), d = this.value, s = SliderWidget.slidersByIds[id];
-        const widgetDiv = SliderWidget.getWidgetDiv(sliderDiv), ordinal = d.ordinal, css = d.css, tooltipFontSize = css.tooltip['font-size'];
+        const id = section.prop('id'), isTouchMode = app.isTouched, sliderDiv = section.find('.ks-slider'),
+            d = this.value, s = SliderWidget.slidersByIds[id];
+        const widgetDiv = SliderWidget.getWidgetDiv(sliderDiv), ordinal = d.ordinal, css = d.css,
+            tooltipFontSize = css.tooltip['font-size'];
 
         if (s) {
             s.destroy();
@@ -173,7 +177,8 @@ class SliderWidget extends Widget {
 
         sliderDiv.find('.ks-slider-track-zero-indicator').css('left', width / 2 + offset);
 
-        const trackFillWidth = width * (trackFillStartValue - d.minRange) / totalRange, noUiConnect = widgetDiv.find('.noUi-connect');
+        const trackFillWidth = width * (trackFillStartValue - d.minRange) / totalRange,
+            noUiConnect = widgetDiv.find('.noUi-connect');
         const trackFill = $('<div class="ks-slider-track-fill" style="width: ' + trackFillWidth + 'px;"><\/div>');
 
         widgetDiv.find('.noUi-connects').append(trackFill).promise().then(() => {
@@ -185,7 +190,11 @@ class SliderWidget extends Widget {
             slider.on('update', (positions) => {
                 adjustTrackFill(positions[0]);
                 if (updateableInput) {
-                    updateableInput.val(positions[0] + ' ' + d.unit);
+                    if (d.updateableWidgetValueHandler) {
+                        updateableInput.val(d.updateableWidgetValueHandler(positions[0]));
+                    } else {
+                        updateableInput.val(positions[0] + ' ' + d.unit);
+                    }
                 }
             });
         });
@@ -225,7 +234,12 @@ class SliderWidget extends Widget {
             updateableInput.on('change', (e) => {
                 const sliderDiv = section.find('.ks-slider');
                 const slider = SliderWidget.getSlider(sliderDiv);
-                slider.set(Utils.parseNumber(updateableInput.val().replace(/\s/g, '').replace('%', '')));
+                let updateableInputValue = Utils.parseNumber(updateableInput.val().replace(/\s/g, '').replace('%', ''));
+                if (widgetValue.countSliderValue) {
+                    slider.set(widgetValue.countSliderValue(updateableInputValue));
+                } else {
+                    slider.set(updateableInputValue);
+                }
             });
         }
 
@@ -265,7 +279,7 @@ class SliderWidget extends Widget {
             e = $(Utils.stopEvent(e).currentTarget);
 
             let sliderDiv = SliderWidget.getSliderDiv(e), v,
-            p = sliderDiv.removeClass('Highlighted').find('.ks-slider-touch,.ks-slider-options');
+                p = sliderDiv.removeClass('Highlighted').find('.ks-slider-touch,.ks-slider-options');
 
             if (e.hasClass('ks-button-update')) {
                 if (isTouchMode) {
@@ -381,7 +395,7 @@ class SliderWidget extends Widget {
 
     static setRulerValue(sliderDiv, value) {
         let s = sliderDiv.find('.ks-slider-touch-track'), p = sliderDiv.find('.ks-slider-touch-track-overflow'), min,
-        max, offset, size;
+            max, offset, size;
 
         min = p.data('min-range');
         max = p.data('max-range');
