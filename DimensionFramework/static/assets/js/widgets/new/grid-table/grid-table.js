@@ -147,8 +147,9 @@ class GridTableWidget extends Widget {
                 k = 0;
             }
 
-            if (colNum !== o.widgets.filter(e => e.type.name !== 'GridTableHeaderRowWidget').length + k && processedData[0]) {
-                o.errorMessage = 'Error! Grid widgets number is not equal to repository query number!';
+            let widgetColNum = o.widgets.filter(e => e.type.name !== 'GridTableHeaderRowWidget').length;
+            if (colNum !== widgetColNum + k && processedData[0]) {
+                o.errorMessage = 'Error! Grid widgets number ' + widgetColNum + ' is not equal to repository query number ' + colNum + '!';
             }
 
 //            let maxHeight = Math.max.apply(Math, widgets.map(function (o) {

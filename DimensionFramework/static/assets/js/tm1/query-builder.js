@@ -79,7 +79,7 @@ QB.loadComment = repositoryId => {
 
 QB.loadFromWidgetValue = (arg, repositoryId, extraParams = {}) => {
     if (arg.execute) {
-        return $.Deferred().resolve(arg.execute(WidgetValue, repositoryId, extraParams));
+        return $.Deferred().resolve(arg.execute(WidgetValue, repositoryId, extraParams, Repository[repositoryId]));
     }
 
     return $.Deferred().resolve(arg(WidgetValue, repositoryId));//TODO remove, back compatibility
@@ -109,10 +109,10 @@ QB.executeMDXs = (repositoryId, path) => {
     for (p of Repository[repositoryId][path]) {
         u = QB.getUrl(p);
         if (p.execute) {
-            deffered.push($.Deferred().resolve(p.execute(WidgetValue, repositoryId)));
+            deffered.push($.Deferred().resolve(p.execute(WidgetValue, repositoryId, Repository[repositoryId])));
             isQuery.push(false);
         } else {
-            body = p.body(WidgetValue);
+            body = p.body(WidgetValue, repositoryId, Repository[repositoryId]);
 
             if (p.server) {
                 mm = QB.getServerSideUrlAndBody(u.url, body, repositoryId, path + '_' + c);
@@ -143,7 +143,7 @@ QB.executeMDXs = (repositoryId, path) => {
                 } else if (t.type === 'list') {
                     d.push(QB.processResultAsList(t, r));
                 } else if (t.type === 'script') {
-                    d.push(t.script(r, repositoryId));
+                    return t.script(r, repositoryId, Repository[repositoryId]);
                 } else {
                     d.push(QB.processResultAsObject(t.query, r));
                 }
@@ -175,7 +175,7 @@ QB.executeMDX = (repositoryId, path, extraParams = {}) => {
     }
 
 
-    let u = QB.getUrl(p), body = p.body(WidgetValue, repositoryId);
+    let u = QB.getUrl(p), body = p.body(WidgetValue, repositoryId, r);
 
     if (p.server) {//Todo ref!
         let mm = QB.getServerSideUrlAndBody(u.url, body, repositoryId, path);
@@ -197,7 +197,7 @@ QB.executeMDX = (repositoryId, path, extraParams = {}) => {
                 return QB.processResultAsList(t, data);
             } else if (t.type === 'script') {
                 El.body.triggerHandler('processdata.' + repositoryId + '.finished');
-                return t.script(data, repositoryId);
+                return t.script(data, repositoryId, r);
             } else {
                 El.body.triggerHandler('processdata.' + repositoryId + '.finished');
                 return QB.processResultAsObject(t.query, data);

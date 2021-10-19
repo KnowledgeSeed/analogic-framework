@@ -13,6 +13,8 @@ class ToggleWidget extends Widget {
             groupId: this.getRealValue('groupId', d, false),
             icon: this.getRealValue('icon', d, false),
             iconOff: this.getRealValue('iconOff', d, false),
+            iconFontSize: this.getRealValue('iconFontSize', d, false),
+            iconFontColor: this.getRealValue('iconFontColor', d, false),
             skin: this.getRealValue('skin', d, 'skin1'),
             titleFontColor: this.getRealValue('titleFontColor', d, false),
             titleFontSize: this.getRealValue('titleFontSize', d, false),
@@ -23,7 +25,7 @@ class ToggleWidget extends Widget {
 
         this.value = {isGridTableHierarchyExpander: v.isGridTableHierarchyExpander};
 
-        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], b = 1 === parseInt(v.value);
+        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], b = 1 === parseInt(v.value), iconStyles = [];
 
         v.titleOn !== '' && mainDivClass.push('has-label');
         b && mainDivClass.push('ks-on');
@@ -32,7 +34,11 @@ class ToggleWidget extends Widget {
         v.titleFontColor && titleStyles.push(`color:${v.titleFontColor};`);
         v.titleFontSize && titleStyles.push(`font-size:${v.titleFontSize}px;`);
 
+        v.iconFontColor && iconStyles.push(`color:${v.iconFontColor};`);
+        v.iconFontSize && iconStyles.push(`font-size:${v.iconFontSize}px;`);
+
         titleStyles = titleStyles.join('');
+        iconStyles = iconStyles.join('');
 
         if (v.groupId && b) {
             WidgetValue[v.groupId] = {ordinal: d.ordinal, value: v.titleOn};
@@ -41,8 +47,8 @@ class ToggleWidget extends Widget {
         return `
 <div class="ks-toggle ${mainDivClass.join(' ')} ${v.groupId ? `ks-toggle-${v.groupId}` : ''} ${v.isGridTableHierarchyExpander ? 'ks-toggle-expander' : ''}" style="${mainDivStyle.join('')}" data-ordinal="${d.ordinal}" data-value="${v.value}" data-id="${o.id}" data-action="switch">
     <div class="ks-toggle-inner ${v.editable === false ? 'readonly' : ''}">
-        <div class="ks-toggle-icon ks-toggle-icon-on">${v.icon ? `<span class="${v.icon}"></span>` : ''}</div>
-        <div class="ks-toggle-icon ks-toggle-icon-off">${v.iconOff ? `<span class="${v.iconOff}"></span>` : ''}</div>
+        <div style="${iconStyles}" class="ks-toggle-icon ks-toggle-icon-on">${v.icon ? `<span class="${v.icon}"></span>` : ''}</div>
+        <div style="${iconStyles}" class="ks-toggle-icon ks-toggle-icon-off">${v.iconOff ? `<span class="${v.iconOff}"></span>` : ''}</div>
         <div style="${titleStyles}" class="ks-toggle-label ks-toggle-label-on">${v.titleOn}</div>
         <div style="${titleStyles}" class="ks-toggle-label ks-toggle-label-off">${v.titleOff}</div>
     </div>
@@ -125,13 +131,13 @@ class ToggleWidget extends Widget {
         let parentRow = s.closest('.ks-grid-table-row'), nextRows = parentRow.nextAll('.ks-grid-table-row');
         let currentPadding = parseInt(s.css('padding-left')), nrp, i = 0, r, t;
 
-        L(s, currentPadding, toggleIndex);
+        //L(s, currentPadding, toggleIndex);
 
         if (nextRows.length > 0) {
             r = $(nextRows[0]);
             nrp = parseInt(ToggleWidget.getActaulToggle(r, toggleIndex).css('padding-left'));
 
-            L(nrp);
+            //L(nrp);
 
             while (nrp > currentPadding && i < nextRows.length) {
                 isActive ? ToggleWidget.hide(r, fade) : ToggleWidget.show(r, fade);
