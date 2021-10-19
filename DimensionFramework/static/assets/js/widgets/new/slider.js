@@ -237,7 +237,7 @@ class SliderWidget extends Widget {
                 const sliderDiv = section.find('.ks-slider');
                 const slider = SliderWidget.getSlider(sliderDiv);
                 let updateableInputValue = Utils.parseNumber(updateableInput.val().replace(/\s/g, '').replace('%', ''));
-                widgetValue['changedByInput'] = true;
+                v(sliderDiv.data('id')).changedByInput = true;
                 if (widgetValue.countSliderValue) {
                     slider.set(widgetValue.countSliderValue(updateableInputValue));
                 } else {
