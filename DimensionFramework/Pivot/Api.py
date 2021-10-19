@@ -4,7 +4,7 @@ from TM1py.Objects import Subset
 import json
 
 
-def call(dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, expand_element=None):
+def call(dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, expand_row_element=None, expand_col_element=None):
     address = "https://kseed-dc1.knowledgeseed.local:5125/haysapi"
     namespace = "knowledgeseed"
     user = "tm1py"
@@ -27,7 +27,7 @@ def call(dimension_name=None, hierarchy_name=None, subset_name=None, element_nam
 
     if selected_cards:
         selected_cards_data = json.loads(selected_cards)
-        mdx = create_mdx(cube_name, selected_cards_data, expand_element)
+        mdx = create_mdx(cube_name, selected_cards_data, expand_row_element, expand_col_element)
         cell_count = tm1.cells.execute_mdx_cellcount(mdx)
         data = {}
         if cell_count < 2000000:
@@ -87,7 +87,7 @@ def get_alias_attribute_names(hierarchy):
     return d
 
 
-def create_mdx(cube_name, selected_cards_data, expand_element=None):
+def create_mdx(cube_name, selected_cards_data, expand_row_element=None, expand_col_element=None):
     mdx = 'SELECT '
     props = ''
     i = 0
@@ -103,8 +103,8 @@ def create_mdx(cube_name, selected_cards_data, expand_element=None):
     #if selected_subsets['rows']:
     #    mdx += ', NON EMPTY '
 
-    if expand_element:
-        d = json.loads(expand_element)
+    if expand_row_element:
+        d = json.loads(expand_row_element)
         s = d['dimension'] + '].[' + d['hierarchy'] + '].[' + d['member']
         mdx += ', {DRILLDOWNMEMBER({[' + s + ']}, {[' + s + ']})} ON ROWS'
     else:
