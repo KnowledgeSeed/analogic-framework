@@ -22,6 +22,7 @@ class SliderWidget extends Widget {
             updateableWidgetId: this.getRealValue('updateableWidgetId', d, false),
             updateableWidgetValueHandler: this.getRealValue('updateableWidgetValueHandler', d, false),
             countSliderValue: this.getRealValue('countSliderValue', d, false),
+            changedByInput: false,
             css: {
                 tooltip: {
                     'font-size': this.getRealValue('trackValueFontSize', d),
@@ -189,13 +190,14 @@ class SliderWidget extends Widget {
             }
             slider.on('update', (positions) => {
                 adjustTrackFill(positions[0]);
-                if (updateableInput) {
+                if (updateableInput && d.changedByInput === false) {
                     if (d.updateableWidgetValueHandler) {
                         updateableInput.val(d.updateableWidgetValueHandler(positions[0]));
                     } else {
                         updateableInput.val(positions[0] + ' ' + d.unit);
                     }
                 }
+                d['changedByInput'] = false;
             });
         });
 
@@ -235,6 +237,7 @@ class SliderWidget extends Widget {
                 const sliderDiv = section.find('.ks-slider');
                 const slider = SliderWidget.getSlider(sliderDiv);
                 let updateableInputValue = Utils.parseNumber(updateableInput.val().replace(/\s/g, '').replace('%', ''));
+                widgetValue['changedByInput'] = true;
                 if (widgetValue.countSliderValue) {
                     slider.set(widgetValue.countSliderValue(updateableInputValue));
                 } else {
