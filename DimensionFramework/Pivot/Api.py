@@ -89,16 +89,20 @@ def get_alias_attribute_names(hierarchy):
 
 def create_mdx(cube_name, selected_cards_data, expand_row_element=None, expand_col_element=None):
     mdx = 'SELECT '
-    props = ''
-    i = 0
 
-    for d in selected_cards_data['cols']:
-        s = '[' + d['dimension'] + '].[' + d['hierarchy'] + '].['
-        mdx += (' * ' if i else '') + '{StrToSet("{' + s + d['subset'] + ']}")}'
-        #props += (', ' if i else '') + s + d['alias_attr_name'] + ']'
-        i += 1
-
-    mdx += ((' PROPERTIES ' + props) if props else ' ') + ' ON COLUMNS'
+    if expand_col_element:
+        d = json.loads(expand_col_element)
+        s = d['dimension'] + '].[' + d['hierarchy'] + '].[' + d['member']
+        mdx += ' {DRILLDOWNMEMBER({[' + s + ']}, {[' + s + ']})} ON COLUMNS'
+    else:
+        props = ''
+        i = 0
+        for d in selected_cards_data['cols']:
+            s = '[' + d['dimension'] + '].[' + d['hierarchy'] + '].['
+            mdx += (' * ' if i else '') + '{StrToSet("{' + s + d['subset'] + ']}")}'
+            #props += (', ' if i else '') + s + d['alias_attr_name'] + ']'
+            i += 1
+        mdx += ((' PROPERTIES ' + props) if props else ' ') + ' ON COLUMNS'
 
     #if selected_subsets['rows']:
     #    mdx += ', NON EMPTY '

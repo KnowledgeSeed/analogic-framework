@@ -95,7 +95,7 @@ class PivotTableWidget extends Widget {
         .on('click', '.icon-aa', e => this.aliasAttributeNameButtonClicked($(e.target)))
         .on('input change', 'input', e => this.filterSelectorTreeColumn(e));
 
-        this.colorDropdown = this.selectorTree.find('.ks-pivot-tag-color-dropdown').on('click', e => this.selectorTreeColorClicked(e));
+        this.colorDropdown = this.selectorTree.find('.ks-pivot-tag-color-dropdown').on('click', e => this.selectorTreeColorClicked($(e.target)));
 
         this.selectorTreeSaveBtn = $('#selectorTreeSaveBtn').on('click', () => this.saveCard());
         this.selectorTreeDeleteBtn = $('#selectorTreeDeleteBtn').on('click', () => this.deleteCard());
@@ -398,8 +398,6 @@ class PivotTableWidget extends Widget {
     }
 
     selectorTreeColorClicked(e, doNotOpen) {
-        e = $(e.target);
-
         if (e.hasClass('ks-pivot-tag-color-dropdown-chooser-item')) {
             const hex = e.data('hex');
 
@@ -811,7 +809,7 @@ class PivotTableWidget extends Widget {
             }
         }
 
-        this.colorDropdown.data('hex', i.hex).children('.ks-pivot-tag-color-icon').css('background-color', '#' + i.hex).next().html(i.name);
+        this.selectorTreeColorClicked(this.colorDropdown.find('.ks-pivot-tag-color-dropdown-chooser-item[data-hex="' + i.hex + '"]'), true);
     }
 
     closeSelectorTree() {
@@ -887,7 +885,7 @@ PivotTableWidget.getPivotTable = (expandRowCell, expandRowCard, expandColCell, e
     if (expandRowCell) {
         postParams.data.expand_row_element = JSON.stringify({...expandRowCard.data(), member: expandRowCell.next().text()});
     } else if (expandColCell) {
-        postParams.data.expand_col_element = JSON.stringify({...expandColCard.data(), member: expandRowCell.text()});
+        postParams.data.expand_col_element = JSON.stringify({...expandColCard.data(), member: expandColCell.text()});
     }
 
     postParams.data.selected_cards = JSON.stringify(d);
@@ -904,7 +902,21 @@ PivotTableWidget.getPivotTable = (expandRowCell, expandRowCard, expandColCell, e
 };
 
 PivotTableWidget.renderExpandedCols = (d, expandCell, colors) => {
+    let c, totalColspan = 1, row = $(expandCell.parent().parent()[0].firstChild);
 
+    expandCell.prevAll().each((i, e) => totalColspan += e.colSpan);
+
+    while (row.length) {
+        c = PivotTableWidget.getCellForColspan(row, totalColspan);
+
+        if ('i' in row.data()) {
+            
+        } else {
+
+        }
+
+        row = row.next();
+    }
 };
 
 PivotTableWidget.renderExpandedRows = (d, expandCell, colors) => {
@@ -959,7 +971,7 @@ PivotTableWidget.getSurroundingHtmlsForExpandedCell = (expandCell, colors) => {
             if (c.hasClass('closed-cell') || c.hasClass('ks-pivot-table-group-title-cell')) {
                 c.removeClass(['closed-cell', 'ks-pivot-table-group-title-cell']).addClass('ks-pivot-table-category-cell').html('');
             } else if (c.hasClass('ks-pivot-table-group-sign-cell')) {
-                c.removeClass('ks-pivot-table-group-sign-cell').addClass('ks-pivot-table-group-sign-cell').html('<div class="ks-pivot-table-group-sign-middle" style="background-color: #' + (colors[c.data('i')] || '53A451') + ';"></div>');
+                c.html('<div class="ks-pivot-table-group-sign-middle" style="background-color: #' + (colors[c.data('i')] || '53A451') + ';"></div>');
             }
 
             h.push(c[0].outerHTML);
@@ -974,7 +986,7 @@ PivotTableWidget.getSurroundingHtmlsForExpandedCell = (expandCell, colors) => {
 PivotTableWidget.renderPivotTable = (d, colors) => {
     const h = [], v = [], cols = d.data.cols, colLen = cols.length, cells = d.data.cells, rows = d.data.rows, rowLen = rows.length, rowElementLen = rows[0].length;
     const colElementLen = cols[0].length, levelMtx = [], colLevelMtx = [], colHeaderMtx = [], maxColspansByLevels = [], colColors = colors[2], rowColors = colors[1], defaultColor = '3AA745';
-    let i, j, k, m, row, r, expandClass, isExpanded, level, maxColspan, verticalLineCellsHtml, c, totalColspan = 0, name, color, colspan, levels, prevLevel, children;
+    let i, j, k, m, row, r, p, lastExpanded, expandClass, isExpanded, level, maxColspan, verticalLineCellsHtml, c, totalColspan = 0, name, color, colspan, levels, prevLevel, children;
 
     // ROW HEADER
 
@@ -1048,6 +1060,7 @@ PivotTableWidget.renderPivotTable = (d, colors) => {
             r = row[j];
             name = r[1];
             level = 0;
+            c = null;
 
             for (k = i - 1; k >= 0; --k) {
                 prevLevel = (colLevelMtx[k] || [])[j] || 0;
@@ -1056,6 +1069,7 @@ PivotTableWidget.renderPivotTable = (d, colors) => {
 
                 if (children && (!name || children.includes(name))) {
                     level = prevLevel + 1;
+                    c = k;
 
                     break;
                 } else if (!prevLevel && children) {
@@ -1093,9 +1107,9 @@ PivotTableWidget.renderPivotTable = (d, colors) => {
                     isExpanded = false;
                 }
 
-                colHeaderMtx[j][level][i] = [r[0], isExpanded];
+                colHeaderMtx[j][level][i] = [r[0], c, isExpanded, 0];
             } else {
-                colHeaderMtx[j][level][i] = [r[0]];
+                colHeaderMtx[j][level][i] = [r[0], c];
             }
 
         }
@@ -1123,10 +1137,13 @@ PivotTableWidget.renderPivotTable = (d, colors) => {
                 r = c[i];
 
                 if (r) {
-                    if (true === r[1]) {
+                    if (true === r[2]) {
                         h.push('<td class="ks-pivot-table-col-group-sign-cell"><div style="border-color: #', color, ';" class="ks-pivot-table-group-sign-start"><div style="background-color: #', color, ';"></div></div>', r[0], '</td>');
                         isExpanded = true;
-                    } else if (false === r[1]) {
+                        p = r[1];
+                        r[3] = i;
+                        lastExpanded = r;
+                    } else if (false === r[2]) {
                         h.push('<td class="ks-pivot-table-col-group-sign-cell"><div style="border-color: #', color, ';" class="ks-pivot-table-group-sign-closed"><div style="background-color: #', color, ';"></div></div>', r[0], '</td>');
                         isExpanded = false;
                     } else {
@@ -1135,10 +1152,15 @@ PivotTableWidget.renderPivotTable = (d, colors) => {
                     }
                 } else {
                     if (isExpanded) {
-                        if (c[i + 1]) {
+                        level = null === p ? colLen - 1 : row[k - 1][p][3];
+
+                        if (c[i + 1] || (i === level)) {
                             h.push('<td class="ks-pivot-table-col-group-sign-cell"><div class="ks-pivot-table-group-sign-end" style="background-color: #', color, ';"><div style="background-color: #', color, ';"></div></div></td>');
+                            ++lastExpanded[3];
+                            isExpanded = false;
                         } else {
                             h.push('<td class="ks-pivot-table-col-group-sign-cell"><div class="ks-pivot-table-group-sign-middle" style="background-color: #', color, ';"></div></td>');
+                            ++lastExpanded[3];
                         }
                     } else {
                         h.push('<td class="ks-pivot-table-sign-cell"></td>');
@@ -1153,6 +1175,7 @@ PivotTableWidget.renderPivotTable = (d, colors) => {
     // TABLE
 
     k = 0;
+    v.length = 0;
 
     for (i = 0; i < rowLen; ++i) {
         row = rows[i];
@@ -1167,7 +1190,11 @@ PivotTableWidget.renderPivotTable = (d, colors) => {
             maxColspan = PivotTableWidget.maxColspans[j];
 
             if (level) {
-                verticalLineCellsHtml = ('<td data-i="' + j + '" class="ks-pivot-table-group-sign-cell"><div class="ks-pivot-table-group-sign-middle" style="background-color: #' + color + ';"></div></td>').repeat(level);
+                if (v[j]) {
+                    verticalLineCellsHtml = ('<td data-i="' + j + '" class="ks-pivot-table-group-sign-cell"><div class="ks-pivot-table-group-sign-middle" style="background-color: #' + color + ';"></div></td>').repeat(level);
+                } else {
+                    verticalLineCellsHtml = ('<td data-i="' + j + '" class="ks-pivot-table-group-sign-cell"><div class="ks-pivot-table-group-sign-middle" style="background-color: #' + color + ';"></div></td>').repeat(level - 1) + '<td data-i="' + j + '"></td>';
+                }
             } else {
                 verticalLineCellsHtml = '';
             }
@@ -1185,9 +1212,11 @@ PivotTableWidget.renderPivotTable = (d, colors) => {
                     }
 
                     if (name && r[2].includes(name)) {
+                        v[j] = true;
                         expandClass = 'start';
                         c = '';
                     } else {
+                        v[j] = false;
                         expandClass = 'closed';
                         c = ' closed-cell';
                     }
@@ -1234,14 +1263,14 @@ PivotTableWidget.expandButtonClicked = e => {
 };
 
 PivotTableWidget.collapseCols = (btn, cell) => {
-    let row = cell.parent().next(), c, e, totalColspan = 1, hideLength = 0, offset = 0, nextSiblings = cell.nextAll(), i, len = nextSiblings.length;
+    let row = cell.parent().next(), c, totalColspan = 1, hideLength = 0, offset = 0, nextSiblings = cell.nextAll(), i, len = nextSiblings.length;
 
     cell.prevAll().each((i, e) => totalColspan += e.colSpan);
 
-    e = PivotTableWidget.getCellForColspan(row, totalColspan).nextAll();
+    c = PivotTableWidget.getCellForColspan(row, totalColspan).nextAll();
 
     for (i = 0; i < len; ++i) {
-        if (!hideLength && !e.eq(i).html()) {
+        if (!hideLength && !c.eq(i).html()) {
             ++offset;
         } else {
             ++hideLength;
@@ -1254,39 +1283,76 @@ PivotTableWidget.collapseCols = (btn, cell) => {
 
     totalColspan += offset;
 
-    row = row.prevAll().last();
+    row = $(row.parent()[0].firstChild);
 
-    do {
-        c = PivotTableWidget.getCellForColspan(row, totalColspan);
-
-        c.nextAll().slice(0, hideLength).data('h', (c.data('h') || 0) + 1).hide();
+    while (row.length) {
+        for (c of PivotTableWidget.getCellForColspan(row, totalColspan).nextAll().slice(0, hideLength)) {
+            c = $(c);
+            c.data('h', (c.data('h') || 0) + 1).hide();
+        }
 
         row = row.next();
-    } while (row.length);
+    }
 
     if (offset) {
-        c = nextSiblings.eq(offset - 1).children();
-        c.removeClass('ks-pivot-table-group-sign-middle').addClass('ks-pivot-table-group-sign-end').html('<div style="background-color: ' + c.css('background-color') + ';"></div>');
+        nextSiblings.slice(0, offset).children().removeClass('ks-pivot-table-group-sign-middle');
     }
 
     btn.addClass('ks-pivot-table-group-sign-closed').removeClass('ks-pivot-table-group-sign-start');
 };
 
 PivotTableWidget.expandCols = (btn, cell) => {
-    let row = cell.parent().next(), c, totalColspan = 1, showLength = 0, nextSiblings = cell.nextAll(), h;
+    let c = cell.next(), row = cell.parent();
+
+    if (c.text() || !c.length) {
+        PivotTableWidget.getPivotTable(null, null, cell, /*this.holders.eq(2)*/$('#pivotColSelector').children('.ks-pivot-table-tag').eq(row.data('i')));
+
+        btn.addClass('ks-pivot-table-group-sign-start').removeClass('ks-pivot-table-group-sign-closed');
+
+        return;
+    }
+
+    let i, totalColspan = 1, showLength = 0, offset = 0, nextSiblings = cell.nextAll();
+    let len = nextSiblings.length, color = cell.children().children().eq(0).css('background-color'), hiddenLevel;
 
     cell.prevAll().each((i, e) => totalColspan += e.colSpan);
 
-    for (c of nextSiblings) {
-        c = $(c);
-        h = c.data('h');
+    c = PivotTableWidget.getCellForColspan(row.next(), totalColspan).nextAll();
 
-        if (c.is(':visible') && showLength) {
-            break;
+    for (i = 0; i < len; ++i) {
+        if (!showLength && !c.eq(i).html()) {
+            ++offset;
+        } else {
+            ++showLength;
         }
 
-
+        if (nextSiblings.eq(i).children('.ks-pivot-table-group-sign-end').length) {
+            break;
+        }
     }
+
+    totalColspan += offset;
+
+    row = $(row.parent()[0].firstChild);
+
+    while (row.length) {
+        for (c of PivotTableWidget.getCellForColspan(row, totalColspan).nextAll().slice(0, showLength)) {
+            c = $(c);
+            hiddenLevel = (c.data('h') - 1) || 0;
+
+            c.data('h', hiddenLevel);
+
+            if (!hiddenLevel) {
+                c.show();
+            }
+        }
+
+        row = row.next();
+    }
+
+    nextSiblings.slice(0, showLength - 1).html('<div class="ks-pivot-table-group-sign-middle" style="background-color: ' + color + ';"></div>');
+
+    btn.addClass('ks-pivot-table-group-sign-start').removeClass('ks-pivot-table-group-sign-closed');
 };
 
 PivotTableWidget.collapseRows = (btn, cell) => {
@@ -1294,7 +1360,7 @@ PivotTableWidget.collapseRows = (btn, cell) => {
 
     cell.prevAll().each((i, e) => totalColspan += e.colSpan);
 
-    do {
+    while (row.length) {
         cell = PivotTableWidget.getCellForColspan(row, totalColspan);
 
         c = cell.children().eq(0);
@@ -1315,10 +1381,9 @@ PivotTableWidget.collapseRows = (btn, cell) => {
         }
 
         row = row.next();
-    } while (row.length);
+    }
 
     btn.addClass('ks-pivot-table-group-sign-closed').removeClass('ks-pivot-table-group-sign-start');
-    cell.addClass('closed-cell');
 };
 
 PivotTableWidget.expandRows = (btn, cell) => {
@@ -1341,7 +1406,7 @@ PivotTableWidget.expandRows = (btn, cell) => {
 PivotTableWidget.doExpandRows = (cell, totalColspan) => {
     let hiddenLevel = null, row = cell.parent().next(), isSameElement = true, showAllowed;
 
-    do {
+    while (row.length) {
         cell = PivotTableWidget.getCellForColspan(row, totalColspan);
 
         if (isSameElement && cell.next().hasClass('ks-pivot-table-category-cell')) {
@@ -1366,7 +1431,7 @@ PivotTableWidget.doExpandRows = (cell, totalColspan) => {
         }
 
         row = row.next();
-    } while (row.length);
+    }
 
     return hiddenLevel;
 };
@@ -1410,7 +1475,7 @@ PivotTableWidget.getCellForColspan = (row, colspan) => {
 
     for (c of row.children()) {
         colspanSum += c.colSpan;
-        if (colspanSum === colspan) {
+        if (colspanSum >= colspan) {
             return $(c);
         }
     }
