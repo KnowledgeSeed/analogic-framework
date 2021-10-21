@@ -5,6 +5,7 @@ import keyring
 import base64
 from flask import json
 import logging
+from DimensionFramework.Core.SqlitePoolUserManager import SqlitePoolUserManager
 
 
 class SettingManager:
@@ -19,6 +20,8 @@ class SettingManager:
         self.cache = cache
         self.site_root = site_root
         self.instance = instance
+        cnf = self.getConfig()
+        self.poolUserManager = SqlitePoolUserManager(cnf['pool']['users'], instance)
 
     def clearCache(self):
         if self.cache is not None:
@@ -28,6 +31,7 @@ class SettingManager:
             self.cache.delete(self.getTM1SessionExpiresCacheKey())
             self.cache.delete(self.getClassesCacheKey())
             self.cache.delete(self.getFrameworkMdxCacheKey())
+            self.poolUserManager.clear()
         return "OK"
 
     def getInstance(self):
@@ -56,10 +60,7 @@ class SettingManager:
 
     def getConfig(self):
         cnf = self.getJsonSetting(self.getConfigCacheKey(), 'config')
-        if cnf['authenticationMode'] == 'DevAuth':
-            cnf['devAuthLogin'] = self.getPoolCamNamespace()
-        else:
-            cnf['devAuthLogin'] = ''
+        cnf['devAuthLogin'] = ''
         return cnf
 
     def getParam(self, param_name):
@@ -130,12 +131,31 @@ class SettingManager:
             return None
         return tm1_session_id
 
-    def getPassword(self):
-        return keyring.get_password(self.getAppCamNamespace() + '/' + self.getPoolUser(), self.getPoolUser())
+    def getPassword(self, user_name):
+        return keyring.get_password(self.getAppCamNamespace() + '/' + user_name, user_name)
 
     def getPoolUser(self):
+        pool_user = self.poolUserManager.getUser()
+        expired = pool_user['expiration'] == ''
+        if expired is False:
+            expired = datetime.datetime.now() >= datetime.datetime.fromisoformat(pool_user['expiration'])
+
+        if expired:
+            pool_user['expiration'] = ''
+            pool_user['session'] = ''
+        self.getLogger().info('Get pool user: ' + str(pool_user))
+        return pool_user
+
+    def updatePoolUser(self, pool_user):
         cnf = self.getConfig()
-        return cnf['pool']['users'][0]
+        expiration = datetime.datetime.now() + datetime.timedelta(minutes=cnf['sessionExpiresInMinutes'] - 1)
+        pool_user['expiration'] = expiration
+        self.getLogger().info('Update pool user: ' + str(pool_user))
+        self.poolUserManager.updateUserSession(pool_user)
+
+    def decreasePoolUserSessionCount(self, pool_user):
+        self.poolUserManager.decreaseSessionCount(pool_user)
+        self.getLogger().info('Decrease pool user session count: ' + str(pool_user))
 
     def getPoolTargetUrl(self):
         cnf = self.getConfig()
@@ -149,9 +169,8 @@ class SettingManager:
         cnf = self.getConfig()
         return cnf['applicationConfigFolder']
 
-    def getPoolCamNamespace(self):
-        password = self.getPassword()
-        user = self.getPoolUser()
+    def getPoolCamNamespace(self, user):
+        password = self.getPassword(user)
         namespace = self.getAppCamNamespace()
         s = user + ":" + password + ":" + namespace
         return 'CAMNamespace ' + base64.b64encode(s.encode('utf-8')).decode("utf-8")

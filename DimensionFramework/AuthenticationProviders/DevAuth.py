@@ -13,11 +13,12 @@ class DevAuth(Base):
 
     def getTM1Service(self):
         cnf = self.setting.getConfig()
+        pool_user = self.setting.getPoolUser()
 
         return TM1Service(
             base_url=cnf['tm1ApiHost'],
             namespace=self.setting.getAppCamNamespace(),
-            user=self.setting.getPoolUser(),
-            password=self.setting.getPassword(),
+            user=pool_user['name'],
+            password=self.setting.getPassword(pool_user['name']),
             ssl=False)
 

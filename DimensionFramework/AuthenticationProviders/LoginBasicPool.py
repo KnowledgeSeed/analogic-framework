@@ -25,12 +25,12 @@ class LoginBasicPool(Pool):
         return redirect(self.setting.getBaseUrl('login'))
 
     def doPoolRequest(self, url, method, mdx, headers, cookies):
-        tm1_session_id = self.setting.getTM1SessionId()
+        pool_user = self.setting.getPoolUser()
 
-        authorization_required = tm1_session_id is None
+        authorization_required = pool_user['session'] == ''
 
         if authorization_required is True:
-            cookies["TM1SessionId"] = tm1_session_id
+            cookies["TM1SessionId"] = pool_user['session']
 
         response = requests.request(
             url=url,
@@ -39,10 +39,13 @@ class LoginBasicPool(Pool):
             headers=headers,
             cookies=cookies,
             verify=False,
-            auth=(self.setting.getPoolUser(), self.setting.getPassword()))
+            auth=(pool_user['name'], self.setting.getPassword(pool_user['name'])))
 
         if authorization_required:
-            self.setting.setTM1SessionId(response.cookies.get('TM1SessionId'))
+            pool_user['session'] = response.cookies.get('TM1SessionId')
+            self.setting.updatePoolUser(pool_user)
+        else:
+            self.setting.decreasePoolUserSessionCount(pool_user)
 
         return response
 
@@ -54,9 +57,3 @@ class LoginBasicPool(Pool):
     def getAuthenticationResponse(self):
         return redirect(self.setting.getBaseUrl('login'))
 
-    def getTM1Service(self):
-        cnf = self.setting.getConfig()
-
-        tm1_session_id = self.setting.getTM1SessionId()
-
-        return TM1Service(base_url=cnf['tm1ApiHost'], session_id=tm1_session_id, ssl=False)

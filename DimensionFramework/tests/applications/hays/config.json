@@ -1,0 +1,33 @@
+{
+  "assetsUrl": "http://localhost:5000/static/assets",
+  "applicationName": "Hays",
+  "applicationAssetsFolder": "hays",
+  "applicationConfigFolder": "hays",
+  "version": "1",
+  "useMinifiedAssets": false,
+  "host": "http://localhost:5000/",
+  "subpath": "",
+  "authenticationMode": "LoginPool",
+  "camNamespace": "knowledgeseed",
+  "sessionExpiresInMinutes": 20,
+  "authenticationBridge": "",
+  "apiLogout": "",
+  "logout": "",
+  "restRequestDebugFlag": false,
+  "tm1ApiHost": "http://localhost:5000/hays/pool",
+  "tm1ApiHostBackend": "https://kseed-dc1.knowledgeseed.local:5125/haysapi",
+  "tm1ApiSubPath": "/api/v1/",
+  "tm1ExecuteMDX": "ExecuteMDX?",
+  "MDXUrl": "https://kseed-dc1.knowledgeseed.local:5125/haysapi/api/v1/ExecuteMDX?",
+  "defaultMDXQuery": "https://kseed-dc1.knowledgeseed.local:5125/haysapi/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value)",
+  "defaultUploadTargetFolder": "\\\\\\\\USER-PC\\\\ddd",
+  "defaultUploadStagingFolder": "\\\\\\\\USER-PC\\\\staging",
+  "MainPage": "haysMain",
+  "pool": {
+    "users": [
+      "oravecz.tamas",
+      "sovegjarto.andras"
+    ],
+    "target": "https://kseed-dc1.knowledgeseed.local:5125/haysapi"
+  }
+}

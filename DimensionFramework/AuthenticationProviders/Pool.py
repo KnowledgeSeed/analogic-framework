@@ -18,7 +18,6 @@ class Pool(Base):
         return mdx
 
     def pool(self, sub_path):
-        #TODO multi pool user
 
         if self.checkAppAuthenticated() is False:
             return self.getAuthenticationResponse()
@@ -44,14 +43,14 @@ class Pool(Base):
         return response.text, response.status_code, {'Content-Type': 'application/json'}
 
     def doPoolRequest(self, url, method, mdx, headers, cookies):
-        tm1_session_id = self.setting.getTM1SessionId()
+        pool_user = self.setting.getPoolUser()
 
-        authorization_required = tm1_session_id is None
+        authorization_required = pool_user['session'] == ''
 
         if authorization_required:
-            headers['Authorization'] = self.setting.getPoolCamNamespace()
+            headers['Authorization'] = self.setting.getPoolCamNamespace(pool_user['name'])
         else:
-            cookies["TM1SessionId"] = tm1_session_id
+            cookies["TM1SessionId"] = pool_user['session']
 
         response = requests.request(
             url=url,
@@ -62,7 +61,10 @@ class Pool(Base):
             verify=False)
 
         if authorization_required:
-            self.setting.setTM1SessionId(response.cookies.get('TM1SessionId'))
+            pool_user['session'] = response.cookies.get('TM1SessionId')
+            self.setting.updatePoolUser(pool_user)
+        else:
+            self.setting.decreasePoolUserSessionCount(pool_user)
 
         return response
 
@@ -71,15 +73,15 @@ class Pool(Base):
 
     def getTM1Service(self):
 
-        tm1_session_id = self.setting.getTM1SessionId()
+        pool_user = self.setting.getPoolUser()
 
-        authorization_required = tm1_session_id is None
+        authorization_required = pool_user['session'] == ''
 
         if authorization_required:
             return TM1Service(base_url=self.setting.getPoolTargetUrl(),
                               namespace=self.setting.getAppCamNamespace(),
-                              user=self.setting.getPoolUser(),
-                              password=self.setting.getPassword(),
+                              user=pool_user['name'],
+                              password=self.setting.getPassword(pool_user['name']),
                               ssl=False)
         else:
-            return TM1Service(base_url=self.setting.getPoolTargetUrl(), session_id=tm1_session_id, ssl=False)
+            return TM1Service(base_url=self.setting.getPoolTargetUrl(), session_id=pool_user['session'], ssl=False)
