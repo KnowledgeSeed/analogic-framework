@@ -902,41 +902,77 @@ PivotTableWidget.getPivotTable = (expandRowCell, expandRowCard, expandColCell, e
 };
 
 PivotTableWidget.renderExpandedCols = (d, expandCell, colors) => {
-    let c, totalColspan = 1, row = $(expandCell.parent().parent()[0].firstChild);
+    let h = [], c, r, o, line, totalColspan = 1, row = expandCell.parent(), rowId = row.index(), cols = d.data.cols;
+    let colLen = cols.length, i = 0, j, cells = d.data.cells, groupId = row.data('i'), nextRow, h2 = (1 === expandCell.index()) ? ' h2' : '';
 
-    expandCell.prevAll().each((i, e) => totalColspan += e.colSpan);
+    if (groupId !== row.next().data('i')) {
+        r = row.clone();
+        r.children().slice(1).removeClass().addClass('ks-pivot-table-sign-cell').html('');
+        row.after(r);
+    }
+
+    row = $(row.parent()[0].firstChild);
+
+    expandCell.data('e', '').prevAll().each((i, e) => totalColspan += e.colSpan);
 
     while (row.length) {
         c = PivotTableWidget.getCellForColspan(row, totalColspan);
 
-        if ('i' in row.data()) {
-            
-        } else {
+        nextRow = row.next();
 
+        if (isNaN(groupId)) {
+            c.replaceWith('<td class="ks-pivot-table-content-cell' + h2 + '">' + cells.slice(i, i += colLen).join('</td><td class="ks-pivot-table-content-cell">') + '</td>');
+        } else {
+            o = colors[groupId];
+            line = '<td class="ks-pivot-table-col-group-sign-cell"><div class="ks-pivot-table-group-sign-middle" style="background-color: #' + o + ';"></div></td>';
+            groupId = nextRow.data('i');
+
+            if (row.index() === rowId + 1) {
+                for (j = 1; j < colLen; ++j) {
+                    r = cols[j][0];
+
+                    if (r[2]) {
+                        h.push('<td data-e="1" class="ks-pivot-table-col-group-sign-cell"><div style="border-color: #', o, ';" class="ks-pivot-table-group-sign-closed"><div style="background-color: #', o, ';"></div></div>', r[0], '</td>');
+                    } else {
+                        h.push('<td class="h5">', r[0], '</td>');
+                    }
+                }
+                c.after(h.join(''));
+            } else if (row.index() === rowId) {
+                c.after(line.repeat(colLen - 2) + '<td class="ks-pivot-table-col-group-sign-cell"><div class="ks-pivot-table-group-sign-end" style="background-color: #' + o + ';"><div style="background-color: #' + o + ';"></div></div></td>');
+            } else if (c.children('.ks-pivot-table-group-sign-start').length) {
+                c.after(line.repeat(colLen - 1));
+            } else if (c.children('.ks-pivot-table-group-sign-middle').length) {
+                c.replaceWith(line.repeat(colLen));
+            } else if (c.children('.ks-pivot-table-group-sign-end').length) {
+                c.html('<div class="ks-pivot-table-group-sign-middle" style="background-color: #' + o + ';"></div>').after(line.repeat(colLen - 2) + '<td class="ks-pivot-table-col-group-sign-cell"><div class="ks-pivot-table-group-sign-end" style="background-color: #' + o + ';"><div style="background-color: #' + o + ';"></div></div></td>');
+            } else {
+                c.replaceWith(('<td class="ks-pivot-table-' + (isNaN(groupId) ? 'header' : 'sign') + '-cell"></td>').repeat(colLen));
+            }
         }
 
-        row = row.next();
+        row = nextRow;
     }
 };
 
 PivotTableWidget.renderExpandedRows = (d, expandCell, colors) => {
-    const colId = expandCell.data('i'), colspan = expandCell.next().prop('colspan'), surroundingHtmls = PivotTableWidget.getSurroundingHtmlsForExpandedCell(expandCell, colors), color = colors[colId] || '3AA745';
+    const colId = expandCell.data('i'), colspan = expandCell.next().prop('colspan'), surroundingHtmls = PivotTableWidget.getSurroundingHtmlsForExpandedCell(expandCell, colors), color = colors[colId];
     let j, k = 0, h = [], rows = d.data.rows, len = rows.length, r, containsConsolidatedCell = false, cells = d.data.cells, colLen = d.data.cols.length;
 
     for (j = 1; j < len; ++j) {
         r = rows[j][0];
 
-        h.push('<tr>', surroundingHtmls[0], '<td data-i="', colId, '" class="ks-pivot-table-group-sign-cell"><div class="ks-pivot-table-group-sign-middle" style="background-color: #', color, ';"></div></td>');
+        h.push('<tr>', surroundingHtmls[0], '<td data-i="', colId, '" class="ks-pivot-table-group-sign-cell"><div class="ks-pivot-table-group-sign-', (j === len - 1 ? 'end' : 'middle'), '" style="background-color: #', color, ';">', (j === len - 1 ? '<div style="background-color: #' + color + ';"></div>' : ''), '</div></td>');
 
         if (r[2]) {
-            h.push('<td data-i="', colId, '" class="ks-pivot-table-group-sign-cell closed-cell"><div class="ks-pivot-table-group-sign-closed" style="border-color: #', color, ';"><div style="background-color: #', color, ';"></div></div></td><td data-i="', colId, '" colspan="', colspan - 1, '" class="ks-pivot-table-group-title-cell">', r[0], '</td>');
+            h.push('<td data-i="', colId, '" class="ks-pivot-table-group-sign-cell closed-cell"><div class="ks-pivot-table-group-sign-closed" style="border-color: #', color, ';"><div style="background-color: #', color, ';"></div></div></td><td data-i="', colId, '" colspan="', colspan - 1, '" class="ks-pivot-table-group-title-cell h3">', r[0], '</td>');
 
             containsConsolidatedCell = true;
         } else {
-            h.push('<td data-i="', colId, '" colspan="', colspan, '" class="ks-pivot-table-title-cell">', r[0], '</td>');
+            h.push('<td data-i="', colId, '" colspan="', colspan, '" class="ks-pivot-table-title-cell h3">', r[0], '</td>');
         }
 
-        h.push(surroundingHtmls[1], '<td class="ks-pivot-table-content-cell">', cells.slice(k, k += colLen).join('</td><td class="ks-pivot-table-content-cell">'), '</td></tr>');
+        h.push(surroundingHtmls[1], '<td class="ks-pivot-table-content-cell h2">', cells.slice(k, k += colLen).join('</td><td class="ks-pivot-table-content-cell">'), '</td></tr>');
     }
 
     r = expandCell.parent().after(h.join('')).prev();
@@ -984,9 +1020,11 @@ PivotTableWidget.getSurroundingHtmlsForExpandedCell = (expandCell, colors) => {
 };
 
 PivotTableWidget.renderPivotTable = (d, colors) => {
+    const t0 = performance.now();
+
     const h = [], v = [], cols = d.data.cols, colLen = cols.length, cells = d.data.cells, rows = d.data.rows, rowLen = rows.length, rowElementLen = rows[0].length;
     const colElementLen = cols[0].length, levelMtx = [], colLevelMtx = [], colHeaderMtx = [], maxColspansByLevels = [], colColors = colors[2], rowColors = colors[1], defaultColor = '3AA745';
-    let i, j, k, m, row, r, p, lastExpanded, expandClass, isExpanded, level, maxColspan, verticalLineCellsHtml, c, totalColspan = 0, name, color, colspan, levels, prevLevel, children;
+    let i, j, k, m, row, r, p, lastExpanded, expandClass, isExpanded, level, maxColspan, verticalLineCellsHtml, c, totalColspan = 0, name, color, colspan, levels, prevLevel, children, isLastRow;
 
     // ROW HEADER
 
@@ -1043,7 +1081,7 @@ PivotTableWidget.renderPivotTable = (d, colors) => {
     for (j = 0; j < rowElementLen; ++j) {
         r = PivotTableWidget.maxColspans[j];
 
-        v.push('<td data-i="', j, '" class="', (j === rowElementLen - 1 ? 'ks-pivot-table-close-group-cell' : 'ks-pivot-table-close-category-cell'), '" colspan="', r, '" style="color: #', (rowColors[j] || defaultColor), ';"><span class="icon-chevron-close-horizontal"></span></td>');
+        v.push('<td data-i="', j, '" class="ks-pivot-table-close-category-cell', (j === rowElementLen - 1 ? ' h4' : ''), '" colspan="', r, '" style="color: #', (rowColors[j] || defaultColor), ';', '"><span class="icon-chevron-close-horizontal"></span></td>');
 
         totalColspan += r;
     }
@@ -1125,10 +1163,12 @@ PivotTableWidget.renderPivotTable = (d, colors) => {
         for (k = 0; k < m; ++k) {
             c = row[k];
 
-            if (j === colElementLen - 1 && k === m - 1) {
+            isLastRow = (j === colElementLen - 1 && k === m - 1);
+
+            if (isLastRow) {
                 h.push('<tr data-i="', j, '">', v.join(''));
             } else {
-                h.push('<tr data-i="', j, '"><td colspan="', totalColspan, '"></td>');
+                h.push('<tr data-i="', j, '"><td class="h4" colspan="', totalColspan, '"></td>');
             }
 
             isExpanded = false;
@@ -1144,7 +1184,7 @@ PivotTableWidget.renderPivotTable = (d, colors) => {
                         r[3] = i;
                         lastExpanded = r;
                     } else if (false === r[2]) {
-                        h.push('<td class="ks-pivot-table-col-group-sign-cell"><div style="border-color: #', color, ';" class="ks-pivot-table-group-sign-closed"><div style="background-color: #', color, ';"></div></div>', r[0], '</td>');
+                        h.push('<td data-e="1" class="ks-pivot-table-col-group-sign-cell"><div style="border-color: #', color, ';" class="ks-pivot-table-group-sign-closed"><div style="background-color: #', color, ';"></div></div>', r[0], '</td>');
                         isExpanded = false;
                     } else {
                         h.push('<td class="ks-pivot-table-header-cell">', r[0], '</td>');
@@ -1163,7 +1203,7 @@ PivotTableWidget.renderPivotTable = (d, colors) => {
                             ++lastExpanded[3];
                         }
                     } else {
-                        h.push('<td class="ks-pivot-table-sign-cell"></td>');
+                        h.push('<td class="ks-pivot-table-', (isLastRow ? 'header' : 'sign'), '-cell"></td>');
                     }
                 }
             }
@@ -1190,10 +1230,18 @@ PivotTableWidget.renderPivotTable = (d, colors) => {
             maxColspan = PivotTableWidget.maxColspans[j];
 
             if (level) {
-                if (v[j]) {
-                    verticalLineCellsHtml = ('<td data-i="' + j + '" class="ks-pivot-table-group-sign-cell"><div class="ks-pivot-table-group-sign-middle" style="background-color: #' + color + ';"></div></td>').repeat(level);
+                if ((levelMtx[i + 1] || [])[j] >= level) {
+                    if (v[j]) {
+                        verticalLineCellsHtml = ('<td data-i="' + j + '" class="ks-pivot-table-group-sign-cell"><div class="ks-pivot-table-group-sign-middle" style="background-color: #' + color + ';"></div></td>').repeat(level);
+                    } else {
+                        verticalLineCellsHtml = ('<td data-i="' + j + '" class="ks-pivot-table-group-sign-cell"><div class="ks-pivot-table-group-sign-middle" style="background-color: #' + color + ';"></div></td>').repeat(level - 1) + '<td data-i="' + j + '"></td>';
+                    }
                 } else {
-                    verticalLineCellsHtml = ('<td data-i="' + j + '" class="ks-pivot-table-group-sign-cell"><div class="ks-pivot-table-group-sign-middle" style="background-color: #' + color + ';"></div></td>').repeat(level - 1) + '<td data-i="' + j + '"></td>';
+                    if (v[j]) {
+                        verticalLineCellsHtml = ('<td data-i="' + j + '" class="ks-pivot-table-group-sign-cell"><div class="ks-pivot-table-group-sign-end" style="background-color: #' + color + ';"><div style="background-color: #' + color + ';"></div></div></td>').repeat(level);
+                    } else {
+                        verticalLineCellsHtml = ('<td data-i="' + j + '" class="ks-pivot-table-group-sign-cell"><div class="ks-pivot-table-group-sign-end" style="background-color: #' + color + ';"><div style="background-color: #' + color + ';"></div></div></td>').repeat(level - 1) + '<td data-i="' + j + '"></td>';
+                    }
                 }
             } else {
                 verticalLineCellsHtml = '';
@@ -1221,20 +1269,22 @@ PivotTableWidget.renderPivotTable = (d, colors) => {
                         c = ' closed-cell';
                     }
 
-                    h.push(verticalLineCellsHtml, '<td data-i="', j, '" class="ks-pivot-table-group-sign-cell', c, '"><div class="ks-pivot-table-group-sign-', expandClass, '" style="border-color: #', color, ';"><div style="background-color: #', color, ';"></div></div></td><td data-i="', j, '" colspan="', maxColspan - level - 1, '" class="ks-pivot-table-group-title-cell">', r[0], '</td>');
+                    h.push(verticalLineCellsHtml, '<td data-i="', j, '" class="ks-pivot-table-group-sign-cell', c, '"><div class="ks-pivot-table-group-sign-', expandClass, '" style="border-color: #', color, ';"><div style="background-color: #', color, ';"></div></div></td><td data-i="', j, '" colspan="', maxColspan - level - 1, '" class="ks-pivot-table-group-title-cell h3">', r[0], '</td>');
                 } else {
-                    h.push(verticalLineCellsHtml, '<td data-i="', j, '" colspan="', maxColspan - level, '" class="', (level ? 'ks-pivot-table-title-cell' : 'ks-pivot-table-category-cell'), '">', r[0], '</td>');
+                    h.push(verticalLineCellsHtml, '<td data-i="', j, '" colspan="', maxColspan - level, '" class="', (level ? 'ks-pivot-table-title-cell' : 'ks-pivot-table-category-cell'), ' h3">', r[0], '</td>');
                 }
             } else {
-                h.push(verticalLineCellsHtml, '<td data-i="', j, '" colspan="', maxColspan - level, '" class="ks-pivot-table-category-cell"></td>');
+                h.push(verticalLineCellsHtml, '<td data-i="', j, '" colspan="', maxColspan - level, '" class="ks-pivot-table-category-cell h3"></td>');
             }
         }
 
-        h.push('<td class="ks-pivot-table-content-cell">', cells.slice(k, k += colLen).join('</td><td class="ks-pivot-table-content-cell">'), '</td></tr>');
+        h.push('<td class="ks-pivot-table-content-cell h2">', cells.slice(k, k += colLen).join('</td><td class="ks-pivot-table-content-cell">'), '</td></tr>');
     }
 
     //table.html(h.join(''));
     $('#pivotTable').html(h.join('')).promise().then(() => PivotTableWidget.adjustPivotTableEndSigns());
+
+    L('RENDERED IN: ' + ((performance.now() - t0) / 1000) + ' seconds');
 }
 ;
 
@@ -1263,7 +1313,7 @@ PivotTableWidget.expandButtonClicked = e => {
 };
 
 PivotTableWidget.collapseCols = (btn, cell) => {
-    let row = cell.parent().next(), c, totalColspan = 1, hideLength = 0, offset = 0, nextSiblings = cell.nextAll(), i, len = nextSiblings.length;
+    let row = cell.parent().next(), c, color, totalColspan = 1, hideLength = 0, offset = 0, nextSiblings = cell.nextAll(), i, len = nextSiblings.length, rowId = row.index() - 1, groupId = row.data('i'), children;
 
     cell.prevAll().each((i, e) => totalColspan += e.colSpan);
 
@@ -1286,9 +1336,26 @@ PivotTableWidget.collapseCols = (btn, cell) => {
     row = $(row.parent()[0].firstChild);
 
     while (row.length) {
-        for (c of PivotTableWidget.getCellForColspan(row, totalColspan).nextAll().slice(0, hideLength)) {
+        cell = PivotTableWidget.getCellForColspan(row, totalColspan);
+        children = cell.nextAll().slice(0, hideLength);
+
+        for (c of children) {
             c = $(c);
             c.data('h', (c.data('h') || 0) + 1).hide();
+        }
+
+        if (offset && (row.index() < rowId) && (row.data('i') === groupId)) {
+            c = cell.children('.ks-pivot-table-group-sign-middle');
+
+            if (c.length) {
+                color = c.css('background-color');
+
+                for (c = 0; c < offset; ++c) {
+                    cell = cell.html('<td class="ks-pivot-table-sign-cell"></td>').prev();
+                }
+
+                cell.html('<div class="ks-pivot-table-group-sign-end" style="background-color: ' + color + ';"><div style="background-color: ' + color + ';"></div></div>');
+            }
         }
 
         row = row.next();
@@ -1302,18 +1369,18 @@ PivotTableWidget.collapseCols = (btn, cell) => {
 };
 
 PivotTableWidget.expandCols = (btn, cell) => {
-    let c = cell.next(), row = cell.parent();
+    let row = cell.parent(), groupId = row.data('i');
 
-    if (c.text() || !c.length) {
-        PivotTableWidget.getPivotTable(null, null, cell, /*this.holders.eq(2)*/$('#pivotColSelector').children('.ks-pivot-table-tag').eq(row.data('i')));
+    btn.addClass('ks-pivot-table-group-sign-start').removeClass('ks-pivot-table-group-sign-closed');
 
-        btn.addClass('ks-pivot-table-group-sign-start').removeClass('ks-pivot-table-group-sign-closed');
+    if (cell.data('e')) {
+        PivotTableWidget.getPivotTable(null, null, cell, /*this.holders.eq(2)*/$('#pivotColSelector').children('.ks-pivot-table-tag').eq(groupId));
 
         return;
     }
 
-    let i, totalColspan = 1, showLength = 0, offset = 0, nextSiblings = cell.nextAll();
-    let len = nextSiblings.length, color = cell.children().children().eq(0).css('background-color'), hiddenLevel;
+    let c = cell.next(), i, totalColspan = 1, showLength = 0, offset = 0, nextSiblings = cell.nextAll();
+    let rowId = row.index(), len = nextSiblings.length, color = cell.children().children().eq(0).css('background-color'), hiddenLevel;
 
     cell.prevAll().each((i, e) => totalColspan += e.colSpan);
 
@@ -1347,12 +1414,20 @@ PivotTableWidget.expandCols = (btn, cell) => {
             }
         }
 
+        if (offset && (row.index() < rowId) && (row.data('i') === groupId)) {
+            cell = PivotTableWidget.getCellForColspan(row, totalColspan - offset);
+
+            if (cell.children('.ks-pivot-table-group-sign-end').length) {
+                for (c = 0; c <= offset; ++c) {
+                    cell = cell.html('<div class="ks-pivot-table-group-sign-middle" style="background-color: ' + color + ';"></div>').next();
+                }
+            }
+        }
+
         row = row.next();
     }
 
-    nextSiblings.slice(0, showLength - 1).html('<div class="ks-pivot-table-group-sign-middle" style="background-color: ' + color + ';"></div>');
-
-    btn.addClass('ks-pivot-table-group-sign-start').removeClass('ks-pivot-table-group-sign-closed');
+    nextSiblings.slice(0, showLength + offset - 1).removeClass().addClass('ks-pivot-table-col-group-sign-cell').html('<div class="ks-pivot-table-group-sign-middle" style="background-color: ' + color + ';"></div>');
 };
 
 PivotTableWidget.collapseRows = (btn, cell) => {
@@ -1373,7 +1448,7 @@ PivotTableWidget.collapseRows = (btn, cell) => {
         }
 
         if (hideAllowed) {
-            if (c.hasClass('ks-pivot-table-group-sign-middle')) {
+            if (c.hasClass('ks-pivot-table-group-sign-middle') || c.hasClass('ks-pivot-table-group-sign-end')) {
                 row.data('h', (row.data('h') || 0) + 1).hide();
             } else {
                 break;
@@ -1417,7 +1492,9 @@ PivotTableWidget.doExpandRows = (cell, totalColspan) => {
         }
 
         if (showAllowed) {
-            if (cell.children().eq(0).hasClass('ks-pivot-table-group-sign-middle')) {
+            cell = cell.children().eq(0);
+
+            if (cell.hasClass('ks-pivot-table-group-sign-middle') || cell.hasClass('ks-pivot-table-group-sign-end')) {
                 hiddenLevel = row.data('h') - 1;
 
                 row.data('h', hiddenLevel);
