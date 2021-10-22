@@ -21,7 +21,7 @@ class SettingManager:
         self.site_root = site_root
         self.instance = instance
         cnf = self.getConfig()
-        self.poolUserManager = SqlitePoolUserManager(cnf['pool']['users'], instance)
+        self.poolUserManager = SqlitePoolUserManager(cnf['pool']['users'], site_root, instance)
 
     def clearCache(self):
         if self.cache is not None:
@@ -31,7 +31,10 @@ class SettingManager:
             self.cache.delete(self.getTM1SessionExpiresCacheKey())
             self.cache.delete(self.getClassesCacheKey())
             self.cache.delete(self.getFrameworkMdxCacheKey())
+        authentication_mode = self.getParam('authenticationMode')
+        if 'Pool' in authentication_mode:
             self.poolUserManager.clear()
+            self.poolUserManager.createDatabase()
         return "OK"
 
     def getInstance(self):

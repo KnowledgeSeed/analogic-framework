@@ -1,6 +1,5 @@
 from DimensionFramework.Core.SettingManager import SettingManager
 from flask_caching import Cache
-import os
 from flask import Flask
 import requests
 from multiprocessing import Pool, TimeoutError

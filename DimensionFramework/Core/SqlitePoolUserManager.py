@@ -1,5 +1,6 @@
 import sqlite3
 import logging
+import os
 
 
 def dict_factory(cursor, row):
@@ -11,18 +12,23 @@ def dict_factory(cursor, row):
 
 class SqlitePoolUserManager:
 
-    def __init__(self, users, instance='default'):
+    def __init__(self, users, site_root, instance='default'):
         self.table_name = instance + '_user_pool_session'
         self.users = users
+        self.site_root = site_root
 
     def getConnection(self):
-        return sqlite3.connect('pool.db')
+        return sqlite3.connect(os.path.join(self.site_root, 'pool.db'))
 
-    def getUser(self):
+    def createDatabase(self):
         con = self.getConnection()
         if self.isTableExists(con) is False:
             self.createTable(con)
             self.createUsers(con)
+        con.close()
+
+    def getUser(self):
+        con = self.getConnection()
         con.row_factory = dict_factory
         c = con.cursor()
         c.execute('SELECT * FROM ' + self.table_name + ' ORDER BY session_count')
@@ -61,7 +67,7 @@ class SqlitePoolUserManager:
         c = con.cursor()
         c.execute('UPDATE ' + self.table_name +
                   ' SET session_count = session_count - 1, session = :session, expiration = :expiration WHERE id = :id',
-                  {'session': pool_user['session'], 'expiration' : pool_user['expiration'], 'id': pool_user['id']})
+                  {'session': pool_user['session'], 'expiration': pool_user['expiration'], 'id': pool_user['id']})
         con.commit()
         con.close()
 
