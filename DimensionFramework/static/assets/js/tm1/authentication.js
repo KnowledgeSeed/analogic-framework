@@ -32,7 +32,7 @@ Auth.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
         },
         statusCode: {
             401: function () {
-                if (('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode) && app.handled401 === false) {
+                if (('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode || 'SSOBasicPool' === app.authenticationMode) && app.handled401 === false) {
                     app.handled401 = true;
                     $.cookie("authenticated", 0);
                     window.location.href = app.url.authenticationBridge;
@@ -47,7 +47,7 @@ Auth.handleSuccessLogin = () => {
         let date = new Date();
         date.setTime(date.getTime() + (app.sessionExpiresInMinutes * 60 * 1000));
         $.cookie("authenticated", 'authenticated', {expires: date});
-        if ('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode) {
+        if ('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode || 'SSOBasicPool' === app.authenticationMode) {
             app.handled401 = false;
         }
         //$.cookie("camPassport", 0);

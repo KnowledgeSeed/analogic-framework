@@ -1,6 +1,11 @@
 import os
 import sys
 from flask import json
+
+root = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.insert(0, root)
+sys.path.append(os.path.join(root, 'DimensionFramework'))
+
 from DimensionFramework.Core.SqlitePoolUserManager import SqlitePoolUserManager
 
 if len(sys.argv) < 2:
