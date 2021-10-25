@@ -134,8 +134,11 @@ class SettingManager:
             return None
         return tm1_session_id
 
-    def getPassword(self, user_name):
-        return keyring.get_password(self.getAppCamNamespace() + '/' + user_name, user_name)
+    def getPassword(self, user_name, namespace=''):
+        n = namespace
+        if n == '':
+            n = self.getAppCamNamespace()
+        return keyring.get_password(n + '/' + user_name, user_name)
 
     def getPoolUser(self):
         pool_user = self.poolUserManager.getUser()

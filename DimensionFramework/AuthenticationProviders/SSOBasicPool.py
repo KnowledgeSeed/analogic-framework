@@ -30,3 +30,17 @@ class SSOBasicPool(SSOPool):
             self.setting.decreasePoolUserSessionCount(pool_user)
 
         return response
+
+    def getHeaderForAccess(self):
+        return {'Content-Type': 'application/json; charset=utf-8',
+                'Accept-Encoding': 'gzip, deflate, br'}
+
+    def makePost(self, url, json, headers):
+        cnf = self.setting.getConfig()
+        sso_cnf = cnf['sso']
+        pwd = self.setting.getPassword(sso_cnf['admin'], sso_cnf['adminNamespace'])
+        return requests.post(url=url,
+                             data=json,
+                             headers=headers,
+                             auth=(sso_cnf['admin'], pwd),
+                             verify=False)
