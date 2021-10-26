@@ -182,7 +182,9 @@ QB.executeMDX = (repositoryId, path, extraParams = {}) => {
         u.url = mm.url;
         body = mm.body;
     }
-
+/*for(let ff = 0; ff < 120;++ff){
+    Auth.getTm1AjaxRequest(u.url, body, u.type, repositoryId);
+}*/
     return Auth.getTm1AjaxRequest(u.url, body, u.type, repositoryId).then((data) => {
         //save cellsetid
         r.cellsetId = data.ID;

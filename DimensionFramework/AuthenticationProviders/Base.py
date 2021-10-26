@@ -9,6 +9,7 @@ from DimensionFramework.Core.FileUploadManager import FileUploadManager
 from io import StringIO, BytesIO
 import logging
 
+
 class Base:
 
     def __init__(self, cache, site_root, instance='default'):

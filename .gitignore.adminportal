@@ -11,6 +11,7 @@ venv
 minified*.*
 logs
 *.log
+pool.db
 DimensionFramework/applications/*
 !DimensionFramework/applications/.placeholder
 !DimensionFramework/applications/adminportal

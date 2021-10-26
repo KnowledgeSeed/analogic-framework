@@ -12,7 +12,6 @@
     app.url.authenticationBridge = "{{ cnf.authenticationBridge|safe }}";
     app.url.apiLogout = '{{ cnf.apiLogout }}';
     app.url.logout = '{{ cnf.logout }}';
-    app.restRequestDebugFlag = {% if cnf.restRequestDebugFlag %}true{% else %}false{% endif %};
     app.tm1ApiHost = '{{ cnf.tm1ApiHost }}';
     app.tm1ApiSubPath = '{{ cnf.tm1ApiSubPath }}';
     app.tm1ExecuteMDX = '{{ cnf.tm1ExecuteMDX }}';

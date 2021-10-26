@@ -26,13 +26,10 @@ Auth.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
         },
         error: function (response, e) {
             L('error:', response, e, widgetId);
-            if (app.restRequestDebugFlag === true) {
-                Auth.showTm1ErrorPage(url, data, response, widgetId);
-            }
         },
         statusCode: {
             401: function () {
-                if (('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode) && app.handled401 === false) {
+                if (('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode || 'SSOBasicPool' === app.authenticationMode) && app.handled401 === false) {
                     app.handled401 = true;
                     $.cookie("authenticated", 0);
                     window.location.href = app.url.authenticationBridge;
@@ -47,7 +44,7 @@ Auth.handleSuccessLogin = () => {
         let date = new Date();
         date.setTime(date.getTime() + (app.sessionExpiresInMinutes * 60 * 1000));
         $.cookie("authenticated", 'authenticated', {expires: date});
-        if ('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode) {
+        if ('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode || 'SSOBasicPool' === app.authenticationMode) {
             app.handled401 = false;
         }
         //$.cookie("camPassport", 0);
@@ -91,22 +88,4 @@ Auth.getHeader = (contentType = 'application/json; charset=utf-8', accept = 'app
     }
 
     return headers;
-};
-
-Auth.showTm1ErrorPage = (url, body, event, widgetId) => {
-    El.body.empty().off().promise().then(() => {
-        El.body.html(`
-<div style="margin-left: 15px;">
-    <br/><h1>Error in api request!</h1><br/><br/>
-    ${widgetId !== '' ? ` <h3>widget:</h3><br/><textarea rows="1" cols="100">${widgetId}</textarea><br/><br/>` : ''}
-    <h3>response status:</h3><br/>
-    <textarea rows="2" cols="100">${event.status + ' ' + event.statusText}</textarea><br/><br/>
-    <h3>response text:</h3><br/>
-    <textarea rows="2" cols="100">${event.responseText}</textarea><br/><br/>
-    <h3>request url:</h3><br/>
-    <textarea rows="4" cols="100">${url}</textarea><br/><br/>
-    <h3>request body:</h3><br/>
-    <textarea rows="25" cols="100">${body}</textarea><br/><br/>
-</div>`);
-    });
 };
