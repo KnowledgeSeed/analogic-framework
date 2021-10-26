@@ -81,7 +81,7 @@ def ping(instance):
 
 
 @app.route('/middleware', defaults={'instance': 'default'}, methods=['GET', 'POST'])
-@app.route('/<path:instance>/middleware')
+@app.route('/<path:instance>/middleware', defaults={'instance': 'default'}, methods=['GET', 'POST'])
 def middleware(instance):
     dimension_name = request.values.get('dimension_name')
     hierarchy_name = request.values.get('hierarchy_name')

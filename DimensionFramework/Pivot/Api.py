@@ -98,9 +98,14 @@ def create_mdx(cube_name, selected_cards_data, expand_row_element=None, expand_c
         props = ''
         i = 0
         for d in selected_cards_data['cols']:
-            s = '[' + d['dimension'] + '].[' + d['hierarchy'] + '].['
-            mdx += (' * ' if i else '') + '{StrToSet("{' + s + d['subset'] + ']}")}'
+            s = '{[' + d['dimension'] + '].[' + d['hierarchy'] + '].['
+            m = '{StrToSet("' + s + d['subset'] + ']}")}'
+            for e in d['expanded_members']:
+                m = '{DRILLDOWNMEMBER(' + m + ', ' + s + e + ']})}'
+            for e in d['collapsed_members']:
+                m = '{DRILLUPMEMBER(' + m + ', ' + s + e + ']})}'
             #props += (', ' if i else '') + s + d['alias_attr_name'] + ']'
+            mdx += (' * ' if i else '') + m
             i += 1
         mdx += ((' PROPERTIES ' + props) if props else ' ') + ' ON COLUMNS'
 
@@ -115,9 +120,14 @@ def create_mdx(cube_name, selected_cards_data, expand_row_element=None, expand_c
         props = ''
         i = 0
         for d in selected_cards_data['rows']:
-            s = '[' + d['dimension'] + '].[' + d['hierarchy'] + '].['
-            mdx += (' * ' if i else ', ') + '{StrToSet("{' + s + d['subset'] + ']}")}'
+            s = '{[' + d['dimension'] + '].[' + d['hierarchy'] + '].['
+            m = '{StrToSet("' + s + d['subset'] + ']}")}'
+            for e in d['expanded_members']:
+                m = '{DRILLDOWNMEMBER(' + m + ', ' + s + e + ']})}'
+            for e in d['collapsed_members']:
+                m = '{DRILLUPMEMBER(' + m + ', ' + s + e + ']})}'
             #props += (', ' if i else '') + s + d['alias_attr_name'] + ']'
+            mdx += (' * ' if i else ', ') + m
             i += 1
         if i:
             mdx += ((' PROPERTIES ' + props) if props else ' ') + ' ON ROWS'
