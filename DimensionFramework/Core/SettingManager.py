@@ -21,7 +21,8 @@ class SettingManager:
         self.site_root = site_root
         self.instance = instance
         cnf = self.getConfig()
-        self.poolUserManager = SqlitePoolUserManager(cnf['pool']['users'], site_root, instance)
+        if 'Pool' in cnf['authenticationMode']:
+            self.poolUserManager = SqlitePoolUserManager(cnf['pool']['users'], site_root, instance)
 
     def clearCache(self):
         if self.cache is not None:
