@@ -4,7 +4,7 @@ from TM1py.Objects import Subset
 import json
 
 
-def call(dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, expand_row_element=None, expand_col_element=None):
+def call(dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, options=None, expand_row_element=None, expand_col_element=None):
     address = "https://kseed-dc1.knowledgeseed.local:5125/haysapi"
     namespace = "knowledgeseed"
     user = "tm1py"
@@ -26,11 +26,13 @@ def call(dimension_name=None, hierarchy_name=None, subset_name=None, element_nam
     data = {}
 
     if selected_cards:
+        options = json.loads(options)
+        cell_limit = options.get('cellLimit', 1000000);
         selected_cards_data = json.loads(selected_cards)
-        mdx = create_mdx(cube_name, selected_cards_data, expand_row_element, expand_col_element)
+        mdx = create_mdx(options, cube_name, selected_cards_data, expand_row_element, expand_col_element)
         cell_count = tm1.cells.execute_mdx_cellcount(mdx)
         data = {}
-        if cell_count < 2000000:
+        if cell_count < cell_limit:
             data = get_pivot_data(tm1, mdx, selected_cards_data)
         return jsonify({'mdx': mdx, 'cell_count': cell_count, 'data': data})
     elif element_names:
@@ -87,69 +89,71 @@ def get_alias_attribute_names(hierarchy):
     return d
 
 
-def create_mdx(cube_name, selected_cards_data, expand_row_element=None, expand_col_element=None):
-    mdx = 'SELECT '
+def create_mdx(options, cube_name, selected_cards_data, expand_row_element=None, expand_col_element=None):
+    mdx = 'SELECT ' + ('NON EMPTY ' if options.get('nonEmptyColumns', False) else '')
 
     if expand_col_element:
         d = json.loads(expand_col_element)
-        s = d['dimension'] + '].[' + d['hierarchy'] + '].[' + d['member']
+        s = rep(d['dimension']) + '].[' + rep(d['hierarchy']) + '].[' + rep(d['member'])
         mdx += ' {DRILLDOWNMEMBER({[' + s + ']}, {[' + s + ']})} ON COLUMNS'
     else:
         props = ''
         i = 0
         for d in selected_cards_data['cols']:
-            s = '{[' + d['dimension'] + '].[' + d['hierarchy'] + '].['
-            m = '{StrToSet("' + s + d['subset'] + ']}")}'
+            s = '{[' + rep(d['dimension']) + '].[' + rep(d['hierarchy']) + '].['
+            m = '{StrToSet("' + s + rep(d['subset']) + ']}")}'
             for e, isToExpand in d['expanded_collapsed_members'].items():
                 if isToExpand is None:
                     continue
                 elif isToExpand:
-                    m = '{DRILLDOWNMEMBER(' + m + ', ' + s + e + ']})}'
+                    m = '{DRILLDOWNMEMBER(' + m + ', ' + s + rep(e) + ']})}'
                 else:
-                    m = '{DRILLUPMEMBER(' + m + ', ' + s + e + ']})}'
+                    m = '{DRILLUPMEMBER(' + m + ', ' + s + rep(e) + ']})}'
             #props += (', ' if i else '') + s + d['alias_attr_name'] + ']'
             mdx += (' * ' if i else '') + m
             i += 1
         mdx += ((' PROPERTIES ' + props) if props else ' ') + ' ON COLUMNS'
 
-    #if selected_subsets['rows']:
-    #    mdx += ', NON EMPTY '
+    if selected_cards_data['rows']:
+        mdx += ', ' + ('NON EMPTY ' if options.get('nonEmptyRows', True) else '')
 
     if expand_row_element:
         d = json.loads(expand_row_element)
-        s = d['dimension'] + '].[' + d['hierarchy'] + '].[' + d['member']
+        s = rep(d['dimension']) + '].[' + rep(d['hierarchy']) + '].[' + rep(d['member'])
         mdx += ', {DRILLDOWNMEMBER({[' + s + ']}, {[' + s + ']})} ON ROWS'
     else:
         props = ''
         i = 0
         for d in selected_cards_data['rows']:
-            s = '{[' + d['dimension'] + '].[' + d['hierarchy'] + '].['
-            m = '{StrToSet("' + s + d['subset'] + ']}")}'
+            s = '{[' + rep(d['dimension']) + '].[' + rep(d['hierarchy']) + '].['
+            m = '{StrToSet("' + s + rep(d['subset']) + ']}")}'
             for e, isToExpand in d['expanded_collapsed_members'].items():
                 if isToExpand is None:
                     continue
                 elif isToExpand:
-                    m = '{DRILLDOWNMEMBER(' + m + ', ' + s + e + ']})}'
+                    m = '{DRILLDOWNMEMBER(' + m + ', ' + s + rep(e) + ']})}'
                 else:
-                    m = '{DRILLUPMEMBER(' + m + ', ' + s + e + ']})}'
+                    m = '{DRILLUPMEMBER(' + m + ', ' + s + rep(e) + ']})}'
             #props += (', ' if i else '') + s + d['alias_attr_name'] + ']'
-            mdx += (' * ' if i else ', ') + m
+            mdx += (' * ' if i else '') + m
             i += 1
         if i:
             mdx += ((' PROPERTIES ' + props) if props else ' ') + ' ON ROWS'
 
-    mdx += ' FROM [' + cube_name + ']'
+    mdx += ' FROM [' + rep(cube_name) + ']'
 
     if selected_cards_data['slices']:
         mdx += ' WHERE ('
         i = 0
         for d in selected_cards_data['slices']:
-            mdx += (', ' if i else '') + '[' + d['dimension'] + '].[' + d['hierarchy'] + '].[' + str(d['element']) + ']'
+            mdx += (', ' if i else '') + '[' + rep(d['dimension']) + '].[' + rep(d['hierarchy']) + '].[' + rep(str(d['element'])) + ']'
             i += 1
         mdx += ')'
 
     return mdx
 
+def rep(s):
+    return s.replace(']', ']]')
 
 def get_pivot_data(tm1, mdx, selected_cards_data):
     alias_attribute_names = {}
@@ -197,6 +201,9 @@ Cells(
 
 
 def get_pivot_header_data(tuples, alias_attribute_names_by_member_ids):
+    if not tuples:
+        return []
+
     data = []
     last_names = [0] * len(tuples[0]['Members'])
     alias_attribute_names_len = len(alias_attribute_names_by_member_ids)
