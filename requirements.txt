@@ -19,3 +19,5 @@ keyring==23.0.0
 cheroot~=8.5.2
 xlrd==2.0.1
 openpyxl==3.0.7
+pycryptodome==3.11.0
+pbkdf2==1.3

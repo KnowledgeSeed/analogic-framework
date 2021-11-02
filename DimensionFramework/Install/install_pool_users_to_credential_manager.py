@@ -3,6 +3,12 @@ import os
 import sys
 from flask import json
 
+root = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.insert(0, root)
+sys.path.append(os.path.join(root, 'DimensionFramework'))
+
+from DimensionFramework.Core.SettingManager import encrypt, getSaltForKey
+
 if len(sys.argv) < 2:
     print('Please add application name as parameter')
     exit(0)
@@ -34,6 +40,6 @@ if len(p['passwords']) != len(setting['pool']['users']):
     exit(0)
 
 for idx, u in enumerate(setting['pool']['users']):
-    keyring.set_password(setting['camNamespace'] + '/' + u, u, p['passwords'][idx])
+    keyring.set_password(setting['camNamespace'] + '/' + u, u, encrypt(p['passwords'][idx], getSaltForKey(u)))
 
 print('users added')

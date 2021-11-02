@@ -5,7 +5,45 @@ import keyring
 import base64
 from flask import json
 import logging
+from pbkdf2 import PBKDF2
+from Crypto.Cipher import AES
 from DimensionFramework.Core.SqlitePoolUserManager import SqlitePoolUserManager
+
+saltSeed = 'zuhder75w7ef4fgbrs'
+
+PASSPHRASE_SIZE = 64
+KEY_SIZE = 32
+BLOCK_SIZE = 16
+IV_SIZE = 16
+SALT_SIZE = 8
+
+
+def getSaltForKey(key):
+    return PBKDF2(key, saltSeed).read(SALT_SIZE)
+
+
+def encrypt(plaintext, salt):
+    init_vector = os.urandom(IV_SIZE)
+
+    key = PBKDF2('testpassphrase', salt).read(KEY_SIZE)
+
+    cipher = AES.new(key, AES.MODE_CBC, init_vector)
+
+    text = plaintext + ' ' * (BLOCK_SIZE - (len(plaintext) % BLOCK_SIZE))
+
+    return (init_vector + cipher.encrypt(text.encode('utf8'))).decode('latin-1')
+
+
+def decrypt(ciphertext, salt):
+    key = PBKDF2('testpassphrase', salt).read(KEY_SIZE)
+
+    init_vector = ciphertext[:IV_SIZE]
+    ciphertext = ciphertext[IV_SIZE:]
+
+    cipher = AES.new(key, AES.MODE_CBC,
+                     init_vector)
+
+    return str(cipher.decrypt(ciphertext), 'utf-8').rstrip(' ')
 
 
 class SettingManager:
@@ -21,7 +59,8 @@ class SettingManager:
         self.site_root = site_root
         self.instance = instance
         cnf = self.getConfig()
-        self.poolUserManager = SqlitePoolUserManager(cnf['pool']['users'], site_root, instance)
+        if 'Pool' in cnf['authenticationMode']:
+            self.poolUserManager = SqlitePoolUserManager(cnf['pool']['users'], site_root, instance)
 
     def clearCache(self):
         if self.cache is not None:
@@ -138,7 +177,7 @@ class SettingManager:
         n = namespace
         if n == '':
             n = self.getAppCamNamespace()
-        return keyring.get_password(n + '/' + user_name, user_name)
+        return decrypt(keyring.get_password(n + '/' + user_name, user_name).encode('latin_1'), getSaltForKey(user_name))
 
     def getPoolUser(self):
         pool_user = self.poolUserManager.getUser()
@@ -184,6 +223,7 @@ class SettingManager:
     def getSsoCamNamespace(self):
         cnf = self.getConfig()
         password = keyring.get_password(cnf['sso']['adminNamespace'] + '/' + cnf['sso']['admin'], cnf['sso']['admin'])
+        password = decrypt(password.encode('latin_1'), getSaltForKey(cnf['sso']['admin']))
         s = cnf['sso']['admin'] + ":" + password + ":" + cnf['sso']['adminNamespace']
         return 'CAMNamespace ' + base64.b64encode(s.encode('utf-8')).decode("utf-8")
 
