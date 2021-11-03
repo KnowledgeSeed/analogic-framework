@@ -102,8 +102,7 @@ class SSOPool(Pool):
         if sso_token is None:
             return {'msg': 'sso token is null', 'token': ''}
 
-        cnf = self.setting.getConfig()
-        secret = cnf['sso']['secret']
+        secret = self.setting.getFrameworkSSOKey()
         msg = ''
         decoded_token = ''
 

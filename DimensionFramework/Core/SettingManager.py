@@ -53,6 +53,7 @@ class SettingManager:
     TM1SessionId = 'dimension_framework_tm1_session_id'
     TM1SessionExpires = 'dimension_framework_tm1_session_expires'
     FRAMEWORK_MDX = 'dimension_framework_mdx'
+    FRAMEWORK_SSO_KEY_NAME = 'dimension_framework_key'
 
     def __init__(self, cache, site_root, instance='default'):
         self.cache = cache
@@ -99,6 +100,13 @@ class SettingManager:
 
     def getInstanceCacheKey(self, key):
         return self.getInstance() + '_' + key
+
+    def getFrameworkSSOKey(self):
+        u = self.getFrameworkSSOKeyName()
+        return keyring.get_password(u, u)
+
+    def getFrameworkSSOKeyName(self):
+        return self.getInstance() + '_' + self.FRAMEWORK_SSO_KEY_NAME
 
     def getConfig(self):
         cnf = self.getJsonSetting(self.getConfigCacheKey(), 'config')

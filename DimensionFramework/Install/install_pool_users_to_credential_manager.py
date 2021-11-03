@@ -19,8 +19,8 @@ if os.path.exists(json_url) is False:
     exit(0)
 
 passwords_url = os.path.join(os.path.dirname(__file__), 'pwd.json')
-if os.path.exists(json_url) is False:
-    print('path does not exists: ' + json_url)
+if os.path.exists(passwords_url) is False:
+    print('path does not exists: ' + passwords_url)
     exit(0)
 
 setting = json.load(open(json_url), encoding="utf-8")
