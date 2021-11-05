@@ -9,8 +9,6 @@ from pbkdf2 import PBKDF2
 from Crypto.Cipher import AES
 from DimensionFramework.Core.SqlitePoolUserManager import SqlitePoolUserManager
 
-saltSeed = 'zuhder75w7ef4fgbrs'
-
 PASSPHRASE_SIZE = 64
 KEY_SIZE = 32
 BLOCK_SIZE = 16
@@ -18,14 +16,17 @@ IV_SIZE = 16
 SALT_SIZE = 8
 
 
-def getSaltForKey(key):
-    return PBKDF2(key, saltSeed).read(SALT_SIZE)
+def getSaltForKey(key, salt_name):
+    salt_seed = keyring.get_password(salt_name, salt_name)
+    return PBKDF2(key, salt_seed).read(SALT_SIZE)
 
 
-def encrypt(plaintext, salt):
+def encrypt(plaintext, salt, passphrase_name):
+    passphrase = keyring.get_password(passphrase_name, passphrase_name)
+
     init_vector = os.urandom(IV_SIZE)
 
-    key = PBKDF2('testpassphrase', salt).read(KEY_SIZE)
+    key = PBKDF2(passphrase, salt).read(KEY_SIZE)
 
     cipher = AES.new(key, AES.MODE_CBC, init_vector)
 
@@ -34,8 +35,10 @@ def encrypt(plaintext, salt):
     return (init_vector + cipher.encrypt(text.encode('utf8'))).decode('latin-1')
 
 
-def decrypt(ciphertext, salt):
-    key = PBKDF2('testpassphrase', salt).read(KEY_SIZE)
+def decrypt(ciphertext, salt, passphrase_name):
+    passphrase = keyring.get_password(passphrase_name, passphrase_name)
+
+    key = PBKDF2(passphrase, salt).read(KEY_SIZE)
 
     init_vector = ciphertext[:IV_SIZE]
     ciphertext = ciphertext[IV_SIZE:]
@@ -54,6 +57,8 @@ class SettingManager:
     TM1SessionExpires = 'dimension_framework_tm1_session_expires'
     FRAMEWORK_MDX = 'dimension_framework_mdx'
     FRAMEWORK_SSO_KEY_NAME = 'dimension_framework_key'
+    FRAMEWORK_SSO_PASSPHRASE_NAME = 'dimension_framework_passphrase'
+    FRAMEWORK_SSO_SALT_NAME = 'dimension_framework_salt'
 
     def __init__(self, cache, site_root, instance='default'):
         self.cache = cache
@@ -107,6 +112,12 @@ class SettingManager:
 
     def getFrameworkSSOKeyName(self):
         return self.getInstance() + '_' + self.FRAMEWORK_SSO_KEY_NAME
+
+    def getFrameworkSSOPassPhrase(self):
+        return self.getInstance() + '_' + self.FRAMEWORK_SSO_PASSPHRASE_NAME
+
+    def getFrameworkSSOSaltName(self):
+        return self.getInstance() + '_' + self.FRAMEWORK_SSO_SALT_NAME
 
     def getConfig(self):
         cnf = self.getJsonSetting(self.getConfigCacheKey(), 'config')
@@ -185,7 +196,8 @@ class SettingManager:
         n = namespace
         if n == '':
             n = self.getAppCamNamespace()
-        return decrypt(keyring.get_password(n + '/' + user_name, user_name).encode('latin_1'), getSaltForKey(user_name))
+        return decrypt(keyring.get_password(n + '/' + user_name, user_name).encode('latin_1'),
+                       getSaltForKey(user_name, self.getFrameworkSSOSaltName()))
 
     def getPoolUser(self):
         pool_user = self.poolUserManager.getUser()
@@ -231,7 +243,8 @@ class SettingManager:
     def getSsoCamNamespace(self):
         cnf = self.getConfig()
         password = keyring.get_password(cnf['sso']['adminNamespace'] + '/' + cnf['sso']['admin'], cnf['sso']['admin'])
-        password = decrypt(password.encode('latin_1'), getSaltForKey(cnf['sso']['admin']))
+        password = decrypt(password.encode('latin_1'),
+                           getSaltForKey(cnf['sso']['admin'], self.getFrameworkSSOSaltName()))
         s = cnf['sso']['admin'] + ":" + password + ":" + cnf['sso']['adminNamespace']
         return 'CAMNamespace ' + base64.b64encode(s.encode('utf-8')).decode("utf-8")
 
