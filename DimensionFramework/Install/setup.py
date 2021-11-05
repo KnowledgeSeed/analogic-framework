@@ -1,9 +1,9 @@
 import os
 import sys
 from flask import json
-from functions import generateKey
+from functions import createPoolUserDB, generateKey, installPoolUsers
 
-if len(sys.argv) < 2:
+if len(sys.argv) < 4:
     print('Please add arguments')
     print('setup.py applicationName passPhrase salt')
     exit(0)
@@ -15,7 +15,10 @@ if os.path.exists(json_url) is False:
 
 setting = json.load(open(json_url), encoding="utf-8")
 
-generateKey(sys.argv[1], sys.argv[2], sys.argv[3])
+application = sys.argv[1]
+passphrase = sys.argv[2]
+salt = sys.argv[3]
 
-
-
+createPoolUserDB(setting, application)
+generateKey(application, passphrase, salt)
+installPoolUsers(application, setting)
