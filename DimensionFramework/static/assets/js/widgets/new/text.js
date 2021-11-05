@@ -49,7 +49,7 @@ class TextWidget extends Widget {
         v.bodyFontColor && bodyStyles.push(`color:${v.bodyFontColor};`);
         v.bodyFontSize && bodyStyles.push(`font-size:${v.bodyFontSize}px;`);
         v.bodyFontWeight && bodyStyles.push(`font-weight:${v.bodyFontWeight};`);
-        v.bodyBackgroundColor && titleStyles.push(`background-color:${v.bodyBackgroundColor};`);
+        v.bodyBackgroundColor && bodyStyles.push(`background-color:${v.bodyBackgroundColor};`);
 
         v.iconWidth && iconStyles.push('width:', v.iconWidth, 'px;');
         v.iconHeight && iconStyles.push('height:', v.iconHeight, 'px;');

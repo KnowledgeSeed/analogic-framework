@@ -24,6 +24,8 @@ if 'pool' not in setting or 'users' not in setting['pool']:
     exit(0)
 
 for idx, u in enumerate(setting['pool']['users']):
-    keyring.delete_password(setting['camNamespace'] + '/' + u, u)
+    p = keyring.get_password(setting['camNamespace'] + '/' + u, u)
+    if p is not None:
+        keyring.delete_password(setting['camNamespace'] + '/' + u, u)
 
 print('users removed')

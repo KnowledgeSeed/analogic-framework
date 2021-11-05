@@ -3,6 +3,12 @@ import os
 import sys
 from flask import json
 
+root = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.insert(0, root)
+sys.path.append(os.path.join(root, 'DimensionFramework'))
+
+from DimensionFramework.Core.SettingManager import encrypt, getSaltForKey
+
 if len(sys.argv) < 2:
     print('Please add application name as parameter')
     exit(0)
@@ -13,8 +19,8 @@ if os.path.exists(json_url) is False:
     exit(0)
 
 passwords_url = os.path.join(os.path.dirname(__file__), 'pwd.json')
-if os.path.exists(json_url) is False:
-    print('path does not exists: ' + json_url)
+if os.path.exists(passwords_url) is False:
+    print('path does not exists: ' + passwords_url)
     exit(0)
 
 setting = json.load(open(json_url), encoding="utf-8")
@@ -34,6 +40,6 @@ if len(p['passwords']) != len(setting['pool']['users']):
     exit(0)
 
 for idx, u in enumerate(setting['pool']['users']):
-    keyring.set_password(setting['camNamespace'] + '/' + u, u, p['passwords'][idx])
+    keyring.set_password(setting['camNamespace'] + '/' + u, u, encrypt(p['passwords'][idx], getSaltForKey(u)))
 
 print('users added')
