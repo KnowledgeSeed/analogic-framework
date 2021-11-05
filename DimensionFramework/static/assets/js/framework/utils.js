@@ -3,7 +3,7 @@
 'use strict';
 
 const L = console.log,
-    v = (path, obj = WidgetValue) => path.split(".").reduce((o, key) => o && o[key] ? o[key] : false, obj);
+v = (path, obj = WidgetValue) => path.split(".").reduce((o, key) => o && o[key] ? o[key] : false, obj);
 
 const Utils = {
     sleep: ms => new Promise(resolve => setTimeout(resolve, ms)),
@@ -14,22 +14,23 @@ const Utils = {
         return e;
     },
     cleanStr: s => Utils.replaceAll(s, {
-        'ö': 'o',
-        'ü': 'u',
-        'ó': 'o',
-        'ő': 'o',
-        'ú': 'u',
-        'é': 'e',
-        'á': 'a',
-        'ű': 'u',
-        'í': 'i'
-    }),
+            'ö': 'o',
+            'ü': 'u',
+            'ó': 'o',
+            'ő': 'o',
+            'ú': 'u',
+            'é': 'e',
+            'á': 'a',
+            'ű': 'u',
+            'í': 'i'
+        }),
     clone: (object, deep) => deep ? $.extend(true, {}, object) : $.extend({}, object),
     replaceAll: (s, m) => s.replace(RegExp(Object.keys(m).join('|'), 'gi'), r => m[r.toLowerCase()]),
     scrollTop: duration => $('html, body').animate({scrollTop: 0}, duration || 500),
-    scrollTo(id, duration) {
-        El.body.triggerHandler('refresh.' + id);
-        $('html, body').animate({scrollTop: $('#' + id).offset().top}, duration || 500);
+    scrollTo(idOrObj, duration) {
+        let isObj = 'object' === typeof idOrObj;
+        El.body.triggerHandler('refresh.' + (isObj ? idOrObj.attr('id') : idOrObj));
+        $('html, body').animate({scrollTop: (isObj ? idOrObj : $('#' + idOrObj)).offset().top}, duration || 500);
     },
     getRandomId: () => window.crypto.getRandomValues(new Uint32Array(1))[0],
     toTitleCase: str => str.toLowerCase().replace(/(?:^|\s)\w/g, match => match.toUpperCase()),
@@ -81,7 +82,7 @@ const Utils = {
     getToday: (delimiter = '.') => Utils.getFormattedDate(new Date(), delimiter),
     getTimestamp(dateStr = '', forwardTime = false) {
         const d = dateStr ? new Date(dateStr.replace(/\./g, '-')) : new Date(),
-            o = forwardTime ? Utils.forwardTime(d) : Utils.rewindTime(d);
+        o = forwardTime ? Utils.forwardTime(d) : Utils.rewindTime(d);
 
         return o.getFullYear() + '-' + (o.getMonth() + 1).toString().padStart(2, 0) + '-' + o.getDate().toString().padStart(2, 0) + 'T' + o.getHours().toString().padStart(2, 0) + ':' + o.getMinutes().toString().padStart(2, 0) + ':' + o.getSeconds().toString().padStart(2, 0) + '.' + o.getMilliseconds().toString().padStart(3, 0) + 'Z';
     },
@@ -184,7 +185,7 @@ const Utils = {
     },
     getGridTableCurrentCell(widgetId) {
         let a = v(widgetId + '.cellData', WidgetValue), b = v(widgetId + '.row', WidgetValue),
-            c = v(widgetId + '.column', WidgetValue);
+        c = v(widgetId + '.column', WidgetValue);
         if (a && b && c) {
             return a[b][c];
         }
@@ -279,7 +280,7 @@ const Utils = {
     },
     getGridTableActualAndLastPage(widgetId) {
         let state = WidgetState[widgetId], maxPage = Math.ceil(state.rows / state.maxRows),
-            actualPage = state.page ? state.page : 1;
+        actualPage = state.page ? state.page : 1;
         return {actualPage: actualPage, maxPage: maxPage};
     },
     getGridTablePagerText(widgetId) {
@@ -353,7 +354,7 @@ const Utils = {
     },
     modifyFileName(widgetId, newName) {
         let file = WidgetValue[widgetId].form.get('file0'), splittedName = file.name.split('.'),
-            fileExt = splittedName[splittedName.length - 1];
+        fileExt = splittedName[splittedName.length - 1];
         file = new File([file], newName + "." + fileExt, {type: file.type});
         WidgetValue[widgetId].form.set('file0', file);
     },
@@ -373,7 +374,7 @@ const Utils = {
     },
     getHorizontalTableHiddenValue(widgetId, actionName, colIndex, valueName) {
         let w = v(widgetId);
-        if(!w || !w[actionName]){
+        if (!w || !w[actionName]) {
             return '';
         }
         let index = 'undefined' !== typeof w[actionName].index ? w[actionName].index : w[actionName].rowindex;

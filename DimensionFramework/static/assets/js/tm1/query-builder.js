@@ -1,4 +1,4 @@
-/* global app, El, Loader, Auth, FileUpload, Repository, Utils, WidgetValue, MiddleWare */
+/* global app, El, EventMap, Loader, Auth, FileUpload, Repository, Server, Utils, WidgetValue, Pivot */
 
 'use strict';
 const QB = {};
@@ -22,8 +22,8 @@ QB.loadData = (argument, type, useDefaultData = false, path = 'init', extraParam
             return Auth.loadDefault(type);
         }
 
-        if (r[path].middleware) {
-            return MiddleWare.call(r[path]).then(d => d);
+        if (r[path].pivot) {
+            return Pivot.call(r[path]).then(d => d);
         }
 
         if (Array.isArray(r[path])) {
@@ -111,6 +111,9 @@ QB.executeMDXs = (repositoryId, path) => {
         if (p.execute) {
             deffered.push($.Deferred().resolve(p.execute(WidgetValue, repositoryId, Repository[repositoryId])));
             isQuery.push(false);
+        } else if (p.pivot) {
+            deffered.push(Pivot.call(p));
+            isQuery.push(true);
         } else {
             body = p.body(WidgetValue, repositoryId, Repository[repositoryId]);
 
@@ -143,7 +146,7 @@ QB.executeMDXs = (repositoryId, path) => {
                 } else if (t.type === 'list') {
                     d.push(QB.processResultAsList(t, r));
                 } else if (t.type === 'script') {
-                    return t.script(r, repositoryId, Repository[repositoryId]);
+                    d.push(t.script(r, repositoryId, Repository[repositoryId]));
                 } else {
                     d.push(QB.processResultAsObject(t.query, r));
                 }
@@ -182,9 +185,9 @@ QB.executeMDX = (repositoryId, path, extraParams = {}) => {
         u.url = mm.url;
         body = mm.body;
     }
-/*for(let ff = 0; ff < 120;++ff){
-    Auth.getTm1AjaxRequest(u.url, body, u.type, repositoryId);
-}*/
+    /*for(let ff = 0; ff < 120;++ff){
+     Auth.getTm1AjaxRequest(u.url, body, u.type, repositoryId);
+     }*/
     return Auth.getTm1AjaxRequest(u.url, body, u.type, repositoryId).then((data) => {
         //save cellsetid
         r.cellsetId = data.ID;
@@ -346,7 +349,7 @@ QB.getCellsetUrl = p => {
 QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
     let params = [],
     subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&server=1' : '' : url + '?server=1';
-    let newUrl = url.includes('pool') ? url : url.replace(app.tm1ApiHost, app.host + '/' + (app.subpath != '' ? app.subpath + '/' + app.instance : app.instance) + '/pool')
+    let newUrl = url.includes('pool') ? url : url.replace(app.tm1ApiHost, app.host + '/' + (app.subpath ? app.subpath + '/' + app.instance : app.instance) + '/pool');
 
     for (const [key, value] of Object.entries(body)) {
         params.push(`"${key}": "${value}"`);

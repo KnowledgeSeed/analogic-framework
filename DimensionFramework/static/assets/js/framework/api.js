@@ -1,65 +1,65 @@
-/* global app, El, PopupWidget, Loader, Listeners, PageState, Render, Utils, WidgetConfig, WidgetValue */
+/* global app, El, PopupWidget, Loader, Listeners, PageState, QB, Render, SliderWidget, TextWidget, Utils, WidgetConfig, WidgetState, WidgetValue, v */
 
 'use strict';
 app.widgetValue = WidgetValue;
 
 app.fn.handleListener = Listeners.handle;
 
-app.fn.showWidgets = function showWidgets(ids){
+app.fn.showWidgets = function showWidgets(ids) {
     ids.forEach(app.fn.showWidget);
-}
+};
 
-app.fn.showWidget = function showWidgets(id){
+app.fn.showWidget = function showWidgets(id) {
     $('#' + id).show().addClass('forcedByEventMap');
-}
+};
 
-app.fn.hideWidgets = function hideWidgets(ids){
+app.fn.hideWidgets = function hideWidgets(ids) {
     ids.forEach(app.fn.hideWidget);
-}
+};
 
-app.fn.hideWidget = function hideWidgets(id){
+app.fn.hideWidget = function hideWidgets(id) {
     $('#' + id).hide().addClass('forcedByEventMap');
-}
+};
 
-app.fn.toggleWidgets = function toggleWidgets(ids){
+app.fn.toggleWidgets = function toggleWidgets(ids) {
     ids.forEach(app.fn.toggleWidget);
-}
+};
 
-app.fn.toggleWidget = function toggleWidget(id){
+app.fn.toggleWidget = function toggleWidget(id) {
     $('#' + id).toggle().addClass('forcedByEventMap');
-}
+};
 
-app.fn.fadeOutWidget = function fadeOutWidget(id){
+app.fn.fadeOutWidget = function fadeOutWidget(id) {
     $('#' + id).fadeOut(300).addClass('forcedByEventMap');
-}
+};
 
-app.fn.fadeInWidget = function fadeInWidget(id){
+app.fn.fadeInWidget = function fadeInWidget(id) {
     $('#' + id).fadeIn(300).addClass('forcedByEventMap');
-}
+};
 
-app.fn.changeSegmentedControlSelection = function changeSegmentedControlSelection(tabId){
+app.fn.changeSegmentedControlSelection = function changeSegmentedControlSelection(tabId) {
     $('#' + tabId).addClass('on').closest('section').parent().closest('section').find('.segment').removeClass('on');
-}
+};
 
-app.fn.resetRadioButtons = function resetRadioButtons(id)  {
+app.fn.resetRadioButtons = function resetRadioButtons(id) {
     $('#' + id).find('.widget-radio').removeClass('on').closest('tr').attr('style', '');
-}
+};
 
 app.fn.scrollTo = function scrollTo() {
     Utils.scrollTo;
-}
+};
 
 app.fn.jumpTo = function jumpTo(id) {
     window.location.href = '#' + id;
-}
+};
 
 app.fn.openPage = function openPage(page) {
     Render.showPage(page);
-}
+};
 
 app.fn.backToMain = function backToMain() {
     Render.showPage(app.MainPage);
-}
+};
 
 app.fn.openPrevPage = function openPrevPage() {
     if (PageState.previous !== '') {
@@ -205,11 +205,11 @@ app.fn.openPageWithStateAndWaitingForEventAndScrollToSection = function openPage
 
 app.fn.removeWidgetValues = function removeWidgetValues(widgetIds) {
     widgetIds.forEach(id => WidgetValue[id] = {});
-}
+};
 
-app.fn.skip = function skip (arg) {
+app.fn.skip = function skip(arg) {
     return arg;
-}
+};
 
 app.fn.removePageValues = function removePageValues(pageId) {
     let page = WidgetConfig[pageId], w;
@@ -229,23 +229,25 @@ app.fn.removeValuesRecursively = function removeValuesRecursively(widgets) {
 
 app.fn.showToolTipsChanged = function showToolTipsChanged() {
     $('.ks-button-info').toggle(WidgetValue.ShowTooltips === true);
-}
+};
 
-app.fn.forceRefresh = function forceRefresh(widgetId){
+app.fn.forceRefresh = function forceRefresh(widgetId) {
     El.body.triggerHandler('forcerefresh.' + widgetId);
-}
+};
 
 app.fn.forceRefreshWidgets = function forceRefreshWidgets(widgetIds) {
     widgetIds.forEach(widgetId => El.body.triggerHandler('forcerefresh.' + widgetId));
-}
-
-app.fn.forceRefreshWithDelay = function forceRefreshWithDelay(argument) {
-    setTimeout(function(){ El.body.triggerHandler('forcerefresh.' + argument[0]); }, argument[1]);
 };
 
-app.fn.goToUrl = function goToUrl(url){
+app.fn.forceRefreshWithDelay = function forceRefreshWithDelay(argument) {
+    setTimeout(function () {
+        El.body.triggerHandler('forcerefresh.' + argument[0]);
+    }, argument[1]);
+};
+
+app.fn.goToUrl = function goToUrl(url) {
     window.location.href = url;
-}
+};
 
 app.fn.goToUrlNewTab = function goToUrlNewTab(url) {
     let win = window.open(url, '_blank');
@@ -254,25 +256,25 @@ app.fn.goToUrlNewTab = function goToUrlNewTab(url) {
 
 app.fn.showPopup = function showPopup(c, w = false) {
     app.popup.show(c, w);
-}
+};
 
 app.fn.changeSystemValue = function changeSystemValue(arg) {
     WidgetValue[arg[0]] = v(arg[1]) === 1;
-}
+};
 
-app.fn.addSystemValue = function addSystemValue (arg) {
+app.fn.addSystemValue = function addSystemValue(arg) {
     WidgetValue[arg[0]] = arg[1];
-}
+};
 
 app.fn.addSystemValueByVal = function addSystemValueByVal(arg) {
     WidgetValue[arg[0]] = v(arg[1]);
-}
+};
 
 app.fn.addGridTableSystemValue = function addGridTableSystemValue(arg) {
     let systemValueName = 'systemValue' + arg[0], gridTableValues = v(arg[1]);
 
     WidgetValue[systemValueName] = gridTableValues.cellData[gridTableValues.row][arg[2]][arg[3]];
-}
+};
 
 app.fn.addGridTableCurrentRowSystemValue = function addGridTableCurrentRowSystemValue(arg) {
     WidgetValue['systemValue' + arg[0]] = Utils.getGridTableCell(arg[1], arg[2])[arg[3]];
@@ -318,7 +320,7 @@ app.fn.removePageState = function removePageState(ids) {
     }
 };
 
-app.fn.openPopup = function openPopup(argument, ev, element)  {
+app.fn.openPopup = function openPopup(argument, ev, element) {
     const c = PopupWidget.popupsByIds[argument];
 
     if (c.isAnchorOnClick()) {
@@ -328,7 +330,7 @@ app.fn.openPopup = function openPopup(argument, ev, element)  {
     c.open();
 };
 
-app.fn.togglePopup = function togglePopup(argument, ev, element){
+app.fn.togglePopup = function togglePopup(argument, ev, element) {
     const c = PopupWidget.popupsByIds[argument];
 
     if (c.isAnchorOnClick()) {
@@ -415,16 +417,16 @@ app.fn.checkTIResponseStatus = function checkTIResponseStatus(argument, ev, elem
 
 app.fn.conditionalHorizontalTableEventHandlerExecution = function conditionalHorizontalTableEventHandlerExecution(argument, ev, element) {
     let widgetId = element.data('id'),
-        action = element.data('action'),
-        row = v(widgetId)[action].rowindex,
-        currentCell = v(widgetId).rows[row][0];
+    action = element.data('action'),
+    row = v(widgetId)[action].rowindex,
+    currentCell = v(widgetId).rows[row][0];
     app.fn.conditionalExecution(argument, ev, element, currentCell);
 };
 
 app.fn.conditionalGridTablePopup = function conditionalGridTablePopup(argument, ev, element) {
     let currentCell = Utils.getGridTableCurrentCell(element.data('id').split('_')[0]);
     app.fn.conditionalExecution(argument, ev, element, currentCell);
-}
+};
 
 app.fn.conditionalExecution = (argument, ev, element, currentCell) => {
     let  i, j;
@@ -449,41 +451,41 @@ app.fn.conditionalExecution = (argument, ev, element, currentCell) => {
 
 app.fn.increasePage = function increasePage(widgetId) {
     if (WidgetState[widgetId].page) {
-        WidgetState[widgetId]['page'] = WidgetState[widgetId]['page'] + 1;
+        WidgetState[widgetId].page = WidgetState[widgetId].page + 1;
     } else {
-        WidgetState[widgetId]['page'] = 2;
+        WidgetState[widgetId].page = 2;
     }
-    let start = (WidgetState[widgetId].page - 2) * WidgetState[widgetId].maxRows * WidgetState[widgetId].col ;
+    let start = (WidgetState[widgetId].page - 2) * WidgetState[widgetId].maxRows * WidgetState[widgetId].col;
     app.fn.copyChangedCells(widgetId, start);
     El.body.triggerHandler('page.' + widgetId);
 };
 
 app.fn.decreasePage = function decreasePage(widgetId) {
     if (WidgetState[widgetId].page) {
-        WidgetState[widgetId]['page'] = WidgetState[widgetId]['page'] - 1;
+        WidgetState[widgetId].page = WidgetState[widgetId].page - 1;
     }
 
-    let start = (WidgetState[widgetId].page) * WidgetState[widgetId].maxRows * WidgetState[widgetId].col ;
+    let start = (WidgetState[widgetId].page) * WidgetState[widgetId].maxRows * WidgetState[widgetId].col;
     app.fn.copyChangedCells(widgetId, start);
 
     El.body.triggerHandler('page.' + widgetId);
 };
 
 app.fn.jumpToFirstPage = function jumpToFirstPage(widgetId) {
-    app.fn.copyChangedCells(widgetId, (WidgetState[widgetId]['page'] - 1)  * WidgetState[widgetId].maxRows * WidgetState[widgetId].col  );
-    WidgetState[widgetId]['page'] = 1;
+    app.fn.copyChangedCells(widgetId, (WidgetState[widgetId].page - 1) * WidgetState[widgetId].maxRows * WidgetState[widgetId].col);
+    WidgetState[widgetId].page = 1;
     El.body.triggerHandler('page.' + widgetId);
 };
 
 app.fn.jumpToLastPage = function jumpToLastPage(widgetId) {
-    app.fn.copyChangedCells(widgetId, (WidgetState[widgetId]['page'] - 1 )  * WidgetState[widgetId].maxRows * WidgetState[widgetId].col );
-    WidgetState[widgetId]['page'] = Utils.getGridTableActualAndLastPage(widgetId).maxPage;
+    app.fn.copyChangedCells(widgetId, (WidgetState[widgetId].page - 1) * WidgetState[widgetId].maxRows * WidgetState[widgetId].col);
+    WidgetState[widgetId].page = Utils.getGridTableActualAndLastPage(widgetId).maxPage;
     El.body.triggerHandler('page.' + widgetId);
 };
 
 app.fn.copyChangedCells = function copyChangedCells(widgetId, start) {
     let changedCells = $('#' + widgetId).find('.ks-grid-table-content .ks-grid-table-cell'), i = 0;
-    while(i < changedCells.length){
+    while (i < changedCells.length) {
         WidgetState[widgetId]['widgets'][start + i] = changedCells[i].outerHTML;
         ++i;
     }

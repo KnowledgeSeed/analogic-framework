@@ -80,9 +80,9 @@ def ping(instance):
     return getProvider(instance).ping()
 
 
-@app.route('/middleware', defaults={'instance': 'default'}, methods=['GET', 'POST'])
-@app.route('/<path:instance>/middleware', defaults={'instance': 'default'}, methods=['GET', 'POST'])
-def middleware(instance):
+@app.route('/pivot', defaults={'instance': 'default'}, methods=['GET', 'POST'])
+@app.route('/<path:instance>/pivot', defaults={'instance': 'default'}, methods=['GET', 'POST'])
+def pivot(instance):
     dimension_name = request.values.get('dimension_name')
     hierarchy_name = request.values.get('hierarchy_name')
     subset_name = request.values.get('subset_name')
