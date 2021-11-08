@@ -118,7 +118,7 @@ class SSOPool(Pool):
         return {'msg': msg, 'token': decoded_token}
 
     def checkAppAuthenticated(self):
-        sso_token = session['sso_token']
+        sso_token = session.get('sso_token')
         decoded = self.decodeToken(sso_token)
         return decoded['msg'] == ''
 
