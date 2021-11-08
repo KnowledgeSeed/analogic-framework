@@ -1,6 +1,13 @@
 import os
 
+""" Options: 
+  'r': Recursively minify directories
+  'v': Verbose
+  'b': Bundle files by concatenation into a single file
+  'o': Output file or directory (must have trailing slash), leave blank to use stdout
 
+  For other options run the "minify.exe --help" command  
+"""
 def min_cmd(path, min_name, file_or_dir_names=[''], options=['r', 'v', 'b', 'o']):
     print(path)
     file_or_dir_names_str = ' '.join([path + f for f in file_or_dir_names])
@@ -24,13 +31,14 @@ configs_path = js_path + 'configs\\'
 
 os.system('del ' + base_path + 'minified*.css /s /q /f')
 os.system('del ' + base_path + 'minified*.js /s /q /f')
+os.system('del ' + base_path + 'minified*.yml /s /q /f')
 
 min_cmd(css_path, 'minified.css', ['bootstrap-grid.min.css', 'lib', 'widgets'])
 
 min_cmd(css_path, 'minified.style.css', ['style.css'], ['v', 'b', 'o'])
 
-with os.scandir(skins_path) as entries:
-    for entry in entries:
+for entry in os.scandir(skins_path):
+    if entry.is_dir():
         min_cmd(skins_path + entry.name + '\\css\\', 'minified.css')
 
 min_cmd(js_path, 'minified.js',
@@ -40,7 +48,7 @@ min_cmd(js_path, 'minified.js',
 
 min_cmd(js_path, 'minified_deprecated.js', ['widgets\\deprecated'])
 
-with os.scandir(configs_path) as entries:
-    gen = (x for x in entries if x.name not in ['default', 'dummy'])
-    for entry in gen:
+gen = (x for x in os.scandir(configs_path) if x.name not in ['default', 'dummy'])
+for entry in gen:
+    if entry.is_dir():
         min_cmd(configs_path + entry.name + '\\', 'minified.js', ['repository.js', 'event-map.js', 'widget-config.js'])

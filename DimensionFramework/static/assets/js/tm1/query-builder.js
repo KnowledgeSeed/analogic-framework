@@ -1,4 +1,4 @@
-/* global app, El, Loader, Auth, FileUpload, Repository, Utils, WidgetValue */
+/* global app, El, EventMap, Loader, Auth, FileUpload, Repository, Server, Utils, WidgetValue, Pivot */
 
 'use strict';
 const QB = {};
@@ -20,6 +20,10 @@ QB.loadData = (argument, type, useDefaultData = false, path = 'init', extraParam
             }
 
             return Auth.loadDefault(type);
+        }
+
+        if (r[path].pivot) {
+            return Pivot.call(r[path]).then(d => d);
         }
 
         if (Array.isArray(r[path])) {
@@ -107,6 +111,9 @@ QB.executeMDXs = (repositoryId, path) => {
         if (p.execute) {
             deffered.push($.Deferred().resolve(p.execute(WidgetValue, repositoryId, Repository[repositoryId])));
             isQuery.push(false);
+        } else if (p.pivot) {
+            deffered.push(Pivot.call(p));
+            isQuery.push(true);
         } else {
             body = p.body(WidgetValue, repositoryId, Repository[repositoryId]);
 
@@ -139,7 +146,7 @@ QB.executeMDXs = (repositoryId, path) => {
                 } else if (t.type === 'list') {
                     d.push(QB.processResultAsList(t, r));
                 } else if (t.type === 'script') {
-                    return t.script(r, repositoryId, Repository[repositoryId]);
+                    d.push(t.script(r, repositoryId, Repository[repositoryId]));
                 } else {
                     d.push(QB.processResultAsObject(t.query, r));
                 }
@@ -178,9 +185,9 @@ QB.executeMDX = (repositoryId, path, extraParams = {}) => {
         u.url = mm.url;
         body = mm.body;
     }
-/*for(let ff = 0; ff < 120;++ff){
-    Auth.getTm1AjaxRequest(u.url, body, u.type, repositoryId);
-}*/
+    /*for(let ff = 0; ff < 120;++ff){
+     Auth.getTm1AjaxRequest(u.url, body, u.type, repositoryId);
+     }*/
     return Auth.getTm1AjaxRequest(u.url, body, u.type, repositoryId).then((data) => {
         //save cellsetid
         r.cellsetId = data.ID;
@@ -207,7 +214,7 @@ QB.executeMDX = (repositoryId, path, extraParams = {}) => {
 
 QB.writeData = (eventMapId, event, element) => {
     let s = eventMapId.split('.'), e = s[0], w = s[1], z = w.split('_'), context = WidgetValue, isGridTable = false, r,
-        g;
+    g;
 
     if (e === 'upload') {
         return FileUpload.uploadFile(w, eventMapId, context);
@@ -288,8 +295,8 @@ QB.writeData = (eventMapId, event, element) => {
             return Server.download(g.download(context));
         }
         let c = r.cellsetId || '',
-            body = isGridTable ? g.body(context, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.body(context),
-            url = isGridTable ? g.url({...r, ...{cellsetId: c}}, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
+        body = isGridTable ? g.body(context, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.body(context),
+        url = isGridTable ? g.url({...r, ...{cellsetId: c}}, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
 
         if (g.server) {
 
@@ -341,8 +348,8 @@ QB.getCellsetUrl = p => {
 
 QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
     let params = [],
-        subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&server=1' : '' : url + '?server=1';
-    let newUrl = url.includes('pool') ? url : url.replace(app.tm1ApiHost, app.host + '/' + (app.subpath != '' ? app.subpath + '/' + app.instance : app.instance) + '/pool')
+    subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&server=1' : '' : url + '?server=1';
+    let newUrl = url.includes('pool') ? url : url.replace(app.tm1ApiHost, app.host + '/' + (app.subpath ? app.subpath + '/' + app.instance : app.instance) + '/pool');
 
     for (const [key, value] of Object.entries(body)) {
         params.push(`"${key}": "${value}"`);
@@ -379,7 +386,7 @@ QB.processResultAsObject = (valueQueries, data) => {
 
 QB.processResultAsList = (valueQueries, data) => {
     let i, result = [],
-        k = data.count ? data.count : data.Cells ? data.Cells.length : data.value ? data.value.length : 0;
+    k = data.count ? data.count : data.Cells ? data.Cells.length : data.value ? data.value.length : 0;
 
     for (i = 0; i < k; ++i) {
         result[i] = valueQueries.query(data, i);
@@ -390,8 +397,8 @@ QB.processResultAsList = (valueQueries, data) => {
 
 QB.processResult = (valueQueries, data) => {
     let i = 0, v, row = [], result = [],
-        k = data.count ? data.count : data.Cells ? data.Cells.length : data.value ? data.value.length : 0,
-        q = valueQueries.length;
+    k = data.count ? data.count : data.Cells ? data.Cells.length : data.value ? data.value.length : 0,
+    q = valueQueries.length;
 
     if (k % q !== 0) {
         L('Too many data!!');

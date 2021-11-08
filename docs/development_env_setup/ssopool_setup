@@ -1,0 +1,20 @@
+1. nyisd meg a requeirements.txt-t a pycharmban, aztán install missing requirements
+2. hozz létre az edit configurations dropboxban egy pure python configuration-t, aminek a script path-a ide mutat:
+c:\..\DimensionFramework\Install\setup.py
+3. a Parametersnél add hozzá ezt:
+hays XrrwAgqLXSH19nIC8I5JOeXoAdx zuhder75w7ef4fgbrs
+
+Futtasd a setup-ot.
+
+Ha ezt látod, okés (pár másodpercig eltart):
+
+Database created
+key generated
+users added
+
+Process finished with exit code 0
+
+
+4. Nyisd meg a credential managered
+keresd meg a hay_dimension_framework_key generic credential, majd editáld és tedd be ezt passwordnek:
+uc9Pu9tAqW3INEJU+M2b/6b1VkOB1P6CybnJ3IYbqlA=

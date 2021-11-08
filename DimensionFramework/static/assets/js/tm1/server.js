@@ -9,7 +9,6 @@ Server.download = (p) => {
             url += '&' + key + '=' + value;
         }
     }
-    //  window.open(url, '_blank');
     $.ajax({
         url: url,
         method: 'GET',

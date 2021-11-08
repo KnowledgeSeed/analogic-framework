@@ -1,6 +1,6 @@
 import os
 import redis
-from flask import Flask, session
+from flask import Flask, session, request
 from flask_caching import Cache
 import DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory
 from DimensionFramework.AuthenticationProviders.Base import Base
@@ -77,6 +77,12 @@ def exportConfig(instance, config_type):
 @app.route('/<path:instance>/ping')
 def ping(instance):
     return getProvider(instance).ping()
+
+
+@app.route('/pivot', defaults={'instance': 'default'}, methods=['GET', 'POST'])
+@app.route('/<path:instance>/pivot', methods=['GET', 'POST'])
+def pivot(instance):
+    return getProvider(instance).pivot()
 
 
 def getProvider(instance):
