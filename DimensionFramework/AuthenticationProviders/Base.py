@@ -6,6 +6,7 @@ from flask import request, send_file, json, request
 from DimensionFramework.Core.ClassLoader import ClassLoader
 from DimensionFramework.Core.SettingManager import SettingManager
 from DimensionFramework.Core.FileUploadManager import FileUploadManager
+import DimensionFramework.Pivot.Api as PivotApi
 from io import StringIO, BytesIO
 import logging
 
@@ -15,6 +16,24 @@ class Base:
     def __init__(self, cache, site_root, instance='default'):
         self.setting = SettingManager(cache, site_root, instance)
         self.upload_manager = FileUploadManager(self.setting)
+
+    def pivot(self):
+        if self.checkAppAuthenticated() is False:
+            return self.getAuthenticationResponse()
+
+        dimension_name = request.values.get('dimension_name')
+        hierarchy_name = request.values.get('hierarchy_name')
+        subset_name = request.values.get('subset_name')
+        element_names = request.values.getlist('element_names[]')
+        subset_name_to_remove = request.values.get('subset_name_to_remove')
+        selected_cards = request.values.get('selected_cards')
+        options = request.values.get('options')
+        expand_row_element = request.values.get('expand_row_element')
+        expand_col_element = request.values.get('expand_col_element')
+
+        return PivotApi.call(self.getTM1Service(), dimension_name, hierarchy_name, subset_name, element_names,
+                             subset_name_to_remove,
+                             selected_cards, options, expand_row_element, expand_col_element)
 
     def export(self):
         if self.checkAppAuthenticated() is False:

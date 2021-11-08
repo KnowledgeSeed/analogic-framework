@@ -113,7 +113,7 @@ class SettingManager:
     def getFrameworkSSOKeyName(self):
         return self.getInstance() + '_' + self.FRAMEWORK_SSO_KEY_NAME
 
-    def getFrameworkSSOPassPhrase(self):
+    def getFrameworkSSOPassPhraseName(self):
         return self.getInstance() + '_' + self.FRAMEWORK_SSO_PASSPHRASE_NAME
 
     def getFrameworkSSOSaltName(self):
@@ -197,7 +197,7 @@ class SettingManager:
         if n == '':
             n = self.getAppCamNamespace()
         return decrypt(keyring.get_password(n + '/' + user_name, user_name).encode('latin_1'),
-                       getSaltForKey(user_name, self.getFrameworkSSOSaltName()))
+                       getSaltForKey(user_name, self.getFrameworkSSOSaltName()), self.getFrameworkSSOPassPhraseName())
 
     def getPoolUser(self):
         pool_user = self.poolUserManager.getUser()
@@ -244,7 +244,7 @@ class SettingManager:
         cnf = self.getConfig()
         password = keyring.get_password(cnf['sso']['adminNamespace'] + '/' + cnf['sso']['admin'], cnf['sso']['admin'])
         password = decrypt(password.encode('latin_1'),
-                           getSaltForKey(cnf['sso']['admin'], self.getFrameworkSSOSaltName()))
+                           getSaltForKey(cnf['sso']['admin'], self.getFrameworkSSOSaltName()), self.getFrameworkSSOPassPhraseName())
         s = cnf['sso']['admin'] + ":" + password + ":" + cnf['sso']['adminNamespace']
         return 'CAMNamespace ' + base64.b64encode(s.encode('utf-8')).decode("utf-8")
 

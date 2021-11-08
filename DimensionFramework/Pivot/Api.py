@@ -4,22 +4,7 @@ from TM1py.Objects import Subset
 import json
 
 
-def call(dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, options=None, expand_row_element=None, expand_col_element=None):
-    address = "https://kseed-dc1.knowledgeseed.local:5125/haysapi"
-    namespace = "knowledgeseed"
-    user = "tm1py"
-    gateway = None
-    password = "2bffS8hcbJqa7xdA"
-    ssl = False
-
-    tm1 = TM1Service(
-        base_url=address,
-        user=user,
-        password=password,
-        namespace=namespace,
-        gateway=gateway,
-        verify=False,
-        ssl=ssl)
+def call(tm1, dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, options=None, expand_row_element=None, expand_col_element=None):
 
     cube_name = 'Sales by Channel'
 

@@ -6,7 +6,6 @@ import DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory
 from DimensionFramework.AuthenticationProviders.Base import Base
 from datetime import timedelta
 import logging
-import DimensionFramework.Pivot.Api as PivotApi
 
 app = Flask(__name__)
 site_root = os.path.realpath(os.path.dirname(__file__))
@@ -81,18 +80,10 @@ def ping(instance):
 
 
 @app.route('/pivot', defaults={'instance': 'default'}, methods=['GET', 'POST'])
-@app.route('/<path:instance>/pivot', defaults={'instance': 'default'}, methods=['GET', 'POST'])
+@app.route('/<path:instance>/pivot', methods=['GET', 'POST'])
 def pivot(instance):
-    dimension_name = request.values.get('dimension_name')
-    hierarchy_name = request.values.get('hierarchy_name')
-    subset_name = request.values.get('subset_name')
-    element_names = request.values.getlist('element_names[]')
-    subset_name_to_remove = request.values.get('subset_name_to_remove')
-    selected_cards = request.values.get('selected_cards')
-    options = request.values.get('options')
-    expand_row_element = request.values.get('expand_row_element')
-    expand_col_element = request.values.get('expand_col_element')
-    return PivotApi.call(dimension_name, hierarchy_name, subset_name, element_names, subset_name_to_remove, selected_cards, options, expand_row_element, expand_col_element)
+    return getProvider(instance).pivot()
+
 
 def getProvider(instance):
     cache = getCache()
