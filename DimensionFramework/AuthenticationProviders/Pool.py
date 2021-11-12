@@ -1,7 +1,8 @@
 import requests
-from flask import request, json
+from flask import request, session
 from DimensionFramework.AuthenticationProviders.Base import Base
 from TM1py.Services import TM1Service
+from flask import jsonify
 
 
 class Pool(Base):
@@ -85,3 +86,6 @@ class Pool(Base):
                               ssl=False)
         else:
             return TM1Service(base_url=self.setting.getPoolTargetUrl(), session_id=pool_user['session'], ssl=False)
+
+    def activeUser(self):
+        return jsonify({'username': session.get('username')})

@@ -97,7 +97,12 @@ QB.loadFromWidgetValues = (arg, repositoryId) => {
     });
 };
 
-QB.getUserData = () => {//TODO
+QB.getUserData = () => {
+    if(app.authenticationMode.includes('Pool')) {
+        return Auth.getTm1AjaxRequest(app.tm1ApiHost.replace('pool','activeUser'), {}, 'GET').pipe(data => {
+            WidgetValue.activeUser = data.username;
+        });
+    }
     return Auth.getTm1AjaxRequest(app.tm1ApiHost + app.tm1ApiSubPath + 'ActiveUser', {}, 'GET').pipe(data => {
         WidgetValue.activeUser = data.Name.replace(/"/g, '\\"');
     });

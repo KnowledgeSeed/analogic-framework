@@ -79,9 +79,6 @@ Auth.getHeader = (contentType = 'application/json; charset=utf-8', accept = 'app
 
     headers['Access-Control-Allow-Origin'] = '*';
 
-    if ('DevAuth' === app.authenticationMode) {
-        headers['Authorization'] = app.devAuthLogin;
-    }
 
     if ('Cam' === app.authenticationMode && $.cookie('camPassport') !== '0') {
         headers['Authorization'] = 'CAMPassport ' + $.cookie('camPassport');

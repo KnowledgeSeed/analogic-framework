@@ -121,7 +121,6 @@ class SettingManager:
 
     def getConfig(self):
         cnf = self.getJsonSetting(self.getConfigCacheKey(), 'config')
-        cnf['devAuthLogin'] = ''
         return cnf
 
     def getParam(self, param_name):

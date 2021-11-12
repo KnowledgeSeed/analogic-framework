@@ -85,6 +85,9 @@ class Base:
     def login(self):
         pass
 
+    def activeUser(self):
+        pass
+
     def pool(self, sub_path):
         pass
 

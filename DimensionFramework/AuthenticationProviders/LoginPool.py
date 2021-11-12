@@ -31,3 +31,4 @@ class LoginPool(Pool):
 
     def extendLoginSession(self):
         session.modified = True
+

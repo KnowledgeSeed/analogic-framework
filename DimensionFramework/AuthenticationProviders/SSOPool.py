@@ -3,9 +3,10 @@ import requests
 import base64
 from DimensionFramework.AuthenticationProviders.Pool import Pool
 from flask import render_template, request, session, make_response, redirect, Response
+import logging
 
 
-# TODO lehet el lehetne redisben tárolni a jwt lejáratát, nem kéne minden request esetén decodelni
+
 class SSOPool(Pool):
     def __init__(self, cache, site_root, instance='default'):
         super().__init__(cache, site_root, instance)
@@ -17,7 +18,7 @@ class SSOPool(Pool):
 
         if decoded.get('msg') != '':
             return make_response(redirect(cnf[
-                                              'authenticationBridge']))  # TODO ez ajax híváskor történik, egy időben küldött több ajax híváskor több popup is feljön (biztos, hogy el akar navigálni..). Egyszer jöjjön csak fel.
+                                              'authenticationBridge']))
 
         authenticated = request.cookies.get('authenticated') is not None
         return render_template('index.html', authenticated=authenticated, cnf=cnf)
@@ -25,6 +26,7 @@ class SSOPool(Pool):
     def authsso(self):
         cnf = self.setting.getConfig()
         sso_token = request.args.get('token')
+        logger = logging.getLogger('login')
 
         decoded = self.decodeToken(sso_token)
 
@@ -33,12 +35,17 @@ class SSOPool(Pool):
 
         user_name = decoded['token'].get('unique_name')
 
+        logger.info(user_name + ' tries to login')
+
         if self.hasPoolUserAccess(user_name.replace('\\', '/'), sso_token) is None:
             return render_template('unauthorized.html')
 
         session['sso_token'] = sso_token
+        session['username'] = user_name
 
         resp = make_response(redirect(self.setting.getBaseUrl()))
+
+        logger.info(user_name + ' logged in successfully')
 
         return self.addAuthenticatedCookie(resp)
 
@@ -46,6 +53,7 @@ class SSOPool(Pool):
         has_access = True
         cnf = self.setting.getConfig()
         sso_cnf = cnf['sso']
+        logger = logging.getLogger('login')
 
         headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
                                    'Accept-Encoding': 'gzip, deflate, br',
@@ -56,14 +64,14 @@ class SSOPool(Pool):
                              headers)
 
         if resp.status_code == 201 or resp.status_code == 200:
-            print('User exists')
+            logger.info('User exists')
             data = resp.json()
             if data['Cells'][1]['Value'] is None or data['Cells'][1]['Value'] != 1:
                 has_access = False
-                print('But user does not have access')
+                logger.info('But user does not have access')
 
         if resp.status_code == 400:
-            print('User does not exist')
+            logger.info('User does not exist')
             has_access = False
             self.makePost(sso_cnf['putUserUrl'],
                           sso_cnf['putUserBody'].replace('$username', user_name),
@@ -73,7 +81,7 @@ class SSOPool(Pool):
                       sso_cnf['putTokenBody'].replace('$username', user_name).replace('$token', token),
                       headers)
 
-        print('Posting token was successful')
+        logger.info('Posting token was successful')
 
         if sso_cnf['additionalPostUrl1'] != '':
             self.makePost(sso_cnf['additionalPostUrl1'],
@@ -119,7 +127,7 @@ class SSOPool(Pool):
 
     def checkAppAuthenticated(self):
         sso_token = session.get('sso_token')
-        decoded = self.decodeToken(sso_token)
+        decoded = self.decodeToken(sso_token) #TODO biztos, hogy kiléptessük?
         return decoded['msg'] == ''
 
     def getAuthenticationResponse(self):
@@ -129,3 +137,6 @@ class SSOPool(Pool):
         if len(mdx) > 0:
             return mdx.replace('$ssoToken', session['sso_token'])
         return mdx
+
+    def extendLoginSession(self):
+        session.modified = True

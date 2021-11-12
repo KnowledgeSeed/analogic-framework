@@ -1,5 +1,4 @@
 from flask import jsonify
-from TM1py.Services import TM1Service
 from TM1py.Objects import Subset
 import json
 
