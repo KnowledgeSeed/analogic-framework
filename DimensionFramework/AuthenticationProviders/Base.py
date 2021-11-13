@@ -73,7 +73,10 @@ class Base:
         mdx = request.data
         if request.args.get('server') is not None:
             body = json.loads(request.data)
-            mdx = self.setting.getMDX(body['key'])
+            key = body['key']
+            if body.get('key_suffix') is not None:
+                key = key + '_' + body['key_suffix']
+            mdx = self.setting.getMDX(key)
             for k in body:
                 mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
 
