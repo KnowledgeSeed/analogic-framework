@@ -98,8 +98,8 @@ QB.loadFromWidgetValues = (arg, repositoryId) => {
 };
 
 QB.getUserData = () => {
-    if(app.authenticationMode.includes('Pool')) {
-        return Auth.getTm1AjaxRequest(app.tm1ApiHost.replace('pool','activeUser'), {}, 'GET').pipe(data => {
+    if (app.authenticationMode.includes('Pool')) {
+        return Auth.getTm1AjaxRequest(app.tm1ApiHost.replace('pool', 'activeUser'), {}, 'GET').pipe(data => {
             WidgetValue.activeUser = data.username;
         });
     }
@@ -219,7 +219,7 @@ QB.executeMDX = (repositoryId, path, extraParams = {}) => {
 
 QB.writeData = (eventMapId, event, element) => {
     let s = eventMapId.split('.'), e = s[0], w = s[1], z = w.split('_'), context = WidgetValue, isGridTable = false, r,
-    g;
+        g;
 
     if (e === 'upload') {
         return FileUpload.uploadFile(w, eventMapId, context);
@@ -300,8 +300,8 @@ QB.writeData = (eventMapId, event, element) => {
             return Server.download(g.download(context));
         }
         let c = r.cellsetId || '',
-        body = isGridTable ? g.body(context, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.body(context),
-        url = isGridTable ? g.url({...r, ...{cellsetId: c}}, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
+            body = isGridTable ? g.body(context, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.body(context),
+            url = isGridTable ? g.url({...r, ...{cellsetId: c}}, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
 
         if (g.server) {
 
@@ -352,14 +352,17 @@ QB.getCellsetUrl = p => {
 };
 
 QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
-    let params = [],
-    subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&server=1' : '' : url + '?server=1';
+    let params = [], keyAdded = false,
+        subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&server=1' : '' : '?server=1';
     let newUrl = url.includes('pool') ? url : url.replace(app.tm1ApiHost, app.host + '/' + (app.subpath ? app.subpath + '/' + app.instance : app.instance) + '/pool');
 
     for (const [key, value] of Object.entries(body)) {
         params.push(`"${key}": "${value}"`);
+        if ('key' === key) {
+            keyAdded = true;
+        }
     }
-    params.push(`"key" : "${repositoryId + "_" + path}"`);
+    !keyAdded && params.push(`"key" : "${repositoryId + "_" + path}"`);
 
     return {url: newUrl + subUrl, body: `{${params.join(',')}}`};
 };
@@ -391,7 +394,7 @@ QB.processResultAsObject = (valueQueries, data) => {
 
 QB.processResultAsList = (valueQueries, data) => {
     let i, result = [],
-    k = data.count ? data.count : data.Cells ? data.Cells.length : data.value ? data.value.length : 0;
+        k = data.count ? data.count : data.Cells ? data.Cells.length : data.value ? data.value.length : 0;
 
     for (i = 0; i < k; ++i) {
         result[i] = valueQueries.query(data, i);
@@ -402,8 +405,8 @@ QB.processResultAsList = (valueQueries, data) => {
 
 QB.processResult = (valueQueries, data) => {
     let i = 0, v, row = [], result = [],
-    k = data.count ? data.count : data.Cells ? data.Cells.length : data.value ? data.value.length : 0,
-    q = valueQueries.length;
+        k = data.count ? data.count : data.Cells ? data.Cells.length : data.value ? data.value.length : 0,
+        q = valueQueries.length;
 
     if (k % q !== 0) {
         L('Too many data!!');
