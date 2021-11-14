@@ -34,6 +34,10 @@ def generateKey(application, pass_phrase, salt):
     dig = hmac.new(os.urandom(10), msg=os.urandom(10), digestmod=hashlib.sha256).digest()
     t = base64.b64encode(dig).decode()
 
+    secret_file = open("secret_key", mode="w", encoding="utf-8")
+    secret_file.writelines(t)
+    secret_file.close()
+
     target_user_name = application + '_' + SettingManager.FRAMEWORK_SSO_KEY_NAME
     pass_phrase_name = application + '_' + SettingManager.FRAMEWORK_SSO_PASSPHRASE_NAME
     salt_name = application + '_' + SettingManager.FRAMEWORK_SSO_SALT_NAME
@@ -42,6 +46,12 @@ def generateKey(application, pass_phrase, salt):
     updateCredentialManager(salt_name, salt_name, salt)
     updateCredentialManager(target_user_name, target_user_name, t)
     print('key generated')
+
+
+def insertKey(application, value):
+    target_user_name = application + '_' + SettingManager.FRAMEWORK_SSO_KEY_NAME
+    updateCredentialManager(target_user_name, target_user_name, value)
+    print('key added')
 
 
 def updateCredentialManager(target, user_name, pwd):

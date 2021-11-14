@@ -12,6 +12,7 @@ minified*.*
 logs
 *.log
 pool.db
+secret_key
 DimensionFramework/applications/*
 !DimensionFramework/applications/.placeholder
 !DimensionFramework/applications/swiss
