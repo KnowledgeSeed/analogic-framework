@@ -30,16 +30,6 @@ class SSOBasicPool(SSOPool):
         return {'Content-Type': 'application/json; charset=utf-8',
                 'Accept-Encoding': 'gzip, deflate, br'}
 
-    def makeRequest(self, url, method, mdx, headers, cookies, **kwargs):
-        return requests.request(
-            url=url,
-            method=method,
-            data=mdx,
-            headers=headers,
-            cookies=cookies,
-            verify=False,
-            **kwargs)
-
     def makePost(self, url, json, headers):
         cnf = self.setting.getConfig()
         sso_cnf = cnf['sso']

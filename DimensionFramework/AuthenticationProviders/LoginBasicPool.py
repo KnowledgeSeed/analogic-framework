@@ -29,17 +29,12 @@ class LoginBasicPool(Pool):
 
         authorization_required = pool_user['session'] == ''
 
-        if authorization_required is True:
+        if authorization_required is False:
             cookies["TM1SessionId"] = pool_user['session']
-
-        response = requests.request(
-            url=url,
-            method=method,
-            data=mdx,
-            headers=headers,
-            cookies=cookies,
-            verify=False,
-            auth=(pool_user['name'], self.setting.getPassword(pool_user['name'])))
+            response = self.makeRequest(url, method, mdx, headers, cookies)
+        else:
+            response = self.makeRequest(url, method, mdx, headers, cookies,
+                                        auth=(pool_user['name'], self.setting.getPassword(pool_user['name'])))
 
         if authorization_required:
             pool_user['session'] = response.cookies.get('TM1SessionId')

@@ -69,6 +69,16 @@ class Pool(Base):
 
         return response
 
+    def makeRequest(self, url, method, mdx, headers, cookies, **kwargs):
+        return requests.request(
+            url=url,
+            method=method,
+            data=mdx,
+            headers=headers,
+            cookies=cookies,
+            verify=False,
+            **kwargs)
+
     def extendLoginSession(self):
         pass
 
