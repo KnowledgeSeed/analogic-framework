@@ -4,6 +4,7 @@ import hmac
 import hashlib
 import base64
 import keyring
+import requests
 from flask import json
 
 root = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -61,7 +62,7 @@ def updateCredentialManager(target, user_name, pwd):
     keyring.set_password(target, user_name, pwd)
 
 
-def installPoolUsers(application, setting):
+def installPoolUsers(application, setting, admin_user='', admin_pwd=''):
     passwords_url = os.path.join(os.path.dirname(__file__), 'pwd.json')
     if os.path.exists(passwords_url) is False:
         print('path does not exists: ' + passwords_url)
@@ -86,5 +87,25 @@ def installPoolUsers(application, setting):
         target = setting['camNamespace'] + '/' + u
         password = encrypt(p['passwords'][idx], getSaltForKey(u, salt_name), passphrase_name)
         updateCredentialManager(target, u, password)
+        if admin_user != '':
+            createInTM1(setting, admin_user, admin_pwd, u, p['passwords'][idx])
 
     print('users added')
+
+
+def createInTM1(setting, admin_user, admin_pwd, user, pwd):
+    url = setting[
+              'tm1ApiHostBackend'] + "/api/v1/Processes('zSYS Analogic Create Pool User')/tm1.ExecuteWithReturn"
+    body = '{"Parameters": [{"Name": "pUserID", "Value": "' + user + '"},{"Name": "pPassword", "Value": "' + pwd + '"}]}'
+    headers = {'Content-Type': 'application/json; charset=utf-8',
+               'Accept-Encoding': 'gzip, deflate, br'}
+    response = requests.request(
+        url=url,
+        method='POST',
+        data=body,
+        headers=headers,
+        verify=False,
+        auth=(admin_user, admin_pwd))
+
+    print(response.text)
+    print(response.status_code)

@@ -54,9 +54,7 @@ class SSOPool(Pool):
         sso_cnf = cnf['sso']
         logger = logging.getLogger('login')
 
-        headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
-                                   'Accept-Encoding': 'gzip, deflate, br',
-                                   'Authorization': self.setting.getSsoCamNamespace()}
+        headers = self.getHeaderForAccess()
 
         resp = self.makePost(sso_cnf['getUserUrl'],
                              sso_cnf['getUserBody'].replace('$username', user_name),

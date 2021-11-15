@@ -11,17 +11,12 @@ class SSOBasicPool(SSOPool):
 
         authorization_required = pool_user['session'] == ''
 
-        if authorization_required is True:
+        if authorization_required is False:
             cookies["TM1SessionId"] = pool_user['session']
-
-        response = requests.request(
-            url=url,
-            method=method,
-            data=mdx,
-            headers=headers,
-            cookies=cookies,
-            verify=False,
-            auth=(pool_user['name'], self.setting.getPassword(pool_user['name'])))
+            response = self.makeRequest(url, method, mdx, headers, cookies)
+        else:
+            response = self.makeRequest(url, method, mdx, headers, cookies,
+                                        auth=(pool_user['name'], self.setting.getPassword(pool_user['name'])))
 
         if authorization_required:
             pool_user['session'] = response.cookies.get('TM1SessionId')
@@ -34,6 +29,16 @@ class SSOBasicPool(SSOPool):
     def getHeaderForAccess(self):
         return {'Content-Type': 'application/json; charset=utf-8',
                 'Accept-Encoding': 'gzip, deflate, br'}
+
+    def makeRequest(self, url, method, mdx, headers, cookies, **kwargs):
+        return requests.request(
+            url=url,
+            method=method,
+            data=mdx,
+            headers=headers,
+            cookies=cookies,
+            verify=False,
+            **kwargs)
 
     def makePost(self, url, json, headers):
         cnf = self.setting.getConfig()
