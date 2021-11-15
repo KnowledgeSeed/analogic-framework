@@ -6,7 +6,6 @@ from flask import render_template, request, session, make_response, redirect, Re
 import logging
 
 
-
 class SSOPool(Pool):
     def __init__(self, cache, site_root, instance='default'):
         super().__init__(cache, site_root, instance)
@@ -127,8 +126,9 @@ class SSOPool(Pool):
 
     def checkAppAuthenticated(self):
         sso_token = session.get('sso_token')
-        decoded = self.decodeToken(sso_token) #TODO biztos, hogy kiléptessük?
-        return decoded['msg'] == ''
+        sso_token is not None
+        # decoded = self.decodeToken(sso_token)
+        # return decoded['msg'] == ''
 
     def getAuthenticationResponse(self):
         return Response('', 401)

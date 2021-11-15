@@ -10,6 +10,8 @@ class DropBoxWidget extends Widget {
         const v = {
             backdrop: this.getRealValue('backdrop', d, false),
             editable: this.getRealValue('editable', d, true),
+            itemIconOff: this.getRealValue('itemIconOff', d, false),
+            itemIconOn: this.getRealValue('itemIconOn', d, false),
             panelWidth: this.getRealValue('panelWidth', d, false),
             placeHolder: this.getRealValue('placeHolder', d, ''),
             selectFirst: this.getRealValue('selectFirst', d, false),
@@ -94,7 +96,10 @@ class DropBoxWidget extends Widget {
             return `
 <div class="ks-dropbox-panel-item ${item.on && v.multiSelect === false ? 'on' : ''}">
     <div class="ks-dropbox-panel-item-inner">
-        <div class="ks-dropbox-panel-item-icon"><input class="ks-dropbox-panel-item-checkbox" ${v.multiSelect ? '' : 'style="display:none;"'} ${item.on ? 'checked=checked' : ''} type="checkbox"></div>
+        <div class="ks-dropbox-panel-item-icon">
+            ${v.multiSelect === false ? `<span class="${item.on ? v.itemIconOn ? v.itemIconOn : '' : v.itemIconOff ? v.itemIconOff : ''}"></span>` : '' }
+            <input class="ks-dropbox-panel-item-checkbox" ${v.multiSelect ? '' : 'style="display:none;"'} ${item.on ? 'checked=checked' : ''} type="checkbox">
+        </div>
         <div class="ks-dropbox-panel-item-separator"></div>
         <div class="ks-dropbox-panel-item-text" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="${item.name}">${item.name}</div>
     </div>
