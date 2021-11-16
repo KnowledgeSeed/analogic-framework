@@ -49,7 +49,7 @@ Auth.handleSuccessLogin = () => {
         }
         //$.cookie("camPassport", 0);
     }
-    if ((new Date().getTime() - app.pingTime) / 1000 >= 30) {
+    if (('Cam' === app.authenticationMode || 'LoginPool' === app.authenticationMode ) && ((new Date().getTime() - app.pingTime) / 1000 >= 30)) {
         app.pingTime = new Date().getTime();
         $.ajax({
             url: 'ping',
