@@ -1,5 +1,6 @@
 import requests
 from DimensionFramework.AuthenticationProviders.SSOPool import SSOPool
+from TM1py.Services import TM1Service
 
 
 class SSOBasicPool(SSOPool):
@@ -39,3 +40,17 @@ class SSOBasicPool(SSOPool):
                              headers=headers,
                              auth=(sso_cnf['admin'], pwd),
                              verify=False)
+
+    def getTM1Service(self):
+
+        pool_user = self.setting.getPoolUser()
+
+        authorization_required = pool_user['session'] == ''
+
+        if authorization_required:
+            return TM1Service(base_url=self.setting.getPoolTargetUrl(),
+                              user=pool_user['name'],
+                              password=self.setting.getPassword(pool_user['name']),
+                              ssl=False)
+        else:
+            return TM1Service(base_url=self.setting.getPoolTargetUrl(), session_id=pool_user['session'], ssl=False)
