@@ -26,4 +26,5 @@
     app.defaultUploadTargetFolder = '{{ cnf.defaultUploadTargetFolder }}';
     app.defaultUploadStagingFolder = '{{ cnf.defaultUploadStagingFolder }}';
     app.pingTime = new Date().getTime();
+    app.usePoolUserAsActiveUser = {% if (cnf.usePoolUserAsActiveUser == True) %}true{% else %}false{% endif %};
 </script>

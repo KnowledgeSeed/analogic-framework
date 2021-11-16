@@ -98,7 +98,7 @@ QB.loadFromWidgetValues = (arg, repositoryId) => {
 };
 
 QB.getUserData = () => {
-    if (app.authenticationMode.includes('Pool')) {
+    if (app.authenticationMode.includes('Pool') && !app.usePoolUserAsActiveUser) {
         return Auth.getTm1AjaxRequest(app.tm1ApiHost.replace('pool', 'activeUser'), {}, 'GET').pipe(data => {
             WidgetValue.activeUser = data.username;
         });
