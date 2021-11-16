@@ -36,7 +36,7 @@ class SSOPool(Pool):
 
         logger.info(user_name + ' tries to login')
 
-        if self.hasPoolUserAccess(user_name.replace('\\', '/'), sso_token) is None:
+        if self.hasPoolUserAccess(user_name.replace('\\', '/'), sso_token) is False:
             return render_template('unauthorized.html')
 
         session['sso_token'] = sso_token
