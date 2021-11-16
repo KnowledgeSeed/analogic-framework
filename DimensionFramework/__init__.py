@@ -31,6 +31,12 @@ def pool(instance, sub_path):
     return getProvider(instance).pool(sub_path)
 
 
+@app.route('/activeUser', defaults={'instance': 'default'}, methods=['GET'])
+@app.route('/<path:instance>/activeUser', methods=['GET'])
+def activeUser(instance):
+    return getProvider(instance).activeUser()
+
+
 @app.route('/auth', defaults={'instance': 'default'}, methods=['POST'])
 @app.route('/<path:instance>/auth', methods=['POST'])
 def auth(instance):
