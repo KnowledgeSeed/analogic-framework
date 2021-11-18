@@ -66,6 +66,7 @@ def installPoolUsers(application, setting, admin_user='', admin_pwd=''):
     passwords_url = os.path.join(os.path.dirname(__file__), 'pwd.json')
     if os.path.exists(passwords_url) is False:
         print('path does not exists: ' + passwords_url)
+        return
 
     if 'pool' not in setting or 'users' not in setting['pool']:
         print('please set pool.users in config.json')

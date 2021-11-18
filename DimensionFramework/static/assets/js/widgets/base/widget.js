@@ -379,10 +379,14 @@ class Widget {
     getWidthAndHeight(data = {}, defaults = {}, dataPrefix = '') {
         const s = [],
         height = this.getRealValue('height', data, defaults.height, dataPrefix),
-        width = this.getRealValue('width', data, defaults.width, dataPrefix);
+        minHeight = this.getRealValue('minHeight', data, defaults.minHeight, dataPrefix),
+        width = this.getRealValue('width', data, defaults.width, dataPrefix),
+        minWidth = this.getRealValue('minWidth', data, defaults.minWidth, dataPrefix);
 
         height && s.push('height:', height, isNaN(height) ? ';' : 'px;');
+        minHeight && s.push('min-height:', minHeight, isNaN(minHeight) ? ';' : 'px;');
         width && s.push('width:', width, isNaN(width) ? ';' : 'px;');
+        minWidth && s.push('min-width:', minWidth, isNaN(minWidth) ? ';' : 'px;');
 
         return s;
     }
