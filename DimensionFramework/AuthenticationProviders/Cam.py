@@ -40,7 +40,7 @@ class Cam(Pool):
         self.setting.setTM1SessionId(response.cookies.get('TM1SessionId'), cam_name)
         return cam_name
 
-    def doPoolRequest(self, url, method, mdx, headers, cookies):
+    def createRequestByAuthenticatedUser(self, url, method, mdx, headers, cookies):
         tm1_session_id = self.setting.getTM1SessionId(session['cam_name'])
 
         cookies["TM1SessionId"] = tm1_session_id

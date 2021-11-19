@@ -50,7 +50,7 @@ class Base:
         if export_description is None:
             return self.getNotFoundResponse()
 
-        return send_file(ClassLoader().call(export_description, request, self.getTM1Service(), self.setting),
+        return send_file(ClassLoader().call(export_description, request, self.getTM1Service(), self.setting, self),
                          attachment_filename=file_name,
                          as_attachment=True,
                          cache_timeout=0,
@@ -191,3 +191,7 @@ class Base:
     def ping(self):
         self.getLogger().info('ping test2')
         return 'Ok', 200, {'Content-Type': 'application/json'}
+
+    def doPoolRequest(self, url, method, mdx, headers=None, cookies=None):
+        pass
+

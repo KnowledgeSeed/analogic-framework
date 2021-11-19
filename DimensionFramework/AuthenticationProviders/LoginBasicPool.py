@@ -24,7 +24,8 @@ class LoginBasicPool(Pool):
             return render_template('index.html', authenticated=True, cnf=cnf)
         return redirect(self.setting.getBaseUrl('login'))
 
-    def doPoolRequest(self, url, method, mdx, headers, cookies):
+    def createRequestByAuthenticatedUser(self, url, method, mdx, headers, cookies):
+
         pool_user = self.setting.getPoolUser()
 
         authorization_required = pool_user['session'] == ''

@@ -7,7 +7,8 @@ class SSOBasicPool(SSOPool):
     def __init__(self, cache, site_root, instance='default'):
         super().__init__(cache, site_root, instance)
 
-    def doPoolRequest(self, url, method, mdx, headers, cookies):
+    def createRequestByAuthenticatedUser(self, url, method, mdx, headers, cookies):
+
         pool_user = self.setting.getPoolUser()
 
         authorization_required = pool_user['session'] == ''

@@ -5,6 +5,7 @@ from flask_caching import Cache
 import DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory
 from DimensionFramework.AuthenticationProviders.Base import Base
 from datetime import timedelta
+from logging.handlers import RotatingFileHandler
 import logging
 
 app = Flask(__name__)
@@ -94,8 +95,23 @@ def pivot(instance):
 def getProvider(instance):
     cache = getCache()
     config = Base(cache, site_root, instance).setting.getConfig()
-    logging.basicConfig(filename=os.path.join(os.path.dirname(__file__), 'logs', 'application.log'), level=logging.INFO,
-                        format='%(asctime)s :: %(levelname)s :: %(name)s :: %(lineno)d \:: %(message)s')
+
+    logger = logging.getLogger('login')
+    if not logger.hasHandlers():
+        log_file_name = os.path.join(os.path.dirname(__file__), 'logs', 'login.log')
+        handler = RotatingFileHandler(log_file_name, maxBytes=1000000, backupCount=10)
+        formatter = logging.Formatter(
+            '%(asctime)s :: %(levelname)s :: %(name)s :: %(lineno)d :: %(funcName)s() :: %(message)s :: %(process)d - %(threadName)s')
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+
+    log_file_name = os.path.join(os.path.dirname(__file__), 'logs', 'application.log')
+    logging.basicConfig(
+        handlers=[RotatingFileHandler(log_file_name, maxBytes=1000000, backupCount=10)],
+        level=logging.INFO,
+        format='%(asctime)s :: %(levelname)s :: %(name)s :: %(lineno)d :: %(funcName)s() :: %(message)s :: %(process)d - %(threadName)s',
+        datefmt='%Y-%m-%dT%H:%M:%S')
+
     provider = DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory.getProvider(config, cache,
                                                                                                     site_root,
                                                                                                     instance)

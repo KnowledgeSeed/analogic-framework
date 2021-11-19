@@ -43,7 +43,18 @@ class Pool(Base):
 
         return response.text, response.status_code, {'Content-Type': 'application/json'}
 
-    def doPoolRequest(self, url, method, mdx, headers, cookies):
+    def doPoolRequest(self, url, method, mdx, headers=None, cookies=None):
+
+        if headers is None:
+            headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
+                                       'Accept-Encoding': 'gzip, deflate, br'}
+
+        if cookies is None:
+            cookies: dict[str, str] = {}
+
+        return self.createRequestByAuthenticatedUser(url, method, mdx, headers, cookies)
+
+    def createRequestByAuthenticatedUser(self, url, method, mdx, headers, cookies):
         pool_user = self.setting.getPoolUser()
 
         authorization_required = pool_user['session'] == ''
