@@ -73,7 +73,7 @@ class Widget {
 
             return $.when.apply($, deffered).then(function (...results) {
                 let widgetHtmls = [], r, processedData = instance.processData(data), v = (processedData || {}).visible,
-                visible = undefined !== v ? v : o.visible;
+                    visible = undefined !== v ? v : o.visible;
 
                 for (r of results) {
                     widgetHtmls.push(r);
@@ -226,7 +226,7 @@ class Widget {
             for (a of actions) {
                 a.action(a.argument, {}, {});
             }
-    }
+        }
     }
 
     initEvents(withState) {
@@ -288,10 +288,10 @@ class Widget {
 
     static doHandleGridTableSystemEvent(element, event, updateValue = true) {
         let a = element.data('action'), i = element.data('id'), idParts = i.split('_'),
-        section = element.closest('section');
+            section = element.closest('section');
 
         const eventMapId = a + '.' + idParts[0] + '_row_' + idParts[2],
-        columnEventMapId = a + '.' + idParts[0] + '_' + idParts[1] + '_' + idParts[2] + '_' + section.data('originalid');
+            columnEventMapId = a + '.' + idParts[0] + '_' + idParts[1] + '_' + idParts[2] + '_' + section.data('originalid');
 
         El.body.triggerHandler(eventMapId + '.started');
         El.body.triggerHandler(columnEventMapId + '.started');
@@ -320,7 +320,7 @@ class Widget {
             for (a of actions) {
                 a.action(a.argument, event, element);
             }
-    }
+        }
     }
 
     get options() {
@@ -378,10 +378,10 @@ class Widget {
 
     getWidthAndHeight(data = {}, defaults = {}, dataPrefix = '') {
         const s = [],
-        height = this.getRealValue('height', data, defaults.height, dataPrefix),
-        minHeight = this.getRealValue('minHeight', data, defaults.minHeight, dataPrefix),
-        width = this.getRealValue('width', data, defaults.width, dataPrefix),
-        minWidth = this.getRealValue('minWidth', data, defaults.minWidth, dataPrefix);
+            height = this.getRealValue('height', data, defaults.height, dataPrefix),
+            minHeight = this.getRealValue('minHeight', data, defaults.minHeight, dataPrefix),
+            width = this.getRealValue('width', data, defaults.width, dataPrefix),
+            minWidth = this.getRealValue('minWidth', data, defaults.minWidth, dataPrefix);
 
         height && s.push('height:', height, isNaN(height) ? ';' : 'px;');
         minHeight && s.push('min-height:', minHeight, isNaN(minHeight) ? ';' : 'px;');
@@ -393,10 +393,10 @@ class Widget {
 
     getPaddings(data = {}, defaults = {}, dataPrefix = '') {
         const s = [],
-        paddingBottom = this.getRealValue('paddingBottom', data, defaults.paddingBottom, dataPrefix),
-        paddingLeft = this.getRealValue('paddingLeft', data, defaults.paddingLeft, dataPrefix),
-        paddingRight = this.getRealValue('paddingRight', data, defaults.paddingRight, dataPrefix),
-        paddingTop = this.getRealValue('paddingTop', data, defaults.paddingTop, dataPrefix);
+            paddingBottom = this.getRealValue('paddingBottom', data, defaults.paddingBottom, dataPrefix),
+            paddingLeft = this.getRealValue('paddingLeft', data, defaults.paddingLeft, dataPrefix),
+            paddingRight = this.getRealValue('paddingRight', data, defaults.paddingRight, dataPrefix),
+            paddingTop = this.getRealValue('paddingTop', data, defaults.paddingTop, dataPrefix);
 
         paddingTop && s.push('padding-top:', paddingTop, paddingTop !== 'auto' && !isNaN(paddingTop) ? 'px;' : ';');
         paddingLeft && s.push('padding-left:', paddingLeft, paddingLeft !== 'auto' && !isNaN(paddingLeft) ? 'px;' : ';');
@@ -408,11 +408,11 @@ class Widget {
 
     getMargins(data = {}, defaults = {}, dataPrefix = '') {
         const s = [],
-        marginBottom = this.getRealValue('marginBottom', data, defaults.marginBottom, dataPrefix),
-        marginLeft = this.getRealValue('marginLeft', data, defaults.marginLeft, dataPrefix),
-        marginRight = this.getRealValue('marginRight', data, defaults.marginRight, dataPrefix),
-        marginTop = this.getRealValue('marginTop', data, defaults.marginTop, dataPrefix),
-        height = this.getRealValue('height', data, defaults.height, dataPrefix);
+            marginBottom = this.getRealValue('marginBottom', data, defaults.marginBottom, dataPrefix),
+            marginLeft = this.getRealValue('marginLeft', data, defaults.marginLeft, dataPrefix),
+            marginRight = this.getRealValue('marginRight', data, defaults.marginRight, dataPrefix),
+            marginTop = this.getRealValue('marginTop', data, defaults.marginTop, dataPrefix),
+            height = this.getRealValue('height', data, defaults.height, dataPrefix);
 
         marginTop && s.push('margin-top:', marginTop, marginTop !== 'auto' && !isNaN(marginTop) ? 'px;' : ';');
         marginLeft && s.push('margin-left:', marginLeft, marginLeft !== 'auto' && !isNaN(marginLeft) ? 'px;' : ';');
@@ -424,13 +424,18 @@ class Widget {
     }
 
     getWidthForSection(data = {}, defaults = {}) {
-        const s = [], width = this.getRealValue('width', data, defaults.width);
+        const s = [],
+            width = this.getRealValue('width', data, defaults.width),
+            minHeight = this.getRealValue('minHeight', data, defaults.minHeight),
+            minWidth = this.getRealValue('minWidth', data, defaults.minWidth);
 
         if (!isNaN(width)) {
             return [];
         }
 
         width && s.push('width:', width, isNaN(width) ? ';' : 'px;');
+        minHeight && s.push('min-height:', minHeight, isNaN(minHeight) ? ';' : 'px;');
+        minWidth && s.push('min-width:', minWidth, isNaN(minWidth) ? ';' : 'px;');
 
         return s;
     }
