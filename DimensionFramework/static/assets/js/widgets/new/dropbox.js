@@ -12,6 +12,7 @@ class DropBoxWidget extends Widget {
             editable: this.getRealValue('editable', d, true),
             itemIconOff: this.getRealValue('itemIconOff', d, false),
             itemIconOn: this.getRealValue('itemIconOn', d, false),
+            hideIfNoData: this.getRealValue('hideIfNoData', d, false),
             panelWidth: this.getRealValue('panelWidth', d, false),
             placeHolder: this.getRealValue('placeHolder', d, ''),
             selectFirst: this.getRealValue('selectFirst', d, false),
@@ -36,7 +37,7 @@ class DropBoxWidget extends Widget {
             data = {...o, ...this.state};
         }
         let selectedItemsArray = $.grep(data.items, (item, i) => item.on);
-        if(!v.multiSelect && selectedItemsArray.length > 1){
+        if (!v.multiSelect && selectedItemsArray.length > 1) {
             let firstSelectedItem = selectedItemsArray[0];
             selectedItemsArray = [firstSelectedItem];
 
@@ -48,7 +49,7 @@ class DropBoxWidget extends Widget {
 
         data.value = selectedItemsArray.map(item => item.name).join();
 
-        this.state = o;
+        this.state = v;
         this.value = data;
 
         let hide = o.hideIfNoData === true && d.length === 0;
@@ -94,11 +95,11 @@ class DropBoxWidget extends Widget {
     getItems(data, v) {
         return data.items.map(item => {
             return `
-<div class="ks-dropbox-panel-item ${item.on && v.multiSelect === false ? 'on' : ''}">
+<div class="ks-dropbox-panel-item ${item.on ? 'on' : ''}">
     <div class="ks-dropbox-panel-item-inner">
         <div class="ks-dropbox-panel-item-icon">
-           <span class="${item.on ? v.itemIconOn ? v.itemIconOn : '' : v.itemIconOff ? v.itemIconOff : ''}"></span>
-            <input class="ks-dropbox-panel-item-checkbox" ${v.multiSelect ? 'style="display:none;"' : 'style="display:none;"'} ${item.on ? 'checked=checked' : ''} type="checkbox">
+           <span></span>
+            <input class="ks-dropbox-panel-item-checkbox" ${v.multiSelect ? '' : 'style="display:none;"'} ${item.on ? 'checked=checked' : ''} type="checkbox">
         </div>
         <div class="ks-dropbox-panel-item-separator"></div>
         <div class="ks-dropbox-panel-item-text" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="${item.name}">${item.name}</div>
@@ -108,7 +109,7 @@ class DropBoxWidget extends Widget {
     }
 
     initEventHandlers(section) {
-        const id = section.attr('id'), w = WidgetValue[id];
+        const id = section.attr('id'), w = WidgetValue[id], state = this.state;
 
         if (section.find('.ks-dropbox-field').hasClass('readonly')) {
             return;
@@ -138,7 +139,7 @@ class DropBoxWidget extends Widget {
 
         const itemHolder = $('#' + id + ' .ks-dropbox-panel')./*on('click', false).*/on('click', '.ks-dropbox-panel-item ', e => {
             const clickedItem = $(e.currentTarget);
-            DropBoxWidget.handleClick(w, e, itemHolder, section, id, clickedItem, $(e.target).hasClass('ks-dropbox-panel-item-checkbox'));
+            DropBoxWidget.handleClick(state, w, e, itemHolder, section, id, clickedItem, $(e.target).hasClass('ks-dropbox-panel-item-checkbox'));
         });
 
         const catcher = Doc.not(dropbox).on('touch click', e => {
@@ -148,43 +149,49 @@ class DropBoxWidget extends Widget {
         itemHolder.hide();
     }
 
-    static handleClick(w, e, itemHolder, section, id, clickedItem, fromCheckbox = false) {
-            const checkbox = clickedItem.find('.ks-dropbox-panel-item-checkbox');
-            const items = itemHolder.children('.widget-dropdown-item');
+    static handleClick(state, w, e, itemHolder, section, id, clickedItem, fromCheckbox = false) {
+        const checkbox = clickedItem.find('.ks-dropbox-panel-item-checkbox');
+        const items = itemHolder.children('.widget-dropdown-item');
 
+        if (state.multiSelect === true) {
             if (checkbox.length && checkbox.is(':visible')) {
-                if(!fromCheckbox){
+                if (!fromCheckbox) {
                     checkbox.prop('checked', !checkbox.prop('checked'));
                 }
                 w.items[clickedItem.index()].on = checkbox.prop("checked");
                 w.value = $.grep(w.items, (item, i) => item.on).map(item => item.name).join();
-            //    clickedItem.toggleClass('on');
             } else {
-                itemHolder.find('.ks-dropbox-panel-item').removeClass('on').each(function () {
-                    w.items[$(this).index()].on = $(this).hasClass('on');
-                    w.value = $.grep(w.items, (item, i) => item.on).map(item => item.name).join();
-                });
-                clickedItem.addClass('on');
+                clickedItem.toggleClass('on');
                 w.items[clickedItem.index()].on = clickedItem.hasClass('on');
                 w.value = $.grep(w.items, (item, i) => item.on).map(item => item.name).join();
-                itemHolder.slideUp(50);
             }
+            //    clickedItem.toggleClass('on');
+        } else {
+            itemHolder.find('.ks-dropbox-panel-item').removeClass('on').each(function () {
+                w.items[$(this).index()].on = $(this).hasClass('on');
+                w.value = $.grep(w.items, (item, i) => item.on).map(item => item.name).join();
+            });
+            clickedItem.addClass('on');
+            w.items[clickedItem.index()].on = clickedItem.hasClass('on');
+            w.value = $.grep(w.items, (item, i) => item.on).map(item => item.name).join();
+            itemHolder.slideUp(50);
+        }
 
-            let v = $.grep(w.items, (item, i) => item.on).map(item => item.name).join(', '),
-                searchText = $('#' + id + ' .search-text');
+        let v = $.grep(w.items, (item, i) => item.on).map(item => item.name).join(', '),
+            searchText = $('#' + id + ' .search-text');
 
-            searchText.attr('placeholder', v).val('');
-            section.find('.ks-dropbox-panel-item').show();
+        searchText.attr('placeholder', v).val('');
+        section.find('.ks-dropbox-panel-item').show();
 
-            let element = $('<div>').data({action: 'choose', id: section.prop('id'), value: WidgetValue[id].value});
+        let element = $('<div>').data({action: 'choose', id: section.prop('id'), value: WidgetValue[id].value});
 
-            if (section.data('ordinal')) {
-                element.data('ordinal', section.data('ordinal'));
-            }
+        if (section.data('ordinal')) {
+            element.data('ordinal', section.data('ordinal'));
+        }
 
-            Widget.doHandleSystemEvent(element, e);
+        Widget.doHandleSystemEvent(element, e);
 
-            return false;
+        return false;
     }
 }
 ;
