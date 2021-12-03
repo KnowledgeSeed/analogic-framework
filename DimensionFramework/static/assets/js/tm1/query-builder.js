@@ -56,27 +56,6 @@ QB.refreshGridCellData = (argument, type) => {
     return QB.loadData(t[0], type, false, 'refresh_col_' + t[2], {row: t[1], col: t[2]});
 };
 
-QB.loadComment = repositoryId => {
-    let r = Repository[repositoryId];
-
-    if (r && r.comment) {
-        let p = r.comment;
-
-        return Auth.getTm1AjaxRequest(app.tm1ApiHost + p.url, p.body(WidgetValue), p.type, repositoryId).then(data => {
-            r.comment.cellsetId = data.ID;
-            let t = r.comment.parsingControl;
-
-            if (t) {
-                return QB.processResultAsObject(t.query, data);
-            }
-
-            return data;
-        });
-    }
-
-    return $.Deferred().resolve('');
-};
-
 QB.loadFromWidgetValue = (arg, repositoryId, extraParams = {}) => {
     if (arg.execute) {
         return $.Deferred().resolve(arg.execute(WidgetValue, repositoryId, extraParams, Repository[repositoryId]));
@@ -143,7 +122,7 @@ QB.executeMDXs = (repositoryId, path) => {
                 Repository[repositoryId][path][i].cellsetId = r.ID;
             }
 
-            t = Repository[repositoryId][path][i].parsingControl;
+            t = (typeof Repository[repositoryId][path][i].parsingControl === 'function') ? Repository[repositoryId][path][i].parsingControl(r, repositoryId, Repository[repositoryId]) : Repository[repositoryId][path][i].parsingControl;
 
             if (t) {
                 if (t.type === 'matrix') {
@@ -190,13 +169,10 @@ QB.executeMDX = (repositoryId, path, extraParams = {}) => {
         u.url = mm.url;
         body = mm.body;
     }
-    /*for(let ff = 0; ff < 120;++ff){
-     Auth.getTm1AjaxRequest(u.url, body, u.type, repositoryId);
-     }*/
     return Auth.getTm1AjaxRequest(u.url, body, u.type, repositoryId).then((data) => {
         //save cellsetid
         r.cellsetId = data.ID;
-        let t = p.parsingControl;
+        let t = (typeof p.parsingControl=== 'function') ? p.parsingControl(WidgetValue, repositoryId, r) : p.parsingControl;
 
         if (t) {
             if (t.type === 'matrix') {

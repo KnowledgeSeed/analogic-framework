@@ -67,7 +67,7 @@ class Base:
 
         description = self.setting.getCustomObjectDescription(key)
 
-        return ClassLoader().call(description, request, self.getTM1Service(), self.setting)
+        return ClassLoader().call(description, request, self.getTM1Service(), self.setting, self)
 
     def getServerSideMDX(self):
         mdx = request.data
@@ -130,7 +130,7 @@ class Base:
             if validation_key != '':
                 description = self.setting.getCustomObjectDescription(validation_key)
 
-                validation_message = ClassLoader().call(description, request, self.getTM1Service(), self.setting,
+                validation_message = ClassLoader().call(description, request, self.getTM1Service(), self.setting, self,
                                                         path=upload_path)
 
                 if validation_message != '':

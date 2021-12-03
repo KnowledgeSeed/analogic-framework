@@ -124,7 +124,7 @@ class SSOPool(Pool):
 
     def checkAppAuthenticated(self):
         sso_token = session.get('sso_token')
-        sso_token is not None
+        return sso_token is not None
         # decoded = self.decodeToken(sso_token)
         # return decoded['msg'] == ''
 

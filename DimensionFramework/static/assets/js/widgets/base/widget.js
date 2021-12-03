@@ -17,8 +17,16 @@ class Widget {
         this[Sym.options] = options;
     }
 
+    getWidget(widgetOptions){
+        if(widgetOptions.import){
+            return v(widgetOptions.import, WidgetConfig);
+        }
+        return widgetOptions;
+    }
+
     render(withState, refresh, useDefaultData = false, loadFunction = QB.loadData) {
         const o = this.options, instance = this, h = Listeners.handle;
+        let ww;
 
         if (withState && 'PageWidget' === instance.name) {
             this.addListeners();
@@ -29,7 +37,8 @@ class Widget {
         let widgetOptions, widgets = [];
 
         for (widgetOptions of o.widgets || []) {
-            widgets.push(new widgetOptions.type(widgetOptions));
+            ww = this.getWidget(widgetOptions);
+            widgets.push(new ww.type(ww));
         }
 
         if (o.listen) {
@@ -173,10 +182,11 @@ class Widget {
 
     addListeners() {
         const o = this.options, h = Listeners.handle;
-        let widgetOptions, widgets = [], w;
+        let widgetOptions, widgets = [], w, ww;
 
         for (widgetOptions of o.widgets || []) {
-            widgets.push(new widgetOptions.type(widgetOptions));
+            ww = this.getWidget(widgetOptions);
+            widgets.push(new ww.type(ww));
         }
 
         if (o.listen) {
@@ -209,10 +219,11 @@ class Widget {
     triggerFinishedEvent(eventType = 'init') {
         const o = this.options;
 
-        let widgetOptions, widgets = [], w;
+        let widgetOptions, widgets = [], w, ww;
 
         for (widgetOptions of o.widgets || []) {
-            widgets.push(new widgetOptions.type(widgetOptions));
+            ww = this.getWidget(widgetOptions);
+            widgets.push(new ww.type(ww));
         }
 
         for (w of widgets) {
@@ -232,10 +243,11 @@ class Widget {
     initEvents(withState) {
         const o = this.options, section = $('#' + o.id);
 
-        let widgetOptions, widgets = [], w;
+        let widgetOptions, widgets = [], w, ww;
 
         for (widgetOptions of o.widgets || []) {
-            widgets.push(new widgetOptions.type(widgetOptions));
+            ww = this.getWidget(widgetOptions);
+            widgets.push(new ww.type(ww));
         }
 
         for (w of widgets) {

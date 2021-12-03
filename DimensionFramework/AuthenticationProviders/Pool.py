@@ -3,6 +3,7 @@ from flask import request, session
 from DimensionFramework.AuthenticationProviders.Base import Base
 from TM1py.Services import TM1Service
 from flask import jsonify
+import logging
 
 
 class Pool(Base):
@@ -40,6 +41,11 @@ class Pool(Base):
         cookies: dict[str, str] = {}
 
         response = self.doPoolRequest(url, method, mdx, headers, cookies)
+
+        if response.status_code == 400 or response.status_code == 500:
+            logger = self.getLogger()
+            logger.error('MDX error: ' + response.text)
+            logger.error('MDX: ' + mdx.decode('utf-8'))
 
         return response.text, response.status_code, {'Content-Type': 'application/json'}
 
@@ -110,3 +116,6 @@ class Pool(Base):
 
     def activeUser(self):
         return jsonify({'username': session.get('username')})
+
+    def getLogger(self):
+        return logging.getLogger(__name__)
