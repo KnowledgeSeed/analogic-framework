@@ -16,6 +16,7 @@ class SSOPool(Pool):
         decoded = self.decodeToken(sso_token)
 
         if decoded.get('msg') != '':
+   #     if sso_token is None or decoded.get('msg') == '':
             return make_response(redirect(cnf[
                                               'authenticationBridge']))
 

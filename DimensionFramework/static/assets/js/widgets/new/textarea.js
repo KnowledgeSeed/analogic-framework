@@ -16,6 +16,7 @@ class TextAreaWidget extends Widget {
         const v = {
             icon: this.getRealValue('icon', d, false),
             highlight: this.getRealValue('highlight', d, false),
+            placeholder: this.getRealValue('placeholder', d, false),
             skin: this.getRealValue('skin', d, 'standard'),
             textAlignment: this.getRealValue('textAlignment', d, false),
             textFontColor: this.getRealValue('textFontColor', d, false),
@@ -53,7 +54,7 @@ class TextAreaWidget extends Widget {
             <div class="ks-textarea-field-inner">
                 <div class="ks-textarea-icon">${v.icon !== false ? `<img src="${app.assetsUrl}/skins/${app.applicationAssetsFolder}/images/${v.icon}">` : '' }</div>
                 <div class="ks-textarea-divider"></div>
-                <textarea style="${textStyles.join('')}" data-action="save" data-ordinal="${d.ordinal}" data-id="${o.id}" class="ks-textarea-input" >${d.value || ''}</textarea>
+                <textarea ${v.placeholder !== false ? `placeholder="${v.placeholder}"` : ''} style="${textStyles.join('')}" data-action="save" data-ordinal="${d.ordinal}" data-id="${o.id}" class="ks-textarea-input" >${d.value || ''}</textarea>
             </div>
         </div>
     </div>
@@ -61,15 +62,26 @@ class TextAreaWidget extends Widget {
     }
 
     initEventHandlers(section) {
-        section.find('.ks-textarea-input').on('focusout', e => {
-            let w = $(e.currentTarget), id = section.prop('id'), v = Utils.escapeText(w.val());
+        const o = this.options;
+        if(o.icon) {
+            section.find('.ks-textarea-icon').on('click', e => {
+                TextAreaWidget.doSaveEvent(section, section.find('.ks-textarea-input'), e);
+            });
+        } else {
+            section.find('.ks-textarea-input').on('focusout', e => {
+                TextAreaWidget.doSaveEvent(section, $(e.currentTarget), e);
+            });
+        }
+    }
+
+    static doSaveEvent(section, w, e){
+           let id = section.prop('id'), v = Utils.escapeText(w.val());
 
             WidgetValue[id].value = v;
 
             w.data('value', v);
 
             Widget.doHandleSystemEvent(w, e);
-        });
     }
 }
 ;
