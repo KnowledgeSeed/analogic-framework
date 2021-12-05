@@ -495,6 +495,10 @@ app.fn.executeRequest = function executeRequest(eventMapId) {
     QB.writeData(eventMapId, {}, {});
 };
 
+app.fn.executeQueryRequest = function executeQueryRequest(argument) {
+    QB.loadData(argument[0], '', false, argument[1]);
+};
+
 app.fn.removeSliders = function removeSliders() {
     SliderWidget.slidersByIds = [];
     SliderWidget.isDocEventsHaveBeenBound = false;
