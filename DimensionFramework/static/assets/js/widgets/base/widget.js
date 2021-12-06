@@ -1,4 +1,4 @@
-/* global app, El, EventMap, Listeners, QB, PageState, Utils, WidgetValue */
+/* global app, El, EventMap, Listeners, QB, PageState, Utils, WidgetConfig, WidgetValue */
 
 'use strict';
 const Sym = Symbol(), WidgetState = {};
@@ -17,8 +17,8 @@ class Widget {
         this[Sym.options] = options;
     }
 
-    getWidget(widgetOptions){
-        if(widgetOptions.import){
+    getWidget(widgetOptions) {
+        if (widgetOptions.import) {
             return v(widgetOptions.import, WidgetConfig);
         }
         return widgetOptions;
@@ -237,7 +237,7 @@ class Widget {
             for (a of actions) {
                 a.action(a.argument, {}, {});
             }
-        }
+    }
     }
 
     initEvents(withState) {
@@ -332,7 +332,7 @@ class Widget {
             for (a of actions) {
                 a.action(a.argument, event, element);
             }
-        }
+    }
     }
 
     get options() {

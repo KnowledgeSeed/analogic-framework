@@ -123,6 +123,7 @@ const Utils = {
     escapeText: str => JSON.stringify(str).slice(1, -1),
     stripHtml: str => isNaN(str) ? str.replace(/(<([^>]+)>)/gi, "") : str,
     nl2br: s => s.replace(/(?:\r\n|\r|\n)/g, '<br>'),
+    htmlEncode: s => s.replaceAll('"', '&quot;').replaceAll("'", '&apos;'),
     getObjectValueByDotSeparatedKeys(o, dotSeparatedKeys) {
         if ('undefined' === typeof o) {
             return o;

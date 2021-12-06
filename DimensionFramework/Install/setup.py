@@ -1,7 +1,7 @@
 import os
 import sys
 from flask import json
-from functions import createPoolUserDB, generateKey, installPoolUsers
+from functions import createPoolUserDB, generateKey, installPoolUsers, installSmtpUser
 
 if len(sys.argv) < 6:
     print('Please add arguments')
@@ -24,3 +24,4 @@ admin_pwd = sys.argv[5]
 createPoolUserDB(setting, application)
 generateKey(application, passphrase, salt)
 installPoolUsers(application, setting, admin_user, admin_pwd)
+installSmtpUser(application, setting)

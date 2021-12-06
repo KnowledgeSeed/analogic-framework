@@ -28,12 +28,9 @@ class Base:
         subset_name_to_remove = request.values.get('subset_name_to_remove')
         selected_cards = request.values.get('selected_cards')
         options = request.values.get('options')
-        expand_row_element = request.values.get('expand_row_element')
-        expand_col_element = request.values.get('expand_col_element')
 
-        return PivotApi.call(self.getTM1Service(), dimension_name, hierarchy_name, subset_name, element_names,
-                             subset_name_to_remove,
-                             selected_cards, options, expand_row_element, expand_col_element)
+        return PivotApi.call(self.getTM1Service(), dimension_name, hierarchy_name, subset_name,
+                             element_names, subset_name_to_remove, selected_cards, options)
 
     def export(self):
         if self.checkAppAuthenticated() is False:

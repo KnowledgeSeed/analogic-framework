@@ -110,3 +110,30 @@ def createInTM1(setting, admin_user, admin_pwd, user, pwd):
 
     print(response.text)
     print(response.status_code)
+
+def installSmtpUser(application, setting):
+    if 'smtp' not in setting:
+        print('The "smtp" key does not exists in the setting!')
+        return
+
+    pwd_url = os.path.join(os.path.dirname(__file__), 'smtp_pwd.txt')
+
+    if os.path.exists(pwd_url) is False:
+        print('Path does not exists: ' + pwd_url)
+        return
+
+    pwd = open(pwd_url, 'r').read()
+
+    if not pwd:
+        print('Please set password for the SMTP user!')
+        return
+
+    passphrase_name = application + '_' + SettingManager.FRAMEWORK_SSO_PASSPHRASE_NAME
+    salt_name = application + '_' + SettingManager.FRAMEWORK_SSO_SALT_NAME
+
+    user_name = setting['smtp']['sender_email']
+    target = setting['camNamespace'] + '/' + user_name
+    password = encrypt(pwd, getSaltForKey(user_name, salt_name), passphrase_name)
+    updateCredentialManager(target, user_name, password)
+
+    print('SMTP user added')

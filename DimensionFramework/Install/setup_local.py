@@ -1,7 +1,7 @@
 import os
 import sys
 from flask import json
-from functions import createPoolUserDB, generateKey, installPoolUsers, insertKey
+from functions import createPoolUserDB, generateKey, installPoolUsers, insertKey, installSmtpUser
 
 if len(sys.argv) < 4:
     print('Please add arguments')
@@ -24,3 +24,4 @@ generateKey(application, passphrase, salt)
 installPoolUsers(application, setting)
 insertKey(application, 'uc9Pu9tAqW3INEJU+M2b/6b1VkOB1P6CybnJ3IYbqlA=')
 os.remove('secret_key')
+installSmtpUser(application, setting)
