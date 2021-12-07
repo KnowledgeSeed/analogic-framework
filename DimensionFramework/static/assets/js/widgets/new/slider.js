@@ -1,4 +1,4 @@
-/* global app, Doc, Widget, noUiSlider, Utils */
+/* global app, Doc, Widget, noUiSlider, Utils, v */
 
 'use strict';
 
@@ -14,7 +14,7 @@ class SliderWidget extends Widget {
             maxRange: parseInt(this.getRealValue('maxRange', d, 8000)),
             smallIncrement: this.getRealValue('smallIncrement', d, 1),
             largeIncrement: this.getRealValue('largeIncrement', d, 100),
-            value: this.getRealValue('value', d, 0),
+            value: Utils.parseNumber(this.getRealValue('value', d, 0)),
             trackFillStartValue: this.getRealValue('trackFillStartValue', d, 0),
             ordinal: d.ordinal,
             valueDivider: this.getRealValue('valueDivider', d, 1),
@@ -34,8 +34,6 @@ class SliderWidget extends Widget {
                 }
             }
         };
-
-        v.value = Utils.parseNumber(v.value); //temp!!!!!!
 
         this.value = v;
 
@@ -178,38 +176,44 @@ class SliderWidget extends Widget {
 
         sliderDiv.find('.ks-slider-track-zero-indicator').css('left', width / 2 + offset);
 
-        const trackFillWidth = width * (trackFillStartValue - d.minRange) / totalRange,
-            noUiConnect = widgetDiv.find('.noUi-connect');
+        const trackFillWidth = width * (trackFillStartValue - d.minRange) / totalRange, noUiConnect = widgetDiv.find('.noUi-connect');
         const trackFill = $('<div class="ks-slider-track-fill" style="width: ' + trackFillWidth + 'px;"><\/div>');
 
         widgetDiv.find('.noUi-connects').append(trackFill).promise().then(() => {
             trackFillColor = trackFill.css('background-color');
-            let updateableInput;
+
+            let updateableInput, v;
+
             if (d.updateableWidgetId) {
                 updateableInput = $('#' + d.updateableWidgetId).find('input');
             }
+
             slider.on('update', (positions) => {
                 adjustTrackFill(positions[0]);
-                if (updateableInput && d.changedByInput === false) {
+
+                if (updateableInput && !d.changedByInput) {
                     if (d.updateableWidgetValueHandler) {
-                        updateableInput.val(d.updateableWidgetValueHandler(positions[0]));
+                        v = d.updateableWidgetValueHandler(positions[0]);
                     } else {
-                        updateableInput.val(positions[0] + ' ' + d.unit);
+                        v = updateableInput.val(positions[0] + ' ' + d.unit);
                     }
+
+                    updateableInput.val(Utils.replaceDecimal(v));
                 }
-                d['changedByInput'] = false;
+
+                d.changedByInput = false;
             });
         });
 
         SliderWidget.hideToolTips(sliderDiv);
         sliderDiv.find('.noUi-tooltip').css(css.tooltip);
 
-        slider.on('set', () => {
-            const v = slider.get(), e = $('<div\/>').data({action: 'slide', id: id, ordinal: ordinal, value: v});
+        slider.on('set', e => {
+            const val = slider.get();
 
-            Widget.doHandleSystemEvent(e, null, true);
+            Widget.doHandleSystemEvent($(e.currentTarget).data({action: 'slide', id: id, ordinal: ordinal, value: val}), e, true);
 
-            d.value = v;
+            d.value = val;
         });
 
         if (isTouchMode) {
@@ -231,13 +235,18 @@ class SliderWidget extends Widget {
 
     static initSliderDocEvents(widgetValue, section) {
         const isTouchMode = app.isTouched;
+
         if (v('updateableWidgetId', widgetValue)) {
             let updateableInput = $('#' + widgetValue.updateableWidgetId).find('input');
-            updateableInput.on('change', (e) => {
+
+            updateableInput.on('change', () => {
                 const sliderDiv = section.find('.ks-slider');
                 const slider = SliderWidget.getSlider(sliderDiv);
-                let updateableInputValue = Utils.parseNumber(updateableInput.val().replace(/\s/g, '').replace('%', ''));
+
+                let updateableInputValue = Utils.parseNumber(updateableInput.val());
+
                 v(sliderDiv.data('id')).changedByInput = true;
+
                 if (widgetValue.countSliderValue) {
                     slider.set(widgetValue.countSliderValue(updateableInputValue));
                 } else {
@@ -245,7 +254,6 @@ class SliderWidget extends Widget {
                 }
             });
         }
-
 
         Doc.on('mouseover.slider', '.ks-slider', e => {
             e = $(Utils.stopEvent(e).currentTarget);

@@ -3,7 +3,7 @@
 'use strict';
 
 const L = console.log,
-v = (path, obj = WidgetValue) => path.split(".").reduce((o, key) => o && o[key] ? o[key] : false, obj);
+    v = (path, obj = WidgetValue) => path.split(".").reduce((o, key) => o && o[key] ? o[key] : false, obj);
 
 const Utils = {
     sleep: ms => new Promise(resolve => setTimeout(resolve, ms)),
@@ -36,9 +36,11 @@ const Utils = {
     toTitleCase: str => str.toLowerCase().replace(/(?:^|\s)\w/g, match => match.toUpperCase()),
     parseNumber(value, locale = navigator.language) {
         let localValue = value;
+
         if (localValue === '' || localValue === null || localValue === false) {
             localValue = '0';
         }
+
         if ('number' === typeof localValue) {
             return localValue;
         }
@@ -53,6 +55,7 @@ const Utils = {
         localValue = localValue.replace(/\D+$/g, '');
 
         const exponentSuffix = localValue.match(/e-{0,1}\d+$/i);
+
         if (exponentSuffix) {
             localValue = localValue.slice(0, exponentSuffix.index);
         }
@@ -82,7 +85,7 @@ const Utils = {
     getToday: (delimiter = '.') => Utils.getFormattedDate(new Date(), delimiter),
     getTimestamp(dateStr = '', forwardTime = false) {
         const d = dateStr ? new Date(dateStr.replace(/\./g, '-')) : new Date(),
-        o = forwardTime ? Utils.forwardTime(d) : Utils.rewindTime(d);
+            o = forwardTime ? Utils.forwardTime(d) : Utils.rewindTime(d);
 
         return o.getFullYear() + '-' + (o.getMonth() + 1).toString().padStart(2, 0) + '-' + o.getDate().toString().padStart(2, 0) + 'T' + o.getHours().toString().padStart(2, 0) + ':' + o.getMinutes().toString().padStart(2, 0) + ':' + o.getSeconds().toString().padStart(2, 0) + '.' + o.getMilliseconds().toString().padStart(3, 0) + 'Z';
     },
@@ -186,7 +189,7 @@ const Utils = {
     },
     getGridTableCurrentCell(widgetId) {
         let a = v(widgetId + '.cellData', WidgetValue), b = v(widgetId + '.row', WidgetValue),
-        c = v(widgetId + '.column', WidgetValue);
+            c = v(widgetId + '.column', WidgetValue);
         if (a && b && c) {
             return a[b][c];
         }
@@ -281,7 +284,7 @@ const Utils = {
     },
     getGridTableActualAndLastPage(widgetId) {
         let state = WidgetState[widgetId], maxPage = Math.ceil(state.rows / state.maxRows),
-        actualPage = state.page ? state.page : 1;
+            actualPage = state.page ? state.page : 1;
         return {actualPage: actualPage, maxPage: maxPage};
     },
     getGridTablePagerText(widgetId) {
@@ -355,7 +358,7 @@ const Utils = {
     },
     modifyFileName(widgetId, newName) {
         let file = WidgetValue[widgetId].form.get('file0'), splittedName = file.name.split('.'),
-        fileExt = splittedName[splittedName.length - 1];
+            fileExt = splittedName[splittedName.length - 1];
         file = new File([file], newName + "." + fileExt, {type: file.type});
         WidgetValue[widgetId].form.set('file0', file);
     },
