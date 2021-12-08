@@ -1,9 +1,8 @@
 /* global app, El, Doc, Intl, WidgetValue, WidgetState */
 
 'use strict';
-
 const L = console.log,
-    v = (path, obj = WidgetValue) => path.split(".").reduce((o, key) => (o && (key in o)) ? o[key] : false, obj);
+    v = (path, obj = WidgetValue) => path.split(".").reduce((o, key) => o && o[key] ? o[key] : false, obj);
 
 const Utils = {
     sleep: ms => new Promise(resolve => setTimeout(resolve, ms)),
