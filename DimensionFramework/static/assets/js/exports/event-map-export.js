@@ -13,7 +13,7 @@ class EventMapExport extends Export {
 
     parseEventMapContent(eventMapContent) {
         let line, exportableDataByEventMapKeys = {}, comment, commentsForStatement = [], commentStartKey;
-        let lastEventMapKey, statement, eventMapKey, eventMapArray, exportData = [], i, d, v, len, args, a;
+        let lastEventMapKey, statement, eventMapKey, eventMapArray, exportData = [], i, d, e, len, args, a;
 
         for (line of eventMapContent.replace(/\n/g, '\r').split('\r')) {
             commentStartKey = line.indexOf('//');
@@ -42,9 +42,9 @@ class EventMapExport extends Export {
                 continue;
             }
 
-            v = statement.match(/^['|"](\w+\.\w+(\.\w+)?)['|"]/) || [];
-            if (3 === v.length) {
-                lastEventMapKey = v[1];
+            e = statement.match(/^['|"](\w+\.\w+(\.\w+)?)['|"]/) || [];
+            if (3 === e.length) {
+                lastEventMapKey = e[1];
 
                 exportableDataByEventMapKeys[lastEventMapKey] = {comments: commentsForStatement, actions: []};
             }
@@ -52,9 +52,9 @@ class EventMapExport extends Export {
 
         for (eventMapKey in exportableDataByEventMapKeys) {
             d = exportableDataByEventMapKeys[eventMapKey];
-            eventMapArray = Utils.getObjectValueByDotSeparatedKeys(app.eventMap, eventMapKey);
+            eventMapArray = v(eventMapKey, app.eventMap);
 
-            v = eventMapKey.split('.');
+            e = eventMapKey.split('.');
             len = eventMapArray.length;
 
             for (i = 0; i < len; ++i) {
@@ -76,14 +76,14 @@ class EventMapExport extends Export {
                                     action: 'app.fn.' + args[j].actions[k].action.name,
                                     argument: args[j].actions[k].argument
                                 }
-                            )
+                            );
                         }
                         conditions.push(condition);
                     }
                     exportData.push([
-                        v[0],
-                        v[1],
-                        v.length > 2 ? v[2] : '',
+                        e[0],
+                        e[1],
+                        e.length > 2 ? e[2] : '',
                         i + 1,
                         d.actions[i],
                         JSON.stringify(conditions),
@@ -100,9 +100,9 @@ class EventMapExport extends Export {
                     ]);
                 }else {
                     exportData.push([
-                        v[0],
-                        v[1],
-                        v.length > 2 ? v[2] : '',
+                        e[0],
+                        e[1],
+                        e.length > 2 ? e[2] : '',
                         i + 1,
                         d.actions[i],
                         this.toString(args[0]),

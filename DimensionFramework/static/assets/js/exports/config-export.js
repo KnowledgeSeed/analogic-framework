@@ -39,7 +39,7 @@ class ConfigExport extends Export {
             if (v.length > 1) {
                 possibleAppKey = v[0].trim().replace('app.', '');
 
-                configValue = Utils.getObjectValueByDotSeparatedKeys(app, possibleAppKey);
+                configValue = v(possibleAppKey, app);
 
                 v = typeof configValue;
 

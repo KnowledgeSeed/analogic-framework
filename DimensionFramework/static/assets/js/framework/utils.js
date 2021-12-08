@@ -3,7 +3,7 @@
 'use strict';
 
 const L = console.log,
-    v = (path, obj = WidgetValue) => path.split(".").reduce((o, key) => o && o[key] ? o[key] : false, obj);
+    v = (path, obj = WidgetValue) => path.split(".").reduce((o, key) => (o && (key in o)) ? o[key] : false, obj);
 
 const Utils = {
     sleep: ms => new Promise(resolve => setTimeout(resolve, ms)),
@@ -126,20 +126,7 @@ const Utils = {
     escapeText: str => JSON.stringify(str).slice(1, -1),
     stripHtml: str => isNaN(str) ? str.replace(/(<([^>]+)>)/gi, "") : str,
     nl2br: s => s.replace(/(?:\r\n|\r|\n)/g, '<br>'),
-    htmlEncode: s => s.replaceAll('"', '&quot;').replaceAll("'", '&apos;'),
-    getObjectValueByDotSeparatedKeys(o, dotSeparatedKeys) {
-        if ('undefined' === typeof o) {
-            return o;
-        }
-
-        const i = dotSeparatedKeys.indexOf('.'), v = o[dotSeparatedKeys];
-
-        if (-1 === i || v) {
-            return v;
-        } else {
-            return Utils.getObjectValueByDotSeparatedKeys(o[dotSeparatedKeys.slice(0, i)], dotSeparatedKeys.slice(i + 1));
-        }
-    },
+    htmlEncode: s => s.replaceAll({'"': '&quot;', "'": '&apos;'}),
     adjustHeightsToMax(elements) {
         let i, height, maxHeight = 0, len = elements.length;
         // testing with maybe "outerHeight"

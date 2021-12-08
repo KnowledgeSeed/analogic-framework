@@ -21,7 +21,7 @@ class SliderWidget extends Widget {
             unit: this.getRealValue('unit', d, ''),
             updateableWidgetId: this.getRealValue('updateableWidgetId', d, false),
             updateableWidgetValueHandler: this.getRealValue('updateableWidgetValueHandler', d, false),
-            countSliderValue: this.getRealValue('countSliderValue', d, false),
+            calculateSliderValue: this.getRealValue('calculateSliderValue', d, false),
             changedByInput: false,
             css: {
                 tooltip: {
@@ -247,8 +247,8 @@ class SliderWidget extends Widget {
 
                 v(sliderDiv.data('id')).changedByInput = true;
 
-                if (widgetValue.countSliderValue) {
-                    slider.set(widgetValue.countSliderValue(updateableInputValue));
+                if (widgetValue.calculateSliderValue) {
+                    slider.set(widgetValue.calculateSliderValue(updateableInputValue));
                 } else {
                     slider.set(updateableInputValue);
                 }
