@@ -195,7 +195,7 @@ class SliderWidget extends Widget {
                     if (d.updateableWidgetValueHandler) {
                         v = d.updateableWidgetValueHandler(positions[0]);
                     } else {
-                        v = updateableInput.val(positions[0] + ' ' + d.unit);
+                        v = positions[0] + ' ' + d.unit;
                     }
 
                     updateableInput.val(Utils.replaceDecimal(v));
