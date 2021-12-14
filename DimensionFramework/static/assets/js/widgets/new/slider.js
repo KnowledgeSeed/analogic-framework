@@ -23,6 +23,7 @@ class SliderWidget extends Widget {
             updateableWidgetValueHandler: this.getRealValue('updateableWidgetValueHandler', d, false),
             calculateSliderValue: this.getRealValue('calculateSliderValue', d, false),
             changedByInput: false,
+            originalValue: this.getRealValue('originalValue', d, false),
             css: {
                 tooltip: {
                     'font-size': this.getRealValue('trackValueFontSize', d),
@@ -195,13 +196,14 @@ class SliderWidget extends Widget {
                     if (d.updateableWidgetValueHandler) {
                         v = d.updateableWidgetValueHandler(positions[0]);
                     } else {
-                        v = positions[0] + ' ' + d.unit;
+                        v = (d.originalValue !== false ? d.originalValue : positions[0]) + ' ' + d.unit;
                     }
 
                     updateableInput.val(Utils.replaceDecimal(v));
                 }
 
                 d.changedByInput = false;
+                d.originalValue = false;
             });
         });
 
