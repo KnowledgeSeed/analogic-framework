@@ -149,8 +149,9 @@ class Base:
                 result = 'ERROR!<br/><br/>' + pre_process_message
             return result, 200, {'Content-Type': 'application/json'}
         except:
-            print('Unexpected error:', sys.exc_info()[0])
-            print('Unexpected error:', sys.exc_info()[1])
+            logger = self.getLogger()
+            logger.error(sys.exc_info()[0])
+            logger.error(sys.exc_info()[1])
             return 'Unexpected error', 200, {'Content-Type': 'application/json'}
 
     def addAuthenticatedCookie(self, response):
