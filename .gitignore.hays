@@ -16,6 +16,7 @@ secret_key
 DimensionFramework/applications/*
 !DimensionFramework/applications/.placeholder
 !DimensionFramework/applications/hays
+!DimensionFramework/applications/haysks
 DimensionFramework/configs/*
 !DimensionFramework/configs/.placeholder
 !DimensionFramework/configs/hays
