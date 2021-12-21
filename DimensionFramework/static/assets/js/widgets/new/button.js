@@ -100,7 +100,7 @@ class ButtonWidget extends Widget {
             return;
         }
         if (!section.find('a').data('confirmmessage') && !section.find('a').data('confirmmessage2')) {
-            return section.find('a').on('click', (e) => {
+            return section.find('a').off('click').on('click', (e) => {
                 let s = $(e.currentTarget);
                 if (v.paste) {
                     navigator.clipboard.readText().then(text => {
