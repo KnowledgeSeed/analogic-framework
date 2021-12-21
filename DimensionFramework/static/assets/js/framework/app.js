@@ -1,4 +1,4 @@
-/* global jQuery, Loader, QB, Render, Utils */
+/* global app, jQuery, Loader, QB, Render, Utils */
 
 'use strict';
 
@@ -25,11 +25,11 @@ let EventMap, Repository, WidgetConfig;
         app.id = Utils.getRandomId();
 
         initEvents();
-        WidgetValue['systemValueGlobalCompanyProductPlanVersion'] = 'Budget';
-        
-        Render.showPage(WidgetValue['redirect'] !== null ? WidgetValue['redirect'] : app.MainPage);
+        WidgetValue.systemValueGlobalCompanyProductPlanVersion = 'Budget';
 
-        WidgetValue['redirect'] = null;
+        Render.showPage(WidgetValue.redirect !== null ? WidgetValue.redirect : app.MainPage);
+
+        WidgetValue.redirect = null;
     }
 
     function initEvents() {
