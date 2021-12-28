@@ -266,7 +266,7 @@ QB.writeData = (eventMapId, event, element) => {
     }
 
     if (g.execute) {
-        isGridTable ? g.execute(context, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.execute(context);
+        isGridTable ? g.execute(context, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2], event, element) : g.execute(context, event, element);
         QB.executeEventMapAction(eventMapId + '.finished', event, element, {});
         if (isGridTable) {
             QB.executeEventMapAction(e + '.' + w + '.finished', event, element, {});
@@ -276,7 +276,7 @@ QB.writeData = (eventMapId, event, element) => {
             return Server.download(g.download(context));
         }
         let c = r.cellsetId || '',
-            body = isGridTable ? g.body(context, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.body(context),
+            body = isGridTable ? g.body(context, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2], event, element) : g.body(context, event, element),
             url = isGridTable ? g.url({...r, ...{cellsetId: c}}, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
 
         if (g.server) {
