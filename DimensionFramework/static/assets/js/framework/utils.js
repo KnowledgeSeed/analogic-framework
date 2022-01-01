@@ -15,16 +15,16 @@ const Utils = {
         return e;
     },
     cleanStr: s => Utils.replaceAll(s, {
-            'ö': 'o',
-            'ü': 'u',
-            'ó': 'o',
-            'ő': 'o',
-            'ú': 'u',
-            'é': 'e',
-            'á': 'a',
-            'ű': 'u',
-            'í': 'i'
-        }),
+        'ö': 'o',
+        'ü': 'u',
+        'ó': 'o',
+        'ő': 'o',
+        'ú': 'u',
+        'é': 'e',
+        'á': 'a',
+        'ű': 'u',
+        'í': 'i'
+    }),
     clone: (object, deep) => deep ? $.extend(true, {}, object) : $.extend({}, object),
     replaceAll: (s, m) => s.replace(RegExp(Object.keys(m).join('|'), 'gi'), r => m[r.toLowerCase()]),
     scrollTop: duration => $('html, body').animate({scrollTop: 0}, duration || 500),
@@ -354,6 +354,17 @@ const Utils = {
         let template = (name, value) => `{"Name": \"${name}\","Value": \"${value}\"}`, i, parameters = [];
         for (i = 0; i < nameValuePairs.length; ++i) {
             parameters.push(template(nameValuePairs[i].name, nameValuePairs[i].value));
+        }
+        return `{
+                   "Parameters": [
+                       ${parameters.join(',')}
+                   ]
+                }`;
+    },
+    buildProcessParametersFromObject(obj) {
+        let template = (name, value) => `{"Name": \"${name}\","Value": \"${value}\"}`, parameters = [];
+        for (const [name, value] of Object.entries(obj)) {
+            parameters.push(template(name, value));
         }
         return `{
                    "Parameters": [
