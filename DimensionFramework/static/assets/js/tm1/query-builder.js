@@ -116,6 +116,20 @@ QB.executeMDXs = (repositoryId, path) => {
     return $.when.apply($, deffered).then(function (...results) {
         let r, i = 0, t, d = [], z;
 
+        if(Repository[repositoryId].commonParsingControl) {
+            if(Repository[repositoryId].mainQueryIndex) {
+                r = isQuery[Repository[repositoryId].mainQueryIndex] ? z[0] : z;
+                if (r.ID) {
+                    Repository[repositoryId][path][Repository[repositoryId].mainQueryIndex].cellsetId = r.ID;
+                }
+            }
+            for (z of results) {
+                d.push(isQuery[i] ? z[0] : z);
+                ++i;
+            }
+            return Repository[repositoryId].commonParsingControl(d, repositoryId, Repository[repositoryId]);
+        }
+
         for (z of results) {
             r = isQuery[i] ? z[0] : z;
             if (r.ID) {
