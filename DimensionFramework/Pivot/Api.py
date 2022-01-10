@@ -25,7 +25,7 @@ def call(tm1:TM1Service, dimension_name=None, hierarchy_name=None, subset_name=N
     elif element_names:
         new_subset = Subset(subset_name, dimension_name, hierarchy_name, subset_name, None, element_names)
         tm1.subsets.update_or_create(new_subset)
-        children = tm1.subsets.get_all_names(dimension_name, hierarchy_name)
+        children = get_filtered_subsets(tm1.subsets.get_all_names(dimension_name, hierarchy_name), options)
         hierarchy = tm1.hierarchies.get(dimension_name, hierarchy_name)
         data['defaultMember'] = hierarchy.default_member
         data['aliasAttributeNames'] = get_alias_attribute_names(hierarchy)
@@ -40,11 +40,7 @@ def call(tm1:TM1Service, dimension_name=None, hierarchy_name=None, subset_name=N
     elif hierarchy_name is None:
         children = tm1.hierarchies.get_all_names(dimension_name)
     elif subset_name is None:
-        children = tm1.subsets.get_all_names(dimension_name, hierarchy_name)
-        options = json.loads(options)
-        filter_str = options.get('filter', False)
-        if filter_str:
-            children = list(filter(re.compile(filter_str).match, children))
+        children = get_filtered_subsets(tm1.subsets.get_all_names(dimension_name, hierarchy_name), options)
         hierarchy = tm1.hierarchies.get(dimension_name, hierarchy_name)
         data['defaultMember'] = hierarchy.default_member
         data['aliasAttributeNames'] = get_alias_attribute_names(hierarchy)
@@ -53,6 +49,14 @@ def call(tm1:TM1Service, dimension_name=None, hierarchy_name=None, subset_name=N
         data['children'] = get_elements_with_aliases(tm1, dimension_name, hierarchy_name, subset_name)
 
     return jsonify({'children': children, 'data': data})
+
+
+def get_filtered_subsets(subsets, options):
+    options = json.loads(options)
+    filter_str = options.get('filter', False)
+    if filter_str:
+        subsets = list(filter(re.compile(filter_str).match, subsets))
+    return subsets
 
 
 def get_elements_with_aliases(tm1, dimension_name, hierarchy_name, subset_name):

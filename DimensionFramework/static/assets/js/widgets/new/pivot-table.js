@@ -693,9 +693,11 @@ class PivotTableWidget extends Widget {
     }
 
     doSaveAsNewSubset(newSubsetName, popup) {
-        newSubsetName = (this.options.subsetPrefix || '') + newSubsetName + (this.options.subsetSuffix || '');
+        const o = this.options;
 
-        const cols = this.getSelectorTreeColumns(), d = {dimension_name: cols.eq(0).data('value'), hierarchy_name: cols.eq(1).data('value'), subset_name: newSubsetName};
+        newSubsetName = (o.subsetPrefix || '') + newSubsetName + (o.subsetSuffix || '');
+
+        const cols = this.getSelectorTreeColumns(), d = {dimension_name: cols.eq(0).data('value'), hierarchy_name: cols.eq(1).data('value'), subset_name: newSubsetName, options: JSON.stringify(o)};
 
         this.newSubsetName = newSubsetName;
 
