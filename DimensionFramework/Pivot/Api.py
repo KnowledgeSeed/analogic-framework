@@ -1,9 +1,12 @@
-from flask import jsonify
-from TM1py.Objects import Subset
 import json
+import re
+
+from TM1py.Objects import Subset
+from TM1py.Services import TM1Service
+from flask import jsonify
 
 
-def call(tm1, dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, options=None):
+def call(tm1:TM1Service, dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, options=None):
 
     cube_name = 'Sales by Channel'
 
@@ -38,6 +41,10 @@ def call(tm1, dimension_name=None, hierarchy_name=None, subset_name=None, elemen
         children = tm1.hierarchies.get_all_names(dimension_name)
     elif subset_name is None:
         children = tm1.subsets.get_all_names(dimension_name, hierarchy_name)
+        options = json.loads(options)
+        filter_str = options.get('filter', False)
+        if filter_str:
+            children = list(filter(re.compile(filter_str).match, children))
         hierarchy = tm1.hierarchies.get(dimension_name, hierarchy_name)
         data['defaultMember'] = hierarchy.default_member
         data['aliasAttributeNames'] = get_alias_attribute_names(hierarchy)

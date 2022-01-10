@@ -349,6 +349,8 @@ class PivotTableWidget extends Widget {
     }
 
     getNextSelectorTreeLevel(selectedData, nextLevelData, cols, callback) {
+        selectedData.options = JSON.stringify(this.options);
+
         return $.when(Pivot.call({data: selectedData})).then(resp => {
             this.addToNextLevelChildren(nextLevelData, resp.children, resp.data);
 
@@ -691,6 +693,8 @@ class PivotTableWidget extends Widget {
     }
 
     doSaveAsNewSubset(newSubsetName, popup) {
+        newSubsetName = (this.options.subsetPrefix || '') + newSubsetName + (this.options.subsetSuffix || '');
+
         const cols = this.getSelectorTreeColumns(), d = {dimension_name: cols.eq(0).data('value'), hierarchy_name: cols.eq(1).data('value'), subset_name: newSubsetName};
 
         this.newSubsetName = newSubsetName;
