@@ -88,11 +88,15 @@ QB.getUserData = () => {
 };
 
 QB.executeMDXs = (repositoryId, path) => {
-    let p, deffered = [], u, isQuery = [], body, c = 1, mm;
+    let p, deffered = [], u, isQuery = [], body, c = 1, mm, callExecute = true;
 
     for (p of Repository[repositoryId][path]) {
         u = QB.getUrl(p);
-        if (p.execute) {
+        if(p.body && p.execute && p.callExecute){
+            callExecute = p.callExecute(WidgetValue, repositoryId, Repository[repositoryId]);
+        }
+
+        if (p.execute && callExecute) {
             deffered.push($.Deferred().resolve(p.execute(WidgetValue, repositoryId, Repository[repositoryId])));
             isQuery.push(false);
         } else if (p.pivot) {
