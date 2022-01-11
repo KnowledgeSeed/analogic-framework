@@ -62,6 +62,20 @@ def updateCredentialManager(target, user_name, pwd):
     keyring.set_password(target, user_name, pwd)
 
 
+def installPoolUser(application, setting, password):
+    if 'pool' not in setting or 'users' not in setting['pool']:
+        print('please set pool.users in config.json')
+        return
+    passphrase_name = application + '_' + SettingManager.FRAMEWORK_SSO_PASSPHRASE_NAME
+    salt_name = application + '_' + SettingManager.FRAMEWORK_SSO_SALT_NAME
+    for idx, u in enumerate(setting['pool']['users']):
+        target = setting['camNamespace'] + '/' + u
+        encrypted_password = encrypt(password, getSaltForKey(u, salt_name), passphrase_name)
+        updateCredentialManager(target, u, encrypted_password)
+
+    print('user added')
+
+
 def installPoolUsers(application, setting, admin_user='', admin_pwd=''):
     passwords_url = os.path.join(os.path.dirname(__file__), 'pwd.json')
     if os.path.exists(passwords_url) is False:
@@ -110,6 +124,7 @@ def createInTM1(setting, admin_user, admin_pwd, user, pwd):
 
     print(response.text)
     print(response.status_code)
+
 
 def installSmtpUser(application, setting):
     if 'smtp' not in setting:
