@@ -4,20 +4,20 @@
 
 class GridTableWidget extends Widget {
 
-    getHtml(widgets, headerRowWidgetHtml, d) {
+    getHtml(widgets, headerRowWidgetHtml, data) {
         const o = this.options;
-
+        let d = Array.isArray(data) ? data : data.content;
         const v = {
-            borderBottom: this.getRealValue('borderBottom', d, true),
-            borderTop: this.getRealValue('borderTop', d, true),
-            hideIfNoData: this.getRealValue('hideIfNoData', d, false),
-            maxRows: this.getRealValue('maxRows', d, false),
-            rowHeight: this.getRealValue('rowHeight', d, false),
-            skin: this.getRealValue('skin', d, 'standard')
+            borderBottom: this.getRealValue('borderBottom', data, true),
+            borderTop: this.getRealValue('borderTop', data, true),
+            hideIfNoData: this.getRealValue('hideIfNoData', data, false),
+            maxRows: this.getRealValue('maxRows', data, false),
+            rowHeight: this.getRealValue('rowHeight', data, false),
+            skin: this.getRealValue('skin', data, 'standard')
         };
 
 
-        let mainDivStyle = this.getGeneralStyles(d);
+        let mainDivStyle = this.getGeneralStyles(data);
         if (v.hideIfNoData === true && (!d || d.length === 0)) {
             mainDivStyle.push('display:none;');
         }
@@ -134,7 +134,9 @@ class GridTableWidget extends Widget {
 
         return QB.loadData(o.id, instance.name).then(function (data) {
             let deffered = [], w, processedData = instance.processData(data), i = 0, j = 0, rows, k, colNum;
-
+            if(!Array.isArray(processedData)) {
+                processedData = processedData.content;
+            }
             o.errorMessage = '';
 
             if (processedData[0] && processedData[0].rows) {//each column has query
@@ -197,7 +199,7 @@ class GridTableWidget extends Widget {
                     first = false;
                 }
                 let visible = data && typeof data.visible !== 'undefined' ? data.visible : o.visible;
-                let ghtml = instance.getHtml(widgetHtmls, headerRowWidgetHtml, processedData, withState), gs = [];
+                let ghtml = instance.getHtml(widgetHtmls, headerRowWidgetHtml, data, withState), gs = [];
                 if (o.applyMeasuresToSection === true) {
                     gs = instance.getWidthAndHeight(data);
                 }
