@@ -9,6 +9,7 @@ class TextWidget extends Widget {
         const v = {
             body: this.getRealValue('body', d, false),
             bodyBackgroundColor: this.getRealValue('bodyBackgroundColor', d, false),
+            bodyCursor: this.getRealValue('bodyCursor', d, false),
             bodyFontColor: this.getRealValue('bodyFontColor', d, false),
             bodyFontSize: this.getRealValue('bodyFontSize', d, false),
             bodyFontWeight: this.getRealValue('bodyFontWeight', d, false),
@@ -24,6 +25,7 @@ class TextWidget extends Widget {
             skin: this.getRealValue('skin', d, 'template1'),
             title: this.getRealValue('title', d, false),
             titleBackgroundColor: this.getRealValue('titleBackgroundColor', d, false),
+            titleCursor: this.getRealValue('titleCursor', d, false),
             titleFontColor: this.getRealValue('titleFontColor', d, false),
             titleFontSize: this.getRealValue('titleFontSize', d, false),
             titleFontWeight: this.getRealValue('titleFontWeight', d, false),
@@ -43,6 +45,7 @@ class TextWidget extends Widget {
         v.titleFontSize && titleStyles.push(`font-size:${v.titleFontSize}px;`);
         v.titleFontWeight && titleStyles.push(`font-weight:${v.titleFontWeight};`);
         v.titleBackgroundColor && titleStyles.push(`background-color:${v.titleBackgroundColor};`);
+        v.titleCursor && titleStyles.push(`cursor:${v.titleCursor};`);
         v.editable && (v.title === false || v.title === '') && titleStyles.push('height: 20px;');
 
         v.bodyAlignment && bodyStyles.push(`display: flex;padding-left: 0px;justify-content: ${v.bodyAlignment === 'start' || v.bodyAlignment === 'end' ? `flex-${v.bodyAlignment}` : v.bodyAlignment};`);
@@ -50,6 +53,7 @@ class TextWidget extends Widget {
         v.bodyFontSize && bodyStyles.push(`font-size:${v.bodyFontSize}px;`);
         v.bodyFontWeight && bodyStyles.push(`font-weight:${v.bodyFontWeight};`);
         v.bodyBackgroundColor && bodyStyles.push(`background-color:${v.bodyBackgroundColor};`);
+        v.bodyCursor && bodyStyles.push(`cursor:${v.bodyCursor};`);
 
         v.iconWidth && iconStyles.push('width:', v.iconWidth, 'px;');
         v.iconHeight && iconStyles.push('height:', v.iconHeight, 'px;');
