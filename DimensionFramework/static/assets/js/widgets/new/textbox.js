@@ -9,7 +9,7 @@ class TextBoxWidget extends Widget {
 
         d = d || {value: ''};
 
-        if (!d.value) {
+        if (!d.value && d.value !== 0) {
             d.value = '';
         }
 

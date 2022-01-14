@@ -38,8 +38,12 @@ const Utils = {
     parseNumber(value, locale = navigator.language) {
         let localValue = value;
 
+        if ('string' === typeof localValue) {
+            localValue = localValue.trim();
+        }
+
         if (localValue === '' || localValue === null || localValue === false) {
-            localValue = '0';
+            return 0;
         }
 
         if ('number' === typeof localValue) {

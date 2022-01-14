@@ -330,6 +330,14 @@ app.fn.openPopup = function openPopup(argument, ev, element) {
     c.open();
 };
 
+app.fn.openPopupWithTimeout = function openPopupWithTimeout(argument, ev, element) {
+    if (!Array.isArray(argument) || argument.length < 2) {
+        alert('openPopupWithTimeout has 2 mandatory argument: ["popupid", "timeout ms"] !');
+        return;
+    }
+    setTimeout(function(){app.fn.openPopup(argument[0], ev, element) }, argument[1]);
+};
+
 app.fn.togglePopup = function togglePopup(argument, ev, element) {
     const c = PopupWidget.popupsByIds[argument];
 
