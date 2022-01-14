@@ -9,7 +9,7 @@ class WaterFallWidget extends Widget {
         const dataset1Config = o.dataset1 || {datapoints: []}, dataset2Config = o.dataset2 || {datapoints: []};
 
         //const demoDataSet1 = {legendLabel: 'Dataset One', legendColor: 'pink', datapoints: [{value: 9.06}, {value: -0.06}, {value: 0.5}, {value: 0}, {value: 9.5}, {value: 9.06}, {value: -0.06}, {value: 0.5}, {value: 0}, {value: 9.5}, {value: 9.06}, {value: -0.06}, {value: 0.5}, {value: 0}, {value: 9.5}, {value: 9.5}]};
-        //const demoDataSet2 = {legendLabel: 'Dataset One', legendColor: 'red', datapoints: [{value: 8.06}, {value: -3.06}, {value: 1.5}, {value: 5}, {value: 4.5}, {value: 8.06}, {value: -3.06}, {value: 1.5}, {value: 5}, {value: 4.5}, {value: 8.06}, {value: -3.06}, {value: 1.5}, {value: 5}, {value: 4.5}, {value: 4.5}]};
+        //const demoDataSet2 = {legendLabel: 'Dataset Two', legendColor: 'red', datapoints: [{value: 8.06}, {value: -3.06}, {value: 1.5}, {value: 5}, {value: 4.5}, {value: 8.06}, {value: -3.06}, {value: 1.5}, {value: 5}, {value: 4.5}, {value: 8.06}, {value: -3.06}, {value: 1.5}, {value: 5}, {value: 4.5}, {value: 4.5}]};
 
         const v = {
             id: o.id,
@@ -19,11 +19,12 @@ class WaterFallWidget extends Widget {
             labelVisible: this.getRealValue('labelVisible', d, true),
             legendVisible: this.getRealValue('legendVisible', d, true),
             minYAxis: parseFloat(this.getRealValue('minYAxis', d, -10)),
-            maxYAxis: parseFloat(this.getRealValue('maxYAxis', d, 100)),
+            maxYAxis: parseFloat(this.getRealValue('maxYAxis', d, 60)),
             yAxisGridLineNum: parseInt(this.getRealValue('yAxisGridLineNum', d, 11)),
             height: parseFloat(Utils.getSize(this.getRealValue('height', d, 300), false, 'height')),
             defaultColor: this.getRealValue('defaultColor', d, '#F3F4F6'),
-            skin: this.getRealValue('skin', d, 'attila-1')
+            skin: this.getRealValue('skin', d, 'attila-1'),
+            hiddenDatasets: [false, false]
         };
 
         this.value = v;
@@ -48,16 +49,27 @@ class WaterFallWidget extends Widget {
     }
 
     initEventHandlers(section) {
-        const v = this.value, min = v.minYAxis, max = v.maxYAxis, yAxisRange = max - min, yAxisStep = yAxisRange / v.yAxisGridLineNum, defaultColor = v.defaultColor, labels = v.xAxisLabels;
+        this.renderWaterFall(section);
+
+        section
+            .on('click', '.ks-waterfall-y-line-label', e => this.renderWaterFall(section, parseFloat(e.currentTarget.innerHTML)))
+            .on('click', '.ks-waterfall-reset', () => this.renderWaterFall(section));
+    }
+
+    renderWaterFall(section, minYAxis) {
+        const v = this.value, min = minYAxis || v.minYAxis, max = v.maxYAxis, yAxisRange = max - min, yAxisStep = yAxisRange / v.yAxisGridLineNum, defaultColor = v.defaultColor, labels = v.xAxisLabels;
         const yAxisHtml = [], h = [], dataset1 = v.dataset1, datapoints1 = dataset1.datapoints, dataset2 = v.dataset2, datapoints2 = dataset2.datapoints, len = datapoints1.length;
         const chartDiv = section.find('.ks-waterfall'), chartHeight = chartDiv.height(), zeroHeight = (-min / yAxisRange) * chartHeight, labelVisible = v.labelVisible;
+        const resetBtnVisibility = (minYAxis && (minYAxis !== v.minYAxis)) ? '' : ' style="display: none;"';
         let i, j = max, d, label, isLastCol, hb, lastHeights = [zeroHeight, zeroHeight], val;
 
-        for (i = 0; i <= v.yAxisGridLineNum; ++i) {
+        for (i = 0; i < v.yAxisGridLineNum; ++i) {
             yAxisHtml.push('<div class="ks-waterfall-y-line ks-primary"><div class="ks-waterfall-y-line-tick ks-left"><\/div><div class="ks-waterfall-y-line-label ks-left">', Utils.precisionRound(j, 1), '<\/div><div class="ks-waterfall-y-line-tick ks-right"><\/div><div class="ks-waterfall-y-line-label ks-right"><\/div><\/div>');
 
             j -= yAxisStep;
         }
+
+        yAxisHtml.push('<div class="ks-waterfall-y-line ks-axis"><div class="ks-waterfall-y-line-tick ks-left"></div><div class="ks-waterfall-y-line-label ks-left ks-waterfall-label-origo">' + min + '</div><div class="ks-waterfall-y-line-tick ks-right"></div><div class="ks-waterfall-y-line-label ks-right"></div><div class="ks-waterfall-reset"' + resetBtnVisibility + '><span class="">i</span> Reset</div></div>');
 
         for (i = 0; i < len; ++i) {
             d = datapoints1[i];
@@ -77,7 +89,7 @@ class WaterFallWidget extends Widget {
 
             h.push('<div class="ks-waterfall-bar-group"><div class="ks-waterfall-bar-group-content">');
 
-            this.addBarHtml(h, d, val, hb[0], hb[1], labelVisible);
+            this.addBarHtml(h, d, val, hb[0], hb[1], labelVisible, v.hiddenDatasets[0]);
 
             h.push('<div class="ks-waterfall-x-line ks-primary"><div class="ks-waterfall-x-line-tick"><\/div><div class="ks-waterfall-x-line-label">', label.value, '<div class="ks-waterfall-x-line-icon', (label.comment ? '' : ' off'), '"><\/div><\/div><\/div>');
 
@@ -88,7 +100,7 @@ class WaterFallWidget extends Widget {
 
                 hb = this.calculateHeightAndBottom(val, yAxisRange, chartHeight, lastHeights, 1);
 
-                this.addBarHtml(h, d, val, hb[0], hb[1], labelVisible);
+                this.addBarHtml(h, d, val, hb[0], hb[1], labelVisible, v.hiddenDatasets[1]);
             }
 
             h.push('<\/div><\/div>');
@@ -130,10 +142,10 @@ class WaterFallWidget extends Widget {
         return [height, bottom];
     }
 
-    addBarHtml(h, d, value, height, bottom, labelVisible) {
+    addBarHtml(h, d, value, height, bottom, labelVisible, isHidden) {
         const color = d[value > 0 ? 'positiveColor' : 'negativeColor'] || this.value.defaultColor;
 
-        h.push('<div class="ks-waterfall-bar" style="background-color:', color, '; height: ', height, 'px; bottom: ', bottom, 'px;"><div', (labelVisible ? '' : ' style="display: none;"'), ' class="ks-waterfall-bar-label">', d.value, '<\/div><\/div>');
+        h.push('<div class="ks-waterfall-bar" style="background-color:', color, '; height: ', height, 'px; bottom: ', bottom, 'px;' + (isHidden ? ' display:none;' : '') + '"><div', (labelVisible ? '' : ' style="display: none;"'), ' class="ks-waterfall-bar-label">', d.value, '<\/div><\/div>');
     }
 
     addSecondaryHtml(h) {
@@ -141,7 +153,7 @@ class WaterFallWidget extends Widget {
     }
 
     createLegend(chartDiv, datasets) {
-        const legendDiv = chartDiv.next().children('.ks-legend-inner'), h = [], bars = chartDiv.find('.ks-waterfall-bar'), childIndexes = [1, 3];
+        const legendDiv = chartDiv.next().children('.ks-legend-inner'), h = [], bars = chartDiv.find('.ks-waterfall-bar');
         let b, c, d;
 
         for (d of datasets) {
@@ -151,7 +163,15 @@ class WaterFallWidget extends Widget {
             h.push('<div class="ks-legend-item"><div class="ks-legend-item-inner"><div class="ks-legend-icon" style="border-color: ', c, ';', b, '"><\/div><div class="ks-legend-label" style="background-color: ', c, ';">', d.legendLabel, '<\/div><\/div><\/div>');
         }
 
-        legendDiv.html(h.join('')).on('click', '.ks-legend-item', e => bars.filter(':nth-child(' + childIndexes[$(e.currentTarget).toggleClass('off').index()] + ')').toggle());
+        legendDiv.html(h.join('')).on('click', '.ks-legend-item', e => this.legendClicked(e, bars));
+    }
+
+    legendClicked(e, bars) {
+        const childIndexes = [1, 3], id = $(e.currentTarget).toggleClass('off').index();
+
+        const isVis = bars.filter(':nth-child(' + childIndexes[id] + ')').toggle().is(':visible');
+
+        this.value.hiddenDatasets[id] = !isVis;
     }
 
     xAxisLabelClicked(e) {
@@ -180,6 +200,10 @@ class WaterFallWidget extends Widget {
     }
 
     processData(data) {
+        if (!data) {
+            return {};
+        }
+
         let d = data[0];
 
         d.dataset1 = {datapoints: data.length > 1 ? data[1][0] || [] : []}; //matrix!!
