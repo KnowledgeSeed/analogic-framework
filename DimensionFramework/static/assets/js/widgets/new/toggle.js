@@ -8,6 +8,7 @@ class ToggleWidget extends Widget {
         const o = this.options;
 
         const v = {
+            backgroundColor: this.getRealValue('backgroundColor', d, false),
             isGridTableHierarchyExpander: this.getRealValue('isGridTableHierarchyExpander', d, false),
             editable: this.getRealValue('editable', d, true),
             groupId: this.getRealValue('groupId', d, false),
@@ -28,6 +29,7 @@ class ToggleWidget extends Widget {
         let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], b = 1 === parseInt(v.value), iconStyles = [];
 
         v.titleOn !== '' && mainDivClass.push('has-label');
+        v.backgroundColor && mainDivStyle.push(`background-color:${v.backgroundColor};`);
         b && mainDivClass.push('ks-on');
         mainDivClass.push(`ks-toggle-${v.skin}`);
 
