@@ -21,6 +21,7 @@ class WaterFallWidget extends Widget {
             minYAxis: parseFloat(this.getRealValue('minYAxis', d, -10)),
             maxYAxis: parseFloat(this.getRealValue('maxYAxis', d, 60)),
             yAxisGridLineNum: parseInt(this.getRealValue('yAxisGridLineNum', d, 11)),
+            yAxisDecimalNum: parseInt(this.getRealValue('yAxisDecimalNum', d, 2)),
             height: parseFloat(Utils.getSize(this.getRealValue('height', d, 300), false, 'height')),
             defaultColor: this.getRealValue('defaultColor', d, '#F3F4F6'),
             skin: this.getRealValue('skin', d, 'attila-1'),
@@ -60,11 +61,11 @@ class WaterFallWidget extends Widget {
         const v = this.value, min = minYAxis || v.minYAxis, max = v.maxYAxis, yAxisRange = max - min, yAxisStep = yAxisRange / v.yAxisGridLineNum, defaultColor = v.defaultColor, labels = v.xAxisLabels;
         const yAxisHtml = [], h = [], dataset1 = v.dataset1, datapoints1 = dataset1.datapoints, dataset2 = v.dataset2, datapoints2 = dataset2.datapoints, len = datapoints1.length;
         const chartDiv = section.find('.ks-waterfall'), chartHeight = chartDiv.height(), zeroHeight = (-min / yAxisRange) * chartHeight, labelVisible = v.labelVisible;
-        const resetBtnVisibility = (minYAxis && (minYAxis !== v.minYAxis)) ? '' : ' style="display: none;"';
+        const resetBtnVisibility = (minYAxis && (minYAxis !== v.minYAxis)) ? '' : ' style="display: none;"', yAxisDecimalNum = v.yAxisDecimalNum;
         let i, j = max, d, label, isLastCol, hb, lastHeights = [zeroHeight, zeroHeight], val;
 
         for (i = 0; i < v.yAxisGridLineNum; ++i) {
-            yAxisHtml.push('<div class="ks-waterfall-y-line ks-primary"><div class="ks-waterfall-y-line-tick ks-left"><\/div><div class="ks-waterfall-y-line-label ks-left">', Utils.precisionRound(j, 1), '<\/div><div class="ks-waterfall-y-line-tick ks-right"><\/div><div class="ks-waterfall-y-line-label ks-right"><\/div><\/div>');
+            yAxisHtml.push('<div class="ks-waterfall-y-line ks-primary"><div class="ks-waterfall-y-line-tick ks-left"><\/div><div class="ks-waterfall-y-line-label ks-left">', Utils.precisionRound(j, yAxisDecimalNum), '<\/div><div class="ks-waterfall-y-line-tick ks-right"><\/div><div class="ks-waterfall-y-line-label ks-right"><\/div><\/div>');
 
             j -= yAxisStep;
         }
@@ -83,7 +84,7 @@ class WaterFallWidget extends Widget {
 
             val = Utils.parseNumber(d.value);
 
-            hb = this.calculateHeightAndBottom(val, yAxisRange, chartHeight, lastHeights, 0);
+            hb = this.calculateHeightAndBottom(val, d, yAxisRange, min, chartHeight, lastHeights, 0);
 
             this.addSecondaryHtml(h);
 
@@ -98,7 +99,7 @@ class WaterFallWidget extends Widget {
             if (d) {
                 val = Utils.parseNumber(d.value);
 
-                hb = this.calculateHeightAndBottom(val, yAxisRange, chartHeight, lastHeights, 1);
+                hb = this.calculateHeightAndBottom(val, d, yAxisRange, min, chartHeight, lastHeights, 1);
 
                 this.addBarHtml(h, d, val, hb[0], hb[1], labelVisible, v.hiddenDatasets[1]);
             }
@@ -117,7 +118,7 @@ class WaterFallWidget extends Widget {
         }
     }
 
-    calculateHeightAndBottom(value, yAxisRange, chartHeight, lastHeights, i) {
+    calculateHeightAndBottom(value, d, yAxisRange, minYAxis, chartHeight, lastHeights, i) {
         let height = (Math.abs(value) / yAxisRange) * chartHeight, bottom, lastHeight = lastHeights[i];
 
         if (value > 0) {
@@ -138,6 +139,15 @@ class WaterFallWidget extends Widget {
         }
 
         lastHeights[i] = lastHeight;
+
+
+        let min = Utils.parseNumber(d.min), forceBottom;
+
+        if (!isNaN(min)) {
+            forceBottom = ((Math.max(min, minYAxis) - minYAxis) / yAxisRange) * chartHeight;
+            height += bottom - forceBottom;
+            bottom = forceBottom;
+        }
 
         return [height, bottom];
     }
