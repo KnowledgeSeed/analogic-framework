@@ -1,0 +1,27 @@
+in applications create Folder and config.json
+
+core \ __init__.py
+import NEWAPP lines:
+from DimensionFramework.Customer.NEWAPP import Validation
+from DimensionFramework.Customer.NEWAPP import Export
+from DimensionFramework.Customer.NEWAPP import BusinessLogic
+
+in config create folder and copy files
+modify accordingly
+(repository.yml --> export MDX definitions
+custom_objects.json --> client - server connection)
+
+in customer create folder copy files 
+modify accordingly
+AND
+__init__.py
+import NEWAPP lines:
+from DimensionFramework.Customer.NEWAPP import Validation
+from DimensionFramework.Customer.NEWAPP import Export
+from DimensionFramework.Customer.NEWAPP import BusinessLogic
+
+in \static\assets\js\configs\
+create 3 files 
+
+in \static\assets\skins\
+copy files 
