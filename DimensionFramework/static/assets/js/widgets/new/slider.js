@@ -24,6 +24,10 @@ class SliderWidget extends Widget {
             calculateSliderValue: this.getRealValue('calculateSliderValue', d, false),
             changedByInput: false,
             originalValue: this.getRealValue('originalValue', d, false),
+            orientation: this.getRealValue('orientation', d, 'horizontal'),
+            direction: this.getRealValue('direction', d, 'ltr'),
+            disabled: this.getRealValue('disabled', d, false),
+            queryFillColor: this.getRealValue('queryFillColor', d, false),
             css: {
                 tooltip: {
                     'font-size': this.getRealValue('trackValueFontSize', d),
@@ -145,8 +149,8 @@ class SliderWidget extends Widget {
         const slider = noUiSlider.create(widgetDiv[0], {
             start: d.value,
             connect: [true, false],
-            direction: 'ltr',
-            orientation: 'horizontal',
+            direction: d.direction,
+            orientation: d.orientation,
             behaviour: isTouchMode ? 'none' : 'tap',
             step: 1,
             tooltips: {
@@ -162,6 +166,9 @@ class SliderWidget extends Widget {
                 from: v => Math.round(v)
             }
         });
+        if(d.disabled){
+           widgetDiv.find('.noUi-origin').attr('disabled', true);
+        }
 
         if (tooltipFontSize) {
             css.tooltip.top = 2 - tooltipFontSize;
@@ -190,7 +197,7 @@ class SliderWidget extends Widget {
             }
 
             slider.on('update', (positions) => {
-                adjustTrackFill(positions[0]);
+                d.queryFillColor ? adjustTrackFillQueryColor(positions[0]) : adjustTrackFill(positions[0]);
 
                 if (updateableInput && !d.changedByInput) {
                     if (d.updateableWidgetValueHandler) {
@@ -212,8 +219,11 @@ class SliderWidget extends Widget {
 
         slider.on('set', e => {
             const val = slider.get();
-
-            Widget.doHandleSystemEvent($(e.currentTarget).data({action: 'slide', id: id, ordinal: ordinal, value: val}), e, true);
+            let ss = $('#' + id).data({action: 'slide', id: id, ordinal: ordinal, value: val});
+            Widget.doHandleSystemEvent(ss, e, true);
+            if (this.amIOnAGridTable()) {
+                Widget.doHandleGridTableSystemEvent(ss, e);
+            }
 
             d.value = val;
         });
@@ -222,6 +232,16 @@ class SliderWidget extends Widget {
             SliderWidget.disableSlider(sliderDiv);
 
             this.createRuler(sliderDiv, d.minRange, d.maxRange);
+        }
+
+        function adjustTrackFillQueryColor(sliderNewVal) {
+            if (sliderNewVal > trackFillStartValue) {
+                trackFill.css({background: trackFill.css('background-color'), 'z-index': 1});
+                noUiConnect.css('background', trackFill.css('background-color'));
+            } else {
+                trackFill.css({background: '', 'z-index': 0});
+                noUiConnect.css('background', trackColor);
+            }
         }
 
         function adjustTrackFill(sliderNewVal) {
