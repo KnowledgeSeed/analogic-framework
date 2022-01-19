@@ -37,7 +37,7 @@ class TextWidget extends Widget {
         let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], bodyStyles = [],
             iconStyles = [];
 
-        (v.title || v.editable) && mainDivClass.push('has-title');
+        (v.title!==false || v.editable) && mainDivClass.push('has-title');
         v.body && mainDivClass.push('has-body');
 
         v.titleAlignment && titleStyles.push(`display: flex;padding-left: 0px;justify-content: ${v.titleAlignment === 'start' || v.titleAlignment === 'end' ? `flex-${v.titleAlignment}` : v.titleAlignment};`);
@@ -64,7 +64,7 @@ class TextWidget extends Widget {
 <div class="ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}" style="${mainDivStyle.join('')}">
     <div class="ks-text-inner" data-id="${o.id}" data-action="text_click" data-ordinal="${v.ordinal}">
         ${v.icon !== false ? `<div class="ks-text-icon" data-id="${o.id}" data-action="${v.iconCustomEventName ? v.iconCustomEventName : 'perform'}" data-ordinal="${v.ordinal}"><span style="${iconStyles.join('')}" class="${v.icon}"></span></div>` : ''}
-        <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title ? Utils.stripHtml(v.title) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title ? v.title : ''}</div>
+        <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title ? Utils.stripHtml(v.title) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title !== false? v.title : ''}</div>
         ${v.body ? `<div class="ks-text-body" style="${bodyStyles.join('')}">${v.body}</div>` : ''}
     </div>
 </div>`;
