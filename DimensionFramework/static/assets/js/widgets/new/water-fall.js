@@ -155,7 +155,7 @@ class WaterFallWidget extends Widget {
     addBarHtml(h, d, value, height, bottom, labelVisible, isHidden) {
         const color = d[value > 0 ? 'positiveColor' : 'negativeColor'] || this.value.defaultColor;
 
-        h.push('<div class="ks-waterfall-bar" style="background-color:', color, '; height: ', height, 'px; bottom: ', bottom, 'px;' + (isHidden ? ' display:none;' : '') + '"><div', (labelVisible ? '' : ' style="display: none;"'), ' class="ks-waterfall-bar-label">', d.value, '<\/div><\/div>');
+        h.push('<div class="ks-waterfall-bar" style="background-color:', color, '; height: ', height, 'px; bottom: ', bottom, 'px;' + (isHidden ? ' display:none;' : '') + '"><div', (labelVisible ? '' : ' style="display: none;"'), ' class="ks-waterfall-bar-label">', (undefined === d.displayValue ? d.value : d.displayValue), '<\/div><\/div>');
     }
 
     addSecondaryHtml(h) {
