@@ -21,6 +21,7 @@ class SliderWidget extends Widget {
             unit: this.getRealValue('unit', d, ''),
             updateableWidgetId: this.getRealValue('updateableWidgetId', d, false),
             updateableWidgetValueHandler: this.getRealValue('updateableWidgetValueHandler', d, false),
+            updateCallBack: this.getRealValue('updateCallBack', d, false),
             calculateSliderValue: this.getRealValue('calculateSliderValue', d, false),
             changedByInput: false,
             originalValue: this.getRealValue('originalValue', d, false),
@@ -207,6 +208,10 @@ class SliderWidget extends Widget {
                     }
 
                     updateableInput.val(Utils.replaceDecimal(v));
+                }
+
+                if(d.updateCallBack) {
+                    d.updateCallBack(positions[0], id);
                 }
 
                 d.changedByInput = false;

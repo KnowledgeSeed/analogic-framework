@@ -386,6 +386,18 @@ const Utils = {
         }
         let index = 'undefined' !== typeof w[actionName].index ? w[actionName].index : w[actionName].rowindex;
         return w.rows[index][colIndex][valueName];
+    },
+    getGridTableRowCol(widgetId){
+        let result = {row: '', column: '', id: ''};
+        if(widgetId) {
+            const z = widgetId.split('_');
+            if (z.length === 3) {
+                result.row = z[1];
+                result.column = z[2];
+                result.id = z[0];
+            }
+        }
+        return result;
     }
 };
 
