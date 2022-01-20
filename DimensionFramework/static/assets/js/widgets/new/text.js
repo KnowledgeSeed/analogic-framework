@@ -181,26 +181,36 @@ class TextWidget extends Widget {
     }
 
     static createEditableRows(editables, currentIndex) {
-        let result = [], rowIndex = -1, sgi, row = [], a, j = currentIndex, i = j, c, colIndex = 0, l = true, cl = 0;
+        let result = [], rowIndex = -1, sgi, row = [], a, j = currentIndex, i = j, colIndex = currentIndex, l = true,
+            cl = 0;
         let ce = $(editables[j]).closest('section').attr('id').split('_'), cri = parseInt(ce[1]), cci = parseInt(ce[2]);
         while (i >= 0 && l === true) {
             sgi = $(editables[i]).closest('section').attr('id').split('_');
             a = parseInt(sgi[1]);
-            c = parseInt(sgi[2]);
             if (a !== cri || i === 0) {
-                colIndex = cci - (i === 0 ? c : cl);
+                colIndex = currentIndex - (i === 0 ? i : cl);
                 l = false;
             }
-            cl = c;
+            cl = i;
             --i;
         }
         while (j < editables.length) {
             sgi = $(editables[j]).closest('section').attr('id').split('_');
             a = parseInt(sgi[1]);
             if ((rowIndex !== a || j === editables.length - 1) && rowIndex !== -1) {
-                j = j + colIndex;
+                if (rowIndex !== a) {
+                    j = j + colIndex;
+                }
                 if (j === editables.length - 1) {
-                    row.push(editables[j]);
+                    if (rowIndex !== a) {
+                        result.push(row);
+                        row = [];
+                        row.push(editables[j]);
+                        result.push(row);
+                        break;
+                    } else {
+                        row.push(editables[j]);
+                    }
                 }
                 result.push(row);
                 row = [];
