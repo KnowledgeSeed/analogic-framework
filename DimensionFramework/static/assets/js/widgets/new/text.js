@@ -6,38 +6,13 @@ class TextWidget extends Widget {
 
     getHtml(widgets, d) {
         const o = this.options;
-        const v = {
-            body: this.getRealValue('body', d, false),
-            bodyBackgroundColor: this.getRealValue('bodyBackgroundColor', d, false),
-            bodyCursor: this.getRealValue('bodyCursor', d, false),
-            bodyFontColor: this.getRealValue('bodyFontColor', d, false),
-            bodyFontSize: this.getRealValue('bodyFontSize', d, false),
-            bodyFontWeight: this.getRealValue('bodyFontWeight', d, false),
-            bodyAlignment: this.getRealValue('bodyAlignment', d, false),
-            editable: this.getRealValue('editable', d, false),
-            icon: this.getRealValue('icon', d, false),
-            iconColor: this.getRealValue('iconColor', d, false),
-            iconCustomEventName: this.getRealValue('iconCustomEventName', d, false),
-            iconHeight: this.getRealValue('iconHeight', d, false),
-            iconPosition: this.getRealValue('iconPosition', d, 'right'),
-            iconWidth: this.getRealValue('iconWidth', d, false),
-            performable: this.getRealValue('performable', d, false),
-            skin: this.getRealValue('skin', d, 'template1'),
-            title: this.getRealValue('title', d, false),
-            titleBackgroundColor: this.getRealValue('titleBackgroundColor', d, false),
-            titleCursor: this.getRealValue('titleCursor', d, false),
-            titleFontColor: this.getRealValue('titleFontColor', d, false),
-            titleFontSize: this.getRealValue('titleFontSize', d, false),
-            titleFontWeight: this.getRealValue('titleFontWeight', d, false),
-            titleAlignment: this.getRealValue('titleAlignment', d, false),
-            ordinal: typeof d.ordinal !== 'undefined' ? d.ordinal : ''
-        };
+        const v = this.getParameters(d);
         this.value = {value: v.title, editable: v.editable, performable: v.performable};
 
         let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], bodyStyles = [],
             iconStyles = [];
 
-        (v.title!==false || v.editable) && mainDivClass.push('has-title');
+        (v.title !== false || v.editable) && mainDivClass.push('has-title');
         v.body && mainDivClass.push('has-body');
 
         v.titleAlignment && titleStyles.push(`display: flex;padding-left: 0px;justify-content: ${v.titleAlignment === 'start' || v.titleAlignment === 'end' ? `flex-${v.titleAlignment}` : v.titleAlignment};`);
@@ -64,10 +39,48 @@ class TextWidget extends Widget {
 <div class="ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}" style="${mainDivStyle.join('')}">
     <div class="ks-text-inner" data-id="${o.id}" data-action="text_click" data-ordinal="${v.ordinal}">
         ${v.icon !== false ? `<div class="ks-text-icon" data-id="${o.id}" data-action="${v.iconCustomEventName ? v.iconCustomEventName : 'perform'}" data-ordinal="${v.ordinal}"><span style="${iconStyles.join('')}" class="${v.icon}"></span></div>` : ''}
-        <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title ? Utils.stripHtml(v.title) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title !== false? v.title : ''}</div>
+        <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title ? Utils.stripHtml(v.title) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title !== false ? v.title : ''}</div>
         ${v.body ? `<div class="ks-text-body" style="${bodyStyles.join('')}">${v.body}</div>` : ''}
     </div>
 </div>`;
+    }
+
+    updateHtml(data) {
+        const o = this.options, v = this.getParameters(data), section = $('#' + o.id);
+        ;
+        this.value = {value: v.title, editable: v.editable, performable: v.performable};
+        if (v.title) {
+            section.find('.ks-text-title').html(v.title);
+        }
+    }
+
+    getParameters(d) {
+        return {
+            body: this.getRealValue('body', d, false),
+            bodyBackgroundColor: this.getRealValue('bodyBackgroundColor', d, false),
+            bodyCursor: this.getRealValue('bodyCursor', d, false),
+            bodyFontColor: this.getRealValue('bodyFontColor', d, false),
+            bodyFontSize: this.getRealValue('bodyFontSize', d, false),
+            bodyFontWeight: this.getRealValue('bodyFontWeight', d, false),
+            bodyAlignment: this.getRealValue('bodyAlignment', d, false),
+            editable: this.getRealValue('editable', d, false),
+            icon: this.getRealValue('icon', d, false),
+            iconColor: this.getRealValue('iconColor', d, false),
+            iconCustomEventName: this.getRealValue('iconCustomEventName', d, false),
+            iconHeight: this.getRealValue('iconHeight', d, false),
+            iconPosition: this.getRealValue('iconPosition', d, 'right'),
+            iconWidth: this.getRealValue('iconWidth', d, false),
+            performable: this.getRealValue('performable', d, false),
+            skin: this.getRealValue('skin', d, 'template1'),
+            title: this.getRealValue('title', d, false),
+            titleBackgroundColor: this.getRealValue('titleBackgroundColor', d, false),
+            titleCursor: this.getRealValue('titleCursor', d, false),
+            titleFontColor: this.getRealValue('titleFontColor', d, false),
+            titleFontSize: this.getRealValue('titleFontSize', d, false),
+            titleFontWeight: this.getRealValue('titleFontWeight', d, false),
+            titleAlignment: this.getRealValue('titleAlignment', d, false),
+            ordinal: typeof d.ordinal !== 'undefined' ? d.ordinal : ''
+        };
     }
 
     initEventHandlers(section) {

@@ -511,3 +511,7 @@ app.fn.removeSliders = function removeSliders() {
     SliderWidget.slidersByIds = [];
     SliderWidget.isDocEventsHaveBeenBound = false;
 };
+
+app.fn.updateContent = function updateContent(widgetId) {
+  El.body.triggerHandler('updatecontent.' + widgetId);
+};

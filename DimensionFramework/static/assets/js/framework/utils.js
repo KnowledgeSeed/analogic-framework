@@ -213,6 +213,39 @@ const Utils = {
         }
         return false;
     },
+    getDropBoxSelectedItem(widgetId) {
+        if (WidgetValue[widgetId]) {
+            let selectedValue = WidgetValue[widgetId].value;
+            return WidgetValue[widgetId].items.find(e => e.name === selectedValue);
+        }
+        return false;
+    },
+    selectDropBoxNextItem(widgetId) {
+        if (WidgetValue[widgetId]) {
+            let items = WidgetValue[widgetId].items;
+            const selectedValue = WidgetValue[widgetId].value,
+                index = WidgetValue[widgetId].items.findIndex(e => e.name === selectedValue);
+            if (index + 1 < items.length) {
+                items[index + 1].on = true;
+                WidgetValue[widgetId].value = items[index + 1].name;
+                return true;
+            }
+        }
+        return false;
+    },
+    selectDropBoxPreviousItem(widgetId) {
+        if (WidgetValue[widgetId]) {
+            let items = WidgetValue[widgetId].items;
+            const selectedValue = WidgetValue[widgetId].value,
+                index = WidgetValue[widgetId].items.findIndex(e => e.name === selectedValue);
+            if (index > 0) {
+                items[index - 1].on = true;
+                WidgetValue[widgetId].value = items[index - 1].name;
+                return true;
+            }
+        }
+        return false;
+    },
     getDropBoxSelectedItemAttribute(widgetId, attributeName) {
         let selectedValue = WidgetValue[widgetId].value;
         let item = WidgetValue[widgetId].items.find(e => e.name === selectedValue);
@@ -387,9 +420,9 @@ const Utils = {
         let index = 'undefined' !== typeof w[actionName].index ? w[actionName].index : w[actionName].rowindex;
         return w.rows[index][colIndex][valueName];
     },
-    getGridTableRowCol(widgetId){
+    getGridTableRowCol(widgetId) {
         let result = {row: '', column: '', id: ''};
-        if(widgetId) {
+        if (widgetId) {
             const z = widgetId.split('_');
             if (z.length === 3) {
                 result.row = z[1];

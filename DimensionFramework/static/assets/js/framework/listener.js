@@ -4,9 +4,10 @@ const Listeners = [];
 
 Listeners.handle = ev => {
     const m = ev.data.method;
-
     if ('refresh' === m) {
         Render.renderWidget(ev);
+    } else if ('updateContent' === m) {
+        Render.updateContent(ev);
     } else if ('refreshWithoutLoader' === m) {
         Render.renderWidget(ev, false, false, false, false);
     } else if ('refreshGridCell' === m) {

@@ -24,6 +24,25 @@ class Widget {
         return widgetOptions;
     }
 
+    updateContent(loadFunction = QB.loadData){
+        const o = this.options, instance = this;
+        let ww, widgetOptions;
+
+        for (widgetOptions of o.widgets || []) {
+            ww = this.getWidget(widgetOptions);
+            new ww.type(ww).updateContent();
+        }
+
+        return loadFunction(o.id, instance.name).then(function (data) {
+            let processedData = instance.processData(data);
+            instance.updateHtml(processedData);
+        });
+    }
+
+    updateHtml(data){
+
+    }
+
     render(withState, refresh, useDefaultData = false, loadFunction = QB.loadData) {
         const o = this.options, instance = this, h = Listeners.handle;
         let ww;
@@ -68,6 +87,8 @@ class Widget {
         }
 
         Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
+        Listeners.push({options: o, method: 'refreshWithoutLoader', eventName: 'refreshwithoutloader.' + o.id, handler: h});
+        Listeners.push({options: o, method: 'updateContent', eventName: 'updatecontent.' + o.id, handler: h});
 
         let useDefaultDataForChildren = (o.visible === false && !refresh && o.notLoadIfHidden) || useDefaultData;
 
