@@ -6,30 +6,7 @@ class ButtonWidget extends Widget {
     getHtml(widgets, d) {
         const o = this.options;
 
-        const v = {
-            backgroundColor: this.getRealValue('backgroundColor', d, false),
-            borderColor: this.getRealValue('borderColor', d, false),
-            borderWidth: this.getRealValue('borderWidth', d, 1),
-            cornerRadius: this.getRealValue('cornerRadius', d, false),
-            dividerWidth: this.getRealValue('dividerWidth', d, false),
-            effect: this.getRealValue('effect', d, false),
-            enabled: this.getRealValue('enabled', d, true),
-            fontBold: this.getRealValue('fontBold', d, false),
-            fontColor: this.getRealValue('fontColor', d, false),
-            fontSize: this.getRealValue('fontSize', d, false),
-            gradient: this.getRealValue('gradient', d, false),
-            icon: this.getRealValue('icon', d, false),
-            iconColor: this.getRealValue('iconColor', d, false),
-            iconFontSize: this.getRealValue('iconFontSize', d, false),
-            iconHeight: this.getRealValue('iconHeight', d, false),
-            iconPosition: this.getRealValue('iconPosition', d, 'left'),
-            iconWidth: this.getRealValue('iconWidth', d, false),
-            isInfo: this.getRealValue('isInfo', d, false),
-            label: this.getRealValue('label', d, ''),
-            paste: this.getRealValue('paste', d, false),
-            skin: this.getRealValue('skin', d, 'standard'),
-            url: this.getRealValue('url', d, false)
-        };
+        const v = this.getParameters(d);
 
         let aClass = [], aStyle = this.getGeneralStyles(d), innerStyle = [], labelStyle = [], dividerStyle = [],
             imgStyle = [];
@@ -92,6 +69,39 @@ class ButtonWidget extends Widget {
         </div>
     </div>
 </a>`;
+    }
+
+    updateHtml(data) {
+        const o = this.options, v = this.getParameters(data), section = $('#' + o.id);
+        this.value = {data: data, paste: v.paste, enabled: v.enabled};
+        section.find('.ks-button-label').html(v.label);
+    }
+
+    getParameters(d){
+        return {
+            backgroundColor: this.getRealValue('backgroundColor', d, false),
+            borderColor: this.getRealValue('borderColor', d, false),
+            borderWidth: this.getRealValue('borderWidth', d, 1),
+            cornerRadius: this.getRealValue('cornerRadius', d, false),
+            dividerWidth: this.getRealValue('dividerWidth', d, false),
+            effect: this.getRealValue('effect', d, false),
+            enabled: this.getRealValue('enabled', d, true),
+            fontBold: this.getRealValue('fontBold', d, false),
+            fontColor: this.getRealValue('fontColor', d, false),
+            fontSize: this.getRealValue('fontSize', d, false),
+            gradient: this.getRealValue('gradient', d, false),
+            icon: this.getRealValue('icon', d, false),
+            iconColor: this.getRealValue('iconColor', d, false),
+            iconFontSize: this.getRealValue('iconFontSize', d, false),
+            iconHeight: this.getRealValue('iconHeight', d, false),
+            iconPosition: this.getRealValue('iconPosition', d, 'left'),
+            iconWidth: this.getRealValue('iconWidth', d, false),
+            isInfo: this.getRealValue('isInfo', d, false),
+            label: this.getRealValue('label', d, ''),
+            paste: this.getRealValue('paste', d, false),
+            skin: this.getRealValue('skin', d, 'standard'),
+            url: this.getRealValue('url', d, false)
+        };
     }
 
     initEventHandlers(section) {

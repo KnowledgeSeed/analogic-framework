@@ -14,6 +14,7 @@ class Render {
         let widget = new event.data.options.type(event.data.options);
         Loader.start();
         widget.updateContent().then(() =>{
+            L(event.data.options.id, 'update done');
            Loader.stop();
         });
     }

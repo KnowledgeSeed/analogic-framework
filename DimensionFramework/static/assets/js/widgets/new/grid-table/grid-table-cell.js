@@ -1,22 +1,13 @@
 /* global app, Listeners, Widget, QB */
 
 'use strict';
+
 class GridTableCellWidget extends Widget {
 
     getHtml(widgets, data, withState) {
-        const v = {
-            alignment: this.getRealValue('alignment', data, 'center-center', ),
-            borderLeft: this.getRealValue('borderLeft', data, true),
-            borderRight: this.getRealValue('borderRight', data, true),
-            cellBackgroundColor: this.getRealValue('cellBackgroundColor', data, false),
-            cellVisible: this.getRealValue('cellVisible', data, true),
-            skin: this.getRealValue('skin', data, 'standard'),
-            cellSkin: this.getRealValue('cellSkin', data, false),
-            cellWidth: this.getRealValue('cellWidth', data, false),
-            width: this.getRealValue('width', data, 30)
-        };
+        const v = this.getParameters(data);
         let defaults = {};
-        if(v.cellWidth !== false){
+        if (v.cellWidth !== false) {
             defaults['width'] = v.cellWidth;
         }
         let mainDivStyle = this.getGeneralStyles(data, defaults, 'cell-');
@@ -28,6 +19,20 @@ class GridTableCellWidget extends Widget {
         }
 
         return `<div class="ks-grid-table-cell ${v.cellSkin !== false ? 'ks-grid-table-cell-' + v.cellSkin : ''} ${v.cellSkin === false ? 'ks-grid-table-cell-' + v.skin : ''} ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}" style="${mainDivStyle.join('')}"><div class="ks-grid-table-cell-border-left"></div><div class="ks-pos-${v.alignment} ks-grid-table-cell-content">${widgets.join('')}</div></div>`;
+    }
+
+    getParameters(data) {
+        return {
+            alignment: this.getRealValue('alignment', data, 'center-center',),
+            borderLeft: this.getRealValue('borderLeft', data, true),
+            borderRight: this.getRealValue('borderRight', data, true),
+            cellBackgroundColor: this.getRealValue('cellBackgroundColor', data, false),
+            cellVisible: this.getRealValue('cellVisible', data, true),
+            skin: this.getRealValue('skin', data, 'standard'),
+            cellSkin: this.getRealValue('cellSkin', data, false),
+            cellWidth: this.getRealValue('cellWidth', data, false),
+            width: this.getRealValue('width', data, 30)
+        };
     }
 
     initEvents(withState) {
@@ -44,6 +49,28 @@ class GridTableCellWidget extends Widget {
         }
 
         this.initEventHandlers(section, withState);
+    }
+
+    updateContent(data = false, loadFunction = QB.loadData) {
+        const o = this.options, instance = this;
+        let widgetOptions, childrenData, deferred = [];
+
+        for (widgetOptions of o.widgets || []) {
+            childrenData = {...widgetOptions, ...data};
+            childrenData['originalId'] = widgetOptions['id'];
+            deferred.push(new widgetOptions.type(childrenData).updateContent(childrenData));
+        }
+
+        return $.when.apply($, deferred).then(function () {
+            instance.updateHtml(childrenData);
+        });
+    }
+
+    updateHtml(data) {
+        const o = this.options, v = this.getParameters(data), section = $('#' + o.id),
+        mainDiv = section.children();
+        v.cellWidth && mainDiv.css('width', Widget.getPercentOrPixel(v.cellWidth));
+        v.cellVisible === false ? section.hide() : section.show();
     }
 
     render(withState, childrenData) {
@@ -68,7 +95,7 @@ class GridTableCellWidget extends Widget {
             }
         }
 
-      //  Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
+        //  Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
 
         return QB.loadData(o.id, instance.name).then(function (data) {
             let deffered = [], w;

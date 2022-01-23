@@ -7,14 +7,7 @@ class GridTableWidget extends Widget {
     getHtml(widgets, headerRowWidgetHtml, data) {
         const o = this.options;
         let d = Array.isArray(data) ? data : data.content;
-        const v = {
-            borderBottom: this.getRealValue('borderBottom', data, true),
-            borderTop: this.getRealValue('borderTop', data, true),
-            hideIfNoData: this.getRealValue('hideIfNoData', data, false),
-            maxRows: this.getRealValue('maxRows', data, false),
-            rowHeight: this.getRealValue('rowHeight', data, false),
-            skin: this.getRealValue('skin', data, 'standard')
-        };
+        const v = this.getParameters(data);
 
 
         let mainDivStyle = this.getGeneralStyles(data);
@@ -70,6 +63,17 @@ class GridTableWidget extends Widget {
         return this.getWidgetHtml(this.buildTableHtml([th, tb].join(''), v.skin), o.title, mainDivStyle);
     }
 
+    getParameters(data){
+       return  {
+            borderBottom: this.getRealValue('borderBottom', data, true),
+            borderTop: this.getRealValue('borderTop', data, true),
+            hideIfNoData: this.getRealValue('hideIfNoData', data, false),
+            maxRows: this.getRealValue('maxRows', data, false),
+            rowHeight: this.getRealValue('rowHeight', data, false),
+            skin: this.getRealValue('skin', data, 'standard')
+        };
+    }
+
     getWidgetHtml(innerHtml, title, mainDivStyle) {
         return `<div style="${mainDivStyle.join('')}"><h3>${title}</h3>${innerHtml}</div>`;
     }
@@ -102,6 +106,52 @@ class GridTableWidget extends Widget {
         return this.getHtml(this.state['widgets'], this.state['headerRowWidgetHtml'], this.value['cellData']);
     }
 
+    updateContent(data = false, loadFunction = QB.loadData) {
+        const o = this.options, instance = this;
+        let widgetOptions, processedData, widgets = [],
+            rowNum, colNum, i, j, deferred = [], w;
+
+        return loadFunction(o.id, instance.name).then(function (d) {
+            processedData = instance.processData(d);
+            if (!Array.isArray(processedData)) {
+                processedData = processedData.content;
+            }
+
+            for (widgetOptions of o.widgets || []) {
+                if ('GridTableHeaderRowWidget' !== widgetOptions.type.name) {
+                    widgets.push(new widgetOptions.type(widgetOptions));
+                }
+            }
+            rowNum = processedData.length;
+            colNum = processedData[0] ? processedData[0].length : 0;
+            instance.state = {rows: rowNum};
+            instance.value = {cellData: []};
+
+            for (i = 0; i < rowNum; ++i) {
+                instance.value.cellData[i] = [];
+                j = 0;
+                for (w of widgets) {
+                    let d = {
+                        id: o.id + '_' + i + '_' + j
+                    };
+                    deferred.push(w.updateContent({...d, ...processedData[i][j]}));
+                    instance.value.cellData[i].push(processedData[i][j]);
+                    ++j;
+                }
+            }
+            return $.when.apply($, deferred).then(function () {
+                instance.updateHtml(d);
+            });
+        });
+    }
+
+    updateHtml(data) {
+        const o = this.options, v = this.getParameters(data), section = $('#' + o.id),
+        mainDiv = section.children();
+        v.minWidth && mainDiv.css('min-width', Widget.getPercentOrPixel(v.minWidth));
+        v.width && mainDiv.css('width', Widget.getPercentOrPixel(v.width));
+    }
+
     render(withState) {
         const o = this.options, instance = this, h = Listeners.handle;
 
@@ -128,13 +178,20 @@ class GridTableWidget extends Widget {
         }
 
         Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
+        Listeners.push({
+            options: o,
+            method: 'refreshWithoutLoader',
+            eventName: 'refreshwithoutloader.' + o.id,
+            handler: h
+        });
+        Listeners.push({options: o, method: 'updateContent', eventName: 'updatecontent.' + o.id, handler: h});
         if (o.maxRows) {
             Listeners.push({options: o, method: 'renderPage', eventName: 'page.' + o.id, handler: h});
         }
 
         return QB.loadData(o.id, instance.name).then(function (data) {
             let deffered = [], w, processedData = instance.processData(data), i = 0, j = 0, rows, k, colNum;
-            if(!Array.isArray(processedData)) {
+            if (!Array.isArray(processedData)) {
                 processedData = processedData.content;
             }
             o.errorMessage = '';

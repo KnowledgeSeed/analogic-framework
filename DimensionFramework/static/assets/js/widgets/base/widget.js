@@ -24,22 +24,30 @@ class Widget {
         return widgetOptions;
     }
 
-    updateContent(loadFunction = QB.loadData){
+    updateContent(data = false, loadFunction = QB.loadData) {
         const o = this.options, instance = this;
-        let ww, widgetOptions;
+        let ww, widgetOptions, processedData, deferred = [];
 
         for (widgetOptions of o.widgets || []) {
             ww = this.getWidget(widgetOptions);
-            new ww.type(ww).updateContent();
+            deferred.push(new ww.type(ww).updateContent());
+        }
+        if (data !== false) {
+            return $.when.apply($, deferred).then(function () {
+                processedData = instance.processData(data);
+                instance.updateHtml(processedData);
+            });
         }
 
-        return loadFunction(o.id, instance.name).then(function (data) {
-            let processedData = instance.processData(data);
-            instance.updateHtml(processedData);
+        return loadFunction(o.id, instance.name).then(function (d) {
+            return $.when.apply($, deferred).then(function () {
+                processedData = instance.processData(data);
+                instance.updateHtml(processedData);
+            });
         });
     }
 
-    updateHtml(data){
+    updateHtml(data) {
 
     }
 
@@ -87,7 +95,12 @@ class Widget {
         }
 
         Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
-        Listeners.push({options: o, method: 'refreshWithoutLoader', eventName: 'refreshwithoutloader.' + o.id, handler: h});
+        Listeners.push({
+            options: o,
+            method: 'refreshWithoutLoader',
+            eventName: 'refreshwithoutloader.' + o.id,
+            handler: h
+        });
         Listeners.push({options: o, method: 'updateContent', eventName: 'updatecontent.' + o.id, handler: h});
 
         let useDefaultDataForChildren = (o.visible === false && !refresh && o.notLoadIfHidden) || useDefaultData;
@@ -258,7 +271,7 @@ class Widget {
             for (a of actions) {
                 a.action(a.argument, {}, {});
             }
-    }
+        }
     }
 
     initEvents(withState) {
@@ -353,7 +366,7 @@ class Widget {
             for (a of actions) {
                 a.action(a.argument, event, element);
             }
-    }
+        }
     }
 
     get options() {
@@ -483,5 +496,9 @@ class Widget {
         height && s.push('height:', height, isNaN(height) ? ';' : 'px;');
 
         return s;
+    }
+
+    static getPercentOrPixel(value){
+        return isNaN(value) ? value : value + 'px';
     }
 }
