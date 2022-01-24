@@ -63,14 +63,16 @@ class GridTableWidget extends Widget {
         return this.getWidgetHtml(this.buildTableHtml([th, tb].join(''), v.skin), o.title, mainDivStyle);
     }
 
-    getParameters(data){
-       return  {
+    getParameters(data) {
+        return {
             borderBottom: this.getRealValue('borderBottom', data, true),
             borderTop: this.getRealValue('borderTop', data, true),
             hideIfNoData: this.getRealValue('hideIfNoData', data, false),
             maxRows: this.getRealValue('maxRows', data, false),
+            minWidth: this.getRealValue('minWidth', data, false),
             rowHeight: this.getRealValue('rowHeight', data, false),
-            skin: this.getRealValue('skin', data, 'standard')
+            skin: this.getRealValue('skin', data, 'standard'),
+            width: this.getRealValue('width', data, false)
         };
     }
 
@@ -106,7 +108,12 @@ class GridTableWidget extends Widget {
         return this.getHtml(this.state['widgets'], this.state['headerRowWidgetHtml'], this.value['cellData']);
     }
 
-    updateContent(data = false, loadFunction = QB.loadData) {
+    isContentUpdatable(refreshedData) {
+        const o = this.options;
+        return refreshedData.length === v(o.id + '.cellData.length');
+    }
+
+    updateContent(event, data = false, loadFunction = QB.loadData) {
         const o = this.options, instance = this;
         let widgetOptions, processedData, widgets = [],
             rowNum, colNum, i, j, deferred = [], w;
@@ -115,6 +122,10 @@ class GridTableWidget extends Widget {
             processedData = instance.processData(d);
             if (!Array.isArray(processedData)) {
                 processedData = processedData.content;
+            }
+
+            if(!instance.isContentUpdatable(processedData)){
+                return Render.renderWidget(event, $('#' + o.id), instance, false, false, d);
             }
 
             for (widgetOptions of o.widgets || []) {
@@ -126,33 +137,35 @@ class GridTableWidget extends Widget {
             colNum = processedData[0] ? processedData[0].length : 0;
             instance.state = {rows: rowNum};
             instance.value = {cellData: []};
-
+            deferred.push(instance.updateHtml(d));
             for (i = 0; i < rowNum; ++i) {
                 instance.value.cellData[i] = [];
                 j = 0;
                 for (w of widgets) {
-                    let d = {
-                        id: o.id + '_' + i + '_' + j
+                    let dd = {
+                        id: o.id + '_' + i + '_' + j,
+                        cellId: o.id + 'Cell' + i + '-' + j
                     };
-                    deferred.push(w.updateContent({...d, ...processedData[i][j]}));
+                    deferred.push(w.updateContent(event, {...dd, ...processedData[i][j]}));
                     instance.value.cellData[i].push(processedData[i][j]);
                     ++j;
                 }
             }
             return $.when.apply($, deferred).then(function () {
-                instance.updateHtml(d);
+
             });
         });
     }
 
     updateHtml(data) {
         const o = this.options, v = this.getParameters(data), section = $('#' + o.id),
-        mainDiv = section.children();
+            mainDiv = section.children();
         v.minWidth && mainDiv.css('min-width', Widget.getPercentOrPixel(v.minWidth));
         v.width && mainDiv.css('width', Widget.getPercentOrPixel(v.width));
+        v.hideIfNoData && section.css('display', data.content.length > 0 ? 'unset' : 'none');
     }
 
-    render(withState) {
+    render(withState, refresh, useDefaultData = false, loadFunction = QB.loadData, previouslyLoadedData = false) {
         const o = this.options, instance = this, h = Listeners.handle;
 
         let widgetOptions, widgets = [], headerRowWidget = false;
@@ -189,7 +202,7 @@ class GridTableWidget extends Widget {
             Listeners.push({options: o, method: 'renderPage', eventName: 'page.' + o.id, handler: h});
         }
 
-        return QB.loadData(o.id, instance.name).then(function (data) {
+        let afterLoad = (data) => {
             let deffered = [], w, processedData = instance.processData(data), i = 0, j = 0, rows, k, colNum;
             if (!Array.isArray(processedData)) {
                 processedData = processedData.content;
@@ -211,16 +224,9 @@ class GridTableWidget extends Widget {
                 o.errorMessage = 'Error! Grid widgets number ' + widgetColNum + ' is not equal to repository query number ' + colNum + '!';
             }
 
-//            let maxHeight = Math.max.apply(Math, widgets.map(function (o) {
-//                return o.options.height;
-//            }));
-
             instance.state = {rows: rows};
             instance.value = {cellData: []};
 
-            const widthTotal = o.widgets.reduce((prev, cur) => prev + (cur.width || cur.type.name !== 'GridTableHeaderRowWidget') ? cur.width : 0, 0);
-
-            //      if (widthTotal <= $(window).width()) {
             if (headerRowWidget !== false) {
                 deffered.push(headerRowWidget.render(withState, processedData.length > 0 ? processedData[0] : []));
             }
@@ -230,19 +236,14 @@ class GridTableWidget extends Widget {
                 j = 0;
                 for (w of widgets) {
                     let d = {
-                        id: o.id + '_' + i + '_' + j
-                        //,height: maxHeight
+                        id: o.id + '_' + i + '_' + j,
+                        cellId: o.id + 'Cell' + i + '-' + j
                     };
                     k === 1 ? deffered.push(w.render(withState, {...d, ...processedData[j + k][i]})) : deffered.push(w.render(withState, {...d, ...processedData[i][j]}));
                     k === 1 ? instance.value.cellData[i].push(processedData[j + k][i]) : instance.value.cellData[i].push(processedData[i][j]);
                     ++j;
                 }
             }
-//            } else {
-//                o.errorMessage = 'Size error!';
-//            }
-
-            //  o.height = maxHeight;
             //lassú:
             return $.when.apply($, deffered).then(function (...results) {
                 let widgetHtmls = [], r, first = true, headerRowWidgetHtml = false;
@@ -266,6 +267,14 @@ class GridTableWidget extends Widget {
                 }
                 return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}"  style="${gs.join('')}"  id="${o.id}">${ghtml}</section>`;
             });
+        };
+
+        if(previouslyLoadedData !== false){
+            return afterLoad(previouslyLoadedData);
+        }
+
+        return QB.loadData(o.id, instance.name).then(function (data) {
+            return afterLoad(data);
         });
     }
 

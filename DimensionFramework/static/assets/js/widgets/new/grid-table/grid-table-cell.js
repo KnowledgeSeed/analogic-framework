@@ -18,7 +18,7 @@ class GridTableCellWidget extends Widget {
             mainDivStyle.push('display:none;');
         }
 
-        return `<div class="ks-grid-table-cell ${v.cellSkin !== false ? 'ks-grid-table-cell-' + v.cellSkin : ''} ${v.cellSkin === false ? 'ks-grid-table-cell-' + v.skin : ''} ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}" style="${mainDivStyle.join('')}"><div class="ks-grid-table-cell-border-left"></div><div class="ks-pos-${v.alignment} ks-grid-table-cell-content">${widgets.join('')}</div></div>`;
+        return `<div id="${v.cellId}" class="ks-grid-table-cell ${v.cellSkin !== false ? 'ks-grid-table-cell-' + v.cellSkin : ''} ${v.cellSkin === false ? 'ks-grid-table-cell-' + v.skin : ''} ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}" style="${mainDivStyle.join('')}"><div class="ks-grid-table-cell-border-left"></div><div class="ks-pos-${v.alignment} ks-grid-table-cell-content">${widgets.join('')}</div></div>`;
     }
 
     getParameters(data) {
@@ -29,6 +29,7 @@ class GridTableCellWidget extends Widget {
             cellBackgroundColor: this.getRealValue('cellBackgroundColor', data, false),
             cellVisible: this.getRealValue('cellVisible', data, true),
             skin: this.getRealValue('skin', data, 'standard'),
+            cellId: this.getRealValue('cellId', data, false),
             cellSkin: this.getRealValue('cellSkin', data, false),
             cellWidth: this.getRealValue('cellWidth', data, false),
             width: this.getRealValue('width', data, 30)
@@ -51,14 +52,14 @@ class GridTableCellWidget extends Widget {
         this.initEventHandlers(section, withState);
     }
 
-    updateContent(data = false, loadFunction = QB.loadData) {
+    updateContent(event,data = false, loadFunction = QB.loadData) {
         const o = this.options, instance = this;
         let widgetOptions, childrenData, deferred = [];
 
         for (widgetOptions of o.widgets || []) {
             childrenData = {...widgetOptions, ...data};
             childrenData['originalId'] = widgetOptions['id'];
-            deferred.push(new widgetOptions.type(childrenData).updateContent(childrenData));
+            deferred.push(new widgetOptions.type(childrenData).updateContent(event, childrenData));
         }
 
         return $.when.apply($, deferred).then(function () {
@@ -67,10 +68,10 @@ class GridTableCellWidget extends Widget {
     }
 
     updateHtml(data) {
-        const o = this.options, v = this.getParameters(data), section = $('#' + o.id),
-        mainDiv = section.children();
-        v.cellWidth && mainDiv.css('width', Widget.getPercentOrPixel(v.cellWidth));
-        v.cellVisible === false ? section.hide() : section.show();
+        const o = this.options, p = this.getParameters(data), mainDiv = $('#' + p.cellId);
+        p.cellWidth && mainDiv.css('width', Widget.getPercentOrPixel(p.cellWidth));
+        p.cellBackgroundColor && mainDiv.css('background-color', p.cellBackgroundColor);
+        p.cellVisible === false ? mainDiv.css('display', 'none') : mainDiv.css('display', 'block') ;
     }
 
     render(withState, childrenData) {

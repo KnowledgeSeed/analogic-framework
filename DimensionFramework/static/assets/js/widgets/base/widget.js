@@ -24,13 +24,17 @@ class Widget {
         return widgetOptions;
     }
 
-    updateContent(data = false, loadFunction = QB.loadData) {
+    isContentUpdatable(){
+        return true;
+    }
+
+    updateContent(event, data = false, loadFunction = QB.loadData) {
         const o = this.options, instance = this;
         let ww, widgetOptions, processedData, deferred = [];
 
         for (widgetOptions of o.widgets || []) {
             ww = this.getWidget(widgetOptions);
-            deferred.push(new ww.type(ww).updateContent());
+            deferred.push(new ww.type(ww).updateContent(event));
         }
         if (data !== false) {
             return $.when.apply($, deferred).then(function () {
@@ -51,7 +55,7 @@ class Widget {
 
     }
 
-    render(withState, refresh, useDefaultData = false, loadFunction = QB.loadData) {
+    render(withState, refresh, useDefaultData = false, loadFunction = QB.loadData, previouslyLoadedData = false) {
         const o = this.options, instance = this, h = Listeners.handle;
         let ww;
 
@@ -107,7 +111,7 @@ class Widget {
 
         //rekurzív renderelés, adatbetöltéssel
 
-        return loadFunction(o.id, instance.name, useDefaultDataForChildren).then(function (data) {
+        let afterLoad = (data) => {
             let deffered = [], w;
 
             for (w of widgets) {
@@ -124,6 +128,14 @@ class Widget {
 
                 return instance.getMainHtmlElement(o, processedData, visible, widgetHtmls, withState);
             });
+        };
+
+        if(previouslyLoadedData !== false){
+            return afterLoad(previouslyLoadedData);
+        }
+
+        return loadFunction(o.id, instance.name, useDefaultDataForChildren).then(function (data) {
+            return afterLoad(data);
         });
     }
 
@@ -500,5 +512,11 @@ class Widget {
 
     static getPercentOrPixel(value){
         return isNaN(value) ? value : value + 'px';
+    }
+
+    static addSkin(element, skinPrefix, newSkin) {
+        let result = element.attr('class').split(' ').filter(e => !e.includes(skinPrefix));
+        result.push(skinPrefix + newSkin);
+        return result.join(' ');
     }
 }

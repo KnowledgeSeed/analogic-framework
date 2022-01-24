@@ -9,7 +9,7 @@ class ButtonWidget extends Widget {
         const v = this.getParameters(d);
 
         let aClass = [], aStyle = this.getGeneralStyles(d), innerStyle = [], labelStyle = [], dividerStyle = [],
-            imgStyle = [];
+            iconInfo;
 
         /* Override css */
 
@@ -51,19 +51,14 @@ class ButtonWidget extends Widget {
 
         /* override divider div style */
         v.dividerWidth && dividerStyle.push('width:', v.dividerWidth, 'px;');
-
-        /* override img tag style */
-        v.iconWidth && imgStyle.push('width:', v.iconWidth, 'px;');
-        v.iconHeight && imgStyle.push('height:', v.iconHeight, 'px;');
-        v.iconColor && imgStyle.push('color:', v.iconColor, ';');
-        v.iconFontSize && imgStyle.push('font-size:', v.iconFontSize, 'px;');
+        iconInfo = this.getIcon(v);
         this.value = {data: d, paste: v.paste, enabled: v.enabled};
 
         return `
 <a style="${aStyle.join('')}" ${o.confirmMessage2 ? `data-confirmmessage2="${o.confirmMessage2}" ` : ''} ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''} ${v.url ? `target="_blank" href="${v.url}" data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}" ` : `data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}"`} class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
     <div class="ks-button-inner" style="${innerStyle.join('')}">
         <div class="ks-button-content">
-            <div class="ks-button-icon" style="${imgStyle.join('')}">${v.icon !== false ? `<span style="${imgStyle.join('')}" class="${v.icon}"></span>` : ''}</div>
+            <div class="ks-button-icon" style="${iconInfo.style}">${v.icon !== false ? iconInfo.html : ''}</div>
             <div class="ks-button-divider" style="${dividerStyle.join('')}"></div>
             <div class="ks-button-label" title="${v.label}" style="${labelStyle.join('')}">${v.label}</div>
         </div>
@@ -71,13 +66,50 @@ class ButtonWidget extends Widget {
 </a>`;
     }
 
-    updateHtml(data) {
-        const o = this.options, v = this.getParameters(data), section = $('#' + o.id);
-        this.value = {data: data, paste: v.paste, enabled: v.enabled};
-        section.find('.ks-button-label').html(v.label);
+    getIcon(v) {
+        let imgStyle = [], imgStyleStr;
+        v.iconWidth && imgStyle.push('width:', v.iconWidth, 'px;');
+        v.iconHeight && imgStyle.push('height:', v.iconHeight, 'px;');
+        v.iconColor && imgStyle.push('color:', v.iconColor, ';');
+        v.iconFontSize && imgStyle.push('font-size:', v.iconFontSize, 'px;');
+        imgStyleStr = imgStyle.join('');
+        return {style: imgStyleStr, html: `<span style="${imgStyleStr}" class="${v.icon}"></span>`};
     }
 
-    getParameters(d){
+    updateHtml(data) {
+        const o = this.options, v = this.getParameters(data), section = $('#' + o.id),
+            labelDiv = section.find('.ks-button-label'),
+            main = section.children(),
+            innerDiv = section.find('.ks-button-inner'),
+            iconDiv = section.find('.ks-button-icon');
+        let iconInfo;
+        this.value = {data: data, paste: v.paste, enabled: v.enabled};
+
+        if (v.label !== '') {
+            labelDiv.html(v.label);
+            !main.hasClass('has-label') && main.addClass('has-label');
+        } else {
+            labelDiv.html('');
+            main.hasClass('has-label') && main.removeClass('has-label');
+        }
+
+        v.fontColor && labelDiv.css('color', v.fontColor);
+        v.backgroundColor && innerDiv.css('background-color', v.backgroundColor);
+
+        if (v.skin && !main.hasClass('ks-button-' + v.skin)) {
+            main.attr('class', Widget.addSkin(main, 'ks-button-', v.skin));
+        }
+
+        if (v.icon !== false) {
+            iconInfo = this.getIcon(v);
+            iconDiv.attr('style', iconInfo.style);
+            iconDiv.html(iconInfo.html);
+        } else {
+            iconDiv.html('');
+        }
+    }
+
+    getParameters(d) {
         return {
             backgroundColor: this.getRealValue('backgroundColor', d, false),
             borderColor: this.getRealValue('borderColor', d, false),
@@ -106,7 +138,7 @@ class ButtonWidget extends Widget {
 
     initEventHandlers(section) {
         let v = this.value;
-        if(v.enabled === false){
+        if (v.enabled === false) {
             return;
         }
         if (!section.find('a').data('confirmmessage') && !section.find('a').data('confirmmessage2')) {

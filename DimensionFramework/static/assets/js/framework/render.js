@@ -10,16 +10,14 @@ class Render {
         Render.renderWidget(null, El.body, widget, withState);
     }
 
-    static updateContent(event) {L(event);
+    static updateContent(event) {
         let widget = new event.data.options.type(event.data.options);
-        Loader.start();
-        widget.updateContent().then(() =>{
+        widget.updateContent(event).then(() =>{
             L(event.data.options.id, 'update done');
-           Loader.stop();
         });
     }
 
-    static renderWidget(event, holder, widget, withState = false, withLoader = true) {
+    static renderWidget(event, holder, widget, withState = false, withLoader = true, previouslyLoadedData = false) {
         withLoader && Loader.start();
 
         Listeners.length = 0;
@@ -37,7 +35,7 @@ class Render {
         }
 
         holder.empty().off().promise().then(() => {
-            widget.render(withState, refresh).then(html => {
+            widget.render(withState, refresh, false, QB.loadData, previouslyLoadedData).then(html => {
                 let isHeightUpdated = false, h = $(html), i;
 
                 if (holderHeight > 0) {
