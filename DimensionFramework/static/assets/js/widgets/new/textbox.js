@@ -68,6 +68,7 @@ class TextBoxWidget extends Widget {
     }
 
     initEventHandlers(section) {
+
         section.find('.ks-textbox-input').on('focusout', e => {
             let w = $(e.currentTarget), id = section.prop('id');
 
@@ -79,6 +80,22 @@ class TextBoxWidget extends Widget {
                 w.attr('value', value);
 
                 Widget.doHandleSystemEvent(w, e);
+            }
+        });
+
+        section.find('.ks-textbox-input').on('keyup', e => {
+            let w = $(e.currentTarget), id = section.prop('id'), value, element;
+            if (!w.hasClass('readonly')) {
+                value = Utils.escapeText(w.val());
+
+                WidgetValue[id].value = value;
+
+                w.attr('value', value);
+
+                element = $('<div>');
+                element.data({action: 'writeKey', id: id, value: value});
+
+                Widget.doHandleSystemEvent(element, e);
             }
         });
     }

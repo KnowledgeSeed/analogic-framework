@@ -45,7 +45,7 @@ class Widget {
 
         return loadFunction(o.id, instance.name).then(function (d) {
             return $.when.apply($, deferred).then(function () {
-                processedData = instance.processData(data);
+                processedData = instance.processData(d);
                 instance.updateHtml(processedData);
             });
         });

@@ -24,8 +24,8 @@ class GridTableCellWidget extends Widget {
     getParameters(data) {
         return {
             alignment: this.getRealValue('alignment', data, 'center-center',),
-            borderLeft: this.getRealValue('borderLeft', data, true),
-            borderRight: this.getRealValue('borderRight', data, true),
+            borderLeft: this.getRealValue('borderLeft', data, false),
+            borderRight: this.getRealValue('borderRight', data, false),
             cellBackgroundColor: this.getRealValue('cellBackgroundColor', data, false),
             cellVisible: this.getRealValue('cellVisible', data, true),
             skin: this.getRealValue('skin', data, 'standard'),
@@ -69,9 +69,9 @@ class GridTableCellWidget extends Widget {
 
     updateHtml(data) {
         const o = this.options, p = this.getParameters(data), mainDiv = $('#' + p.cellId);
+        p.cellVisible === false ? mainDiv.css('display', 'none') : mainDiv.css('display', 'block') ;
         p.cellWidth && mainDiv.css('width', Widget.getPercentOrPixel(p.cellWidth));
         p.cellBackgroundColor && mainDiv.css('background-color', p.cellBackgroundColor);
-        p.cellVisible === false ? mainDiv.css('display', 'none') : mainDiv.css('display', 'block') ;
     }
 
     render(withState, childrenData) {
