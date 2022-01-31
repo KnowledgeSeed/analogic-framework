@@ -4,7 +4,7 @@
 class GridTableHeaderCellWidget extends Widget {
 
     getHtml(widgets, d, withState) {
-        const v = this.getParameters(d);
+        const v = this.getParameters(d), o = this.options;
 
         let mainDivStyle = [];
 
@@ -14,7 +14,7 @@ class GridTableHeaderCellWidget extends Widget {
             mainDivStyle.push('display:none;');
         }
 
-        return `<div class="${v.cellHeaderSkin ? 'ks-grid-table-head-cell-' + v.cellHeaderSkin : ''}  ks-grid-table-cell ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}" style="${mainDivStyle.join('')}"><div class="ks-grid-table-head-cell-border-left"></div><div class="ks-pos-${v.alignment} ks-grid-table-cell-content">${widgets.join('')}</div></div>`;
+        return `<div id="${o.id}" class="${v.cellHeaderSkin ? 'ks-grid-table-head-cell-' + v.cellHeaderSkin : ''}  ks-grid-table-cell ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}" style="${mainDivStyle.join('')}"><div class="ks-grid-table-head-cell-border-left"></div><div class="ks-pos-${v.alignment} ks-grid-table-cell-content">${widgets.join('')}</div></div>`;
     }
 
     getParameters(d){
@@ -70,6 +70,7 @@ class GridTableHeaderCellWidget extends Widget {
         }
 
         Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
+        Listeners.push({options: o, method: 'updateContent', eventName: 'updatecontent.' + o.id, handler: h});
 
         //rekurzív renderelés, adatbetöltéssel
 
@@ -93,10 +94,8 @@ class GridTableHeaderCellWidget extends Widget {
     }
 
     updateHtml(data) {
-        const o = this.options, v = this.getParameters(data), section = $('#' + o.id);
-        if (v.cellHeaderSkin) {
-            Widget.setSkin(section.children, 'ks-grid-table-head-cell-', v.cellHeaderSkin);
-        }
+        const o = this.options, v = this.getParameters(data), mainDiv = $('#' + o.id);
+        Widget.setSkin(mainDiv, 'ks-grid-table-head-cell-', v.cellHeaderSkin);
     }
 }
 ;

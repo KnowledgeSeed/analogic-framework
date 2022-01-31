@@ -72,6 +72,7 @@ class GridTableCellWidget extends Widget {
         p.cellVisible === false ? mainDiv.css('display', 'none') : mainDiv.css('display', 'block') ;
         p.cellWidth && mainDiv.css('width', Widget.getPercentOrPixel(p.cellWidth));
         p.cellBackgroundColor && mainDiv.css('background-color', p.cellBackgroundColor);
+        Widget.setSkin(mainDiv, 'ks-grid-table-cell-', p.cellSkin);
     }
 
     render(withState, childrenData) {

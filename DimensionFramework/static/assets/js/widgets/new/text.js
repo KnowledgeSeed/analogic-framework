@@ -49,7 +49,7 @@ class TextWidget extends Widget {
         const o = this.options, v = this.getParameters(data), section = $('#' + o.id),
         title = section.find('.ks-text-title');
         this.value = {value: v.title, editable: v.editable, performable: v.performable};
-        if (v.title) {
+        if (v.title !== false) {
             title.html(v.title);
         }
         if(v.titleFontColor){
