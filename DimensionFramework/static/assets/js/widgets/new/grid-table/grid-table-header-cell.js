@@ -94,8 +94,10 @@ class GridTableHeaderCellWidget extends Widget {
     }
 
     updateHtml(data) {
-        const o = this.options, v = this.getParameters(data), mainDiv = $('#' + o.id);
-        Widget.setSkin(mainDiv, 'ks-grid-table-head-cell-', v.cellHeaderSkin);
+        const o = this.options, p = this.getParameters(data), mainDiv = $('#' + o.id);
+        Widget.setSkin(mainDiv, 'ks-grid-table-head-cell-', p.cellHeaderSkin);
+        p.cellVisible === false ? mainDiv.css('display', 'none') : mainDiv.css('display', 'block');
+        p.width && mainDiv.css('width', Widget.getPercentOrPixel(p.width));
     }
 }
 ;
