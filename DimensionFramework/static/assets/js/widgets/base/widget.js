@@ -514,9 +514,11 @@ class Widget {
         return isNaN(value) ? value : value + 'px';
     }
 
-    static addSkin(element, skinPrefix, newSkin) {
-        let result = element.attr('class').split(' ').filter(e => !e.includes(skinPrefix));
-        result.push(skinPrefix + newSkin);
-        return result.join(' ');
+    static setSkin(element, skinPrefix, newSkin) {
+        if(!element.hasClass(skinPrefix + newSkin)) {
+            let result = element.attr('class').split(' ').filter(e => !e.includes(skinPrefix));
+            result.push(skinPrefix + newSkin);
+            element.attr('class', result.join(' '));
+        }
     }
 }

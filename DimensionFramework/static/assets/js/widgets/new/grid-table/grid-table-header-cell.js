@@ -4,14 +4,7 @@
 class GridTableHeaderCellWidget extends Widget {
 
     getHtml(widgets, d, withState) {
-        const v = {
-            alignment: this.getRealValue('alignment', d, 'center-center'),
-            borderLeft: this.getRealValue('borderLeft', d, true),
-            borderRight: this.getRealValue('borderRight', d, true),
-            cellHeaderSkin: this.getRealValue('cellHeaderSkin', d, false),
-            cellVisible: this.getRealValue('cellVisible', d, true),
-            width: this.getRealValue('width', d, false)
-        };
+        const v = this.getParameters(d);
 
         let mainDivStyle = [];
 
@@ -22,6 +15,17 @@ class GridTableHeaderCellWidget extends Widget {
         }
 
         return `<div class="${v.cellHeaderSkin ? 'ks-grid-table-head-cell-' + v.cellHeaderSkin : ''}  ks-grid-table-cell ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}" style="${mainDivStyle.join('')}"><div class="ks-grid-table-head-cell-border-left"></div><div class="ks-pos-${v.alignment} ks-grid-table-cell-content">${widgets.join('')}</div></div>`;
+    }
+
+    getParameters(d){
+        return {
+            alignment: this.getRealValue('alignment', d, 'center-center'),
+            borderLeft: this.getRealValue('borderLeft', d, true),
+            borderRight: this.getRealValue('borderRight', d, true),
+            cellHeaderSkin: this.getRealValue('cellHeaderSkin', d, false),
+            cellVisible: this.getRealValue('cellVisible', d, true),
+            width: this.getRealValue('width', d, false)
+        };
     }
 
     render(withState, d, loadFunction = QB.loadData) {
@@ -86,6 +90,13 @@ class GridTableHeaderCellWidget extends Widget {
                 return `${instance.getHtml(widgetHtmls, instance.processData(d.cellVisible === false ? {...data, ...{cellVisible: d.cellVisible}} : data), withState)}`;
             });
         });
+    }
+
+    updateHtml(data) {
+        const o = this.options, v = this.getParameters(data), section = $('#' + o.id);
+        if (v.cellHeaderSkin) {
+            Widget.setSkin(section.children, 'ks-grid-table-head-cell-', v.cellHeaderSkin);
+        }
     }
 }
 ;

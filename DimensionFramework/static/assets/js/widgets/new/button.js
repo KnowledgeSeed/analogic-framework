@@ -96,8 +96,8 @@ class ButtonWidget extends Widget {
         v.fontColor && labelDiv.css('color', v.fontColor);
         v.backgroundColor && innerDiv.css('background-color', v.backgroundColor);
 
-        if (v.skin && !main.hasClass('ks-button-' + v.skin)) {
-            main.attr('class', Widget.addSkin(main, 'ks-button-', v.skin));
+        if (v.skin) {
+            Widget.setSkin(main, 'ks-button-', v.skin);
         }
 
         if (v.icon !== false) {
