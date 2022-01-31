@@ -45,8 +45,8 @@ app.fn.resetRadioButtons = function resetRadioButtons(id) {
     $('#' + id).find('.widget-radio').removeClass('on').closest('tr').attr('style', '');
 };
 
-app.fn.scrollTo = function scrollTo() {
-    Utils.scrollTo;
+app.fn.scrollTo = function scrollTo(idOrObj, duration) {
+    Utils.scrollTo(idOrObj, duration);
 };
 
 app.fn.jumpTo = function jumpTo(id) {

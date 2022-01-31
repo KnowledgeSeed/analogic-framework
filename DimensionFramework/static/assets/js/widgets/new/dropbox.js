@@ -123,7 +123,7 @@ class DropBoxWidget extends Widget {
             Doc.find(".ks-dropbox .ks-dropbox-panel").not(dropbox).each((i, el) => $(el).is(':visible') ? $(el).slideUp(50) : false);
 
             itemHolder.is(':visible') ? itemHolder.slideUp(50) : itemHolder.slideDown(50, function () {
-                $(e.currentTarget).parent().get(0).scrollIntoView({behavior: "smooth", block: "start"});
+               // $(e.currentTarget).parent().get(0).scrollIntoView({behavior: "smooth", block: "start"});
             });
 
             return false;
