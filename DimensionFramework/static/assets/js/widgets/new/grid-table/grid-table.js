@@ -162,7 +162,9 @@ class GridTableWidget extends Widget {
             mainDiv = section.children();
         v.minWidth && mainDiv.css('min-width', Widget.getPercentOrPixel(v.minWidth));
         v.width && mainDiv.css('width', Widget.getPercentOrPixel(v.width));
-        v.hideIfNoData && section.css('display', data.content.length > 0 ? 'unset' : 'none');
+        if(data.content){
+            v.hideIfNoData && section.css('display', data.content.length > 0 ? 'unset' : 'none');
+        }
     }
 
     render(withState, refresh, useDefaultData = false, loadFunction = QB.loadData, previouslyLoadedData = false) {
