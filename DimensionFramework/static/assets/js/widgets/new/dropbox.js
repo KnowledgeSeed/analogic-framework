@@ -160,6 +160,7 @@ class DropBoxWidget extends Widget {
                 }
                 w.items[clickedItem.index()].on = checkbox.prop("checked");
                 w.value = $.grep(w.items, (item, i) => item.on).map(item => item.name).join();
+                checkbox.attr('checked', checkbox.prop("checked") ? 'checked' : false);
             } else {
                 clickedItem.toggleClass('on');
                 w.items[clickedItem.index()].on = clickedItem.hasClass('on');
