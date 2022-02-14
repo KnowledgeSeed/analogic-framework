@@ -50,7 +50,8 @@ class DatePickerWidget extends Widget {
             </div>
         </div>
     </div>
-    <div class="ks-datepicker-panel holder" style="display:none;">
+    ${v.editable ? 
+    `<div class="ks-datepicker-panel holder" style="display:none;">
         <div class="ks-datepicker-panel-header">
             <div class="ks-datepicker-panel-header-inner">
                 <div class="ks-datepicker-panel-pager ks-left"></div>
@@ -60,7 +61,7 @@ class DatePickerWidget extends Widget {
         </div>
         <div class="ks-datepicker-panel-months">${monthsHtml.join('')}</div>
         <div class="ks-datepicker-panel-days">${DatePickerWidget.getPickerHolderDaysHtml(date, minDate, maxDate)}</div>
-    </div>
+    </div>` : ''}
 </div>`;
 
         return html;
@@ -97,15 +98,12 @@ class DatePickerWidget extends Widget {
         datePicker.on('click touch', e => {
             Doc.find(".dropdown-type .holder").not(datePicker).each((i, el) => {
                 if ($(el).is(':visible')) {
-                    $(el).slideUp(50);
+                    DatePickerWidget.triggerPickEvent($(el).closest('section').attr('id'), $(el), e);
                 }
             });
 
             if (pickerHolder.is(':visible')) {
-                let element = $('<div>');
-                element.data({action: 'pick', id: id, value: $('#' + id + ' .ks-datepicker-input').val().slice(0, -1), ordinal: $('#' + id + ' .ks-datepicker').data('ordinal')});
-                Widget.doHandleSystemEvent(element, e, true);
-                pickerHolder.slideUp(50);
+                DatePickerWidget.triggerPickEvent(id, pickerHolder, e);
             } else {
                 pickerHolder.slideDown(50, () => $(e.currentTarget).parent().get(0).scrollIntoView({behavior: 'smooth', block: 'start'}));
             }
@@ -197,6 +195,13 @@ class DatePickerWidget extends Widget {
         });
 
         pickerHolder.hide();
+    }
+
+    static triggerPickEvent(id, pickerHolder, e) {
+        let element = $('<div>');
+        element.data({action: 'pick', id: id, value: $('#' + id + ' .ks-datepicker-input').val().slice(0, -1), ordinal: $('#' + id + ' .ks-datepicker').data('ordinal')});
+        Widget.doHandleSystemEvent(element, e, true);
+        pickerHolder.slideUp(50);
     }
 
     static isValidDateString(dateString, isMonthPicker = false) {
