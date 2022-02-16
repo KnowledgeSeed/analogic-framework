@@ -47,10 +47,13 @@ class TextWidget extends Widget {
 
     updateHtml(data) {
         const o = this.options, v = this.getParameters(data), section = $('#' + o.id),
-        title = section.find('.ks-text-title');
+        title = section.find('.ks-text-title'), body = section.find('.ks-text-body');
         this.value = {value: v.title, editable: v.editable, performable: v.performable};
         if (v.title !== false) {
             title.html(v.title);
+        }
+        if (v.body !== false) {
+            body.html(v.body);
         }
         if(v.titleFontColor){
             title.css('color', v.titleFontColor);

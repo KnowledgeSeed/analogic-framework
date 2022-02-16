@@ -258,6 +258,10 @@ class Widget {
         this.triggerFinishedEvent();
     }
 
+    updateContentFinished() {
+        this.triggerFinishedEvent('updateContent');
+    }
+
     refreshFinished() {
         this.triggerFinishedEvent('refresh');
     }
@@ -283,6 +287,9 @@ class Widget {
             for (a of actions) {
                 a.action(a.argument, {}, {});
             }
+        }
+        if(Repository[o.id] && Repository[o.id][eventType + 'Finished']){
+            Repository[o.id][eventType + 'Finished']();
         }
     }
 

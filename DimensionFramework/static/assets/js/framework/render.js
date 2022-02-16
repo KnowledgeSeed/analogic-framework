@@ -14,6 +14,7 @@ class Render {
         let widget = new event.data.options.type(event.data.options);
         widget.updateContent(event).then(() =>{
             L(event.data.options.id, 'update done');
+            widget.updateContentFinished();
         });
     }
 
