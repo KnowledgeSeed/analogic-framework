@@ -7,6 +7,7 @@ from DimensionFramework.AuthenticationProviders.Base import Base
 from datetime import timedelta
 from logging.handlers import RotatingFileHandler
 import logging
+import json_logging
 
 app = Flask(__name__)
 site_root = os.path.realpath(os.path.dirname(__file__))
@@ -98,6 +99,8 @@ def getProvider(instance):
 
     logger = logging.getLogger('login')
     if not logger.hasHandlers():
+        json_logging.ENABLE_JSON_LOGGING = True
+        json_logging.init_flask(None, True)
         log_file_name = os.path.join(os.path.dirname(__file__), 'logs', 'login.log')
         handler = RotatingFileHandler(log_file_name, maxBytes=1000000, backupCount=10)
         formatter = logging.Formatter(
@@ -111,6 +114,8 @@ def getProvider(instance):
         level=logging.INFO,
         format='%(asctime)s :: %(levelname)s :: %(name)s :: %(lineno)d :: %(funcName)s() :: %(message)s :: %(process)d - %(threadName)s',
         datefmt='%Y-%m-%dT%H:%M:%S')
+
+    json_logging.config_root_logger()
 
     provider = DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory.getProvider(config, cache,
                                                                                                     site_root,
