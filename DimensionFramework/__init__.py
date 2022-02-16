@@ -100,10 +100,10 @@ def getProvider(instance):
     logger = logging.getLogger('login')
     if not logger.hasHandlers():
         json_logging.ENABLE_JSON_LOGGING = True
-        json_logging.init_flask(None, True)
+        json_logging.init_flask(enable_json=True)
         log_file_name = os.path.join(os.path.dirname(__file__), 'logs', 'login.log')
         handler = RotatingFileHandler(log_file_name, maxBytes=1000000, backupCount=10)
-        formatter = logging.Formatter(
+        formatter = json_logging.JSONLogFormatter(
             '%(asctime)s :: %(levelname)s :: %(name)s :: %(lineno)d :: %(funcName)s() :: %(message)s :: %(process)d - %(threadName)s')
         handler.setFormatter(formatter)
         logger.addHandler(handler)
