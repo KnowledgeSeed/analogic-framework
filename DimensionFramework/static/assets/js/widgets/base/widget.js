@@ -523,9 +523,11 @@ class Widget {
 
     static setSkin(element, skinPrefix, newSkin) {
         if(!element.hasClass(skinPrefix + newSkin)) {
-            let result = element.attr('class').split(' ').filter(e => !e.includes(skinPrefix));
-            result.push(skinPrefix + newSkin);
-            element.attr('class', result.join(' '));
+            if(element.attr('class')) {
+                let result = element.attr('class').split(' ').filter(e => !e.includes(skinPrefix));
+                result.push(skinPrefix + newSkin);
+                element.attr('class', result.join(' '));
+            }
         }
     }
 }

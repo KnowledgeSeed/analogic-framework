@@ -99,6 +99,7 @@ QB.executeMDXs = (repositoryId, path) => {
         if (p.execute && callExecute) {
             deffered.push($.Deferred().resolve(p.execute(WidgetValue, repositoryId, Repository[repositoryId])));
             isQuery.push(false);
+            ++c;
         } else if (p.pivot) {
             deffered.push(Pivot.call(p));
             isQuery.push(true);

@@ -12,9 +12,11 @@ class Render {
 
     static updateContent(event) {
         let widget = new event.data.options.type(event.data.options);
-        widget.updateContent(event).then(() =>{
+        widget.updateContent(event).then((r) =>{
             L(event.data.options.id, 'update done');
-            widget.updateContentFinished();
+            if('rendered' !== r) {
+                widget.updateContentFinished();
+            }
         });
     }
 
@@ -91,6 +93,8 @@ class Render {
                 });
             });
         });
+
+        return 'rendered';
     }
 
     static refreshGridCell(event, withState = false) {
