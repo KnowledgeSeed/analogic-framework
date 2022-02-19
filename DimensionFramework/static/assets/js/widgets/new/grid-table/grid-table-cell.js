@@ -64,6 +64,7 @@ class GridTableCellWidget extends Widget {
 
         return $.when.apply($, deferred).then(function () {
             instance.updateHtml(childrenData);
+            return 'update';
         });
     }
 

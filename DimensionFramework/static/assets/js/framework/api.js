@@ -235,6 +235,10 @@ app.fn.forceRefresh = function forceRefresh(widgetId) {
     El.body.triggerHandler('forcerefresh.' + widgetId);
 };
 
+app.fn.forceRefreshWithoutLoader = function forceRefreshWithoutLoader(widgetId) {
+    El.body.triggerHandler('forcerefreshwithoutloader.' + widgetId);
+};
+
 app.fn.forceRefreshWidgets = function forceRefreshWidgets(widgetIds) {
     widgetIds.forEach(widgetId => El.body.triggerHandler('forcerefresh.' + widgetId));
 };
@@ -514,8 +518,4 @@ app.fn.removeSliders = function removeSliders() {
 
 app.fn.updateContent = function updateContent(widgetId) {
   El.body.triggerHandler('updatecontent.' + widgetId);
-};
-
-app.fn.updateWidgetsContent = function updateWidgetsContent(widgetIds) {
-  widgetIds.forEach(widgetId => El.body.triggerHandler('updatecontent.' + widgetId));
 };

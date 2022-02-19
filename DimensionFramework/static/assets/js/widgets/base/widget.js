@@ -47,6 +47,7 @@ class Widget {
             return $.when.apply($, deferred).then(function () {
                 processedData = instance.processData(d);
                 instance.updateHtml(processedData);
+                return 'update';
             });
         });
     }

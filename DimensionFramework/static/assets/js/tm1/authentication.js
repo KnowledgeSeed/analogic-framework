@@ -12,6 +12,7 @@ Auth.loadDefault = arg => {
 };
 
 Auth.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
+    Loader.start(true);
     let urlWithWidgetId = url + ( url.includes('?') ? '&' : '?' ) + 'widgetid=' + widgetId;
     return $.ajax({
         cache: true,
@@ -22,9 +23,11 @@ Auth.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
         data: type === 'GET' ? {} : data,
         global: true,
         success: function (data) {
+            Loader.stop(true);
             Auth.handleSuccessLogin();
         },
         error: function (response, e) {
+            Loader.stop(true);
             L('error:', response, e, widgetId);
         },
         statusCode: {

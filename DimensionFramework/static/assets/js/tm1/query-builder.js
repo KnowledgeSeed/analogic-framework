@@ -92,7 +92,7 @@ QB.executeMDXs = (repositoryId, path) => {
 
     for (p of Repository[repositoryId][path]) {
         u = QB.getUrl(p);
-        if(p.body && p.execute && p.callExecute){
+        if (p.body && p.execute && p.callExecute) {
             callExecute = p.callExecute(WidgetValue, repositoryId, Repository[repositoryId]);
         }
 
@@ -119,10 +119,10 @@ QB.executeMDXs = (repositoryId, path) => {
     }
 
     return $.when.apply($, deffered).then(function (...results) {
-        let r, i = 0, t, d = [], z;
+        let r, i = 0, t, d = [], z, parsingControlResult;
 
-        if(Repository[repositoryId].commonParsingControl) {
-            if(Repository[repositoryId].mainQueryIndex) {
+        if (Repository[repositoryId].commonParsingControl) {
+            if (Repository[repositoryId].mainQueryIndex) {
                 r = isQuery[Repository[repositoryId].mainQueryIndex] ? z[0] : z;
                 if (r.ID) {
                     Repository[repositoryId][path][Repository[repositoryId].mainQueryIndex].cellsetId = r.ID;
@@ -132,7 +132,9 @@ QB.executeMDXs = (repositoryId, path) => {
                 d.push(isQuery[i] ? z[0] : z);
                 ++i;
             }
-            return Repository[repositoryId].commonParsingControl(d, repositoryId, Repository[repositoryId]);
+            parsingControlResult = Repository[repositoryId].commonParsingControl(d, repositoryId, Repository[repositoryId]);
+            QB.parsingControlFinished(repositoryId);
+            return parsingControlResult;
         }
 
         for (z of results) {
@@ -163,13 +165,20 @@ QB.executeMDXs = (repositoryId, path) => {
         if (Repository[repositoryId].mergeInitResults) {
             return QB.mergeResults(d[0], d[1]);
         }
-
+        QB.parsingControlFinished(repositoryId);
         return d;
     });
 };
 
+QB.parsingControlFinished = (repositoryId) => {
+    El.body.triggerHandler('parsingcontrol.' + repositoryId + '.finished');
+    if (Repository[repositoryId] && Repository[repositoryId]['parsingControlFinished']) {
+        Repository[repositoryId]['parsingControlFinished']();
+    }
+};
+
 QB.executeMDX = (repositoryId, path, extraParams = {}) => {
-    let r = Repository[repositoryId], p = r[path];
+    let r = Repository[repositoryId], p = r[path], parsingControlResult;
 
     if (r.reference) {
         r = Repository[r.reference];
@@ -177,7 +186,9 @@ QB.executeMDX = (repositoryId, path, extraParams = {}) => {
     }
 
     if (p && p.execute) {
-        return QB.loadFromWidgetValue(p, repositoryId, extraParams);
+        parsingControlResult = QB.loadFromWidgetValue(p, repositoryId, extraParams);
+        QB.parsingControlFinished(repositoryId);
+        return parsingControlResult;
     }
 
 
@@ -191,23 +202,22 @@ QB.executeMDX = (repositoryId, path, extraParams = {}) => {
     return Auth.getTm1AjaxRequest(u.url, body, u.type, repositoryId).then((data) => {
         //save cellsetid
         r.cellsetId = data.ID;
-        let t = (typeof p.parsingControl=== 'function') ? p.parsingControl(WidgetValue, repositoryId, r) : p.parsingControl;
+        let t = (typeof p.parsingControl === 'function') ? p.parsingControl(WidgetValue, repositoryId, r) : p.parsingControl;
 
         if (t) {
             if (t.type === 'matrix') {
-                El.body.triggerHandler('processdata.' + repositoryId + '.finished');
-                return QB.processResult(t, data);
+                parsingControlResult = QB.processResult(t, data);
             } else if (t.type === 'list') {
-                El.body.triggerHandler('processdata.' + repositoryId + '.finished');
-                return QB.processResultAsList(t, data);
+                parsingControlResult = QB.processResultAsList(t, data);
             } else if (t.type === 'script') {
-                El.body.triggerHandler('processdata.' + repositoryId + '.finished');
-                return t.script(data, repositoryId, r);
+                parsingControlResult = t.script(data, repositoryId, r);
             } else {
-                El.body.triggerHandler('processdata.' + repositoryId + '.finished');
-                return QB.processResultAsObject(t.query, data);
+                parsingControlResult = QB.processResultAsObject(t.query, data);
             }
+            QB.parsingControlFinished(repositoryId);
+            return parsingControlResult;
         }
+        QB.parsingControlFinished(repositoryId);
         return data;
     });
 };

@@ -22,12 +22,13 @@ class GridTableWidget extends Widget {
             return `<div><h3 style="color:red;">${o.errorMessage}</h3></div>`;
         }
 
+        this.state['col'] = col;
+
         if (v.maxRows) {
             let page = this.state.page ? this.state.page : 1;
             let maxRows = v.maxRows * col;
             let start = (page - 1) * maxRows, end = page * maxRows;
             this.state['widgets'] = widgets;
-            this.state['col'] = col;
             this.state['headerRowWidgetHtml'] = headerRowWidgetHtml;
             //   this.state['d'] = d;
             this.state['maxRows'] = v.maxRows;
@@ -65,6 +66,7 @@ class GridTableWidget extends Widget {
 
     getParameters(data) {
         return {
+            allowFullContentUpdated: this.getRealValue('allowFullContentUpdated', data, false),
             borderBottom: this.getRealValue('borderBottom', data, true),
             borderTop: this.getRealValue('borderTop', data, true),
             hideIfNoData: this.getRealValue('hideIfNoData', data, false),
@@ -113,19 +115,29 @@ class GridTableWidget extends Widget {
         return refreshedData.length === v(o.id + '.cellData.length');
     }
 
+    renderRowForUpdateContent(widgets, v) {L(widgets);
+        let j = 0, col = this.state['col'], r = [];
+        while (j < widgets.length) {
+            r.push(this.buildTableRowHtml(widgets.slice(j, j + col).join(''), v.rowHeight, v.borderBottom));
+            j = j + col;
+        }
+        return r.join('');
+    }
+
     updateContent(event, data = false, loadFunction = QB.loadData) {
         const o = this.options, instance = this;
         let widgetOptions, processedData, widgets = [],
-            rowNum, colNum, i, j, deferred = [], w;
+            rowNum, colNum, i, j, deferred = [], w, previousLength = v(o.id + '.cellData.length');
 
         return loadFunction(o.id, instance.name).then(function (d) {
             processedData = instance.processData(d);
+            const vv = instance.getParameters(d);
             if (!Array.isArray(processedData)) {
                 processedData = processedData.content;
             }
 
-            if(!instance.isContentUpdatable(processedData)){
-                return Render.renderWidget(event, $('#' + o.id), instance, false, false, d);
+            if (!vv.allowFullContentUpdated && !instance.isContentUpdatable(processedData)) {
+                 return Render.renderWidget(event, $('#' + o.id), instance, false, false, d);
             }
 
             for (widgetOptions of o.widgets || []) {
@@ -135,7 +147,7 @@ class GridTableWidget extends Widget {
             }
             rowNum = processedData.length;
             colNum = processedData[0] ? processedData[0].length : 0;
-            instance.state = {rows: rowNum};
+            instance.state['rows'] = rowNum;
             instance.value = {cellData: []};
             deferred.push(instance.updateHtml(d));
             for (i = 0; i < rowNum; ++i) {
@@ -146,13 +158,21 @@ class GridTableWidget extends Widget {
                         id: o.id + '_' + i + '_' + j,
                         cellId: o.id + 'Cell' + i + '-' + j
                     };
-                    deferred.push(w.updateContent(event, {...dd, ...processedData[i][j]}));
+                    if (i >= previousLength) {
+                        deferred.push(w.render(event, {...dd, ...processedData[i][j]}));
+                    } else {
+                        deferred.push(w.updateContent(event, {...dd, ...processedData[i][j]}));
+                    }
                     instance.value.cellData[i].push(processedData[i][j]);
                     ++j;
                 }
             }
-            return $.when.apply($, deferred).then(function () {
-
+            return $.when.apply($, deferred).then(function (...results) {
+                if(rowNum > previousLength){
+                    let rowsToAppend = instance.renderRowForUpdateContent(results.filter(e => e !== 'update'), vv);
+                    $('#' + o.id).find('.ks-grid-table-content').append(rowsToAppend);
+                }
+                return 'update';
             });
         });
     }
@@ -162,9 +182,10 @@ class GridTableWidget extends Widget {
             mainDiv = section.children();
         v.minWidth && mainDiv.css('min-width', Widget.getPercentOrPixel(v.minWidth));
         v.width && mainDiv.css('width', Widget.getPercentOrPixel(v.width));
-        if(data.content){
+        if (data.content) {
             v.hideIfNoData && section.css('display', data.content.length > 0 ? 'unset' : 'none');
         }
+        return 'update';
     }
 
     render(withState, refresh, useDefaultData = false, loadFunction = QB.loadData, previouslyLoadedData = false) {
@@ -271,7 +292,7 @@ class GridTableWidget extends Widget {
             });
         };
 
-        if(previouslyLoadedData !== false){
+        if (previouslyLoadedData !== false) {
             return afterLoad(previouslyLoadedData);
         }
 

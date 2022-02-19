@@ -11,17 +11,22 @@ class Render {
     }
 
     static updateContent(event) {
+        Loader.start(true);
         let widget = new event.data.options.type(event.data.options);
-        widget.updateContent(event).then((r) =>{
-            L(event.data.options.id, 'update done');
-            if('rendered' !== r) {
+        widget.updateContent(event).then((r) => {
+            L(event.data.options.id, 'update done', r);
+            if ('rendered' !== r) {
                 widget.updateContentFinished();
             }
+            Loader.stop(true);
         });
     }
 
     static renderWidget(event, holder, widget, withState = false, withLoader = true, previouslyLoadedData = false) {
-        withLoader && Loader.start();
+
+        if (withLoader) {
+            Loader.start(true);
+        }
 
         Listeners.length = 0;
 
@@ -36,7 +41,6 @@ class Render {
             widgetId = event.data.options.id;
             holderHeight = holder.actual('height');
         }
-
         holder.empty().off().promise().then(() => {
             widget.render(withState, refresh, false, QB.loadData, previouslyLoadedData).then(html => {
                 let isHeightUpdated = false, h = $(html), i;
@@ -89,7 +93,9 @@ class Render {
 
                     app.fn.showToolTipsChanged();
 
-                    withLoader && Loader.stop();
+                    if (withLoader) {
+                        Loader.stop(true);
+                    }
                 });
             });
         });

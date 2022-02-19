@@ -13,7 +13,7 @@ const Loader = ($ => {
 
             if (!e.is(':visible')) {
                 if (incAjaxCallNum) {
-                    timeoutId = setTimeout(() => e.show(), 600);
+                    timeoutId = setTimeout(() => e.show(), 1500);
                 } else {
                     e.show();
                 }
@@ -37,7 +37,7 @@ const Loader = ($ => {
             }
         },
         autoOn: () => {
-            Doc.ajaxStart(() => Loader.start(true)).ajaxStop(() => Loader.stop(true));
+          //  Doc.ajaxStart(() => Loader.start(true)).ajaxStop(() => Loader.stop(true));
         }
     };
 })(jQuery);

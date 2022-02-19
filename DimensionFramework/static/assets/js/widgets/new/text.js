@@ -14,6 +14,7 @@ class TextWidget extends Widget {
 
         (v.title !== false || v.editable) && mainDivClass.push('has-title');
         v.body && mainDivClass.push('has-body');
+        v.backgroundColor && mainDivStyle.push(`background-color:${v.backgroundColor};`);
 
         v.titleAlignment && titleStyles.push(`display: flex;padding-left: 0px;justify-content: ${v.titleAlignment === 'start' || v.titleAlignment === 'end' ? `flex-${v.titleAlignment}` : v.titleAlignment};`);
         v.titleFontColor && titleStyles.push(`color:${v.titleFontColor};`);
@@ -47,7 +48,8 @@ class TextWidget extends Widget {
 
     updateHtml(data) {
         const o = this.options, v = this.getParameters(data), section = $('#' + o.id),
-        title = section.find('.ks-text-title'), body = section.find('.ks-text-body');
+        title = section.find('.ks-text-title'), body = section.find('.ks-text-body'),
+        mainDiv = section.children(), icon = section.find('.ks-text-icon span');
         this.value = {value: v.title, editable: v.editable, performable: v.performable};
         if (v.title !== false) {
             title.html(v.title);
@@ -61,10 +63,23 @@ class TextWidget extends Widget {
         if(v.titleCursor){
             title.css('cursor', v.titleCursor);
         }
+        if(v.backgroundColor) {
+            mainDiv.css('background-color', v.backgroundColor);
+        }
+        if (v.skin) {
+            Widget.setSkin(mainDiv, 'ks-text-', v.skin);
+        }
+        if (v.icon){
+            icon.attr('class', v.icon);
+        }
+        if(v.iconColor) {
+            icon.css('color', v.iconColor);
+        }
     }
 
     getParameters(d) {
         return {
+            backgroundColor: this.getRealValue('backgroundColor', d, false),
             body: this.getRealValue('body', d, false),
             bodyBackgroundColor: this.getRealValue('bodyBackgroundColor', d, false),
             bodyCursor: this.getRealValue('bodyCursor', d, false),

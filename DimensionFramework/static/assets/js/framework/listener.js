@@ -4,6 +4,15 @@ const Listeners = [];
 
 Listeners.handle = ev => {
     const m = ev.data.method;
+    let refreshWithWaitingForEvent = (ev, withLoader) => {
+        let eventName = ev.data.parameters[0];
+        let widgetId = ev.data.options.id;
+
+        El.body.on(eventName, () => {
+            El.body.off(eventName);
+            withLoader ? app.fn.forceRefresh(widgetId) : app.fn.forceRefreshWithoutLoader(widgetId);
+        });
+    };
     if ('refresh' === m) {
         Render.renderWidget(ev);
     } else if ('updateContent' === m) {
@@ -13,13 +22,9 @@ Listeners.handle = ev => {
     } else if ('refreshGridCell' === m) {
         Render.refreshGridCell(ev);
     } else if ('refreshWithWaitingForEvent' === m) {
-        let eventName = ev.data.parameters[0];
-        let widgetId = ev.data.options.id;
-
-        El.body.on(eventName, () => {
-            El.body.off(eventName);
-            app.fn.forceRefresh(widgetId);
-        });
+        refreshWithWaitingForEvent(ev, true);
+    }  else if ('refreshWithWaitingForEventWithoutLoader' === m) {
+        refreshWithWaitingForEvent(ev, false);
     } else if ('refreshWithState' === m) {
         Render.renderWidget(ev, null, null, true);
     } else if ('show' === m) {
