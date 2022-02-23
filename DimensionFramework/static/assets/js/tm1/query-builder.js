@@ -328,6 +328,9 @@ QB.writeData = (eventMapId, event, element) => {
             if (isGridTable) {
                 QB.executeEventMapAction(e + '.' + w + '.finished', event, element, {});
             }
+            if(g.callback) {
+                g.callback(d, event, element);
+            }
         });
     }
 

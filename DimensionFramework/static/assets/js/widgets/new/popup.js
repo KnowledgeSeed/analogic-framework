@@ -67,8 +67,8 @@ class PopupWidget extends Widget {
         this.value = v;
 
         return `
-${v.backdrop ? `<div class="ks-container-${v.skin} ks-container-backdrop"  ${b}></div>` : ''}
-<div class="ks-container-${v.skin} ks-container ${alignmentClass}" style="${s.join('')}">
+${v.backdrop ? `<div class="ks-container-backdrop ks-container-${v.skin}"  ${b}></div>` : ''}
+<div class="ks-container ${alignmentClass} ks-container-${v.skin}" style="${s.join('')}">
     <div class="ks-container-background">
         <div class="ks-container-content">${v.closeBtn ? '<div class="div-x" onclick="$(this).trigger(\'close\');"><span class="icon-x"><\/span><\/div>' : ''}${widgets.join('')}</div>
     </div>

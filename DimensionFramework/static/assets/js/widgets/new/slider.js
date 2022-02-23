@@ -202,7 +202,7 @@ class SliderWidget extends Widget {
 
                 if (updateableInput && !d.changedByInput) {
                     if (d.updateableWidgetValueHandler) {
-                        v = d.updateableWidgetValueHandler(positions[0]);
+                        v = d.originalValue !== false ? d.originalValue : d.updateableWidgetValueHandler(positions[0]);
                     } else {
                         v = (d.originalValue !== false ? d.originalValue : positions[0]) + ' ' + d.unit;
                     }

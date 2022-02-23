@@ -519,3 +519,7 @@ app.fn.removeSliders = function removeSliders() {
 app.fn.updateContent = function updateContent(widgetId) {
   El.body.triggerHandler('updatecontent.' + widgetId);
 };
+
+app.fn.updateWidgetsContent = function updateWidgetsContent(widgetIds) {
+  widgetIds.forEach(widgetId => El.body.triggerHandler('updatecontent.' + widgetId));
+};

@@ -15,7 +15,7 @@ class GridRowWidget extends Widget {
             mainDivStyle = this.getGeneralStyles(d);
         }
 
-        return `<div class="ks-grid-row ks-grid-row-${v.skin} ${v.alignment !== false ? `ks-row-pos-${v.alignment}` : ''}" style="${mainDivStyle.join('')}">${widgets.join('')}</div>`;
+        return `<div class="ks-grid-row ${v.alignment !== false ? `ks-row-pos-${v.alignment}` : ''} ks-grid-row-${v.skin}" style="${mainDivStyle.join('')}">${widgets.join('')}</div>`;
 
     }
 

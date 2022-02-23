@@ -10,6 +10,7 @@ class TextWidget extends Widget {
         this.value = {value: v.title, editable: v.editable, performable: v.performable};
 
         let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], bodyStyles = [],
+            innerStyles = [],
             iconStyles = [];
 
         (v.title !== false || v.editable) && mainDivClass.push('has-title');
@@ -36,45 +37,61 @@ class TextWidget extends Widget {
         v.iconColor && iconStyles.push('color:', v.iconColor, ';');
         v.iconPosition === 'left' ? mainDivClass.push('pos-icon-left') : mainDivClass.push('pos-icon-right');
 
+        v.innerWidth && innerStyles.push('width:', Widget.getPercentOrPixel(v.innerWidth), ';');
+        v.innerHeight && innerStyles.push('height:', Widget.getPercentOrPixel(v.innerHeight), ';');
+        v.innerCursor && innerStyles.push(`cursor:${v.innerCursor};`);
+
         return `
 <div class="ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}" style="${mainDivStyle.join('')}">
-    <div class="ks-text-inner" data-id="${o.id}" data-action="text_click" data-ordinal="${v.ordinal}">
-        ${v.icon !== false ? `<div class="ks-text-icon" data-id="${o.id}" data-action="${v.iconCustomEventName ? v.iconCustomEventName : 'perform'}" data-ordinal="${v.ordinal}"><span style="${iconStyles.join('')}" class="${v.icon}"></span></div>` : ''}
+    <div class="ks-text-inner" style="${innerStyles.join('')}" data-id="${o.id}" data-action="text_click" data-ordinal="${v.ordinal}">
+        <div class="ks-text-icon" data-id="${o.id}" data-action="${v.iconCustomEventName ? v.iconCustomEventName : 'perform'}" data-ordinal="${v.ordinal}"><span style="${iconStyles.join('')}" class="${v.icon}"></span></div>
         <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title ? Utils.stripHtml(v.title) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title !== false ? v.title : ''}</div>
-        ${v.body ? `<div class="ks-text-body" style="${bodyStyles.join('')}">${v.body}</div>` : ''}
+        <div class="ks-text-body" style="${bodyStyles.join('')}">${v.body}</div>
     </div>
 </div>`;
     }
 
     updateHtml(data) {
         const o = this.options, v = this.getParameters(data), section = $('#' + o.id),
-        title = section.find('.ks-text-title'), body = section.find('.ks-text-body'),
-        mainDiv = section.children(), icon = section.find('.ks-text-icon span');
+            title = section.find('.ks-text-title'), body = section.find('.ks-text-body'),
+            mainDiv = section.children(), icon = section.find('.ks-text-icon span'),
+            inner = section.find('.ks-text-inner');
         this.value = {value: v.title, editable: v.editable, performable: v.performable};
-        if (v.title !== false) {
-            title.html(v.title);
-        }
-        if (v.body !== false) {
-            body.html(v.body);
-        }
-        if(v.titleFontColor){
-            title.css('color', v.titleFontColor);
-        }
-        if(v.titleCursor){
-            title.css('cursor', v.titleCursor);
-        }
-        if(v.backgroundColor) {
+
+        //main
+        if (v.backgroundColor !== false) {
             mainDiv.css('background-color', v.backgroundColor);
         }
         if (v.skin) {
             Widget.setSkin(mainDiv, 'ks-text-', v.skin);
         }
-        if (v.icon){
-            icon.attr('class', v.icon);
+
+        //inner
+        Widget.setOrRemoveStyle(inner, 'cursor', v.innerCursor);
+        Widget.setOrRemoveStyle(inner, 'width', v.innerWidth ? Widget.getPercentOrPixel(v.innerWidth) : false);
+        Widget.setOrRemoveStyle(inner, 'height',  v.innerHeight ? Widget.getPercentOrPixel(v.innerHeight) : false);
+
+        //title
+        title.html(v.title ? v.title : '');
+        if (v.title) {
+            mainDiv.addClass('has-title');
         }
-        if(v.iconColor) {
+        Widget.setOrRemoveStyle(title, 'color', v.titleFontColor);
+        Widget.setOrRemoveStyle(title, 'cursor', v.titleCursor);
+
+        //body
+        body.html(v.body ? v.body : '');
+        if (v.body) {
+            mainDiv.addClass('has-body');
+        }
+        Widget.setOrRemoveStyle(body, 'color', v.bodyFontColor);
+
+        //icon
+        icon.attr('class', v.icon ? v.icon : '');
+        if (v.iconColor) {
             icon.css('color', v.iconColor);
         }
+
     }
 
     getParameters(d) {
@@ -94,6 +111,9 @@ class TextWidget extends Widget {
             iconHeight: this.getRealValue('iconHeight', d, false),
             iconPosition: this.getRealValue('iconPosition', d, 'right'),
             iconWidth: this.getRealValue('iconWidth', d, false),
+            innerHeight: this.getRealValue('innerHeight', d, false),
+            innerWidth: this.getRealValue('innerWidth', d, false),
+            innerCursor: this.getRealValue('innerCursor', d, false),
             performable: this.getRealValue('performable', d, false),
             skin: this.getRealValue('skin', d, 'template1'),
             title: this.getRealValue('title', d, false),

@@ -525,10 +525,25 @@ class Widget {
     static setSkin(element, skinPrefix, newSkin) {
         if(!element.hasClass(skinPrefix + newSkin)) {
             if(element.attr('class')) {
-                let result = element.attr('class').split(' ').filter(e => !e.includes(skinPrefix));
+                let result, classWithoutSkin, originalClass = element.attr('class'), s = originalClass.indexOf(skinPrefix);
+                classWithoutSkin = s !== -1 ? originalClass.substring(0, s - 1) : originalClass;
+                result = classWithoutSkin.split(' ');
                 result.push(skinPrefix + newSkin);
                 element.attr('class', result.join(' '));
             }
         }
+    }
+
+    static removeStyle(element, styleName) {
+        let s = element.prop('style');
+        s && s.removeProperty(styleName);
+    }
+
+    static setOrRemoveStyle(element, styleName, value) {
+        value ? element.css(styleName, value) : Widget.removeStyle(element, styleName);
+    }
+
+    static setOrRemoveMeasure(element, measureName, value) {
+        Widget.setOrRemoveStyle(element, measureName, value ? Widget.getPercentOrPixel(value) : false);
     }
 }
