@@ -339,7 +339,9 @@ app.fn.openPopupWithTimeout = function openPopupWithTimeout(argument, ev, elemen
         alert('openPopupWithTimeout has 2 mandatory argument: ["popupid", "timeout ms"] !');
         return;
     }
-    setTimeout(function(){app.fn.openPopup(argument[0], ev, element) }, argument[1]);
+    setTimeout(function () {
+        app.fn.openPopup(argument[0], ev, element)
+    }, argument[1]);
 };
 
 app.fn.togglePopup = function togglePopup(argument, ev, element) {
@@ -350,6 +352,11 @@ app.fn.togglePopup = function togglePopup(argument, ev, element) {
     }
 
     c.toggle();
+};
+
+app.fn.closePopup = function closePopup(argument) {
+    const c = PopupWidget.popupsByIds[argument];
+    c && c.close();
 };
 
 app.fn.showInfoWidget = function showInfoWidget(arg) {
@@ -429,9 +436,9 @@ app.fn.checkTIResponseStatus = function checkTIResponseStatus(argument, ev, elem
 
 app.fn.conditionalHorizontalTableEventHandlerExecution = function conditionalHorizontalTableEventHandlerExecution(argument, ev, element) {
     let widgetId = element.data('id'),
-    action = element.data('action'),
-    row = v(widgetId)[action].rowindex,
-    currentCell = v(widgetId).rows[row][0];
+        action = element.data('action'),
+        row = v(widgetId)[action].rowindex,
+        currentCell = v(widgetId).rows[row][0];
     app.fn.conditionalExecution(argument, ev, element, currentCell);
 };
 
@@ -441,7 +448,7 @@ app.fn.conditionalGridTablePopup = function conditionalGridTablePopup(argument, 
 };
 
 app.fn.conditionalExecution = (argument, ev, element, currentCell) => {
-    let  i, j;
+    let i, j;
     for (i = 0; i < argument.length; ++i) {
         if (currentCell[argument[i].conditionKey] || argument[i].conditionKey === 'else') {
             let conditionKeyResult;
@@ -517,9 +524,13 @@ app.fn.removeSliders = function removeSliders() {
 };
 
 app.fn.updateContent = function updateContent(widgetId) {
-  El.body.triggerHandler('updatecontent.' + widgetId);
+    El.body.triggerHandler('updatecontent.' + widgetId);
+};
+
+app.fn.updateContentWithoutLoader = function updateContentWithoutLoader(widgetId) {
+    El.body.triggerHandler('updatecontentwithoutloader.' + widgetId);
 };
 
 app.fn.updateWidgetsContent = function updateWidgetsContent(widgetIds) {
-  widgetIds.forEach(widgetId => El.body.triggerHandler('updatecontent.' + widgetId));
+    widgetIds.forEach(widgetId => El.body.triggerHandler('updatecontent.' + widgetId));
 };

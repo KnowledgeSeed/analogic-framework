@@ -222,9 +222,29 @@ QB.executeMDX = (repositoryId, path, extraParams = {}) => {
     });
 };
 
+QB.getWriteContext = (id, repositoryOjbect, event, element) => {
+    return {
+        getId() {
+            return id;
+        },
+        getObject() {
+            return repositoryOjbect;
+        },
+        getEvent() {
+            return event;
+        },
+        getElement() {
+            return element;
+        },
+        getWidgetValue(property = false) {
+            return v(this.getId() + (property ? '.' + property : ''));
+        }
+    }
+};
+
 QB.writeData = (eventMapId, event, element) => {
     let s = eventMapId.split('.'), e = s[0], w = s[1], z = w.split('_'), context = WidgetValue, isGridTable = false, r,
-        g;
+        g, newContext;
 
     if (e === 'upload') {
         return FileUpload.uploadFile(w, eventMapId, context);
@@ -244,6 +264,8 @@ QB.writeData = (eventMapId, event, element) => {
     }
 
     r = Repository[w], g = (r || {})[e];
+
+    newContext = {...QB.getWriteContext(w, r, event, element), ...context}; //sample context implementation to avoid many parameters
 
     if (!g) {
         QB.executeEventMapAction(eventMapId + '.finished', event, element);
@@ -295,17 +317,26 @@ QB.writeData = (eventMapId, event, element) => {
     }
 
     if (g.execute) {
-        isGridTable ? g.execute(context, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2], event, element) : g.execute(context, event, element);
+        isGridTable ? g.execute(newContext, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2], event, element) : g.execute(newContext, event, element);
         QB.executeEventMapAction(eventMapId + '.finished', event, element, {});
         if (isGridTable) {
             QB.executeEventMapAction(e + '.' + w + '.finished', event, element, {});
+        }
+        if (g.callback) {
+            g.callback({
+                ...{
+                    getResponse() {
+                        return '';
+                    }, ...newContext
+                }
+            });
         }
     } else {
         if (g.download && (typeof g.download === 'function')) {
             return Server.download(g.download(context));
         }
         let c = r.cellsetId || '',
-            body = isGridTable ? g.body(context, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2], event, element) : g.body(context, event, element),
+            body = isGridTable ? g.body(newContext, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2], event, element) : g.body(newContext, event, element),
             url = isGridTable ? g.url({...r, ...{cellsetId: c}}, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
 
         if (g.server) {
@@ -317,7 +348,7 @@ QB.writeData = (eventMapId, event, element) => {
 
         let type;
         if (typeof g.type === 'function') {
-            type = isGridTable ? g.type(context, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.type(context);
+            type = isGridTable ? g.type(newContext, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.type(newContext);
         } else {
             type = g.type;
         }
@@ -328,8 +359,14 @@ QB.writeData = (eventMapId, event, element) => {
             if (isGridTable) {
                 QB.executeEventMapAction(e + '.' + w + '.finished', event, element, {});
             }
-            if(g.callback) {
-                g.callback(d, event, element);
+            if (g.callback) {
+                g.callback({
+                    ...{
+                        getResponse() {
+                            return d;
+                        }, ...newContext
+                    }
+                });
             }
         });
     }

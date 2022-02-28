@@ -203,6 +203,14 @@ class HorizontalTableWidget extends Widget {
         }
 
         Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
+        Listeners.push({
+            options: o,
+            method: 'refreshWithoutLoader',
+            eventName: 'refreshwithoutloader.' + o.id,
+            handler: h
+        });
+        Listeners.push({options: o, method: 'updateContent', eventName: 'updatecontent.' + o.id, handler: h});
+        Listeners.push({options: o, method: 'updateContentWithoutLoader', eventName: 'updatecontentwithoutloader.' + o.id, handler: h});
 
         return QB.loadData(o.id, instance.name).then(function (data) {
             let deffered = [], w, i = 0, leftRowWidgets = [], rightRowWidgets = [], buttonWidgets = [], position = 1000, processedData;

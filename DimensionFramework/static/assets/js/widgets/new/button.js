@@ -52,7 +52,7 @@ class ButtonWidget extends Widget {
         /* override divider div style */
         v.dividerWidth && dividerStyle.push('width:', v.dividerWidth, 'px;');
         iconInfo = this.getIcon(v);
-        this.value = {data: d, paste: v.paste, enabled: v.enabled};
+        this.value = {data: d, paste: v.paste, enabled: v.enabled, label: v.label};
 
         return `
 <a style="${aStyle.join('')}" ${o.confirmMessage2 ? `data-confirmmessage2="${o.confirmMessage2}" ` : ''} ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''} ${v.url ? `target="_blank" href="${v.url}" data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}" ` : `data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}"`} class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
@@ -83,7 +83,7 @@ class ButtonWidget extends Widget {
             innerDiv = section.find('.ks-button-inner'),
             iconDiv = section.find('.ks-button-icon');
         let iconInfo;
-        this.value = {data: data, paste: v.paste, enabled: v.enabled};
+        this.value = {data: data, paste: v.paste, enabled: v.enabled, label: v.label};
 
         if (v.label !== '') {
             labelDiv.html(v.label);

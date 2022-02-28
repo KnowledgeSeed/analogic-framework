@@ -221,6 +221,7 @@ class GridTableWidget extends Widget {
             handler: h
         });
         Listeners.push({options: o, method: 'updateContent', eventName: 'updatecontent.' + o.id, handler: h});
+        Listeners.push({options: o, method: 'updateContentWithoutLoader', eventName: 'updatecontentwithoutloader.' + o.id, handler: h});
         if (o.maxRows) {
             Listeners.push({options: o, method: 'renderPage', eventName: 'page.' + o.id, handler: h});
         }

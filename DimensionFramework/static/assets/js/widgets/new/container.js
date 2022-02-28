@@ -28,6 +28,10 @@ class ContainerWidget {
         this.c.refreshFinished();
     }
 
+    updateContentFinished() {
+        this.c.updateContentFinished();
+    }
+
     triggerFinishedEvent(eventType = 'init'){
         this.c.triggerFinishedEvent(eventType);
     }
@@ -53,7 +57,17 @@ class ContainerWidget {
     }
 
     addListeners() {
-
+        this.c.addListeners();
     }
+
+    updateContent(event, data = false, loadFunction = QB.loadData) {
+        return this.c.updateContent(event, data, loadFunction);
+    }
+
+    updateHtml(data){
+        return this.c.updateHtml(data);
+    }
+
+
 }
 ;

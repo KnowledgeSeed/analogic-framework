@@ -14,7 +14,7 @@ class DatePickerWidget extends Widget {
             minDate: this.getRealValue('minDate', d, false),
             monthPicker: monthPicker,
             ordinal: this.getRealValue('ordinal', d, ''),
-            panelVisible: this.getRealValue('panelVisible', d, false),
+            panelFixed: this.getRealValue('panelFixed', d, false),
             title: this.getRealValue('title', d, ''),
             titleVisible: this.getRealValue('titleVisible', d, true)
         };
@@ -24,7 +24,7 @@ class DatePickerWidget extends Widget {
         minDate = v.minDate ? DatePickerWidget.getDateFromString(v.minDate, v.monthPicker) : '',
         maxDate = v.maxDate ? DatePickerWidget.getDateFromString(v.maxDate, v.monthPicker) : '';
 
-        this.value = {value: v.datePicked, minDate: minDate, maxDate: maxDate, panelVisible: v.panelVisible};
+        this.value = {value: v.datePicked, minDate: minDate, maxDate: maxDate, panelFixed: v.panelFixed};
 
         const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
@@ -52,7 +52,7 @@ class DatePickerWidget extends Widget {
         </div>
     </div>
     ${v.editable ? 
-    `<div class="ks-datepicker-panel holder" ${v.panelVisible ? '' : 'style="display:none;'}">
+    `<div class="ks-datepicker-panel holder" ${v.panelFixed ? '' : 'style="display:none;'}">
         <div class="ks-datepicker-panel-header">
             <div class="ks-datepicker-panel-header-inner">
                 <div class="ks-datepicker-panel-pager ks-left"></div>
@@ -147,6 +147,10 @@ class DatePickerWidget extends Widget {
                     target.toggleClass('disabled', ym > maxDate);
                 }
             });
+
+            if(WidgetValue[id].panelFixed) {
+                DatePickerWidget.triggerPickEvent(id, pickerHolder, {});
+            }
         });
 
         const pickerHolder = $('#' + id + ' .ks-datepicker-panel').on('click touch', '.ks-datepicker-panel-pager', e => {
@@ -187,14 +191,14 @@ class DatePickerWidget extends Widget {
         });
 
         const catcher = Doc.not(datePicker).on('click touch', e => {
-            if (pickerHolder.is(':visible') && !WidgetValue[id].panelVisible) {
+            if (pickerHolder.is(':visible') && !WidgetValue[id].panelFixed) {
                 let element = $('<div>');
                 element.data({action: 'pick', id: id, value: $('#' + id + ' .ks-datepicker-input').val().slice(0, -1), ordinal: $('#' + id + ' .ks-datepicker').data('ordinal')});
                 Widget.doHandleSystemEvent(element, e, true);
             }
         });
 
-        if(!WidgetValue[id].panelVisible) {
+        if(!WidgetValue[id].panelFixed) {
             pickerHolder.hide();
         }
     }
@@ -203,7 +207,7 @@ class DatePickerWidget extends Widget {
         let element = $('<div>');
         element.data({action: 'pick', id: id, value: $('#' + id + ' .ks-datepicker-input').val().slice(0, -1), ordinal: $('#' + id + ' .ks-datepicker').data('ordinal')});
         Widget.doHandleSystemEvent(element, e, true);
-        if(!WidgetValue[id].panelVisible) {
+        if(!WidgetValue[id].panelFixed) {
             pickerHolder.slideUp(50);
         }
     }

@@ -431,6 +431,18 @@ const Utils = {
             }
         }
         return result;
+    },
+    openPopup(id, ctx) {
+        app.fn.openPopup(id, ctx.getEvent(), ctx.getElement());
+    },
+    togglePopup(id, ctx) {
+        app.fn.togglePopup(id, ctx.getEvent(), ctx.getElement());
+    },
+    closePopup(id, ctx) {
+        app.fn.closePopup(id, ctx.getEvent(), ctx.getElement());
+    },
+    closePopups(ids){
+        ids.forEach(id => {app.fn.closePopup(id);});
     }
 };
 

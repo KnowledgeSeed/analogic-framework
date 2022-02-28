@@ -56,6 +56,14 @@ class GridTableHeaderRowWidget extends Widget {
         }
 
         Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
+        Listeners.push({
+            options: o,
+            method: 'refreshWithoutLoader',
+            eventName: 'refreshwithoutloader.' + o.id,
+            handler: h
+        });
+        Listeners.push({options: o, method: 'updateContent', eventName: 'updatecontent.' + o.id, handler: h});
+        Listeners.push({options: o, method: 'updateContentWithoutLoader', eventName: 'updatecontentwithoutloader.' + o.id, handler: h});
 
         //rekurzív renderelés, adatbetöltéssel
 

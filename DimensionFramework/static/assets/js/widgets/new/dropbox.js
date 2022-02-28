@@ -7,26 +7,7 @@ class DropBoxWidget extends Widget {
     getHtml(widgets, d) {
         const o = this.options;
 
-        const v = {
-            backdrop: this.getRealValue('backdrop', d, false),
-            editable: this.getRealValue('editable', d, true),
-            itemIconOff: this.getRealValue('itemIconOff', d, false),
-            itemIconOn: this.getRealValue('itemIconOn', d, false),
-            hideIfNoData: this.getRealValue('hideIfNoData', d, false),
-            panelWidth: this.getRealValue('panelWidth', d, false),
-            placeHolder: this.getRealValue('placeHolder', d, ''),
-            selectFirst: this.getRealValue('selectFirst', d, false),
-            skin: this.getRealValue('skin', d, 'standard'),
-            textAlignment: this.getRealValue('textAlignment', d, false),
-            textFontColor: this.getRealValue('textFontColor', d, false),
-            textFontSize: this.getRealValue('textFontSize', d, false),
-            title: this.getRealValue('title', d, ''),
-            titleVisible: this.getRealValue('titleVisible', d, true),
-            multiSelect: this.getRealValue('multiSelect', d, false),
-            titleFontColor: this.getRealValue('titleFontColor', d, false),
-            titleFontSize: this.getRealValue('titleFontSize', d, false),
-            titleTextAlignment: this.getRealValue('titleTextAlignment', d, false)
-        };
+        const v = this.getParameters(d);
 
         let data;
 
@@ -50,7 +31,7 @@ class DropBoxWidget extends Widget {
         data.value = selectedItemsArray.map(item => item.name).join();
 
         this.state = v;
-        this.value = data;
+        this.value = data;// Todo standardize
 
         let hide = o.hideIfNoData === true && d.length === 0;
 
@@ -108,6 +89,43 @@ class DropBoxWidget extends Widget {
         }).join('');
     }
 
+    getParameters(d) {
+        return {
+            backdrop: this.getRealValue('backdrop', d, false),
+            editable: this.getRealValue('editable', d, true),
+            itemIconOff: this.getRealValue('itemIconOff', d, false),
+            itemIconOn: this.getRealValue('itemIconOn', d, false),
+            hideIfNoData: this.getRealValue('hideIfNoData', d, false),
+            panelWidth: this.getRealValue('panelWidth', d, false),
+            placeHolder: this.getRealValue('placeHolder', d, ''),
+            selectFirst: this.getRealValue('selectFirst', d, false),
+            serverSideFilter: this.getRealValue('serverSideFilter', d, false),
+            skin: this.getRealValue('skin', d, 'standard'),
+            textAlignment: this.getRealValue('textAlignment', d, false),
+            textFontColor: this.getRealValue('textFontColor', d, false),
+            textFontSize: this.getRealValue('textFontSize', d, false),
+            title: this.getRealValue('title', d, ''),
+            titleVisible: this.getRealValue('titleVisible', d, true),
+            multiSelect: this.getRealValue('multiSelect', d, false),
+            titleFontColor: this.getRealValue('titleFontColor', d, false),
+            titleFontSize: this.getRealValue('titleFontSize', d, false),
+            titleTextAlignment: this.getRealValue('titleTextAlignment', d, false)
+        };
+    }
+
+    updateHtml(data) {
+        const o = this.options, p = this.getParameters(data), section = $('#' + o.id),
+        inner = section.find('.ks-dropbox-panel-inner');
+        if (this.state.serverSideFilter) {
+           let previouslySelected = this.value.items.filter(e => e.on === true),
+           previouslySelectedName = previouslySelected.map(e => e.name);
+           this.value.items = previouslySelected.concat(data.items.filter(e => !previouslySelectedName.includes(e.name)));
+        } else {
+            this.value = data.items;
+        }
+        inner.html(this.getItems(this.value, p));
+    }
+
     initEventHandlers(section) {
         const id = section.attr('id'), w = WidgetValue[id], state = this.state;
 
@@ -123,7 +141,7 @@ class DropBoxWidget extends Widget {
             Doc.find(".ks-dropbox .ks-dropbox-panel").not(dropbox).each((i, el) => $(el).is(':visible') ? $(el).slideUp(50) : false);
 
             itemHolder.is(':visible') ? itemHolder.slideUp(50) : itemHolder.slideDown(50, function () {
-               // $(e.currentTarget).parent().get(0).scrollIntoView({behavior: "smooth", block: "start"});
+                // $(e.currentTarget).parent().get(0).scrollIntoView({behavior: "smooth", block: "start"});
             });
 
             return false;
@@ -131,10 +149,20 @@ class DropBoxWidget extends Widget {
 
         section.find('input[type="text"]').on('input', i => {
             let e = $(i.currentTarget), term = e.val(), f;
-            section.find('.ks-dropbox-panel-item').each(function () {
-                f = $(this);
-                f.toggle(-1 !== f.find('.ks-dropbox-panel-item-text').html().toLowerCase().indexOf(term.toLowerCase()));
-            });
+            if (state.serverSideFilter) {
+                let element = $('<div>').data({action: 'filter', id: section.prop('id'), value: term});
+
+                if (section.data('ordinal')) {
+                    element.data('ordinal', section.data('ordinal'));
+                }
+
+                Widget.doHandleSystemEvent(element, e);
+            } else {
+                section.find('.ks-dropbox-panel-item').each(function () {
+                    f = $(this);
+                    f.toggle(-1 !== f.find('.ks-dropbox-panel-item-text').html().toLowerCase().indexOf(term.toLowerCase()));
+                });
+            }
         });
 
         const itemHolder = $('#' + id + ' .ks-dropbox-panel')./*on('click', false).*/on('click', '.ks-dropbox-panel-item ', e => {
@@ -181,7 +209,7 @@ class DropBoxWidget extends Widget {
         let v = $.grep(w.items, (item, i) => item.on).map(item => item.name).join(', '),
             searchText = $('#' + id + ' .search-text');
 
-        searchText.attr('placeholder', v).val('');
+        (!state.serverSideFilter || !state.multiSelect )&& searchText.attr('placeholder', v).val('');
         section.find('.ks-dropbox-panel-item').show();
 
         let element = $('<div>').data({action: 'choose', id: section.prop('id'), value: WidgetValue[id].value});

@@ -17,6 +17,8 @@ Listeners.handle = ev => {
         Render.renderWidget(ev);
     } else if ('updateContent' === m) {
         Render.updateContent(ev);
+    } else if ('updateContentWithoutLoader' === m) {
+        Render.updateContent(ev, false);
     } else if ('refreshWithoutLoader' === m) {
         Render.renderWidget(ev, false, false, false, false);
     } else if ('refreshGridCell' === m) {

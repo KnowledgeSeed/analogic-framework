@@ -10,15 +10,15 @@ class Render {
         Render.renderWidget(null, El.body, widget, withState);
     }
 
-    static updateContent(event) {
-        Loader.start(true);
+    static updateContent(event, withLoader = true) {
+        withLoader && Loader.start(true);
         let widget = new event.data.options.type(event.data.options);
         widget.updateContent(event).then((r) => {
             L(event.data.options.id, 'update done', r);
             if ('rendered' !== r) {
                 widget.updateContentFinished();
             }
-            Loader.stop(true);
+            withLoader && Loader.stop(true);
         });
     }
 

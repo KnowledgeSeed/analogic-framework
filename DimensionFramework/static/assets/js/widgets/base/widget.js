@@ -107,6 +107,7 @@ class Widget {
             handler: h
         });
         Listeners.push({options: o, method: 'updateContent', eventName: 'updatecontent.' + o.id, handler: h});
+        Listeners.push({options: o, method: 'updateContentWithoutLoader', eventName: 'updatecontentwithoutloader.' + o.id, handler: h});
 
         let useDefaultDataForChildren = (o.visible === false && !refresh && o.notLoadIfHidden) || useDefaultData;
 
@@ -249,6 +250,14 @@ class Widget {
         }
 
         Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
+        Listeners.push({
+            options: o,
+            method: 'refreshWithoutLoader',
+            eventName: 'refreshwithoutloader.' + o.id,
+            handler: h
+        });
+        Listeners.push({options: o, method: 'updateContent', eventName: 'updatecontent.' + o.id, handler: h});
+        Listeners.push({options: o, method: 'updateContentWithoutLoader', eventName: 'updatecontentwithoutloader.' + o.id, handler: h});
 
         for (w of widgets) {
             w.addListeners();
