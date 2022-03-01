@@ -1,11 +1,18 @@
 /* global app, Doc, Widget, noUiSlider, Utils, v */
 
 'use strict';
-
 class SliderWidget extends Widget {
 
     getHtml(widgets, d) {
         SliderWidget.slidersByIds = SliderWidget.slidersByIds || {};
+
+        let val = this.getRealValue('value', d, [0]), i;
+
+        val = Array.isArray(val) ? val : [val];
+
+        for (i = 0; i < val.length; ++i) {
+            val[i] = Utils.parseNumber(val[i]);
+        }
 
         const v = {
             skin: this.getRealValue('skin', d, 'standard'),
@@ -14,7 +21,9 @@ class SliderWidget extends Widget {
             maxRange: parseInt(this.getRealValue('maxRange', d, 8000)),
             smallIncrement: this.getRealValue('smallIncrement', d, 1),
             largeIncrement: this.getRealValue('largeIncrement', d, 100),
-            value: Utils.parseNumber(this.getRealValue('value', d, 0)),
+            value: val,
+            connect: this.getRealValue('connect', d, [true, false]),
+            legend: this.getRealValue('legend', d),
             trackFillStartValue: this.getRealValue('trackFillStartValue', d, 0),
             ordinal: d.ordinal,
             valueDivider: this.getRealValue('valueDivider', d, 1),
@@ -119,6 +128,7 @@ class SliderWidget extends Widget {
             <div class="ks-slider-options-button ks-button-update">Update</div>
         </div>
     </div>
+    ${this.createLegendHmtml()}
 </div>`;
     }
 
@@ -145,19 +155,20 @@ class SliderWidget extends Widget {
         }
 
         const trackColor = widgetDiv.css('background-color'), trackFillStartValue = d.trackFillStartValue;
-        let trackFillColor;
+        let trackFillColor, e;
 
         const slider = noUiSlider.create(widgetDiv[0], {
             start: d.value,
-            connect: [true, false],
+            connect: d.connect,
             direction: d.direction,
             orientation: d.orientation,
-            behaviour: isTouchMode ? 'none' : 'tap',
+            behaviour: 'unconstrained-tap',
+            //behaviour: isTouchMode ? 'none' : 'tap',
             step: 1,
-            tooltips: {
+            tooltips: Array(d.value.length).fill({
                 to: v => Math.round(v) + ' ' + d.unit,
                 from: v => Math.round(v).toString().replace(' ' + d.unit, '')
-            },
+            }),
             range: {
                 min: d.minRange,
                 max: d.maxRange
@@ -167,13 +178,20 @@ class SliderWidget extends Widget {
                 from: v => Math.round(v)
             }
         });
-        if(d.disabled){
-           widgetDiv.find('.noUi-origin').attr('disabled', true);
+
+        if (d.disabled) {
+            widgetDiv.find('.noUi-origin').attr('disabled', true);
         }
 
         if (tooltipFontSize) {
             css.tooltip.top = 2 - tooltipFontSize;
             css.tooltipHover.top = '';
+        }
+
+        if ((d.legend || []).length) {
+            let handles = widgetDiv.find('.noUi-handle').each((i, h) => d.legend[i] && $(h).css({cssText: 'background-color:' + d.legend[i].color + ' !important'}));
+
+            section.on(app.clickEvent, '.ks-legend-item', e => handles.eq(e.currentTarget.dataset.id).toggle());
         }
 
         slider.css = css;
@@ -202,7 +220,7 @@ class SliderWidget extends Widget {
 
                 if (updateableInput && !d.changedByInput) {
                     if (d.updateableWidgetValueHandler) {
-                        v = d.originalValue !== false ? d.originalValue : d.updateableWidgetValueHandler(positions[0]);
+                        v = d.updateableWidgetValueHandler(positions[0]);
                     } else {
                         v = (d.originalValue !== false ? d.originalValue : positions[0]) + ' ' + d.unit;
                     }
@@ -210,7 +228,7 @@ class SliderWidget extends Widget {
                     updateableInput.val(Utils.replaceDecimal(v));
                 }
 
-                if(d.updateCallBack) {
+                if (d.updateCallBack) {
                     d.updateCallBack(positions[0], id);
                 }
 
@@ -225,7 +243,9 @@ class SliderWidget extends Widget {
         slider.on('set', e => {
             const val = slider.get();
             let ss = $('#' + id).data({action: 'slide', id: id, ordinal: ordinal, value: val});
+
             Widget.doHandleSystemEvent(ss, e, true);
+
             if (this.amIOnAGridTable()) {
                 Widget.doHandleGridTableSystemEvent(ss, e);
             }
@@ -258,6 +278,22 @@ class SliderWidget extends Widget {
                 noUiConnect.css('background', trackColor);
             }
         }
+    }
+
+    createLegendHmtml() {
+        let v = this.value, h = '<div class="ks-legend"><div class="ks-legend-inner">', d, i = -1;
+
+        if (!(v.legend || []).length) {
+            return '';
+        }
+
+        for (d of v.legend) {
+            h += '<div data-id="' + (++i) + '" style="background-color:' + d.color + ';" class="ks-legend-item"><div class="ks-legend-item-inner"><div style="color: #000;" class="ks-legend-icon"></div><div style="color: #000;" class="ks-legend-label">' + d.name + '</div></div></div>';
+        }
+
+        h += '</div></div>';
+
+        return h;
     }
 
     static initSliderDocEvents(widgetValue, section) {
@@ -364,23 +400,22 @@ class SliderWidget extends Widget {
             } else if (27 === e.which) {
                 p.find('.ks-button-cancel').trigger('click');
             }
-        });
+        }),
+            function openPopup(sliderDiv) {
+                const popup = sliderDiv.find('.ks-slider-options');
 
-        function openPopup(sliderDiv) {
-            const popup = sliderDiv.find('.ks-slider-options');
+                if (isTouchMode) {
+                    sliderDiv.find('.ks-slider-touch').hide();
+                }
 
-            if (isTouchMode) {
-                sliderDiv.find('.ks-slider-touch').hide();
+                SliderWidget.disableSlider(sliderDiv.addClass('Highlighted'));
+
+                const e = popup.find('input').val(SliderWidget.getSlider(sliderDiv).get());
+
+                popup.show().promise().done(() => e.focus());
+
+                Utils.backdrop.show();
             }
-
-            SliderWidget.disableSlider(sliderDiv.addClass('Highlighted'));
-
-            const e = popup.find('input').val(SliderWidget.getSlider(sliderDiv).get());
-
-            popup.show().promise().done(() => e.focus());
-
-            Utils.backdrop.show();
-        }
     }
 
     createRuler(sliderDiv, minRange, maxRange) {

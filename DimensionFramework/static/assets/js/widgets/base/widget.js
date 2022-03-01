@@ -486,14 +486,12 @@ class Widget {
             marginBottom = this.getRealValue('marginBottom', data, defaults.marginBottom, dataPrefix),
             marginLeft = this.getRealValue('marginLeft', data, defaults.marginLeft, dataPrefix),
             marginRight = this.getRealValue('marginRight', data, defaults.marginRight, dataPrefix),
-            marginTop = this.getRealValue('marginTop', data, defaults.marginTop, dataPrefix),
-            height = this.getRealValue('height', data, defaults.height, dataPrefix);
+            marginTop = this.getRealValue('marginTop', data, defaults.marginTop, dataPrefix);
 
         marginTop && s.push('margin-top:', marginTop, marginTop !== 'auto' && !isNaN(marginTop) ? 'px;' : ';');
         marginLeft && s.push('margin-left:', marginLeft, marginLeft !== 'auto' && !isNaN(marginLeft) ? 'px;' : ';');
         marginRight && s.push('margin-right:', marginRight, marginRight !== 'auto' && !isNaN(marginRight) ? 'px;' : ';');
         marginBottom && s.push('margin-bottom:', marginBottom, marginBottom !== 'auto' && !isNaN(marginBottom) ? 'px;' : ';');
-        height && s.push('height:', height, isNaN(height) ? ';' : 'px;');
 
         return s;
     }
