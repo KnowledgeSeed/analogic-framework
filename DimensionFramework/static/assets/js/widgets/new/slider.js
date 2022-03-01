@@ -22,7 +22,6 @@ class SliderWidget extends Widget {
             smallIncrement: this.getRealValue('smallIncrement', d, 1),
             largeIncrement: this.getRealValue('largeIncrement', d, 100),
             value: val,
-            connect: this.getRealValue('connect', d, [true, false]),
             legend: this.getRealValue('legend', d),
             trackFillStartValue: this.getRealValue('trackFillStartValue', d, 0),
             ordinal: d.ordinal,
@@ -155,11 +154,11 @@ class SliderWidget extends Widget {
         }
 
         const trackColor = widgetDiv.css('background-color'), trackFillStartValue = d.trackFillStartValue;
-        let trackFillColor, e;
+        let trackFillColor;
 
         const slider = noUiSlider.create(widgetDiv[0], {
             start: d.value,
-            connect: d.connect,
+            connect: 1 === d.value.length ? [true, false] : false,
             direction: d.direction,
             orientation: d.orientation,
             behaviour: 'unconstrained-tap',
@@ -400,22 +399,23 @@ class SliderWidget extends Widget {
             } else if (27 === e.which) {
                 p.find('.ks-button-cancel').trigger('click');
             }
-        }),
-            function openPopup(sliderDiv) {
-                const popup = sliderDiv.find('.ks-slider-options');
+        });
 
-                if (isTouchMode) {
-                    sliderDiv.find('.ks-slider-touch').hide();
-                }
+        function openPopup(sliderDiv) {
+            const popup = sliderDiv.find('.ks-slider-options');
 
-                SliderWidget.disableSlider(sliderDiv.addClass('Highlighted'));
-
-                const e = popup.find('input').val(SliderWidget.getSlider(sliderDiv).get());
-
-                popup.show().promise().done(() => e.focus());
-
-                Utils.backdrop.show();
+            if (isTouchMode) {
+                sliderDiv.find('.ks-slider-touch').hide();
             }
+
+            SliderWidget.disableSlider(sliderDiv.addClass('Highlighted'));
+
+            const e = popup.find('input').val(SliderWidget.getSlider(sliderDiv).get());
+
+            popup.show().promise().done(() => e.focus());
+
+            Utils.backdrop.show();
+        }
     }
 
     createRuler(sliderDiv, minRange, maxRange) {
