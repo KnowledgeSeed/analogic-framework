@@ -352,8 +352,9 @@ QB.writeData = (eventMapId, event, element) => {
         } else {
             type = g.type;
         }
-
+        Loader.start(true);
         Auth.getTm1AjaxRequest(app.tm1ApiHost + url, body, type, w).then((d) => {
+            Loader.stop(true);
             L('finished after ajax');
             QB.executeEventMapAction(eventMapId + '.finished', event, element, d);
             if (isGridTable) {
