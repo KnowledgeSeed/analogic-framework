@@ -9,6 +9,7 @@ class DatePickerWidget extends Widget {
         const v = {
             datePicked: this.getRealValue('datePicked', d, DatePickerWidget.getStandardizedDateString(new Date(), monthPicker)),
             editable: this.getRealValue('editable', d, true),
+            local: this.getRealValue('local', d, false),
             skin: this.getRealValue('skin', d, 'standard'),
             maxDate: this.getRealValue('maxDate', d, false),
             minDate: this.getRealValue('minDate', d, false),
@@ -20,11 +21,11 @@ class DatePickerWidget extends Widget {
         };
 
         let date = DatePickerWidget.getDateFromString(v.datePicked, v.monthPicker),
-        dateText = DatePickerWidget.getFormattedDateString(date, v.monthPicker),
+        dateText = DatePickerWidget.getFormattedDateString(date, v.monthPicker, v.local),
         minDate = v.minDate ? DatePickerWidget.getDateFromString(v.minDate, v.monthPicker) : '',
         maxDate = v.maxDate ? DatePickerWidget.getDateFromString(v.maxDate, v.monthPicker) : '';
 
-        this.value = {value: v.datePicked, minDate: minDate, maxDate: maxDate, panelFixed: v.panelFixed};
+        this.value = {value: v.datePicked, minDate: minDate, maxDate: maxDate, panelFixed: v.panelFixed, local: v.local};
 
         const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
@@ -118,14 +119,14 @@ class DatePickerWidget extends Widget {
             if (minDateStr && DatePickerWidget.isValidDateString(minDateStr, m)) {
                 if (date < minDate) {
                     date = minDate;
-                    dateInput.val(DatePickerWidget.getFormattedDateString(date, m));
+                    dateInput.val(DatePickerWidget.getFormattedDateString(date, m, WidgetValue[id].local));
                 }
             }
 
             if (maxDateStr && DatePickerWidget.isValidDateString(maxDateStr, m)) {
                 if (date > maxDate) {
                     date = maxDate;
-                    dateInput.val(DatePickerWidget.getFormattedDateString(date, m));
+                    dateInput.val(DatePickerWidget.getFormattedDateString(date, m, WidgetValue[id].local));
                 }
             }
 
@@ -167,7 +168,7 @@ class DatePickerWidget extends Widget {
             date.setDate(target.data('day'));
         }).on('click touch', e => {
             e.stopPropagation();
-            $('#' + id + ' .ks-datepicker-input').val(DatePickerWidget.getFormattedDateString(date, datePicker.data('monthpicker')));
+            $('#' + id + ' .ks-datepicker-input').val(DatePickerWidget.getFormattedDateString(date, datePicker.data('monthpicker'), WidgetValue[id].local));
             datePicker.trigger('dateChange.' + id, [date]);
         });
 
@@ -180,7 +181,7 @@ class DatePickerWidget extends Widget {
             datePicker.trigger('dateChange.' + id, [date]);
         }).on('focusout', e => {
             let date = DatePickerWidget.getDateFromString($(e.currentTarget).val(), $(e.currentTarget).data('monthpicker'));
-            $('#' + id + ' .ks-datepicker-input').val(DatePickerWidget.getFormattedDateString(date, datePicker.data('monthpicker')));
+            $('#' + id + ' .ks-datepicker-input').val(DatePickerWidget.getFormattedDateString(date, datePicker.data('monthpicker'), WidgetValue[id].local));
         }).on('keypress', e => {
             if (e.which === 13) {
                 $(e.currentTarget).blur();
@@ -195,6 +196,7 @@ class DatePickerWidget extends Widget {
                 let element = $('<div>');
                 element.data({action: 'pick', id: id, value: $('#' + id + ' .ks-datepicker-input').val().slice(0, -1), ordinal: $('#' + id + ' .ks-datepicker').data('ordinal')});
                 Widget.doHandleSystemEvent(element, e, true);
+                pickerHolder.slideUp(50);
             }
         });
 
@@ -264,11 +266,11 @@ class DatePickerWidget extends Widget {
         return daysOnPane;
     }
 
-    static getFormattedDateString(date, isMonthPicker = false) {
+    static getFormattedDateString(date, isMonthPicker = false, local = false) {
         if (isMonthPicker) {
-            return date.toLocaleDateString('hu-HU', {year: 'numeric', month: '2-digit'});  // hu-HU: yyyy. mm.
+            return date.toLocaleDateString(local ? local : 'hu-HU', {year: 'numeric', month: '2-digit'});  // hu-HU: yyyy. mm.
         } else {
-            return date.toLocaleDateString('hu', {year: 'numeric', month: '2-digit', day: '2-digit'});  // hu-HU: yyyy. mm. dd.
+            return date.toLocaleDateString(local ? local.substring(0,2) : 'hu', {year: 'numeric', month: '2-digit', day: '2-digit'});  // hu-HU: yyyy. mm. dd.
     }
     }
 
