@@ -534,3 +534,7 @@ app.fn.updateContentWithoutLoader = function updateContentWithoutLoader(widgetId
 app.fn.updateWidgetsContent = function updateWidgetsContent(widgetIds) {
     widgetIds.forEach(widgetId => El.body.triggerHandler('updatecontent.' + widgetId));
 };
+
+app.fn.updateWidgetsContentWithoutLoader = function updateWidgetsContentWithoutLoader(widgetIds) {
+    widgetIds.forEach(widgetId => El.body.triggerHandler('updatecontentwithoutloader.' + widgetId));
+};

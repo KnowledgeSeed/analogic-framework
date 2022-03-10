@@ -13,7 +13,7 @@ const Loader = ($ => {
 
             if (!e.is(':visible')) {
                 if (incAjaxCallNum) {
-                    timeoutId = setTimeout(() => e.show(), 600);
+                    timeoutId = setTimeout(() => e.show(), 1000);
                 } else {
                     e.show();
                 }

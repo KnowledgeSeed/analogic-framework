@@ -24,7 +24,7 @@ class Widget {
         return widgetOptions;
     }
 
-    isContentUpdatable(){
+    isContentUpdatable() {
         return true;
     }
 
@@ -107,7 +107,12 @@ class Widget {
             handler: h
         });
         Listeners.push({options: o, method: 'updateContent', eventName: 'updatecontent.' + o.id, handler: h});
-        Listeners.push({options: o, method: 'updateContentWithoutLoader', eventName: 'updatecontentwithoutloader.' + o.id, handler: h});
+        Listeners.push({
+            options: o,
+            method: 'updateContentWithoutLoader',
+            eventName: 'updatecontentwithoutloader.' + o.id,
+            handler: h
+        });
 
         let useDefaultDataForChildren = (o.visible === false && !refresh && o.notLoadIfHidden) || useDefaultData;
 
@@ -132,7 +137,7 @@ class Widget {
             });
         };
 
-        if(previouslyLoadedData !== false){
+        if (previouslyLoadedData !== false) {
             return afterLoad(previouslyLoadedData);
         }
 
@@ -257,7 +262,12 @@ class Widget {
             handler: h
         });
         Listeners.push({options: o, method: 'updateContent', eventName: 'updatecontent.' + o.id, handler: h});
-        Listeners.push({options: o, method: 'updateContentWithoutLoader', eventName: 'updatecontentwithoutloader.' + o.id, handler: h});
+        Listeners.push({
+            options: o,
+            method: 'updateContentWithoutLoader',
+            eventName: 'updatecontentwithoutloader.' + o.id,
+            handler: h
+        });
 
         for (w of widgets) {
             w.addListeners();
@@ -298,7 +308,7 @@ class Widget {
                 a.action(a.argument, {}, {});
             }
         }
-        if(Repository[o.id] && Repository[o.id][eventType + 'Finished']){
+        if (Repository[o.id] && Repository[o.id][eventType + 'Finished']) {
             Repository[o.id][eventType + 'Finished']();
         }
     }
@@ -447,6 +457,22 @@ class Widget {
         return defaultVal;
     }
 
+    getHtmlComponentStylesArray(key, data = {}) {
+        let stylesObj = this.getHtmlComponentStyles(key, data), styles = [];
+        for (const [key, value] of Object.entries(stylesObj)) {
+            styles.push(`${key.replaceAll('_', '-')}:${value};`);
+        }
+        return styles;
+    }
+
+    getHtmlComponentStylesString(key, data = {}) {
+        return this.getHtmlComponentStylesArray(key, data).join('');
+    }
+
+    getHtmlComponentStyles(key, data = {}) {
+        return this.getRealValue(key + 'Style', data, {});
+    }
+
     getGeneralStyles(data = {}, defaults = {}, dataPrefix = '') {
         return [...this.getWidthAndHeight(data, defaults, dataPrefix), ...this.getPaddings(data, defaults, dataPrefix), ...this.getMargins(data, defaults, dataPrefix)];
     }
@@ -525,14 +551,15 @@ class Widget {
         return s;
     }
 
-    static getPercentOrPixel(value){
+    static getPercentOrPixel(value) {
         return isNaN(value) ? value : value + 'px';
     }
 
     static setSkin(element, skinPrefix, newSkin) {
-        if(!element.hasClass(skinPrefix + newSkin)) {
-            if(element.attr('class')) {
-                let result, classWithoutSkin, originalClass = element.attr('class'), s = originalClass.indexOf(skinPrefix);
+        if (!element.hasClass(skinPrefix + newSkin)) {
+            if (element.attr('class')) {
+                let result, classWithoutSkin, originalClass = element.attr('class'),
+                    s = originalClass.indexOf(skinPrefix);
                 classWithoutSkin = s !== -1 ? originalClass.substring(0, s - 1) : originalClass;
                 result = classWithoutSkin.split(' ');
                 result.push(skinPrefix + newSkin);

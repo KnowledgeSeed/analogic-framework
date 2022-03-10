@@ -85,6 +85,8 @@ class ButtonWidget extends Widget {
         let iconInfo;
         this.value = {data: data, paste: v.paste, enabled: v.enabled, label: v.label};
 
+        v.visible ? section.show() : section.hide();
+
         if (v.label !== '') {
             labelDiv.html(v.label);
             !main.hasClass('has-label') && main.addClass('has-label');
@@ -132,7 +134,8 @@ class ButtonWidget extends Widget {
             label: this.getRealValue('label', d, ''),
             paste: this.getRealValue('paste', d, false),
             skin: this.getRealValue('skin', d, 'standard'),
-            url: this.getRealValue('url', d, false)
+            url: this.getRealValue('url', d, false),
+            visible: this.getRealValue('visible', d, true)
         };
     }
 

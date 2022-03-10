@@ -1,4 +1,4 @@
-/* global app, El, EventMap, Loader, Auth, FileUpload, Repository, Server, Utils, WidgetValue, Pivot */
+/* global app, El, EventMap, Loader, Auth, FileUpload, Repository, Server, Utils, WidgetValue, Pivot, RestRequest */
 
 'use strict';
 const QB = {};
@@ -8,15 +8,16 @@ QB.loadData = (argument, type, useDefaultData = false, path = 'init', extraParam
         return Auth.loadDefault(type);
     }
 
-    let conditionPath = path + 'Condition', defaultPath = path + 'Default', r = Repository[argument];
+    let conditionPath = path + 'Condition', defaultPath = path + 'Default', r = Repository[argument], newContext;
     if (r && r.reference) {
         r = Repository[r.reference];
     }
+    newContext = QB.getExecuteContext(argument, r, extraParams);
 
     if (r && r[path]) {
-        if (r[conditionPath] && !r[conditionPath](WidgetValue, argument)) {
+        if (r[conditionPath] && !r[conditionPath](newContext, argument)) {
             if (r[defaultPath]) {
-                return QB.loadFromWidgetValue(r[defaultPath], argument);
+                return QB.loadFromWidgetValue(r[defaultPath], argument, {}, newContext);
             }
 
             return Auth.loadDefault(type);
@@ -33,7 +34,7 @@ QB.loadData = (argument, type, useDefaultData = false, path = 'init', extraParam
         return QB.executeMDX(argument, path, extraParams);
     }
 
-    if (r && r.state) {
+    if (r && r.state) { //Todo remove, backward compatibility
         if (r[conditionPath] && !r[conditionPath](WidgetValue)) {
             if (r[defaultPath]) {
                 return QB.loadFromWidgetValue(r[defaultPath], argument);
@@ -56,12 +57,8 @@ QB.refreshGridCellData = (argument, type) => {
     return QB.loadData(t[0], type, false, 'refresh_col_' + t[2], {row: t[1], col: t[2]});
 };
 
-QB.loadFromWidgetValue = (arg, repositoryId, extraParams = {}) => {
-    if (arg.execute) {
-        return $.Deferred().resolve(arg.execute(WidgetValue, repositoryId, extraParams, Repository[repositoryId]));
-    }
-
-    return $.Deferred().resolve(arg(WidgetValue, repositoryId));//TODO remove, back compatibility
+QB.loadFromWidgetValue = (arg, repositoryId, extraParams = {}, newContext = false) => {
+    return $.Deferred().resolve(arg(newContext ? newContext : WidgetValue, repositoryId));//TODO keep newContext argument if possible
 };
 
 QB.loadFromWidgetValues = (arg, repositoryId) => {
@@ -87,7 +84,7 @@ QB.getUserData = () => {
     });
 };
 
-QB.executeMDXs = (repositoryId, path) => {
+QB.executeMDXs = (repositoryId, path) => {//Todo implement new context
     let p, deffered = [], u, isQuery = [], body, c = 1, mm, callExecute = true;
 
     for (p of Repository[repositoryId][path]) {
@@ -177,22 +174,48 @@ QB.parsingControlFinished = (repositoryId) => {
     }
 };
 
+QB.getExecuteContext = (id, repositoryObject, extraParams, loaderFunction = false) => {
+    let o = {
+        getId() {
+            return id;
+        },
+        getObject() {
+            return repositoryObject;
+        },
+        getExtraParams() {
+            return extraParams;
+        },
+        getLoaderFunction() {
+            return loaderFunction;
+        }
+    };
+    return {...o, ...WidgetValue}
+};
+
 QB.executeMDX = (repositoryId, path, extraParams = {}) => {
-    let r = Repository[repositoryId], p = r[path], parsingControlResult;
+    let r = Repository[repositoryId], p = r[path], parsingControlResult, newContext, calculatedRepositoryId = repositoryId;
 
     if (r.reference) {
+        calculatedRepositoryId = r.reference;
         r = Repository[r.reference];
         p = r[path];
     }
 
-    if (p && p.execute) {
-        parsingControlResult = QB.loadFromWidgetValue(p, repositoryId, extraParams);
-        QB.parsingControlFinished(repositoryId);
-        return parsingControlResult;
+    newContext = QB.getExecuteContext(repositoryId, r, extraParams, p);
+
+    if (p && (p.execute || (typeof p === 'function'))) {
+        parsingControlResult = typeof p === 'function' ?
+            Repository[calculatedRepositoryId][path](newContext, repositoryId, extraParams, Repository[repositoryId]) : // Todo remove parameters except newContext if possible
+            p.execute(newContext, repositoryId, extraParams, Repository[repositoryId]); // Todo remove parameters except newContext if possible
+        if (!(parsingControlResult instanceof RestRequest)) {
+            QB.parsingControlFinished(newContext);
+            return $.Deferred().resolve(parsingControlResult);
+        }
+        p = parsingControlResult.getDescription();
     }
 
 
-    let u = QB.getUrl(p), body = p.body(WidgetValue, repositoryId, r);
+    let u = QB.getUrl(p), body = p.body(newContext, repositoryId, r); // Todo remove parameters except newContext if possible
 
     if (p.server) {//Todo ref!
         let mm = QB.getServerSideUrlAndBody(u.url, body, repositoryId, path);
@@ -202,33 +225,33 @@ QB.executeMDX = (repositoryId, path, extraParams = {}) => {
     return Auth.getTm1AjaxRequest(u.url, body, u.type, repositoryId).then((data) => {
         //save cellsetid
         r.cellsetId = data.ID;
-        let t = (typeof p.parsingControl === 'function') ? p.parsingControl(WidgetValue, repositoryId, r) : p.parsingControl;
+        let t = (typeof p.parsingControl === 'function') ? p.parsingControl(newContext, repositoryId, r) : p.parsingControl; // Todo remove parameters except newContext if possible
 
         if (t) {
             if (t.type === 'matrix') {
-                parsingControlResult = QB.processResult(t, data);
+                parsingControlResult = QB.processResult(t, data, newContext);
             } else if (t.type === 'list') {
-                parsingControlResult = QB.processResultAsList(t, data);
+                parsingControlResult = QB.processResultAsList(t, data, newContext);
             } else if (t.type === 'script') {
-                parsingControlResult = t.script(data, repositoryId, r);
+                parsingControlResult = t.script(data, repositoryId, r, newContext); // Todo remove parameters except newContext and data if possible
             } else {
-                parsingControlResult = QB.processResultAsObject(t.query, data);
+                parsingControlResult = QB.processResultAsObject(t.query, data, newContext);
             }
-            QB.parsingControlFinished(repositoryId);
+            QB.parsingControlFinished(newContext);
             return parsingControlResult;
         }
-        QB.parsingControlFinished(repositoryId);
+        QB.parsingControlFinished(newContext);
         return data;
     });
 };
 
-QB.getWriteContext = (id, repositoryOjbect, event, element) => {
+QB.getWriteContext = (id, repositoryObject, event, element, gridTableInfo) => {
     return {
         getId() {
             return id;
         },
         getObject() {
-            return repositoryOjbect;
+            return repositoryObject;
         },
         getEvent() {
             return event;
@@ -238,13 +261,39 @@ QB.getWriteContext = (id, repositoryOjbect, event, element) => {
         },
         getWidgetValue(property = false) {
             return v(this.getId() + (property ? '.' + property : ''));
+        },
+        getCell(){
+          return gridTableInfo.getCell();
+        },
+        getRow(){
+            return gridTableInfo.getRow();
+        },
+        getColumn(){
+            return gridTableInfo.getColumn();
+        },
+        getGridTableInfo(){
+            return gridTableInfo;
         }
     }
 };
 
+QB.getGridTableInfo = (cell, row, column) => {
+    return {
+        getCell(){
+          return cell;
+        },
+        getRow(){
+            return row;
+        },
+        getColumn(){
+            return column;
+        },
+    } ;
+};
+
 QB.writeData = (eventMapId, event, element) => {
     let s = eventMapId.split('.'), e = s[0], w = s[1], z = w.split('_'), context = WidgetValue, isGridTable = false, r,
-        g, newContext;
+        g, newContext, gridTableCell, gridTableInfo = QB.getGridTableInfo({}, false, false);
 
     if (e === 'upload') {
         return FileUpload.uploadFile(w, eventMapId, context);
@@ -259,13 +308,17 @@ QB.writeData = (eventMapId, event, element) => {
 
         context[z[0]] = {...r, ...{row: z[1], column: z[2]}, ...context[w]};
 
+        gridTableCell = v(z[0] + '.cellData')[z[1]][z[2]];
+
+        gridTableInfo = QB.getGridTableInfo(gridTableCell, parseInt(z[1]), parseInt(z[2]));
+
         w = z.length > 3 ? z[3] : z[0];
         isGridTable = true;
     }
 
     r = Repository[w], g = (r || {})[e];
 
-    newContext = {...QB.getWriteContext(w, r, event, element), ...context}; //sample context implementation to avoid many parameters
+    newContext = {...QB.getWriteContext(w, r, event, element, gridTableInfo), ...context}; //sample context implementation to avoid many parameters
 
     if (!g) {
         QB.executeEventMapAction(eventMapId + '.finished', event, element);
@@ -278,7 +331,7 @@ QB.writeData = (eventMapId, event, element) => {
 
 
     if (g.validation) {
-        let r = isGridTable ? g.validation(WidgetValue, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.validation(WidgetValue);
+        let r = isGridTable ? g.validation(newContext, gridTableCell, v(w + '.' + e), z[1], z[2]) : g.validation(newContext);
 
         if (!r.success) {
             if (r.widget) {
@@ -317,7 +370,7 @@ QB.writeData = (eventMapId, event, element) => {
     }
 
     if (g.execute) {
-        isGridTable ? g.execute(newContext, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2], event, element) : g.execute(newContext, event, element);
+        isGridTable ? g.execute(newContext, gridTableCell, v(w + '.' + e), z[1], z[2], event, element) : g.execute(newContext, event, element);
         QB.executeEventMapAction(eventMapId + '.finished', event, element, {});
         if (isGridTable) {
             QB.executeEventMapAction(e + '.' + w + '.finished', event, element, {});
@@ -336,8 +389,8 @@ QB.writeData = (eventMapId, event, element) => {
             return Server.download(g.download(context));
         }
         let c = r.cellsetId || '',
-            body = isGridTable ? g.body(newContext, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2], event, element) : g.body(newContext, event, element),
-            url = isGridTable ? g.url({...r, ...{cellsetId: c}}, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
+            body = isGridTable ? g.body(newContext, gridTableCell, v(w + '.' + e), z[1], z[2], event, element) : g.body(newContext, event, element),
+            url = isGridTable ? g.url({...r, ...{cellsetId: c}}, gridTableCell, v(w + '.' + e), z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
 
         if (g.server) {
 
@@ -348,7 +401,7 @@ QB.writeData = (eventMapId, event, element) => {
 
         let type;
         if (typeof g.type === 'function') {
-            type = isGridTable ? g.type(newContext, v(z[0] + '.cellData')[z[1]][z[2]], v(w + '.' + e), z[1], z[2]) : g.type(newContext);
+            type = isGridTable ? g.type(newContext, gridTableCell, v(w + '.' + e), z[1], z[2]) : g.type(newContext);
         } else {
             type = g.type;
         }
@@ -428,28 +481,28 @@ QB.getMDXUrl = p => {
     return {url: app.defaultMDXQuery, type: p.type ? p.type : 'POST'};
 };
 
-QB.processResultAsObject = (valueQueries, data) => {
+QB.processResultAsObject = (valueQueries, data, newContext = false) => {
     let result = {}, r, i = 0;
 
     for (r in valueQueries) {
-        result[r] = valueQueries[r](data, i, WidgetValue);
+        result[r] = valueQueries[r](data, i, newContext ? newContext : WidgetValue); //Todo keep just newContext if possible
     }
 
     return result;
 };
 
-QB.processResultAsList = (valueQueries, data) => {
+QB.processResultAsList = (valueQueries, data, newContext = {}) => {
     let i, result = [],
         k = data.count ? data.count : data.Cells ? data.Cells.length : data.value ? data.value.length : 0;
 
     for (i = 0; i < k; ++i) {
-        result[i] = valueQueries.query(data, i);
+        result[i] = valueQueries.query(data, i, newContext);
     }
 
     return result;
 };
 
-QB.processResult = (valueQueries, data) => {
+QB.processResult = (valueQueries, data, newContext = {}) => {
     let i = 0, v, row = [], result = [],
         k = data.count ? data.count : data.Cells ? data.Cells.length : data.value ? data.value.length : 0,
         q = valueQueries.length;
@@ -464,7 +517,7 @@ QB.processResult = (valueQueries, data) => {
     while (i < k) {
         row = [];
         for (v of valueQueries.query) {
-            row.push(v(data, i));
+            row.push(v(data, i, newContext));
         }
         i = i + valueQueries.length;
         result.push(row);

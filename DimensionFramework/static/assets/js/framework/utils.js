@@ -205,6 +205,16 @@ const Utils = {
         }
         return property !== '' ? a[rowIndex][columnIndex][property] : a[rowIndex][columnIndex];
     },
+    getCheckedGridTableCellByRowAndColumn(widgetId, rowIndex, columnIndex, property = '') {
+        let a = v(widgetId + '.cellData');
+        if (a === false || a.length <= parseInt(rowIndex) || a[rowIndex].length < parseInt(columnIndex)) {
+            return false;
+        }
+        if (property !== '' && v(property, a[rowIndex][columnIndex]) === false) {
+            return false;
+        }
+        return property !== '' ? a[rowIndex][columnIndex][property] : a[rowIndex][columnIndex];
+    },
     setAndGetGridTableSystemValueByCurrentRow(widgetId, columnIndex, systemValue, cellProperty) {
         let c = Utils.getGridTableCell(widgetId, columnIndex);
         if (c !== false) {
@@ -441,8 +451,10 @@ const Utils = {
     closePopup(id, ctx) {
         app.fn.closePopup(id, ctx.getEvent(), ctx.getElement());
     },
-    closePopups(ids){
-        ids.forEach(id => {app.fn.closePopup(id);});
+    closePopups(ids) {
+        ids.forEach(id => {
+            app.fn.closePopup(id);
+        });
     }
 };
 

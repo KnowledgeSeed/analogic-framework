@@ -11,7 +11,7 @@ class TextWidget extends Widget {
 
         let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], bodyStyles = [],
             innerStyles = [],
-            iconStyles = [];
+            iconStyles = this.getHtmlComponentStylesArray('icon', d);
 
         (v.title !== false || v.editable) && mainDivClass.push('has-title');
         v.body && mainDivClass.push('has-body');
@@ -58,6 +58,12 @@ class TextWidget extends Widget {
             inner = section.find('.ks-text-inner');
         this.value = {value: v.title, editable: v.editable, performable: v.performable};
 
+        //section
+        if(v.applyMeasuresToSection){
+            Widget.setOrRemoveStyle(section, 'width', v.width ? Widget.getPercentOrPixel(v.width) : false);
+            Widget.setOrRemoveStyle(section, 'height',  v.height ? Widget.getPercentOrPixel(v.height) : false);
+        }
+
         //main
         if (v.backgroundColor !== false) {
             mainDiv.css('background-color', v.backgroundColor);
@@ -65,6 +71,9 @@ class TextWidget extends Widget {
         if (v.skin) {
             Widget.setSkin(mainDiv, 'ks-text-', v.skin);
         }
+        Widget.setOrRemoveStyle(mainDiv, 'width', v.width ? Widget.getPercentOrPixel(v.width) : false);
+        Widget.setOrRemoveStyle(mainDiv, 'height',  v.height ? Widget.getPercentOrPixel(v.height) : false);
+        Widget.setOrRemoveStyle(mainDiv, 'margin-top',  v.marginTop ? Widget.getPercentOrPixel(v.marginTop) : false);
 
         //inner
         Widget.setOrRemoveStyle(inner, 'cursor', v.innerCursor);
@@ -96,6 +105,7 @@ class TextWidget extends Widget {
 
     getParameters(d) {
         return {
+            applyMeasuresToSection: this.getRealValue('applyMeasuresToSection', d, false),
             backgroundColor: this.getRealValue('backgroundColor', d, false),
             body: this.getRealValue('body', d, false),
             bodyBackgroundColor: this.getRealValue('bodyBackgroundColor', d, false),
@@ -105,6 +115,7 @@ class TextWidget extends Widget {
             bodyFontWeight: this.getRealValue('bodyFontWeight', d, false),
             bodyAlignment: this.getRealValue('bodyAlignment', d, false),
             editable: this.getRealValue('editable', d, false),
+            height: this.getRealValue('height', d, false),
             icon: this.getRealValue('icon', d, false),
             iconColor: this.getRealValue('iconColor', d, false),
             iconCustomEventName: this.getRealValue('iconCustomEventName', d, false),
@@ -114,6 +125,7 @@ class TextWidget extends Widget {
             innerHeight: this.getRealValue('innerHeight', d, false),
             innerWidth: this.getRealValue('innerWidth', d, false),
             innerCursor: this.getRealValue('innerCursor', d, false),
+            marginTop: this.getRealValue('marginTop', d, false),
             performable: this.getRealValue('performable', d, false),
             skin: this.getRealValue('skin', d, 'template1'),
             title: this.getRealValue('title', d, false),
@@ -123,6 +135,7 @@ class TextWidget extends Widget {
             titleFontSize: this.getRealValue('titleFontSize', d, false),
             titleFontWeight: this.getRealValue('titleFontWeight', d, false),
             titleAlignment: this.getRealValue('titleAlignment', d, false),
+            width: this.getRealValue('width', d, false),
             ordinal: typeof d.ordinal !== 'undefined' ? d.ordinal : ''
         };
     }

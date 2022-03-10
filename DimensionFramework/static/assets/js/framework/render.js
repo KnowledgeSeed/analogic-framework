@@ -14,7 +14,7 @@ class Render {
         withLoader && Loader.start(true);
         let widget = new event.data.options.type(event.data.options);
         widget.updateContent(event).then((r) => {
-            L(event.data.options.id, 'update done', r);
+           // L(event.data.options.id, 'update done', r);
             if ('rendered' !== r) {
                 widget.updateContentFinished();
             }
@@ -24,7 +24,9 @@ class Render {
 
     static renderWidget(event, holder, widget, withState = false, withLoader = true, previouslyLoadedData = false) {
 
-        if (withLoader) {
+        const isPageRender = holder === El.body;
+
+        if (withLoader && !isPageRender) {
             Loader.start(true);
         }
 
@@ -42,6 +44,7 @@ class Render {
             holderHeight = holder.actual('height');
         }
         holder.empty().off().promise().then(() => {
+            isPageRender && Loader.start(true);
             widget.render(withState, refresh, false, QB.loadData, previouslyLoadedData).then(html => {
                 let isHeightUpdated = false, h = $(html), i;
 

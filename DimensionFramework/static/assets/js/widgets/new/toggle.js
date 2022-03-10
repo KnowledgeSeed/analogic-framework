@@ -7,26 +7,12 @@ class ToggleWidget extends Widget {
     getHtml(widgets, d) {
         const o = this.options;
 
-        const v = {
-            backgroundColor: this.getRealValue('backgroundColor', d, false),
-            isGridTableHierarchyExpander: this.getRealValue('isGridTableHierarchyExpander', d, false),
-            editable: this.getRealValue('editable', d, true),
-            groupId: this.getRealValue('groupId', d, false),
-            icon: this.getRealValue('icon', d, false),
-            iconOff: this.getRealValue('iconOff', d, false),
-            iconFontSize: this.getRealValue('iconFontSize', d, false),
-            iconFontColor: this.getRealValue('iconFontColor', d, false),
-            skin: this.getRealValue('skin', d, 'skin1'),
-            titleFontColor: this.getRealValue('titleFontColor', d, false),
-            titleFontSize: this.getRealValue('titleFontSize', d, false),
-            titleOn: this.getRealValue('titleOn', d, ''),
-            titleOff: this.getRealValue('titleOff', d, ''),
-            value: this.getRealValue('value', d, false)
-        };
+        const v = this.getParameters(d);
 
         this.value = {isGridTableHierarchyExpander: v.isGridTableHierarchyExpander};
 
-        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], b = 1 === parseInt(v.value), iconStyles = [];
+        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], b = 1 === parseInt(v.value),
+            iconStyles = [];
 
         v.titleOn !== '' && mainDivClass.push('has-label');
         v.backgroundColor && mainDivStyle.push(`background-color:${v.backgroundColor};`);
@@ -55,6 +41,51 @@ class ToggleWidget extends Widget {
         <div style="${titleStyles}" class="ks-toggle-label ks-toggle-label-off">${v.titleOff}</div>
     </div>
 </div>`;
+    }
+
+    updateHtml(data) {
+        const o = this.options, p = this.getParameters(data), section = $('#' + o.id),
+            main = section.find('.ks-toggle'),
+            titleOn = section.find('.ks-toggle-label-on'),
+            titleOff = section.find('.ks-toggle-label-off'),
+            iconOn = section.find('.ks-toggle-icon-on'),
+            iconOff = section.find('.ks-toggle-icon-off'),
+            b = 1 === parseInt(p.value);
+
+        if (b) {
+            !main.hasClass('ks-on') && main.addClass('ks-on');
+        } else {
+            main.removeClass('ks-on');
+        }
+
+        titleOn.html(p.titleOn);
+        Widget.setOrRemoveStyle(titleOn, 'color', p.titleFontColor);
+
+        Widget.setOrRemoveStyle(iconOn, 'color', p.iconFontColor);
+
+        titleOff.html(p.titleOff);
+        Widget.setOrRemoveStyle(titleOff, 'color', p.titleFontColor);
+
+        Widget.setOrRemoveStyle(iconOff, 'color', p.iconFontColor);
+    }
+
+    getParameters(d) {
+        return {
+            backgroundColor: this.getRealValue('backgroundColor', d, false),
+            isGridTableHierarchyExpander: this.getRealValue('isGridTableHierarchyExpander', d, false),
+            editable: this.getRealValue('editable', d, true),
+            groupId: this.getRealValue('groupId', d, false),
+            icon: this.getRealValue('icon', d, false),
+            iconOff: this.getRealValue('iconOff', d, false),
+            iconFontSize: this.getRealValue('iconFontSize', d, false),
+            iconFontColor: this.getRealValue('iconFontColor', d, false),
+            skin: this.getRealValue('skin', d, 'skin1'),
+            titleFontColor: this.getRealValue('titleFontColor', d, false),
+            titleFontSize: this.getRealValue('titleFontSize', d, false),
+            titleOn: this.getRealValue('titleOn', d, ''),
+            titleOff: this.getRealValue('titleOff', d, ''),
+            value: this.getRealValue('value', d, false)
+        };
     }
 
     initEventHandlers(section) {
