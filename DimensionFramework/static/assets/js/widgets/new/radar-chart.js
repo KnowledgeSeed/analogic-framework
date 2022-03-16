@@ -35,8 +35,8 @@ class RadarChartWidget extends Widget {
         ];
 
         const v = {
-            labels: o.labels || d.labels || demoLabels,
-            datasets: $.extend(true, [], o.datasets || [], d.datasets || demoDatasets),
+            labels: o.labels || d.labels,
+            datasets: $.extend(true, [], o.datasets || [], d.datasets),
             canvasHeight: this.getRealValue('canvasHeight', d, false),
             canvasWidth: this.getRealValue('canvasWidth', d, false),
             skin: this.getRealValue('skin', d, 'standard'),
