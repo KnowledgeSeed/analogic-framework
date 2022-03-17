@@ -208,7 +208,7 @@ class SliderWidget extends Widget {
         widgetDiv.find('.noUi-connects').append(trackFill).promise().then(() => {
             trackFillColor = trackFill.css('background-color');
 
-            let updateableInput, v;
+            let updateableInput, vv, ww;
 
             if (d.updateableWidgetId) {
                 updateableInput = $('#' + d.updateableWidgetId).find('input');
@@ -219,12 +219,15 @@ class SliderWidget extends Widget {
 
                 if (updateableInput && !d.changedByInput) {
                     if (d.updateableWidgetValueHandler) {
-                        v = d.originalValue !== false ? d.originalValue : d.updateableWidgetValueHandler(positions[0]);
+                        vv = d.originalValue !== false ? d.originalValue : d.updateableWidgetValueHandler(positions[0]);
                     } else {
-                        v = (d.originalValue !== false ? d.originalValue : positions[0]) + ' ' + d.unit;
+                        vv = (d.originalValue !== false ? d.originalValue : positions[0]) + ' ' + d.unit;
                     }
-
-                    updateableInput.val(Utils.replaceDecimal(v));
+                    ww = Utils.replaceDecimal(vv);
+                    updateableInput.val(ww);
+                    if(v(d.updateableWidgetId)) {
+                        v(d.updateableWidgetId).value = ww;
+                    }
                 }
 
                 if (d.updateCallBack) {
