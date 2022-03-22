@@ -14,7 +14,7 @@ class Render {
         withLoader && Loader.start(true);
         let widget = new event.data.options.type(event.data.options);
         widget.updateContent(event).then((r) => {
-           // L(event.data.options.id, 'update done', r);
+            // L(event.data.options.id, 'update done', r);
             if ('rendered' !== r) {
                 widget.updateContentFinished();
             }
@@ -54,6 +54,10 @@ class Render {
                 }
 
                 holder.html(h.html()).promise().then(() => {
+                    if (isPageRender && withState) {
+                        $('.loader').remove();
+                    }
+
                     if (!holder.hasClass('forcedByEventMap')) {
                         holder.css('display', h.css('display') !== '' ? h.css('display') : 'unset');
                     }
