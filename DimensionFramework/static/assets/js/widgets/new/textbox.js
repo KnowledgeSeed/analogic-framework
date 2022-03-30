@@ -17,21 +17,7 @@ class TextBoxWidget extends Widget {
 
         let hide = o.hideIfNoData === true && d.value === '';
 
-        const v = {
-            icon: this.getRealValue('icon', d, false),
-            highlight: this.getRealValue('highlight', d, false),
-            defaultText: this.getRealValue('defaultText', d, false),
-            editable: this.getRealValue('editable', d, true),
-            skin: this.getRealValue('skin', d, 'standard'),
-            textBoxType: this.getRealValue('textBoxType', d, 'text'),
-            textAlignment: this.getRealValue('textAlignment', d, false),
-            textFontColor: this.getRealValue('textFontColor', d, false),
-            textFontSize: this.getRealValue('textFontSize', d, false),
-            title: this.getRealValue('title', d, false),
-            titleFontColor: this.getRealValue('titleFontColor', d, false),
-            titleFontSize: this.getRealValue('titleFontSize', d, false),
-            titleTextAlignment: this.getRealValue('titleTextAlignment', d, false)
-        };
+        const v = this.getParameters(d);
 
         let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], textStyles = [];
 
@@ -65,6 +51,43 @@ class TextBoxWidget extends Widget {
         </div>
     </div>
 </div>`;
+    }
+
+    updateHtml(data) {
+        const o = this.options, p = this.getParameters(data), section = $('#' + o.id),
+        input = section.find('input');
+
+         data = data || {value: ''};
+
+        if (!data.value && data.value !== 0) {
+            data.value = '';
+        }
+
+        this.value = data;
+
+        input.attr('placeholder', p.defaultText === false ? '' : p.defaultText);
+        input.attr('value', data.value);
+        input.val(data.value);
+
+
+    }
+
+    getParameters(d){
+        return {
+            icon: this.getRealValue('icon', d, false),
+            highlight: this.getRealValue('highlight', d, false),
+            defaultText: this.getRealValue('defaultText', d, false),
+            editable: this.getRealValue('editable', d, true),
+            skin: this.getRealValue('skin', d, 'standard'),
+            textBoxType: this.getRealValue('textBoxType', d, 'text'),
+            textAlignment: this.getRealValue('textAlignment', d, false),
+            textFontColor: this.getRealValue('textFontColor', d, false),
+            textFontSize: this.getRealValue('textFontSize', d, false),
+            title: this.getRealValue('title', d, false),
+            titleFontColor: this.getRealValue('titleFontColor', d, false),
+            titleFontSize: this.getRealValue('titleFontSize', d, false),
+            titleTextAlignment: this.getRealValue('titleTextAlignment', d, false)
+        };
     }
 
     initEventHandlers(section) {
