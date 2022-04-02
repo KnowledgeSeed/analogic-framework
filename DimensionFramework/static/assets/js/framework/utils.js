@@ -455,6 +455,32 @@ const Utils = {
         ids.forEach(id => {
             app.fn.closePopup(id);
         });
+    },
+    getMatrixFromArray(arr, colNum) {
+        let result = [], i;
+
+        if (colNum === 0) {
+            L('Error: colNum must be greater than 0');
+            return [];
+        }
+
+        if (arr.length % colNum !== 0) {
+            L('Error: arr.length % colNum is not 0:' + arr.length % colNum);
+            return [];
+        }
+
+        for (i = 0; i < arr.length; i += colNum) {
+            result.push(arr.slice(i, i + colNum));
+        }
+
+        return result;
+    },
+    getGridtableMatrix(arr, colNum, f) {
+        let result = [], matrix = Utils.getMatrixFromArray(arr, colNum);
+        matrix.forEach(row => {
+            result.push(row.map(f));
+        });
+        return result;
     }
 };
 

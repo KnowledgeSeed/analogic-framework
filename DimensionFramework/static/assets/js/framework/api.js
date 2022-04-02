@@ -116,20 +116,19 @@ app.fn.openPageWithState = function openPageWithState(page) {
     if (Array.isArray(page)) {
         if (PageState[page[0]]) {
             Render.showPage(page[0], true);
+            El.body.on('bodyReady', () => {
+                El.body.off('bodyReady');
+
+                if (page.length > 1) {
+                    for (let i = 1; i < page.length; ++i) {
+                        app.fn.forceRefresh(page[i]);
+                    }
+                }
+            });
         } else {
             Render.showPage(page[0]);
 
         }
-
-        El.body.on('bodyReady', () => {
-            El.body.off('bodyReady');
-
-            if (page.length > 1) {
-                for (let i = 1; i < page.length; ++i) {
-                    app.fn.forceRefresh(page[i]);
-                }
-            }
-        });
     } else {
         if (PageState[page]) {
             Render.showPage(page, true);

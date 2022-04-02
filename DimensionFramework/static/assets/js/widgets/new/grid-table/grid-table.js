@@ -115,7 +115,7 @@ class GridTableWidget extends Widget {
         return refreshedData.length === v(o.id + '.cellData.length');
     }
 
-    renderRowForUpdateContent(widgets, v) {L(widgets);
+    renderRowForUpdateContent(widgets, v) {L('render row for update content!!!!!!!!!');
         let j = 0, col = this.state['col'], r = [];
         while (j < widgets.length) {
             r.push(this.buildTableRowHtml(widgets.slice(j, j + col).join(''), v.rowHeight, v.borderBottom));
@@ -158,7 +158,7 @@ class GridTableWidget extends Widget {
                         id: o.id + '_' + i + '_' + j,
                         cellId: o.id + 'Cell' + i + '-' + j
                     };
-                    if (i >= previousLength) {
+                    if (vv.allowFullContentUpdated && i >= previousLength) {
                         deferred.push(w.render(event, {...dd, ...processedData[i][j]}));
                     } else {
                         deferred.push(w.updateContent(event, {...dd, ...processedData[i][j]}));
@@ -168,7 +168,7 @@ class GridTableWidget extends Widget {
                 }
             }
             return $.when.apply($, deferred).then(function (...results) {
-                if(rowNum > previousLength){
+                if(vv.allowFullContentUpdated && rowNum > previousLength){
                     let rowsToAppend = instance.renderRowForUpdateContent(results.filter(e => e !== 'update'), vv);
                     $('#' + o.id).find('.ks-grid-table-content').append(rowsToAppend);
                 }
