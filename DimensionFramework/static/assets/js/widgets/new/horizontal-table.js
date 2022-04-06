@@ -1,6 +1,7 @@
 /* global app, El, Listeners, QB, Utils, Widget, WidgetValue */
 
 'use strict';
+
 class HorizontalTableWidget extends Widget {
 
     getHtml(widgets, data, withState, leftRowWidgets, rightRowWidgets) {
@@ -25,13 +26,13 @@ class HorizontalTableWidget extends Widget {
         }
 
         if (v.searchField) {
-            s.push(`<div class="ks-horizontal-table-search"><div class="ks-horizontal-table-search-icon"><span class="icon-search"></span></div><input type="text" value=" ${withState && this.state.searchInput ? this.state.searchInput : '' }" class="ks-horizontal-table-search-input" placeholder="Search..."></div>`);
+            s.push(`<div class="ks-horizontal-table-search"><div class="ks-horizontal-table-search-icon"><span class="icon-search"></span></div><input type="text" value=" ${withState && this.state.searchInput ? this.state.searchInput : ''}" class="ks-horizontal-table-search-input" placeholder="Search..."></div>`);
         }
 
         if (o.checkbox) {
             s.push(`
 <div class="ks-horizontal-table-search-toggle-holder">
-    <div class="ks-horizontal-table-search-toggle ${withState && this.state.checkbox === true ? 'ks-on' : '' }" data-value="${o.checkbox.value}">
+    <div class="ks-horizontal-table-search-toggle ${withState && this.state.checkbox === true ? 'ks-on' : ''}" data-value="${o.checkbox.value}">
         <div class="ks-horizontal-table-toggle-icon ks-horizontal-table-toggle-icon-off"><span class="icon-checkbox-off"></span></div>
         <div class="ks-horizontal-table-toggle-icon ks-horizontal-table-toggle-icon-on"><span class="icon-checkbox-on"></span></div>
         <div class="ks-horizontal-table-toggle-label ks-horizontal-table-toggle-label-on">${o.checkbox.value} Only</div>
@@ -68,7 +69,7 @@ class HorizontalTableWidget extends Widget {
             <div class="ks-horizontal-table-body-scroll" style="max-height:${fadeOutHeight}px;${data.cells.length <= v.fadeOutNum ? 'overflow:hidden;' : ''}">${d}</div>
             ${data.cells.length > v.fadeOutNum ? '<div class="ks-horizontal-table-fade"></div>' : ''}
         </div>
-        ${data.cells.length > v.fadeOutNum ? `<div class="ks-horizontal-table-footer"><div class="ks-horizontal-table-info">${data.cells.length}  ${data.cells.length > 1 ? 'results' : 'result' }</div></div>` : '' }
+        ${data.cells.length > v.fadeOutNum ? `<div class="ks-horizontal-table-footer"><div class="ks-horizontal-table-info">${data.cells.length}  ${data.cells.length > 1 ? 'results' : 'result'}</div></div>` : ''}
     </div>
 </div>`;
     }
@@ -100,7 +101,8 @@ class HorizontalTableWidget extends Widget {
     }
 
     getTableBody(o, data, dataColumnNames, leftRowWidgets, rightRowWidgets, withState, actionWidth, v) {
-        let i, j, k, c = [], d = [], leftActionsNum = 0, rightActionsNum = 0, s = [], mtx = data.cells, len = mtx.length, cells, cell, escapedValue, enabled, len2, columnType = 'string', selectFirstIndex;
+        let i, j, k, c = [], d = [], leftActionsNum = 0, rightActionsNum = 0, s = [], mtx = data.cells,
+            len = mtx.length, cells, cell, escapedValue, enabled, len2, columnType = 'string', selectFirstIndex;
 
         for (i = 0; i < len; ++i) {//content
             enabled = data.leftActionCells.length > 0 && data.leftActionCells[i].length > 0 ? data.leftActionCells[i][0].active : true;
@@ -132,7 +134,16 @@ class HorizontalTableWidget extends Widget {
                 cell = cells[i];
                 len2 = cell.length;
                 for (k = 0; k < len2; ++k) {
-                    s.push(leftRowWidgets[k].getHtml([], {icon: cell[k].icon, index: i, on: (withState && this.state.radio === i) || cell[k].on === true || (v.selectFirst && i === 0), d: d, active: cell[k].active === true, id: o.id, num: leftActionsNum, actionWidth: actionWidth}));
+                    s.push(leftRowWidgets[k].getHtml([], {
+                        icon: cell[k].icon,
+                        index: i,
+                        on: (withState && this.state.radio === i) || cell[k].on === true || (v.selectFirst && i === 0),
+                        d: d,
+                        active: cell[k].active === true,
+                        id: o.id,
+                        num: leftActionsNum,
+                        actionWidth: actionWidth
+                    }));
                     if (v.selectFirst && i === 0) {
                         let html = $(s[s.length - 1]), p = html.find('.ks-horizontal-table-row-toggle');
                         WidgetValue[o.id][p.data('action')] = p.data();
@@ -157,7 +168,17 @@ class HorizontalTableWidget extends Widget {
                 cell = cells[i];
                 len2 = cell.length;
                 for (k = 0; k < len2; ++k) {
-                    s.push(rightRowWidgets[k].getHtml([], {icon: cell[k].icon, ordinal: cell[k].ordinal, on: (withState && this.state.radio === i) || cell[k].on === true || (v.selectFirst && i === 0), index: i, d: d, active: cell[k].active === true, id: o.id, num: rightActionsNum, actionWidth: actionWidth}));
+                    s.push(rightRowWidgets[k].getHtml([], {
+                        icon: cell[k].icon,
+                        ordinal: cell[k].ordinal,
+                        on: (withState && this.state.radio === i) || cell[k].on === true || (v.selectFirst && i === 0),
+                        index: i,
+                        d: d,
+                        active: cell[k].active === true,
+                        id: o.id,
+                        num: rightActionsNum,
+                        actionWidth: actionWidth
+                    }));
                     if (v.selectFirst && i === 0) {
                         let html = $(s[s.length - 1]), p = html.find('.ks-horizontal-table-row-toggle');
                         WidgetValue[o.id][p.data('action')] = p.data();
@@ -203,17 +224,10 @@ class HorizontalTableWidget extends Widget {
         }
 
         Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
-        Listeners.push({
-            options: o,
-            method: 'refreshWithoutLoader',
-            eventName: 'refreshwithoutloader.' + o.id,
-            handler: h
-        });
-        Listeners.push({options: o, method: 'updateContent', eventName: 'updatecontent.' + o.id, handler: h});
-        Listeners.push({options: o, method: 'updateContentWithoutLoader', eventName: 'updatecontentwithoutloader.' + o.id, handler: h});
 
         return QB.loadData(o.id, instance.name).then(function (data) {
-            let deffered = [], w, i = 0, leftRowWidgets = [], rightRowWidgets = [], buttonWidgets = [], position = 1000, processedData;
+            let deffered = [], w, i = 0, leftRowWidgets = [], rightRowWidgets = [], buttonWidgets = [], position = 1000,
+                processedData;
 
             for (w of widgets) {
                 if (!w.options.position) {
@@ -240,7 +254,7 @@ class HorizontalTableWidget extends Widget {
             processedData = instance.processData(data);
 
             return $.when.apply($, deffered).then(function (...results) {
-                let widgetHtmls = [], r;
+                let widgetHtmls = [], r, gs = [];
 
                 for (r of results) {
                     widgetHtmls.push(r);
@@ -248,7 +262,15 @@ class HorizontalTableWidget extends Widget {
 
                 let visible = data && typeof data.visible !== 'undefined' ? data.visible : o.visible;
 
-                return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" ${visible === false ? 'style="display:none"' : '' } id="${o.id}">${instance.getHtml(widgetHtmls, processedData, withState, leftRowWidgets, rightRowWidgets)}</section>`;
+                if (o.applyMeasuresToSection === true) {
+                    gs = instance.getWidthAndHeight(data);
+                }
+
+                if (visible === false) {
+                    gs.push('display:none;');
+                }
+
+                return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" style="${gs.join('')}" id="${o.id}">${instance.getHtml(widgetHtmls, processedData, withState, leftRowWidgets, rightRowWidgets)}</section>`;
             });
         });
     }
@@ -289,7 +311,8 @@ class HorizontalTableWidget extends Widget {
         });
 
         section.find('.sortable').each(function () {
-            let th = $(this), s = th.closest('section'), table = s.find('.ks-horizontal-table-body-scroll'), thIndex = th.index(), inverse = false;
+            let th = $(this), s = th.closest('section'), table = s.find('.ks-horizontal-table-body-scroll'),
+                thIndex = th.index(), inverse = false;
 
 
             th.click(function () {
@@ -326,16 +349,16 @@ class HorizontalTableWidget extends Widget {
             this.state.radio = w.data('index');
 
             p.closest('.ks-horizontal-table-row').prop('style', '');
-            if(this.value.multiSelect === false) {
+            if (this.value.multiSelect === false) {
                 p.removeClass('ks-on');
                 w.addClass('ks-on');
                 w.closest('.ks-horizontal-table-row').prop('style', 'background-color:#bfd9f2;');
             } else {
-                if(w.hasClass('ks-on')) {
+                if (w.hasClass('ks-on')) {
                     w.removeClass('ks-on');
                     this.value['selected'] = false;
                     this.value['selectedOrdinal'] = w.data('ordinal');
-                }else{
+                } else {
                     w.addClass('ks-on');
                     this.value['selected'] = true;
                     this.value['selectedOrdinal'] = w.data('ordinal');
@@ -346,7 +369,9 @@ class HorizontalTableWidget extends Widget {
         });
 
         section.find('.ks-horizontal-table-search-toggle').on('click', e => {
-            let c = $(e.currentTarget).toggleClass('ks-on'), s = c.closest('section'), t = s.find('.ks-horizontal-table-body-scroll'), w = s.find('.ks-horizontal-table-search'), i = w.find('input');
+            let c = $(e.currentTarget).toggleClass('ks-on'), s = c.closest('section'),
+                t = s.find('.ks-horizontal-table-body-scroll'), w = s.find('.ks-horizontal-table-search'),
+                i = w.find('input');
 
             this.state.checkbox = c.hasClass('ks-on');
 
@@ -354,7 +379,8 @@ class HorizontalTableWidget extends Widget {
         });
 
         for (let g of section.find('.ks-horizontal-table-search')) {
-            let w = $(g), s = w.closest('section'), t = s.find('.ks-horizontal-table-body-scroll'), i = w.find('input'), c = s.find('.ks-horizontal-table-search-toggle');
+            let w = $(g), s = w.closest('section'), t = s.find('.ks-horizontal-table-body-scroll'), i = w.find('input'),
+                c = s.find('.ks-horizontal-table-search-toggle');
             i.on('focus', () => i.select()).on('input', () => {
                 i.attr('value', i.val());
                 this.state.searchInput = i.val();
@@ -367,7 +393,8 @@ class HorizontalTableWidget extends Widget {
         if (withState) {
             const o = this.options;
             if (o.searchField || o.checkbox) {
-                let t = section.find('.ks-horizontal-table-body-scroll'), i = section.find('input'), c = section.find('.ks-horizontal-table-search-toggle');
+                let t = section.find('.ks-horizontal-table-body-scroll'), i = section.find('input'),
+                    c = section.find('.ks-horizontal-table-search-toggle');
                 HorizontalTableWidget.filter(t, i.val(), c);
             }
 
@@ -375,7 +402,9 @@ class HorizontalTableWidget extends Widget {
                 let tr = section.find('.ks-horizontal-table-row-toggle.ks-on').closest('.ks-horizontal-table-row').prop('style', 'background-color:#bfd9f2;');
 
                 if (tr) {
-                    let trPos = tr.position(), trCtr = tr.height() / 2, tableContainer = $(section.find('.ks-horizontal-table-body')[0]), dataTblctr = (tableContainer.height()) / 2;
+                    let trPos = tr.position(), trCtr = tr.height() / 2,
+                        tableContainer = $(section.find('.ks-horizontal-table-body')[0]),
+                        dataTblctr = (tableContainer.height()) / 2;
 
                     if (trPos) {
                         tableContainer.scrollTop(trPos.top - dataTblctr + trCtr);
