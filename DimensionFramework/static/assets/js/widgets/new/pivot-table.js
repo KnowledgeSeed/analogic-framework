@@ -17,7 +17,7 @@ class PivotTableWidget extends Widget {
         this.value = v;
 
         return `
-<div class="ks-pivot-table-controls-holder">
+<div id="pivot"><div class="ks-pivot-table-controls-holder">
     <div class="ks-pivot-table-control-row presets-row">
         <div class="ks-pivot-table-presets-btn">
             <span class="icon-ellipsis"></span>
@@ -42,6 +42,12 @@ class PivotTableWidget extends Widget {
     }
 
     initEventHandlers(section) {
+        const o = this.options;
+
+        section = section.children();
+
+        this.cubeName = o.cubeName;
+
         this.initPresetsDropdown();
 
         this.initSelectorTree(section);
@@ -349,6 +355,7 @@ class PivotTableWidget extends Widget {
     }
 
     getNextSelectorTreeLevel(selectedData, nextLevelData, cols, callback) {
+        selectedData.cube_name = this.cubeName;
         selectedData.options = JSON.stringify(this.options);
 
         return $.when(Pivot.call({data: selectedData})).then(resp => {
@@ -697,7 +704,7 @@ class PivotTableWidget extends Widget {
 
         newSubsetName = (o.subsetPrefix || '') + newSubsetName + (o.subsetSuffix || '');
 
-        const cols = this.getSelectorTreeColumns(), d = {dimension_name: cols.eq(0).data('value'), hierarchy_name: cols.eq(1).data('value'), subset_name: newSubsetName, options: JSON.stringify(o)};
+        const cols = this.getSelectorTreeColumns(), d = {cube_name: this.cubeName, dimension_name: cols.eq(0).data('value'), hierarchy_name: cols.eq(1).data('value'), subset_name: newSubsetName, options: JSON.stringify(o)};
 
         this.newSubsetName = newSubsetName;
 
@@ -741,7 +748,7 @@ class PivotTableWidget extends Widget {
     }
 
     doRemoveSubset(popup) {
-        const cols = this.getSelectorTreeColumns(), d = {dimension_name: cols.eq(0).data('value'), hierarchy_name: cols.eq(1).data('value'), subset_name_to_remove: cols.eq(2).children('.ks-pivot-tag-add-col-content').children('.ks-on').data('name')};
+        const cols = this.getSelectorTreeColumns(), d = {cube_name: this.cubeName, dimension_name: cols.eq(0).data('value'), hierarchy_name: cols.eq(1).data('value'), subset_name_to_remove: cols.eq(2).children('.ks-pivot-tag-add-col-content').children('.ks-on').data('name')};
 
         $.when(Pivot.call({data: d})).then(subsetData => this.reloadSubsetsInSelectorTree(popup, cols, d, subsetData));
 
@@ -987,7 +994,7 @@ class PivotTableWidget extends Widget {
     }
 
     getPivotTable() {
-        let i, j, d = {}, cards, len, types = ['slices', 'rows', 'cols'], v, cardData, colors = [[], [], []], n, o = this.options, data = {options: JSON.stringify(o)};
+        let i, j, d = {}, cards, len, types = ['slices', 'rows', 'cols'], v, cardData, colors = [[], [], []], n, o = this.options, data = {cube_name: this.cubeName, options: JSON.stringify(o)};
 
         for (i = 0; i < 3; ++i) {
             v = [];
@@ -1026,7 +1033,6 @@ class PivotTableWidget extends Widget {
         const cc = d.cell_count;
 
         if ($.isEmptyObject(d.data)) {
-            L(this.options.cellLimit);
             if (this.options.cellLimit < cc) {
                 app.popup.show('The Cell Limit (<b style="color: green;">' + this.options.cellLimit + '</b>) is exceeded: <b style="color: red;">' + cc + '</b>');
             } else {

@@ -21,15 +21,17 @@ class Base:
         if self.checkAppAuthenticated() is False:
             return self.getAuthenticationResponse()
 
-        dimension_name = request.values.get('dimension_name')
-        hierarchy_name = request.values.get('hierarchy_name')
-        subset_name = request.values.get('subset_name')
-        element_names = request.values.getlist('element_names[]')
-        subset_name_to_remove = request.values.get('subset_name_to_remove')
-        selected_cards = request.values.get('selected_cards')
-        options = request.values.get('options')
+        v = request.values
+        cube_name = v.get('cube_name')
+        dimension_name = v.get('dimension_name')
+        hierarchy_name = v.get('hierarchy_name')
+        subset_name = v.get('subset_name')
+        element_names = v.getlist('element_names[]')
+        subset_name_to_remove = v.get('subset_name_to_remove')
+        selected_cards = v.get('selected_cards')
+        options = v.get('options')
 
-        return PivotApi.call(self.getTM1Service(), dimension_name, hierarchy_name, subset_name,
+        return PivotApi.call(self.getTM1Service(), cube_name, dimension_name, hierarchy_name, subset_name,
                              element_names, subset_name_to_remove, selected_cards, options)
 
     def export(self):

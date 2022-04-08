@@ -6,10 +6,7 @@ from TM1py.Services import TM1Service
 from flask import jsonify
 
 
-def call(tm1:TM1Service, dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, options=None):
-
-    cube_name = 'Sales by Channel'
-
+def call(tm1:TM1Service, cube_name=None, dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, options=None):
     data = {}
 
     if selected_cards:
