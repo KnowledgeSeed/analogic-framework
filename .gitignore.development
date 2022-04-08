@@ -26,3 +26,4 @@ DimensionFramework/static/assets/js/configs/*
 !DimensionFramework/static/assets/js/configs/default
 topology_files
 Seeder/configs/database.json
+Seeder/static/assets/js/import/*
