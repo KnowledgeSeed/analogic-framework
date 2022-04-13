@@ -131,7 +131,7 @@ const Utils = {
     escapeText: str => JSON.stringify(str).slice(1, -1),
     stripHtml: str => isNaN(str) ? str.replace(/(<([^>]+)>)/gi, "") : str,
     nl2br: s => s.replace(/(?:\r\n|\r|\n)/g, '<br>'),
-    htmlEncode: s => s.replaceAll({'"': '&quot;', "'": '&apos;'}),
+    htmlEncode: s => ('' + s).replaceAll({'"': '&quot;', "'": '&apos;'}),
     adjustHeightsToMax(elements) {
         let i, height, maxHeight = 0, len = elements.length;
         // testing with maybe "outerHeight"

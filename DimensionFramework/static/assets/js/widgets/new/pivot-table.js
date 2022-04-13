@@ -67,7 +67,8 @@ class PivotTableWidget extends Widget {
             .on('click', '.ks-pivot-table-tag-switch', () => this.changeRowsAndColumnsCards())
             .on('click', '#resetPivotBtn', () => this.resetPivotTable())
             .on('click', '#loadPresetBtn', e => this.loadPresetButtonClicked(e))
-            .on('click', '#saveAsPresetBtn', e => this.saveAsPreset(e));
+            .on('click', '#saveAsPresetBtn', e => this.saveAsPreset(e))
+            .on('choose', e => Utils.stopEvent(e));
 
         Doc.off('keydown.pivot').on('keydown.pivot', e => this.keyPressed(e));
 
