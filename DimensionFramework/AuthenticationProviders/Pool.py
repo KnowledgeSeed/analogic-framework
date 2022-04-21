@@ -118,4 +118,4 @@ class Pool(Base):
         return jsonify({'username': session.get('username')})
 
     def getLogger(self):
-        return logging.getLogger(__name__)
+        return logging.getLogger(self.setting.getInstance())

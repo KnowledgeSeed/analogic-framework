@@ -181,11 +181,12 @@ class SettingManager:
         self.cacheSet(self.getTM1SessionExpiresCacheKey() + suffix, expires, 0)
 
     def getTM1SessionId(self, suffix=''):
-        self.getLogger().info(self.getTm1SessionIdCacheKey() + suffix)
+        logger = self.getLogger()
+        logger.info(self.getTm1SessionIdCacheKey() + suffix)
         tm1_session_id = self.cacheGet(self.getTm1SessionIdCacheKey() + suffix)
-        self.getLogger().info(tm1_session_id)
+        logger.info(tm1_session_id)
         tm1_session_id_exp = self.cacheGet(self.getTM1SessionExpiresCacheKey() + suffix)
-        self.getLogger().info(tm1_session_id_exp)
+        logger.info(tm1_session_id_exp)
         if tm1_session_id is None or (
                 tm1_session_id_exp is not None and datetime.datetime.now() >= tm1_session_id_exp):
             return None
@@ -257,4 +258,4 @@ class SettingManager:
             self.cache.set(key, value, expires)
 
     def getLogger(self):
-        return logging.getLogger(__name__)
+        return logging.getLogger(self.getInstance())

@@ -62,12 +62,11 @@ class Cam(Pool):
         return 'Authentication required', 401, {'Content-Type': 'application/json'}
 
     def getTM1Service(self):
-        return None
-    #   cnf = self.setting.getConfig()todo resolve dns problem
+        cnf = self.setting.getConfig()
 
-    #   tm1_session_id = self.setting.getTM1SessionId(session['cam_name'])
+        tm1_session_id = self.setting.getTM1SessionId(session['cam_name'])
 
-    #   return TM1Service(base_url=cnf['tm1ApiHost'], session_id=tm1_session_id, ssl=False)
+        return TM1Service(base_url=cnf['tm1ApiHost'], session_id=tm1_session_id, ssl=False)
 
     def getLogger(self):
         return logging.getLogger(__name__)

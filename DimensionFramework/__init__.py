@@ -8,10 +8,15 @@ from datetime import timedelta
 from logging.handlers import RotatingFileHandler
 import logging
 import json_logging
+import logging.config
+import json
 
 app = Flask(__name__)
 site_root = os.path.realpath(os.path.dirname(__file__))
 app.secret_key = b'\x18m\x18\\]\xec\xcf\xbd\xf2\x89\xb9\xa3\x06N\x07\xfd'
+
+log_config = json.load(open(os.path.join(app.root_path, 'configs', 'logging.json')))
+logging.config.dictConfig(log_config)
 
 
 @app.route('/', defaults={'instance': 'default'})
@@ -97,31 +102,31 @@ def getProvider(instance):
     cache = getCache()
     config = Base(cache, site_root, instance).setting.getConfig()
 
-    if 'logFolder' in config:
-        log_folder_root = config['logFolder']
-    else:
-        log_folder_root = os.path.join(os.path.dirname(__file__), 'logs')
-
-
-    logger = logging.getLogger('login')
-    if not logger.hasHandlers():
-        json_logging.ENABLE_JSON_LOGGING = True
-        json_logging.init_flask(enable_json=True)
-        log_file_name = os.path.join(log_folder_root, 'login.log')
-        handler = RotatingFileHandler(log_file_name, maxBytes=1000000, backupCount=10)
-        formatter = json_logging.JSONLogFormatter(
-            '%(asctime)s :: %(levelname)s :: %(name)s :: %(lineno)d :: %(funcName)s() :: %(message)s :: %(process)d - %(threadName)s')
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
-
-    log_file_name = os.path.join(log_folder_root, 'application.log')
-    logging.basicConfig(
-        handlers=[RotatingFileHandler(log_file_name, maxBytes=1000000, backupCount=10)],
-        level=logging.INFO,
-        format='%(asctime)s :: %(levelname)s :: %(name)s :: %(lineno)d :: %(funcName)s() :: %(message)s :: %(process)d - %(threadName)s',
-        datefmt='%Y-%m-%dT%H:%M:%S')
-
-    json_logging.config_root_logger()
+    # if 'logFolder' in config:
+    #     log_folder_root = config['logFolder']
+    # else:
+    #     log_folder_root = os.path.join(os.path.dirname(__file__), 'logs')
+    #
+    #
+    # logger = logging.getLogger('login')
+    # if not logger.hasHandlers():
+    #     json_logging.ENABLE_JSON_LOGGING = True
+    #     json_logging.init_flask(enable_json=True)
+    #     log_file_name = os.path.join(log_folder_root, 'login.log')
+    #     handler = RotatingFileHandler(log_file_name, maxBytes=1000000, backupCount=10)
+    #     formatter = json_logging.JSONLogFormatter(
+    #         '%(asctime)s :: %(levelname)s :: %(name)s :: %(lineno)d :: %(funcName)s() :: %(message)s :: %(process)d - %(threadName)s')
+    #     handler.setFormatter(formatter)
+    #     logger.addHandler(handler)
+    #
+    # log_file_name = os.path.join(log_folder_root, 'application.log')
+    # logging.basicConfig(
+    #     handlers=[RotatingFileHandler(log_file_name, maxBytes=1000000, backupCount=10)],
+    #     level=logging.INFO,
+    #     format='%(asctime)s :: %(levelname)s :: %(name)s :: %(lineno)d :: %(funcName)s() :: %(message)s :: %(process)d - %(threadName)s',
+    #     datefmt='%Y-%m-%dT%H:%M:%S')
+    #
+    # json_logging.config_root_logger()
 
     provider = DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory.getProvider(config, cache,
                                                                                                     site_root,

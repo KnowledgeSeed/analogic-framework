@@ -186,7 +186,7 @@ class Base:
         return send_file(mem, as_attachment=True, attachment_filename=file_name, mimetype='text/csv')
 
     def getLogger(self):
-        return logging.getLogger(__name__)
+        return logging.getLogger(self.setting.getInstance())
 
     def ping(self):
         self.getLogger().info('ping test2')
