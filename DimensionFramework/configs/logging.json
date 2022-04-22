@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "simple": {
+      "format": "%(asctime)s :: %(levelname)s :: %(name)s :: %(filename)s :: %(funcName)s() :: %(lineno)d :: %(message)s :: %(process)d - %(threadName)s"
+    },
+    "json": {
+      "format": "%(asctime)s :: %(levelname)s :: %(name)s :: %(filename)s :: %(funcName)s() :: %(lineno)d :: %(message)s :: %(process)d - %(threadName)s",
+      "class": "json_logging.JSONLogFormatter"
+    }
+  },
+  "handlers": {
+
+    "info_file_handler": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "INFO",
+      "formatter": "simple",
+      "filename": "DimensionFramework/logs/info.log",
+      "maxBytes": 10485760,
+      "backupCount": 20,
+      "encoding": "utf8"
+    },
+
+    "info_json_file_handler": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "INFO",
+      "formatter": "json",
+      "filename": "DimensionFramework/logs/info_json.log",
+      "maxBytes": 10485760,
+      "backupCount": 20,
+      "encoding": "utf8"
+    },
+
+    "error_file_handler": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "ERROR",
+      "formatter": "simple",
+      "filename": "DimensionFramework/logs/errors.log",
+      "maxBytes": 10485760,
+      "backupCount": 20,
+      "encoding": "utf8"
+    },
+
+    "error_json_file_handler": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "ERROR",
+      "formatter": "json",
+      "filename": "DimensionFramework/logs/errors_json.log",
+      "maxBytes": 10485760,
+      "backupCount": 20,
+      "encoding": "utf8"
+    },
+
+    "werkzeug_file_handler": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "INFO",
+      "formatter": "simple",
+      "filename": "DimensionFramework/logs/werkzeug.log",
+      "maxBytes": 10485760,
+      "backupCount": 20,
+      "encoding": "utf8"
+    },
+
+    "werkzeug_json_file_handler": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "INFO",
+      "formatter": "json",
+      "filename": "DimensionFramework/logs/werkzeug_json.log",
+      "maxBytes": 10485760,
+      "backupCount": 20,
+      "encoding": "utf8"
+    },
+
+    "login_file_handler": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "INFO",
+      "formatter": "simple",
+      "filename": "DimensionFramework/logs/login.log",
+      "maxBytes": 10485760,
+      "backupCount": 20,
+      "encoding": "utf8"
+    },
+
+    "login_json_file_handler": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "INFO",
+      "formatter": "json",
+      "filename": "DimensionFramework/logs/login_json.log",
+      "maxBytes": 10485760,
+      "backupCount": 20,
+      "encoding": "utf8"
+    },
+
+    "console": {
+      "class": "logging.StreamHandler",
+      "level": "DEBUG",
+      "formatter": "simple",
+      "stream": "ext://sys.stdout"
+    }
+  },
+  "loggers": {
+    "login": {
+      "level": "INFO",
+      "handlers": ["login_file_handler", "login_json_file_handler"],
+      "propagate": false
+    },
+     "werkzeug": {
+      "level": "INFO",
+      "handlers": ["console", "werkzeug_file_handler", "werkzeug_json_file_handler"],
+      "propagate": false
+    }
+  },
+  "root": {
+    "level": "INFO",
+    "handlers": ["info_file_handler", "info_json_file_handler", "error_file_handler", "error_json_file_handler"]
+  }
+}
