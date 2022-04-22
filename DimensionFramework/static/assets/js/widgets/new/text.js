@@ -82,6 +82,7 @@ class TextWidget extends Widget {
 
         //title
         title.html(v.title ? v.title : '');
+        title.attr('title', v.title ? Utils.stripHtml(v.title) : '');
         if (v.title) {
             mainDiv.addClass('has-title');
         }
