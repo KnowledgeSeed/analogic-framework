@@ -24,6 +24,7 @@ DimensionFramework/static/assets/skins/*
 DimensionFramework/static/assets/js/configs/*
 !DimensionFramework/static/assets/js/configs/dummy
 !DimensionFramework/static/assets/js/configs/default
+!DimensionFramework/configs/logging.json
 topology_files
 Seeder/configs/database.json
 Seeder/static/assets/js/import/*
