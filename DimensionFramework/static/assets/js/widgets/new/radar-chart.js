@@ -30,13 +30,24 @@ class RadarChartWidget extends Widget {
                 pointBackgroundColor: 'rgb(54, 162, 235)',
                 pointBorderColor: '#fff',
                 pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: 'rgb(54, 162, 235)'
+                pointHoverBorderColor: 'rgb(54, 162, 235)',
+                tension: 0
             }
         ];
 
         const v = {
             labels: o.labels || d.labels,
             datasets: $.extend(true, [], o.datasets || [], d.datasets),
+            min: this.getRealValue('min', d, null),
+            max: this.getRealValue('max', d, null),
+            stepSize: this.getRealValue('stepSize', d, null),
+            ticks: this.getRealValue('ticks', d, []),
+            tickColor: this.getRealValue('tickColor', d, '#666'),
+            tickFontFamily: this.getRealValue('tickFontFamily', d, null),
+            tickFontSize: this.getRealValue('tickFontSize', d, 12),
+            tickFontStyle: this.getRealValue('tickFontStyle', d, 'normal'),
+            bezierCurveBorderWidth: this.getRealValue('bezierCurveBorderWidth', d, 1.5),
+            bezierCurveTension: this.getRealValue('bezierCurveTension', d, 0),
             canvasHeight: this.getRealValue('canvasHeight', d, false),
             canvasWidth: this.getRealValue('canvasWidth', d, false),
             skin: this.getRealValue('skin', d, 'standard'),
@@ -55,15 +66,19 @@ class RadarChartWidget extends Widget {
         this.value = v;
 
         return `
-<div class="ks-radar-chart ks-radar-chart-${v.skin}" style="${this.getGeneralStyles(v.data, {width: 450, height: 450}).join('')}">
+<div class="ks-radar-chart ks-radar-chart-${v.skin}" style="${this.getGeneralStyles(v.data, {
+            width: 450,
+            height: 450
+        }).join('')}">
     <div class="ks-radar-chart-title"><h3>${o.title}</h3></div>
     <div class="ks-radar-chart-widget" style="${v.canvasWidth ? `width:${Utils.getSize(v.canvasWidth, true)}` : ''} ${v.canvasHeight ? `height:${Utils.getSize(v.canvasHeight, true)}` : ''}"><canvas id="${o.id}Canvas"></canvas></div>
-    <div class="ks-radar ks-radar-${v.legendSkin}"></div>
+    ${v.legendVisible ? `<div class="ks-radar ks-radar-${v.legendSkin}"></div>` : ''}
 </div>`;
     }
 
     initEventHandlers() {
-        const canvas = document.getElementById(this.options.id + 'Canvas'), ctx = canvas.getContext('2d'), c = new Chart(ctx, this.getChartConfig());
+        const canvas = document.getElementById(this.options.id + 'Canvas'), ctx = canvas.getContext('2d'),
+            c = new Chart(ctx, this.getChartConfig());
 
         $(canvas.parentElement.nextElementSibling).html(c.generateLegend()).on('click', '.ks-legend-item', e => {
             let legend = $(e.target).closest('.ks-legend-item').toggleClass('off'), id = legend.data('id');
@@ -75,7 +90,7 @@ class RadarChartWidget extends Widget {
     }
 
     getChartConfig() {
-        const v = this.value;
+        const v = this.value, ticks = v.ticks;
 
         return {
             type: 'radar',
@@ -117,6 +132,19 @@ class RadarChartWidget extends Widget {
 
                     return h;
                 },
+                scale: {
+                    ticks: {
+                        beginAtZero: false,
+                        min: null === v.min ? undefined : v.min,
+                        max: null === v.max ? undefined : v.max,
+                        stepSize: null === v.stepSize ? undefined : v.stepSize,
+                        callback: (v, i) => (i - 1) in ticks ? ticks[(i - 1)] : v,
+                        fontColor: v.tickColor,
+                        fontFamily: null === v.tickFontFamily ? undefined : v.tickFontFamily,
+                        fontSize: v.tickFontSize,
+                        fontStyle: v.tickFontStyle
+                    }
+                },
                 scales: {
                     r: {
                         angleLines: {
@@ -134,8 +162,8 @@ class RadarChartWidget extends Widget {
                 },
                 elements: {
                     line: {
-                        borderWidth: 1.5,
-                        tension: 0.3 //disables bezier curves if 0
+                        borderWidth: v.bezierCurveBorderWidth,
+                        tension: v.bezierCurveTension //disables bezier curves if 0
                     }
                 }
             }
