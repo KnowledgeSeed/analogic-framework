@@ -115,7 +115,8 @@ class GridTableWidget extends Widget {
         return refreshedData.length === v(o.id + '.cellData.length');
     }
 
-    renderRowForUpdateContent(widgets, v) {L('render row for update content!!!!!!!!!');
+    renderRowForUpdateContent(widgets, v) {
+        L('render row for update content!!!!!!!!!');
         let j = 0, col = this.state['col'], r = [];
         while (j < widgets.length) {
             r.push(this.buildTableRowHtml(widgets.slice(j, j + col).join(''), v.rowHeight, v.borderBottom));
@@ -137,7 +138,7 @@ class GridTableWidget extends Widget {
             }
 
             if (!vv.allowFullContentUpdated && !instance.isContentUpdatable(processedData)) {
-                 return Render.renderWidget(event, $('#' + o.id), instance, false, false, d);
+                return Render.renderWidget(event, $('#' + o.id), instance, false, false, d);
             }
 
             for (widgetOptions of o.widgets || []) {
@@ -168,7 +169,7 @@ class GridTableWidget extends Widget {
                 }
             }
             return $.when.apply($, deferred).then(function (...results) {
-                if(vv.allowFullContentUpdated && rowNum > previousLength){
+                if (vv.allowFullContentUpdated && rowNum > previousLength) {
                     let rowsToAppend = instance.renderRowForUpdateContent(results.filter(e => e !== 'update'), vv);
                     $('#' + o.id).find('.ks-grid-table-content').append(rowsToAppend);
                 }
@@ -221,7 +222,12 @@ class GridTableWidget extends Widget {
             handler: h
         });
         Listeners.push({options: o, method: 'updateContent', eventName: 'updatecontent.' + o.id, handler: h});
-        Listeners.push({options: o, method: 'updateContentWithoutLoader', eventName: 'updatecontentwithoutloader.' + o.id, handler: h});
+        Listeners.push({
+            options: o,
+            method: 'updateContentWithoutLoader',
+            eventName: 'updatecontentwithoutloader.' + o.id,
+            handler: h
+        });
         if (o.maxRows) {
             Listeners.push({options: o, method: 'renderPage', eventName: 'page.' + o.id, handler: h});
         }
@@ -333,6 +339,12 @@ class GridTableWidget extends Widget {
         let section = $('#' + o.id);
 
         this.initEventHandlers(section, withState);
+    }
+
+    appendListeners(o, h) {
+        if (o.maxRows) {
+            Listeners.push({options: o, method: 'renderPage', eventName: 'page.' + o.id, handler: h});
+        }
     }
 
     initEventHandlers(section) {

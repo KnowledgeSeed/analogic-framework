@@ -73,18 +73,6 @@ class Widget {
             widgets.push(new ww.type(ww));
         }
 
-        if (o.listen) {
-            for (let l of o.listen) {
-                Listeners.push({
-                    options: o,
-                    method: l.method,
-                    eventName: l.event,
-                    parameters: l.parameters || [],
-                    handler: h
-                });
-            }
-        }
-
         if (o.depends) {//grid
             const f = o.id.split('_'), a = f[0], b = f[1];
 
@@ -99,20 +87,7 @@ class Widget {
             }
         }
 
-        Listeners.push({options: o, method: 'refresh', eventName: 'forcerefresh.' + o.id, handler: h});
-        Listeners.push({
-            options: o,
-            method: 'refreshWithoutLoader',
-            eventName: 'refreshwithoutloader.' + o.id,
-            handler: h
-        });
-        Listeners.push({options: o, method: 'updateContent', eventName: 'updatecontent.' + o.id, handler: h});
-        Listeners.push({
-            options: o,
-            method: 'updateContentWithoutLoader',
-            eventName: 'updatecontentwithoutloader.' + o.id,
-            handler: h
-        });
+        this.addListeners(false);
 
         let useDefaultDataForChildren = (o.visible === false && !refresh && o.notLoadIfHidden) || useDefaultData;
 
@@ -233,7 +208,7 @@ class Widget {
         });
     }
 
-    addListeners() {
+    addListeners(recursive=true) {
         const o = this.options, h = Listeners.handle;
         let widgetOptions, widgets = [], w, ww;
 
@@ -268,10 +243,18 @@ class Widget {
             eventName: 'updatecontentwithoutloader.' + o.id,
             handler: h
         });
+        this.appendListeners(o, h);
 
-        for (w of widgets) {
-            w.addListeners();
+        if(recursive) {
+            for (w of widgets) {
+                w.addListeners();
+            }
         }
+    }
+
+
+    appendListeners(options, handler) {
+
     }
 
     initFinished() {
