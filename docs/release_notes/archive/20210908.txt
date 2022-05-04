@@ -1,5 +1,0 @@
-textwidget
-- text_click event
-- iconCustomEventName
-GridTableCell:
-- cellWidth

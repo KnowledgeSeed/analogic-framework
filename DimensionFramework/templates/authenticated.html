@@ -32,7 +32,7 @@
                 <script type="text/javascript" src="{{cnf.assetsUrl}}/js/minified_deprecated.js?v={{ cnf.version }}" charset="UTF-8"></script>
             {% endif %}
             <script type="text/javascript" src="{{cnf.assetsUrl}}/js/configs/{{ cnf.applicationAssetsFolder }}/minified.js?v={{ cnf.version }}" charset="UTF-8"></script>
-            <script type="text/javascript" src="{{cnf.assetsUrl}}/js/configs/{{ cnf.applicationConfigFolder }}/repository.js?v={{ cnf.version }}" charset="UTF-8"></script>
+            <script type="text/javascript" src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/repository.js')}}?v={{cnf.version}}"></script>
         {% else %}
             {% include 'javascripts.html' %}
             {%  if (cnf.applicationAssetsFolder == "risksimulation") %}

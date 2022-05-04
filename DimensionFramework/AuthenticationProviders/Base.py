@@ -162,7 +162,7 @@ class Base:
         response.set_cookie('authenticated', 'authenticated', max_age=cnf['sessionExpiresInMinutes'] * 60)
         return response
 
-    def exportConfig(self, config_type):
+    def exportConfig(self, config_type): #TODO remove
         if self.checkAppAuthenticated() is False:
             return self.getAuthenticationResponse()
 

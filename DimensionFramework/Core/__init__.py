@@ -2,12 +2,6 @@ from DimensionFramework.Core.SettingManager import SettingManager
 from DimensionFramework.Core.FileUploadManager import FileUploadManager
 from DimensionFramework.Core.ClassLoader import ClassLoader
 from DimensionFramework.Core.EmailManager import EmailManager
-from DimensionFramework.Customer.rochebpsp import Validation
-from DimensionFramework.Customer.rochebpsp import Export
-from DimensionFramework.Customer.rochebpsp import BusinessLogic
-from DimensionFramework.Customer.hays import Validation
-from DimensionFramework.Customer.hays import Export
-from DimensionFramework.Customer.hays import BusinessLogic
-from DimensionFramework.Customer.adminportal import Validation
-from DimensionFramework.Customer.adminportal import Export
-from DimensionFramework.Customer.adminportal import BusinessLogic
+# from DimensionFramework.Customer.bpsp import Validation
+# from DimensionFramework.Customer.bpsp import Export
+# from DimensionFramework.Customer.bpsp import BusinessLogic

@@ -120,7 +120,7 @@ class SettingManager:
         return self.getInstance() + '_' + self.FRAMEWORK_SSO_SALT_NAME
 
     def getConfig(self):
-        cnf = self.getJsonSetting(self.getConfigCacheKey(), 'config')
+        cnf = self.getJsonSetting(self.getConfigCacheKey(), 'application_settings')
         return cnf
 
     def getParam(self, param_name):
@@ -151,6 +151,7 @@ class SettingManager:
             json_url = os.path.join(self.site_root, folder, file_path + '.json')
             setting = json.load(open(json_url), encoding="utf-8")
             setting['instance'] = self.instance
+            setting['blueprint_static'] = self.instance + '.static'
             self.cacheSet(key, setting, 0)
         return setting
 

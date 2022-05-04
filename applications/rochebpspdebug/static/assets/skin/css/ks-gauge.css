@@ -1,0 +1,28 @@
+.ks-gauge {
+    display: block;
+}
+
+.ks-gauge-inner {
+    position: relative;
+}
+
+.ks-gauge-canvas img {
+    width: 100%;
+}
+
+.ks-gauge-labels {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.ks-gauge-labels {
+    left: 0;
+    position: absolute;
+    right: 0;
+}
+
+.ks-gauge-labels-col {
+    display: flex;
+    flex-direction: column;
+}

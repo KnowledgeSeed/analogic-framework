@@ -1,1 +1,0 @@
-Másold be a post-checkout fájlt a c:\lokál_repositoryd_útvonala/.git/hooks mappába.

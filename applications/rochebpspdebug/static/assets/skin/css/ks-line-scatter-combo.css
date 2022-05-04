@@ -1,0 +1,83 @@
+#AMLegendLine {
+    display: inline-block;
+    position: relative;
+    left: 5%;
+    margin-top: 30px;
+}
+
+#AMLegendScatter {
+    display: inline-block;
+    position: relative;
+    float: right;
+    margin-top: 30px;
+}
+
+.ChartLegendTag {
+    border-radius: 2px;
+    color: #fff;
+    cursor: pointer;
+    float: left;
+    font-size: 10px;
+    font-weight: normal;
+    line-height: 10px;
+    margin-bottom: 2px;
+    margin-right: 10px;
+    padding: 2px 5px;
+    position: relative;
+    white-space: nowrap;
+}
+
+.ChartLegendTag.Off {
+    border: 1px solid;
+    padding: 1px 4px;
+}
+
+.ChartLegendTag.HasIcon {
+    margin-left: 12px;
+}
+
+.ChartLegendTag.HasIcon div {
+    left: -12px;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.ChartLegendTag.FullCircle div {
+    border-radius: 50%;
+    height: 10px;
+    width: 10px;
+}
+
+.ChartLegendTag.circle div {
+    border: 2px solid;
+    border-radius: 50%;
+    height: 10px;
+    width: 10px;
+}
+
+.ChartLegendTag.rectRot div {
+    height: 8px;
+    margin-top: -3.5px;
+    width: 8px;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.ChartLegendTag.rect div {
+    height: 8px;
+    width: 8px;
+}
+
+.ChartLegendTag.triangle div {
+    border-left: 4.5px solid transparent!important;
+    border-right: 4.5px solid transparent!important;
+    border-bottom: 8px solid;
+}

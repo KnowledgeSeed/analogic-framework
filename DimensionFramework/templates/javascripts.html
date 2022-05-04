@@ -87,9 +87,9 @@
 <!-- end layouts -->
 
 <!-- configs -->
-<script type="text/javascript" src="{{cnf.assetsUrl}}/js/configs/{{cnf.applicationConfigFolder}}/repository.js?v={{cnf.version}}" charset="UTF-8"></script>
-<script type="text/javascript" src="{{cnf.assetsUrl}}/js/configs/{{cnf.applicationConfigFolder}}/widget-config.js?v={{cnf.version}}" charset="UTF-8"></script>
-<script type="text/javascript" src="{{cnf.assetsUrl}}/js/configs/{{cnf.applicationConfigFolder}}/event-map.js?v={{cnf.version}}" charset="UTF-8"></script>
+<script type="text/javascript" src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/repository.js')}}?v={{cnf.version}}"></script>
+<script type="text/javascript" src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/widget-config.js')}}?v={{cnf.version}}"></script>
+<script type="text/javascript" src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/event-map.js')}}?v={{cnf.version}}"></script>
 <!-- end configs -->
 
 <script type="text/javascript" src="{{cnf.assetsUrl}}/js/exports/base/export.js?v={{cnf.version}}"></script>
