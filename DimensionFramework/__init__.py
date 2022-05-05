@@ -35,7 +35,7 @@ class DimensionFrameworkApp(Flask):
         self.add_url_rule('/<path:instance>/' + url, methods=methods, view_func=view_func)
 
     def index(self, instance):
-        return self.get_provider(instance).index()
+        return self.get_provider(instance.replace('/', '')).index()
 
     def login(self, instance):
         return self.get_provider(instance).login()
@@ -101,6 +101,10 @@ def load_logging(app):
         os.makedirs(logs_folder_path)
 
     log_config = json.load(open(os.path.join(app.root_path, 'logging.json')))
+    for h in log_config['handlers']:
+        if 'filename' in log_config['handlers'][h]:
+            log_config['handlers'][h]['filename'] = os.path.join(app.instance_path, log_config['handlers'][h]['filename'])
+
     logging.config.dictConfig(log_config)
 
 

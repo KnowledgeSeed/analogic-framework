@@ -26,3 +26,24 @@ OR manually:
 set FLASK_APP=DimensionFramework\__init__.py
 set FLASK_ENV=development
 flask run
+
+pypi build:
+
+py -m build
+py -m twine upload --repository testpypi dist/*
+
+
+<VirtualHost *:5000>
+    WSGIScriptAlias / C:/Repos/flaskProject3/apache.wsgi
+	Alias /applications/ C:/Repos/flaskProject3/applications/
+	Alias /static/ C:/Repos/flaskProject3/DimensionFramework/static/
+	Alias /templates/ C:/Repos/flaskProject3/DimensionFramework/templates/
+	LogLevel debug
+	ErrorLog logs/seeder_error.log
+	CustomLog logs/seeder_custom.log combined
+    <Directory C:/Repos/flaskProject3>
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+

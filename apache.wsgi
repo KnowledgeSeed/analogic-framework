@@ -5,4 +5,4 @@ root = os.path.realpath(os.path.dirname(__file__))
 sys.path.insert(0, root)
 sys.path.append(os.path.join(root, 'venv', 'Lib', 'site-packages'))
 
-from DimensionFramework.run import app as application
+from run import app as application

@@ -8,7 +8,7 @@ if len(sys.argv) < 2:
     print('setup_local_with_default_credential.py applicationName')
     exit(0)
 
-json_url = os.path.join(os.path.dirname(__file__), '..', 'applications', sys.argv[1], 'config.json')
+json_url = os.path.join(os.getcwd(), 'applications', sys.argv[1], 'application_settings.json')
 if os.path.exists(json_url) is False:
     print('path does not exists: ' + json_url)
     exit(0)

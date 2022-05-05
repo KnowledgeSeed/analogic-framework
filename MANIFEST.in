@@ -1,7 +1,3 @@
-prune DimensionFramework/applications
-prune DimensionFramework/cache
-prune DimensionFramework/logs
-prune DimensionFramework/tests
-prune DimensionFramework/configs
 graft DimensionFramework/global
+include DimensionFramework/logging.json
 global-exclude *.pyc

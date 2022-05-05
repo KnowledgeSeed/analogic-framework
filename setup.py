@@ -2,13 +2,12 @@ from setuptools import setup
 
 setup(
     name='DimensionFramework',
-    version='4.0.3',
+    version='4.0.4',
     packages=[
         'DimensionFramework',
         'DimensionFramework/AuthenticationProviders',
         'DimensionFramework/Core',
-        'DimensionFramework/Pivot',
-
+        'DimensionFramework/Pivot'
     ],
     include_package_data=True,
     install_requires=[

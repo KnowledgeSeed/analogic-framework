@@ -22,7 +22,7 @@ def createPoolUserDB(setting, application):
 
     if 'Pool' in setting['authenticationMode']:
         poolUserManager = SqlitePoolUserManager(setting['pool']['users'],
-                                                os.path.join(os.path.dirname(__file__), '..'),
+                                                os.getcwd(),
                                                 application)
         poolUserManager.clear()
         poolUserManager.createDatabase()
