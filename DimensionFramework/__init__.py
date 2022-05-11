@@ -2,6 +2,7 @@ import os
 from flask import Flask, session, Blueprint
 import DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory
 from DimensionFramework.AuthenticationProviders.Base import Base
+from DimensionFramework.Core.ReverseProxy import ReverseProxy
 from flask_caching import Cache
 from datetime import timedelta
 import logging.config
@@ -12,6 +13,8 @@ import sys
 
 class DimensionFrameworkApp(Flask):
     def __init__(self, *args, **kwargs):
+        self._reverse_proxy_path = kwargs.get('reverse_proxy_path', 't')
+        kwargs.pop('reverse_proxy_path')
         super().__init__(*args, **kwargs)
 
         self.add_url_rule('/', defaults={'instance': 'default'}, view_func=self.index)
@@ -29,6 +32,9 @@ class DimensionFrameworkApp(Flask):
         self.add_dimension_framework_url_rule('clearcache', ['GET'], self.clear_cache)
         self.add_dimension_framework_url_rule('ping', ['GET'], self.ping)
         self.add_dimension_framework_url_rule('pivot', ['GET', 'POST'], self.pivot)
+
+    def get_reverse_proxy_path(self):
+        return self._reverse_proxy_path
 
     def add_dimension_framework_url_rule(self, url, methods, view_func):
         self.add_url_rule('/' + url, defaults={'instance': 'default'}, methods=methods, view_func=view_func)
@@ -84,9 +90,12 @@ class DimensionFrameworkApp(Flask):
         return Cache(self, config={'CACHE_TYPE': 'FileSystemCache', 'CACHE_DIR': cache_path})
 
 
-def create_app(site_root):
-    app = DimensionFrameworkApp(__name__, instance_path=site_root)
+def create_app(site_root, reverse_proxy_path=''):
+    app = DimensionFrameworkApp(__name__, instance_path=site_root, reverse_proxy_path=reverse_proxy_path)
     app.secret_key = b'\x18m\x18\\]\xec\xcf\xbd\xf2\x89\xb9\xa3\x06N\x07\xfd'
+
+    if reverse_proxy_path != '':
+        app.wsgi_app = ReverseProxy(app.wsgi_app, script_name='/' + reverse_proxy_path)
 
     load_logging(app)
 

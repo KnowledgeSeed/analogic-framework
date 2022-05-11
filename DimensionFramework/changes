@@ -1,0 +1,16 @@
+config.json -> application_settings.json
+deleted:
+ applicationAssetsFolder
+ applicationConfigFolder
+ apiLogout
+ logout
+ restRequestDebugFlag
+ tm1ExecuteMDX
+ MDXUrl
+ defaultMDXQuery
+ defaultUploadTargetFolder
+ defaultUploadStagingFolder
+ subpath
+ host
+
+MainPage -> mainPage

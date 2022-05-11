@@ -27,7 +27,7 @@ let EventMap, Repository, WidgetConfig;
         initEvents();
         WidgetValue.systemValueGlobalCompanyProductPlanVersion = 'Budget';
 
-        Render.showPage(WidgetValue.redirect !== null ? WidgetValue.redirect : app.MainPage);
+        Render.showPage(WidgetValue.redirect !== null ? WidgetValue.redirect : app.mainPage);
 
         WidgetValue.redirect = null;
     }

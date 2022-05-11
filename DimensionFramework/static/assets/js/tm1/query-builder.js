@@ -453,7 +453,7 @@ QB.getCellsetUrl = p => {
 QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
     let params = [], keyAdded = false,
         subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&server=1' : '' : '?server=1';
-    let newUrl = url.includes('pool') ? url : url.replace(app.tm1ApiHost, app.host + '/' + (app.subpath ? app.subpath + '/' + app.instance : app.instance) + '/pool');
+    let newUrl = url.includes('pool') ? url : url.replace(app.tm1ApiHost, app.hostname + '/' + (app.reverseProxyPath ? app.reverseProxyPath + '/' + app.instance : app.instance) + '/pool');
 
     for (const [key, value] of Object.entries(body)) {
         params.push(`"${key}": "${value}"`);
@@ -474,11 +474,9 @@ QB.getMDXUrl = p => {
         };
     }
 
-    if (p.query) {
-        return {url: app.MDXUrl + p.query, type: p.type ? p.type : 'POST'};
-    }
+    L('error: url not found', p);
 
-    return {url: app.defaultMDXQuery, type: p.type ? p.type : 'POST'};
+    return {url: '', type: p.type ? p.type : 'POST'};
 };
 
 QB.processResultAsObject = (valueQueries, data, newContext = false) => {

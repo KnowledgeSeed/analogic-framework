@@ -52,7 +52,7 @@ class TextAreaWidget extends Widget {
         </div>
         <div class="ks-textarea-field">
             <div class="ks-textarea-field-inner">
-                <div class="ks-textarea-icon">${v.icon !== false ? `<img src="${app.assetsUrl}/skins/${app.applicationAssetsFolder}/images/${v.icon}">` : '' }</div>
+                <div class="ks-textarea-icon">${v.icon !== false ? `<img src="${app.applicationAssetsUrl}/skins/images/${v.icon}">` : '' }</div>
                 <div class="ks-textarea-divider"></div>
                 <textarea ${v.placeholder !== false ? `placeholder="${v.placeholder}"` : ''} style="${textStyles.join('')}" data-action="save" data-ordinal="${d.ordinal}" data-id="${o.id}" class="ks-textarea-input" >${d.value || ''}</textarea>
             </div>

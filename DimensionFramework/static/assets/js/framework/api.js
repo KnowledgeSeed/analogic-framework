@@ -58,7 +58,7 @@ app.fn.openPage = function openPage(page) {
 };
 
 app.fn.backToMain = function backToMain() {
-    Render.showPage(app.MainPage);
+    Render.showPage(app.mainPage);
 };
 
 app.fn.openPrevPage = function openPrevPage() {

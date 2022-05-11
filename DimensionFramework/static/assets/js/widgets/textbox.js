@@ -44,7 +44,7 @@ class TextBoxWidget extends Widget {
         </div>
         <div class="ks-textbox-field">
             <div class="ks-textbox-field-inner ${v.editable === false ? 'readonly' : ''}">
-                <div class="ks-textbox-icon">${v.icon !== false ? `<img src="${app.assetsUrl}/skins/${app.applicationAssetsFolder}/images/${v.icon}">` : '' }</div>
+                <div class="ks-textbox-icon">${v.icon !== false ? `<img src="${app.applicationAssetsUrl}/skin/images/${v.icon}">` : '' }</div>
                 <div class="ks-textbox-divider"></div>
                 <input ${v.editable === false ? 'readonly' : ''} style="${textStyles.join('')}" data-action="writeEnd" data-id="${o.id}"  type="${v.textBoxType}" value="${d.value}" class="ks-textbox-input" placeholder="${v.defaultText ? v.defaultText : ''}">
             </div>

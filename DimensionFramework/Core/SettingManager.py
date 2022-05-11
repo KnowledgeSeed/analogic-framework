@@ -3,11 +3,12 @@ import yaml
 import os
 import keyring
 import base64
-from flask import json
+from flask import json, request, current_app
 import logging
 from pbkdf2 import PBKDF2
 from Crypto.Cipher import AES
 from DimensionFramework.Core.SqlitePoolUserManager import SqlitePoolUserManager
+from urllib.parse import urlparse
 
 PASSPHRASE_SIZE = 64
 KEY_SIZE = 32
@@ -89,7 +90,7 @@ class SettingManager:
         return self.getInstanceCacheKey(self.CONFIG)
 
     def getRepositoryCacheKey(self):
-        return self.getMiddlewareConfig() + '_' + self.REPOSITORY
+        return self.getInstance() + '_' + self.REPOSITORY
 
     def getTm1SessionIdCacheKey(self):
         return self.getInstanceCacheKey(self.TM1SessionId)
@@ -130,12 +131,12 @@ class SettingManager:
     def getBaseUrl(self, route=''):
         cnf = self.getConfig()
         if self.instance == 'default':
-            return os.path.join(cnf['host'], cnf['subpath'], route)
-        return os.path.join(cnf['host'], cnf['subpath'], self.instance, route)
+            return os.path.join(cnf['hostname'], cnf['reverseProxyPath'], route)
+        return os.path.join(cnf['hostname'], cnf['reverseProxyPath'], self.instance, route)
 
     def getRepository(self):
         return self.getYamlSetting(self.getRepositoryCacheKey(), 'repository', False,
-                                   os.path.join('configs', self.getMiddlewareConfig()))
+                                   os.path.join('applications', self.getInstance(), 'server', 'configs'))
 
     def getMDX(self, key):
         repository = self.getRepository()
@@ -150,10 +151,21 @@ class SettingManager:
                 file_path = os.path.join(self.instance, file_name)
             json_url = os.path.join(self.site_root, folder, file_path + '.json')
             setting = json.load(open(json_url), encoding="utf-8")
-            setting['instance'] = self.instance
-            setting['blueprint_static'] = self.instance + '.static'
+
+            if file_name == 'application_settings':
+                setting['instance'] = self.instance
+                setting['blueprint_static'] = self.instance + '.static'
+                setting['hostname'] = self.get_host_name_url()
+                setting['reverseProxyPath'] = current_app.get_reverse_proxy_path()
+
             self.cacheSet(key, setting, 0)
         return setting
+
+    def get_host_name_url(self):
+        o = urlparse(request.base_url)
+        if current_app.get_reverse_proxy_path() != '':
+            return o.scheme + '://' + o.hostname + '/'
+        return o.scheme + '://' + o.netloc + '/'
 
     def getYamlSetting(self, key, file_name, by_instance=True, folder='applications'):
         setting = self.cacheGet(key)
@@ -172,7 +184,7 @@ class SettingManager:
 
     def getCustomObjectDescription(self, key):
         classes = self.getJsonSetting(self.getClassesCacheKey(), 'custom_objects', False,
-                                      os.path.join('configs', self.getMiddlewareConfig()))
+                                      os.path.join('applications', self.getInstance(), 'server', 'configs'))
         return classes[key]
 
     def setTM1SessionId(self, tm1_session_id, suffix=''):
@@ -231,10 +243,6 @@ class SettingManager:
         cnf = self.getConfig()
         return cnf['camNamespace']
 
-    def getMiddlewareConfig(self):
-        cnf = self.getConfig()
-        return cnf['applicationConfigFolder']
-
     def getPoolCamNamespace(self, user):
         password = self.getPassword(user)
         namespace = self.getAppCamNamespace()
@@ -245,7 +253,8 @@ class SettingManager:
         cnf = self.getConfig()
         password = keyring.get_password(cnf['sso']['adminNamespace'] + '/' + cnf['sso']['admin'], cnf['sso']['admin'])
         password = decrypt(password.encode('latin_1'),
-                           getSaltForKey(cnf['sso']['admin'], self.getFrameworkSSOSaltName()), self.getFrameworkSSOPassPhraseName())
+                           getSaltForKey(cnf['sso']['admin'], self.getFrameworkSSOSaltName()),
+                           self.getFrameworkSSOPassPhraseName())
         s = cnf['sso']['admin'] + ":" + password + ":" + cnf['sso']['adminNamespace']
         return 'CAMNamespace ' + base64.b64encode(s.encode('utf-8')).decode("utf-8")
 

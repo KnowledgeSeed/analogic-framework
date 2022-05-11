@@ -46,8 +46,6 @@ min_cmd(js_path, 'minified.js',
          'framework\\api.js', 'framework\\shout.js', 'exports', 'tm1', 'widgets\\base', 'widgets\\new',
          'widgets\\loader.js'])
 
-min_cmd(js_path, 'minified_deprecated.js', ['widgets\\deprecated'])
-
 gen = (x for x in os.scandir(configs_path) if x.name not in ['default', 'dummy'])
 for entry in gen:
     if entry.is_dir():

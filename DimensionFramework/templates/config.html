@@ -3,26 +3,21 @@
 
     let app = {};
     app = {fn: {}, id: 0, isMobile: null, isTouched: false, shoutWaiting: false, url: {}}
-    app.assetsUrl = '{{cnf.assetsUrl}}';
-    app.applicationAssetsFolder = '{{cnf.applicationAssetsFolder}}';
-    app.host = '{{ cnf.host }}';
+    app.assetsUrl = '{{url_for('static', filename='assets')}}';
+    app.applicationAssetsUrl = '{{url_for(cnf.blueprint_static, filename='assets')}}';
+    app.hostname = '{{ cnf.hostname }}';
     app.authenticationMode = '{{ cnf.authenticationMode }}';
     app.sessionExpiresInMinutes = {{ cnf.sessionExpiresInMinutes }};
     app.url.authenticationBridge = "{{ cnf.authenticationBridge|safe }}";
-    app.url.apiLogout = '{{ cnf.apiLogout }}';
-    app.url.logout = '{{ cnf.logout }}';
     app.tm1ApiHost = '{{ cnf.tm1ApiHost }}';
     app.tm1ApiSubPath = '{{ cnf.tm1ApiSubPath }}';
-    app.tm1ExecuteMDX = '{{ cnf.tm1ExecuteMDX }}';
     app.tm1CellsetId = (cellsetId) => `Cellsets('${cellsetId}')?`;
-    app.MDXUrl = '{{ cnf.MDXUrl }}';
     app.CellSetUrl = (cellsetId) => app.tm1ApiHost + app.tm1ApiSubPath + app.tm1CellsetId(cellsetId);
-    app.defaultMDXQuery = '{{ cnf.defaultMDXQuery }}';
     app.defaultCellsetIdQuery = (cellsetId) => app.CellSetUrl(cellsetId) + '$expand=Cells($select=Ordinal,Value)';
-    app.MainPage = '{{ cnf.MainPage }}';
+    app.mainPage = '{{ cnf.mainPage }}';
     app.handled401 = false;
     app.instance = '{{ cnf.instance }}';
-    app.subpath = '{{ cnf.subpath }}';
+    app.reverseProxyPath = '{{ cnf.reverseProxyPath }}';
     app.defaultUploadTargetFolder = '{{ cnf.defaultUploadTargetFolder }}';
     app.defaultUploadStagingFolder = '{{ cnf.defaultUploadStagingFolder }}';
     app.pingTime = new Date().getTime();

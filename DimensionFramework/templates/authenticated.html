@@ -3,41 +3,29 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ cnf.applicationName }}</title>
-        <link rel="apple-touch-icon" sizes="180x180" href="{{cnf.assetsUrl}}/skins/{{cnf.applicationAssetsFolder}}/favicon/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{cnf.assetsUrl}}/skins/{{cnf.applicationAssetsFolder}}/favicon/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{cnf.assetsUrl}}/skins/{{cnf.applicationAssetsFolder}}/favicon/favicon-16x16.png">
-        <link rel="manifest" href="{{cnf.assetsUrl}}/skins/{{cnf.applicationAssetsFolder}}/favicon/site.webmanifest">
-        <link rel="mask-icon" href="{{cnf.assetsUrl}}/skins/{{cnf.applicationAssetsFolder}}/favicon/safari-pinned-tab.svg" color="#0066b1">
+        <title>{{ cnf.projectName }}</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for(cnf.blueprint_static, filename='assets/skin/favicon/apple-touch-icon.png')}}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for(cnf.blueprint_static, filename='assets/skin/favicon/favicon-32x32.png')}}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for(cnf.blueprint_static, filename='assets/skin/favicon/favicon-16x16.png')}}">
+        <link rel="manifest" href="{{ url_for(cnf.blueprint_static, filename='assets/skin/favicon/site.webmanifest')}}">
+        <link rel="mask-icon" href="{{ url_for(cnf.blueprint_static, filename='assets/skin/favicon/safari-pinned-tab.svg')}}" color="#0066b1">
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="theme-color" content="#ffffff">
         {% if (cnf.useMinifiedAssets)%}
-            <link href="{{cnf.assetsUrl}}/css/minified.css?v={{ cnf.version }}" rel="stylesheet" type="text/css">
-            <link href="{{cnf.assetsUrl}}/skins/{{ cnf.applicationAssetsFolder }}/css/minified.css?v={{ cnf.version }}" rel="stylesheet" type="text/css">
-            {%  if (applicationAssetsFolder == "risksimulation") %}
-                <link href="{{cnf.assetsUrl}}/css/minified.style.css?v={{ cnf.version }}" rel="stylesheet" type="text/css">
-            {% endif %}
+            <link href="{{ url_for('static', filename='assets/css/minified.css')}}?v={{ cnf.version }}" rel="stylesheet" type="text/css">
+            <link href="{{ url_for(cnf.blueprint_static, filename='assets/skin/css/minified.css')}}?v={{ cnf.version }}" rel="stylesheet" type="text/css">
         {% else %}
-            {%  if (cnf.applicationAssetsFolder == "risksimulation") %} <!-- deprecated -->
-                <link href="{{cnf.assetsUrl}}/css/style.css?v={{cnf.version}}" rel="stylesheet" type="text/css">
-            {%  endif %}
             {% include 'css.html' %}
         {% endif %}
     </head>
     <body>
         {% if (cnf.useMinifiedAssets)%}
             {% include 'config.html' %}
-            <script type="text/javascript" src="{{cnf.assetsUrl}}/js/minified.js?v={{ cnf.version }}" charset="UTF-8"></script>
-            {%  if (applicationAssetsFolder == "risksimulation") %}
-                <script type="text/javascript" src="{{cnf.assetsUrl}}/js/minified_deprecated.js?v={{ cnf.version }}" charset="UTF-8"></script>
-            {% endif %}
-            <script type="text/javascript" src="{{cnf.assetsUrl}}/js/configs/{{ cnf.applicationAssetsFolder }}/minified.js?v={{ cnf.version }}" charset="UTF-8"></script>
-            <script type="text/javascript" src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/repository.js')}}?v={{cnf.version}}"></script>
+            <script type="text/javascript" src="{{ url_for('static', filename='assets/js/minified.js')}}?v={{ cnf.version }}" charset="UTF-8"></script>
+            <script type="text/javascript" src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/minified.js')}}?v={{ cnf.version }}" charset="UTF-8"></script>
+            <script type="text/javascript" src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/repository.js')}}')}}?v={{cnf.version}}"></script>
         {% else %}
             {% include 'javascripts.html' %}
-            {%  if (cnf.applicationAssetsFolder == "risksimulation") %}
-                {% include 'deprecated.html' %}
-            {%  endif %}
         {% endif %}
         <script type="text/javascript">
             {% for k, v in request.args.items() %}

@@ -55,19 +55,6 @@ class Base:
                          cache_timeout=0,
                          mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
-    def do(self):
-        if self.checkAppAuthenticated() is False:
-            return self.getAuthenticationResponse()
-
-        key = request.args.get('key')
-
-        if key is None:
-            return self.getNotFoundResponse()
-
-        description = self.setting.getCustomObjectDescription(key)
-
-        return ClassLoader().call(description, request, self.getTM1Service(), self.setting, self)
-
     def getServerSideMDX(self):
         mdx = request.data
         if request.args.get('server') is not None:
@@ -162,7 +149,7 @@ class Base:
         response.set_cookie('authenticated', 'authenticated', max_age=cnf['sessionExpiresInMinutes'] * 60)
         return response
 
-    def exportConfig(self, config_type): #TODO remove
+    def exportConfig(self, config_type):  # TODO remove
         if self.checkAppAuthenticated() is False:
             return self.getAuthenticationResponse()
 
@@ -194,4 +181,3 @@ class Base:
 
     def doPoolRequest(self, url, method, mdx, headers=None, cookies=None):
         pass
-
