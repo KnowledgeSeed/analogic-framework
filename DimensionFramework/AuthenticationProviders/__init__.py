@@ -1,4 +1,3 @@
-from DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory import AuthenticationProviderFactory
 from DimensionFramework.AuthenticationProviders.Base import Base
 from DimensionFramework.AuthenticationProviders.LoginBasicPool import LoginBasicPool
 from DimensionFramework.AuthenticationProviders.Cam import Cam

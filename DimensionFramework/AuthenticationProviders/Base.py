@@ -1,14 +1,12 @@
-import pandas as pd
 import sys
-
-pd.set_option('display.float_format', lambda x: '%.3f' % x)
-from flask import request, send_file, json, request
+from flask import send_file, json, request
 from DimensionFramework.Core.ClassLoader import ClassLoader
 from DimensionFramework.Core.SettingManager import SettingManager
 from DimensionFramework.Core.FileUploadManager import FileUploadManager
 import DimensionFramework.Pivot.Api as PivotApi
-from io import StringIO, BytesIO
 import logging
+import pandas as pd
+pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
 
 class Base:
@@ -149,34 +147,11 @@ class Base:
         response.set_cookie('authenticated', 'authenticated', max_age=cnf['sessionExpiresInMinutes'] * 60)
         return response
 
-    def exportConfig(self, config_type):  # TODO remove
-        if self.checkAppAuthenticated() is False:
-            return self.getAuthenticationResponse()
-
-        file_name = config_type + '-export.csv'
-
-        if 'config' == config_type:
-            dict = self.setting.getConfig()
-        else:
-            dict = self.setting.getRepository()
-
-        f = StringIO()
-
-        for key in dict.keys():
-            f.write('"%s";"%s"\n' % (key, dict[key]))
-
-        mem = BytesIO()
-        mem.write(f.getvalue().encode('utf-8'))
-        mem.seek(0)
-        f.close()
-
-        return send_file(mem, as_attachment=True, attachment_filename=file_name, mimetype='text/csv')
-
     def getLogger(self):
         return logging.getLogger(self.setting.getInstance())
 
     def ping(self):
-        self.getLogger().info('ping test2')
+        self.getLogger().info('ping')
         return 'Ok', 200, {'Content-Type': 'application/json'}
 
     def doPoolRequest(self, url, method, mdx, headers=None, cookies=None):

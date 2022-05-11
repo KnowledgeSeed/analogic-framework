@@ -1,6 +1,5 @@
 import os
 from flask import Flask, session, Blueprint
-import DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory
 from DimensionFramework.AuthenticationProviders.Base import Base
 from DimensionFramework.Core.ReverseProxy import ReverseProxy
 from flask_caching import Cache
@@ -9,6 +8,7 @@ import logging.config
 import json
 import pkgutil
 import sys
+import importlib
 
 
 class DimensionFrameworkApp(Flask):
@@ -77,9 +77,9 @@ class DimensionFrameworkApp(Flask):
         cache = self.get_cache()
         config = Base(cache, self.instance_path, instance).setting.getConfig()
 
-        provider = DimensionFramework.AuthenticationProviders.AuthenticationProviderFactory.getProvider(config, cache,
-                                                                                                        self.instance_path,
-                                                                                                        instance)
+        module_name, class_name = config['authenticationMode'].rsplit(".", 1) #Todo check module loaded
+        provider_class = getattr(importlib.import_module(module_name), class_name)
+        provider = provider_class(cache, self.instance_path, instance)
 
         session.permanent = True
         self.permanent_session_lifetime = timedelta(minutes=config['sessionExpiresInMinutes'] - 1)
