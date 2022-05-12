@@ -77,8 +77,14 @@ class DimensionFrameworkApp(Flask):
         cache = self.get_cache()
         config = Base(cache, self.instance_path, instance).setting.getConfig()
 
-        module_name, class_name = config['authenticationMode'].rsplit(".", 1) #Todo check module loaded
-        provider_class = getattr(importlib.import_module(module_name), class_name)
+        module_name, class_name = config['authenticationMode'].rsplit(".", 1)
+
+        if module_name in sys.modules:
+            module = sys.modules[module_name]
+        else:
+            module = importlib.import_module(module_name)  # Todo ModuleNotFoundError
+
+        provider_class = getattr(module, class_name)
         provider = provider_class(cache, self.instance_path, instance)
 
         session.permanent = True
@@ -101,6 +107,8 @@ def create_app(site_root, reverse_proxy_path=''):
 
     load_applications(app)
 
+    load_extensions(app)
+
     return app
 
 
@@ -112,9 +120,28 @@ def load_logging(app):
     log_config = json.load(open(os.path.join(app.root_path, 'logging.json')))
     for h in log_config['handlers']:
         if 'filename' in log_config['handlers'][h]:
-            log_config['handlers'][h]['filename'] = os.path.join(app.instance_path, log_config['handlers'][h]['filename'])
+            log_config['handlers'][h]['filename'] = os.path.join(app.instance_path,
+                                                                 log_config['handlers'][h]['filename'])
 
     logging.config.dictConfig(log_config)
+
+
+def load_extensions(app):
+    extensions_dir_name = 'extensions'
+    extensions_dir = os.path.join(app.instance_path, extensions_dir_name)
+    for extension_dir_name in os.listdir(extensions_dir):
+        extension_dir = os.path.join(extensions_dir, extension_dir_name)
+
+        extensions = pkgutil.iter_modules(path=[extension_dir])
+        for loader, mod_name, is_pkg in extensions:
+            class_name = extensions_dir_name + '.' + extension_dir_name + '.' + mod_name
+            if mod_name != 'setup' and mod_name not in sys.modules:
+                loaded_module = __import__(class_name)
+                if mod_name == 'extension':
+                    for obj in vars(
+                            vars(vars(loaded_module)[extension_dir_name])[mod_name]).values():  # Todo error handling
+                        if isinstance(obj, Blueprint):
+                            app.register_blueprint(obj)
 
 
 def load_applications(app):
@@ -129,10 +156,10 @@ def load_applications(app):
             if mod_name not in sys.modules:
                 loaded_module = __import__(class_name)
                 if mod_name == 'application':
-                    for obj in vars(vars(vars(loaded_module)[application_dir_name])[mod_name]).values(): #Todo error handling
+                    for obj in vars(
+                            vars(vars(loaded_module)[application_dir_name])[mod_name]).values():  # Todo error handling
                         if isinstance(obj, Blueprint):
                             app.register_blueprint(obj)
-
 
 #
 #

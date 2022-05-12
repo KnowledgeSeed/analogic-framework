@@ -3,7 +3,7 @@
   "projectId": "bpsp",
   "version": "189",
   "useMinifiedAssets": false,
-  "authenticationMode": "DimensionFramework.AuthenticationProviders.LoginBasicPool.LoginBasicPool",
+  "authenticationMode": "DimensionFrameworkPoolExtension.AuthenticationProviders.LoginBasicPool.LoginBasicPool",
   "camNamespace": "knowledgeseed",
   "sessionExpiresInMinutes": 20,
   "authenticationBridge": "",

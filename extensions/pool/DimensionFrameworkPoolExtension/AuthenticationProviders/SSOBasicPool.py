@@ -1,5 +1,5 @@
 import requests
-from DimensionFramework.AuthenticationProviders.SSOPool import SSOPool
+from DimensionFrameworkPoolExtension.AuthenticationProviders.SSOPool import SSOPool
 from TM1py.Services import TM1Service
 
 

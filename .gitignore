@@ -11,3 +11,4 @@ logs
 pool.db
 dist
 DimensionFramework.egg-info
+DimensionFrameworkPoolExtension.egg-info

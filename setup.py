@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='DimensionFramework',
-    version='4.0.4',
+    version='4.0.5',
     packages=[
         'DimensionFramework',
         'DimensionFramework/AuthenticationProviders',
