@@ -139,6 +139,26 @@ class SliderWidget extends Widget {
 
             SliderWidget.isDocEventsHaveBeenBound = true;
         }
+
+        let widgetValue = this.value;
+        if (v('updateableWidgetId', widgetValue)) {
+            let updateableInput = $('#' + widgetValue.updateableWidgetId).find('input');
+            updateableInput.off('change');
+            updateableInput.on('change', () => {
+                const sliderDiv = section.find('.ks-slider');L(sliderDiv);
+                const slider = SliderWidget.getSlider(sliderDiv);
+
+                let updateableInputValue = Utils.parseNumber(updateableInput.val());
+
+                v(sliderDiv.data('id')).changedByInput = true;
+
+                if (widgetValue.calculateSliderValue) {
+                    slider.set(widgetValue.calculateSliderValue(updateableInputValue));
+                } else {
+                    slider.set(updateableInputValue);
+                }
+            });
+        }
     }
 
     createSlider(section) {
@@ -300,25 +320,6 @@ class SliderWidget extends Widget {
 
     static initSliderDocEvents(widgetValue, section) {
         const isTouchMode = app.isTouched;
-
-        if (v('updateableWidgetId', widgetValue)) {
-            let updateableInput = $('#' + widgetValue.updateableWidgetId).find('input');
-
-            updateableInput.on('change', () => {
-                const sliderDiv = section.find('.ks-slider');
-                const slider = SliderWidget.getSlider(sliderDiv);
-
-                let updateableInputValue = Utils.parseNumber(updateableInput.val());
-
-                v(sliderDiv.data('id')).changedByInput = true;
-
-                if (widgetValue.calculateSliderValue) {
-                    slider.set(widgetValue.calculateSliderValue(updateableInputValue));
-                } else {
-                    slider.set(updateableInputValue);
-                }
-            });
-        }
 
         Doc.on('mouseover.slider', '.ks-slider', e => {
             e = $(Utils.stopEvent(e).currentTarget);

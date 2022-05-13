@@ -136,6 +136,7 @@ def load_extensions(app):
         for loader, mod_name, is_pkg in extensions:
             class_name = extensions_dir_name + '.' + extension_dir_name + '.' + mod_name
             if mod_name != 'setup' and mod_name not in sys.modules:
+                print(class_name)
                 loaded_module = __import__(class_name)
                 if mod_name == 'extension':
                     for obj in vars(
