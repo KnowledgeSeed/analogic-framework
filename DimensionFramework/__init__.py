@@ -1,5 +1,7 @@
 import os
-from flask import Flask, session, Blueprint
+from flask import Flask, session, Blueprint, request
+from flask.scaffold import setupmethod
+import typing as t
 from DimensionFramework.AuthenticationProviders.Base import Base
 from DimensionFramework.Core.ReverseProxy import ReverseProxy
 from flask_caching import Cache
@@ -12,68 +14,104 @@ import importlib
 
 
 class DimensionFrameworkApp(Flask):
+
     def __init__(self, *args, **kwargs):
-        self._reverse_proxy_path = kwargs.get('reverse_proxy_path', 't')
+        self._reverse_proxy_path = kwargs.get('reverse_proxy_path', '')
         kwargs.pop('reverse_proxy_path')
         super().__init__(*args, **kwargs)
 
-        self.add_url_rule('/', defaults={'instance': 'default'}, view_func=self.index)
-        self.add_url_rule('/<path:instance>', view_func=self.index)
-        self.add_url_rule('/<path:instance>/', view_func=self.index)
+        self.analogic_url_rules = []
 
-        self.add_dimension_framework_url_rule('login', ['GET', 'POST'], self.login)
-        self.add_dimension_framework_url_rule('pool/<path:sub_path>', ['GET', 'POST', 'PATCH'], self.pool)
-        self.add_dimension_framework_url_rule('activeUser', ['GET'],
-                                              self.active_user)  # TODO rename activeUser -> active_user
-        self.add_dimension_framework_url_rule('auth', ['POST'], self.auth)
-        self.add_dimension_framework_url_rule('authsso', ['GET'], self.auth_sso)  # TODO rename authsso -> auth_sso
-        self.add_dimension_framework_url_rule('upload', ['POST'], self.upload)
-        self.add_dimension_framework_url_rule('export', ['GET', 'POST'], self.export)
-        self.add_dimension_framework_url_rule('clearcache', ['GET'], self.clear_cache)
-        self.add_dimension_framework_url_rule('ping', ['GET'], self.ping)
-        self.add_dimension_framework_url_rule('pivot', ['GET', 'POST'], self.pivot)
+        self.add_analogic_url_rule('/', methods=['GET', 'POST'], view_func=self.index)
+        self.add_analogic_url_rule('/login', methods=['GET', 'POST'], view_func=self.login)
+        self.add_analogic_url_rule('/pool/<path:sub_path>', methods=['GET', 'POST', 'PATCH'], view_func=self.pool)
+        self.add_analogic_url_rule('/activeUser', methods=['GET'],
+                                              view_func=self.active_user)  # TODO rename activeUser -> active_user
+        self.add_analogic_url_rule('/auth', methods=['POST'], view_func=self.auth)
+        self.add_analogic_url_rule('/authsso', methods=['GET'], view_func=self.auth_sso)  # TODO rename authsso -> auth_sso
+        self.add_analogic_url_rule('/upload', methods=['POST'], view_func=self.upload)
+        self.add_analogic_url_rule('/export', methods=['GET', 'POST'], view_func=self.export)
+        self.add_analogic_url_rule('/clearcache', methods=['GET'], view_func=self.clear_cache)
+        self.add_analogic_url_rule('/ping', methods=['GET'], view_func=self.ping)
+        self.add_analogic_url_rule('/pivot', methods=['GET', 'POST'], view_func=self.pivot)
 
     def get_reverse_proxy_path(self):
         return self._reverse_proxy_path
 
-    def add_dimension_framework_url_rule(self, url, methods, view_func):
-        self.add_url_rule('/' + url, defaults={'instance': 'default'}, methods=methods, view_func=view_func)
-        self.add_url_rule('/<path:instance>/' + url, methods=methods, view_func=view_func)
+    def add_analogic_url_rule(self,
+                              rule: str,
+                              endpoint: t.Optional[str] = None,
+                              view_func: t.Optional[t.Callable] = None,
+                              provide_automatic_options: t.Optional[bool] = None,
+                              **options: t.Any):
 
-    def index(self, instance):
-        return self.get_provider(instance.replace('/', '')).index()
+        self.analogic_url_rules.append({
+            'rule': rule,
+            'endpoint': endpoint,
+            'view_func': view_func,
+            'provide_automatic_options': provide_automatic_options,
+            'options': options
+        })
 
-    def login(self, instance):
-        return self.get_provider(instance).login()
+    def register_analogic_url_rules(self, instance):
+        for url_rule in self.analogic_url_rules:
+            self.add_url_rule(instance + url_rule['rule'],
+                              url_rule['endpoint'],
+                              view_func=url_rule['view_func'],
+                              provide_automatic_options=url_rule['provide_automatic_options'],
+                              **url_rule['options'])
 
-    def pool(self, instance, sub_path):
-        return self.get_provider(instance).pool(sub_path)
+    @setupmethod
+    def register_blueprint(self, blueprint: "Blueprint", **options: t.Any) -> None:
 
-    def active_user(self, instance):
-        return self.get_provider(instance).activeUser()
+        instance = '/' + blueprint.name
+        self.register_analogic_url_rules(instance)
 
-    def auth(self, instance):
-        return self.get_provider(instance).auth()
+        super().register_blueprint(blueprint, **options)
 
-    def auth_sso(self, instance):
-        return self.get_provider(instance).authsso()
+    @staticmethod
+    def get_analogic_instance():
+        s = request.path.split('/')
+        if len(s) > 1:
+            return s[1]
+        else:
+            return 'default'
 
-    def upload(self, instance):
-        return self.get_provider(instance).processFiles()
+    def index(self):
+        return self.get_provider().index()
 
-    def export(self, instance):
-        return self.get_provider(instance).export()
+    def login(self):
+        return self.get_provider().login()
 
-    def clear_cache(self, instance):
-        return self.get_provider(instance).setting.clearCache()
+    def pool(self, sub_path):
+        return self.get_provider().pool(sub_path)
 
-    def ping(self, instance):
-        return self.get_provider(instance).ping()
+    def active_user(self):
+        return self.get_provider().activeUser()
 
-    def pivot(self, instance):
-        return self.get_provider(instance).pivot()
+    def auth(self):
+        return self.get_provider().auth()
 
-    def get_provider(self, instance):
+    def auth_sso(self):
+        return self.get_provider().authsso()
+
+    def upload(self):
+        return self.get_provider().processFiles()
+
+    def export(self):
+        return self.get_provider().export()
+
+    def clear_cache(self):
+        return self.get_provider().setting.clearCache()
+
+    def ping(self):
+        return self.get_provider().ping()
+
+    def pivot(self):
+        return self.get_provider().pivot()
+
+    def get_provider(self):
+        instance = self.get_analogic_instance()
         cache = self.get_cache()
         config = Base(cache, self.instance_path, instance).setting.getConfig()
 
@@ -96,8 +134,8 @@ class DimensionFrameworkApp(Flask):
         return Cache(self, config={'CACHE_TYPE': 'FileSystemCache', 'CACHE_DIR': cache_path})
 
 
-def create_app(site_root, reverse_proxy_path=''):
-    app = DimensionFrameworkApp(__name__, instance_path=site_root, reverse_proxy_path=reverse_proxy_path)
+def create_app(instance_path, reverse_proxy_path=''):
+    app = DimensionFrameworkApp(__name__, instance_path=instance_path, reverse_proxy_path=reverse_proxy_path)
     app.secret_key = b'\x18m\x18\\]\xec\xcf\xbd\xf2\x89\xb9\xa3\x06N\x07\xfd'
 
     if reverse_proxy_path != '':
@@ -108,6 +146,8 @@ def create_app(site_root, reverse_proxy_path=''):
     load_applications(app)
 
     load_extensions(app)
+
+    app.register_analogic_url_rules('')
 
     return app
 

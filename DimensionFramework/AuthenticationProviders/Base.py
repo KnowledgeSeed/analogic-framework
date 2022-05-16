@@ -6,6 +6,7 @@ from DimensionFramework.Core.FileUploadManager import FileUploadManager
 import DimensionFramework.Pivot.Api as PivotApi
 import logging
 import pandas as pd
+
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
 
