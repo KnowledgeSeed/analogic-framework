@@ -116,25 +116,25 @@ class ButtonWidget extends Widget {
             backgroundColor: this.getRealValue('backgroundColor', d, false),
             borderColor: this.getRealValue('borderColor', d, false),
             borderWidth: this.getRealValue('borderWidth', d, 1),
-            cornerRadius: this.getRealValue('cornerRadius', d, false),
+            cornerRadius: this.getRealValue('cornerRadius', d, false),//-
             dividerWidth: this.getRealValue('dividerWidth', d, false),
-            effect: this.getRealValue('effect', d, false),
+            effect: this.getRealValue('effect', d, false),//-
             enabled: this.getRealValue('enabled', d, true),
             fontBold: this.getRealValue('fontBold', d, false),
             fontColor: this.getRealValue('fontColor', d, false),
             fontSize: this.getRealValue('fontSize', d, false),
-            gradient: this.getRealValue('gradient', d, false),
+            gradient: this.getRealValue('gradient', d, false),//-
             icon: this.getRealValue('icon', d, false),
             iconColor: this.getRealValue('iconColor', d, false),
             iconFontSize: this.getRealValue('iconFontSize', d, false),
             iconHeight: this.getRealValue('iconHeight', d, false),
             iconPosition: this.getRealValue('iconPosition', d, 'left'),
             iconWidth: this.getRealValue('iconWidth', d, false),
-            isInfo: this.getRealValue('isInfo', d, false),
+            isInfo: this.getRealValue('isInfo', d, false),//-
             label: this.getRealValue('label', d, ''),
-            paste: this.getRealValue('paste', d, false),
+            paste: this.getRealValue('paste', d, false),//-
             skin: this.getRealValue('skin', d, 'standard'),
-            url: this.getRealValue('url', d, false),
+            url: this.getRealValue('url', d, false),//-
             visible: this.getRealValue('visible', d, true)
         };
     }
