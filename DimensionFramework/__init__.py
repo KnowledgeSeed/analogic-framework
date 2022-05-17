@@ -4,6 +4,8 @@ from flask.scaffold import setupmethod
 import typing as t
 from DimensionFramework.AuthenticationProviders.Base import Base
 from DimensionFramework.Core.ReverseProxy import ReverseProxy
+from DimensionFramework.Core.AnalogicEndpoint import AnalogicEndpoint
+from DimensionFramework.Core.AnalogicEndpointBlueprint import AnalogicEndpointBlueprint
 from flask_caching import Cache
 from datetime import timedelta
 import logging.config
@@ -11,6 +13,8 @@ import json
 import pkgutil
 import sys
 import importlib
+import functools
+from importlib import resources
 
 
 class DimensionFrameworkApp(Flask):
@@ -26,9 +30,10 @@ class DimensionFrameworkApp(Flask):
         self.add_analogic_url_rule('/login', methods=['GET', 'POST'], view_func=self.login)
         self.add_analogic_url_rule('/pool/<path:sub_path>', methods=['GET', 'POST', 'PATCH'], view_func=self.pool)
         self.add_analogic_url_rule('/activeUser', methods=['GET'],
-                                              view_func=self.active_user)  # TODO rename activeUser -> active_user
+                                   view_func=self.active_user)  # TODO rename activeUser -> active_user
         self.add_analogic_url_rule('/auth', methods=['POST'], view_func=self.auth)
-        self.add_analogic_url_rule('/authsso', methods=['GET'], view_func=self.auth_sso)  # TODO rename authsso -> auth_sso
+        self.add_analogic_url_rule('/authsso', methods=['GET'],
+                                   view_func=self.auth_sso)  # TODO rename authsso -> auth_sso
         self.add_analogic_url_rule('/upload', methods=['POST'], view_func=self.upload)
         self.add_analogic_url_rule('/export', methods=['GET', 'POST'], view_func=self.export)
         self.add_analogic_url_rule('/clearcache', methods=['GET'], view_func=self.clear_cache)
@@ -60,6 +65,9 @@ class DimensionFrameworkApp(Flask):
                               view_func=url_rule['view_func'],
                               provide_automatic_options=url_rule['provide_automatic_options'],
                               **url_rule['options'])
+
+    def register_analogic_endpoint_blueprint(self, blueprint: "AnalogicEndpointBlueprint"):
+        self.analogic_url_rules.extend(blueprint.analogic_url_rules)
 
     @setupmethod
     def register_blueprint(self, blueprint: "Blueprint", **options: t.Any) -> None:
@@ -143,9 +151,11 @@ def create_app(instance_path, reverse_proxy_path=''):
 
     load_logging(app)
 
-    load_applications(app)
+    load_dd(app)
 
     load_extensions(app)
+
+    load_applications(app)
 
     app.register_analogic_url_rules('')
 
@@ -166,6 +176,63 @@ def load_logging(app):
     logging.config.dictConfig(log_config)
 
 
+def load_dd(app):
+    extensions_dir_name = 'extensions'
+    extensions_dir = os.path.join(app.instance_path, extensions_dir_name)
+    for extension_dir_name in os.listdir(extensions_dir):
+        extension_dir = os.path.join(extensions_dir, extension_dir_name)
+        if os.path.isdir(extension_dir):
+            # module = importlib.import_module(extension_dir_name)
+            files = resources.contents(extension_dir_name)
+
+            modules = [f[:-3] for f in files if f.endswith(".py") and f[0] != "_"]
+
+            endpoints = list(filter(lambda x: x.endswith('AnalogicEndpoint'), modules))
+            load_analogic_endpoints(app, extension_dir_name, endpoints)
+
+            blueprints = list(filter(lambda x: x.endswith('endpointblueprint'), modules))
+            register_analogic_endpoint_blueprints(app, extension_dir_name, blueprints)
+
+            print('t')
+
+
+def register_analogic_endpoint_blueprints(app, extension_name, files):
+    for file in files:
+        module = extension_name + '.' + file
+
+        objects = vars(sys.modules[module])
+
+        if isinstance(objects[file], AnalogicEndpointBlueprint):
+            app.register_analogic_endpoint_blueprint(objects[file])
+
+
+def load_analogic_endpoints(app, extension_name, endpoints):
+    for endpoint in endpoints:
+        module = extension_name + '.' + endpoint
+
+        if module not in sys.modules:
+            print(module + ' not loaded')
+            return
+
+        classes = vars(sys.modules[module])
+
+        if endpoint not in classes:
+            print(endpoint + ' class not found in ' + module)
+            return
+
+        if AnalogicEndpoint not in classes[endpoint].__bases__:
+            print(endpoint + ' class does not inherit AnalogicEndpoint')
+            return
+
+        functions = [func for func in dir(classes[endpoint]) if
+                     callable(getattr(classes[endpoint], func)) and func[0] != '_']
+
+        for function in functions:
+            app.add_analogic_url_rule('/' + function, methods=['GET'], view_func=getattr(classes[endpoint], function))
+
+        print('ok')
+
+
 def load_extensions(app):
     extensions_dir_name = 'extensions'
     extensions_dir = os.path.join(app.instance_path, extensions_dir_name)
@@ -178,6 +245,8 @@ def load_extensions(app):
             if mod_name != 'setup' and mod_name not in sys.modules:
                 print(class_name)
                 loaded_module = __import__(class_name)
+                # if 'AnalogicEndpoint' in mod_name:
+                # vars(vars(vars(loaded_module)[extension_dir_name])[mod_name])[mod_name].__bases__[0] is AnalogicEndpoint
                 if mod_name == 'extension':
                     for obj in vars(
                             vars(vars(loaded_module)[extension_dir_name])[mod_name]).values():  # Todo error handling

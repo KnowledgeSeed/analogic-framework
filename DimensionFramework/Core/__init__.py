@@ -3,3 +3,4 @@ from DimensionFramework.Core.FileUploadManager import FileUploadManager
 from DimensionFramework.Core.ClassLoader import ClassLoader
 from DimensionFramework.Core.EmailManager import EmailManager
 from DimensionFramework.Core.ReverseProxy import ReverseProxy
+from DimensionFramework.Core.AnalogicEndpoint import AnalogicEndpoint
