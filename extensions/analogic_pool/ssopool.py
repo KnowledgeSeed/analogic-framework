@@ -1,12 +1,12 @@
 import jwt
 import requests
 import base64
-from DimensionFramework.AuthenticationProviders.Pool import Pool
+from analogic import Middleware
 from flask import render_template, request, session, make_response, redirect, Response
 import logging
 
 
-class SSOPool(Pool):
+class SSOPool(Middleware):
     def __init__(self, cache, site_root, instance='default'):
         super().__init__(cache, site_root, instance)
 

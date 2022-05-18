@@ -1,11 +1,11 @@
 import requests
-from DimensionFramework.AuthenticationProviders.Pool import Pool
+from analogic import Middleware
 from flask import render_template, request, make_response, redirect, session
 from TM1py.Services import TM1Service
 import logging
 
 
-class Cam(Pool):
+class Cam(Middleware):
     def __init__(self, cache, site_root, instance='default'):
         super().__init__(cache, site_root, instance)
 

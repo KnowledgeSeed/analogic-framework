@@ -11,8 +11,8 @@ root = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.insert(0, root)
 sys.path.append(os.path.join(root, 'DimensionFramework'))
 
-from DimensionFramework.Core.SqlitePoolUserManager import SqlitePoolUserManager
-from DimensionFramework.Core.SettingManager import SettingManager, encrypt, getSaltForKey
+from analogic.sqlite import SqlitePoolUserManager
+from analogic.setting import SettingManager, encrypt, getSaltForKey
 
 
 def createPoolUserDB(setting, application):

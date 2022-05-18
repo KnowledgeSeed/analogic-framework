@@ -1,4 +1,4 @@
-from DimensionFramework import create_app
+from analogic import create_app
 import os
 
 site_root = os.path.realpath(os.path.dirname(__file__))

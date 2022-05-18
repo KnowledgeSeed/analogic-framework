@@ -1,8 +1,8 @@
-from DimensionFramework.AuthenticationProviders.Pool import Pool
+from analogic import Middleware
 from flask import render_template, request, make_response, redirect, session
 
 
-class LoginBasicPool(Pool):
+class LoginBasicPool(Middleware):
     def __init__(self, cache, site_root, instance='default'):
         super().__init__(cache, site_root, instance)
 

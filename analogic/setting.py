@@ -7,7 +7,7 @@ from flask import json, request, current_app
 import logging
 from pbkdf2 import PBKDF2
 from Crypto.Cipher import AES
-from DimensionFramework.Core.SqlitePoolUserManager import SqlitePoolUserManager
+from analogic.sqlite import SqlitePoolUserManager
 from urllib.parse import urlparse
 
 PASSPHRASE_SIZE = 64

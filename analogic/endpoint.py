@@ -4,7 +4,7 @@ import os
 from flask.scaffold import _sentinel
 
 
-class AnalogicEndpointBlueprint(Blueprint):
+class AnalogicEndpoint(Blueprint):
     def __init__(
             self,
             name: str,
@@ -62,13 +62,3 @@ class AnalogicEndpointBlueprint(Blueprint):
             'provide_automatic_options': provide_automatic_options,
             'options': options
         })
-
-        # self.record(
-        #     lambda s: s.add_url_rule(
-        #         rule,
-        #         endpoint,
-        #         view_func,
-        #         provide_automatic_options=provide_automatic_options,
-        #         **options,
-        #     )
-        # )
