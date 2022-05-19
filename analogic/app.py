@@ -11,6 +11,8 @@ import pkgutil
 import sys
 from importlib import resources
 from analogic.core_endpoints import core_endpoints
+from analogic.middleware import Middleware
+import inspect
 
 
 class Analogic(Flask):
@@ -21,6 +23,7 @@ class Analogic(Flask):
         super().__init__(*args, **kwargs)
 
         self.analogic_url_rules = []
+        self.middlewares = {}
 
     def get_reverse_proxy_path(self):
         return self._reverse_proxy_path
@@ -50,6 +53,12 @@ class Analogic(Flask):
     def register_analogic_endpoint(self, endpoint: "AnalogicEndpoint"):
         self.analogic_url_rules.extend(endpoint.analogic_url_rules)
 
+    def register_middleware(self, name, module_name):
+        self.middlewares[name] = module_name
+
+    def get_middleware_module_name(self, name):
+        return self.middlewares[name]
+
     @setupmethod
     def register_blueprint(self, blueprint: "Blueprint", **options: t.Any) -> None:
         instance = '/' + blueprint.name
@@ -68,6 +77,7 @@ def create_app(instance_path, reverse_proxy_path=''):
     load_logging(app)
 
     app.register_analogic_endpoint(core_endpoints)
+
     load_extensions(app)
 
     load_applications(app)
@@ -105,6 +115,8 @@ def load_extensions(app):
             endpoints = list(filter(lambda x: x.endswith('_endpoints'), modules))
             register_analogic_endpoint(app, extension_dir_name, endpoints)
 
+            register_middleware(app, extension_dir_name, modules)
+
 
 def register_analogic_endpoint(app, extension_name, files):
     for file in files:
@@ -119,6 +131,21 @@ def register_analogic_endpoint(app, extension_name, files):
         for obj in objects:
             if isinstance(objects[obj], AnalogicEndpoint):
                 app.register_analogic_endpoint(objects[obj])
+
+
+def register_middleware(app, extension_name, files):
+    for file in files:
+        module = extension_name + '.' + file
+
+        if module not in sys.modules:
+            print(module + ' not loaded')
+            return
+
+        for name, obj in inspect.getmembers(sys.modules[module]):
+            if inspect.isclass(obj) and \
+                    not inspect.isabstract(obj) and \
+                    issubclass(obj, Middleware):
+                app.register_middleware(name, extension_name)
 
 
 def load_applications(app):

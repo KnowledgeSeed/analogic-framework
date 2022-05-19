@@ -23,7 +23,10 @@ def get_middleware():
     setting = SettingManager(cache, current_app.instance_path, analogic_application)
     config = setting.getConfig()
 
-    module_name, class_name = config['authenticationMode'].rsplit(".", 1)
+    # module_name, class_name = config['authenticationMode'].rsplit(".", 1)
+
+    class_name = config['authenticationMode']
+    module_name = current_app.get_middleware_module_name(class_name)
 
     if module_name in sys.modules:
         module = sys.modules[module_name]
