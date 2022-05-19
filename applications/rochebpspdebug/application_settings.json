@@ -8,7 +8,6 @@
   "sessionExpiresInMinutes": 20,
   "authenticationBridge": "",
   "tm1ApiHost": "http://localhost/flask/rochebpspdebug/pool",
-  "tm1ApiHostBackend": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi",
   "tm1ApiSubPath": "/api/v1/",
   "mainPage": "rocheBPSPMain",
   "pool": {

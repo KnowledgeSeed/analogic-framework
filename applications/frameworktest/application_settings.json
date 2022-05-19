@@ -8,7 +8,6 @@
   "sessionExpiresInMinutes": 20,
   "authenticationBridge": "",
   "tm1ApiHost": "http://localhost:5000/frameworktest/pool",
-  "tm1ApiHostBackend": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi",
   "tm1ApiSubPath": "/api/v1/",
   "mainPage": "frameworktestMain",
   "pool": {

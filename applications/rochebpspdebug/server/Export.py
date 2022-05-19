@@ -78,9 +78,9 @@ class Export:
 
         cnf = setting.getConfig()
 
-        target_url = cnf['tm1ApiHostBackend']
+        target_url = cnf['tm1ApiHost']
 
-        response = authentication_provider.doPoolRequest(
+        response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable;$expand=Members($select=Name, Attributes/Caption))',
             'POST',
             mdx
@@ -205,9 +205,9 @@ class Export:
 
         cnf = setting.getConfig()
 
-        target_url = cnf['tm1ApiHostBackend']
+        target_url = cnf['tm1ApiHost']
 
-        response = authentication_provider.doPoolRequest(
+        response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable)',
             'POST',
             mdx
@@ -278,9 +278,9 @@ class Export:
 
         cnf = setting.getConfig()
 
-        target_url = cnf['tm1ApiHostBackend']
+        target_url = cnf['tm1ApiHost']
 
-        response = authentication_provider.doPoolRequest(
+        response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable)',
             'POST',
             mdx
@@ -616,9 +616,9 @@ class Export:
 
         cnf = setting.getConfig()
 
-        target_url = cnf['tm1ApiHostBackend']
+        target_url = cnf['tm1ApiHost']
 
-        response = authentication_provider.doPoolRequest(
+        response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',
             'POST',
             mdx
@@ -715,9 +715,9 @@ class Export:
 
         cnf = setting.getConfig()
 
-        target_url = cnf['tm1ApiHostBackend']
+        target_url = cnf['tm1ApiHost']
 
-        response = authentication_provider.doPoolRequest(
+        response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))',
             'POST',
             mdx
@@ -806,9 +806,9 @@ class Export:
 
         cnf = setting.getConfig()
 
-        target_url = cnf['tm1ApiHostBackend']
+        target_url = cnf['tm1ApiHost']
 
-        response = authentication_provider.doPoolRequest(
+        response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))',
             'POST',
             mdx
@@ -927,9 +927,9 @@ class Export:
 
         cnf = setting.getConfig()
 
-        target_url = cnf['tm1ApiHostBackend']
+        target_url = cnf['tm1ApiHost']
 
-        response = authentication_provider.doPoolRequest(
+        response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',
             'POST',
             mdx
@@ -1010,9 +1010,9 @@ class Export:
 
         cnf = setting.getConfig()
 
-        target_url = cnf['tm1ApiHostBackend']
+        target_url = cnf['tm1ApiHost']
 
-        response = authentication_provider.doPoolRequest(
+        response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name,Attributes))',
             'POST',
             mdx
@@ -1145,9 +1145,9 @@ class Export:
 
         cnf = setting.getConfig()
 
-        target_url = cnf['tm1ApiHostBackend']
+        target_url = cnf['tm1ApiHost']
 
-        response = authentication_provider.doPoolRequest(
+        response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',
             'POST',
             mdx
@@ -1222,9 +1222,9 @@ class Export:
         mdx = '{"MDX"  :"' + mdx + '"}'
         cnf = setting.getConfig()
 
-        target_url = cnf['tm1ApiHostBackend']
+        target_url = cnf['tm1ApiHost']
 
-        response = authentication_provider.doPoolRequest(
+        response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',
             'POST',
             mdx

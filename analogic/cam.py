@@ -6,8 +6,9 @@ import logging
 
 
 class Cam(Middleware):
-    def __init__(self, cache, site_root, instance='default'):
-        super().__init__(cache, site_root, instance)
+
+    def __init__(self, setting):
+        super().__init__(setting)
 
     def index(self):
         authenticated = request.cookies.get('authenticated') is not None
@@ -17,11 +18,11 @@ class Cam(Middleware):
         resp = make_response(redirect(self.setting.getBaseUrl()))
         resp.set_cookie('camPassport', request.form.get('c_pp'))
 
-        cam_name = self.setTM1SessionIdForTM1Service(request.form.get('c_pp'))
+        cam_name = self.set_tm1_session_id_for_tm1_service(request.form.get('c_pp'))
         session['cam_name'] = cam_name
-        return self.addAuthenticatedCookie(resp)
+        return self.add_authenticated_cookies(resp)
 
-    def setTM1SessionIdForTM1Service(self, cam_passport):
+    def set_tm1_session_id_for_tm1_service(self, cam_passport):
         headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
                                    'Accept-Encoding': 'gzip, deflate, br'}
         cookies: dict[str, str] = {}
@@ -30,17 +31,18 @@ class Cam(Middleware):
 
         headers['Authorization'] = 'CAMPassport ' + cam_passport
 
-        # hq nem tudja backenden feloldani a hq.coresystems.hu-t
-        # response = requests.request(url=cnf['tm1ApiHost'] + cnf['tm1ApiSubPath'] + 'ActiveUser', method='GET', headers=headers, cookies=cookies, verify=False)
-        response = requests.request(url=cnf['tm1ApiHostBackend'] + cnf['tm1ApiSubPath'] + 'ActiveUser',
+        response = requests.request(url=cnf['tm1ApiHost'] + cnf['tm1ApiSubPath'] + 'ActiveUser',
                                     method='GET',
                                     headers=headers, cookies=cookies, verify=False)
+
         json_object = response.json()
         cam_name = json_object['Name']
+
         self.setting.setTM1SessionId(response.cookies.get('TM1SessionId'), cam_name)
+
         return cam_name
 
-    def createRequestByAuthenticatedUser(self, url, method, mdx, headers, cookies):
+    def create_request_with_authenticated_user(self, url, method, mdx, headers, cookies):
         tm1_session_id = self.setting.getTM1SessionId(session['cam_name'])
 
         cookies["TM1SessionId"] = tm1_session_id
@@ -55,13 +57,13 @@ class Cam(Middleware):
 
         return response
 
-    def checkAppAuthenticated(self):
+    def check_app_authenticated(self):
         return session.get('cam_name', '') != '' and self.setting.getTM1SessionId(session.get('cam_name')) is not None
 
-    def getAuthenticationResponse(self):
+    def get_authentication_response(self):
         return 'Authentication required', 401, {'Content-Type': 'application/json'}
 
-    def getTM1Service(self):
+    def get_tm1_service(self):
         cnf = self.setting.getConfig()
 
         tm1_session_id = self.setting.getTM1SessionId(session['cam_name'])
@@ -83,7 +85,7 @@ class Cam(Middleware):
 
         cnf = self.setting.getConfig()
 
-        response = requests.request(url=cnf['tm1ApiHostBackend'] + cnf['tm1ApiSubPath'] + 'ActiveUser',
+        response = requests.request(url=cnf['tm1ApiHost'] + cnf['tm1ApiSubPath'] + 'ActiveUser',
                                     method='GET',
                                     headers=headers, cookies=cookies, verify=False)
 
@@ -94,3 +96,6 @@ class Cam(Middleware):
         self.getLogger().info(response.status_code)
         self.getLogger().info(response.text)
         return 'Ok', response.status_code, {'Content-Type': 'application/json'}
+
+    def extend_login_session(self):
+        pass

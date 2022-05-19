@@ -2,11 +2,9 @@ import os
 import shutil
 import pandas as pd
 import chardet
-#import magic
 import pathlib
-
-pd.set_option('display.float_format', lambda x: '%.3f' % x)
 from werkzeug.utils import secure_filename
+pd.set_option('display.float_format', lambda x: '%.3f' % x)
 from TM1py.Utils.Utils import build_pandas_dataframe_from_cellset
 
 
@@ -57,11 +55,7 @@ class FileUploadManager:
 
         for file_name in file_names:
             file_path = os.path.join(source_dir, file_name)
-            blob = open(file_path, 'rb').read()
             m = ''
-            # if rules['CharacterSetCheck'] != '':
-            #    m += self.checkCharacterSet(blob, rules['CharacterSetCheck'], file_name)
-            # m += self.checkFileFormat(os.path.join(source_dir, file_name), rules['FileFormat'], file_name)
             if rules['ExtensionCheck'] == 'yes':
                 m += self.checkExtension(rules['FileFormat'], file_name)
             if rules['FileNoneEmptyCheck'] == 'yes':
@@ -81,10 +75,6 @@ class FileUploadManager:
     def checkCharacterSet(self, blob, expected, file_name):
         result = chardet.detect(blob)
         return self.getErrorMessage(expected, result['encoding'], file_name, 'character set')
-
-   # def checkFileFormat(self, path, expected, file_name):
-   #     result = magic.from_file(path, mime=True)
-   #     return self.getErrorMessage(expected, result, file_name, 'file format')
 
     def checkExtension(self, expected, file_name):
         file_extension = pathlib.Path(file_name).suffix
@@ -129,7 +119,6 @@ class FileUploadManager:
     def getErrorMessage(self, expected, got, file_name, sub_message):
 
         if expected is None or got is None:
-            # Todo ilyenkor mit kell tenni?
             return ''
         if expected.lower() != got.lower():
             return 'Expected ' + sub_message + ' for ' + file_name + ' is ' + expected + ' but got: ' \

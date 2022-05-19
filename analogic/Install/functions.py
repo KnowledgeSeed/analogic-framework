@@ -110,7 +110,7 @@ def installPoolUsers(application, setting, admin_user='', admin_pwd=''):
 
 def createInTM1(setting, admin_user, admin_pwd, user, pwd):
     url = setting[
-              'tm1ApiHostBackend'] + "/api/v1/Processes('zSYS Analogic Create Pool User')/tm1.ExecuteWithReturn"
+              'tm1ApiHost'] + "/api/v1/Processes('zSYS Analogic Create Pool User')/tm1.ExecuteWithReturn"
     body = '{"Parameters": [{"Name": "pUserID", "Value": "' + user + '"},{"Name": "pPassword", "Value": "' + pwd + '"}]}'
     headers = {'Content-Type': 'application/json; charset=utf-8',
                'Accept-Encoding': 'gzip, deflate, br'}

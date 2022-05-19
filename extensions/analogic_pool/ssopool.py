@@ -1,14 +1,14 @@
 import jwt
 import requests
 import base64
-from analogic import Middleware
+from analogic_pool import Pool
 from flask import render_template, request, session, make_response, redirect, Response
 import logging
 
 
-class SSOPool(Middleware):
-    def __init__(self, cache, site_root, instance='default'):
-        super().__init__(cache, site_root, instance)
+class SSOPool(Pool):
+    def __init__(self, setting):
+        super().__init__(setting)
 
     def index(self):
         cnf = self.setting.getConfig()
@@ -23,7 +23,7 @@ class SSOPool(Middleware):
         authenticated = request.cookies.get('authenticated') is not None
         return render_template('index.html', authenticated=authenticated, cnf=cnf)
 
-    def authsso(self):
+    def auth_sso(self):
         cnf = self.setting.getConfig()
         sso_token = request.args.get('token')
         logger = logging.getLogger('login')
@@ -47,7 +47,7 @@ class SSOPool(Middleware):
 
         logger.info(user_name + ' logged in successfully')
 
-        return self.addAuthenticatedCookie(resp)
+        return self.add_authenticated_cookies(resp)
 
     def hasPoolUserAccess(self, user_name, token):
         has_access = True
@@ -123,19 +123,19 @@ class SSOPool(Middleware):
 
         return {'msg': msg, 'token': decoded_token}
 
-    def checkAppAuthenticated(self):
+    def check_app_authenticated(self):
         sso_token = session.get('sso_token')
         return sso_token is not None
         # decoded = self.decodeToken(sso_token)
         # return decoded['msg'] == ''
 
-    def getAuthenticationResponse(self):
+    def get_authentication_response(self):
         return Response('', 401)
 
-    def setCustomMDXData(self, mdx):
+    def set_custom_mdx_data(self, mdx):
         if len(mdx) > 0:
             return mdx.replace('$ssoToken', session['sso_token'])
         return mdx
 
-    def extendLoginSession(self):
+    def extend_login_session(self):
         session.modified = True

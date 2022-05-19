@@ -1,10 +1,10 @@
-from analogic import Middleware
+from analogic_pool import Pool
 from flask import render_template, request, make_response, redirect, session
 
 
-class LoginBasicPool(Middleware):
-    def __init__(self, cache, site_root, instance='default'):
-        super().__init__(cache, site_root, instance)
+class LoginBasicPool(Pool):
+    def __init__(self, setting):
+        super().__init__(setting)
 
     def login(self):
         cnf = self.setting.getConfig()
@@ -13,7 +13,7 @@ class LoginBasicPool(Middleware):
                 session['username'] = request.form['username']
                 session['permanent'] = True
                 resp = make_response(redirect(self.setting.getBaseUrl()))
-                return self.addAuthenticatedCookie(resp)
+                return self.add_authenticated_cookies(resp)
         return render_template('login.html', cnf=cnf)
 
     def index(self):
@@ -22,7 +22,7 @@ class LoginBasicPool(Middleware):
             return render_template('index.html', authenticated=True, cnf=cnf)
         return redirect(self.setting.getBaseUrl('login'))
 
-    def createRequestByAuthenticatedUser(self, url, method, mdx, headers, cookies):
+    def create_request_with_authenticated_user(self, url, method, mdx, headers, cookies):
 
         pool_user = self.setting.getPoolUser()
 
@@ -43,11 +43,14 @@ class LoginBasicPool(Middleware):
 
         return response
 
-    def checkAppAuthenticated(self):
+    def check_app_authenticated(self):
         if 'username' in session:
             return True
         return False
 
-    def getAuthenticationResponse(self):
+    def get_authentication_response(self):
         return redirect(self.setting.getBaseUrl('login'))
+
+    def extend_login_session(self):
+        session.modified = True
 

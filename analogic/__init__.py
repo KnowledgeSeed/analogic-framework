@@ -9,5 +9,4 @@ from .email import EmailManager
 from .upload import FileUploadManager
 from .proxy import ReverseProxy
 from .setting import SettingManager
-from .sqlite import SqlitePoolUserManager
 from . import pivot

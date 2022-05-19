@@ -12,5 +12,6 @@ deleted:
  defaultUploadStagingFolder
  subpath
  host
+ tm1ApiHostBackend
 
 MainPage -> mainPage

@@ -21,7 +21,7 @@ def pool(sub_path):
 
 @core_endpoints.analogic_endpoint_route('/activeUser', methods=['GET'])
 def active_user():
-    return get_middleware().activeUser()  # TODO rename activeUser -> active_user
+    return get_middleware().active_user()
 
 
 @core_endpoints.analogic_endpoint_route('/auth', methods=['POST'])
@@ -29,14 +29,9 @@ def auth():
     return get_middleware().auth()
 
 
-@core_endpoints.analogic_endpoint_route('/authsso', methods=['GET'])
-def auth_sso():
-    return get_middleware().authsso()  # TODO rename authsso -> auth_sso
-
-
 @core_endpoints.analogic_endpoint_route('/upload', methods=['POST'])
 def upload():
-    return get_middleware().processFiles()
+    return get_middleware().process_files()
 
 
 @core_endpoints.analogic_endpoint_route('/export', methods=['GET', 'POST'])

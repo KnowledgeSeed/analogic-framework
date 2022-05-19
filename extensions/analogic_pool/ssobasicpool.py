@@ -4,10 +4,10 @@ from TM1py.Services import TM1Service
 
 
 class SSOBasicPool(SSOPool):
-    def __init__(self, cache, site_root, instance='default'):
-        super().__init__(cache, site_root, instance)
+    def __init__(self, setting):
+        super().__init__(setting)
 
-    def createRequestByAuthenticatedUser(self, url, method, mdx, headers, cookies):
+    def create_request_with_authenticated_user(self, url, method, mdx, headers, cookies):
 
         pool_user = self.setting.getPoolUser()
 
@@ -42,7 +42,7 @@ class SSOBasicPool(SSOPool):
                              auth=(sso_cnf['admin'], pwd),
                              verify=False)
 
-    def getTM1Service(self):
+    def get_tm1_service(self):
 
         pool_user = self.setting.getPoolUser()
 
