@@ -11,8 +11,10 @@ class ToggleWidget extends Widget {
 
         this.value = {isGridTableHierarchyExpander: v.isGridTableHierarchyExpander};
 
-        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], b = 1 === parseInt(v.value),
-            iconStyles = [];
+        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d),
+            titleStyles = this.getHtmlComponentStylesArray('title', d),
+            b = 1 === parseInt(v.value),
+            iconStyles = this.getHtmlComponentStylesArray('icon', d);
 
         v.titleOn !== '' && mainDivClass.push('has-label');
         v.backgroundColor && mainDivStyle.push(`background-color:${v.backgroundColor};`);

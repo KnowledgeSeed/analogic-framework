@@ -4,7 +4,11 @@
 class DatePickerWidget extends Widget {
 
     getHtml(widgets, d) {
-        let mainDivStyle = this.getGeneralStyles(d), monthPicker = this.getRealValue('monthPicker', d, false);
+        let mainDivStyle = this.getGeneralStyles(d),
+             titleStyles = this.getHtmlComponentStylesArray('title', d),
+            innerStyle = this.getHtmlComponentStylesArray('inner', d),
+            dividerStyle = this.getHtmlComponentStylesArray('divider', d),
+            monthPicker = this.getRealValue('monthPicker', d, false);
 
         const v = {
             datePicked: this.getRealValue('datePicked', d, DatePickerWidget.getStandardizedDateString(new Date(), monthPicker)),
@@ -41,9 +45,9 @@ class DatePickerWidget extends Widget {
 
         const html = `
 <div class="ks-datepicker dropdown-type ks-datepicker-${v.skin}" style="${mainDivStyle.join('')}" data-ordinal="${v.ordinal}" data-monthpicker="${v.monthPicker || false}" data-min-date="${v.minDate || ''}" data-max-date="${v.maxDate || ''}">
-    <div class="ks-datepicker-inner">
+    <div class="ks-datepicker-inner">" style="${innerStyle.join('')}"
         <div class="ks-datepicker-title">
-            ${v.titleVisible ? v.title : ''}
+            ${v.titleVisible ? v.title : ''}" style="${titleStyles.join('')}"
         </div>
         <div class="ks-datepicker-field">
             <div class="ks-datepicker-field-inner">

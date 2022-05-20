@@ -9,8 +9,10 @@ class TextWidget extends Widget {
         const v = this.getParameters(d);
         this.value = {value: v.title, editable: v.editable, performable: v.performable};
 
-        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], bodyStyles = [],
-            innerStyles = [],
+        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d),
+            titleStyles = this.getHtmlComponentStylesArray('title', d),
+            bodyStyles = this.getHtmlComponentStylesArray('body', d),
+            innerStyles = this.getHtmlComponentStylesArray('inner', d),
             iconStyles = this.getHtmlComponentStylesArray('icon', d);
 
         (v.title !== false || v.editable) && mainDivClass.push('has-title');

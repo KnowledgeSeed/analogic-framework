@@ -19,7 +19,10 @@ class TextBoxWidget extends Widget {
 
         const v = this.getParameters(d);
 
-        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], textStyles = [];
+        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d),
+            titleStyles = this.getHtmlComponentStylesArray('title', d),
+            iconStyles = this.getHtmlComponentStylesArray('icon', d),
+            textStyles = this.getHtmlComponentStylesArray('text', d);
 
         v.title && mainDivClass.push('has-title');
         v.icon !== false && mainDivClass.push('has-icon');
@@ -44,7 +47,7 @@ class TextBoxWidget extends Widget {
         </div>
         <div class="ks-textbox-field">
             <div class="ks-textbox-field-inner ${v.editable === false ? 'readonly' : ''}">
-                <div class="ks-textbox-icon">${v.icon !== false ? `<img src="${app.applicationAssetsUrl}/skin/images/${v.icon}">` : '' }</div>
+                <div class="ks-textbox-icon">${v.icon !== false ? `style="${iconStyles.join('')}"<img src="${app.applicationAssetsUrl}/skin/images/${v.icon}">` : '' }</div>
                 <div class="ks-textbox-divider"></div>
                 <input ${v.editable === false ? 'readonly' : ''} style="${textStyles.join('')}" data-action="writeEnd" data-id="${o.id}"  type="${v.textBoxType}" value="${d.value}" class="ks-textbox-input" placeholder="${v.defaultText ? v.defaultText : ''}">
             </div>

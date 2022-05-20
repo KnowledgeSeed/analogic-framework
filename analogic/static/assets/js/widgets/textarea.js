@@ -27,7 +27,10 @@ class TextAreaWidget extends Widget {
             titleTextAlignment: this.getRealValue('titleTextAlignment', d, false)
         };
 
-        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], textStyles = [];
+        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d),
+            titleStyles = this.getHtmlComponentStylesArray('title', d),
+            iconStyles = this.getHtmlComponentStylesArray('icon', d),
+            textStyles = this.getHtmlComponentStylesArray('text', d);
 
         v.title && mainDivClass.push('has-title');
         v.icon !== false && mainDivClass.push('has-icon');
@@ -52,7 +55,7 @@ class TextAreaWidget extends Widget {
         </div>
         <div class="ks-textarea-field">
             <div class="ks-textarea-field-inner">
-                <div class="ks-textarea-icon">${v.icon !== false ? `<img src="${app.applicationAssetsUrl}/skins/images/${v.icon}">` : '' }</div>
+                <div class="ks-textarea-icon">${v.icon !== false ? `style="${iconStyles.join('')}"<img src="${app.applicationAssetsUrl}/skins/images/${v.icon}">` : '' }</div>
                 <div class="ks-textarea-divider"></div>
                 <textarea ${v.placeholder !== false ? `placeholder="${v.placeholder}"` : ''} style="${textStyles.join('')}" data-action="save" data-ordinal="${d.ordinal}" data-id="${o.id}" class="ks-textarea-input" >${d.value || ''}</textarea>
             </div>

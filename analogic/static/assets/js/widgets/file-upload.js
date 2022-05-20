@@ -39,7 +39,11 @@ class FileUploadWidget extends Widget {
             showUploadSuccessMessage: v.showUploadSuccessMessage
         };
 
-        let aClass = [], aStyle = this.getWidthAndHeight(d), pStyle = [...aStyle], innerStyle = [], labelStyle = [], dividerStyle = [], imgStyle = [];
+        let aClass = [], aStyle = this.getWidthAndHeight(d), pStyle = [...aStyle],
+            innerStyle = this.getHtmlComponentStylesArray('inner', d),
+            labelStyle = this.getHtmlComponentStylesArray('label', d),
+            dividerStyle = this.getHtmlComponentStylesArray('divider', d),
+            imgStyle = this.getHtmlComponentStylesArray('img', d);
         let outerDivSyle = this.getPaddings(d).concat(this.getMargins(d));
 
         /* Override css */

@@ -8,7 +8,12 @@ class ButtonWidget extends Widget {
 
         const v = this.getParameters(d);
 
-        let aClass = [], aStyle = this.getGeneralStyles(d), innerStyle = [], labelStyle = [], dividerStyle = [],
+        let aClass = [],
+            aStyle = this.getGeneralStyles(d),
+            labelStyle = this.getHtmlComponentStylesArray('label', d),
+            innerStyle = this.getHtmlComponentStylesArray('inner', d),
+            dividerStyle = this.getHtmlComponentStylesArray('divider', d),
+            iconInfoStyle = this.getHtmlComponentStylesArray('icon', d),
             iconInfo;
 
         /* Override css */
