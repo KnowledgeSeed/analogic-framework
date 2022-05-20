@@ -10,7 +10,7 @@ class TextWidget extends Widget {
         this.value = {value: v.title, editable: v.editable, performable: v.performable};
 
         let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d), titleStyles = [], bodyStyles = [],
-            innerStyles = [],
+            innerStyles = this.getHtmlComponentStylesArray('inner', d),
             iconStyles = this.getHtmlComponentStylesArray('icon', d);
 
         (v.title !== false || v.editable) && mainDivClass.push('has-title');

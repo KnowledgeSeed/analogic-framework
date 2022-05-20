@@ -52,3 +52,4 @@ def ping():
 @core_endpoints.analogic_endpoint_route('/pivot', methods=['GET', 'POST'])
 def pivot():
     return get_middleware().pivot()
+

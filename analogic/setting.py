@@ -90,6 +90,8 @@ class SettingManager:
                 setting['blueprint_static'] = self.instance + '.static'
                 setting['hostname'] = self.get_host_name_url()
                 setting['reverseProxyPath'] = current_app.get_reverse_proxy_path()
+                setting['extension_css_asset_names'] = current_app.get_extension_css_asset_names()
+                setting['extension_js_asset_names'] = current_app.get_extension_js_asset_names()
 
             self.cacheSet(key, setting, 0)
         return setting

@@ -1,6 +1,5 @@
 import os
-from flask import Flask, Blueprint
-from flask.scaffold import setupmethod
+from flask import Flask, Blueprint, request, send_file
 import typing as t
 
 from analogic.proxy import ReverseProxy
@@ -22,28 +21,17 @@ class Analogic(Flask):
         kwargs.pop('reverse_proxy_path')
         super().__init__(*args, **kwargs)
 
-        self.analogic_url_rules = []
+        self.endpoint_rules = []
         self.middlewares = {}
+        self.scripts = []
+        self.extension_assets = {}
+        self.add_url_rule('/extension_asset', methods=['GET'], view_func=self.extension_asset)
 
     def get_reverse_proxy_path(self):
         return self._reverse_proxy_path
 
-    def add_analogic_url_rule(self,
-                              rule: str,
-                              endpoint: t.Optional[str] = None,
-                              view_func: t.Optional[t.Callable] = None,
-                              provide_automatic_options: t.Optional[bool] = None,
-                              **options: t.Any):
-        self.analogic_url_rules.append({
-            'rule': rule,
-            'endpoint': endpoint,
-            'view_func': view_func,
-            'provide_automatic_options': provide_automatic_options,
-            'options': options
-        })
-
     def register_analogic_url_rules(self, instance):
-        for url_rule in self.analogic_url_rules:
+        for url_rule in self.endpoint_rules:
             self.add_url_rule(instance + url_rule['rule'],
                               url_rule['endpoint'],
                               view_func=url_rule['view_func'],
@@ -51,7 +39,7 @@ class Analogic(Flask):
                               **url_rule['options'])
 
     def register_analogic_endpoint(self, endpoint: "AnalogicEndpoint"):
-        self.analogic_url_rules.extend(endpoint.analogic_url_rules)
+        self.endpoint_rules.extend(endpoint.endpoint_rules)
 
     def register_middleware(self, name, module_name):
         self.middlewares[name] = module_name
@@ -59,12 +47,29 @@ class Analogic(Flask):
     def get_middleware_module_name(self, name):
         return self.middlewares[name]
 
-    @setupmethod
-    def register_blueprint(self, blueprint: "Blueprint", **options: t.Any) -> None:
+    def register_application(self, blueprint: "Blueprint", **options: t.Any) -> None:
         instance = '/' + blueprint.name
         self.register_analogic_url_rules(instance)
 
         super().register_blueprint(blueprint, **options)
+
+    def register_extension_assets(self, assets):
+        self.extension_assets.update(assets)
+
+    def extension_asset(self):
+        asset_name = request.args.get('asset_name')
+        if asset_name in self.extension_assets:
+            return send_file(self.extension_assets[asset_name])
+        return 'not found', 404
+
+    def get_extension_css_asset_names(self):
+        return self.get_asset_by_ext('.css')
+
+    def get_extension_js_asset_names(self):
+        return self.get_asset_by_ext('.js')
+
+    def get_asset_by_ext(self, ext):
+        return list(filter(lambda x: x.endswith(ext), list(self.extension_assets.keys())))
 
 
 def create_app(instance_path, reverse_proxy_path=''):
@@ -107,45 +112,37 @@ def load_extensions(app):
     for extension_dir_name in os.listdir(extensions_dir):
         extension_dir = os.path.join(extensions_dir, extension_dir_name)
         if os.path.isdir(extension_dir):
-            # module = importlib.import_module(extension_dir_name)
+
             files = resources.contents(extension_dir_name)
 
             modules = [f[:-3] for f in files if f.endswith(".py") and f[0] != "_"]
 
-            endpoints = list(filter(lambda x: x.endswith('_endpoints'), modules))
-            register_analogic_endpoint(app, extension_dir_name, endpoints)
+            register_extension_components(app, extension_dir_name, modules)
 
-            register_middleware(app, extension_dir_name, modules)
+            register_extension_assets(app, extension_dir)
 
 
-def register_analogic_endpoint(app, extension_name, files):
+def register_extension_assets(app, extension_dir):
+    assets = fast_scandir(extension_dir, ['.css', '.js'])[1]
+    app.register_extension_assets(assets)
+
+
+def register_extension_components(app, extension_name, files):
     for file in files:
         module = extension_name + '.' + file
 
         if module not in sys.modules:
             print(module + ' not loaded')
-            return
-
-        objects = vars(sys.modules[module])
-
-        for obj in objects:
-            if isinstance(objects[obj], AnalogicEndpoint):
-                app.register_analogic_endpoint(objects[obj])
-
-
-def register_middleware(app, extension_name, files):
-    for file in files:
-        module = extension_name + '.' + file
-
-        if module not in sys.modules:
-            print(module + ' not loaded')
-            return
+            continue
 
         for name, obj in inspect.getmembers(sys.modules[module]):
             if inspect.isclass(obj) and \
                     not inspect.isabstract(obj) and \
                     issubclass(obj, Middleware):
                 app.register_middleware(name, extension_name)
+
+            if isinstance(obj, AnalogicEndpoint):
+                app.register_analogic_endpoint(obj)
 
 
 def load_applications(app):
@@ -163,4 +160,21 @@ def load_applications(app):
                     for obj in vars(
                             vars(vars(loaded_module)[application_dir_name])[mod_name]).values():  # Todo error handling
                         if isinstance(obj, Blueprint):
-                            app.register_blueprint(obj)
+                            app.register_application(obj)
+
+
+def fast_scandir(dir, ext):
+    sub_folders, files = [], {}
+
+    for f in os.scandir(dir):
+        if f.is_dir():
+            sub_folders.append(f.path)
+        if f.is_file():
+            if os.path.splitext(f.name)[1].lower() in ext:
+                files[f.name] = f.path
+
+    for dir in list(sub_folders):
+        sf, f = fast_scandir(dir, ext)
+        sub_folders.extend(sf)
+        files.update(f)
+    return sub_folders, files
