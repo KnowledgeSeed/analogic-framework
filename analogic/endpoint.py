@@ -30,7 +30,7 @@ class AnalogicEndpoint(Blueprint):
             root_path=root_path,
             cli_group=cli_group,
         )
-        self.analogic_url_rules = []
+        self.endpoint_rules = []
 
     def analogic_endpoint_route(self, rule: str, **options: t.Any) -> t.Callable:
         def decorator(f: t.Callable) -> t.Callable:
@@ -55,7 +55,7 @@ class AnalogicEndpoint(Blueprint):
         if view_func and hasattr(view_func, "__name__") and "." in view_func.__name__:
             raise ValueError("'view_func' name may not contain a dot '.' character.")
 
-        self.analogic_url_rules.append({
+        self.endpoint_rules.append({
             'rule': rule,
             'endpoint': endpoint,
             'view_func': view_func,

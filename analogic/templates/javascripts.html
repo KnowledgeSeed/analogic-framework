@@ -76,6 +76,11 @@
 <script type="text/javascript" src="{{ url_for('static', filename='assets/js/widgets/pivot-table.js')}}?v={{cnf.version}}"></script>
 
 <script type="text/javascript" src="{{ url_for('static', filename='assets/js/widgets/horizontal-bar-chart.js')}}?v={{cnf.version}}"></script>
+
+{% for asset_name in cnf.extension_js_asset_names %}
+    <script type="text/javascript" src="{{ url_for('extension_asset', asset_name=asset_name)}}&v={{cnf.version}}"></script>
+{% endfor %}
+
 <!-- end widgets -->
 
 <!-- layouts -->
