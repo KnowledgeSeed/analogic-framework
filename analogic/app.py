@@ -79,6 +79,8 @@ def create_app(instance_path, reverse_proxy_path=''):
     if reverse_proxy_path != '':
         app.wsgi_app = ReverseProxy(app.wsgi_app, script_name='/' + reverse_proxy_path)
 
+    print('App created')
+
     load_logging(app)
 
     app.register_analogic_endpoint(core_endpoints)
@@ -109,10 +111,13 @@ def load_logging(app):
 def load_extensions(app):
     extensions_dir_name = 'extensions'
     extensions_dir = os.path.join(app.instance_path, extensions_dir_name)
+
+    if extensions_dir not in sys.path and os.path.exists(extensions_dir) and len(os.listdir(extensions_dir)) != 0:
+        sys.path.append(extensions_dir)
+
     for extension_dir_name in os.listdir(extensions_dir):
         extension_dir = os.path.join(extensions_dir, extension_dir_name)
         if os.path.isdir(extension_dir):
-
             files = resources.contents(extension_dir_name)
 
             modules = [f[:-3] for f in files if f.endswith(".py") and f[0] != "_"]
@@ -148,6 +153,37 @@ def register_extension_components(app, extension_name, files):
 def load_applications(app):
     applications_dir_name = 'applications'
     applications_dir = os.path.join(app.instance_path, applications_dir_name)
+
+    if applications_dir not in sys.path and os.path.exists(applications_dir) and len(os.listdir(applications_dir)) != 0:
+        sys.path.append(applications_dir)
+
+    for application_dir_name in os.listdir(applications_dir):
+        application_dir = os.path.join(applications_dir, application_dir_name)
+
+        if os.path.isdir(application_dir):
+            files = resources.contents(application_dir_name)
+
+            modules = [f[:-3] for f in files if f.endswith(".py") and f[0] != "_"]
+            register_application(app, application_dir_name, modules)
+
+
+def register_application(app, application_name, files):
+    for file in files:
+        module = application_name + '.' + file
+
+        if module not in sys.modules:
+            print(module + ' not loaded')
+            continue
+
+        for name, obj in inspect.getmembers(sys.modules[module]):
+            if isinstance(obj, Blueprint):
+                app.register_application(obj)
+
+
+def load_applications_old(app):
+    applications_dir_name = 'applications'
+    applications_dir = os.path.join(app.instance_path, applications_dir_name)
+
     for application_dir_name in os.listdir(applications_dir):
         application_dir = os.path.join(applications_dir, application_dir_name)
 

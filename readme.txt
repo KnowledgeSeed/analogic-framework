@@ -36,8 +36,8 @@ py -m twine upload --repository testpypi dist/*
 <VirtualHost *:5000>
     WSGIScriptAlias / C:/Repos/flaskProject3/apache.wsgi
 	Alias /applications/ C:/Repos/flaskProject3/applications/
-	Alias /static/ C:/Repos/flaskProject3/DimensionFramework/static/
-	Alias /templates/ C:/Repos/flaskProject3/DimensionFramework/templates/
+	Alias /static/ C:/Repos/flaskProject3/analogic/static/
+	Alias /templates/ C:/Repos/flaskProject3/analogic/templates/
 	LogLevel debug
 	ErrorLog logs/seeder_error.log
 	CustomLog logs/seeder_custom.log combined
