@@ -1,81 +1,81 @@
 {
   "davidCustom1": {
-    "namespace": "applications.bpsp.server.Export",
+    "namespace": "bpsp.server.Export",
     "class": "Export",
     "method": "davidExport1"
   },
   "rocheMonthly": {
-    "namespace": "applications.bpsp.server.Export",
+    "namespace": "bpsp.server.Export",
     "class": "Export",
     "method": "rocheMonthly"
   },
   "exportCustomerMonthly": {
-    "namespace": "applications.bpsp.server.Export",
+    "namespace": "bpsp.server.Export",
     "class": "Export",
     "method": "rocheCustomerExport"
   },
   "rocheIpPlanningMonthly": {
-    "namespace": "applications.bpsp.server.Export",
+    "namespace": "bpsp.server.Export",
     "class": "Export",
     "method": "rocheIpPlanningMonthly"
   },
   "validateIpPlanningExcelImport": {
-    "namespace": "applications.bpsp.server.Validation",
+    "namespace": "bpsp.server.Validation",
     "class": "Validation",
     "method": "validateIpPlanningExcelImport"
   },
   "validateExcelImport": {
-    "namespace": "applications.bpsp.server.Validation",
+    "namespace": "bpsp.server.Validation",
     "class": "Validation",
     "method": "validateExcelImport"
   },
   "validateCustomerPlanningExcelImport": {
-    "namespace": "applications.bpsp.server.Validation",
+    "namespace": "bpsp.server.Validation",
     "class": "Validation",
     "method": "validateCustomerPlanningExcelImport"
   },
   "cool": {
-    "namespace": "applications.bpsp.server.BusinessLogic",
+    "namespace": "bpsp.server.BusinessLogic",
     "class": "BusinessLogic",
     "method": "doSomethingCool"
   },
   "rocheProductLevelExport": {
-    "namespace": "applications.bpsp.server.Export",
+    "namespace": "bpsp.server.Export",
     "class": "Export",
     "method": "rocheProductLevelExport"
   },
   "rocheMaterialMaintenanceExport": {
-    "namespace": "applications.bpsp.server.Export",
+    "namespace": "bpsp.server.Export",
     "class": "Export",
     "method": "rocheMaterialMaintenanceExport"
   },
   "rocheMaterialMaintenanceByIpNodeExport": {
-    "namespace": "applications.bpsp.server.Export",
+    "namespace": "bpsp.server.Export",
     "class": "Export",
     "method": "rocheMaterialMaintenanceByIpNodeExport"
   },
   "rocheCustomerReportExport": {
-    "namespace": "applications.bpsp.server.Export",
+    "namespace": "bpsp.server.Export",
     "class": "Export",
     "method": "rocheCustomerReportExport"
   },
   "rocheCustomerStatusReportExport": {
-    "namespace": "applications.bpsp.server.Export",
+    "namespace": "bpsp.server.Export",
     "class": "Export",
     "method": "rocheCustomerStatusReportExport"
   },
   "rocheIpPlanningReportExport": {
-    "namespace": "applications.bpsp.server.Export",
+    "namespace": "bpsp.server.Export",
     "class": "Export",
     "method": "rocheIpPlanningReportExport"
   },
   "rocheGrowthRateExport": {
-    "namespace": "applications.bpsp.server.Export",
+    "namespace": "bpsp.server.Export",
     "class": "Export",
     "method": "rocheGrowthRateExport"
   },
   "validateGrowthRateExcelImport": {
-    "namespace": "applications.bpsp.server.Validation",
+    "namespace": "bpsp.server.Validation",
     "class": "Validation",
     "method": "validateGrowthRateExcelImport"
   }

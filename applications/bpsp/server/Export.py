@@ -76,9 +76,7 @@ class Export:
             j = j + 1
             i = i + 1
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable;$expand=Members($select=Name, Attributes/Caption))',
@@ -203,9 +201,7 @@ class Export:
         worksheet.write(2, 29, line_item, bold)
         worksheet.write(2, 42, line_item, bold)
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable)',
@@ -276,9 +272,7 @@ class Export:
 
         mdx = getMDXJSONByRequest(request, setting)
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable)',
@@ -614,9 +608,7 @@ class Export:
         worksheet.write(5, 14, 'Final Plan', bold)
         worksheet.write(5, 15, 'Final Plan', bold)
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',
@@ -713,9 +705,7 @@ class Export:
         worksheet.write(3, 1, 'Level', bold)
         worksheet.write(3, 2, 'Material Number', bold)
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))',
@@ -804,9 +794,7 @@ class Export:
         worksheet.write(3, 1, 'Level', bold)
         worksheet.write(3, 2, 'Material Number', bold)
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))',
@@ -925,9 +913,7 @@ class Export:
         worksheet.write(4, 18, 'Growth Final Sales Plan', bold)
         worksheet.write(4, 19, 'Growth Final Sales Plan', bold)
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',
@@ -1008,9 +994,7 @@ class Export:
 
         mdx = getMDXJSONByRequest(request, setting)
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name,Attributes))',
@@ -1143,9 +1127,7 @@ class Export:
         worksheet.write(5, 20, 'Comment', bold)
         worksheet.write(5, 21, 'Comment', bold)
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',
@@ -1220,9 +1202,7 @@ class Export:
             mdx = mdx.replace('$' + k, request.args[k].replace('"', '\\"'))
 
         mdx = '{"MDX"  :"' + mdx + '"}'
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',

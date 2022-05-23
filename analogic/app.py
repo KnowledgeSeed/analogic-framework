@@ -13,6 +13,10 @@ from analogic.core_endpoints import core_endpoints
 from analogic.middleware import Middleware
 import inspect
 
+APPLICATIONS_DIR = 'applications'
+EXTENSIONS_DIR = 'extensions'
+ALLOWED_EXTENSION_PREFIX = 'analogic_'
+
 
 class Analogic(Flask):
 
@@ -83,9 +87,9 @@ def create_app(instance_path, reverse_proxy_path=''):
 
     app.register_analogic_endpoint(core_endpoints)
 
-    load_extensions(app)
+    load_analogic_extensions(app)
 
-    load_applications(app)
+    load_applications(app, register_func=register_application)
 
     app.register_analogic_url_rules('')
 
@@ -106,24 +110,28 @@ def load_logging(app):
     logging.config.dictConfig(log_config)
 
 
-def load_extensions(app):
-    extensions_dir_name = 'extensions'
-    extensions_dir = os.path.join(app.instance_path, extensions_dir_name)
-    for extension_dir_name in os.listdir(extensions_dir):
-        extension_dir = os.path.join(extensions_dir, extension_dir_name)
-        if os.path.isdir(extension_dir):
+def load_analogic_extensions(app):
+    append_extension_dir_to_path(app, EXTENSIONS_DIR)
 
-            files = resources.contents(extension_dir_name)
+    for directory in sys.path:
+        if os.path.exists(directory) and os.path.isdir(directory) and len(os.listdir(directory)) != 0:
+            load_modules(app, directory, True, register_func=register_extension)
 
-            modules = [f[:-3] for f in files if f.endswith(".py") and f[0] != "_"]
 
-            register_extension_components(app, extension_dir_name, modules)
+def append_extension_dir_to_path(app, modules_dir_name):
+    modules_dir = os.path.join(app.instance_path, modules_dir_name)
+    if modules_dir not in sys.path and os.path.exists(modules_dir) and len(os.listdir(modules_dir)) != 0:
+        sys.path.append(modules_dir)
 
-            register_extension_assets(app, extension_dir)
+
+def register_extension(app, extension_dir, extension_dir_name, modules):
+    register_extension_components(app, extension_dir_name, modules)
+
+    register_extension_assets(app, extension_dir)
 
 
 def register_extension_assets(app, extension_dir):
-    assets = fast_scandir(extension_dir, ['.css', '.js'])[1]
+    assets = fast_scan_dir(extension_dir, ['.css', '.js'])[1]
     app.register_extension_assets(assets)
 
 
@@ -145,36 +153,51 @@ def register_extension_components(app, extension_name, files):
                 app.register_analogic_endpoint(obj)
 
 
-def load_applications(app):
-    applications_dir_name = 'applications'
-    applications_dir = os.path.join(app.instance_path, applications_dir_name)
-    for application_dir_name in os.listdir(applications_dir):
-        application_dir = os.path.join(applications_dir, application_dir_name)
+def load_applications(app, register_func):
+    modules_dir = os.path.join(app.instance_path, APPLICATIONS_DIR)
 
-        applications = pkgutil.iter_modules(path=[application_dir])
-        for loader, mod_name, is_pkg in applications:
-            class_name = applications_dir_name + '.' + application_dir_name + '.' + mod_name
-            if mod_name not in sys.modules:
-                loaded_module = __import__(class_name)
-                if mod_name == 'application':
-                    for obj in vars(
-                            vars(vars(loaded_module)[application_dir_name])[mod_name]).values():  # Todo error handling
-                        if isinstance(obj, Blueprint):
-                            app.register_application(obj)
+    append_extension_dir_to_path(app, APPLICATIONS_DIR)
+
+    load_modules(app, modules_dir, False, register_func)
 
 
-def fast_scandir(dir, ext):
+def load_modules(app, modules_dir, check_prefix, register_func):
+    for module_dir_name in os.listdir(modules_dir):
+        module_dir = os.path.join(modules_dir, module_dir_name)
+
+        if os.path.isdir(module_dir) and (
+                check_prefix is False or module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX)):
+            files = resources.contents(module_dir_name)
+
+            modules = [f[:-3] for f in files if f.endswith(".py") and f[0] != "_"]
+            register_func(app, module_dir, module_dir_name, modules)
+
+
+def register_application(app, application_dir, application_name, files):
+    for file in files:
+        module = application_name + '.' + file
+
+        if module not in sys.modules:
+            print(module + ' not loaded')
+            continue
+
+        for name, obj in inspect.getmembers(sys.modules[module]):
+            if isinstance(obj, Blueprint):
+                app.register_application(obj)
+
+
+def fast_scan_dir(directory, ext):
     sub_folders, files = [], {}
 
-    for f in os.scandir(dir):
+    for f in os.scandir(directory):
         if f.is_dir():
             sub_folders.append(f.path)
         if f.is_file():
             if os.path.splitext(f.name)[1].lower() in ext:
                 files[f.name] = f.path
 
-    for dir in list(sub_folders):
-        sf, f = fast_scandir(dir, ext)
+    for directory in list(sub_folders):
+        sf, f = fast_scan_dir(directory, ext)
         sub_folders.extend(sf)
         files.update(f)
     return sub_folders, files
