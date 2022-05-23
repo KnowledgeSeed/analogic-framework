@@ -8,7 +8,7 @@ class TextWidget extends Widget {
         const o = this.options;
         const v = this.getParameters(d);
         this.value = {value: v.title, editable: v.editable, performable: v.performable};
-        
+
         let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d),
             titleStyles = this.getHtmlComponentStylesArray('title', d),
             bodyStyles = this.getHtmlComponentStylesArray('body', d),
