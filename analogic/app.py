@@ -26,7 +26,10 @@ class Analogic(Flask):
         super().__init__(*args, **kwargs)
 
         self.endpoint_rules = []
-        self.middlewares = {}
+        self.middlewares = {
+            'Cam': 'analogic',
+            'LoginBasic': 'analogic'
+        }
         self.scripts = []
         self.extension_assets = {}
         self.add_url_rule('/extension_asset', methods=['GET'], view_func=self.extension_asset)

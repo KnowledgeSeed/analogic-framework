@@ -1,5 +1,5 @@
 import requests
-from analogic import Middleware
+from analogic.middleware import Middleware
 from flask import render_template, request, make_response, redirect, session
 from TM1py.Services import TM1Service
 import logging
