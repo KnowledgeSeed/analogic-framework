@@ -15,3 +15,18 @@ deleted:
  tm1ApiHostBackend
 
 MainPage -> mainPage
+
+Export:
+
+    cnf = setting.getConfig()
+    target_url = cnf['tm1ApiHost']
+
+    -->
+
+    target_url = setting.getPoolTargetUrl()
+
+required config:
+
+  "pool": {
+    "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
+  },

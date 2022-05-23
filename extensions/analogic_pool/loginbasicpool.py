@@ -1,5 +1,6 @@
 from analogic_pool import Pool
 from flask import render_template, request, make_response, redirect, session
+from TM1py.Services import TM1Service
 
 
 class LoginBasicPool(Pool):
@@ -53,4 +54,18 @@ class LoginBasicPool(Pool):
 
     def extend_login_session(self):
         session.modified = True
+
+    def get_tm1_service(self):
+
+        pool_user = self.setting.getPoolUser()
+
+        authorization_required = pool_user['session'] == ''
+
+        if authorization_required:
+            return TM1Service(base_url=self.setting.getPoolTargetUrl(),
+                              user=pool_user['name'],
+                              password=self.setting.getPassword(pool_user['name']),
+                              ssl=False)
+        else:
+            return TM1Service(base_url=self.setting.getPoolTargetUrl(), session_id=pool_user['session'], ssl=False)
 

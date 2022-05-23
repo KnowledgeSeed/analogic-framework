@@ -76,9 +76,7 @@ class Export:
             j = j + 1
             i = i + 1
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable;$expand=Members($select=Name, Attributes/Caption))',
@@ -203,9 +201,7 @@ class Export:
         worksheet.write(2, 29, line_item, bold)
         worksheet.write(2, 42, line_item, bold)
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable)',
@@ -276,9 +272,7 @@ class Export:
 
         mdx = getMDXJSONByRequest(request, setting)
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable)',
@@ -614,9 +608,7 @@ class Export:
         worksheet.write(5, 14, 'Final Plan', bold)
         worksheet.write(5, 15, 'Final Plan', bold)
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',
@@ -713,9 +705,7 @@ class Export:
         worksheet.write(3, 1, 'Level', bold)
         worksheet.write(3, 2, 'Material Number', bold)
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))',
@@ -804,9 +794,7 @@ class Export:
         worksheet.write(3, 1, 'Level', bold)
         worksheet.write(3, 2, 'Material Number', bold)
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))',
@@ -925,9 +913,7 @@ class Export:
         worksheet.write(4, 18, 'Growth Final Sales Plan', bold)
         worksheet.write(4, 19, 'Growth Final Sales Plan', bold)
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',
@@ -964,21 +950,21 @@ class Export:
                 c = 0
                 i = i + 1
                 # receivers
-                receiver = d['Cells'][i+10]['Members'][5]['Name']
+                receiver = d['Cells'][i + 10]['Members'][5]['Name']
                 if receiver is None:
                     receiver = 0
                 worksheet.write(r, c, receiver, simple)
                 c = c + 1
 
                 # BPSP Budget
-                receiver = d['Cells'][i+10]['Members'][6]['Name']
+                receiver = d['Cells'][i + 10]['Members'][6]['Name']
                 if receiver is None:
                     receiver = 0
                 worksheet.write(r, c, receiver, simple)
                 c = c + 1
 
                 # Territories
-                receiver = d['Cells'][i+10]['Members'][4]['Name']
+                receiver = d['Cells'][i + 10]['Members'][4]['Name']
                 if receiver is None:
                     receiver = 0
                 worksheet.write(r, c, receiver, simple)
@@ -1008,9 +994,7 @@ class Export:
 
         mdx = getMDXJSONByRequest(request, setting)
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name,Attributes))',
@@ -1143,9 +1127,7 @@ class Export:
         worksheet.write(5, 20, 'Comment', bold)
         worksheet.write(5, 21, 'Comment', bold)
 
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',
@@ -1208,7 +1190,6 @@ class Export:
         output.seek(0)
         return output
 
-
     def rocheGrowthRateExport(self, request, tm1_service, setting, authentication_provider):
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
@@ -1220,9 +1201,7 @@ class Export:
             mdx = mdx.replace('$' + k, request.args[k].replace('"', '\\"'))
 
         mdx = '{"MDX"  :"' + mdx + '"}'
-        cnf = setting.getConfig()
-
-        target_url = cnf['tm1ApiHost']
+        target_url = setting.getPoolTargetUrl()
 
         response = authentication_provider.do_pool_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',
@@ -1248,7 +1227,7 @@ class Export:
         user = request.args['activeUserName']
         company = request.args['company']
         version = request.args['version']
-        
+
         # actual version
         worksheet.write(0, 0, user)
         worksheet.write(0, 1, company)
@@ -1257,7 +1236,7 @@ class Export:
         worksheet.write(1, 0, 'Receiver', bold)
         worksheet.write(1, 1, 'Product name', bold)
         worksheet.write(1, 2, 'Product code', bold)
-        worksheet.write(1, 3, 'Level', bold)        
+        worksheet.write(1, 3, 'Level', bold)
 
         worksheet.set_column(0, 0, 15)
         worksheet.set_column(1, 1, 30)
@@ -1279,14 +1258,14 @@ class Export:
             value = d['Cells'][i]['Value']
 
             if (value == None):
-                    value = 0
+                value = 0
 
             if (c > 3):
                 if (r == 2):
                     year = d['Cells'][i]['Members'][5]['Name']
                     worksheet.write(1, c, year, bold)
 
-                worksheet.write(r, c, round(float(value), 4)*100, simple)
+                worksheet.write(r, c, round(float(value), 4) * 100, simple)
             else:
                 worksheet.write(r, c, value, read_only)
 

@@ -1,81 +1,81 @@
 {
   "davidCustom1": {
-    "namespace": "applications.rochebpspdebug.server.Export",
+    "namespace": "rochebpspdebug.server.Export",
     "class": "Export",
     "method": "davidExport1"
   },
   "rocheMonthly": {
-    "namespace": "applications.rochebpspdebug.server.Export",
+    "namespace": "rochebpspdebug.server.Export",
     "class": "Export",
     "method": "rocheMonthly"
   },
   "exportCustomerMonthly": {
-    "namespace": "applications.rochebpspdebug.server.Export",
+    "namespace": "rochebpspdebug.server.Export",
     "class": "Export",
     "method": "rocheCustomerExport"
   },
   "rocheIpPlanningMonthly": {
-    "namespace": "applications.rochebpspdebug.server.Export",
+    "namespace": "rochebpspdebug.server.Export",
     "class": "Export",
     "method": "rocheIpPlanningMonthly"
   },
   "validateIpPlanningExcelImport": {
-    "namespace": "applications.rochebpspdebug.server.Validation",
+    "namespace": "rochebpspdebug.server.Validation",
     "class": "Validation",
     "method": "validateIpPlanningExcelImport"
   },
   "validateExcelImport": {
-    "namespace": "applications.rochebpspdebug.server.Validation",
+    "namespace": "rochebpspdebug.server.Validation",
     "class": "Validation",
     "method": "validateExcelImport"
   },
   "validateCustomerPlanningExcelImport": {
-    "namespace": "applications.rochebpspdebug.server.Validation",
+    "namespace": "rochebpspdebug.server.Validation",
     "class": "Validation",
     "method": "validateCustomerPlanningExcelImport"
   },
   "cool": {
-    "namespace": "applications.rochebpspdebug.server.BusinessLogic",
+    "namespace": "rochebpspdebug.server.BusinessLogic",
     "class": "BusinessLogic",
     "method": "doSomethingCool"
   },
   "rocheProductLevelExport": {
-    "namespace": "applications.rochebpspdebug.server.Export",
+    "namespace": "rochebpspdebug.server.Export",
     "class": "Export",
     "method": "rocheProductLevelExport"
   },
   "rocheMaterialMaintenanceExport": {
-    "namespace": "applications.rochebpspdebug.server.Export",
+    "namespace": "rochebpspdebug.server.Export",
     "class": "Export",
     "method": "rocheMaterialMaintenanceExport"
   },
   "rocheMaterialMaintenanceByIpNodeExport": {
-    "namespace": "applications.rochebpspdebug.server.Export",
+    "namespace": "rochebpspdebug.server.Export",
     "class": "Export",
     "method": "rocheMaterialMaintenanceByIpNodeExport"
   },
   "rocheCustomerReportExport": {
-    "namespace": "applications.rochebpspdebug.server.Export",
+    "namespace": "rochebpspdebug.server.Export",
     "class": "Export",
     "method": "rocheCustomerReportExport"
   },
   "rocheCustomerStatusReportExport": {
-    "namespace": "applications.rochebpspdebug.server.Export",
+    "namespace": "rochebpspdebug.server.Export",
     "class": "Export",
     "method": "rocheCustomerStatusReportExport"
   },
   "rocheIpPlanningReportExport": {
-    "namespace": "applications.rochebpspdebug.server.Export",
+    "namespace": "rochebpspdebug.server.Export",
     "class": "Export",
     "method": "rocheIpPlanningReportExport"
   },
   "rocheGrowthRateExport": {
-    "namespace": "applications.rochebpspdebug.server.Export",
+    "namespace": "rochebpspdebug.server.Export",
     "class": "Export",
     "method": "rocheGrowthRateExport"
   },
   "validateGrowthRateExcelImport": {
-    "namespace": "applications.rochebpspdebug.server.Validation",
+    "namespace": "rochebpspdebug.server.Validation",
     "class": "Validation",
     "method": "validateGrowthRateExcelImport"
   }
