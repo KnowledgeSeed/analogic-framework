@@ -1,13 +1,10 @@
 from setuptools import setup
 
 setup(
-    name='DimensionFramework',
-    version='4.0.5',
+    name='analogic',
+    version='4.0.0',
     packages=[
-        'DimensionFramework',
-        'DimensionFramework/AuthenticationProviders',
-        'DimensionFramework/Core',
-        'DimensionFramework/Pivot'
+        'analogic'
     ],
     include_package_data=True,
     install_requires=[

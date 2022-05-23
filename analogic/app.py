@@ -6,12 +6,12 @@ from analogic.proxy import ReverseProxy
 from analogic.endpoint import AnalogicEndpoint
 import logging.config
 import json
-import pkgutil
 import sys
 from importlib import resources
 from analogic.core_endpoints import core_endpoints
 from analogic.middleware import Middleware
 import inspect
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 APPLICATIONS_DIR = 'applications'
 EXTENSIONS_DIR = 'extensions'
@@ -78,6 +78,7 @@ class Analogic(Flask):
 
 def create_app(instance_path, reverse_proxy_path=''):
     app = Analogic(__name__, instance_path=instance_path, reverse_proxy_path=reverse_proxy_path)
+    #app.wsgi_app = ProxyFix(app.wsgi_app)
     app.secret_key = b'\x18m\x18\\]\xec\xcf\xbd\xf2\x89\xb9\xa3\x06N\x07\xfd'
 
     if reverse_proxy_path != '':
@@ -166,7 +167,9 @@ def load_modules(app, modules_dir, check_prefix, register_func):
         module_dir = os.path.join(modules_dir, module_dir_name)
 
         if os.path.isdir(module_dir) and (
-                check_prefix is False or module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX)):
+                check_prefix is False or (
+                module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX) and not module_dir_name.endswith('dist-info'))):
+
             files = resources.contents(module_dir_name)
 
             modules = [f[:-3] for f in files if f.endswith(".py") and f[0] != "_"]
