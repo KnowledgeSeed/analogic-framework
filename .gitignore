@@ -10,5 +10,5 @@ minified*.*
 logs
 pool.db
 dist
-DimensionFramework.egg-info
-DimensionFrameworkPoolExtension.egg-info
+analogic.egg-info
+analogic_pool.egg-info

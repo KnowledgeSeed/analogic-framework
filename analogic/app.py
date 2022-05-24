@@ -1,17 +1,21 @@
 import os
-from flask import Flask, Blueprint, request, send_file
+from flask import Flask, Blueprint, request, send_file, session
 import typing as t
 
 from analogic.proxy import ReverseProxy
 from analogic.endpoint import AnalogicEndpoint
 import logging.config
 import json
-import pkgutil
 import sys
 from importlib import resources
 from analogic.core_endpoints import core_endpoints
-from analogic.middleware import Middleware
+from analogic.authentication_provider import AuthenticationProvider
 import inspect
+from flask_caching import Cache
+from analogic.setting import SettingManager
+from datetime import timedelta
+import importlib
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 APPLICATIONS_DIR = 'applications'
 EXTENSIONS_DIR = 'extensions'
@@ -26,10 +30,13 @@ class Analogic(Flask):
         super().__init__(*args, **kwargs)
 
         self.endpoint_rules = []
-        self.middlewares = {}
-        self.scripts = []
+        self.authentication_providers = {
+            'Cam': 'analogic',
+            'LoginBasic': 'analogic'
+        }
         self.extension_assets = {}
         self.add_url_rule('/extension_asset', methods=['GET'], view_func=self.extension_asset)
+        self.analogic_applications = {}
 
     def get_reverse_proxy_path(self):
         return self._reverse_proxy_path
@@ -42,20 +49,30 @@ class Analogic(Flask):
                               provide_automatic_options=url_rule['provide_automatic_options'],
                               **url_rule['options'])
 
-    def register_analogic_endpoint(self, endpoint: "AnalogicEndpoint"):
+    def register_analogic_endpoint(self, endpoint: "AnalogicEndpoint", **options: t.Any):
         self.endpoint_rules.extend(endpoint.endpoint_rules)
+        super().register_blueprint(endpoint, **options)
 
-    def register_middleware(self, name, module_name):
-        self.middlewares[name] = module_name
+    def register_authentication_provider(self, name, module_name):
+        self.authentication_providers[name] = module_name
 
-    def get_middleware_module_name(self, name):
-        return self.middlewares[name]
+    def get_authentication_provider_module_name(self, name):
+        return self.authentication_providers[name]
 
     def register_application(self, blueprint: "Blueprint", **options: t.Any) -> None:
         instance = '/' + blueprint.name
         self.register_analogic_url_rules(instance)
 
+        self.analogic_applications[blueprint.name] = True
+
         super().register_blueprint(blueprint, **options)
+
+    def get_analogic_application(self):
+        s = request.path.split('/')
+        if len(s) > 2 and s[1] in self.analogic_applications:
+            return s[1]
+        else:
+            return 'default'
 
     def register_extension_assets(self, assets):
         self.extension_assets.update(assets)
@@ -75,9 +92,36 @@ class Analogic(Flask):
     def get_asset_by_ext(self, ext):
         return list(filter(lambda x: x.endswith(ext), list(self.extension_assets.keys())))
 
+    def get_authentication_provider(self):
+        analogic_application = self.get_analogic_application()
+        cache = self.get_cache()
+
+        setting = SettingManager(cache, self.instance_path, analogic_application)
+        config = setting.getConfig()
+
+        class_name = config['authenticationMode']
+        module_name = self.get_authentication_provider_module_name(class_name)
+
+        if module_name in sys.modules:
+            module = sys.modules[module_name]
+        else:
+            module = importlib.import_module(module_name)  # Todo ModuleNotFoundError
+
+        authentication_provider_class = getattr(module, class_name)
+        authentication_provider = authentication_provider_class(setting)
+
+        session.permanent = True
+        self.permanent_session_lifetime = timedelta(minutes=config['sessionExpiresInMinutes'] - 1)
+        return authentication_provider
+
+    def get_cache(self):
+        cache_path = os.path.join(self.instance_path, 'cache')
+        return Cache(self, config={'CACHE_TYPE': 'FileSystemCache', 'CACHE_DIR': cache_path})
+
 
 def create_app(instance_path, reverse_proxy_path=''):
     app = Analogic(__name__, instance_path=instance_path, reverse_proxy_path=reverse_proxy_path)
+    #app.wsgi_app = ProxyFix(app.wsgi_app)
     app.secret_key = b'\x18m\x18\\]\xec\xcf\xbd\xf2\x89\xb9\xa3\x06N\x07\xfd'
 
     if reverse_proxy_path != '':
@@ -146,8 +190,8 @@ def register_extension_components(app, extension_name, files):
         for name, obj in inspect.getmembers(sys.modules[module]):
             if inspect.isclass(obj) and \
                     not inspect.isabstract(obj) and \
-                    issubclass(obj, Middleware):
-                app.register_middleware(name, extension_name)
+                    issubclass(obj, AuthenticationProvider):
+                app.register_authentication_provider(name, extension_name)
 
             if isinstance(obj, AnalogicEndpoint):
                 app.register_analogic_endpoint(obj)
@@ -166,7 +210,9 @@ def load_modules(app, modules_dir, check_prefix, register_func):
         module_dir = os.path.join(modules_dir, module_dir_name)
 
         if os.path.isdir(module_dir) and (
-                check_prefix is False or module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX)):
+                check_prefix is False or (
+                module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX) and not module_dir_name.endswith('dist-info'))):
+
             files = resources.contents(module_dir_name)
 
             modules = [f[:-3] for f in files if f.endswith(".py") and f[0] != "_"]

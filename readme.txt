@@ -51,8 +51,8 @@ pip:
 <VirtualHost *:5000>
     WSGIScriptAlias / C:/Repos/flaskProject4/apache.wsgi
 	Alias /applications/ C:/Repos/flaskProject4/applications/
-	Alias /static/ C:/Repos/flaskProject4/venv/Lib/site-packages/DimensionFramework/static/
-	Alias /templates/ C:/Repos/flaskProject4/venv/Lib/site-packages/DimensionFramework/templates/
+	Alias /static/ C:/Repos/flaskProject4/venv/Lib/site-packages/analogic/static/
+	Alias /templates/ C:/Repos/flaskProject4/venv/Lib/site-packages/analogic/templates/
 	LogLevel debug
 	ErrorLog logs/seeder_error.log
 	CustomLog logs/seeder_custom.log combined

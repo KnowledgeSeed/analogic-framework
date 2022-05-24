@@ -6,12 +6,17 @@ from TM1py.Services import TM1Service
 class LoginBasicPool(Pool):
     def __init__(self, setting):
         super().__init__(setting)
+        self.authentication_session_name = self.setting.getInstance() + '_username'
+
+    def test_analogic_endpoint(self):
+        cnf = self.setting.getConfig()
+        return render_template('test_analogic_endpoint.html', cnf=cnf)
 
     def login(self):
         cnf = self.setting.getConfig()
         if request.method == 'POST':
             if request.form['username'] == 'test' and request.form['password'] == 'test1!3??_1':
-                session['username'] = request.form['username']
+                session[self.authentication_session_name] = request.form['username']
                 session['permanent'] = True
                 resp = make_response(redirect(self.setting.getBaseUrl()))
                 return self.add_authenticated_cookies(resp)
@@ -19,7 +24,7 @@ class LoginBasicPool(Pool):
 
     def index(self):
         cnf = self.setting.getConfig()
-        if 'username' in session:
+        if self.authentication_session_name  in session:
             return render_template('index.html', authenticated=True, cnf=cnf)
         return redirect(self.setting.getBaseUrl('login'))
 
@@ -45,11 +50,11 @@ class LoginBasicPool(Pool):
         return response
 
     def check_app_authenticated(self):
-        if 'username' in session:
+        if self.authentication_session_name  in session:
             return True
         return False
 
-    def get_authentication_response(self):
+    def get_authentication_required_response(self):
         return redirect(self.setting.getBaseUrl('login'))
 
     def extend_login_session(self):

@@ -1,0 +1,28 @@
+.ks-segmented {
+	display: block;
+	overflow: hidden;
+}
+
+.ks-segmented section{
+    display: contents;
+}
+
+.ks-segmented-inner {
+	align-items: center;
+	display: flex;
+	height: 100%;
+}
+
+.ks-segment {
+	cursor: pointer;
+	height: 100%;
+	flex: 1 1 0px;
+	flex-grow: 1;
+}
+
+.ks-segment-inner {
+	display: flex;
+	align-items: center;
+	height: 100%;
+	justify-content: center;
+}

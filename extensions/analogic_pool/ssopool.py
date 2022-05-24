@@ -9,14 +9,15 @@ import logging
 class SSOPool(Pool):
     def __init__(self, setting):
         super().__init__(setting)
+        self.authentication_session_name = self.setting.getInstance() + '_sso_token'
+        self.authentication_session_user_name = self.setting.getInstance() + '_username'
 
     def index(self):
         cnf = self.setting.getConfig()
-        sso_token = session.get('sso_token')
+        sso_token = session.get(self.authentication_session_name)
         decoded = self.decodeToken(sso_token)
 
         if decoded.get('msg') != '':
-   #     if sso_token is None or decoded.get('msg') == '':
             return make_response(redirect(cnf[
                                               'authenticationBridge']))
 
@@ -40,8 +41,8 @@ class SSOPool(Pool):
         if self.hasPoolUserAccess(user_name.replace('\\', '/'), sso_token) is False:
             return render_template('unauthorized.html')
 
-        session['sso_token'] = sso_token
-        session['username'] = user_name
+        session[self.authentication_session_name] = sso_token
+        session[self.authentication_session_username_name] = user_name
 
         resp = make_response(redirect(self.setting.getBaseUrl()))
 
@@ -124,17 +125,15 @@ class SSOPool(Pool):
         return {'msg': msg, 'token': decoded_token}
 
     def check_app_authenticated(self):
-        sso_token = session.get('sso_token')
+        sso_token = session.get(self.authentication_session_name)
         return sso_token is not None
-        # decoded = self.decodeToken(sso_token)
-        # return decoded['msg'] == ''
 
-    def get_authentication_response(self):
+    def get_authentication_required_response(self):
         return Response('', 401)
 
     def set_custom_mdx_data(self, mdx):
         if len(mdx) > 0:
-            return mdx.replace('$ssoToken', session['sso_token'])
+            return mdx.replace('$ssoToken', session[self.authentication_session_name])
         return mdx
 
     def extend_login_session(self):

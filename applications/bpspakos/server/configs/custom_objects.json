@@ -1,0 +1,82 @@
+{
+  "davidCustom1": {
+    "namespace": "bpspakos.server.Export",
+    "class": "Export",
+    "method": "davidExport1"
+  },
+  "rocheMonthly": {
+    "namespace": "bpspakos.server.Export",
+    "class": "Export",
+    "method": "rocheMonthly"
+  },
+  "exportCustomerMonthly": {
+    "namespace": "bpspakos.server.Export",
+    "class": "Export",
+    "method": "rocheCustomerExport"
+  },
+  "rocheIpPlanningMonthly": {
+    "namespace": "bpspakos.server.Export",
+    "class": "Export",
+    "method": "rocheIpPlanningMonthly"
+  },
+  "validateIpPlanningExcelImport": {
+    "namespace": "bpspakos.server.Validation",
+    "class": "Validation",
+    "method": "validateIpPlanningExcelImport"
+  },
+  "validateExcelImport": {
+    "namespace": "bpspakos.server.Validation",
+    "class": "Validation",
+    "method": "validateExcelImport"
+  },
+  "validateCustomerPlanningExcelImport": {
+    "namespace": "bpspakos.server.Validation",
+    "class": "Validation",
+    "method": "validateCustomerPlanningExcelImport"
+  },
+  "cool": {
+    "namespace": "bpspakos.server.BusinessLogic",
+    "class": "BusinessLogic",
+    "method": "doSomethingCool"
+  },
+  "rocheProductLevelExport": {
+    "namespace": "bpspakos.server.Export",
+    "class": "Export",
+    "method": "rocheProductLevelExport"
+  },
+  "rocheMaterialMaintenanceExport": {
+    "namespace": "bpspakos.server.Export",
+    "class": "Export",
+    "method": "rocheMaterialMaintenanceExport"
+  },
+  "rocheMaterialMaintenanceByIpNodeExport": {
+    "namespace": "bpspakos.server.Export",
+    "class": "Export",
+    "method": "rocheMaterialMaintenanceByIpNodeExport"
+  },
+  "rocheCustomerReportExport": {
+    "namespace": "bpspakos.server.Export",
+    "class": "Export",
+    "method": "rocheCustomerReportExport"
+  },
+  "rocheCustomerStatusReportExport": {
+    "namespace": "bpspakos.server.Export",
+    "class": "Export",
+    "method": "rocheCustomerStatusReportExport"
+  },
+  "rocheIpPlanningReportExport": {
+    "namespace": "bpspakos.server.Export",
+    "class": "Export",
+    "method": "rocheIpPlanningReportExport"
+  },
+  "rocheGrowthRateExport": {
+    "namespace": "bpspakos.server.Export",
+    "class": "Export",
+    "method": "rocheGrowthRateExport"
+  },
+  "validateGrowthRateExcelImport": {
+    "namespace": "bpspakos.server.Validation",
+    "class": "Validation",
+    "method": "validateGrowthRateExcelImport"
+  }
+}

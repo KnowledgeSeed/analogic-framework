@@ -2,7 +2,7 @@
 
 'use strict';
 
-const Doc = $(document), El = {body: $('body')}, PageState = {current: '', previous: ''}, WidgetValue = {infoData: {}};
+const Doc = $(document), El = {body: $('body')}, PageState = {current: '', previous: ''}, WidgetValue = {infoData: {}}, Extensions = [];
 
 let EventMap, Repository, WidgetConfig;
 
