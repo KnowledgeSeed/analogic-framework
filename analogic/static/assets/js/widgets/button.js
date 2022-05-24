@@ -102,8 +102,9 @@ class ButtonWidget extends Widget {
 
         v.fontColor && labelDiv.css('color', v.fontColor);
         v.backgroundColor && innerDiv.css('background-color', v.backgroundColor);
-        v.borderColor && innerDiv.css('border-color', v.borderColor);
+        v.borderColor && main.css('border-color', v.borderColor);
         v.borderWidth && innerDiv.css('border-width', v.borderWidth);
+        v.dividerWidth && innerDiv.css('divider-width', v.dividerWidth);
 
         if (v.skin) {
             Widget.setSkin(main, 'ks-button-', v.skin);
