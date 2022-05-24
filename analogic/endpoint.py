@@ -35,12 +35,12 @@ class AnalogicEndpoint(Blueprint):
     def analogic_endpoint_route(self, rule: str, **options: t.Any) -> t.Callable:
         def decorator(f: t.Callable) -> t.Callable:
             endpoint = options.pop("endpoint", None)
-            self.add_url_rule(rule, endpoint, f, **options)
+            self.add_analogic_url_rule(rule, endpoint, f, **options)
             return f
 
         return decorator
 
-    def add_url_rule(
+    def add_analogic_url_rule(
         self,
         rule: str,
         endpoint: t.Optional[str] = None,

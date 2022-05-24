@@ -1,18 +1,19 @@
 import requests
-from analogic.middleware import Middleware
+from analogic.authentication_provider import AuthenticationProvider
 from flask import render_template, request, make_response, redirect, session
 from TM1py.Services import TM1Service
 import logging
 
 
-class LoginBasic(Middleware):
+class LoginBasic(AuthenticationProvider):
 
     def __init__(self, setting):
         super().__init__(setting)
+        self.authentication_session_name = self.setting.getInstance() + '_username'
 
     def index(self):
         cnf = self.setting.getConfig()
-        if 'username' in session:
+        if self.authentication_session_name in session:
             return render_template('index.html', authenticated=True, cnf=cnf)
         return redirect(self.setting.getBaseUrl('login'))
 
@@ -26,11 +27,11 @@ class LoginBasic(Middleware):
                                         verify=False)
 
             if response.status_code == 200:
-
-                self.setting.setTM1SessionId(response.cookies.get('TM1SessionId'), request.form['username'])
-
-                session['username'] = request.form['username']
+                session[self.authentication_session_name] = request.form['username']
                 session['permanent'] = True
+
+                self.setting.setTM1SessionId(response.cookies.get('TM1SessionId'),
+                                             session[self.authentication_session_name])
 
                 resp = make_response(redirect(self.setting.getBaseUrl()))
 
@@ -39,7 +40,7 @@ class LoginBasic(Middleware):
         return render_template('login.html', cnf=cnf)
 
     def create_request_with_authenticated_user(self, url, method, mdx, headers, cookies):
-        tm1_session_id = self.setting.getTM1SessionId(session['username'])
+        tm1_session_id = self.setting.getTM1SessionId(session[self.authentication_session_name])
 
         cookies["TM1SessionId"] = tm1_session_id
 
@@ -54,11 +55,11 @@ class LoginBasic(Middleware):
         return response
 
     def check_app_authenticated(self):
-        if 'username' in session:
+        if self.authentication_session_name in session:
             return True
         return False
 
-    def get_authentication_response(self):
+    def get_authentication_required_response(self):
         return redirect(self.setting.getBaseUrl('login'))
 
     def extend_login_session(self):
@@ -67,11 +68,9 @@ class LoginBasic(Middleware):
     def get_tm1_service(self):
         cnf = self.setting.getConfig()
 
-        tm1_session_id = self.setting.getTM1SessionId(session['username'])
+        tm1_session_id = self.setting.getTM1SessionId(session[self.authentication_session_name])
 
         return TM1Service(base_url=cnf['tm1ApiHost'], session_id=tm1_session_id, ssl=False)
 
     def getLogger(self):
         return logging.getLogger(__name__)
-
-

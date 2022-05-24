@@ -1,11 +1,11 @@
 from abc import ABCMeta
-from analogic import Middleware
+from analogic import AuthenticationProvider
 import requests
 from TM1py.Services import TM1Service
 from analogic_pool import PoolSettingManager
 
 
-class Pool(Middleware, metaclass=ABCMeta):
+class Pool(AuthenticationProvider, metaclass=ABCMeta):
     def __init__(self, setting):
         super().__init__(PoolSettingManager(setting))
 

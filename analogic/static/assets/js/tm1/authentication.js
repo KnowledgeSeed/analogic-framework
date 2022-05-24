@@ -12,7 +12,6 @@ Auth.loadDefault = arg => {
 };
 
 Auth.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
-   // Loader.start(true);
     let urlWithWidgetId = url + ( url.includes('?') ? '&' : '?' ) + 'widgetid=' + widgetId;
     return $.ajax({
         cache: true,
@@ -23,20 +22,19 @@ Auth.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
         data: type === 'GET' ? {} : data,
         global: true,
         success: function (data) {
-          //  Loader.stop(true);
             Auth.handleSuccessLogin();
         },
         error: function (response, e) {
-          //  Loader.stop(true);
             L('error:', response, e, widgetId);
         },
         statusCode: {
             401: function () {
-                if (('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode || 'SSOBasicPool' === app.authenticationMode) && app.handled401 === false) {
+                if ('Cam' === app.authenticationMode && app.handled401 === false) {
                     app.handled401 = true;
                     $.cookie("authenticated", 0);
                     window.location.href = app.url.authenticationBridge;
                 }
+                Extensions.forEach(ext => ext.handle401);
             }
         }
     });
@@ -47,11 +45,12 @@ Auth.handleSuccessLogin = () => {
         let date = new Date();
         date.setTime(date.getTime() + (app.sessionExpiresInMinutes * 60 * 1000));
         $.cookie("authenticated", 'authenticated', {expires: date});
-        if ('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode || 'SSOBasicPool' === app.authenticationMode) {
+        if ('Cam' === app.authenticationMode) {
             app.handled401 = false;
         }
         //$.cookie("camPassport", 0);
     }
+
     if (('Cam' === app.authenticationMode) && ((new Date().getTime() - app.pingTime) / 1000 >= 30)) {
         app.pingTime = new Date().getTime();
         $.ajax({
@@ -66,8 +65,9 @@ Auth.handleSuccessLogin = () => {
             }
         });
     }
-};
 
+    Extensions.forEach(ext => ext.handleSuccessLogin);
+};
 
 Auth.getHeader = (contentType = 'application/json; charset=utf-8', accept = 'application/json; charset=utf-8') => {
     let headers = {};

@@ -1,68 +1,50 @@
-from flask_caching import Cache
-from datetime import timedelta
 from flask import session, current_app, send_file, json, request, jsonify
-import importlib
 import sys
-import os
 from analogic.loader import ClassLoader
-from analogic.setting import SettingManager
 from analogic.upload import FileUploadManager
 import analogic.pivot as PivotApi
 import logging
 import pandas as pd
 from abc import ABC, abstractmethod
-
+from functools import wraps
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
 
-def get_middleware():
-    analogic_application = get_analogic_application()
-    cache = get_cache()
-
-    setting = SettingManager(cache, current_app.instance_path, analogic_application)
-    config = setting.getConfig()
-
-    # module_name, class_name = config['authenticationMode'].rsplit(".", 1)
-
-    class_name = config['authenticationMode']
-    module_name = current_app.get_middleware_module_name(class_name)
-
-    if module_name in sys.modules:
-        module = sys.modules[module_name]
-    else:
-        module = importlib.import_module(module_name)  # Todo ModuleNotFoundError
-
-    middleware_class = getattr(module, class_name)
-    middleware = middleware_class(setting)
-
-    session.permanent = True
-    current_app.permanent_session_lifetime = timedelta(minutes=config['sessionExpiresInMinutes'] - 1)
-    return middleware
+def get_authentication_provider():
+    return current_app.get_authentication_provider()
 
 
-def get_analogic_application():
-    s = request.path.split('/')
-    if len(s) > 1:
-        return s[1]
-    else:
-        return 'default'
+def endpoint_login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        auth_provider = get_authentication_provider()
+        if auth_provider.check_app_authenticated() is False:
+            return auth_provider.get_authentication_required_response()
+        return f(*args, **kwargs)
+
+    return decorated_function
 
 
-def get_cache():
-    cache_path = os.path.join(current_app.instance_path, 'cache')
-    return Cache(current_app, config={'CACHE_TYPE': 'FileSystemCache', 'CACHE_DIR': cache_path})
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        auth_provider = args[0]
+        if auth_provider.check_app_authenticated() is False:
+            return auth_provider.get_authentication_required_response()
+        return f(*args, **kwargs)
+
+    return decorated_function
 
 
-class Middleware(ABC):
+class AuthenticationProvider(ABC):
 
     def __init__(self, setting):
         self.setting = setting
         self.upload_manager = FileUploadManager(self.setting)
 
+    @login_required
     def pivot(self):
-        if self.check_app_authenticated() is False:
-            return self.get_authentication_response()
 
         v = request.values
         cube_name = v.get('cube_name')
@@ -77,9 +59,8 @@ class Middleware(ABC):
         return PivotApi.call(self.get_tm1_service(), cube_name, dimension_name, hierarchy_name, subset_name,
                              element_names, subset_name_to_remove, selected_cards, options)
 
+    @login_required
     def export(self):
-        if self.check_app_authenticated() is False:
-            return self.get_authentication_response()
 
         file_name = request.args.get('file_name', default='export.xlsx')
         export_key = request.args.get('export_key')
@@ -123,12 +104,13 @@ class Middleware(ABC):
         return True
 
     @abstractmethod
-    def get_authentication_response(self):
+    def get_authentication_required_response(self):
         pass
 
     def get_not_found_response(self):
         return 'Not found', 404, {'Content-Type': 'application/json'}
 
+    @login_required
     def process_files(self):
         try:
 
@@ -144,7 +126,8 @@ class Middleware(ABC):
             if validation_key != '':
                 description = self.setting.getCustomObjectDescription(validation_key)
 
-                validation_message = ClassLoader().call(description, request, self.get_tm1_service(), self.setting, self,
+                validation_message = ClassLoader().call(description, request, self.get_tm1_service(), self.setting,
+                                                        self,
                                                         path=upload_path)
 
                 if validation_message != '':
@@ -180,10 +163,8 @@ class Middleware(ABC):
     def set_custom_mdx_data(self, mdx):
         return mdx
 
+    @login_required
     def pool(self, sub_path):
-
-        if self.check_app_authenticated() is False:
-            return self.get_authentication_response()
 
         self.extend_login_session()
 
@@ -233,6 +214,7 @@ class Middleware(ABC):
     def get_tm1_service(self):
         pass
 
+    @login_required
     def active_user(self):
         return jsonify({'username': session.get('username')})
 
