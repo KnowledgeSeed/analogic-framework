@@ -34,7 +34,7 @@ Auth.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
                     $.cookie("authenticated", 0);
                     window.location.href = app.url.authenticationBridge;
                 }
-                Extensions.forEach(ext => ext.handle401);
+                Extensions.forEach(ext => ext.handle401());
             }
         }
     });
@@ -66,7 +66,7 @@ Auth.handleSuccessLogin = () => {
         });
     }
 
-    Extensions.forEach(ext => ext.handleSuccessLogin);
+    Extensions.forEach(ext => ext.handleSuccessLogin());
 };
 
 Auth.getHeader = (contentType = 'application/json; charset=utf-8', accept = 'application/json; charset=utf-8') => {

@@ -34,7 +34,6 @@ class Analogic(Flask):
             'Cam': 'analogic',
             'LoginBasic': 'analogic'
         }
-        self.scripts = []
         self.extension_assets = {}
         self.add_url_rule('/extension_asset', methods=['GET'], view_func=self.extension_asset)
         self.analogic_applications = {}
