@@ -78,5 +78,10 @@
     "namespace": "bpsp.server.Validation",
     "class": "Validation",
     "method": "validateGrowthRateExcelImport"
+  },
+  "sendEmail": {
+    "namespace": "analogic",
+    "class": "EmailManager",
+    "method": "send_email"
   }
 }

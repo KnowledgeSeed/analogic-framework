@@ -16,5 +16,11 @@
     ],
     "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
   },
-  "usePoolUserAsActiveUser": true
+  "usePoolUserAsActiveUser": true,
+  "smtp": {
+    "server": "",
+    "port": "",
+    "password": "",
+    "sender_email": ""
+  }
 }

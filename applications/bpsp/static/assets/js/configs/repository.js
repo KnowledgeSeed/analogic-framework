@@ -37,6 +37,18 @@ app.repository = {
             return dict[widgetId];
         }
     },
+    sendEmailTest: {
+        launch: {
+            url: (db) => `custom_request`,
+            type: 'POST',
+            server: true,
+            body: (db) => {
+                return {
+                  key: 'sendEmail'
+                };
+            }
+        }
+    },
     rocheBPSPMainApplicationInit: {
         init: [
             {
@@ -20124,7 +20136,7 @@ app.repository = {
             type: 'POST',
             body: (db, widgetId) => {
                 let product = Utils.getGridTableCell('rocheBPSPReportKPIMaterialSelectorShortcutPopupGridTable', 0).productCode === undefined ? 'PL1' :
-                        Utils.getGridTableCell('rocheBPSPReportKPIMaterialSelectorShortcutPopupGridTable', 0).productCode,
+                    Utils.getGridTableCell('rocheBPSPReportKPIMaterialSelectorShortcutPopupGridTable', 0).productCode,
                     company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPReportKPIGridRow1Cell2DropBox', 'key'),
                     receiver = Utils.getDropBoxSelectedItemAttribute('rocheBPSPReportKPIGridRow1Cell3DropBox', 'key'),
                     currency = Utils.getDropBoxSelectedItemAttribute('rocheBPSPReportKPIGridRow1Cell5DropBox', 'name'),

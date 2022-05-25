@@ -53,3 +53,7 @@ def ping():
 def pivot():
     return get_authentication_provider().pivot()
 
+
+@core_endpoints.analogic_endpoint_route('/custom_request', methods=['GET', 'POST'])
+def custom_request():
+    return get_authentication_provider().custom_request()

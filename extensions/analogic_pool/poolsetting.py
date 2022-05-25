@@ -79,12 +79,20 @@ class PoolSettingManager(SettingManager):
     def get_framework_sso_salt_name(self):
         return self.get_instance() + '_' + self.FRAMEWORK_SSO_SALT_NAME
 
+    def get_smtp_password(self):
+        cnf = self.get_config()
+        if 'password' in cnf['smtp']:
+            return cnf['smtp']['password']
+        else:
+            return self.get_password(cnf['smtp']['sender_email'])
+
     def get_password(self, user_name, namespace=''):
         n = namespace
         if n == '':
             n = self.get_app_cam_namespace()
         return decrypt(keyring.get_password(n + '/' + user_name, user_name).encode('latin_1'),
-                       get_salt_for_key(user_name, self.get_framework_sso_salt_name()), self.get_framework_sso_pass_phrase_name())
+                       get_salt_for_key(user_name, self.get_framework_sso_salt_name()),
+                       self.get_framework_sso_pass_phrase_name())
 
     def get_pool_user(self):
         pool_user = self.poolUserManager.get_user()

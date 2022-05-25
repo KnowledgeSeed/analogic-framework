@@ -148,6 +148,10 @@ class SettingManager:
         cnf = self.get_config()
         return cnf['camNamespace']
 
+    def get_smtp_password(self):
+        cnf = self.get_config()
+        return cnf['smtp']['password']
+
     def _cache_get(self, key):
         if self.cache is not None:
             return self.cache.get(key)

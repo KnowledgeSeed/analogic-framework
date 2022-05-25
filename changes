@@ -30,3 +30,12 @@ required config:
   "pool": {
     "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
   },
+
+
+EmailManager:
+    smtp: {
+      sender_email: '',
+      server: '',
+      port: '',
+      password: '', required in analogic, optional in analogic_pool (stored in credential manager or same way in application_settings.json)
+    }

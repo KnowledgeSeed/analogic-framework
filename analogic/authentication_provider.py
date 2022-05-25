@@ -79,6 +79,17 @@ class AuthenticationProvider(ABC):
                          cache_timeout=0,
                          mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
+    @login_required
+    def custom_request(self):
+        key = request.args.get('key')
+
+        if key is None:
+            return self.get_not_found_response()
+
+        description = self.setting.get_custom_object_description(key)
+
+        return ClassLoader().call(description, request, self.get_tm1_service(), self.setting, self)
+
     def _get_server_side_mdx(self):
         mdx = request.data
         if request.args.get('server') is not None:

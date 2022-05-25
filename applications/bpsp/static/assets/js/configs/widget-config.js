@@ -18,6 +18,12 @@ app.widgetConfig = {
                     ]
                 },
                 {
+                   id: 'sendEmailTest',
+                   type: ButtonWidget,
+                    label: 'Send'
+                    
+                },
+                {
                     id: 'rocheBPSPMainSubmissionToBPXPPopup',
                     type: ContainerWidget,
                     anchorVisible: false,
