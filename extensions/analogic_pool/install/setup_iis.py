@@ -1,7 +1,7 @@
 import sys
 from os.path import exists
 import os
-from functions import insertKey
+from analogic_pool import insert_key
 
 if len(sys.argv) < 2:
     print('Please add applicationName as 1st argument')
@@ -19,6 +19,6 @@ os.remove('secret_key')
 
 application = sys.argv[1]
 
-insertKey(application, secret_key)
+insert_key(application, secret_key)
 
 

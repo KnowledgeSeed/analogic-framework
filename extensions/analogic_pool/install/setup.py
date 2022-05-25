@@ -1,14 +1,14 @@
 import os
 import sys
 from flask import json
-from functions import createPoolUserDB, generateKey, installPoolUsers, installSmtpUser
+from analogic_pool import create_pool_user_db, generate_key, install_pool_users, install_smtp_user
 
 if len(sys.argv) < 6:
     print('Please add arguments')
     print('setup.py applicationName passPhrase salt adminUser adminPassword')
     exit(0)
 
-json_url = os.path.join(os.path.dirname(__file__), '..', 'applications', sys.argv[1], 'config.json')
+json_url = os.path.join(os.getcwd(), 'applications', sys.argv[1], 'application_settings.json')
 if os.path.exists(json_url) is False:
     print('path does not exists: ' + json_url)
     exit(0)
@@ -21,7 +21,7 @@ salt = sys.argv[3]
 admin_user = sys.argv[4]
 admin_pwd = sys.argv[5]
 
-createPoolUserDB(setting, application)
-generateKey(application, passphrase, salt)
-installPoolUsers(application, setting, admin_user, admin_pwd)
-installSmtpUser(application, setting)
+create_pool_user_db(setting, application)
+generate_key(application, passphrase, salt)
+install_pool_users(application, setting, admin_user, admin_pwd)
+install_smtp_user(application, setting)

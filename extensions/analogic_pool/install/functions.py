@@ -1,5 +1,4 @@
 import os
-import sys
 import hmac
 import hashlib
 import base64
@@ -7,31 +6,29 @@ import keyring
 import requests
 from flask import json
 
-root = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))
-sys.path.insert(0, root)
-sys.path.append(os.path.join(root, 'DimensionFramework'))
+root = os.getcwd()
 
-from analogic.sqlite import SqlitePoolUserManager
-from analogic.setting import SettingManager, encrypt, getSaltForKey
+from analogic_pool.sqlite import SqlitePoolUserManager
+from analogic_pool.poolsetting import PoolSettingManager, encrypt, get_salt_for_key
 
 
-def createPoolUserDB(setting, application):
+def create_pool_user_db(setting, application):
     if 'pool' not in setting or 'users' not in setting['pool']:
         print('please set pool.users in config.json')
         return
 
     if 'Pool' in setting['authenticationMode']:
-        poolUserManager = SqlitePoolUserManager(setting['pool']['users'],
-                                                os.getcwd(),
-                                                application)
-        poolUserManager.clear()
-        poolUserManager.create_database()
+        pool_user_manager = SqlitePoolUserManager(setting['pool']['users'],
+                                                  os.getcwd(),
+                                                  application)
+        pool_user_manager.clear()
+        pool_user_manager.create_database()
         print('Database created')
     else:
         print('authenticationMode is not Pool')
 
 
-def generateKey(application, pass_phrase, salt):
+def generate_key(application, pass_phrase, salt):
     dig = hmac.new(os.urandom(10), msg=os.urandom(10), digestmod=hashlib.sha256).digest()
     t = base64.b64encode(dig).decode()
 
@@ -39,45 +36,45 @@ def generateKey(application, pass_phrase, salt):
     secret_file.writelines(t)
     secret_file.close()
 
-    target_user_name = application + '_' + SettingManager.FRAMEWORK_SSO_KEY_NAME
-    pass_phrase_name = application + '_' + SettingManager.FRAMEWORK_SSO_PASSPHRASE_NAME
-    salt_name = application + '_' + SettingManager.FRAMEWORK_SSO_SALT_NAME
+    target_user_name = application + '_' + PoolSettingManager.FRAMEWORK_SSO_KEY_NAME
+    pass_phrase_name = application + '_' + PoolSettingManager.FRAMEWORK_SSO_PASSPHRASE_NAME
+    salt_name = application + '_' + PoolSettingManager.FRAMEWORK_SSO_SALT_NAME
 
-    updateCredentialManager(pass_phrase_name, pass_phrase_name, pass_phrase)
-    updateCredentialManager(salt_name, salt_name, salt)
-    updateCredentialManager(target_user_name, target_user_name, t)
+    update_credential_manager(pass_phrase_name, pass_phrase_name, pass_phrase)
+    update_credential_manager(salt_name, salt_name, salt)
+    update_credential_manager(target_user_name, target_user_name, t)
     print('key generated')
 
 
-def insertKey(application, value):
-    target_user_name = application + '_' + SettingManager.FRAMEWORK_SSO_KEY_NAME
-    updateCredentialManager(target_user_name, target_user_name, value)
+def insert_key(application, value):
+    target_user_name = application + '_' + PoolSettingManager.FRAMEWORK_SSO_KEY_NAME
+    update_credential_manager(target_user_name, target_user_name, value)
     print('key added')
 
 
-def updateCredentialManager(target, user_name, pwd):
+def update_credential_manager(target, user_name, pwd):
     p = keyring.get_password(target, user_name)
     if p is not None:
         keyring.delete_password(target, user_name)
     keyring.set_password(target, user_name, pwd)
 
 
-def installPoolUser(application, setting, password):
+def install_pool_user(application, setting, password):
     if 'pool' not in setting or 'users' not in setting['pool']:
         print('please set pool.users in config.json')
         return
-    passphrase_name = application + '_' + SettingManager.FRAMEWORK_SSO_PASSPHRASE_NAME
-    salt_name = application + '_' + SettingManager.FRAMEWORK_SSO_SALT_NAME
+    passphrase_name = application + '_' + PoolSettingManager.FRAMEWORK_SSO_PASSPHRASE_NAME
+    salt_name = application + '_' + PoolSettingManager.FRAMEWORK_SSO_SALT_NAME
     for idx, u in enumerate(setting['pool']['users']):
         target = setting['camNamespace'] + '/' + u
-        encrypted_password = encrypt(password, getSaltForKey(u, salt_name), passphrase_name)
-        updateCredentialManager(target, u, encrypted_password)
+        encrypted_password = encrypt(password, get_salt_for_key(u, salt_name), passphrase_name)
+        update_credential_manager(target, u, encrypted_password)
 
     print('user added')
 
 
-def installPoolUsers(application, setting, admin_user='', admin_pwd=''):
-    passwords_url = os.path.join(os.path.dirname(__file__), 'pwd.json')
+def install_pool_users(application, setting, admin_user='', admin_pwd=''):
+    passwords_url = os.path.join(os.getcwd(), 'pwd.json')
     if os.path.exists(passwords_url) is False:
         print('path does not exists: ' + passwords_url)
         return
@@ -96,19 +93,19 @@ def installPoolUsers(application, setting, admin_user='', admin_pwd=''):
         print('length of password array is not equals with users array')
         return
 
-    passphrase_name = application + '_' + SettingManager.FRAMEWORK_SSO_PASSPHRASE_NAME
-    salt_name = application + '_' + SettingManager.FRAMEWORK_SSO_SALT_NAME
+    passphrase_name = application + '_' + PoolSettingManager.FRAMEWORK_SSO_PASSPHRASE_NAME
+    salt_name = application + '_' + PoolSettingManager.FRAMEWORK_SSO_SALT_NAME
     for idx, u in enumerate(setting['pool']['users']):
         target = setting['camNamespace'] + '/' + u
-        password = encrypt(p['passwords'][idx], getSaltForKey(u, salt_name), passphrase_name)
-        updateCredentialManager(target, u, password)
+        password = encrypt(p['passwords'][idx], get_salt_for_key(u, salt_name), passphrase_name)
+        update_credential_manager(target, u, password)
         if admin_user != '':
-            createInTM1(setting, admin_user, admin_pwd, u, p['passwords'][idx])
+            create_in_tm1(setting, admin_user, admin_pwd, u, p['passwords'][idx])
 
     print('users added')
 
 
-def createInTM1(setting, admin_user, admin_pwd, user, pwd):
+def create_in_tm1(setting, admin_user, admin_pwd, user, pwd):
     url = setting[
               'tm1ApiHost'] + "/api/v1/Processes('zSYS Analogic Create Pool User')/tm1.ExecuteWithReturn"
     body = '{"Parameters": [{"Name": "pUserID", "Value": "' + user + '"},{"Name": "pPassword", "Value": "' + pwd + '"}]}'
@@ -126,12 +123,12 @@ def createInTM1(setting, admin_user, admin_pwd, user, pwd):
     print(response.status_code)
 
 
-def installSmtpUser(application, setting):
+def install_smtp_user(application, setting):
     if 'smtp' not in setting:
         print('The "smtp" key does not exists in the setting!')
         return
 
-    pwd_url = os.path.join(os.path.dirname(__file__), 'smtp_pwd.txt')
+    pwd_url = os.path.join(os.getcwd(), 'smtp_pwd.txt')
 
     if os.path.exists(pwd_url) is False:
         print('Path does not exists: ' + pwd_url)
@@ -143,12 +140,12 @@ def installSmtpUser(application, setting):
         print('Please set password for the SMTP user!')
         return
 
-    passphrase_name = application + '_' + SettingManager.FRAMEWORK_SSO_PASSPHRASE_NAME
-    salt_name = application + '_' + SettingManager.FRAMEWORK_SSO_SALT_NAME
+    passphrase_name = application + '_' + PoolSettingManager.FRAMEWORK_SSO_PASSPHRASE_NAME
+    salt_name = application + '_' + PoolSettingManager.FRAMEWORK_SSO_SALT_NAME
 
     user_name = setting['smtp']['sender_email']
     target = setting['camNamespace'] + '/' + user_name
-    password = encrypt(pwd, getSaltForKey(user_name, salt_name), passphrase_name)
-    updateCredentialManager(target, user_name, password)
+    password = encrypt(pwd, get_salt_for_key(user_name, salt_name), passphrase_name)
+    update_credential_manager(target, user_name, password)
 
     print('SMTP user added')

@@ -1,1 +1,3 @@
 graft analogic_pool/static
+graft analogic_pool/test_templates
+global-exclude *.pyc
