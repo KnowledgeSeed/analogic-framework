@@ -68,7 +68,7 @@ class AuthenticationProvider(ABC):
         if export_key is None:
             return self.get_not_found_response()
 
-        export_description = self.setting.getCustomObjectDescription(export_key)
+        export_description = self.setting.get_custom_object_description(export_key)
 
         if export_description is None:
             return self.get_not_found_response()
@@ -79,18 +79,18 @@ class AuthenticationProvider(ABC):
                          cache_timeout=0,
                          mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
-    def get_server_side_mdx(self):
+    def _get_server_side_mdx(self):
         mdx = request.data
         if request.args.get('server') is not None:
             body = json.loads(request.data)
             key = body['key']
             if body.get('key_suffix') is not None:
                 key = key + '_' + body['key_suffix']
-            mdx = self.setting.getMDX(key)
+            mdx = self.setting.get_mdx(key)
             for k in body:
                 mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
 
-            mdx = self.set_custom_mdx_data(mdx)
+            mdx = self._set_custom_mdx_data(mdx)
             return mdx.encode('utf-8')
 
         return mdx
@@ -124,7 +124,7 @@ class AuthenticationProvider(ABC):
             upload_path = self.upload_manager.upload(target, staging, sub_folder, request.files)
 
             if validation_key != '':
-                description = self.setting.getCustomObjectDescription(validation_key)
+                description = self.setting.get_custom_object_description(validation_key)
 
                 validation_message = ClassLoader().call(description, request, self.get_tm1_service(), self.setting,
                                                         self,
@@ -137,13 +137,13 @@ class AuthenticationProvider(ABC):
             preprocess_template = request.form.get('preProcessTemplate', default='')
 
             if preprocess_template != '':
-                pre_process_message = self.upload_manager.preProcess(self.get_tm1_service(), preprocess_template,
-                                                                     upload_path)
+                pre_process_message = self.upload_manager.pre_process(self.get_tm1_service(), preprocess_template,
+                                                                      upload_path)
 
             if staging != '':
                 self.upload_manager.move(target, staging, sub_folder)
 
-            self.upload_manager.postProcess()
+            self.upload_manager.post_process()
 
             if pre_process_message != '':
                 result = 'ERROR!<br/><br/>' + pre_process_message
@@ -154,23 +154,23 @@ class AuthenticationProvider(ABC):
             logger.error(sys.exc_info()[1])
             return 'Unexpected error', 200, {'Content-Type': 'application/json'}
 
-    def add_authenticated_cookies(self, response):
-        cnf = self.setting.getConfig()
+    def _add_authenticated_cookies(self, response):
+        cnf = self.setting.get_config()
         # TODO secure, httpOnly!!!
         response.set_cookie('authenticated', 'authenticated', max_age=cnf['sessionExpiresInMinutes'] * 60)
         return response
 
-    def set_custom_mdx_data(self, mdx):
+    def _set_custom_mdx_data(self, mdx):
         return mdx
 
     @login_required
     def pool(self, sub_path):
 
-        self.extend_login_session()
+        self._extend_login_session()
 
-        target_url = self.setting.getPoolTargetUrl()
+        target_url = self.setting.get_pool_target_url()
 
-        mdx = self.get_server_side_mdx()
+        mdx = self._get_server_side_mdx()
 
         url = target_url + "/" + sub_path + (
             "?" + request.query_string.decode('UTF-8') if len(
@@ -200,14 +200,14 @@ class AuthenticationProvider(ABC):
         if cookies is None:
             cookies: dict[str, str] = {}
 
-        return self.create_request_with_authenticated_user(url, method, mdx, headers, cookies)
+        return self._create_request_with_authenticated_user(url, method, mdx, headers, cookies)
 
     @abstractmethod
-    def create_request_with_authenticated_user(self, url, method, mdx, headers, cookies):
+    def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies):
         pass
 
     @abstractmethod
-    def extend_login_session(self):
+    def _extend_login_session(self):
         pass
 
     @abstractmethod
@@ -219,4 +219,4 @@ class AuthenticationProvider(ABC):
         return jsonify({'username': session.get('username')})
 
     def getLogger(self):
-        return logging.getLogger(self.setting.getInstance())
+        return logging.getLogger(self.setting.get_instance())

@@ -10,7 +10,7 @@ pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
 
 def getMDXJSONByRequest(request, setting):
-    mdx = setting.getMDX(request.args['key'])
+    mdx = setting.get_mdx(request.args['key'])
     for k in request.args:
         mdx = mdx.replace('$' + k, request.args[k].replace('"', '\\"'))
 

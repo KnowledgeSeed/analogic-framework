@@ -17,18 +17,18 @@ class SqlitePoolUserManager:
         self.users = users
         self.site_root = site_root
 
-    def getConnection(self):
+    def get_connection(self):
         return sqlite3.connect(os.path.join(self.site_root, 'pool.db'))
 
-    def createDatabase(self):
-        con = self.getConnection()
-        if self.isTableExists(con) is False:
-            self.createTable(con)
-            self.createUsers(con)
+    def create_database(self):
+        con = self.get_connection()
+        if self.is_table_exists(con) is False:
+            self.create_table(con)
+            self.create_users(con)
         con.close()
 
-    def getUser(self):
-        con = self.getConnection()
+    def get_user(self):
+        con = self.get_connection()
         con.row_factory = dict_factory
         c = con.cursor()
         c.execute('SELECT * FROM ' + self.table_name + ' ORDER BY session_count')
@@ -38,7 +38,7 @@ class SqlitePoolUserManager:
         con.close()
         return pool_user
 
-    def isTableExists(self, con):
+    def is_table_exists(self, con):
         c = con.cursor()
 
         c.execute('SELECT count(name) FROM sqlite_master WHERE type=:type AND name=:name',
@@ -46,13 +46,13 @@ class SqlitePoolUserManager:
 
         return c.fetchone()[0] == 1
 
-    def createTable(self, con):
+    def create_table(self, con):
         c = con.cursor()
         c.execute('create table if not exists ' + self.table_name +
                   '(id integer, name text, session text, session_count integer, expiration text)')
         con.commit()
 
-    def createUsers(self, con):
+    def create_users(self, con):
         pool_users = []
         i = 1
         for user in self.users:
@@ -62,8 +62,8 @@ class SqlitePoolUserManager:
         c.executemany('INSERT INTO ' + self.table_name + ' VALUES(?, ?, ?, ?, ?)', pool_users)
         con.commit()
 
-    def updateUserSession(self, pool_user):
-        con = self.getConnection()
+    def update_user_session(self, pool_user):
+        con = self.get_connection()
         c = con.cursor()
         c.execute('UPDATE ' + self.table_name +
                   ' SET session_count = session_count - 1, session = :session, expiration = :expiration WHERE id = :id',
@@ -71,8 +71,8 @@ class SqlitePoolUserManager:
         con.commit()
         con.close()
 
-    def decreaseSessionCount(self, pool_user):
-        con = self.getConnection()
+    def decrease_session_count(self, pool_user):
+        con = self.get_connection()
         c = con.cursor()
         c.execute('UPDATE ' + self.table_name +
                   ' SET session_count = session_count - 1 WHERE id = :id',
@@ -81,7 +81,7 @@ class SqlitePoolUserManager:
         con.close()
 
     def clear(self):
-        con = self.getConnection()
+        con = self.get_connection()
         c = con.cursor()
         c.execute('DROP table IF EXISTS ' + self.table_name)
         con.commit()

@@ -25,7 +25,7 @@ def createPoolUserDB(setting, application):
                                                 os.getcwd(),
                                                 application)
         poolUserManager.clear()
-        poolUserManager.createDatabase()
+        poolUserManager.create_database()
         print('Database created')
     else:
         print('authenticationMode is not Pool')

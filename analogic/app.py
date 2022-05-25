@@ -84,20 +84,20 @@ class Analogic(Flask):
         return 'not found', 404
 
     def get_extension_css_asset_names(self):
-        return self.get_asset_by_ext('.css')
+        return self._get_asset_by_ext('.css')
 
     def get_extension_js_asset_names(self):
-        return self.get_asset_by_ext('.js')
+        return self._get_asset_by_ext('.js')
 
-    def get_asset_by_ext(self, ext):
+    def _get_asset_by_ext(self, ext):
         return list(filter(lambda x: x.endswith(ext), list(self.extension_assets.keys())))
 
     def get_authentication_provider(self):
         analogic_application = self.get_analogic_application()
-        cache = self.get_cache()
+        cache = self._get_cache()
 
         setting = SettingManager(cache, self.instance_path, analogic_application)
-        config = setting.getConfig()
+        config = setting.get_config()
 
         class_name = config['authenticationMode']
         module_name = self.get_authentication_provider_module_name(class_name)
@@ -114,7 +114,7 @@ class Analogic(Flask):
         self.permanent_session_lifetime = timedelta(minutes=config['sessionExpiresInMinutes'] - 1)
         return authentication_provider
 
-    def get_cache(self):
+    def _get_cache(self):
         cache_path = os.path.join(self.instance_path, 'cache')
         return Cache(self, config={'CACHE_TYPE': 'FileSystemCache', 'CACHE_DIR': cache_path})
 
@@ -127,20 +127,20 @@ def create_app(instance_path, reverse_proxy_path=''):
     if reverse_proxy_path != '':
         app.wsgi_app = ReverseProxy(app.wsgi_app, script_name='/' + reverse_proxy_path)
 
-    load_logging(app)
+    _load_logging(app)
 
     app.register_analogic_endpoint(core_endpoints)
 
-    load_analogic_extensions(app)
+    _load_analogic_extensions(app)
 
-    load_applications(app, register_func=register_application)
+    _load_applications(app, register_func=_register_application)
 
     app.register_analogic_url_rules('')
 
     return app
 
 
-def load_logging(app):
+def _load_logging(app):
     logs_folder_path = os.path.join(app.instance_path, 'logs')
     if not os.path.exists(logs_folder_path):
         os.makedirs(logs_folder_path)
@@ -154,32 +154,32 @@ def load_logging(app):
     logging.config.dictConfig(log_config)
 
 
-def load_analogic_extensions(app):
-    append_extension_dir_to_path(app, EXTENSIONS_DIR)
+def _load_analogic_extensions(app):
+    _append_extension_dir_to_path(app, EXTENSIONS_DIR)
 
     for directory in sys.path:
         if os.path.exists(directory) and os.path.isdir(directory) and len(os.listdir(directory)) != 0:
-            load_modules(app, directory, True, register_func=register_extension)
+            _load_modules(app, directory, True, register_func=_register_extension)
 
 
-def append_extension_dir_to_path(app, modules_dir_name):
+def _append_extension_dir_to_path(app, modules_dir_name):
     modules_dir = os.path.join(app.instance_path, modules_dir_name)
     if modules_dir not in sys.path and os.path.exists(modules_dir) and len(os.listdir(modules_dir)) != 0:
         sys.path.append(modules_dir)
 
 
-def register_extension(app, extension_dir, extension_dir_name, modules):
-    register_extension_components(app, extension_dir_name, modules)
+def _register_extension(app, extension_dir, extension_dir_name, modules):
+    _register_extension_components(app, extension_dir_name, modules)
 
-    register_extension_assets(app, extension_dir)
+    _register_extension_assets(app, extension_dir)
 
 
-def register_extension_assets(app, extension_dir):
-    assets = fast_scan_dir(extension_dir, ['.css', '.js'])[1]
+def _register_extension_assets(app, extension_dir):
+    assets = _fast_scan_dir(extension_dir, ['.css', '.js'])[1]
     app.register_extension_assets(assets)
 
 
-def register_extension_components(app, extension_name, files):
+def _register_extension_components(app, extension_name, files):
     for file in files:
         module = extension_name + '.' + file
 
@@ -197,15 +197,15 @@ def register_extension_components(app, extension_name, files):
                 app.register_analogic_endpoint(obj)
 
 
-def load_applications(app, register_func):
+def _load_applications(app, register_func):
     modules_dir = os.path.join(app.instance_path, APPLICATIONS_DIR)
 
-    append_extension_dir_to_path(app, APPLICATIONS_DIR)
+    _append_extension_dir_to_path(app, APPLICATIONS_DIR)
 
-    load_modules(app, modules_dir, False, register_func)
+    _load_modules(app, modules_dir, False, register_func)
 
 
-def load_modules(app, modules_dir, check_prefix, register_func):
+def _load_modules(app, modules_dir, check_prefix, register_func):
     for module_dir_name in os.listdir(modules_dir):
         module_dir = os.path.join(modules_dir, module_dir_name)
 
@@ -219,7 +219,7 @@ def load_modules(app, modules_dir, check_prefix, register_func):
             register_func(app, module_dir, module_dir_name, modules)
 
 
-def register_application(app, application_dir, application_name, files):
+def _register_application(app, application_dir, application_name, files):
     for file in files:
         module = application_name + '.' + file
 
@@ -232,7 +232,7 @@ def register_application(app, application_dir, application_name, files):
                 app.register_application(obj)
 
 
-def fast_scan_dir(directory, ext):
+def _fast_scan_dir(directory, ext):
     sub_folders, files = [], {}
 
     for f in os.scandir(directory):
@@ -243,7 +243,7 @@ def fast_scan_dir(directory, ext):
                 files[f.name] = f.path
 
     for directory in list(sub_folders):
-        sf, f = fast_scan_dir(directory, ext)
+        sf, f = _fast_scan_dir(directory, ext)
         sub_folders.extend(sf)
         files.update(f)
     return sub_folders, files
