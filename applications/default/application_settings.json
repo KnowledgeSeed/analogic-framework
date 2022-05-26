@@ -11,10 +11,12 @@
   "tm1ApiSubPath": "/api/v1/",
   "mainPage": "rocheBPSPMain",
   "proxy": {
+    "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
+  },
+  "pool" : {
     "users": [
       "admin"
-    ],
-    "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
+    ]
   },
   "usePoolUserAsActiveUser": true
 }

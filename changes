@@ -44,4 +44,6 @@ pool: {
  users: [...
 }
 
-server: true -> proxy: true
+Export
+doPoolRequest -> do_proxy_request
+getPoolTargetUrl -> get_proxy_target_url

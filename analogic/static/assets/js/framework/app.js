@@ -8,7 +8,7 @@ let EventMap, Repository, WidgetConfig;
 
 (() => {
     Doc.ready(() => {
-        EventMap = EventMap || app.eventMap;
+        EventMap = EventMap || app.eventMap;//Todo app.eventMap megszűntetése
 
         Repository = Repository || app.repository;
 
@@ -25,7 +25,7 @@ let EventMap, Repository, WidgetConfig;
         app.id = Utils.getRandomId();
 
         initEvents();
-        WidgetValue.systemValueGlobalCompanyProductPlanVersion = 'Budget';
+        WidgetValue.systemValueGlobalCompanyProductPlanVersion = 'Budget';//Todo ez mi?
 
         Render.showPage(WidgetValue.redirect !== null ? WidgetValue.redirect : app.mainPage);
 

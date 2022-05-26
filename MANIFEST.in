@@ -1,6 +1,5 @@
 graft analogic/global
 graft analogic/templates
 graft analogic/static
-graft analogic/Deployment
 include analogic/logging.json
 global-exclude *.pyc

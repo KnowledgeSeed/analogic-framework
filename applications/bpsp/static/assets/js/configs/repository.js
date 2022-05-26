@@ -39,9 +39,9 @@ app.repository = {
     },
     sendEmailTest: {
         launch: {
-            url: (db) => `custom_request`,
+            url: (db) => `/middleware`,
             type: 'POST',
-            server: true,
+            middleware: true,
             body: (db) => {
                 return {
                   key: 'sendEmail'
