@@ -80,7 +80,7 @@ class AuthenticationProvider(ABC):
                          mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
     @login_required
-    def custom_request(self):
+    def middleware(self):
         key = request.args.get('key')
 
         if key is None:
@@ -175,11 +175,11 @@ class AuthenticationProvider(ABC):
         return mdx
 
     @login_required
-    def pool(self, sub_path):
+    def proxy(self, sub_path):
 
         self._extend_login_session()
 
-        target_url = self.setting.get_pool_target_url()
+        target_url = self.setting.get_proxy_target_url()
 
         mdx = self._get_server_side_mdx()
 
@@ -193,7 +193,7 @@ class AuthenticationProvider(ABC):
                                    'Accept-Encoding': 'gzip, deflate, br'}
         cookies: dict[str, str] = {}
 
-        response = self.do_pool_request(url, method, mdx, headers, cookies)
+        response = self.do_proxy_request(url, method, mdx, headers, cookies)
 
         if response.status_code == 400 or response.status_code == 500:
             logger = self.getLogger()
@@ -202,7 +202,7 @@ class AuthenticationProvider(ABC):
 
         return response.text, response.status_code, {'Content-Type': 'application/json'}
 
-    def do_pool_request(self, url, method, mdx, headers=None, cookies=None):
+    def do_proxy_request(self, url, method, mdx, headers=None, cookies=None):
 
         if headers is None:
             headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',

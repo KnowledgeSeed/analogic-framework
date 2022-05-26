@@ -7,10 +7,10 @@
   "camNamespace": "knowledgeseed",
   "sessionExpiresInMinutes": 20,
   "authenticationBridge": "",
-  "tm1ApiHost": "http://localhost:5000/bpspakos/pool",
+  "tm1ApiHost": "http://localhost:5000/bpspakos/proxy",
   "tm1ApiSubPath": "/api/v1/",
   "mainPage": "rocheBPSPMain",
-  "pool": {
+  "proxy": {
     "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
   }
 }

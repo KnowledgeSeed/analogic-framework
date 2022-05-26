@@ -21,7 +21,7 @@ class LoginBasic(AuthenticationProvider):
         cnf = self.setting.get_config()
         if request.method == 'POST':
 
-            response = requests.request(url=self.setting.get_pool_target_url() + cnf['tm1ApiSubPath'] + 'ActiveUser',
+            response = requests.request(url=self.setting.get_proxy_target_url() + cnf['tm1ApiSubPath'] + 'ActiveUser',
                                         method='GET',
                                         auth=(request.form['username'], request.form['password']),
                                         verify=False)

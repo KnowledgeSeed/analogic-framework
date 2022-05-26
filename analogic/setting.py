@@ -140,9 +140,9 @@ class SettingManager:
             return None
         return tm1_session_id
 
-    def get_pool_target_url(self):
+    def get_proxy_target_url(self):
         cnf = self.get_config()
-        return cnf['pool']['target']
+        return cnf['proxy']['target']
 
     def get_app_cam_namespace(self):
         cnf = self.get_config()

@@ -52,10 +52,10 @@ class Pool(AuthenticationProvider, metaclass=ABCMeta):
         authorization_required = pool_user['session'] == ''
 
         if authorization_required:
-            return TM1Service(base_url=self.setting.get_pool_target_url(),
+            return TM1Service(base_url=self.setting.get_proxy_target_url(),
                               namespace=self.setting.get_app_cam_namespace(),
                               user=pool_user['name'],
                               password=self.setting.get_password(pool_user['name']),
                               ssl=False)
         else:
-            return TM1Service(base_url=self.setting.get_pool_target_url(), session_id=pool_user['session'], ssl=False)
+            return TM1Service(base_url=self.setting.get_proxy_target_url(), session_id=pool_user['session'], ssl=False)

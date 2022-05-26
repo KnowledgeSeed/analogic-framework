@@ -10,7 +10,7 @@
   "tm1ApiHost": "http://localhost:5000/pool",
   "tm1ApiSubPath": "/api/v1/",
   "mainPage": "rocheBPSPMain",
-  "pool": {
+  "proxy": {
     "users": [
       "admin"
     ],

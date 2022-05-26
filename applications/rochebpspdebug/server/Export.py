@@ -76,9 +76,9 @@ class Export:
             j = j + 1
             i = i + 1
 
-        target_url = setting.get_pool_target_url()
+        target_url = setting.get_proxy_target_url()
 
-        response = authentication_provider.do_pool_request(
+        response = authentication_provider.do_proxy_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable;$expand=Members($select=Name, Attributes/Caption))',
             'POST',
             mdx
@@ -201,9 +201,9 @@ class Export:
         worksheet.write(2, 29, line_item, bold)
         worksheet.write(2, 42, line_item, bold)
 
-        target_url = setting.get_pool_target_url()
+        target_url = setting.get_proxy_target_url()
 
-        response = authentication_provider.do_pool_request(
+        response = authentication_provider.do_proxy_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable)',
             'POST',
             mdx
@@ -272,9 +272,9 @@ class Export:
 
         mdx = getMDXJSONByRequest(request, setting)
 
-        target_url = setting.get_pool_target_url()
+        target_url = setting.get_proxy_target_url()
 
-        response = authentication_provider.do_pool_request(
+        response = authentication_provider.do_proxy_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value, Consolidated, RuleDerived, Updateable)',
             'POST',
             mdx
@@ -608,9 +608,9 @@ class Export:
         worksheet.write(5, 14, 'Final Plan', bold)
         worksheet.write(5, 15, 'Final Plan', bold)
 
-        target_url = setting.get_pool_target_url()
+        target_url = setting.get_proxy_target_url()
 
-        response = authentication_provider.do_pool_request(
+        response = authentication_provider.do_proxy_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',
             'POST',
             mdx
@@ -705,9 +705,9 @@ class Export:
         worksheet.write(3, 1, 'Level', bold)
         worksheet.write(3, 2, 'Material Number', bold)
 
-        target_url = setting.get_pool_target_url()
+        target_url = setting.get_proxy_target_url()
 
-        response = authentication_provider.do_pool_request(
+        response = authentication_provider.do_proxy_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))',
             'POST',
             mdx
@@ -794,9 +794,9 @@ class Export:
         worksheet.write(3, 1, 'Level', bold)
         worksheet.write(3, 2, 'Material Number', bold)
 
-        target_url = setting.get_pool_target_url()
+        target_url = setting.get_proxy_target_url()
 
-        response = authentication_provider.do_pool_request(
+        response = authentication_provider.do_proxy_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))',
             'POST',
             mdx
@@ -913,9 +913,9 @@ class Export:
         worksheet.write(4, 18, 'Growth Final Sales Plan', bold)
         worksheet.write(4, 19, 'Growth Final Sales Plan', bold)
 
-        target_url = setting.get_pool_target_url()
+        target_url = setting.get_proxy_target_url()
 
-        response = authentication_provider.do_pool_request(
+        response = authentication_provider.do_proxy_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',
             'POST',
             mdx
@@ -994,9 +994,9 @@ class Export:
 
         mdx = getMDXJSONByRequest(request, setting)
 
-        target_url = setting.get_pool_target_url()
+        target_url = setting.get_proxy_target_url()
 
-        response = authentication_provider.do_pool_request(
+        response = authentication_provider.do_proxy_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name,Attributes))',
             'POST',
             mdx
@@ -1127,9 +1127,9 @@ class Export:
         worksheet.write(5, 20, 'Comment', bold)
         worksheet.write(5, 21, 'Comment', bold)
 
-        target_url = setting.get_pool_target_url()
+        target_url = setting.get_proxy_target_url()
 
-        response = authentication_provider.do_pool_request(
+        response = authentication_provider.do_proxy_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',
             'POST',
             mdx
@@ -1201,9 +1201,9 @@ class Export:
             mdx = mdx.replace('$' + k, request.args[k].replace('"', '\\"'))
 
         mdx = '{"MDX"  :"' + mdx + '"}'
-        target_url = setting.get_pool_target_url()
+        target_url = setting.get_proxy_target_url()
 
-        response = authentication_provider.do_pool_request(
+        response = authentication_provider.do_proxy_request(
             target_url + '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value;$expand=Members($select=Name))',
             'POST',
             mdx

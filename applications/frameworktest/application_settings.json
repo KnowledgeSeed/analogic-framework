@@ -7,14 +7,16 @@
   "camNamespace": "knowledgeseed",
   "sessionExpiresInMinutes": 20,
   "authenticationBridge": "",
-  "tm1ApiHost": "http://localhost:5000/frameworktest/pool",
+  "tm1ApiHost": "http://localhost:5000/frameworktest/proxy",
   "tm1ApiSubPath": "/api/v1/",
   "mainPage": "frameworktestMain",
-  "pool": {
+  "proxy": {
+    "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
+  },
+  "pool" : {
     "users": [
       "admin"
-    ],
-    "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
+    ]
   },
   "usePoolUserAsActiveUser": true
 }

@@ -74,11 +74,13 @@ QB.loadFromWidgetValues = (arg, repositoryId) => {
 };
 
 QB.getUserData = () => {
-    if (app.authenticationMode.includes('Pool') && !app.usePoolUserAsActiveUser) {
-        return Auth.getTm1AjaxRequest(app.tm1ApiHost.replace('pool', 'activeUser'), {}, 'GET').pipe(data => {
-            WidgetValue.activeUser = data.username;
-        });
-    }
+    let extResponse;
+    Extensions.forEach(ext => {
+        extResponse = ext.getUserData();
+        if( false !== extResponse){
+            return extResponse;
+        }
+    });
     return Auth.getTm1AjaxRequest(app.tm1ApiHost + app.tm1ApiSubPath + 'ActiveUser', {}, 'GET').pipe(data => {
         WidgetValue.activeUser = data.Name.replace(/"/g, '\\"');
     });
@@ -453,7 +455,7 @@ QB.getCellsetUrl = p => {
 QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
     let params = [], keyAdded = false,
         subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&server=1' : '' : '?server=1';
-    let newUrl = url.includes('pool') ? url : url.replace(app.tm1ApiHost, app.hostname + '/' + (app.reverseProxyPath ? app.reverseProxyPath + '/' + app.instance : app.instance) + '/pool');
+    let newUrl = url.includes('proxy') ? url : url.replace(app.tm1ApiHost, app.hostname + '/' + (app.reverseProxyPath ? app.reverseProxyPath + '/' + app.instance : app.instance) + '/proxy');
 
     for (const [key, value] of Object.entries(body)) {
         params.push(`"${key}": "${value}"`);

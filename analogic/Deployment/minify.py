@@ -43,7 +43,7 @@ for entry in os.scandir(skins_path):
 
 min_cmd(js_path, 'minified.js',
         ['lib', 'framework\\app.js', 'framework\\utils.js', 'framework\\render.js', 'framework\\listener.js',
-         'framework\\api.js', 'framework\\shout.js', 'exports', 'tm1', 'widgets\\base', 'widgets\\new',
+         'framework\\api.js',  'exports', 'tm1', 'widgets\\base', 'widgets\\new',
          'widgets\\loader.js'])
 
 gen = (x for x in os.scandir(configs_path) if x.name not in ['default', 'dummy'])

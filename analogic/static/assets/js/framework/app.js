@@ -34,10 +34,6 @@ let EventMap, Repository, WidgetConfig;
 
     function initEvents() {
         window.onbeforeunload = () => 'Logout';
-
-        if (app.useShout) {
-            setInterval(app.fn.getShouts, 1000);
-        }
     }
 
     function requestClipboarReadPermissionForFireFox() {
