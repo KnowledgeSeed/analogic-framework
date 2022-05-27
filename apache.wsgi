@@ -3,6 +3,9 @@ import os
 
 root = os.path.realpath(os.path.dirname(__file__))
 sys.path.insert(0, root)
-sys.path.append(os.path.join(root, 'venv', 'Lib', 'site-packages'))
+path = os.path.join(root, 'venv', 'Lib', 'site-packages')
+if path not in sys.path:
+    sys.path.append(path)
+
 
 from run import app as application
