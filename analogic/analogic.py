@@ -17,7 +17,7 @@ from datetime import timedelta
 import importlib
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-APPLICATIONS_DIR = 'applications'
+APPLICATIONS_DIR = 'apps'
 EXTENSIONS_DIR = 'extensions'
 ALLOWED_EXTENSION_PREFIX = 'analogic_'
 
@@ -127,7 +127,7 @@ def create_app(instance_path, reverse_proxy_path=''):
     if reverse_proxy_path != '':
         app.wsgi_app = ReverseProxy(app.wsgi_app, script_name='/' + reverse_proxy_path)
 
-    _load_logging(app)
+    _load_logging(app) # Todo overwrite
 
     app.register_analogic_endpoint(core_endpoints)
 

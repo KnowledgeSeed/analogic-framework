@@ -8,7 +8,7 @@ if len(sys.argv) < 3:
     print('setup_local_with_default_credential.py applicationName passwordForPoolUser')
     exit(0)
 
-json_url = os.path.join(os.getcwd(), 'applications', sys.argv[1], 'application_settings.json')
+json_url = os.path.join(os.getcwd(), 'apps', sys.argv[1], 'app.json')
 if os.path.exists(json_url) is False:
     print('path does not exists: ' + json_url)
     exit(0)

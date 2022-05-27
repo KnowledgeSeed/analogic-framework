@@ -54,7 +54,7 @@ class SettingManager:
         return self.get_instance() + '_' + key
 
     def get_config(self):
-        cnf = self._get_json_setting(self._get_config_cache_key(), 'application_settings')
+        cnf = self._get_json_setting(self._get_config_cache_key(), 'app')
         return cnf
 
     def _get_param(self, param_name):
@@ -69,14 +69,14 @@ class SettingManager:
 
     def _get_repository(self):
         return self._get_yaml_setting(self._get_repository_cache_key(), 'repository', False,
-                                      os.path.join('applications', self.get_instance(), 'server', 'configs'))
+                                      os.path.join('apps', self.get_instance(), 'server', 'configs'))
 
     def get_mdx(self, key):
         repository = self._get_repository()
         mdx = repository[key]
         return mdx
 
-    def _get_json_setting(self, key, file_name, by_instance=True, folder='applications'):
+    def _get_json_setting(self, key, file_name, by_instance=True, folder='apps'):
         setting = self._cache_get(key)
         if setting is None:
             file_path = file_name
@@ -85,7 +85,7 @@ class SettingManager:
             json_url = os.path.join(self.site_root, folder, file_path + '.json')
             setting = json.load(open(json_url), encoding="utf-8")
 
-            if file_name == 'application_settings':
+            if file_name == 'app':
                 setting['instance'] = self.instance
                 setting['blueprint_static'] = self.instance + '.static'
                 setting['hostname'] = self.get_host_name_url()
@@ -102,7 +102,7 @@ class SettingManager:
             return o.scheme + '://' + o.hostname + '/'
         return o.scheme + '://' + o.netloc + '/'
 
-    def _get_yaml_setting(self, key, file_name, by_instance=True, folder='applications'):
+    def _get_yaml_setting(self, key, file_name, by_instance=True, folder='apps'):
         setting = self._cache_get(key)
         if setting is None:
             file_path = file_name
@@ -119,7 +119,7 @@ class SettingManager:
 
     def get_custom_object_description(self, key):
         classes = self._get_json_setting(self._get_classes_cache_key(), 'custom_objects', False,
-                                         os.path.join('applications', self.get_instance(), 'server', 'configs'))
+                                         os.path.join('apps', self.get_instance(), 'server', 'configs'))
         return classes[key]
 
     def set_tm1_session_id(self, tm1_session_id, suffix=''):

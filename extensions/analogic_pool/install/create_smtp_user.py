@@ -9,7 +9,7 @@ if len(sys.argv) < 2:
 
 application = sys.argv[1]
 
-json_url = os.path.join(os.getcwd(), 'applications', application, 'application_settings.json')
+json_url = os.path.join(os.getcwd(), 'apps', application, 'app.json')
 
 if os.path.exists(json_url) is False:
     print('path does not exists: ' + json_url)

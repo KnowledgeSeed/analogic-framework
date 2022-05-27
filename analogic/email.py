@@ -3,7 +3,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from jinja2 import Environment, FileSystemLoader, select_autoescape, TemplateNotFound
 import logging
-from analogic.app import APPLICATIONS_DIR
+from analogic.analogic import APPLICATIONS_DIR
 
 
 class EmailManager:
