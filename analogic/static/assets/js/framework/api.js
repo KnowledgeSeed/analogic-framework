@@ -45,8 +45,16 @@ app.fn.resetRadioButtons = function resetRadioButtons(id) {
     $('#' + id).find('.widget-radio').removeClass('on').closest('tr').attr('style', '');
 };
 
-app.fn.scrollTo = function scrollTo(idOrObj, duration) {
-    Utils.scrollTo(idOrObj, duration);
+app.fn.scrollTo = function scrollTo(arg) {
+    if (Array.isArray(arg)) {
+        if (arg.length === 2) {
+            Utils.scrollTo(arg[0], 500, arg[1]);
+        } else {
+            Utils.scrollTo(arg[0]);
+        }
+    } else {
+        Utils.scrollTo(arg);
+    }
 };
 
 app.fn.jumpTo = function jumpTo(id) {
@@ -58,7 +66,7 @@ app.fn.openPage = function openPage(page) {
 };
 
 app.fn.backToMain = function backToMain() {
-    Render.showPage(app.mainPage);
+    Render.showPage(app.MainPage);
 };
 
 app.fn.openPrevPage = function openPrevPage() {

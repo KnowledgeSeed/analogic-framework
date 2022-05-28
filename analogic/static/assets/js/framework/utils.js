@@ -28,10 +28,10 @@ const Utils = {
     clone: (object, deep) => deep ? $.extend(true, {}, object) : $.extend({}, object),
     replaceAll: (s, m) => s.replace(RegExp(Object.keys(m).join('|'), 'gi'), r => m[r.toLowerCase()]),
     scrollTop: duration => $('html, body').animate({scrollTop: 0}, duration || 500),
-    scrollTo(idOrObj, duration) {
+    scrollTo(idOrObj, duration, topOffset = 0) {
         let isObj = 'object' === typeof idOrObj;
         El.body.triggerHandler('refresh.' + (isObj ? idOrObj.attr('id') : idOrObj));
-        $('html, body').animate({scrollTop: (isObj ? idOrObj : $('#' + idOrObj)).offset().top}, duration || 500);
+        $('html, body').animate({scrollTop: (isObj ? idOrObj : $('#' + idOrObj)).offset().top + topOffset}, duration || 500);
     },
     getRandomId: () => window.crypto.getRandomValues(new Uint32Array(1))[0],
     toTitleCase: str => str.toLowerCase().replace(/(?:^|\s)\w/g, match => match.toUpperCase()),

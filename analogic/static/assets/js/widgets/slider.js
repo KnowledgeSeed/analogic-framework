@@ -319,6 +319,10 @@ class SliderWidget extends Widget {
     }
 
     static initSliderDocEvents(widgetValue, section) {
+        if (widgetValue.disabled) {
+            return;
+        }
+
         const isTouchMode = app.isTouched;
 
         Doc.on('mouseover.slider', '.ks-slider', e => {
