@@ -116,7 +116,32 @@ class RadarChartWidget extends Widget {
                 tooltips: {
                     enabled: v.tooltipsEnabled,
                     mode: v.tooltipsMode,
-                    intersect: false
+                    intersect: false,
+                    callbacks: {
+                        title: (ctx, data) => {
+                            let c, d, t, v = data.datasets, s = '';
+
+                            for (c of ctx) {
+                                d = v[c.datasetIndex];
+                                t = (d.tooltipLabels || [])[c.index];
+
+                                if (t) {
+                                    s += '\n' + d.label + ':\n' + t;
+                                }
+                            }
+
+                            return ctx[0].value + s;
+                        },
+                        label: (ctx, data) => {
+                            let d = data.datasets[ctx.datasetIndex];
+
+                            if ((d.tooltipLabels || [])[ctx.index]) {
+                                return '';
+                            }
+
+                            return d.label + ': ' + ctx.label;
+                        }
+                    }
                 },
                 legend: {
                     display: false
