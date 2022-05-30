@@ -1,5 +1,5 @@
 import requests
-from analogic_pool.ssopoolfortesting import SSOPoolForTesting
+from analogic_pool import SSOPoolForTesting
 from TM1py.Services import TM1Service
 
 

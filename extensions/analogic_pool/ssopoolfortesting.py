@@ -1,5 +1,5 @@
 from analogic_pool import SSOPool
-from flask import render_template, request, session, make_response, redirect, Response
+from flask import render_template, request, session, make_response, redirect
 import logging
 import uuid
 

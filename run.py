@@ -1,10 +1,8 @@
 from analogic import create_app
 import os
-from analogic import monitor
 
 site_root = os.path.realpath(os.path.dirname(__file__))
 app = create_app(site_root)
-#monitor.start()
 
 
 

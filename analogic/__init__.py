@@ -13,4 +13,3 @@ from .proxy import ReverseProxy
 from .setting import SettingManager
 from . import pivot
 from .loginbasic import LoginBasic
-from . import monitor
