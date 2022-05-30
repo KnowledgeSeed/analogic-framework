@@ -1,0 +1,82 @@
+{
+  "davidCustom1": {
+    "namespace": "default.server.Export",
+    "class": "Export",
+    "method": "davidExport1"
+  },
+  "rocheMonthly": {
+    "namespace": "default.server.Export",
+    "class": "Export",
+    "method": "rocheMonthly"
+  },
+  "exportCustomerMonthly": {
+    "namespace": "default.server.Export",
+    "class": "Export",
+    "method": "rocheCustomerExport"
+  },
+  "rocheIpPlanningMonthly": {
+    "namespace": "default.server.Export",
+    "class": "Export",
+    "method": "rocheIpPlanningMonthly"
+  },
+  "validateIpPlanningExcelImport": {
+    "namespace": "default.server.Validation",
+    "class": "Validation",
+    "method": "validateIpPlanningExcelImport"
+  },
+  "validateExcelImport": {
+    "namespace": "default.server.Validation",
+    "class": "Validation",
+    "method": "validateExcelImport"
+  },
+  "validateCustomerPlanningExcelImport": {
+    "namespace": "default.server.Validation",
+    "class": "Validation",
+    "method": "validateCustomerPlanningExcelImport"
+  },
+  "cool": {
+    "namespace": "default.server.BusinessLogic",
+    "class": "BusinessLogic",
+    "method": "doSomethingCool"
+  },
+  "rocheProductLevelExport": {
+    "namespace": "default.server.Export",
+    "class": "Export",
+    "method": "rocheProductLevelExport"
+  },
+  "rocheMaterialMaintenanceExport": {
+    "namespace": "default.server.Export",
+    "class": "Export",
+    "method": "rocheMaterialMaintenanceExport"
+  },
+  "rocheMaterialMaintenanceByIpNodeExport": {
+    "namespace": "default.server.Export",
+    "class": "Export",
+    "method": "rocheMaterialMaintenanceByIpNodeExport"
+  },
+  "rocheCustomerReportExport": {
+    "namespace": "default.server.Export",
+    "class": "Export",
+    "method": "rocheCustomerReportExport"
+  },
+  "rocheCustomerStatusReportExport": {
+    "namespace": "default.server.Export",
+    "class": "Export",
+    "method": "rocheCustomerStatusReportExport"
+  },
+  "rocheIpPlanningReportExport": {
+    "namespace": "default.server.Export",
+    "class": "Export",
+    "method": "rocheIpPlanningReportExport"
+  },
+  "rocheGrowthRateExport": {
+    "namespace": "default.server.Export",
+    "class": "Export",
+    "method": "rocheGrowthRateExport"
+  },
+  "validateGrowthRateExcelImport": {
+    "namespace": "default.server.Validation",
+    "class": "Validation",
+    "method": "validateGrowthRateExcelImport"
+  }
+}

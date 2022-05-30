@@ -63,9 +63,8 @@ class SettingManager:
 
     def get_base_url(self, route=''):
         cnf = self.get_config()
-        if self.instance == 'default':
-            return os.path.join(cnf['hostname'], cnf['reverseProxyPath'], route)
-        return os.path.join(cnf['hostname'], cnf['reverseProxyPath'], self.instance, route)
+        sub_path = [cnf['hostname'][:-1], cnf['reverseProxyPath'], self.instance, route]
+        return '/'.join(filter(lambda x : x != '' and x != 'default' and x is not None, sub_path))
 
     def _get_repository(self):
         return self._get_yaml_setting(self._get_repository_cache_key(), 'repository', False,
@@ -83,7 +82,8 @@ class SettingManager:
             if by_instance:
                 file_path = os.path.join(self.instance, file_name)
             json_url = os.path.join(self.site_root, folder, file_path + '.json')
-            setting = json.load(open(json_url), encoding="utf-8")
+            with open(json_url, encoding="utf-8") as f:
+                setting = json.load(f)
 
             if file_name == 'app':
                 setting['instance'] = self.instance

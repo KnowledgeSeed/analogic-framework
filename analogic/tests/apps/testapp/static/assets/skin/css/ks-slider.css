@@ -1,0 +1,75 @@
+.ks-slider {
+    position: relative;
+}
+
+.ks-slider.Highlighted {
+    /*padding: 5px 40px 5px 40px;*/
+    position: relative;
+    z-index: 2000;
+}
+
+.ks-slider-inner {
+    height: 100%;
+    float: none;
+    margin: 0 auto;
+    position: relative;
+}
+
+.ks-slider-steppers {
+    display: flex;
+    justify-content: center;
+}
+
+.ks-slider-stepper {
+    position: relative;
+}
+
+.ks-slider-options {
+    display: none;
+    position: absolute;
+    text-align: center;
+}
+
+.ks-slider-options-controls {
+    align-items: center;
+    display: flex;
+}
+
+.ks-slider-options-buttons {
+    align-items: center;
+    display: flex;
+}
+
+.ks-slider-options-input {
+    position: relative;
+}
+
+.ks-slider-options-input-label.ks-label-min {
+    left: 0;
+}
+
+.ks-slider-options-input-label.ks-label-max {
+    right: 0;
+}
+
+.ks-slider-track-fill {
+    height: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.ks-slider-track-fill.from-left {
+    background: transparent !important;
+}
+
+.ks-slider-inner .noUi-handle:before, .ks-slider-inner .noUi-handle:after {
+    content: unset !important;
+}
+
+[disabled].ks-slider-inner.noUi-target,
+[disabled].ks-slider-inner .noUi-handle,
+[disabled].ks-slider-inner .noUi-handle {
+    cursor: auto !important;
+}

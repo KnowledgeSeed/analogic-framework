@@ -145,13 +145,14 @@ def _load_logging(app):
     if not os.path.exists(logs_folder_path):
         os.makedirs(logs_folder_path)
 
-    log_config = json.load(open(os.path.join(app.root_path, 'logging.json')))
-    for h in log_config['handlers']:
-        if 'filename' in log_config['handlers'][h]:
-            log_config['handlers'][h]['filename'] = os.path.join(app.instance_path,
-                                                                 log_config['handlers'][h]['filename'])
+    with open(os.path.join(app.root_path, 'logging.json')) as file:
+        log_config = json.load(file)
+        for h in log_config['handlers']:
+            if 'filename' in log_config['handlers'][h]:
+                log_config['handlers'][h]['filename'] = os.path.join(app.instance_path,
+                                                                     log_config['handlers'][h]['filename'])
 
-    logging.config.dictConfig(log_config)
+        logging.config.dictConfig(log_config)
 
 
 def _load_analogic_extensions(app):

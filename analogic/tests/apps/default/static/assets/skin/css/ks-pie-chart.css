@@ -1,0 +1,18 @@
+.ks-pie-chart-title{
+    display: flex;
+    justify-content: center;
+}
+
+.ks-pie-chart-title h3 {
+    font-size: 14px;
+    width: 200px;
+    text-align: center;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #ebecec;
+}
+
+.ks-pie-chart, .ks-pie-chart-widget {
+    position: relative;
+}
+
+

@@ -1,0 +1,54 @@
+.ks-toggle {
+	cursor: pointer;
+	display: block;
+	text-decoration: none;
+}
+
+.ks-toggle-inner {
+	align-items: center;
+	display: flex;
+	height: 100%;
+	justify-content:center;
+	position: relative;
+}
+
+.ks-toggle-icon,
+.ks-toggle-label {
+	display: none;
+}
+
+.ks-toggle-icon img {
+	display: block;
+}
+
+
+.ks-toggle.has-label .ks-toggle-label {
+	display: block;
+	flex-grow: 1;
+}
+
+.ks-toggle.has-label .ks-toggle-label-on {
+	display: none;
+}
+.ks-toggle.has-label .ks-toggle-label-off {
+	display: block;
+}
+
+.ks-toggle.has-label.ks-on .ks-toggle-label-on {
+	display: block;
+}
+.ks-toggle.has-label.ks-on .ks-toggle-label-off {
+	display: none;
+}
+
+.ks-toggle.has-label.has-switching .ks-toggle-label-off {
+	order: 1;
+}
+
+.ks-toggle.has-label.has-switching.ks-on .ks-toggle-label-on {
+	order: 0;
+}
+
+.ks-toggle-inner.readonly{
+    background-color: lightgrey;
+}
