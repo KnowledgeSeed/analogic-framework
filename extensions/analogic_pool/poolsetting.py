@@ -14,7 +14,7 @@ IV_SIZE = 16
 SALT_SIZE = 8
 
 
-def getSaltForKey(key, salt_name):
+def get_salt_for_key(key, salt_name):
     salt_seed = keyring.get_password(salt_name, salt_name)
     return PBKDF2(key, salt_seed).read(SALT_SIZE)
 
@@ -54,40 +54,48 @@ class PoolSettingManager(SettingManager):
 
     def __init__(self, setting):
         super().__init__(setting.cache, setting.site_root, setting.instance)
-        cnf = self.getConfig()
+        cnf = self.get_config()
         if 'Pool' in cnf['authenticationMode']:
             self.poolUserManager = SqlitePoolUserManager(cnf['pool']['users'], setting.site_root, setting.instance)
 
-    def clearCache(self):
-        super().clearCache()
-        authentication_mode = self.getParam('authenticationMode')
+    def clear_cache(self):
+        super().clear_cache()
+        authentication_mode = self._get_param('authenticationMode')
         if 'Pool' in authentication_mode:
             self.poolUserManager.clear()
-            self.poolUserManager.createDatabase()
+            self.poolUserManager.create_database()
         return "OK"
 
-    def getFrameworkSSOKey(self):
-        u = self.getFrameworkSSOKeyName()
+    def get_framework_sso_key(self):
+        u = self.get_framework_sso_key_name()
         return keyring.get_password(u, u)
 
-    def getFrameworkSSOKeyName(self):
-        return self.getInstance() + '_' + self.FRAMEWORK_SSO_KEY_NAME
+    def get_framework_sso_key_name(self):
+        return self.get_instance() + '_' + self.FRAMEWORK_SSO_KEY_NAME
 
-    def getFrameworkSSOPassPhraseName(self):
-        return self.getInstance() + '_' + self.FRAMEWORK_SSO_PASSPHRASE_NAME
+    def get_framework_sso_pass_phrase_name(self):
+        return self.get_instance() + '_' + self.FRAMEWORK_SSO_PASSPHRASE_NAME
 
-    def getFrameworkSSOSaltName(self):
-        return self.getInstance() + '_' + self.FRAMEWORK_SSO_SALT_NAME
+    def get_framework_sso_salt_name(self):
+        return self.get_instance() + '_' + self.FRAMEWORK_SSO_SALT_NAME
 
-    def getPassword(self, user_name, namespace=''):
+    def get_smtp_password(self):
+        cnf = self.get_config()
+        if 'password' in cnf['smtp']:
+            return cnf['smtp']['password']
+        else:
+            return self.get_password(cnf['smtp']['sender_email'])
+
+    def get_password(self, user_name, namespace=''):
         n = namespace
         if n == '':
-            n = self.getAppCamNamespace()
+            n = self.get_app_cam_namespace()
         return decrypt(keyring.get_password(n + '/' + user_name, user_name).encode('latin_1'),
-                       getSaltForKey(user_name, self.getFrameworkSSOSaltName()), self.getFrameworkSSOPassPhraseName())
+                       get_salt_for_key(user_name, self.get_framework_sso_salt_name()),
+                       self.get_framework_sso_pass_phrase_name())
 
-    def getPoolUser(self):
-        pool_user = self.poolUserManager.getUser()
+    def get_pool_user(self):
+        pool_user = self.poolUserManager.get_user()
         expired = pool_user['expiration'] == ''
         if expired is False:
             expired = datetime.datetime.now() >= datetime.datetime.fromisoformat(pool_user['expiration'])
@@ -98,28 +106,28 @@ class PoolSettingManager(SettingManager):
         self.getLogger().info('Get pool user: ' + str(pool_user))
         return pool_user
 
-    def updatePoolUser(self, pool_user):
-        cnf = self.getConfig()
+    def update_pool_user(self, pool_user):
+        cnf = self.get_config()
         expiration = datetime.datetime.now() + datetime.timedelta(minutes=cnf['sessionExpiresInMinutes'] - 1)
         pool_user['expiration'] = expiration
         self.getLogger().info('Update pool user: ' + str(pool_user))
-        self.poolUserManager.updateUserSession(pool_user)
+        self.poolUserManager.update_user_session(pool_user)
 
-    def decreasePoolUserSessionCount(self, pool_user):
-        self.poolUserManager.decreaseSessionCount(pool_user)
+    def decrease_pool_user_session_count(self, pool_user):
+        self.poolUserManager.decrease_session_count(pool_user)
         self.getLogger().info('Decrease pool user session count: ' + str(pool_user))
 
-    def getPoolCamNamespace(self, user):
-        password = self.getPassword(user)
-        namespace = self.getAppCamNamespace()
+    def get_pool_cam_namespace(self, user):
+        password = self.get_password(user)
+        namespace = self.get_app_cam_namespace()
         s = user + ":" + password + ":" + namespace
         return 'CAMNamespace ' + base64.b64encode(s.encode('utf-8')).decode("utf-8")
 
-    def getSsoCamNamespace(self):
-        cnf = self.getConfig()
+    def get_sso_cam_namespace(self):
+        cnf = self.get_config()
         password = keyring.get_password(cnf['sso']['adminNamespace'] + '/' + cnf['sso']['admin'], cnf['sso']['admin'])
         password = decrypt(password.encode('latin_1'),
-                           getSaltForKey(cnf['sso']['admin'], self.getFrameworkSSOSaltName()),
-                           self.getFrameworkSSOPassPhraseName())
+                           get_salt_for_key(cnf['sso']['admin'], self.get_framework_sso_salt_name()),
+                           self.get_framework_sso_pass_phrase_name())
         s = cnf['sso']['admin'] + ":" + password + ":" + cnf['sso']['adminNamespace']
         return 'CAMNamespace ' + base64.b64encode(s.encode('utf-8')).decode("utf-8")

@@ -8,8 +8,8 @@ deleted:
  tm1ExecuteMDX
  MDXUrl
  defaultMDXQuery
- defaultUploadTargetFolder
- defaultUploadStagingFolder
+ defaultUploadTargetFolder deleted: app.defaultUploadTargetFolder
+ defaultUploadStagingFolder deleted: app.defaultUploadStagingFolder
  subpath
  host
  tm1ApiHostBackend
@@ -27,6 +27,23 @@ Export:
 
 required config:
 
-  "pool": {
+  "proxy": {
     "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
   },
+
+
+EmailManager:
+    smtp: {
+      sender_email: '',
+      server: '',
+      port: '',
+      password: '', required in analogic, optional in analogic_pool (stored in credential manager or same way in application_settings.json)
+    }
+
+pool: {
+ users: [...
+}
+
+Export
+doPoolRequest -> do_proxy_request
+getPoolTargetUrl -> get_proxy_target_url

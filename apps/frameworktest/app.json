@@ -1,0 +1,22 @@
+{
+  "projectName": "Framework test",
+  "projectId": "frameworktest",
+  "version": "189",
+  "useMinifiedAssets": false,
+  "authenticationMode": "LoginBasicPool",
+  "camNamespace": "knowledgeseed",
+  "sessionExpiresInMinutes": 20,
+  "authenticationBridge": "",
+  "tm1ApiHost": "http://localhost:5000/frameworktest/proxy",
+  "tm1ApiSubPath": "/api/v1/",
+  "mainPage": "frameworktestMain",
+  "proxy": {
+    "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
+  },
+  "pool" : {
+    "users": [
+      "admin"
+    ]
+  },
+  "usePoolUserAsActiveUser": true
+}

@@ -252,7 +252,6 @@ class Widget {
         }
     }
 
-
     appendListeners(options, handler) {
 
     }

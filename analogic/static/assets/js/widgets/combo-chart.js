@@ -416,12 +416,13 @@ class ComboChartWidget extends Widget {
                             }, {});
                         };
 
-                        let groupedByBars = groupBy(chart.data.datasets.filter(d => d.type === 'bar' || d.type === 'line'), 'stack'), /*lines = chart.data.datasets.filter(d => d.type === 'line'),*/ i, text = [], j = 0; //lines.length;
+                        let groupedByBars = groupBy(chart.data.datasets.filter(d => d.type === 'bar' || d.type === 'line'), 'stack'), /*lines = chart.data.datasets.filter(d => d.type === 'line'),*/ i, text = [], legendBackgroundColor, j = 0; //lines.length;
 
                         for (let [key, legends] of Object.entries(groupedByBars)) {
                             text.push('<div class="ks-legend-inner">');
                             for (i = 0; i < legends.length; ++i) {
-                                text.push(`<div data-id="${j}" class="ks-legend-item" style="order: ${legends.length - i};"><div class="ks-legend-item-inner"><div style="background-color: ${chart.data.datasets[j].backgroundColor};" class="ks-legend-icon"></div><div style="background-color: ${chart.data.datasets[j].backgroundColor};" class="ks-legend-label">${legends[i].legendLabel }</div></div></div>`);
+                                legendBackgroundColor = chart.data.datasets[j].legendBackgroundColor;
+                                text.push(`<div data-id="${j}" class="ks-legend-item" style="order: ${legends.length - i};"><div class="ks-legend-item-inner" style="${legendBackgroundColor ? 'background-color:' + legendBackgroundColor + ';' : ''}"><div style="background-color: ${chart.data.datasets[j].backgroundColor};" class="ks-legend-icon"></div><div style="background-color: ${chart.data.datasets[j].backgroundColor};" class="ks-legend-label">${legends[i].legendLabel }</div></div></div>`);
                                 ++j;
                             }
                             text.push('</div>');
@@ -429,13 +430,14 @@ class ComboChartWidget extends Widget {
 
                         return text.join('');
                     } else {
-                        let text = ['<div class="ks-legend-inner">'], i, lines = [];
+                        let text = ['<div class="ks-legend-inner">'], i, lines = [], legendBackgroundColor;
 
                         for (i = 0; i < chart.data.datasets.length; ++i) {//color vs background-color configba !!!!!
+                            legendBackgroundColor = chart.data.datasets[i].legendBackgroundColor;
                             if (chart.data.datasets[i].type === 'line') {
-                                lines.push(`<div data-id="${i}" class="ks-legend-item"><div class="ks-legend-item-inner"><div style="color: ${chart.data.datasets[i].backgroundColor};" class="ks-legend-icon"></div><div style="color: ${chart.data.datasets[i].backgroundColor};"  class="ks-legend-label">${chart.data.datasets[i].legendLabel }</div></div></div>`);
+                                lines.push(`<div data-id="${i}" class="ks-legend-item"><div class="ks-legend-item-inner" style="${legendBackgroundColor ? 'background-color:' + legendBackgroundColor + ';' : ''}"><div style="color: ${chart.data.datasets[i].backgroundColor};" class="ks-legend-icon"></div><div style="color: ${chart.data.datasets[i].backgroundColor};"  class="ks-legend-label">${chart.data.datasets[i].legendLabel }</div></div></div>`);
                             } else {
-                                text.push(`<div data-id="${i}" class="ks-legend-item"><div class="ks-legend-item-inner"><div style="color: ${chart.data.datasets[i].backgroundColor};" class="ks-legend-icon"></div><div style="color: ${chart.data.datasets[i].backgroundColor};" class="ks-legend-label">${chart.data.datasets[i].legendLabel }</div></div></div>`);
+                                text.push(`<div data-id="${i}" class="ks-legend-item"><div class="ks-legend-item-inner" style="${legendBackgroundColor ? 'background-color:' + legendBackgroundColor + ';' : ''}"><div style="color: ${chart.data.datasets[i].backgroundColor};" class="ks-legend-icon"></div><div style="color: ${chart.data.datasets[i].backgroundColor};" class="ks-legend-label">${chart.data.datasets[i].legendLabel }</div></div></div>`);
                             }
                         }
 

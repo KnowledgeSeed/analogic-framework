@@ -27,11 +27,12 @@ Server.download = (p) => {
         },
         success: function (response, status, xhr) {
             if(xhr.status === 401){
-                 if (('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode || 'SSOBasicPool' === app.authenticationMode) && app.handled401 === false) {
+                 if ('Cam' === app.authenticationMode && app.handled401 === false) {
                     app.handled401 = true;
                     $.cookie("authenticated", 0);
                     window.location.href = app.url.authenticationBridge;
                 }
+                Extensions.forEach(ext => ext.handle401());
             }else {
                 let blob = new Blob([response], {type: "application/octetstream"});
                 let a = $('<a />');
@@ -44,11 +45,12 @@ Server.download = (p) => {
         },
         statusCode: {
             401: function () {
-                if (('Cam' === app.authenticationMode || 'SSOPool' === app.authenticationMode || 'SSOPool' === app.authenticationMode) && app.handled401 === false) {
+                if ('Cam' === app.authenticationMode && app.handled401 === false) {
                     app.handled401 = true;
                     $.cookie("authenticated", 0);
                     window.location.href = app.url.authenticationBridge;
                 }
+                Extensions.forEach(ext => ext.handle401());
             }
         }
     });

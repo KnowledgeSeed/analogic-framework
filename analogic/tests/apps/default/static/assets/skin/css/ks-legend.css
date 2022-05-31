@@ -1,0 +1,14 @@
+.ks-legend {
+	display: block;
+	overflow: hidden;
+}
+
+.ks-legend-inner {
+	display: flex;
+	align-items: center;
+}
+
+.ks-legend-item-inner {
+	display: flex;
+	align-items: center;
+}

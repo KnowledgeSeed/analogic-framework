@@ -9,13 +9,13 @@ import logging
 class SSOPool(Pool):
     def __init__(self, setting):
         super().__init__(setting)
-        self.authentication_session_name = self.setting.getInstance() + '_sso_token'
-        self.authentication_session_user_name = self.setting.getInstance() + '_username'
+        self.authentication_session_name = self.setting.get_instance() + '_sso_token'
+        self.authentication_session_user_name = self.setting.get_instance() + '_username'
 
     def index(self):
-        cnf = self.setting.getConfig()
+        cnf = self.setting.get_config()
         sso_token = session.get(self.authentication_session_name)
-        decoded = self.decodeToken(sso_token)
+        decoded = self._decode_token(sso_token)
 
         if decoded.get('msg') != '':
             return make_response(redirect(cnf[
@@ -25,11 +25,11 @@ class SSOPool(Pool):
         return render_template('index.html', authenticated=authenticated, cnf=cnf)
 
     def auth_sso(self):
-        cnf = self.setting.getConfig()
+        cnf = self.setting.get_config()
         sso_token = request.args.get('token')
         logger = logging.getLogger('login')
 
-        decoded = self.decodeToken(sso_token)
+        decoded = self._decode_token(sso_token)
 
         if decoded['msg'] != '':
             return render_template('sso_error.html', msg=decoded['msg'], cnf=cnf)
@@ -38,29 +38,29 @@ class SSOPool(Pool):
 
         logger.info(user_name + ' tries to login')
 
-        if self.hasPoolUserAccess(user_name.replace('\\', '/'), sso_token) is False:
+        if self._has_pool_user_access(user_name.replace('\\', '/'), sso_token) is False:
             return render_template('unauthorized.html')
 
         session[self.authentication_session_name] = sso_token
         session[self.authentication_session_username_name] = user_name
 
-        resp = make_response(redirect(self.setting.getBaseUrl()))
+        resp = make_response(redirect(self.setting.get_base_url()))
 
         logger.info(user_name + ' logged in successfully')
 
-        return self.add_authenticated_cookies(resp)
+        return self._add_authenticated_cookies(resp)
 
-    def hasPoolUserAccess(self, user_name, token):
+    def _has_pool_user_access(self, user_name, token):
         has_access = True
-        cnf = self.setting.getConfig()
+        cnf = self.setting.get_config()
         sso_cnf = cnf['sso']
         logger = logging.getLogger('login')
 
-        headers = self.getHeaderForAccess()
+        headers = self._get_header_for_access()
 
-        resp = self.makePost(sso_cnf['getUserUrl'],
-                             sso_cnf['getUserBody'].replace('$username', user_name),
-                             headers)
+        resp = self._make_post(sso_cnf['getUserUrl'],
+                               sso_cnf['getUserBody'].replace('$username', user_name),
+                               headers)
 
         if resp.status_code == 201 or resp.status_code == 200:
             logger.info('User exists')
@@ -72,44 +72,44 @@ class SSOPool(Pool):
         if resp.status_code == 400:
             logger.info('User does not exist')
             has_access = False
-            self.makePost(sso_cnf['putUserUrl'],
-                          sso_cnf['putUserBody'].replace('$username', user_name),
-                          headers)
+            self._make_post(sso_cnf['putUserUrl'],
+                            sso_cnf['putUserBody'].replace('$username', user_name),
+                            headers)
 
-        self.makePost(sso_cnf['putTokenUrl'],
-                      sso_cnf['putTokenBody'].replace('$username', user_name).replace('$token', token),
-                      headers)
+        self._make_post(sso_cnf['putTokenUrl'],
+                        sso_cnf['putTokenBody'].replace('$username', user_name).replace('$token', token),
+                        headers)
 
         logger.info('Posting token was successful')
 
         if sso_cnf['additionalPostUrl1'] != '':
-            self.makePost(sso_cnf['additionalPostUrl1'],
-                          sso_cnf['additionalPostBody1'].replace('$username', user_name).replace('$token', token),
-                          headers)
+            self._make_post(sso_cnf['additionalPostUrl1'],
+                            sso_cnf['additionalPostBody1'].replace('$username', user_name).replace('$token', token),
+                            headers)
 
         if sso_cnf['additionalPostUrl2'] != '':
-            self.makePost(sso_cnf['additionalPostUrl2'],
-                          sso_cnf['additionalPostBody2'].replace('$username', user_name).replace('$token', token),
-                          headers)
+            self._make_post(sso_cnf['additionalPostUrl2'],
+                            sso_cnf['additionalPostBody2'].replace('$username', user_name).replace('$token', token),
+                            headers)
 
         return has_access
 
-    def getHeaderForAccess(self):
+    def _get_header_for_access(self):
         return {'Content-Type': 'application/json; charset=utf-8',
                 'Accept-Encoding': 'gzip, deflate, br',
-                'Authorization': self.setting.getSsoCamNamespace()}
+                'Authorization': self.setting.get_sso_cam_namespace()}
 
-    def makePost(self, url, json, headers):
+    def _make_post(self, url, json, headers):
         return requests.post(url=url,
                              data=json,
                              headers=headers,
                              verify=False)
 
-    def decodeToken(self, sso_token):
+    def _decode_token(self, sso_token):
         if sso_token is None:
             return {'msg': 'sso token is null', 'token': ''}
 
-        secret = self.setting.getFrameworkSSOKey()
+        secret = self.setting.get_framework_sso_key()
         msg = ''
         decoded_token = ''
 
@@ -131,10 +131,10 @@ class SSOPool(Pool):
     def get_authentication_required_response(self):
         return Response('', 401)
 
-    def set_custom_mdx_data(self, mdx):
+    def _set_custom_mdx_data(self, mdx):
         if len(mdx) > 0:
             return mdx.replace('$ssoToken', session[self.authentication_session_name])
         return mdx
 
-    def extend_login_session(self):
+    def _extend_login_session(self):
         session.modified = True

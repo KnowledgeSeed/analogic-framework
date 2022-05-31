@@ -11,7 +11,7 @@ def call(tm1:TM1Service, cube_name=None, dimension_name=None, hierarchy_name=Non
 
     if selected_cards:
         options = json.loads(options)
-        cell_limit = options.get('cellLimit', 1000000);
+        cell_limit = options.get('cellLimit', 1000000)
         selected_cards_data = json.loads(selected_cards)
         mdx = create_mdx(options, cube_name, selected_cards_data)
         cell_count = tm1.cells.execute_mdx_cellcount(mdx)

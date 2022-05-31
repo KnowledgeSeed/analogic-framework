@@ -1,0 +1,57 @@
+.ks-segmentedbar {
+    display: block;
+}
+
+.ks-segmentedbar-inner {
+    align-items: center;
+    display: flex;
+    height: 100%;
+}
+
+.ks-segmentedbar-block {
+    position: relative;
+}
+
+.ks-segmentedbar-block-label {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    z-index: 9;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.ks-segmentedbar-separator {
+    position: relative;
+}
+
+.ks-segmentedbar-separator-label {
+    left: 50%;
+    position: absolute;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.ks-segmentedbar-separator-icon {
+    left: 50%;
+    position: absolute;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.ks-segmentedbar-confidence-line {
+    position: absolute;
+    background-color: #fff;
+    height: 100%;
+    width: 1px;
+    z-index: 10;
+}

@@ -1,0 +1,28 @@
+{
+  "projectName": "Test App",
+  "projectId": "testapp",
+  "version": "190",
+  "useMinifiedAssets": false,
+  "authenticationMode": "LoginBasicPool",
+  "camNamespace": "knowledgeseed",
+  "sessionExpiresInMinutes": 20,
+  "authenticationBridge": "",
+  "tm1ApiHost": "http://localhost:5000/testapp/proxy",
+  "tm1ApiSubPath": "/api/v1/",
+  "mainPage": "testAppMain",
+  "proxy": {
+    "target": "https://kseed-dc1.knowledgeseed.local:5125/testappapi"
+  },
+  "pool" : {
+    "users": [
+      "admin"
+    ]
+  },
+  "usePoolUserAsActiveUser": true,
+  "smtp": {
+    "server": "",
+    "port": "",
+    "password": "",
+    "sender_email": ""
+  }
+}

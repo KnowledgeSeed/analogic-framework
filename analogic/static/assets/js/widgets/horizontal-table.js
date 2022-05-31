@@ -15,6 +15,7 @@ class HorizontalTableWidget extends Widget {
             multiSelect: this.getRealValue('multiSelect', d, false),
             searchField: this.getRealValue('searchField', data, false),
             selectFirst: this.getRealValue('selectFirst', data, false),
+            selectedRowBackgroundColor: this.getRealValue('selectedRowBackgroundColor', data, '#bfd9f2'),
             skin: this.getRealValue('skin', data, 'standard')
         };
 
@@ -22,7 +23,7 @@ class HorizontalTableWidget extends Widget {
 
         if (!withState) {
             this.state = {};
-            this.value = {rows: data.cells, multiSelect: v.multiSelect};
+            this.value = {rows: data.cells, multiSelect: v.multiSelect, selectedRowBackgroundColor: v.selectedRowBackgroundColor};
         }
 
         if (v.searchField) {
@@ -352,7 +353,7 @@ class HorizontalTableWidget extends Widget {
             if (this.value.multiSelect === false) {
                 p.removeClass('ks-on');
                 w.addClass('ks-on');
-                w.closest('.ks-horizontal-table-row').prop('style', 'background-color:#bfd9f2;');
+                w.closest('.ks-horizontal-table-row').prop('style', 'background-color:' + this.value.selectedRowBackgroundColor + ';');
             } else {
                 if (w.hasClass('ks-on')) {
                     w.removeClass('ks-on');
@@ -362,7 +363,7 @@ class HorizontalTableWidget extends Widget {
                     w.addClass('ks-on');
                     this.value['selected'] = true;
                     this.value['selectedOrdinal'] = w.data('ordinal');
-                    w.closest('.ks-horizontal-table-row').prop('style', 'background-color:#bfd9f2;');
+                    w.closest('.ks-horizontal-table-row').prop('style', 'background-color:' + this.value.selectedRowBackgroundColor + ';');
                 }
             }
             Widget.doHandleSystemEvent(w, e, true);

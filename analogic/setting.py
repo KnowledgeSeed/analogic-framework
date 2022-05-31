@@ -19,73 +19,73 @@ class SettingManager:
         self.site_root = site_root
         self.instance = instance
 
-    def clearCache(self):
+    def clear_cache(self):
         if self.cache is not None:
-            self.cache.delete(self.getConfigCacheKey())
-            self.cache.delete(self.getRepositoryCacheKey())
-            self.cache.delete(self.getTm1SessionIdCacheKey())
-            self.cache.delete(self.getTM1SessionExpiresCacheKey())
-            self.cache.delete(self.getClassesCacheKey())
-            self.cache.delete(self.getFrameworkMdxCacheKey())
+            self.cache.delete(self._get_config_cache_key())
+            self.cache.delete(self._get_repository_cache_key())
+            self.cache.delete(self._get_tm1_session_id_cache_key())
+            self.cache.delete(self._get_tm1_session_expires_cache_key())
+            self.cache.delete(self._get_classes_cache_key())
+            self.cache.delete(self._get_framework_mdx_cache_key())
         return "OK"
 
-    def getInstance(self):
+    def get_instance(self):
         return self.instance
 
-    def getConfigCacheKey(self):
-        return self.getInstanceCacheKey(self.CONFIG)
+    def _get_config_cache_key(self):
+        return self._get_instance_cache_key(self.CONFIG)
 
-    def getRepositoryCacheKey(self):
-        return self.getInstance() + '_' + self.REPOSITORY
+    def _get_repository_cache_key(self):
+        return self.get_instance() + '_' + self.REPOSITORY
 
-    def getTm1SessionIdCacheKey(self):
-        return self.getInstanceCacheKey(self.TM1SessionId)
+    def _get_tm1_session_id_cache_key(self):
+        return self._get_instance_cache_key(self.TM1SessionId)
 
-    def getTM1SessionExpiresCacheKey(self):
-        return self.getInstanceCacheKey(self.TM1SessionExpires)
+    def _get_tm1_session_expires_cache_key(self):
+        return self._get_instance_cache_key(self.TM1SessionExpires)
 
-    def getClassesCacheKey(self):
-        return self.getInstanceCacheKey(self.CLASSES)
+    def _get_classes_cache_key(self):
+        return self._get_instance_cache_key(self.CLASSES)
 
-    def getFrameworkMdxCacheKey(self):
-        return self.getInstanceCacheKey(self.FRAMEWORK_MDX)
+    def _get_framework_mdx_cache_key(self):
+        return self._get_instance_cache_key(self.FRAMEWORK_MDX)
 
-    def getInstanceCacheKey(self, key):
-        return self.getInstance() + '_' + key
+    def _get_instance_cache_key(self, key):
+        return self.get_instance() + '_' + key
 
-    def getConfig(self):
-        cnf = self.getJsonSetting(self.getConfigCacheKey(), 'application_settings')
+    def get_config(self):
+        cnf = self._get_json_setting(self._get_config_cache_key(), 'app')
         return cnf
 
-    def getParam(self, param_name):
-        cnf = self.getConfig()
+    def _get_param(self, param_name):
+        cnf = self.get_config()
         return cnf[param_name]
 
-    def getBaseUrl(self, route=''):
-        cnf = self.getConfig()
-        if self.instance == 'default':
-            return os.path.join(cnf['hostname'], cnf['reverseProxyPath'], route)
-        return os.path.join(cnf['hostname'], cnf['reverseProxyPath'], self.instance, route)
+    def get_base_url(self, route=''):
+        cnf = self.get_config()
+        sub_path = [cnf['hostname'][:-1], cnf['reverseProxyPath'], self.instance, route]
+        return '/'.join(filter(lambda x : x != '' and x != 'default' and x is not None, sub_path))
 
-    def getRepository(self):
-        return self.getYamlSetting(self.getRepositoryCacheKey(), 'repository', False,
-                                   os.path.join('applications', self.getInstance(), 'server', 'configs'))
+    def _get_repository(self):
+        return self._get_yaml_setting(self._get_repository_cache_key(), 'repository', False,
+                                      os.path.join('apps', self.get_instance(), 'server', 'configs'))
 
-    def getMDX(self, key):
-        repository = self.getRepository()
+    def get_mdx(self, key):
+        repository = self._get_repository()
         mdx = repository[key]
         return mdx
 
-    def getJsonSetting(self, key, file_name, by_instance=True, folder='applications'):
-        setting = self.cacheGet(key)
+    def _get_json_setting(self, key, file_name, by_instance=True, folder='apps'):
+        setting = self._cache_get(key)
         if setting is None:
             file_path = file_name
             if by_instance:
                 file_path = os.path.join(self.instance, file_name)
             json_url = os.path.join(self.site_root, folder, file_path + '.json')
-            setting = json.load(open(json_url), encoding="utf-8")
+            with open(json_url, encoding="utf-8") as f:
+                setting = json.load(f)
 
-            if file_name == 'application_settings':
+            if file_name == 'app':
                 setting['instance'] = self.instance
                 setting['blueprint_static'] = self.instance + '.static'
                 setting['hostname'] = self.get_host_name_url()
@@ -93,7 +93,7 @@ class SettingManager:
                 setting['extension_css_asset_names'] = current_app.get_extension_css_asset_names()
                 setting['extension_js_asset_names'] = current_app.get_extension_js_asset_names()
 
-            self.cacheSet(key, setting, 0)
+            self._cache_set(key, setting, 0)
         return setting
 
     def get_host_name_url(self):
@@ -102,60 +102,64 @@ class SettingManager:
             return o.scheme + '://' + o.hostname + '/'
         return o.scheme + '://' + o.netloc + '/'
 
-    def getYamlSetting(self, key, file_name, by_instance=True, folder='applications'):
-        setting = self.cacheGet(key)
+    def _get_yaml_setting(self, key, file_name, by_instance=True, folder='apps'):
+        setting = self._cache_get(key)
         if setting is None:
             file_path = file_name
             if by_instance:
                 file_path = os.path.join(self.instance, file_name)
             with open(os.path.join(self.site_root, folder, file_path + '.yml'), encoding="utf-8") as file:
                 setting = yaml.load(file, Loader=yaml.FullLoader)
-                self.cacheSet(key, setting, 0)
+                self._cache_set(key, setting, 0)
         return setting
 
-    def getFrameworkMdx(self, key):
-        mdx = self.getYamlSetting(self.getFrameworkMdxCacheKey(), 'mdx', False, 'global')
+    def get_framework_mdx(self, key):
+        mdx = self._get_yaml_setting(self._get_framework_mdx_cache_key(), 'mdx', False, 'global')
         return mdx[key]
 
-    def getCustomObjectDescription(self, key):
-        classes = self.getJsonSetting(self.getClassesCacheKey(), 'custom_objects', False,
-                                      os.path.join('applications', self.getInstance(), 'server', 'configs'))
+    def get_custom_object_description(self, key):
+        classes = self._get_json_setting(self._get_classes_cache_key(), 'custom_objects', False,
+                                         os.path.join('apps', self.get_instance(), 'server', 'configs'))
         return classes[key]
 
-    def setTM1SessionId(self, tm1_session_id, suffix=''):
-        cnf = self.getConfig()
-        self.cacheSet(self.getTm1SessionIdCacheKey() + suffix, tm1_session_id, 0)
+    def set_tm1_session_id(self, tm1_session_id, suffix=''):
+        cnf = self.get_config()
+        self._cache_set(self._get_tm1_session_id_cache_key() + suffix, tm1_session_id, 0)
         expires = datetime.datetime.now() + datetime.timedelta(minutes=cnf['sessionExpiresInMinutes'] - 1)
-        self.cacheSet(self.getTM1SessionExpiresCacheKey() + suffix, expires, 0)
+        self._cache_set(self._get_tm1_session_expires_cache_key() + suffix, expires, 0)
 
-    def getTM1SessionId(self, suffix=''):
+    def get_tm1_session_id(self, suffix=''):
         logger = self.getLogger()
-        logger.info(self.getTm1SessionIdCacheKey() + suffix)
-        tm1_session_id = self.cacheGet(self.getTm1SessionIdCacheKey() + suffix)
+        logger.info(self._get_tm1_session_id_cache_key() + suffix)
+        tm1_session_id = self._cache_get(self._get_tm1_session_id_cache_key() + suffix)
         logger.info(tm1_session_id)
-        tm1_session_id_exp = self.cacheGet(self.getTM1SessionExpiresCacheKey() + suffix)
+        tm1_session_id_exp = self._cache_get(self._get_tm1_session_expires_cache_key() + suffix)
         logger.info(tm1_session_id_exp)
         if tm1_session_id is None or (
                 tm1_session_id_exp is not None and datetime.datetime.now() >= tm1_session_id_exp):
             return None
         return tm1_session_id
 
-    def getPoolTargetUrl(self):
-        cnf = self.getConfig()
-        return cnf['pool']['target']
+    def get_proxy_target_url(self):
+        cnf = self.get_config()
+        return cnf['proxy']['target']
 
-    def getAppCamNamespace(self):
-        cnf = self.getConfig()
+    def get_app_cam_namespace(self):
+        cnf = self.get_config()
         return cnf['camNamespace']
 
-    def cacheGet(self, key):
+    def get_smtp_password(self):
+        cnf = self.get_config()
+        return cnf['smtp']['password']
+
+    def _cache_get(self, key):
         if self.cache is not None:
             return self.cache.get(key)
         return None
 
-    def cacheSet(self, key, value, expires=0):
+    def _cache_set(self, key, value, expires=0):
         if self.cache is not None:
             self.cache.set(key, value, expires)
 
     def getLogger(self):
-        return logging.getLogger(self.getInstance())
+        return logging.getLogger(self.get_instance())

@@ -14,6 +14,7 @@ class TextAreaWidget extends Widget {
         let hide = o.hideIfNoData === true && d.value === '';
 
         const v = {
+            editable: this.getRealValue('editable', d, true),
             icon: this.getRealValue('icon', d, false),
             highlight: this.getRealValue('highlight', d, false),
             placeholder: this.getRealValue('placeholder', d, false),
@@ -55,9 +56,9 @@ class TextAreaWidget extends Widget {
         </div>
         <div class="ks-textarea-field">
             <div class="ks-textarea-field-inner">
-                <div class="ks-textarea-icon">${v.icon !== false ? `style="${iconStyles.join('')}"<img src="${app.applicationAssetsUrl}/skins/images/${v.icon}">` : '' }</div>
+                <div class="ks-textarea-icon">${v.icon !== false ? `style="${iconStyles.join('')}"<img src="${app.applicationAssetsUrl}/skins/images/${v.icon}">` : ''}</div>
                 <div class="ks-textarea-divider"></div>
-                <textarea ${v.placeholder !== false ? `placeholder="${v.placeholder}"` : ''} style="${textStyles.join('')}" data-action="save" data-ordinal="${d.ordinal}" data-id="${o.id}" class="ks-textarea-input" >${d.value || ''}</textarea>
+                <textarea ${v.editable ? '' : 'disabled'} ${v.placeholder !== false ? `placeholder="${v.placeholder}"` : ''} style="${textStyles.join('')}" data-action="save" data-ordinal="${d.ordinal}" data-id="${o.id}" class="ks-textarea-input" >${d.value || ''}</textarea>
             </div>
         </div>
     </div>
@@ -66,7 +67,12 @@ class TextAreaWidget extends Widget {
 
     initEventHandlers(section) {
         const o = this.options;
-        if(o.icon) {
+
+        if (!o.editable) {
+            return;
+        }
+
+        if (o.icon) {
             section.find('.ks-textarea-icon').on('click', e => {
                 TextAreaWidget.doSaveEvent(section, section.find('.ks-textarea-input'), e);
             });
@@ -77,14 +83,14 @@ class TextAreaWidget extends Widget {
         }
     }
 
-    static doSaveEvent(section, w, e){
-           let id = section.prop('id'), v = Utils.escapeText(w.val());
+    static doSaveEvent(section, w, e) {
+        let id = section.prop('id'), v = Utils.escapeText(w.val());
 
-            WidgetValue[id].value = v;
+        WidgetValue[id].value = v;
 
-            w.data('value', v);
+        w.data('value', v);
 
-            Widget.doHandleSystemEvent(w, e);
+        Widget.doHandleSystemEvent(w, e);
     }
 }
 ;

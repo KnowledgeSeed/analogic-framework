@@ -36,9 +36,9 @@ class FileUploadManager:
 
         return path
 
-    def preProcess(self, tm1_service, preprocess_template, target):
+    def pre_process(self, tm1_service, preprocess_template, target):
 
-        framework_mdx = self.setting.getFrameworkMdx('upload_preprocess')
+        framework_mdx = self.setting.get_framework_mdx('upload_preprocess')
         query = framework_mdx['mdx'].replace('$preprocess_template', preprocess_template)
 
         data = tm1_service.cubes.cells.execute_mdx(query)
@@ -46,9 +46,9 @@ class FileUploadManager:
         df = build_pandas_dataframe_from_cellset(data, multiindex=False)
         rules = df.set_index(framework_mdx['index']).to_dict()[framework_mdx['values']]
 
-        return self.preProcessValidate(rules, target)
+        return self._pre_process_validate(rules, target)
 
-    def preProcessValidate(self, rules, source_dir):
+    def _pre_process_validate(self, rules, source_dir):
         file_names = os.listdir(source_dir)
         message = ''
         wrong_files = []
@@ -57,12 +57,12 @@ class FileUploadManager:
             file_path = os.path.join(source_dir, file_name)
             m = ''
             if rules['ExtensionCheck'] == 'yes':
-                m += self.checkExtension(rules['FileFormat'], file_name)
+                m += self._check_extension(rules['FileFormat'], file_name)
             if rules['FileNoneEmptyCheck'] == 'yes':
-                m += self.checkNoneEmpty(file_path, file_name)
-            m += self.checkContent(file_path, rules['ExpectedColumnNr'],
-                                   rules['FileColumnDelimiter'], rules['FileQuoteCharacter'],
-                                   rules['HeaderCheck'], file_name)
+                m += self._check_not_empty(file_path, file_name)
+            m += self._check_content(file_path, rules['ExpectedColumnNr'],
+                                     rules['FileColumnDelimiter'], rules['FileQuoteCharacter'],
+                                     rules['HeaderCheck'], file_name)
             if m != '':
                 wrong_files.append(file_name)
             message += m
@@ -72,20 +72,20 @@ class FileUploadManager:
 
         return message
 
-    def checkCharacterSet(self, blob, expected, file_name):
+    def _check_character_set(self, blob, expected, file_name):
         result = chardet.detect(blob)
-        return self.getErrorMessage(expected, result['encoding'], file_name, 'character set')
+        return self._get_error_message(expected, result['encoding'], file_name, 'character set')
 
-    def checkExtension(self, expected, file_name):
+    def _check_extension(self, expected, file_name):
         file_extension = pathlib.Path(file_name).suffix
-        return self.getErrorMessage('.' + expected, file_extension, file_name, 'extension')
+        return self._get_error_message('.' + expected, file_extension, file_name, 'extension')
 
-    def checkNoneEmpty(self, path, file_name):
+    def _check_not_empty(self, path, file_name):
         if os.path.getsize(path) > 0:
             return ''
         return 'file: ' + file_name + ' is empty<br/>'
 
-    def checkContent(self, path, expected_col, delimiter, quote, header, file_name):
+    def _check_content(self, path, expected_col, delimiter, quote, header, file_name):
 
         result = ''
         if delimiter.isnumeric():
@@ -116,7 +116,7 @@ class FileUploadManager:
 
         return result
 
-    def getErrorMessage(self, expected, got, file_name, sub_message):
+    def _get_error_message(self, expected, got, file_name, sub_message):
 
         if expected is None or got is None:
             return ''
@@ -137,5 +137,5 @@ class FileUploadManager:
 
         os.rmdir(source_dir)
 
-    def postProcess(self):
+    def post_process(self):
         pass

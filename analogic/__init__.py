@@ -1,5 +1,5 @@
-from .app import Analogic as Analogic
-from .app import create_app
+from .analogic import Analogic as Analogic
+from .analogic import create_app
 from .authentication_provider import get_authentication_provider
 from .authentication_provider import login_required
 from .authentication_provider import endpoint_login_required

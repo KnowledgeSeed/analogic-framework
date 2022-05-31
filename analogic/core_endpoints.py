@@ -14,9 +14,9 @@ def login():
     return get_authentication_provider().login()
 
 
-@core_endpoints.analogic_endpoint_route('/pool/<path:sub_path>', methods=['GET', 'POST', 'PATCH'])
-def pool(sub_path):
-    return get_authentication_provider().pool(sub_path)
+@core_endpoints.analogic_endpoint_route('/proxy/<path:sub_path>', methods=['GET', 'POST', 'PATCH'])
+def proxy(sub_path):
+    return get_authentication_provider().proxy(sub_path)
 
 
 @core_endpoints.analogic_endpoint_route('/activeUser', methods=['GET'])
@@ -41,7 +41,7 @@ def export():
 
 @core_endpoints.analogic_endpoint_route('/clearcache', methods=['GET'])
 def clear_cache():
-    return get_authentication_provider().setting.clearCache()
+    return get_authentication_provider().setting.clear_cache()
 
 
 @core_endpoints.analogic_endpoint_route('/ping', methods=['GET'])
@@ -53,3 +53,7 @@ def ping():
 def pivot():
     return get_authentication_provider().pivot()
 
+
+@core_endpoints.analogic_endpoint_route('/middleware', methods=['GET', 'POST'])
+def middleware():
+    return get_authentication_provider().middleware()

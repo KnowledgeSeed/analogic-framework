@@ -1,0 +1,70 @@
+.ks-container-backdrop {
+    background-color: rgba(116, 123, 133, 0.75);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width:100%;
+    z-index: 999;
+}
+
+.ks-container {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15), 0px 6px 12px rgba(0, 0, 0, 0.15);
+    position: fixed;
+    width: 260px;
+    z-index: 1000;
+}
+
+.ks-container-background {
+    padding: 5px;
+}
+
+.anchor-top:before {
+    content: "";
+    right: calc(50% - 15px);
+    position: absolute;
+    bottom: -15px;
+    border-top: 15px solid white;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+}
+
+.anchor-right:before {
+    border-right: 15px solid white;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    content: "";
+    left: -15px;
+    position: absolute;
+    top: calc(50% - 15px);
+}
+
+.anchor-bottom:before {
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid #fff;
+    border-left: 15px solid transparent;
+    content: "";
+    left: 50%;
+    margin-left: -15px;
+    position: absolute;
+    top: -15px;
+}
+
+.anchor-left:before {
+    border-top: 15px solid transparent;
+    border-left: 15px solid white;
+    border-bottom: 15px solid transparent;
+    content: "";
+    right: -15px;
+    position: absolute;
+    top: calc(50% - 15px);
+}
+
+.ks-container-content {
+    padding: 5px;
+    position: relative;
+}

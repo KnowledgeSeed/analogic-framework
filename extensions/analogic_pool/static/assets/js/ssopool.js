@@ -1,4 +1,4 @@
-/* global app, Extensions */
+/* global app, Extensions, Auth, WidgetValue */
 
 'use strict';
 
@@ -15,6 +15,15 @@ Extensions.push(
             if ('SSOPool' === app.authenticationMode || 'SSOBasicPool' === app.authenticationMode) {
                 app.handled401 = false;
             }
+        },
+        getUserData() {
+            if (['SSOBasicPool', 'SSOPool', 'LoginBasicPool', 'LoginPool'].includes(app.authenticationMode)
+                && !app.usePoolUserAsActiveUser) {
+                return Auth.getTm1AjaxRequest(app.tm1ApiHost.replace('proxy', 'activeUser'), {}, 'GET').pipe(data => {
+                    WidgetValue.activeUser = data.username;
+                });
+            }
+            return false;
         }
     }
 );

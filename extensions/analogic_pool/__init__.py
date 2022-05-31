@@ -5,5 +5,8 @@ from .loginbasicpool import LoginBasicPool
 from .loginpool import LoginPool
 from .ssobasicpool import SSOBasicPool
 from .ssopool import SSOPool
+from .ssopoolfortesting import SSOPoolForTesting
+from .ssobasicpoolfortesting import SSOBasicPoolForTesting
 from . import ssopool_endpoints
 from . import scripts
+from .install.functions import *
