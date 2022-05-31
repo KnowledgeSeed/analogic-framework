@@ -2,7 +2,8 @@
 
 'use strict';
 
-const Doc = $(document), El = {body: $('body')}, PageState = {current: '', previous: ''}, WidgetValue = {infoData: {}}, Extensions = [];
+const Doc = $(document), El = {body: $('body')}, PageState = {current: '', previous: ''}, WidgetValue = {infoData: {}},
+    Extensions = [], Widgets = {};
 
 let EventMap, Repository, WidgetConfig;
 
@@ -18,8 +19,31 @@ let EventMap, Repository, WidgetConfig;
 
         Loader.autoOn();
 
+        for (const k in WidgetConfig) {
+            if (WidgetConfig[k].type) {
+                loadWidget(WidgetConfig[k]);
+            } else {
+                for (const l in WidgetConfig[k]) {
+                    loadWidget(WidgetConfig[k][l]);
+                }
+            }
+        }
+
         QB.getUserData().then(start);
     }).on('touchstart', () => app.isTouched = true);
+
+    function loadWidgets(widgets) {
+        widgets.forEach(w => {
+            loadWidget(w);
+        });
+    }
+
+    function loadWidget(widget) {
+        if (!widget.import) { //how to handle import, multiple imports
+            Widgets[widget.id] = new widget.type(widget);
+            widget.widgets && loadWidgets(widget.widgets);
+        }
+    }
 
     function start() {
         app.id = Utils.getRandomId();
