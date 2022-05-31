@@ -1,17 +1,17 @@
 {
-  "projectName": "Roche BPSP",
-  "projectId": "bpsp",
+  "projectName": "Test App",
+  "projectId": "testapp",
   "version": "190",
   "useMinifiedAssets": false,
   "authenticationMode": "LoginBasicPool",
   "camNamespace": "knowledgeseed",
   "sessionExpiresInMinutes": 20,
   "authenticationBridge": "",
-  "tm1ApiHost": "http://localhost:5000/bpsp/proxy",
+  "tm1ApiHost": "http://localhost:5000/testapp/proxy",
   "tm1ApiSubPath": "/api/v1/",
-  "mainPage": "rocheBPSPMain",
+  "mainPage": "testAppMain",
   "proxy": {
-    "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
+    "target": "https://kseed-dc1.knowledgeseed.local:5125/testappapi"
   },
   "pool" : {
     "users": [

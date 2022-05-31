@@ -1,7 +1,7 @@
 {
-  "davidCustom1": {
-    "namespace": "bpsp.server.Export",
+  "testappExport": {
+    "namespace": "testapp.server.Export",
     "class": "Export",
-    "method": "davidExport1"
+    "method": "testappExport"
   }
 }
