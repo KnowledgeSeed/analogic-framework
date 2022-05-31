@@ -332,7 +332,6 @@ QB.validateWrite = (g, isGridTable, newContext, gridTableCell, z, w, e) => {
     return true;
 };
 
-
 QB.writeData2 = (eventMapId, jqueryEvent, jqueryElement) => {
     let s = eventMapId.split('.'), eventName = s[0], widgetId = s[1], z = widgetId.split('_'),
     repositoryObject, eventObject, newContext;
@@ -410,6 +409,10 @@ QB.writeExecuteFinished = (eventMapId, newContext, repositoryObject, jqueryEvent
             }
         });
     }
+};
+
+QB.testWriteExecutor = (eventMapId, event, element) => {
+    return new UploadWriteExecutor();
 };
 
 QB.writeData = (eventMapId, event, element) => {

@@ -85,7 +85,6 @@ def _monitor():
 
             # Go to sleep for specified interval.
 
-
             return _queue.get(timeout=_interval)
         except:
             pass
