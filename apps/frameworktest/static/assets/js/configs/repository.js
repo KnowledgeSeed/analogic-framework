@@ -14,8 +14,7 @@ app.repository = {
         init: {
             execute: (db, widgetId) => {
                 return {
-                    backgroundColor: v('systemValueTrue') ? '#f2f2f2' : '#ffffff',
-                    width: v('systemValueTrue') ? '30px' : '20px'
+                    fontSize: v('systemValueTrue') ?   15   : 12,
 
                 }
             }
