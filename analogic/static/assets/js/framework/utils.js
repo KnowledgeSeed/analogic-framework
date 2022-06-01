@@ -481,6 +481,13 @@ const Utils = {
             result.push(row.map(f));
         });
         return result;
+    },
+    focus(idOrObj, moveCursorToEnd = true) {
+        let o = 'object' === typeof idOrObj ? idOrObj : $('#' + idOrObj), len = moveCursorToEnd ? o.val().length * 2 : 0;
+
+        o.focus();
+
+        return o;
     }
 };
 

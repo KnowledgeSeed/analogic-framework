@@ -63,6 +63,9 @@
 #pivot .icon-arrow-swap:before {
     content: "\e906";
 }
+#pivot .icon-arrow-to-top:before {
+    content: "\e907";
+}
 #pivot .icon-check-intermediate:before {
     content: "\e90d";
 }
@@ -113,6 +116,21 @@
 }
 #pivot .icon-x-circle:before {
     content: "\e945";
+}
+#pivot .icon-doc-arrow-down:before {
+    content: "\e94d";
+}
+#pivot .icon-zero-square-outline:before {
+    content: "\e94e";
+}
+
+#pivotPresetsDropdown hr {
+    border-top: 1px solid #e1e1e1;
+    border-bottom: 0;
+}
+
+.supressZeroBtn {
+    margin-left: 20px;
 }
 
 .ks-pivot-table-title-row {
@@ -168,7 +186,7 @@
     position: absolute;
     right: 0;
     top: 80%;
-    width: 240px;
+    width: 270px;
     z-index: 9;
 }
 
@@ -194,15 +212,6 @@
     margin-right: 5px;
     text-align: center;
     width: 30px;
-}
-
-.ks-pivot-table-presets-dropdown a .icon-check {
-    color: #009FDA;
-    visibility: hidden;
-}
-
-.ks-pivot-table-presets-dropdown a.on .icon-check {
-    visibility: visible;
 }
 
 .ks-pivot-table-tag-holder {
@@ -515,6 +524,20 @@
     font-weight: 500;
     padding: 0 4px;
     text-align: right;
+}
+
+.ks-pivot-table-content-cell.sel {
+    border: 2px solid #a9a9a9;
+}
+.ks-pivot-table-content-cell.ok {
+    border: 2px solid #739600;
+}
+.ks-pivot-table-content-cell.err {
+    border: 2px solid red;
+}
+
+.ks-pivot-table-content-cell input {
+    width: 100%;
 }
 
 .ks-pivot-tag-add-holder {
