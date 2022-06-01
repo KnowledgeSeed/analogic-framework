@@ -2,8 +2,9 @@
 
 FileUpload = {};
 
-FileUpload.uploadFile = (w, eventMapId, context, event, element) => {
-    const e = 'upload', r = Repository[w], v = WidgetValue[w];
+FileUpload.uploadFile = (context) => {
+    const e = 'upload', widgetId = context.getWidgetId(), eventMapId = context.getEventMapId(),
+        r = context.getObject(), v = WidgetValue[widgetId];
     let target = false, staging = false, uploadParams = {}, uploadRepoExist = r && r[e], subFolder = '';
 
     if (uploadRepoExist) {
@@ -45,9 +46,9 @@ FileUpload.uploadFile = (w, eventMapId, context, event, element) => {
 
     Loader.start();
 
-    FileUpload.uploadToServer(w).done(d => {
+    FileUpload.uploadToServer(widgetId).done(d => {
         if (d === 'ok') {
-            QB.executeEventMapAction(eventMapId + '.finished', event, element, d);
+            QB.executeEventMapAction(eventMapId + '.finished', context, d);
             v.form = new FormData();
             if(v.showUploadSuccessMessage === true) {
                 app.fn.showPopup(v.uploadSuccessMessage);
@@ -55,7 +56,7 @@ FileUpload.uploadFile = (w, eventMapId, context, event, element) => {
             }
         } else {
             app.fn.showPopup(d, 600);
-            QB.executeEventMapAction(eventMapId + '.error', event, element, d);
+            QB.executeEventMapAction(eventMapId + '.error', context, d);
             Loader.stop();
         }
     }).fail(() => {

@@ -248,19 +248,37 @@ QB.executeMDX = (repositoryId, path, extraParams = {}) => {
     });
 };
 
-QB.getWriteContext = (id, repositoryObject, event, element, gridTableInfo) => {
+QB.getWriteContext = (eventName, widgetId, jqueryEvent, jqueryElement, gridTableInfo=null) => {
     return {
         getId() {
-            return id;
+            return widgetId;
+        },
+        getWidgetId() {
+            return widgetId;
+        },
+        getEventMapId() {
+           return this.getEventName() + '.' + this.getId();
+        },
+        getEventName() {
+           return eventName;
+        },
+        getEventHandler() {
+           return (this.getObject() || {})[this.getEventName()];
         },
         getObject() {
-            return repositoryObject;
+            return Repository[widgetId];
+        },
+        getJQueryEvent() {
+            return jqueryEvent;
+        },
+        getJQueryElement() {
+            return jqueryElement;
         },
         getEvent() {
-            return event;
+            return jqueryEvent;
         },
         getElement() {
-            return element;
+            return jqueryElement;
         },
         getWidgetValue(property = false) {
             return v(this.getId() + (property ? '.' + property : ''));
@@ -276,6 +294,9 @@ QB.getWriteContext = (id, repositoryObject, event, element, gridTableInfo) => {
         },
         getGridTableInfo() {
             return gridTableInfo;
+        },
+        isGridTable() {
+            return this.getGridTableInfo() !== null;
         }
     }
 };
@@ -411,11 +432,11 @@ QB.writeExecuteFinished = (eventMapId, newContext, repositoryObject, jqueryEvent
     }
 };
 
-QB.testWriteExecutor = (eventMapId, event, element) => {
-    return new UploadWriteExecutor();
+QB.writeData = (eventMapId, jqueryEvent, jqueryElement) => {
+    return WriteExecutorFactory.createExecutor(eventMapId, jqueryEvent, jqueryElement).execute();
 };
 
-QB.writeData = (eventMapId, event, element) => {
+QB.writeDataOld = (eventMapId, event, element) => {
     let s = eventMapId.split('.'), e = s[0], w = s[1], z = w.split('_'), context = WidgetValue, isGridTable = false, r,
         g, newContext, gridTableCell, gridTableInfo = QB.getGridTableInfo({}, false, false);
 
@@ -522,13 +543,13 @@ QB.writeData = (eventMapId, event, element) => {
     return true;
 };
 
-QB.executeEventMapAction = (eventMapId, event, element, response) => {
+QB.executeEventMapAction = (eventMapId, context, response) => {
     L(eventMapId);
     El.body.triggerHandler(eventMapId);
     let actions = EventMap[eventMapId], a;
     if (actions) {
         for (a of actions) {
-            a.action(a.argument, event, element, response);
+            a.action(a.argument, context.getJQueryEvent(), context.getJQueryElement(), response);
         }
     }
 };
