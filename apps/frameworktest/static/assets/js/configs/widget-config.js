@@ -79,7 +79,7 @@ app.widgetConfig = {
                                         label: '',
                                         action: '',
                                         width: '145',
-                                        icon: 'icon-people-square-stack',
+                                        icon: 'icon-table',
                                         fontColor: 'white',
                                         height: '145'
                                     }
@@ -96,7 +96,7 @@ app.widgetConfig = {
                                 height: '18%',
                                 widgets: [
                                     {
-                                        id: 'frameworktestMainRow3Cell3Button',
+                                        id: 'frameworktestMainRow3Cell5Button',
                                         type: ButtonWidget,
                                         label: '',
                                         action: '',
@@ -116,7 +116,6 @@ app.widgetConfig = {
                                 alignment: 'top-center',
                                 width: '12%',
                                 height: '18%',
-                                visible: false,
                                 widgets: [
                                     {
                                         id: 'frameworktestMainRow3Cell4Button',
@@ -124,7 +123,7 @@ app.widgetConfig = {
                                         label: '',
                                         action: '',
                                         width: '145',
-                                        icon: 'icon-percent-target',
+                                        icon: 'icon-table',
                                         fontColor: 'white',
                                         height: '145'
                                     }
@@ -139,16 +138,14 @@ app.widgetConfig = {
                                 alignment: 'top-center',
                                 width: '12%',
                                 height: '18%',
-                                visible: false,
-                                widgets: [
+                                 widgets: [
                                     {
                                         id: 'frameworktestMainRow3Cell5Button',
                                         type: ButtonWidget,
                                         label: '',
                                         action: '',
                                         width: '145',
-                                        iconFontSize: 105,
-                                        icon: 'icon-lights-3',
+                                        icon: 'icon-table',
                                         fontColor: 'white',
                                         height: '145'
                                     }
@@ -163,7 +160,6 @@ app.widgetConfig = {
                                 alignment: 'top-center',
                                 width: '12%',
                                 height: '18%',
-                                visible: false,
                                 widgets: [
                                     {
                                         id: 'frameworktestMainRow3Cell6Button',
@@ -171,7 +167,7 @@ app.widgetConfig = {
                                         label: '',
                                         action: '',
                                         width: '145',
-                                        icon: 'icon-calendar-clock-circle',
+                                        icon: 'icon-table',
                                         fontColor: 'white',
                                         height: '145'
                                     }

@@ -1,12 +1,14 @@
 import json
 import re
+import io
+import xlsxwriter
 
 from TM1py.Objects import Subset
 from TM1py.Services import TM1Service
-from flask import jsonify
+from flask import jsonify, send_file
 
 
-def call(tm1:TM1Service, cube_name=None, dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, options=None):
+def call(tm1:TM1Service, cube_name=None, dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, options=None, export_data=None):
     data = {}
 
     if selected_cards:
@@ -18,6 +20,8 @@ def call(tm1:TM1Service, cube_name=None, dimension_name=None, hierarchy_name=Non
         data = {}
         if cell_count < cell_limit:
             data = get_pivot_data(tm1, mdx, selected_cards_data)
+        if export_data:
+            return export_to_excel(selected_cards_data, data, json.loads(export_data))
         return jsonify({'mdx': mdx, 'cell_count': cell_count, 'data': data})
     elif element_names:
         new_subset = Subset(subset_name, dimension_name, hierarchy_name, subset_name, None, element_names)
@@ -181,7 +185,7 @@ Cells(
     rows = get_pivot_header_data(raw_data['Axes'][1]['Tuples'], alias_attribute_names_by_axis_and_member_ids[1])
     cells = list(map(lambda c: c['FormattedValue'], raw_data['Cells']))
 
-    return {'rows': rows, 'cols': cols, 'cells': cells}
+    return {'rows': rows, 'cols': cols, 'cells': cells, 'cellsetId': cellset_id}
 
 
 def get_pivot_header_data(tuples, alias_attribute_names_by_member_ids):
@@ -212,3 +216,62 @@ def get_pivot_header_data(tuples, alias_attribute_names_by_member_ids):
         data.append(d)
 
     return data
+
+
+def export_to_excel(selected_cards_data, pivot_data, export_data):
+    output = io.BytesIO()
+    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+    worksheet = workbook.add_worksheet(name='Pivot Export')
+
+    bold = workbook.add_format({'bold': True})
+
+    worksheet.write(0, 1, 'Filters', bold)
+    worksheet.write(1, 1, 'Dimension name')
+    worksheet.write(2, 1, 'Selected element')
+
+    i = 0
+    for d in selected_cards_data['slices']:
+        worksheet.write(1, 2 + i, d['dimension'])
+        worksheet.write(2, 2 + i, d['element'])
+        i += 1
+
+    col_header = export_data['col_header']
+    row_header = export_data['row_header']
+    col_header_offset = len(col_header[0])
+    row_num = 5
+
+    for r in row_header:
+        i = 1
+        for c in r:
+            worksheet.write(row_num, col_header_offset + i, c)
+            i += 1
+        row_num += 1
+
+    first_row_num = row_num
+
+    for r in col_header:
+        i = 1
+        for c in r:
+            worksheet.write(row_num, i, c)
+            i += 1
+        row_num += 1
+
+    col_len = len(pivot_data['cols'])
+    row_num = first_row_num
+    col_header_offset += 1
+
+    i = 0
+    for c in pivot_data['cells']:
+        if col_len == i:
+            row_num += 1
+            i = 0
+        worksheet.write(row_num, col_header_offset + i, c)
+        i += 1
+
+    workbook.close()
+    output.seek(0)
+    return send_file(output,
+                     download_name='pivot_export.xls',
+                     as_attachment=True,
+                     cache_timeout=0,
+                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
