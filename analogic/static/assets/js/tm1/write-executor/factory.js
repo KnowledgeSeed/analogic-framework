@@ -1,4 +1,4 @@
-/* global Widgets, QB, Repository */
+/* global Widgets, QB, Repository, Extensions */
 
 'use strict';
 
@@ -53,9 +53,9 @@ class WriteExecutorFactory {
 
             widgetId = z.length > 3 ? z[3] : z[0];
 
-            context = {...WriteExecutorFactory.getContext(eventName, widgetId, jqueryElement, jqueryEvent, gridTableInfo), ...context};
+            context = {...WriteExecutorFactory.getContext(eventName, widgetId, jqueryEvent, jqueryElement, gridTableInfo), ...context};
         } else {
-            context = {...WriteExecutorFactory.getContext(eventName, widgetId, jqueryElement, jqueryEvent), ...context};
+            context = {...WriteExecutorFactory.getContext(eventName, widgetId, jqueryEvent, jqueryElement), ...context};
         }
         return context;
     }

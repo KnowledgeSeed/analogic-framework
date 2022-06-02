@@ -3,7 +3,10 @@
 'use strict';
 
 const Doc = $(document), El = {body: $('body')}, PageState = {current: '', previous: ''}, WidgetValue = {infoData: {}},
-    Extensions = [], Widgets = {};
+    Extensions = {
+        authenticationProviders: [],
+        writeExecutors: []
+    }, Widgets = {};
 
 let EventMap, Repository, WidgetConfig;
 

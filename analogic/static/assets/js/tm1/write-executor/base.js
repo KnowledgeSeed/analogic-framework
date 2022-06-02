@@ -92,12 +92,12 @@ class WriteExecutor {
             this.context.getJQueryElement());
     }
 
-    triggerRepositoryFinished() {
+    triggerRepositoryFinished(response = {}) {
 
         QB.executeEventMapAction(
             this.context.getEventMapId() + '.finished',
             this.context,
-            {});
+            response);
     }
 
     triggerRestRequest() {
@@ -127,7 +127,7 @@ class WriteExecutor {
         Auth.getTm1AjaxRequest(app.tm1ApiHost + url, body, type, widgetId).then((d) => {
             Loader.stop(true);
             L('finished after ajax');
-            instance.triggerRepositoryFinished();
+            instance.triggerRepositoryFinished(d);
             if (eventHandler.callback) {
                 eventHandler.callback({
                     ...{

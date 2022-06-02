@@ -31,12 +31,12 @@ class GridTableWriteExecutor extends WriteExecutor {
             this.context.getJQueryElement());
     }
 
-    triggerRepositoryFinished() {
-        super.triggerRepositoryFinished();
+    triggerRepositoryFinished(response = {}) {
+        super.triggerRepositoryFinished(response);
         QB.executeEventMapAction(
             this.context.getGridTableOriginalEventMapId() + '.finished',
             this.context,
-            {});
+            response);
     }
 
     getRestBody() {
