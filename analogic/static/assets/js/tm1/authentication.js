@@ -5,7 +5,7 @@ const Auth = {};
 
 Auth.loadDefault = arg => {
     return $.ajax({
-        url: app.assetsUrl + '/js/configs/default/' + arg + '.json',
+        url: app.assetsUrl + '/js/widgets/default/' + arg + '.json',
         dataType: 'json',
         cache: false
     });

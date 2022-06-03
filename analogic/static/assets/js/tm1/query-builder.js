@@ -3,6 +3,10 @@
 'use strict';
 const QB = {};
 
+QB.loadData2 = (widgetId, widgetTypeName, useDefaultData = false, loaderFunctionPath = 'init', extraParams = {}) => {
+    return LoadExecutorFactory.createExecutor(widgetId, widgetTypeName, useDefaultData, loaderFunctionPath, extraParams).execute();
+};
+
 QB.loadData = (argument, type, useDefaultData = false, path = 'init', extraParams = {}) => {
     if (useDefaultData) {
         return Auth.loadDefault(type);
@@ -34,7 +38,7 @@ QB.loadData = (argument, type, useDefaultData = false, path = 'init', extraParam
         return QB.executeMDX(argument, path, extraParams);
     }
 
-    if (r && r.state) { //Todo remove, backward compatibility
+    if (r && r.state) {
         if (r[conditionPath] && !r[conditionPath](WidgetValue)) {
             if (r[defaultPath]) {
                 return QB.loadFromWidgetValue(r[defaultPath], argument);
