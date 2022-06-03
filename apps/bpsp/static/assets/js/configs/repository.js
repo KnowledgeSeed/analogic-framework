@@ -39,7 +39,7 @@ app.repository = {
     },
     sendEmailTest: {
         launch: {
-            url: (db) => `middleware`,
+            url: (db) => `sampletest`,
             type: 'POST',
             body: (db) => {
                 return {
@@ -3226,7 +3226,7 @@ app.repository = {
                 }
                 return result;
             },
-            url: (db, cell, widgetValue, row, col) => {
+            url: (db, cell, widgetValue, row, col) => {L(db, cell, widgetValue, row, col);
                 if (Utils.getPropertyOrFunctionValue(cell, 'distributionEdit')) {
                     return `/api/v1/Processes('MODULE - UI - Products Yearly Prepare Split')/tm1.ExecuteWithReturn`;
                 } else {

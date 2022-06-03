@@ -3,20 +3,27 @@
 'use strict';
 
 class WriteExecutorFactory {
+
     static createExecutor(eventMapId, jqueryEvent, jqueryElement) {
         let s = eventMapId.split('.'), eventName = s[0], widgetId = s[1], eventHandler,
-            context = WriteExecutorFactory.createContext(eventName, widgetId, jqueryEvent, jqueryElement);
-
-        //possible extension hook point
-
-        if (eventName === 'upload') {
-            return new UploadWriteExecutor(context);
-        }
+            context = WriteExecutorFactory.createContext(eventName, widgetId, jqueryEvent, jqueryElement),
+        extResponse;
 
         eventHandler = context.getEventHandler();
 
         if (!eventHandler) {
             return new SkipWriteExecutor(context);
+        }
+
+        for(let i = 0; i < Extensions.writeExecutors.length; ++i){
+            extResponse = Extensions.writeExecutors[i].getExecutor(context);
+            if (extResponse instanceof WriteExecutor) {
+                return extResponse;
+            }
+        }
+
+        if (eventName === 'upload') {
+            return new UploadWriteExecutor(context);
         }
 
         if (context.isGridTable()) {
@@ -96,7 +103,7 @@ class WriteExecutorFactory {
                 return v(this.getId() + (property ? '.' + property : ''));
             },
             getEventValues() {
-               return this.getWidgetValue(this.getEventName());
+                return this.getWidgetValue(this.getEventName());
             },
             getCell() {
                 return gridTableInfo !== null ? gridTableInfo.getCell() : null;

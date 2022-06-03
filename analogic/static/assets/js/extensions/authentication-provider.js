@@ -10,4 +10,8 @@ class AuthenticationProviderExtension {
     getUserData() {
         return false;
     }
+
+    handleError(response, e, widgetId){
+        
+    }
 }

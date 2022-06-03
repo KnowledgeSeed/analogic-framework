@@ -26,6 +26,7 @@ Auth.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
         },
         error: function (response, e) {
             L('error:', response, e, widgetId);
+            Extensions.authenticationProviders.forEach(ext => ext.handleError(response, e, widgetId));
         },
         statusCode: {
             401: function () {

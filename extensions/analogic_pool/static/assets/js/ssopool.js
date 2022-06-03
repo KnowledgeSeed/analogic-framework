@@ -29,6 +29,34 @@ class SSOPoolAuthenticationProviderExtension extends AuthenticationProviderExten
     }
 }
 
+class SampleTestWriterExecutorExtension extends WriteExecutorExtension {
+
+    getExecutor(context) {
+
+        if(context.isGridTable()) {
+            return false;
+        }
+
+        let eventHandler = context.getEventHandler();
+
+        if (eventHandler && eventHandler.url && eventHandler.url(context) === 'sampletest') {
+
+            const SampleTestWriterExecutor = class extends WriteExecutor {
+                execute() {
+                    L(this.context);
+                }
+            };
+
+            return new SampleTestWriterExecutor(context);
+        }
+    }
+
+}
+
 Extensions.authenticationProviders.push(
     new SSOPoolAuthenticationProviderExtension()
+);
+
+Extensions.writeExecutors.push(
+    new SampleTestWriterExecutorExtension()
 );
