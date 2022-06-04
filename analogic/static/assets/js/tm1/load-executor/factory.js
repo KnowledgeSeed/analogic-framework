@@ -7,21 +7,37 @@ class LoadExecutorFactory {
     static createExecutor(widgetId, widgetTypeName, useDefaultData = false, loaderFunctionPath = 'init', extraParams = {}) {
 
         let context = LoadExecutorFactory.createContext(widgetId, widgetTypeName, useDefaultData, loaderFunctionPath, extraParams),
-        repositoryObject;
+            repositoryObject, loaderFunction;
 
         if (useDefaultData) {
             return new DefaultLoadExecutor(context);
         }
 
-        if(!context.getRepositoryObject()) {
+        repositoryObject = context.getRepositoryObject();
+
+        if (repositoryObject && repositoryObject.state) {
+            return new StateLoadExecutor(context);
+        }
+
+        loaderFunction = context.getLoaderFunction();
+
+        if(isClass(loaderFunction)){
+            return new loaderFunction(context); //Todo check
+        }
+
+        if (loaderFunction instanceof LoadExecutor) {
+            return loaderFunction; // Todo check
+        }
+
+        if (!loaderFunction) {
             return new SkipLoadExecutor(context);
         }
 
-        repositoryObject = context.getRepositoryObject();
-
-        if ( repositoryObject.state ) {
-            return new StateLoadExecutor(context);
+        if (loaderFunction.pivot) {
+            return new PivotLoadExecutor(context);
         }
+
+        return new LoadExecutor(context);
 
     }
 
@@ -29,21 +45,22 @@ class LoadExecutorFactory {
 
         let repositoryObject = Repository[widgetId], loaderFunction,
             conditionPath = loaderFunctionPath + 'Condition', conditionFailedPath = loaderFunctionPath + 'Default',
-            conditionFunction, conditionFailedFunction;
+            conditionFunction, conditionFailedFunction, referenceWidgetId;
 
         if (repositoryObject && repositoryObject.reference) {
             repositoryObject = Repository[repositoryObject.reference];
+            referenceWidgetId = repositoryObject.reference;
         }
 
         if (repositoryObject) {
 
             loaderFunction = repositoryObject[loaderFunctionPath];
 
-            if ( repositoryObject[conditionPath] ) {
+            if (repositoryObject[conditionPath]) {
                 conditionFunction = repositoryObject[conditionPath];
             }
 
-            if ( repositoryObject[conditionFailedPath] ) {
+            if (repositoryObject[conditionFailedPath]) {
                 conditionFailedFunction = repositoryObject[conditionFailedPath];
             }
         }
@@ -54,6 +71,9 @@ class LoadExecutorFactory {
             },
             getWidgetId() {
                 return widgetId;
+            },
+            getReferenceWidgetId() {
+                return referenceWidgetId;
             },
             getExtraParams() {
                 return extraParams;
@@ -66,6 +86,9 @@ class LoadExecutorFactory {
             },
             getLoaderFunction() {
                 return loaderFunction;
+            },
+            getLoaderFunctionName() {
+                return loaderFunctionPath;
             },
             getConditionFunction() {
                 return conditionFunction;

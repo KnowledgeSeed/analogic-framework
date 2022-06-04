@@ -6,6 +6,8 @@ const L = console.log,
     v = (path, obj = WidgetValue) => path.split(".").reduce((o, key) => o && o[key] ? o[key] : false, obj),
     w = (path, obj = WidgetValue) => path.split('.').reduce((o, key) => (o || {})[key], obj);
 
+const isClass = fn => /^\s*class/.test(fn.toString());
+
 const Utils = {
     sleep: ms => new Promise(resolve => setTimeout(resolve, ms)),
     stopEvent(e) {

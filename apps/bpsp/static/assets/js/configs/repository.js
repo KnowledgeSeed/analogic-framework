@@ -4788,6 +4788,7 @@ app.repository = {
     },
     // versioning
     rocheBPSPProductsCheckoutGridVersionSelector: {
+        test: new LoadExecutor(this),
         init: {
             execute: (db) => {
                 return {
