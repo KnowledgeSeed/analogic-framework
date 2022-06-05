@@ -98,11 +98,13 @@ app.widgetConfig = {
                                     {
                                         id: 'frameworktestMainRow3Cell5Button',
                                         type: ButtonWidget,
-                                        label: '',
+                                        label: 'test',
                                         action: '',
                                         width: '145',
+                                        title: 'test',
                                         icon: 'icon-table',
-                                        fontColor: 'white',
+                                        fontSize: 12,
+                                        fontColor: '#000',
                                         height: '145'
                                     }
                                 ]

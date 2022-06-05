@@ -5,14 +5,14 @@ const Auth = {};
 
 Auth.loadDefault = arg => {
     return $.ajax({
-        url: app.assetsUrl + '/js/configs/default/' + arg + '.json',
+        url: app.assetsUrl + '/js/widgets/default/' + arg + '.json',
         dataType: 'json',
         cache: false
     });
 };
 
 Auth.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
-    let urlWithWidgetId = url + ( url.includes('?') ? '&' : '?' ) + 'widgetid=' + widgetId;
+    let urlWithWidgetId = url + (url.includes('?') ? '&' : '?') + 'widgetid=' + widgetId;
     return $.ajax({
         cache: true,
         type: type,
@@ -26,15 +26,11 @@ Auth.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
         },
         error: function (response, e) {
             L('error:', response, e, widgetId);
+            Extensions.authenticationProviders.forEach(ext => ext.handleError(response, e, widgetId));
         },
         statusCode: {
             401: function () {
-                if ('Cam' === app.authenticationMode && app.handled401 === false) {
-                    app.handled401 = true;
-                    $.cookie("authenticated", 0);
-                    window.location.href = app.url.authenticationBridge;
-                }
-                Extensions.forEach(ext => ext.handle401());
+                Auth.handle401();
             }
         }
     });
@@ -61,12 +57,20 @@ Auth.handleSuccessLogin = () => {
             },
             error: function (response, e) {
             },
-            statusCode: {
-            }
+            statusCode: {}
         });
     }
 
-    Extensions.forEach(ext => ext.handleSuccessLogin());
+    Extensions.authenticationProviders.forEach(ext => ext.handleSuccessLogin());
+};
+
+Auth.handle401 = () => {
+    if ('Cam' === app.authenticationMode && app.handled401 === false) {
+        app.handled401 = true;
+        $.cookie("authenticated", 0);
+        window.location.href = app.url.authenticationBridge;
+    }
+    Extensions.authenticationProviders.forEach(ext => ext.handle401());
 };
 
 Auth.getHeader = (contentType = 'application/json; charset=utf-8', accept = 'application/json; charset=utf-8') => {

@@ -10,7 +10,7 @@ class TextAreaWidget extends Widget {
         if (!d.value) {
             d.value = '';
         }
-        this.value = d;
+
         let hide = o.hideIfNoData === true && d.value === '';
 
         const v = {
@@ -27,6 +27,8 @@ class TextAreaWidget extends Widget {
             titleFontSize: this.getRealValue('titleFontSize', d, false),
             titleTextAlignment: this.getRealValue('titleTextAlignment', d, false)
         };
+        d.editable = v.editable;
+        this.value = d;
 
         let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d),
             titleStyles = this.getHtmlComponentStylesArray('title', d),
@@ -68,7 +70,7 @@ class TextAreaWidget extends Widget {
     initEventHandlers(section) {
         const o = this.options;
 
-        if (!o.editable) {
+        if (!this.value.editable) {
             return;
         }
 

@@ -1,4 +1,4 @@
-/* global app */
+/* global app, Server, Extensions */
 
 Pivot = {callNum: 0};
 
@@ -12,15 +12,12 @@ Pivot.call = p => {
         dataType: p.dataType || 'json',
         statusCode: {
             401: function () {
-                if ('Cam' === app.authenticationMode && app.handled401 === false) {
-                    app.handled401 = true;
-                    $.cookie("authenticated", 0);
-                    window.location.href = app.url.authenticationBridge;
-                }
-                Extensions.forEach(ext => ext.handle401());
+                Auth.handle401();
             }
         }
     }).always(() => {
         --Pivot.callNum;
     });
 };
+
+Pivot.export = d => Server.download({url: 'pivot'}, {method: 'POST', data: d, fileName: 'pivotExport.xls'});

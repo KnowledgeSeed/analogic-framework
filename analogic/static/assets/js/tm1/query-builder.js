@@ -3,6 +3,10 @@
 'use strict';
 const QB = {};
 
+QB.loadData2 = (widgetId, widgetTypeName, useDefaultData = false, loaderFunctionPath = 'init', extraParams = {}) => {
+    return LoadExecutorFactory.createExecutor(widgetId, widgetTypeName, useDefaultData, loaderFunctionPath, extraParams).execute();
+};
+
 QB.loadData = (argument, type, useDefaultData = false, path = 'init', extraParams = {}) => {
     if (useDefaultData) {
         return Auth.loadDefault(type);
@@ -34,7 +38,7 @@ QB.loadData = (argument, type, useDefaultData = false, path = 'init', extraParam
         return QB.executeMDX(argument, path, extraParams);
     }
 
-    if (r && r.state) { //Todo remove, backward compatibility
+    if (r && r.state) {
         if (r[conditionPath] && !r[conditionPath](WidgetValue)) {
             if (r[defaultPath]) {
                 return QB.loadFromWidgetValue(r[defaultPath], argument);
@@ -73,9 +77,9 @@ QB.loadFromWidgetValues = (arg, repositoryId) => {
     });
 };
 
-QB.getUserData = () => {
+QB.getUserData = () => { // Todo refactor
     let extResponse;
-    Extensions.forEach(ext => {
+    Extensions.authenticationProviders.forEach(ext => {
         extResponse = ext.getUserData();
         if (false !== extResponse) {
             return extResponse;
@@ -169,7 +173,7 @@ QB.executeMDXs = (repositoryId, path) => {//Todo implement new context
     });
 };
 
-QB.parsingControlFinished = (repositoryId) => {
+QB.parsingControlFinished = (repositoryId) => { // Todo move
     El.body.triggerHandler('parsingcontrol.' + repositoryId + '.finished');
     if (Repository[repositoryId] && Repository[repositoryId]['parsingControlFinished']) {
         Repository[repositoryId]['parsingControlFinished']();
@@ -248,294 +252,23 @@ QB.executeMDX = (repositoryId, path, extraParams = {}) => {
     });
 };
 
-QB.getWriteContext = (id, repositoryObject, event, element, gridTableInfo) => {
-    return {
-        getId() {
-            return id;
-        },
-        getObject() {
-            return repositoryObject;
-        },
-        getEvent() {
-            return event;
-        },
-        getElement() {
-            return element;
-        },
-        getWidgetValue(property = false) {
-            return v(this.getId() + (property ? '.' + property : ''));
-        },
-        getCell() {
-            return gridTableInfo !== null ? gridTableInfo.getCell() : null;
-        },
-        getRow() {
-            return gridTableInfo !== null ? gridTableInfo.getRow() : null;
-        },
-        getColumn() {
-            return gridTableInfo !== null ? gridTableInfo.getColumn() : null;
-        },
-        getGridTableInfo() {
-            return gridTableInfo;
-        }
-    }
+QB.writeData = (eventMapId, jqueryEvent, jqueryElement) => {
+    return WriteExecutorFactory.createExecutor(eventMapId, jqueryEvent, jqueryElement).execute();
 };
 
-QB.getGridTableInfo = (cell, row, column) => {
-    return {
-        getCell() {
-            return cell;
-        },
-        getRow() {
-            return row;
-        },
-        getColumn() {
-            return column;
-        },
-    };
-};
-
-QB.validateWrite = (g, isGridTable, newContext, gridTableCell, z, w, e) => {
-    if (g.validation) {
-        let r = isGridTable ? g.validation(newContext, gridTableCell, v(w + '.' + e), z[1], z[2]) : g.validation(newContext);
-
-        if (!r.success) {
-            if (r.widget) {
-                let input = $('#' + r.widget).find('.ks-textbox-field');
-
-                if (input.hasClass('input-error')) {
-                    return false;
-                }
-
-                if (input) {
-                    input.addClass('input-error');
-                }
-
-                let secondary = $('#' + r.widget).find('.ks-textbox-title-secondary');
-                secondary.html(r.message);
-            } else {
-                if (r.message) {
-                    app.popup.show(r.message);
-                }
-            }
-
-            return false;
-        } else {
-            let input = $('#' + w).find('.ks-textbox-field');
-
-            if (input) {
-                input.removeClass('input-error');
-            }
-
-            $('#' + w).find('.ks-textbox-title-secondary').html('');
-        }
-    }
-    return true;
-};
-
-QB.writeData2 = (eventMapId, jqueryEvent, jqueryElement) => {
-    let s = eventMapId.split('.'), eventName = s[0], widgetId = s[1], z = widgetId.split('_'),
-    repositoryObject, eventObject, newContext;
-
-    if (eventName === 'upload') {
-        return FileUpload.uploadFile(widgetId, eventMapId, WidgetValue);
-    }
-
-    if (z.length > 2 && z[1] !== 'row') { //gridtable
-        return QB.writeGridTableData(z, eventName, eventMapId, jqueryEvent, jqueryElement);
-    }
-
-    repositoryObject = Repository[widgetId], eventObject = (repositoryObject || {})[eventName];
-
-    if (!eventObject) {
-        QB.executeEventMapAction(eventMapId + '.finished', jqueryEvent, jqueryElement);
-        return true;
-    }
-
-    newContext = {...QB.getWriteContext(widgetId, repositoryObject, jqueryEvent, jqueryElement, null), ...WidgetValue};
-
-
-};
-
-QB.writeGridTableData = (z, eventName, eventMapId, jqueryEvent, jqueryElement) => {
-    let gridTableCell, gridTableInfo, r, context = WidgetValue, widgetId, repositoryObject, eventObject, newContext;
-
-    r = context[z[0]];
-
-    r.row && delete r.row;
-    r.column && delete r.column;
-
-    context[z[0]] = {...r, ...{row: z[1], column: z[2]}, ...context[w]};
-
-    gridTableCell = v(z[0] + '.cellData')[z[1]][z[2]];
-
-    gridTableInfo = QB.getGridTableInfo(gridTableCell, parseInt(z[1]), parseInt(z[2]));
-
-    widgetId = z.length > 3 ? z[3] : z[0];
-
-    repositoryObject = Repository[widgetId], eventObject = (repositoryObject || {})[eventName];
-
-    if (!eventObject) {
-        QB.executeEventMapAction(eventMapId + '.finished', jqueryEvent, jqueryElement);
-        return true;
-    }
-
-    newContext = {...QB.getWriteContext(widgetId, repositoryObject, jqueryEvent, jqueryElement, gridTableInfo), ...context};
-
-    if (z.length > 3) {
-        repositoryObject.cellsetId = Repository[z[0]].cellsetId;
-    }
-
-    if (!QB.validateWrite(eventObject, true, newContext, gridTableCell, z, widgetId, eventName)) {
-        return false;
-    }
-
-    if (eventObject.execute) {
-        eventObject.execute(newContext, gridTableCell, v(widgetId + '.' + eventName), z[1], z[2], jqueryEvent, jqueryElement);
-        QB.executeEventMapAction(eventName + '.' + widgetId + '.finished', jqueryEvent, jqueryElement, {});
-        QB.writeExecuteFinished(eventMapId, newContext, repositoryObject, jqueryEvent, jqueryElement);
-        return;
-    }
-
-};
-
-QB.writeExecuteFinished = (eventMapId, newContext, repositoryObject, jqueryEvent, jqueryElement) => {
-    QB.executeEventMapAction(eventMapId + '.finished', jqueryEvent, jqueryElement, {});
-    if (repositoryObject.callback) {
-        repositoryObject.callback({
-            ...{
-                getResponse() {
-                    return '';
-                }, ...newContext
-            }
-        });
-    }
-};
-
-QB.testWriteExecutor = (eventMapId, event, element) => {
-    return new UploadWriteExecutor();
-};
-
-QB.writeData = (eventMapId, event, element) => {
-    let s = eventMapId.split('.'), e = s[0], w = s[1], z = w.split('_'), context = WidgetValue, isGridTable = false, r,
-        g, newContext, gridTableCell, gridTableInfo = QB.getGridTableInfo({}, false, false);
-
-    if (e === 'upload') {
-        return FileUpload.uploadFile(w, eventMapId, context);
-    }
-
-
-    if (z.length > 2 && z[1] !== 'row') { //gridtable
-        r = context[z[0]];
-
-        r.row && delete r.row;
-        r.column && delete r.column;
-
-        context[z[0]] = {...r, ...{row: z[1], column: z[2]}, ...context[w]};
-
-        gridTableCell = v(z[0] + '.cellData')[z[1]][z[2]];
-
-        gridTableInfo = QB.getGridTableInfo(gridTableCell, parseInt(z[1]), parseInt(z[2]));
-
-        w = z.length > 3 ? z[3] : z[0];
-        isGridTable = true;
-    }
-
-    r = Repository[w], g = (r || {})[e];
-
-    newContext = {...QB.getWriteContext(w, r, event, element, gridTableInfo), ...context}; //sample context implementation to avoid many parameters
-
-    if (!g) {
-        QB.executeEventMapAction(eventMapId + '.finished', event, element);
-        return true;
-    }
-
-    if (isGridTable && z.length > 3) {
-        r.cellsetId = Repository[z[0]].cellsetId;
-    }
-
-    if (!QB.validateWrite(g, isGridTable, newContext, gridTableCell, z, w, e)) {
-        return false;
-    }
-
-    // let f = r.init, c = f ? Array.isArray(f) ? f[0].cellsetId ? f[0].cellsetId : '' : f.cellsetId ? f.cellsetId : '' : '';
-    if (Array.isArray(g)) {
-        //todo: implement!!
-    }
-
-    if (g.execute) {
-        isGridTable ? g.execute(newContext, gridTableCell, v(w + '.' + e), z[1], z[2], event, element) : g.execute(newContext, event, element);
-        QB.executeEventMapAction(eventMapId + '.finished', event, element, {});
-        if (isGridTable) {
-            QB.executeEventMapAction(e + '.' + w + '.finished', event, element, {});
-        }
-        if (g.callback) {
-            g.callback({
-                ...{
-                    getResponse() {
-                        return '';
-                    }, ...newContext
-                }
-            });
-        }
-    } else {
-        if (g.download && (typeof g.download === 'function')) {
-            return Server.download(g.download(context));
-        }
-        let c = r.cellsetId || '',
-            body = isGridTable ? g.body(newContext, gridTableCell, v(w + '.' + e), z[1], z[2], event, element) : g.body(newContext, event, element),
-            url = isGridTable ? g.url({...r, ...{cellsetId: c}}, gridTableCell, v(w + '.' + e), z[1], z[2]) : g.url({...r, ...{cellsetId: c}});
-
-        if (g.server) {
-            let mm = QB.getServerSideUrlAndBody(url, body, w, e);
-            url = mm.url;
-            body = mm.body;
-        }
-
-
-        let type;
-        if (typeof g.type === 'function') {
-            type = isGridTable ? g.type(newContext, gridTableCell, v(w + '.' + e), z[1], z[2]) : g.type(newContext);
-        } else {
-            type = g.type;
-        }
-        Loader.start(true);
-        Auth.getTm1AjaxRequest(app.tm1ApiHost + url, body, type, w).then((d) => {
-            Loader.stop(true);
-            L('finished after ajax');
-            QB.executeEventMapAction(eventMapId + '.finished', event, element, d);
-            if (isGridTable) {
-                QB.executeEventMapAction(e + '.' + w + '.finished', event, element, {});
-            }
-            if (g.callback) {
-                g.callback({
-                    ...{
-                        getResponse() {
-                            return d;
-                        }, ...newContext
-                    }
-                });
-            }
-        });
-    }
-
-
-    return true;
-};
-
-QB.executeEventMapAction = (eventMapId, event, element, response) => {
-    L(eventMapId);
+QB.executeEventMapAction = (eventMapId, context, response) => { //Todo move
     El.body.triggerHandler(eventMapId);
     let actions = EventMap[eventMapId], a;
     if (actions) {
         for (a of actions) {
-            a.action(a.argument, event, element, response);
+            a.action(a.argument, context.getJQueryEvent(), context.getJQueryElement(), response);
         }
     }
 };
 
-QB.getUrl = p => p.cellsetId && !p.url ? QB.getCellsetUrl(p) : QB.getMDXUrl(p);
+QB.getUrl = p => p.cellsetId && !p.url ? QB.getCellsetUrl(p) : QB.getMDXUrl(p); //Todo refactor
 
-QB.getCellsetUrl = p => {
+QB.getCellsetUrl = p => { // Todo remove
     if (p.query) {
         return {url: app.CellSetUrl(p.cellsetId) + p.query, type: 'GET'};
     }
@@ -543,7 +276,7 @@ QB.getCellsetUrl = p => {
     return {url: app.defaultCellsetIdQuery(p.cellsetId), type: 'GET'};
 };
 
-QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
+QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => { //Todo refactor
     let params = [], keyAdded = false,
         subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&server=1' : '' : '?server=1',
         instance = app.instance === 'default' ? '' : '/' + app.instance;
@@ -560,7 +293,7 @@ QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
     return {url: newUrl + subUrl, body: `{${params.join(',')}}`};
 };
 
-QB.getMDXUrl = p => {
+QB.getMDXUrl = p => { //Todo refactor
     if (p.url) {
         return {
             url: app.tm1ApiHost + (typeof p.url === 'function' ? p.url(WidgetValue) : p.url),

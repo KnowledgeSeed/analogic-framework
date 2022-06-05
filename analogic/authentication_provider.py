@@ -55,9 +55,10 @@ class AuthenticationProvider(ABC):
         subset_name_to_remove = v.get('subset_name_to_remove')
         selected_cards = v.get('selected_cards')
         options = v.get('options')
+        export_data = v.get('export_data')
 
         return PivotApi.call(self.get_tm1_service(), cube_name, dimension_name, hierarchy_name, subset_name,
-                             element_names, subset_name_to_remove, selected_cards, options)
+                             element_names, subset_name_to_remove, selected_cards, options, export_data)
 
     @login_required
     def export(self):

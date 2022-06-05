@@ -3,7 +3,10 @@
 'use strict';
 
 const Doc = $(document), El = {body: $('body')}, PageState = {current: '', previous: ''}, WidgetValue = {infoData: {}},
-    Extensions = [], Widgets = {};
+    Extensions = {
+        authenticationProviders: [],
+        writeExecutors: []
+    }, Widgets = {};
 
 let EventMap, Repository, WidgetConfig;
 
@@ -19,29 +22,28 @@ let EventMap, Repository, WidgetConfig;
 
         Loader.autoOn();
 
-        for (const k in WidgetConfig) {
-            if (WidgetConfig[k].type) {
-                loadWidget(WidgetConfig[k]);
-            } else {
-                for (const l in WidgetConfig[k]) {
-                    loadWidget(WidgetConfig[k][l]);
-                }
+        let wc, i;
+
+        for (i in WidgetConfig) {
+            wc = WidgetConfig[i];
+
+            if (wc.type) {
+                loadWidget(wc);
             }
         }
 
         QB.getUserData().then(start);
     }).on('touchstart', () => app.isTouched = true);
 
-    function loadWidgets(widgets) {
-        widgets.forEach(w => {
-            loadWidget(w);
-        });
-    }
-
-    function loadWidget(widget) {
-        if (!widget.import) { //how to handle import, multiple imports
-            Widgets[widget.id] = new widget.type(widget);
-            widget.widgets && loadWidgets(widget.widgets);
+    function loadWidget(wc, parent = Widgets) {
+        if (wc.import) {
+            let wci = v(wc.import, WidgetConfig), w = new wci.type(wci);
+            w.widgets = {};
+            parent[wc.id] = w;
+            (wci.widgets || []).forEach(w => loadWidget(w, parent[wc.id].widgets));
+        } else {
+            parent[wc.id] = new wc.type(wc);
+            (wc.widgets || []).forEach(w => loadWidget(w, parent));
         }
     }
 
@@ -49,7 +51,8 @@ let EventMap, Repository, WidgetConfig;
         app.id = Utils.getRandomId();
 
         initEvents();
-        WidgetValue.systemValueGlobalCompanyProductPlanVersion = 'Budget';//Todo ez mi?
+
+        WidgetValue.systemValueGlobalCompanyProductPlanVersion = 'Budget';//Todo ez mi? Ne töröld, amíg nem nézem meg a bpspben (Ote)
 
         Render.showPage(WidgetValue.redirect !== null ? WidgetValue.redirect : app.mainPage);
 

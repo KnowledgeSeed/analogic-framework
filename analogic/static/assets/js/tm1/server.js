@@ -2,16 +2,19 @@
 
 Server = {};
 
-Server.download = (p) => {
+Server.download = (p, d = {}) => {
     let url = p.url;
+
     for (const [key, value] of Object.entries(p)) {
         if (key !== 'url') {
             url += '&' + key + '=' + value;
         }
     }
+
     $.ajax({
         url: url,
-        method: 'GET',
+        method: d.method || 'GET',
+        data: d.data || {},
         xhr: function () {
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
@@ -27,17 +30,12 @@ Server.download = (p) => {
         },
         success: function (response, status, xhr) {
             if(xhr.status === 401){
-                 if ('Cam' === app.authenticationMode && app.handled401 === false) {
-                    app.handled401 = true;
-                    $.cookie("authenticated", 0);
-                    window.location.href = app.url.authenticationBridge;
-                }
-                Extensions.forEach(ext => ext.handle401());
+                 Auth.handle401();
             }else {
                 let blob = new Blob([response], {type: "application/octetstream"});
                 let a = $('<a />');
                 a.attr('href', window.URL.createObjectURL(blob));
-                a.attr('download', p.fileName ? p.fileName : 'file');
+                a.attr('download', p.fileName || d.fileName || 'file');
                 $('body').append(a);
                 a[0].click();
                 $('body').remove(a);
@@ -45,12 +43,7 @@ Server.download = (p) => {
         },
         statusCode: {
             401: function () {
-                if ('Cam' === app.authenticationMode && app.handled401 === false) {
-                    app.handled401 = true;
-                    $.cookie("authenticated", 0);
-                    window.location.href = app.url.authenticationBridge;
-                }
-                Extensions.forEach(ext => ext.handle401());
+                Auth.handle401();
             }
         }
     });
