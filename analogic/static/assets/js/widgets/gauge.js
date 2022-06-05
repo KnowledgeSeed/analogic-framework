@@ -22,7 +22,6 @@ class GaugeWidget extends Widget {
             title: this.getRealValue('title', d, ''),
             fontFamily: this.getRealValue('fontFamily', d, 'imago'),
             skin: this.getRealValue('skin', d, 'standard')
-
         };
 
         if (v.maxRange === 0) {

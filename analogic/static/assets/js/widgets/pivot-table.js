@@ -6,15 +6,11 @@ class PivotTableWidget extends Widget {
     getHtml(widgets, data) {
         const o = this.options, p = data[1] ? JSON.parse(data[1]) : null, s = p ? p[4] : {};
 
-        const v = {
-            selectorTreeColNames: ['Dimensions', 'Hierarchies', 'Subsets', 'Elements'],
-            colors: [{name: 'Light Blue 100', hex: '009FDA'}, {name: 'Light Blue 60', hex: '66C5E9'}, {name: 'Light Blue 40', hex: '99D9F0'}, {name: 'Gray', hex: '747678'}, {name: 'Gray 40', hex: 'C7C8C9'}, {name: 'Gray 20', hex: 'E3E4E4'}, {name: 'Purple', hex: '80379B'}, {name: 'Purple 60', hex: 'B387C3'}, {name: 'Purple 40', hex: 'CCAFD7'}, {name: 'Orange', hex: 'E98300'}, {name: 'Orange 60', hex: 'F2B566'}, {name: 'Orange 40', hex: 'F6CD99'}, {name: 'Pink', hex: 'D71F85'}, {name: 'Pink 60', hex: 'E77986'}, {name: 'Pink 40', hex: 'EFA5CE'}, {name: 'Green', hex: '739600'}, {name: 'Green 60', hex: 'ABC066'}, {name: 'Green 40', hex: 'C7D599'}],
-            data: data[0],
-            presetData: p,
-            tree: {children: {}}
-        };
-
-        this.value = v;
+        this.selectorTreeColNames = ['Dimensions', 'Hierarchies', 'Subsets', 'Elements'];
+        this.colors = [{name: 'Light Blue 100', hex: '009FDA'}, {name: 'Light Blue 60', hex: '66C5E9'}, {name: 'Light Blue 40', hex: '99D9F0'}, {name: 'Gray', hex: '747678'}, {name: 'Gray 40', hex: 'C7C8C9'}, {name: 'Gray 20', hex: 'E3E4E4'}, {name: 'Purple', hex: '80379B'}, {name: 'Purple 60', hex: 'B387C3'}, {name: 'Purple 40', hex: 'CCAFD7'}, {name: 'Orange', hex: 'E98300'}, {name: 'Orange 60', hex: 'F2B566'}, {name: 'Orange 40', hex: 'F6CD99'}, {name: 'Pink', hex: 'D71F85'}, {name: 'Pink 60', hex: 'E77986'}, {name: 'Pink 40', hex: 'EFA5CE'}, {name: 'Green', hex: '739600'}, {name: 'Green 60', hex: 'ABC066'}, {name: 'Green 40', hex: 'C7D599'}];
+        this.data = data[0];
+        this.presetData = p;
+        this.tree = {children: {}};
 
         return `
 <div id="pivot"><div class="ks-pivot-table-controls-holder">
@@ -93,7 +89,7 @@ class PivotTableWidget extends Widget {
 
         this.supressOptions = {nonEmptyRows: true, nonEmptyColumns: true};
 
-        this.loadPreset(this.value.presetData);
+        this.loadPreset(this.presetData);
 
         this.initControls();
     }
@@ -126,17 +122,17 @@ class PivotTableWidget extends Widget {
     }
 
     initSelectorTree(section) {
-        const v = this.value, h = ['<div style="display: none; margin: 50px auto;"><div class="ks-pivot-tag-add-controls"><div class="ks-pivot-tag-color-dropdown-holder"><label>Pivot Colour</label><div class="ks-pivot-tag-color-dropdown"><div class="ks-pivot-tag-color-icon"></div><span></span><div style="display: none;" class="ks-pivot-tag-color-dropdown-chooser">'];
+        const h = ['<div style="display: none; margin: 50px auto;"><div class="ks-pivot-tag-add-controls"><div class="ks-pivot-tag-color-dropdown-holder"><label>Pivot Colour</label><div class="ks-pivot-tag-color-dropdown"><div class="ks-pivot-tag-color-icon"></div><span></span><div style="display: none;" class="ks-pivot-tag-color-dropdown-chooser">'];
 
-        this.addToNextLevelChildren(v.tree, v.data.children, v.data.data);
+        this.addToNextLevelChildren(this.tree, this.data.children, this.data.data);
 
-        for (let color of v.colors) {
+        for (let color of this.colors) {
             h.push('<div data-name="', color.name, '" data-hex="', color.hex, '" class="ks-pivot-tag-color-dropdown-chooser-item" style="background-color: #', color.hex, ';"></div>');
         }
 
         h.push('</div></div></div><div class="ks-pivot-tag-button-holder"><a id="selectorTreeDeleteBtn" class="ks-pivot-btn btn-red">Delete</a><a id="selectorTreeCancelBtn" class="ks-pivot-btn btn-blue-light">Cancel</a><a id="selectorTreeSaveBtn" class="ks-pivot-btn btn-blue">Save</a></div></div><div class="ks-pivot-tag-add-holder">');
 
-        h.push(this.renderNextSelectorTreeLevel(v.tree), '</div></div>');
+        h.push(this.renderNextSelectorTreeLevel(this.tree), '</div></div>');
 
         this.selectorTree = $(h.join('')).prependTo(section)
             .off('click input change')
@@ -263,7 +259,7 @@ class PivotTableWidget extends Widget {
         if (id === e.to.id) {
             $(e.to).children('[data-dimension="' + dim + '"][data-hierarchy="' + hier + '"]').not(card).remove();
 
-            d = this.value.tree.children[dim].children[hier];
+            d = this.tree.children[dim].children[hier];
             defaultMember = d.defaultMember;
 
             d = d.children[subset];
@@ -342,7 +338,7 @@ class PivotTableWidget extends Widget {
         }
 
         const cols = this.getSelectorTreeColumns(), subsetItemCheckInfo = col.prev().children('.ks-pivot-tag-add-col-content').children('.ks-on').children().eq(0).removeClass();
-        const d = this.value.tree.children[cols.eq(0).data('value')].children[cols.eq(1).data('value')].children[cols.eq(2).data('value')];
+        const d = this.tree.children[cols.eq(0).data('value')].children[cols.eq(1).data('value')].children[cols.eq(2).data('value')];
         const infoCheckbox = this.adjustElementColumnCheckInfo(col), subsetCheckboxClass = infoCheckbox.attr('class');
 
         d.checkboxClass = subsetCheckboxClass;
@@ -363,7 +359,7 @@ class PivotTableWidget extends Widget {
 
         clickedPart.removeClass().addClass(subsetCheckboxClass);
 
-        this.value.tree.children[cols.eq(0).data('value')].children[cols.eq(1).data('value')].children[subset].checkboxClass = subsetCheckboxClass;
+        this.tree.children[cols.eq(0).data('value')].children[cols.eq(1).data('value')].children[subset].checkboxClass = subsetCheckboxClass;
 
         this.adjustElementsSelectivityMetaData(cols, isSubsetSelected, subset);
 
@@ -387,7 +383,7 @@ class PivotTableWidget extends Widget {
     }
 
     adjustElementsSelectivityMetaData(cols, isSubsetSelected, subset) {
-        let i, elements = this.value.tree.children[cols.eq(0).data('value')].children[cols.eq(1).data('value')].children[subset || cols.eq(2).data('value')];
+        let i, elements = this.tree.children[cols.eq(0).data('value')].children[cols.eq(1).data('value')].children[subset || cols.eq(2).data('value')];
 
         if (elements) {
             elements = elements.children;
@@ -409,7 +405,7 @@ class PivotTableWidget extends Widget {
     }
 
     showNextSelectorTreeLevel(callback) {
-        let i, col, val, v = this.value, cols = this.getSelectorTreeColumns(), selectedData = {}, nextLevelData;
+        let i, col, val, cols = this.getSelectorTreeColumns(), selectedData = {}, nextLevelData;
 
         for (i = 0; i < cols.length; ++i) {
             col = cols.eq(i);
@@ -417,7 +413,7 @@ class PivotTableWidget extends Widget {
 
             selectedData[col.data('type') + '_name'] = val;
 
-            nextLevelData = (nextLevelData || v.tree).children[val];
+            nextLevelData = (nextLevelData || this.tree).children[val];
         }
 
         if ($.isEmptyObject(nextLevelData.children)) {
@@ -451,11 +447,11 @@ class PivotTableWidget extends Widget {
     }
 
     renderNextSelectorTreeLevel(nextLevelData, cols, callback) {
-        const types = ['dimension', 'hierarchy', 'subset', 'element'], i = cols ? cols.length : 0, v = this.value, children = nextLevelData.children;
+        const types = ['dimension', 'hierarchy', 'subset', 'element'], i = cols ? cols.length : 0, children = nextLevelData.children;
         const isTaintedHolderSlicer = this.isTaintedHolderSlicer(), isCheckableCol = (i > 1), isElementCol = (3 === i);
         const aliasAttrName = isElementCol ? this.getSelectedAliasAttributeName(cols.eq(0).data('value'), cols.eq(1).data('value')) : false;
 
-        let el, isCheckedElementRenderedForSlicer = false, name, isSubsetSelected, h = ['<div data-type="', types[i], '" class="ks-pivot-tag-add-col ', (isCheckableCol && (!isTaintedHolderSlicer || isElementCol) ? 'checkable-col' : ''), '"><div class="ks-pivot-add-tag-search-holder"><div class="ks-pivot-add-tag-search"><span class="icon-search"></span><input type="text" placeholder="Search..."></div></div><div class="ks-pivot-tag-add-col-content"><div class="ks-pivot-tag-add-item title-item">', (isElementCol ? ('<span ' + (isTaintedHolderSlicer ? 'style="display: none;"' : '') + '></span>') : ''), v.selectorTreeColNames[i], (isElementCol ? '<span class="icon-aa"><div class="ks-pivot-table-presets-dropdown"></div></span><span class="icon-ellipsis"><div class="ks-pivot-table-presets-dropdown"><a data-action="save"><span class="icon-plus-circle" style="color: #1d7bff;"></span>Save as New Subset</a><a data-action="remove"><span class="icon-trash-fill" style="color: #dc3545;"></span>Remove Subset</a></div></span>' : ''), '</div>'];
+        let el, isCheckedElementRenderedForSlicer = false, name, isSubsetSelected, h = ['<div data-type="', types[i], '" class="ks-pivot-tag-add-col ', (isCheckableCol && (!isTaintedHolderSlicer || isElementCol) ? 'checkable-col' : ''), '"><div class="ks-pivot-add-tag-search-holder"><div class="ks-pivot-add-tag-search"><span class="icon-search"></span><input type="text" placeholder="Search..."></div></div><div class="ks-pivot-tag-add-col-content"><div class="ks-pivot-tag-add-item title-item">', (isElementCol ? ('<span ' + (isTaintedHolderSlicer ? 'style="display: none;"' : '') + '></span>') : ''), this.selectorTreeColNames[i], (isElementCol ? '<span class="icon-aa"><div class="ks-pivot-table-presets-dropdown"></div></span><span class="icon-ellipsis"><div class="ks-pivot-table-presets-dropdown"><a data-action="save"><span class="icon-plus-circle" style="color: #1d7bff;"></span>Save as New Subset</a><a data-action="remove"><span class="icon-trash-fill" style="color: #dc3545;"></span>Remove Subset</a></div></span>' : ''), '</div>'];
 
         if (isCheckableCol) {
             let check, defautMember, chevron = 2 === i ? '<span class="icon-chevron-right"></span>' : '', subsetCheckbox = cols.eq(2).children('.ks-pivot-tag-add-col-content').children('.ks-on').children('span').eq(0);
@@ -613,7 +609,7 @@ class PivotTableWidget extends Widget {
         let displayName;
 
         if (isTaintedHolderSlicer) {
-            displayName = aliasAttrName ? this.value.tree.children[dimension].children[hierarchy].children[subset].children[element][aliasAttrName] : element;
+            displayName = aliasAttrName ? this.tree.children[dimension].children[hierarchy].children[subset].children[element][aliasAttrName] : element;
             this.holders.eq(0).children(cardSelector).remove();
         } else {
             displayName = subset;
@@ -662,7 +658,7 @@ class PivotTableWidget extends Widget {
     }
 
     getSelectedAliasAttributeName(dimension, hierarchy) {
-        const d = this.value.tree.children[dimension].children[hierarchy];
+        const d = this.tree.children[dimension].children[hierarchy];
 
         return d.selectedAliasAttributeName || d.aliasAttributeNames[0] || '';
     }
@@ -708,7 +704,7 @@ class PivotTableWidget extends Widget {
     }
 
     aliasAttributeNameButtonClicked(btn) {
-        const cols = this.getSelectorTreeColumns(), d = this.value.tree.children[cols.eq(0).data('value')].children[cols.eq(1).data('value')];
+        const cols = this.getSelectorTreeColumns(), d = this.tree.children[cols.eq(0).data('value')].children[cols.eq(1).data('value')];
 
         if (btn.hasClass('icon-aa')) {
             btn.children().html(d.aliasAttributeNames.map((e, i) => '<a' + (((!d.selectedAliasAttributeName && !i) || e === d.selectedAliasAttributeName) ? ' class="on"' : '') + ' data-alias_attr_name="' + e + '"><span class="icon-check"></span>' + e + '</a>')).toggle();
@@ -781,7 +777,7 @@ class PivotTableWidget extends Widget {
 
         this.newSubsetName = newSubsetName;
 
-        let c, el, elements, subset, subsets = this.value.tree.children[d.dimension_name].children[d.hierarchy_name].children, elementNames = [];
+        let c, el, elements, subset, subsets = this.tree.children[d.dimension_name].children[d.hierarchy_name].children, elementNames = [];
 
         for (subset in subsets) {
             c = subsets[subset].checkboxClass;
@@ -835,11 +831,11 @@ class PivotTableWidget extends Widget {
     reloadSubsetsInSelectorTree(popup, cols, selectedData, subsetData) {
         cols.slice(2).remove();
 
-        this.value.tree.children[selectedData.dimension_name].children[selectedData.hierarchy_name] = {children: {}};
+        this.tree.children[selectedData.dimension_name].children[selectedData.hierarchy_name] = {children: {}};
 
-        this.addToNextLevelChildren(this.value.tree.children[selectedData.dimension_name].children[selectedData.hierarchy_name], subsetData.children, subsetData.data);
+        this.addToNextLevelChildren(this.tree.children[selectedData.dimension_name].children[selectedData.hierarchy_name], subsetData.children, subsetData.data);
 
-        this.renderNextSelectorTreeLevel(this.value.tree.children[selectedData.dimension_name].children[selectedData.hierarchy_name], cols.slice(0, 2));
+        this.renderNextSelectorTreeLevel(this.tree.children[selectedData.dimension_name].children[selectedData.hierarchy_name], cols.slice(0, 2));
 
         popup.remove();
 
@@ -911,7 +907,7 @@ class PivotTableWidget extends Widget {
 
         d[++i] = this.supressOptions;
 
-        this.value.save = JSON.stringify(d);
+        this.save = JSON.stringify(d);
 
         Widget.doHandleSystemEvent($(e.currentTarget), e);
 
@@ -925,9 +921,9 @@ class PivotTableWidget extends Widget {
 
         this.supressOptions[btn.data('type')] = !isSupressed;
 
-        this.value.presetData[4] = this.supressOptions;
+        this.presetData[4] = this.supressOptions;
 
-        this.value.save = JSON.stringify(this.value.presetData);
+        this.save = JSON.stringify(this.presetData);
 
         Widget.doHandleSystemEvent($(e.currentTarget), e);
 
@@ -1027,9 +1023,9 @@ class PivotTableWidget extends Widget {
     }
 
     offerNextColorInSelectorTreeColorDropdown() {
-        const v = this.value, colors = {}, cards = this.taintedHolder.children('.ks-pivot-table-tag');
+        const colors = {}, cards = this.taintedHolder.children('.ks-pivot-table-tag');
 
-        v.colors.forEach(e => colors[e.hex] = 0);
+        this.colors.forEach(e => colors[e.hex] = 0);
 
         let i, len = cards.length, offeredColor;
 
@@ -1039,7 +1035,7 @@ class PivotTableWidget extends Widget {
 
         const min = Math.min(...Object.values(colors));
 
-        for (i of v.colors) {
+        for (i of this.colors) {
             if (min === colors[i.hex]) {
                 offeredColor = i;
                 break;
@@ -1061,7 +1057,7 @@ class PivotTableWidget extends Widget {
     }
 
     resetSelectorTreeSelections() {
-        let d = this.value.tree.children, dim, hier, subset, el, hiers, subsets, elements;
+        let d = this.tree.children, dim, hier, subset, el, hiers, subsets, elements;
 
         for (dim in d) {
             hiers = d[dim].children;

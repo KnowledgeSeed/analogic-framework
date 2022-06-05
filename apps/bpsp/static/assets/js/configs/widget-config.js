@@ -21,7 +21,7 @@ app.widgetConfig = {
                    id: 'sendEmailTest',
                    type: ButtonWidget,
                     label: 'Send'
-                    
+
                 },
                 {
                     id: 'rocheBPSPMainSubmissionToBPXPPopup',
@@ -3736,6 +3736,7 @@ app.widgetConfig = {
             type: PageWidget,
             widgets: [
                 {
+                    id: 'rocheBPSPProductsCheckoutVersionsCopyDataTemplatePopup',
                     import: 'popups.rocheBPSPVersionsCopyDataTemplatePopup'
                 },
                 {
@@ -9532,8 +9533,8 @@ app.widgetConfig = {
             id: 'rocheBPSPIpPlanningCheckout',
             type: PageWidget,
             widgets: [
-
                 {
+                    id: 'rocheBPSPIpPlanningCheckout',
                     import: 'popups.rocheBPSPVersionsCopyDataTemplatePopup'
                 },
 
@@ -16775,8 +16776,8 @@ app.widgetConfig = {
             id: 'rocheBPSPCustomersPlanning',
             type: PageWidget,
             widgets: [
-
                 {
+                    id: 'rocheBPSPCustomersPlanningVersionsCopyDataTemplatePopup',
                     import: 'popups.rocheBPSPVersionsCopyDataTemplatePopup'
                 },
 

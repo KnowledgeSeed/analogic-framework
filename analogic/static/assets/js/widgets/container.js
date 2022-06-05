@@ -1,4 +1,4 @@
-/* global SwipeWidget, PopupWidget  */
+/* global SwipeWidget, PopupWidget, QB  */
 
 'use strict';
 
@@ -32,7 +32,7 @@ class ContainerWidget {
         this.c.updateContentFinished();
     }
 
-    triggerFinishedEvent(eventType = 'init'){
+    triggerFinishedEvent(eventType = 'init') {
         this.c.triggerFinishedEvent(eventType);
     }
 
@@ -64,10 +64,8 @@ class ContainerWidget {
         return this.c.updateContent(event, data, loadFunction);
     }
 
-    updateHtml(data){
+    updateHtml(data) {
         return this.c.updateHtml(data);
     }
-
-
 }
 ;
