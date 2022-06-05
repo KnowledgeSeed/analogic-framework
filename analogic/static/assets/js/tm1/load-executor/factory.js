@@ -6,39 +6,44 @@ class LoadExecutorFactory {
 
     static createExecutor(widgetId, widgetTypeName, useDefaultData = false, loaderFunctionPath = 'init', extraParams = {}) {
 
-        let context = LoadExecutorFactory.createContext(widgetId, widgetTypeName, useDefaultData, loaderFunctionPath, extraParams),
-            repositoryObject, loaderFunction;
+        let ctx = LoadExecutorFactory.createContext(widgetId, widgetTypeName, useDefaultData, loaderFunctionPath, extraParams);
 
         if (useDefaultData) {
-            return new DefaultLoadExecutor(context);
+            return new DefaultLoadExecutor(ctx);
         }
 
-        repositoryObject = context.getRepositoryObject();
+        return LoadExecutorFactory.getExecutor(ctx);
+    }
 
-        if (repositoryObject && repositoryObject.state) {
-            return new StateLoadExecutor(context);
+    static getExecutor(ctx) {
+        let repositoryObject = ctx.getRepositoryObject(), loaderFunction = ctx.getLoaderFunction();;
+
+        if (!loaderFunction) {
+
+            if (repositoryObject && repositoryObject.state) {
+                return new StateLoadExecutor(ctx);
+            }
+
+            return new SkipLoadExecutor(ctx);
         }
 
-        loaderFunction = context.getLoaderFunction();
+        if (Array.isArray(loaderFunction)) {
+            return new ArrayLoadExecutor(ctx);
+        }
 
-        if(isClass(loaderFunction)){
-            return new loaderFunction(context); //Todo check
+        if (isClass(loaderFunction)) {
+            return new loaderFunction(ctx); //Todo check
         }
 
         if (loaderFunction instanceof LoadExecutor) {
             return loaderFunction; // Todo check
         }
 
-        if (!loaderFunction) {
-            return new SkipLoadExecutor(context);
-        }
-
         if (loaderFunction.pivot) {
-            return new PivotLoadExecutor(context);
+            return new PivotLoadExecutor(ctx);
         }
 
-        return new LoadExecutor(context);
-
+        return new LoadExecutor(ctx);
     }
 
     static createContext(widgetId, widgetTypeName, useDefaultData = false, loaderFunctionPath = 'init', extraParams = {}) {
@@ -98,6 +103,12 @@ class LoadExecutorFactory {
             },
             getWidgetTypeName() {
                 return widgetTypeName;
+            },
+            triggerParsingControlFinished() {
+                return true;
+            },
+            runParsingControl() {
+                return true;
             }
         };
 

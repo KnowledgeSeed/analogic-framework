@@ -23,6 +23,12 @@ class LoadExecutor {
 
     }
 
+    parsingControlFinished(widgetId) {
+        if (this.context.triggerParsingControlFinished()) {
+            QB.parsingControlFinished(widgetId);
+        }
+    }
+
     loadData() {
 
         const ctx = this.context, widgetId = ctx.getWidgetId(),
@@ -38,7 +44,7 @@ class LoadExecutor {
 
             if (!(loaderFunctionResult instanceof RestRequest)) {
 
-                QB.parsingControlFinished(widgetId);
+                this.parsingControlFinished(widgetId);
 
                 return $.Deferred().resolve(loaderFunctionResult);
             }
@@ -83,6 +89,10 @@ class LoadExecutor {
 
         if(data && data.ID) {
             ctx.getRepositoryObject().cellsetId = data.ID;
+        }
+
+        if(!this.context.runParsingControl()){
+            return data;
         }
 
         return ParsingControlFactory.createExecutor(ctx, data).execute();

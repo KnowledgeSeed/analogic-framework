@@ -9,7 +9,9 @@ class ParsingControl {
 
     execute() {
         let response = this.parse();
-        QB.parsingControlFinished(this.context.getWidgetId());
+        if (this.context.triggerParsingControlFinished()) {
+            QB.parsingControlFinished(this.context.getWidgetId());
+        }
         return response;
     }
 

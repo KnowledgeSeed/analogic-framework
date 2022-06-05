@@ -77,7 +77,7 @@ QB.loadFromWidgetValues = (arg, repositoryId) => {
     });
 };
 
-QB.getUserData = () => {
+QB.getUserData = () => { // Todo refactor
     let extResponse;
     Extensions.authenticationProviders.forEach(ext => {
         extResponse = ext.getUserData();
@@ -173,7 +173,7 @@ QB.executeMDXs = (repositoryId, path) => {//Todo implement new context
     });
 };
 
-QB.parsingControlFinished = (repositoryId) => {
+QB.parsingControlFinished = (repositoryId) => { // Todo move
     El.body.triggerHandler('parsingcontrol.' + repositoryId + '.finished');
     if (Repository[repositoryId] && Repository[repositoryId]['parsingControlFinished']) {
         Repository[repositoryId]['parsingControlFinished']();
@@ -256,7 +256,7 @@ QB.writeData = (eventMapId, jqueryEvent, jqueryElement) => {
     return WriteExecutorFactory.createExecutor(eventMapId, jqueryEvent, jqueryElement).execute();
 };
 
-QB.executeEventMapAction = (eventMapId, context, response) => {
+QB.executeEventMapAction = (eventMapId, context, response) => { //Todo move
     El.body.triggerHandler(eventMapId);
     let actions = EventMap[eventMapId], a;
     if (actions) {
@@ -266,9 +266,9 @@ QB.executeEventMapAction = (eventMapId, context, response) => {
     }
 };
 
-QB.getUrl = p => p.cellsetId && !p.url ? QB.getCellsetUrl(p) : QB.getMDXUrl(p);
+QB.getUrl = p => p.cellsetId && !p.url ? QB.getCellsetUrl(p) : QB.getMDXUrl(p); //Todo refactor
 
-QB.getCellsetUrl = p => {
+QB.getCellsetUrl = p => { // Todo remove
     if (p.query) {
         return {url: app.CellSetUrl(p.cellsetId) + p.query, type: 'GET'};
     }
@@ -276,7 +276,7 @@ QB.getCellsetUrl = p => {
     return {url: app.defaultCellsetIdQuery(p.cellsetId), type: 'GET'};
 };
 
-QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
+QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => { //Todo refactor
     let params = [], keyAdded = false,
         subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&server=1' : '' : '?server=1',
         instance = app.instance === 'default' ? '' : '/' + app.instance;
@@ -293,7 +293,7 @@ QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
     return {url: newUrl + subUrl, body: `{${params.join(',')}}`};
 };
 
-QB.getMDXUrl = p => {
+QB.getMDXUrl = p => { //Todo refactor
     if (p.url) {
         return {
             url: app.tm1ApiHost + (typeof p.url === 'function' ? p.url(WidgetValue) : p.url),

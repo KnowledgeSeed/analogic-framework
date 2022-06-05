@@ -52,6 +52,8 @@ let EventMap, Repository, WidgetConfig;
 
         initEvents();
 
+        WidgetValue.systemValueGlobalCompanyProductPlanVersion = 'Budget';//Todo ez mi? Ne töröld, amíg nem nézem meg a bpspben (Ote)
+
         Render.showPage(WidgetValue.redirect !== null ? WidgetValue.redirect : app.mainPage);
 
         WidgetValue.redirect = null;
