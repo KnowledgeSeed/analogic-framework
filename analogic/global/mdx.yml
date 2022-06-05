@@ -17,3 +17,6 @@ upload_preprocess:
     FROM [zSYS Analogic UI FileUpload Preprocessing Setting]
   index: zSYS Analogic UI FileUpload Preprocessing Setting Measure
   values: Values
+
+testFrameworkMdx: >
+  testMdx

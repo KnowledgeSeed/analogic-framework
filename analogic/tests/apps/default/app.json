@@ -1,6 +1,6 @@
 {
-  "projectName": "Roche BPSP",
-  "projectId": "bpspdefault",
+  "projectName": "Default App",
+  "projectId": "default",
   "version": "189",
   "useMinifiedAssets": false,
   "authenticationMode": "LoginBasicPool",
@@ -9,9 +9,9 @@
   "authenticationBridge": "",
   "tm1ApiHost": "http://localhost:5000/pool",
   "tm1ApiSubPath": "/api/v1/",
-  "mainPage": "rocheBPSPMain",
+  "mainPage": "defaultMain",
   "proxy": {
-    "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
+    "target": "https://kseed-dc1.knowledgeseed.local:5125/defaultapi"
   },
   "pool" : {
     "users": [

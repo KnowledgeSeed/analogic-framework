@@ -20,9 +20,9 @@
   },
   "usePoolUserAsActiveUser": true,
   "smtp": {
-    "server": "",
-    "port": "",
-    "password": "",
-    "sender_email": ""
+    "server": "knowledgeseed",
+    "port": "5125",
+    "password": "testPass",
+    "sender_email": "test_email@test.com"
   }
 }
