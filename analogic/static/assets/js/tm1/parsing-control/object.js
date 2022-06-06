@@ -4,7 +4,7 @@ class ObjectParsingControl extends ParsingControl {
 
     parse() {
         const ctx = this.context, data = ctx.getLoaderResponse(),
-        valueQueries = ctx.getLoaderFunction().parsingControl.query;
+        valueQueries = this.args[0].query;
 
         let result = {}, r, i = 0;
 

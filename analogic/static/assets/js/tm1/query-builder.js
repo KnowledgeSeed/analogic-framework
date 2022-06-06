@@ -3,11 +3,11 @@
 'use strict';
 const QB = {};
 
-QB.loadData2 = (widgetId, widgetTypeName, useDefaultData = false, loaderFunctionPath = 'init', extraParams = {}) => {
+QB.loadData = (widgetId, widgetTypeName, useDefaultData = false, loaderFunctionPath = 'init', extraParams = {}) => {
     return LoadExecutorFactory.createExecutor(widgetId, widgetTypeName, useDefaultData, loaderFunctionPath, extraParams).execute();
 };
 
-QB.loadData = (argument, type, useDefaultData = false, path = 'init', extraParams = {}) => {
+QB.loadDataOld = (argument, type, useDefaultData = false, path = 'init', extraParams = {}) => {
     if (useDefaultData) {
         return Auth.loadDefault(type);
     }
