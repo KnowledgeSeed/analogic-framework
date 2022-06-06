@@ -124,7 +124,7 @@ class WriteExecutor {
             type = eventHandler.type;
         }
         Loader.start(true);
-        Auth.getTm1AjaxRequest(app.tm1ApiHost + url, body, type, widgetId).then((d) => {
+        Auth.getAjaxRequest(app.apiHost + url, body, type, widgetId).then((d) => {
             Loader.stop(true);
             L('finished after ajax');
             instance.triggerRepositoryFinished(d);

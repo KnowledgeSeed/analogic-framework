@@ -32,7 +32,7 @@ class Cam(AuthenticationProvider):
 
         headers['Authorization'] = 'CAMPassport ' + cam_passport
 
-        response = requests.request(url=cnf['tm1ApiHost'] + cnf['tm1ApiSubPath'] + 'ActiveUser',
+        response = requests.request(url=cnf['apiHost'] + cnf['apiSubPath'] + 'ActiveUser',
                                     method='GET',
                                     headers=headers, cookies=cookies, verify=False)
 
@@ -70,7 +70,7 @@ class Cam(AuthenticationProvider):
 
         tm1_session_id = self.setting.get_tm1_session_id(session[self.authentication_session_name])
 
-        return TM1Service(base_url=cnf['tm1ApiHost'], session_id=tm1_session_id, ssl=False)
+        return TM1Service(base_url=cnf['apiHost'], session_id=tm1_session_id, ssl=False)
 
     def getLogger(self):
         return logging.getLogger(__name__)
@@ -87,7 +87,7 @@ class Cam(AuthenticationProvider):
 
         cnf = self.setting.get_config()
 
-        response = requests.request(url=cnf['tm1ApiHost'] + cnf['tm1ApiSubPath'] + 'ActiveUser',
+        response = requests.request(url=cnf['apiHost'] + cnf['apiSubPath'] + 'ActiveUser',
                                     method='GET',
                                     headers=headers, cookies=cookies, verify=False)
 

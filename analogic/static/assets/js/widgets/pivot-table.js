@@ -1649,7 +1649,7 @@ class PivotTableWidget extends Widget {
 
         let body = '{"Ordinal":' + this.getOrdinalOfCell(p) + ',"Value": \"' + i.val().trim() + '\"}';
 
-        Auth.getTm1AjaxRequest(app.tm1ApiHost + url, body, 'PATCH', this.widgetId)
+        Auth.getAjaxRequest(app.apiHost + url, body, 'PATCH', this.widgetId)
             .then(() => p.addClass('ok'))
             .fail(() => p.addClass('err'))
             .always(() => this.finishEditingContentCell());

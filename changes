@@ -12,14 +12,16 @@ deleted:
  defaultUploadStagingFolder deleted: app.defaultUploadStagingFolder
  subpath
  host
- tm1ApiHostBackend
+ apiHostBackend
 
 MainPage -> mainPage
+tm1ApiHost -> apiHost
+tm1ApiSubPath -> apiSubPath
 
 Export:
 
     cnf = setting.getConfig()
-    target_url = cnf['tm1ApiHost']
+    target_url = cnf['apiHost']
 
     -->
 

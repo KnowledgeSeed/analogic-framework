@@ -21,7 +21,7 @@ class LoginBasic(AuthenticationProvider):
         cnf = self.setting.get_config()
         if request.method == 'POST':
 
-            response = requests.request(url=self.setting.get_proxy_target_url() + cnf['tm1ApiSubPath'] + 'ActiveUser',
+            response = requests.request(url=self.setting.get_proxy_target_url() + cnf['apiSubPath'] + 'ActiveUser',
                                         method='GET',
                                         auth=(request.form['username'], request.form['password']),
                                         verify=False)
@@ -70,7 +70,7 @@ class LoginBasic(AuthenticationProvider):
 
         tm1_session_id = self.setting.get_tm1_session_id(session[self.authentication_session_name])
 
-        return TM1Service(base_url=cnf['tm1ApiHost'], session_id=tm1_session_id, ssl=False)
+        return TM1Service(base_url=cnf['apiHost'], session_id=tm1_session_id, ssl=False)
 
     def getLogger(self):
         return logging.getLogger(__name__)

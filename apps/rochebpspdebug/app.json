@@ -7,8 +7,8 @@
   "camNamespace": "knowledgeseed",
   "sessionExpiresInMinutes": 20,
   "authenticationBridge": "",
-  "tm1ApiHost": "http://localhost/flask/rochebpspdebug/proxy",
-  "tm1ApiSubPath": "/api/v1/",
+  "apiHost": "http://localhost/flask/rochebpspdebug/proxy",
+  "apiSubPath": "/api/v1/",
   "mainPage": "rocheBPSPMain",
   "proxy": {
     "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
