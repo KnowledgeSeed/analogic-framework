@@ -35,15 +35,26 @@ let EventMap, Repository, WidgetConfig;
         QB.getUserData().then(start);
     }).on('touchstart', () => app.isTouched = true);
 
-    function loadWidget(wc, parent = Widgets) {
+    function loadWidget(wc, parent = Widgets, parentId = null) {
         if (wc.import) {
             let wci = v(wc.import, WidgetConfig), w = new wci.type(wci);
             w.widgets = {};
+            if(parent[wc.id]) {
+                L('duplicated widgetid: ' + wc.id );
+                L(wc);
+            }
             parent[wc.id] = w;
-            (wci.widgets || []).forEach(w => loadWidget(w, parent[wc.id].widgets));
+            (wci.widgets || []).forEach(w => loadWidget(w, parent[wc.id].widgets, wc.id));
         } else {
-            parent[wc.id] = new wc.type(wc);
-            (wc.widgets || []).forEach(w => loadWidget(w, parent));
+            if (parent[wc.id]) {
+                L('duplicated widgetid: ' + wc.id);
+                L(wc);
+            }
+            let wcc = new wc.type(wc);
+            wcc.parentId = parentId;
+            wc.parentId = parentId;
+            parent[wc.id] = wcc;
+            (wc.widgets || []).forEach(w => loadWidget(w, parent, parentId));
         }
     }
 

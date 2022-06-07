@@ -445,6 +445,10 @@ app.eventMap = {
             },
             {
                 action: app.fn.checkTIResponseStatus,
+                argument: [app.fn.removeWidgetValues, ['rocheBPSPProductsCheckoutTypeSegmentedControl'], app.fn.skip, '']
+            },
+            {
+                action: app.fn.checkTIResponseStatus,
                 argument: [app.fn.openPage, 'rocheBPSPProductsCheckout', app.fn.openPopup, 'rocheBPSPProductsCheckoutWarning']
             }
         ],
@@ -1208,7 +1212,8 @@ app.eventMap = {
                     'rocheBPSPProductsGridTableYearly',
                     'rocheBPSPProductsGridTableMonthly',
                     'rocheBPSPProductsCheckoutCopyMergePopupSlider',
-                    'rocheBPSPProductsTypeSegmentedControl'
+                    'rocheBPSPProductsTypeSegmentedControl',
+                    'rocheBPSPProductsCheckoutTypeSegmentedControl'
                 ]
             },
             {
@@ -1248,7 +1253,7 @@ app.eventMap = {
             },
             {
                 action: app.fn.forceRefresh,
-                argument: 'rocheBPSPProductsTypeSegmentedControl'
+                argument: 'rocheBPSPProductsCheckoutTypeSegmentedControl'
             }
         ],
     'segmentedControlTab1.rocheBPSPProductsCheckoutPeriodUnitSegmentedControl':
@@ -1271,11 +1276,11 @@ app.eventMap = {
             },
             {
                 action: app.fn.forceRefresh,
-                argument: 'rocheBPSPProductsTypeSegmentedControlInfoText'
+                argument: 'rocheBPSPProductsCheckoutTypeSegmentedControlInfoText'
             },
             {
                 action: app.fn.forceRefresh,
-                argument: 'rocheBPSPProductsTypeSegmentedControl'
+                argument: 'rocheBPSPProductsCheckoutTypeSegmentedControl'
             }
         ],
     'launch.rocheBPSPProductsCheckoutGridRow2Cell1bButton':
@@ -1996,7 +2001,7 @@ app.eventMap = {
                     'rocheBPSPipPlanningGridRow2Cell3Text',
                     'rocheBPSPipPlanningGridRow2Cell3ButtonCompareColumn',
                     'rocheBPSPipPlanningGridRow2Cell3ButtonCompareRow',
-                    'rocheBPSPipPlanningYearSegmentedControl',
+                    'rocheBPSPIpPlanningCheckoutYearSegmentedControl',
                     'rocheBPSPIpPlanningCheckoutPopupCheckoutButton',
                     'rocheBPSPIpPlanningCheckoutPopupVersionCompareButton'
                 ]
@@ -2034,22 +2039,22 @@ app.eventMap = {
         [
             {
                 action: app.fn.forceRefresh,
-                argument: 'rocheBPSPIpPlanningCheckoutInfoPopupText1'
+                argument: 'rocheBPSPIpPlanningCheckoutCheckoutInfoPopupText1'
             },
             {
                 action: app.fn.forceRefresh,
-                argument: 'rocheBPSPIpPlanningCheckoutInfoPopupText2'
+                argument: 'rocheBPSPIpPlanningCheckoutCheckoutInfoPopupText2'
             },
             {
                 action: app.fn.openPopup,
-                argument: 'rocheBPSPIpPlanningCheckoutInfoPopup'
+                argument: 'rocheBPSPIpPlanningCheckoutCheckoutInfoPopup'
             }
         ],
-    'launch.rocheBPSPIpPlanningCheckoutInfoPopupCancelButton':
+    'launch.rocheBPSPIpPlanningCheckoutCheckoutInfoPopupCancelButton':
         [
             {
                 action: app.fn.togglePopup,
-                argument: 'rocheBPSPIpPlanningCheckoutInfoPopup'
+                argument: 'rocheBPSPIpPlanningCheckoutCheckoutInfoPopup'
             }
         ],
     'launch.rocheBPSPIpPlanningCheckoutGridRow2Cell3Button.finished':
@@ -2147,7 +2152,7 @@ app.eventMap = {
                     'rocheBPSPIpPlanningCheckoutVersioningCompareText',
                     'rocheBPSPIpPlanningCheckoutVersioningColumnButton',
                     'rocheBPSPIpPlanningCheckoutVersioningRowButton',
-                    'rocheBPSPipPlanningYearSegmentedControl',
+                    'rocheBPSPIpPlanningCheckoutYearSegmentedControl',
                     'rocheBPSPIpPlanningCheckoutGridRow2Cell1aButton',
                     'rocheBPSPIpPlanningCheckoutGridRow2Cell1bButton',
                     'rocheBPSPIpPlanningCheckoutGridRow2Cell2Button',
@@ -2196,7 +2201,7 @@ app.eventMap = {
                     'rocheBPSPIpPlanningCheckoutVersioningCompareText',
                     'rocheBPSPIpPlanningCheckoutVersioningColumnButton',
                     'rocheBPSPIpPlanningCheckoutVersioningRowButton',
-                    'rocheBPSPipPlanningYearSegmentedControl',
+                    'rocheBPSPIpPlanningCheckoutYearSegmentedControl',
                     'rocheBPSPIpPlanningCheckoutGridRow2Cell1aButton',
                     'rocheBPSPIpPlanningCheckoutGridRow2Cell1bButton',
                     'rocheBPSPIpPlanningCheckoutGridRow2Cell2Button',
@@ -4296,10 +4301,9 @@ app.eventMap = {
                 action: app.fn.hideWidget,
                 argument: 'rocheBPSPTerritoriesUsersTerritoriesGrid'
             },
-
             {
-                action: app.fn.removeWidgetValue,
-                argument: 'rocheBPSPTerritoriesUsersTerritoriesSegmentedControl'
+                action: app.fn.removeWidgetValues,
+                argument: ['rocheBPSPTerritoriesUsersSegmentedControl']
             },
         ],
 
@@ -4314,8 +4318,8 @@ app.eventMap = {
                 argument: 'rocheBPSPTerritoriesUsersTerritoriesGrid'
             },
             {
-                action: app.fn.removeWidgetValue,
-                argument: 'rocheBPSPTerritoriesUsersSegmentedControl'
+                action: app.fn.removeWidgetValues,
+                argument: ['rocheBPSPTerritoriesUsersTerritoriesSegmentedControl']
             },
         ],
 
@@ -4908,6 +4912,10 @@ app.eventMap = {
 
     'launch.rocheBPSPCompanySettingsSimulationsGridTable_row_8':
         [
+            {
+                action: app.fn.forceRefresh,
+                argument: 'rocheBPSPCompanySettingsSimulationsSpreadPopupGridRow4Cell1Toggle'
+            },
             {
                 action: app.fn.openPopup,
                 argument: 'rocheBPSPCompanySettingsSimulationsSpreadPopup'

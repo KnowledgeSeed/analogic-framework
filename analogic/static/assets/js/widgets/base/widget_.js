@@ -1,7 +1,7 @@
-/* global app, El, EventMap, Listeners, QB, PageState, Repository, Utils, WidgetConfig, WidgetValue, Widgets */
+/* global app, El, EventMap, Listeners, QB, PageState, Utils, WidgetConfig, WidgetValue */
 
 'use strict';
-const WidgetState = {};
+const Sym = Symbol(), WidgetState = {};
 
 class Widget {
 
@@ -14,14 +14,14 @@ class Widget {
             throw new TypeError('The "getHtml" method must be implemented for the "' + this.name + '" object!');
         }
 
-        this.options = options;
+        this[Sym.options] = options;
     }
 
     getWidget(widgetOptions) {
-        if (widgetOptions.parentId) {
-            return Widgets[widgetOptions.parentId].widgets[widgetOptions.id];
+        if (widgetOptions.import) {
+            return v(widgetOptions.import, WidgetConfig);
         }
-        return Widgets[widgetOptions.id];
+        return widgetOptions;
     }
 
     isContentUpdatable() {
@@ -34,9 +34,8 @@ class Widget {
 
         for (widgetOptions of o.widgets || []) {
             ww = this.getWidget(widgetOptions);
-            deferred.push(ww.updateContent(event));
+            deferred.push(new ww.type(ww).updateContent(event));
         }
-
         if (data !== false) {
             return $.when.apply($, deferred).then(function () {
                 processedData = instance.processData(data);
@@ -71,7 +70,7 @@ class Widget {
 
         for (widgetOptions of o.widgets || []) {
             ww = this.getWidget(widgetOptions);
-            widgets.push(ww);
+            widgets.push(new ww.type(ww));
         }
 
         if (o.depends) {//grid
@@ -96,6 +95,7 @@ class Widget {
 
         let afterLoad = (data) => {
             let deffered = [], w;
+
             for (w of widgets) {
                 deffered.push(w.render(withState, refresh, useDefaultDataForChildren));
             }
@@ -208,13 +208,13 @@ class Widget {
         });
     }
 
-    addListeners(recursive = true) {
+    addListeners(recursive=true) {
         const o = this.options, h = Listeners.handle;
         let widgetOptions, widgets = [], w, ww;
 
         for (widgetOptions of o.widgets || []) {
             ww = this.getWidget(widgetOptions);
-            widgets.push(ww);
+            widgets.push(new ww.type(ww));
         }
 
         if (o.listen) {
@@ -245,12 +245,13 @@ class Widget {
         });
         this.appendListeners(o, h);
 
-        if (recursive) {
+        if(recursive) {
             for (w of widgets) {
                 w.addListeners();
             }
         }
     }
+
 
     appendListeners(options, handler) {
 
@@ -275,7 +276,7 @@ class Widget {
 
         for (widgetOptions of o.widgets || []) {
             ww = this.getWidget(widgetOptions);
-            widgets.push(ww);
+            widgets.push(new ww.type(ww));
         }
 
         for (w of widgets) {
@@ -302,7 +303,7 @@ class Widget {
 
         for (widgetOptions of o.widgets || []) {
             ww = this.getWidget(widgetOptions);
-            widgets.push(ww);
+            widgets.push(new ww.type(ww));
         }
 
         for (w of widgets) {
@@ -388,6 +389,14 @@ class Widget {
                 a.action(a.argument, event, element);
             }
         }
+    }
+
+    get options() {
+        return this[Sym.options];
+    }
+
+    set options(n) {
+        throw new Error('Don\'t change the "options" property on this object!');
     }
 
     get id() {

@@ -52,3 +52,5 @@ getPoolTargetUrl -> get_proxy_target_url
 
 query-builder: executeMDXS callExecute deleted -> init as function and RestRequest
 query-builder: executeMDXS mainQueryIndex deleted
+
+widgetId must be unique!!!
