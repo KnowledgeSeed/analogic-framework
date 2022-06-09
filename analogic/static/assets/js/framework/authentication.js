@@ -11,7 +11,7 @@ Auth.loadDefault = arg => {
     });
 };
 
-Auth.getTm1AjaxRequest = (url, data, type, widgetId = '') => {
+Auth.getAjaxRequest = (url, data, type, widgetId = '') => {
     let urlWithWidgetId = url + (url.includes('?') ? '&' : '?') + 'widgetid=' + widgetId;
     return $.ajax({
         cache: true,

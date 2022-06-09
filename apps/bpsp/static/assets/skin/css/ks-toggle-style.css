@@ -293,6 +293,24 @@
     display: block;
 }
 
+
+/* MBy 13.05.2022 */
+.ks-toggle-deepblue_checkbox_off.ks-toggle .ks-toggle-icon-off:before {
+    font-family: 'roche' !important;
+    content: "\e979";
+    color: #0066cc;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.ks-toggle-deepblue_checkbox_off.ks-toggle .ks-toggle-icon-off {
+    display: block;
+    background-color: #c5c5c5;
+    height: 20px;
+    width: 18px;
+}
+
+
 /* checkbox */
 .ks-toggle-checkbox.ks-toggle .ks-toggle-icon-on:before {
     font-family: 'roche' !important;

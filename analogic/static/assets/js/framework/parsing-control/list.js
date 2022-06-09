@@ -4,7 +4,7 @@ class ListParsingControl extends ParsingControl {
 
     parse() {
         const ctx = this.context, data = ctx.getLoaderResponse(),
-        valueQueries = ctx.getLoaderFunction().parsingControl;
+        valueQueries = this.args[0];
 
         let i, result = [],
             k = data.count ? data.count : data.Cells ? data.Cells.length : data.value ? data.value.length : 0;

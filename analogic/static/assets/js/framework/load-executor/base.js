@@ -77,7 +77,7 @@ class LoadExecutor {
 
         let instance = this;
 
-        return Auth.getTm1AjaxRequest(url, body, type, widgetId).then((data) => {
+        return Auth.getAjaxRequest(url, body, type, widgetId).then((data) => {
             return instance.handleAjaxResponse(data);
         });
 
@@ -87,16 +87,27 @@ class LoadExecutor {
 
         const ctx = this.context;
 
-        if(data && data.ID) {
+        if (data && data.ID) {
             ctx.getRepositoryObject().cellsetId = data.ID;
         }
 
-        if(!this.context.runParsingControl()){
+        if (!this.context.runParsingControl()) {
             return data;
         }
 
         return ParsingControlFactory.createExecutor(ctx, data).execute();
     }
 
-    getUrl = p => p.cellsetId && !p.url ? QB.getCellsetUrl(p) : QB.getMDXUrl(p);
+    getUrl = p => {
+        if (p.url) {
+            return {
+                url: app.apiHost + (typeof p.url === 'function' ? p.url(WidgetValue) : p.url),
+                type: p.type ? p.type : 'POST'
+            };
+        }
+
+        L('error: url not found', p);
+
+        return {url: '', type: p.type ? p.type : 'POST'};
+    };
 }

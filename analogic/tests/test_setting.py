@@ -53,7 +53,7 @@ class MyTestCase(unittest.TestCase):
             self.assertEqual(cnf['authenticationMode'], 'LoginBasicPool')
             self.assertEqual(cnf['projectName'], 'Test App')
             self.assertEqual(cnf['projectId'], 'testapp')
-            self.assertEqual(cnf['tm1ApiHost'], 'http://localhost:5000/testapp/proxy')
+            self.assertEqual(cnf['apiHost'], 'http://localhost:5000/testapp/proxy')
             self.assertEqual(cnf['proxy']['target'], 'https://kseed-dc1.knowledgeseed.local:5125/testappapi')
             self.assertEqual(cnf['smtp']['password'], 'testPass')
             self.assertEqual(cnf['instance'], 'testapp')
@@ -64,7 +64,7 @@ class MyTestCase(unittest.TestCase):
             self.assertEqual(cnf_default['authenticationMode'], 'LoginBasicPool')
             self.assertEqual(cnf_default['projectName'], 'Default App')
             self.assertEqual(cnf_default['projectId'], 'default')
-            self.assertEqual(cnf_default['tm1ApiHost'], 'http://localhost:5000/pool')
+            self.assertEqual(cnf_default['apiHost'], 'http://localhost:5000/pool')
             self.assertEqual(cnf_default['proxy']['target'], 'https://kseed-dc1.knowledgeseed.local:5125/defaultapi')
             self.assertEqual(cnf_default['instance'], 'default')
             self.assertEqual(cnf_default['hostname'], 'http://localhost/')
@@ -75,14 +75,14 @@ class MyTestCase(unittest.TestCase):
             self.assertEqual('testapp.static', self.setting._get_param('blueprint_static'))
             self.assertEqual('http://localhost/', self.setting._get_param('hostname'))
             self.assertEqual('testapp', self.setting._get_param('projectId'))
-            self.assertEqual('http://localhost:5000/testapp/proxy', self.setting._get_param('tm1ApiHost'))
+            self.assertEqual('http://localhost:5000/testapp/proxy', self.setting._get_param('apiHost'))
 
         with self.app.test_request_context(''):
             self.assertEqual('default', self.default_setting._get_param('instance'))
             self.assertEqual('default.static', self.default_setting._get_param('blueprint_static'))
             self.assertEqual('http://localhost/', self.default_setting._get_param('hostname'))
             self.assertEqual('default', self.default_setting._get_param('projectId'))
-            self.assertEqual('http://localhost:5000/pool', self.default_setting._get_param('tm1ApiHost'))
+            self.assertEqual('http://localhost:5000/pool', self.default_setting._get_param('apiHost'))
 
     def test_get_instance(self):
         self.assertEqual('testapp', self.setting.get_instance())

@@ -1,14 +1,14 @@
 {
   "projectName": "Roche BPSP",
   "projectId": "bpsp",
-  "version": "191",
+  "version": "192",
   "useMinifiedAssets": false,
   "authenticationMode": "LoginBasicPool",
   "camNamespace": "knowledgeseed",
   "sessionExpiresInMinutes": 20,
   "authenticationBridge": "",
-  "tm1ApiHost": "http://localhost:5000/bpsp/proxy",
-  "tm1ApiSubPath": "/api/v1/",
+  "apiHost": "http://localhost:5001/bpsp/proxy",
+  "apiSubPath": "/api/v1/",
   "mainPage": "rocheBPSPMain",
   "proxy": {
     "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"

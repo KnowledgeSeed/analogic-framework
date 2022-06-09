@@ -21,6 +21,4 @@
             app['{{ key }}'] = {% if (value == True) %}true{% else %}false{% endif %};
         {% endif %}
     {% endfor %}
-    app.CellSetUrl = (cellsetId) => app.tm1ApiHost + app.tm1ApiSubPath + app.tm1CellsetId(cellsetId); // Todo remove
-    app.defaultCellsetIdQuery = (cellsetId) => app.CellSetUrl(cellsetId) + '$expand=Cells($select=Ordinal,Value)'; // Todo remove
 </script>

@@ -21,7 +21,7 @@ class SSOPoolAuthenticationProviderExtension extends AuthenticationProviderExten
     getUserData() {
         if (['SSOBasicPool', 'SSOPool', 'LoginBasicPool', 'LoginPool'].includes(app.authenticationMode)
             && !app.usePoolUserAsActiveUser) {
-            return Auth.getTm1AjaxRequest(app.tm1ApiHost.replace('proxy', 'activeUser'), {}, 'GET').pipe(data => {
+            return Auth.getAjaxRequest(app.apiHost.replace('proxy', 'activeUser'), {}, 'GET').pipe(data => {
                 WidgetValue.activeUser = data.username;
             });
         }

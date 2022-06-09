@@ -6,9 +6,9 @@ class ArrayLoadExecutor extends LoadExecutor {
 
         const ctx = this.context, loaderFunctions = ctx.getLoaderFunction(),
             repositoryObject = ctx.getRepositoryObject(),
-            runParsingControl = repositoryObject.commonParsingControl;
+            runParsingControl = typeof repositoryObject.commonParsingControl !== undefined;
 
-        let subContext, subLoaderFunction, c = 1, deffered = [];
+        let subContext, subLoaderFunction, c = 1, deferred = [];
 
         for (subLoaderFunction of loaderFunctions) {
 
@@ -19,12 +19,12 @@ class ArrayLoadExecutor extends LoadExecutor {
 
             ++c;
 
-            deffered.push(LoadExecutorFactory.getExecutor(subContext).execute());
+
+            deferred.push(LoadExecutorFactory.getExecutor(subContext).execute());
         }
 
-        return $.when.apply($, deffered).then(function (...results) {
-
-            if (runParsingControl) {
+        return $.when.apply($, deferred).then(function (...results) {
+            if (!runParsingControl) {
                 let z, d = [], parsingControlResult;
                 for (z of results) {
                     d.push(z);
@@ -65,6 +65,8 @@ class ArrayLoadExecutor extends LoadExecutor {
         ctx.runParsingControl = () => {
             return runParsingControl;
         };
+
+        return ctx;
 
     }
 

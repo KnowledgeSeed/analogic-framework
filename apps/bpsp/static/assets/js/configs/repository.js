@@ -37,17 +37,6 @@ app.repository = {
             return dict[widgetId];
         }
     },
-    sendEmailTest: {
-        launch: {
-            url: (db) => `sampletest`,
-            type: 'POST',
-            body: (db) => {
-                return {
-                  key: 'sendEmail'
-                };
-            }
-        }
-    },
     rocheBPSPMainApplicationInit: {
         init: [
             {
@@ -356,7 +345,7 @@ app.repository = {
 
     rocheBPSPMainSubmissionToBPXPPopupYes: {
         initCondition: (db) => {
-            return Utils.isValueExistingAndNotEmpty('rocheBPSPProductReportGridRow1Cell2DropBox');
+            return Utils.isValueExistingAndNotEmpty('rocheBPSPMainSubmissionToBPXPPopupDropBox');
         },
         initDefault: (db) => {
             return [];
@@ -365,8 +354,8 @@ app.repository = {
         init: {
             execute: (db) => {
                 return {
-                    enabled: Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'flag') === 1 ? true : false,
-                    skin: Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'flag') === 1 ? 'blue_bg_bpsp' : 'grey_bg_bpsp'
+                    enabled: Utils.getDropBoxSelectedItemAttribute('rocheBPSPMainSubmissionToBPXPPopupDropBox', 'flag') === 1 ? true : false,
+                    skin: Utils.getDropBoxSelectedItemAttribute('rocheBPSPMainSubmissionToBPXPPopupDropBox', 'flag') === 1 ? 'blue_bg_bpsp' : 'grey_bg_bpsp'
                 };
             }
         },
@@ -376,7 +365,7 @@ app.repository = {
             type: 'POST',
             body: (db) => `{
                         "Parameters": [
-                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductReportGridRow1Cell2DropBox', 'key')}"}
+                                {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPMainSubmissionToBPXPPopupDropBox', 'key')}"}
                         ]
                     }`
         }
@@ -665,6 +654,33 @@ app.repository = {
             body: (db) => {
                 WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = v('rocheBPSPProductsYearSegmentedControl.value');
                 WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = v('rocheBPSPProductsYearSegmentedControl.selected');
+                return `{"Ordinal": 0,"Value": \"${db.systemValueGlobalSegmentedControlRelativeYear}\"}`
+            }
+        }
+    },
+
+
+    rocheBPSPProductsCheckoutYearSegmentedControl: {
+        init: {
+            execute: (db) => {
+                let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
+                    sr = WidgetValue['systemValueGlobalSegmentedControlRelativeYear'],
+                    sc = parseInt(WidgetValue['systemValueProductPlanYearsCount']),
+                    sm = s + sc;
+                return [
+                    {label: s, selected: 'Y0' === sr, visible: sm > s},
+                    {label: ++s, selected: 'Y1' === sr, visible: sm > s},
+                    {label: ++s, selected: 'Y2' === sr, visible: sm > s},
+                    {label: ++s, selected: 'Y3' === sr, visible: sm > s},
+                ];
+            }
+        },
+        switch: {
+            url: (db) => `/api/v1/Cellsets('${WidgetValue.systemValueGlobalSegmentedControlCellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db) => {
+                WidgetValue['systemValueGlobalSegmentedControlRelativeYear'] = v('rocheBPSPProductsCheckoutYearSegmentedControl.value');
+                WidgetValue['systemValueGlobalSegmentedControlRelativeYearValue'] = v('rocheBPSPProductsCheckoutYearSegmentedControl.selected');
                 return `{"Ordinal": 0,"Value": \"${db.systemValueGlobalSegmentedControlRelativeYear}\"}`
             }
         }
@@ -1038,6 +1054,10 @@ app.repository = {
                 };
             }
         }
+    },
+
+    rocheBPSPProductsCheckoutTypeSegmentedControlInfoText: {
+        reference: 'rocheBPSPProductsTypeSegmentedControlInfoText'
     },
     rocheBPSPProductsTypeSegmentedControl: {
         switch: {
@@ -2493,6 +2513,83 @@ app.repository = {
     },
 
 //start product checkout
+    rocheBPSPProductsCheckoutTypeSegmentedControl: {
+        switch: {
+            execute: (db) => {
+                Utils.setWidgetValue('selectedProductsTypeSegmentedControl', v('rocheBPSPProductsCheckoutTypeSegmentedControl.selected'));
+            }
+        },
+        initCondition: (db) => {
+            return db.systemValueSegmentedControlPeriodUnit === 'Monthly';
+        },
+        initDefault: (db) => {
+            return {visible: false};
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption))`,
+            type: 'POST',
+            body: (db) => {
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsCompanySelector', 'key');
+                return `{"MDX":"
+                  WITH MEMBER [}Groups].[}Groups].[Marketing Flag]
+                  AS IIF([}Groups].[}Groups].[${company} SalesMarketing] <> '' OR [}Groups].[}Groups].[ADMIN] <> '' OR [}Groups].[}Groups].[Support 1L] <> '' ,'Write','')
+                    MEMBER [}Groups].[}Groups].[Finance Flag]
+                    AS IIF([}Groups].[}Groups].[${company} SalesFinance] <> '' OR [}Groups].[}Groups].[ADMIN] <> '' OR [}Groups].[}Groups].[Support 1L] <> '' ,'Write','')
+                  SELECT 
+                    {[}Groups].[}Groups].[Marketing Flag],[}Groups].[}Groups].[Finance Flag]} 
+                  ON COLUMNS , 
+                    {[}Clients].[}Clients].[${db.activeUser}]} 
+                    PROPERTIES [}Clients].[}Clients].[}TM1_DefaultDisplayValue]  ON ROWS 
+                    FROM [}ClientGroups] 
+                  "}`;
+            },
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        visible: (r, x) => {
+                            let checkoutProduct = v('systemValueCheckoutProduct'),
+                                marketingAdjustmentVisible = r.Cells[0].FormattedValue !== '' || !checkoutProduct,
+                                finalSalesPlanVisible = r.Cells[1].FormattedValue !== '' || !checkoutProduct,
+                                visible = (finalSalesPlanVisible && marketingAdjustmentVisible) || !checkoutProduct,
+                                visibleType = '';
+
+                            if (marketingAdjustmentVisible && !finalSalesPlanVisible) {
+                                visibleType = 'Marketing Adjustment';
+                            }
+
+                            if (!marketingAdjustmentVisible && finalSalesPlanVisible) {
+                                visibleType = 'Final Sales Plan';
+                            }
+
+                            if (!marketingAdjustmentVisible && !finalSalesPlanVisible) {
+                                visibleType = 'Access denied';
+                            }
+                            Utils.setWidgetValue('systemValueProductsTypeSegmentedControlVisibleType', visibleType);
+                            Utils.setWidgetValue('systemValueProductsTypeIsOk', visibleType !== 'Access denied');
+                            return v('systemValueSegmentedControlPeriodUnit') === 'Monthly' && visible;
+                        },
+                        data: (r, x) => {
+                            let vv = v('systemValueProductsTypeSegmentedControlVisibleType'),
+                                selected = vv === false ? v('selectedProductsTypeSegmentedControl') !== false ? v('selectedProductsTypeSegmentedControl') : 'Final Sales Plan' : vv;
+                            return [
+                                {
+                                    selected: 'Final Sales Plan' === selected,
+                                    label: 'Final Sales Plan',
+                                    value: 'Final Sales Plan'
+                                },
+                                {
+                                    selected: 'Marketing Adjustment' === selected,
+                                    label: 'Marketing Adjustment',
+                                    value: 'Marketing Adjustment'
+                                }
+                            ];
+                        }
+                    }
+            }
+        }
+    },
+
 
     rocheBPSPProductsCheckoutPeriodUnitSegmentedControl: {
         init: {
@@ -2534,6 +2631,19 @@ app.repository = {
     },
 
     rocheBPSPProductsCheckout: {
+        getProductsTypeSegmentedControlValue: (db) => {
+            let vv = v('systemValueProductsTypeSegmentedControlVisibleType');
+            if (vv !== false) {
+                return vv;
+            }
+            return v('rocheBPSPProductsCheckoutTypeSegmentedControl.selected');
+        },
+        initConditionDependingOnCheckoutYearlyMonthly: (db) => {
+            let g = WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Yearly' ? 'rocheBPSPProductsCheckoutGridTableYearly' : 'rocheBPSPProductsCheckoutGridTableMonthly',
+                l = v(g + '.cellData.length');
+            return l !== false && l !== 0;
+        },
+
         initCondition: () => {
             return Utils.isValueExistingAndNotEmpty('rocheBPSPProductsCheckoutGridTableYearly', 'cellData');
         },
@@ -2745,7 +2855,7 @@ app.repository = {
             s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsCompanySelector', 'key'));
             s.push(Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsReceiverSelector', 'key'));
             s.push(db.systemValueCheckoutProduct);
-            s.push(Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db));
+            s.push(Repository.rocheBPSPProductsCheckout.getProductsTypeSegmentedControlValue(db));
             return s.join('_').replaceAll(':', '_').replaceAll(' ', '_').replaceAll('/', '_');
         },
         getProductsCheckoutGridTableMonthlyCell: (index, r) => {
@@ -3059,7 +3169,7 @@ app.repository = {
                     visible:
                         db.systemValueSegmentedControlPeriodUnit === 'Monthly' &&
                         v('systemValueProductsTypeIsOk') === true &&
-                        v('rocheBPSPProductsTypeSegmentedControl.value') !== false
+                        v('rocheBPSPProductsCheckoutTypeSegmentedControl.value') !== false
                 };
             }
         }
@@ -3170,7 +3280,7 @@ app.repository = {
             type: 'POST',
             body: (db) => {
                 let scope = v('systemValueSegmentedControlPeriodUnit') === 'Yearly' ? 'Product View - Yearly' : 'Product View - Monthly',
-                    lineItem = v('systemValueSegmentedControlPeriodUnit') === 'Yearly' ? '' : Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db),
+                    lineItem = v('systemValueSegmentedControlPeriodUnit') === 'Yearly' ? '' : Repository.rocheBPSPProductsCheckout.getProductsTypeSegmentedControlValue(db),
                     company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsCompanySelector', 'key'),
                     receiver = Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsReceiverSelector', 'key'),
                     version = v('systemValueGlobalVersionKey'),
@@ -3197,7 +3307,7 @@ app.repository = {
             type: 'POST',
             body: (db) => {
                 let scope = v('systemValueSegmentedControlPeriodUnit') === 'Yearly' ? 'Product View - Yearly' : 'Product View - Monthly',
-                    lineItem = v('systemValueSegmentedControlPeriodUnit') === 'Yearly' ? 'Final Sales Plan' : Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db),
+                    lineItem = v('systemValueSegmentedControlPeriodUnit') === 'Yearly' ? 'Final Sales Plan' : Repository.rocheBPSPProductsCheckout.getProductsTypeSegmentedControlValue(db),
                     company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsCompanySelector', 'key'),
                     receiver = Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsReceiverSelector', 'key'),
                     version = v('systemValueGlobalVersionKey'),
@@ -3226,7 +3336,7 @@ app.repository = {
                 }
                 return result;
             },
-            url: (db, cell, widgetValue, row, col) => {L(db, cell, widgetValue, row, col);
+            url: (db, cell, widgetValue, row, col) => {
                 if (Utils.getPropertyOrFunctionValue(cell, 'distributionEdit')) {
                     return `/api/v1/Processes('MODULE - UI - Products Yearly Prepare Split')/tm1.ExecuteWithReturn`;
                 } else {
@@ -4073,7 +4183,7 @@ app.repository = {
                     visible:
                         db.systemValueSegmentedControlPeriodUnit === 'Monthly' &&
                         v('systemValueProductsTypeIsOk') === true &&
-                        v('rocheBPSPProductsTypeSegmentedControl.value') !== false
+                        v('rocheBPSPProductsCheckoutTypeSegmentedControl.value') !== false
                 };
             }
         },
@@ -4092,7 +4202,7 @@ app.repository = {
                     product: db.systemValueCheckoutProduct,
                     globalVersion: v('systemValueGlobalVersionKey'),
                     version: WidgetValue.systemValueGlobalCompanyProductPlanVersion,
-                    lineItem: Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db),
+                    lineItem: Repository.rocheBPSPProductsCheckout.getProductsTypeSegmentedControlValue(db),
                     year1: y1,
                     year2: y1 + 1,
                     year3: y1 + 2,
@@ -4141,7 +4251,7 @@ app.repository = {
                 validationGlobalVersion: v('systemValueGlobalVersionKey'),
                 validationVersion: WidgetValue.systemValueGlobalCompanyProductPlanVersion,
                 validationProduct: WidgetValue.systemValueCheckoutProduct,
-                validationLineItem: Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db),
+                validationLineItem: Repository.rocheBPSPProductsCheckout.getProductsTypeSegmentedControlValue(db),
                 validationMessage: 'First row of excel does not match'
                 //      preProcessTemplate: v('preprocess.choose.value') === false ? 'Template1' : v('preprocess.choose.value')
             };
@@ -4160,7 +4270,7 @@ app.repository = {
                                 {"Name": "pTargetCube", "Value": "Sales Plan by Product"},
                                 {"Name": "pSelectedProductLevel", "Value": "${v('rocheBPSPProductsCheckoutUploadPopupPlDropbox.value')}"},
                                 {"Name": "pFileName", "Value": "${fileName}"},
-                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}"},
+                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProductsCheckout.getProductsTypeSegmentedControlValue(db)}"},
                                 {"Name": "pVersion", "Value": "${v('systemValueGlobalVersionKey')}"}
                         ]
                     }`;
@@ -4231,7 +4341,7 @@ app.repository = {
                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsReceiverSelector.value')}"},
                                 {"Name": "pSplitMode", "Value": "Monthly"},
                                 {"Name": "pSplitMethod", "Value": "Previous Year"},
-                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}"},
+                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProductsCheckout.getProductsTypeSegmentedControlValue(db)}"},
                                 {"Name": "pVersion", "Value": "${v('systemValueGlobalVersionKey')}"}
                         ]
                     }`
@@ -4252,7 +4362,7 @@ app.repository = {
                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsReceiverSelector.value')}"},
                                 {"Name": "pSplitMode", "Value": "Monthly"},
                                 {"Name": "pSplitMethod", "Value": "Equal"},
-                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}"},
+                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProductsCheckout.getProductsTypeSegmentedControlValue(db)}"},
                                 {"Name": "pVersion", "Value": "${v('systemValueGlobalVersionKey')}"}
                         ]
                     }`
@@ -4273,7 +4383,7 @@ app.repository = {
                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsReceiverSelector.value')}"},
                                 {"Name": "pSplitMode", "Value": "Monthly"},
                                 {"Name": "pSplitMethod", "Value": "MonthlyPhasing"},
-                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}"},
+                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProductsCheckout.getProductsTypeSegmentedControlValue(db)}"},
                                 {"Name": "pVersion", "Value": "${v('systemValueGlobalVersionKey')}"}
                         ]
                     }`
@@ -4285,7 +4395,7 @@ app.repository = {
             execute: (db) => {
                 return {
                     title: db.systemValueGlobalSegmentedControlRelativeYearValue,
-                    body: Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)
+                    body: Repository.rocheBPSPProductsCheckout.getProductsTypeSegmentedControlValue(db)
                 };
             }
         }
@@ -4304,7 +4414,7 @@ app.repository = {
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsCompanySelector', 'key')}"},
                                 {"Name": "pReceiver", "Value": "${v('rocheBPSPProductsReceiverSelector.value')}"},
                                 {"Name": "pSplitMode", "Value": "Default"},
-                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}"}
+                                {"Name": "pLineItem", "Value": "${Repository.rocheBPSPProductsCheckout.getProductsTypeSegmentedControlValue(db)}"}
                         ]
                     }`
             }
@@ -4360,7 +4470,7 @@ app.repository = {
                                     "Dimensions('Companies')/Hierarchies('Companies')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsCompanySelector', 'key')}')",
                                     "Dimensions('Products')/Hierarchies('BPSP Budget')/Elements('${productCode}')",
                                     "Dimensions('Receivers')/Hierarchies('Receivers')/Elements('${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsReceiverSelector', 'key')}')",
-                                    "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}')",
+                                    "Dimensions('LineItems Sales Plan by Product')/Hierarchies('LineItems Sales Plan by Product')/Elements('${Repository.rocheBPSPProductsCheckout.getProductsTypeSegmentedControlValue(db)}')",
                                     "Dimensions('Measures Sales Plan by Product')/Hierarchies('Measures Sales Plan by Product')/Elements('Monthly Split Type')"
                                 ]
                             },
@@ -4383,7 +4493,7 @@ app.repository = {
         },
         initCondition: (db) => {
             return WidgetValue['systemValueSegmentedControlPeriodUnit'] === 'Monthly'
-                && v('rocheBPSPProductsTypeSegmentedControl.value') !== false
+                && v('rocheBPSPProductsCheckoutTypeSegmentedControl.value') !== false
                 && v('systemValueProductsTypeIsOk') == true;
         },
         initDefault: (db) => {
@@ -4415,15 +4525,21 @@ app.repository = {
                              MEMBER [Periods].[Periods].[UILevelFormat] as 
                                     [Products].[BPSP ${db.systemValueGlobalCompanyProductPlanVersion}].CurrentMember.Properties('BPSP ${db.systemValueGlobalCompanyProductPlanVersion} UI Level Format')
                              MEMBER [Periods].[Periods].[zUI CheckOutFlag] as
-                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value])
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI CheckOutFlag],
+                                    [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Value])
                              MEMBER [Periods].[Periods].[HasComment] as
-                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[Comment Flag])
+                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],
+                                    [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[Final Sales Plan],
+                                    [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Comment Flag])
                              MEMBER [Periods].[Periods].[zUI CheckOutUser] as 
-                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedBy])
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],
+                                    [Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedBy])
                              MEMBER [Periods].[Periods].[zUI CheckOutDateTime] as 
-                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],[Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime])
+                                    [Sales Plan by Product].([Periods].[Periods].[2021],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[zUI Checkout Flag],
+                                    [Measures Sales Plan by Product].[Measures Sales Plan by Product].[EditedDateTime])
                              MEMBER [Periods].[Periods].[zUI Split Flag] as 
-                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],[LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}],
+                                    [Sales Plan by Product].([Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}],
+                                    [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[${Repository.rocheBPSPProductsCheckout.getProductsTypeSegmentedControlValue(db)}],
                                     [Measures Sales Plan by Product].[Measures Sales Plan by Product].[Monthly Split Type])
                         -- Create the first 5 column with information
                              Set FixColumns AS
@@ -4439,7 +4555,8 @@ app.repository = {
                         -- query
                         SELECT 
                         --Columns
-                           {Union({Union(Union(FixColumns,{DRILLDOWNMEMBER({[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]},{[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]})},All),{Comment},All)},
+                           {Union({Union(Union(FixColumns,{DRILLDOWNMEMBER({[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]},
+                           {[Periods].[Periods].[${db.systemValueGlobalSegmentedControlRelativeYearValue}]})},All),{Comment},All)},
                            {[Periods].[Periods].[UILevelFormat]})}
                            PROPERTIES [Periods].[Periods].[Caption] ON COLUMNS , 
                         -- rows
@@ -4448,7 +4565,7 @@ app.repository = {
                         FROM [Sales Plan by Product] 
                         WHERE 
                           (
-                           [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[${Repository.rocheBPSPProducts.getProductsTypeSegmentedControlValue(db)}],
+                           [LineItems Sales Plan by Product].[LineItems Sales Plan by Product].[${Repository.rocheBPSPProductsCheckout.getProductsTypeSegmentedControlValue(db)}],
                        [Versions].[Versions].[${v('systemValueGlobalVersionKey')}],
                        [Companies].[Companies].[${Utils.getDropBoxSelectedItemAttribute('rocheBPSPProductsCompanySelector', 'key')}],
                        [Receivers].[Receivers].[${v('rocheBPSPProductsReceiverSelector.value')}],
@@ -4788,7 +4905,6 @@ app.repository = {
     },
     // versioning
     rocheBPSPProductsCheckoutGridVersionSelector: {
-        test: new LoadExecutor(this),
         init: {
             execute: (db) => {
                 return {
@@ -4865,7 +4981,8 @@ app.repository = {
             'rocheBPSPProductsCheckoutGridRow2Cell2Button',
             'rocheBPSPProductsCheckoutGridRow2Cell3Button',
             'rocheBPSPProductsYearSegmentedControl',
-            'rocheBPSPProductsCheckoutPeriodUnitSegmentedControl'
+            'rocheBPSPProductsCheckoutPeriodUnitSegmentedControl',
+            'rocheBPSPProductsCheckoutYearSegmentedControl'
 
         ],
         launch: {
@@ -5307,6 +5424,26 @@ app.repository = {
             execute: (db) => {
                 WidgetValue['systemValueIpPlanningSegmentedControlRelativeYear'] = v('rocheBPSPipPlanningYearSegmentedControl.value');
                 WidgetValue['systemValueIpPlanningSegmentedControlRelativeYearValue'] = v('rocheBPSPipPlanningYearSegmentedControl.selected');
+            }
+        }
+    },
+
+    rocheBPSPIpPlanningCheckoutYearSegmentedControl: {
+        init: {
+            execute: (db) => {
+                let s = parseInt(WidgetValue['systemValueGlobalStartingPlanYear']),
+                    sr = Utils.setWidgetValueIfNotExist('systemValueIpPlanningSegmentedControlRelativeYear', 'Y0');
+                Utils.setWidgetValueIfNotExist('systemValueIpPlanningSegmentedControlRelativeYearValue', s);
+                return [
+                    {label: s, selected: 'Y0' === sr},
+                    {label: ++s, selected: 'Y1' === sr}
+                ];
+            }
+        },
+        switch: {
+            execute: (db) => {
+                WidgetValue['systemValueIpPlanningSegmentedControlRelativeYear'] = v('rocheBPSPIpPlanningCheckoutYearSegmentedControl.value');
+                WidgetValue['systemValueIpPlanningSegmentedControlRelativeYearValue'] = v('rocheBPSPIpPlanningCheckoutYearSegmentedControl.selected');
             }
         }
     },
@@ -7606,6 +7743,10 @@ app.repository = {
             }
         }
     },
+
+    rocheBPSPIpPlanningCheckoutCheckoutInfoPopupText2: {
+        reference: 'rocheBPSPIpPlanningCheckoutInfoPopupText2'
+    },
     rocheBPSPIpPlanningCheckoutInfoPopupText1: {
         initCondition: (db) => {
             return v('rocheBPSPipPlanningGridRow1Cell2DropBox.value.length') !== false;
@@ -7635,6 +7776,10 @@ app.repository = {
                     }
             }
         }
+    },
+
+    rocheBPSPIpPlanningCheckoutCheckoutInfoPopupText1: {
+        reference: 'rocheBPSPIpPlanningCheckoutInfoPopupText1'
     },
     rocheBPSPIpPlanningCheckoutGridRow1Cell9Button: {
         reference: 'rocheBPSPProductsGridRow1Cell9Button'
@@ -11447,6 +11592,11 @@ app.repository = {
             }
         }
     },
+
+    rocheBPSPMainSubmissionToBPXPPopupDropBox: {
+        reference: 'rocheBPSPProductReportGridRow1Cell2DropBox'
+    },
+
     rocheBPSPProductReportPageInit: {
         initCondition: (db) => {
             return Utils.isValueExistingAndNotEmpty('rocheBPSPProductReportGridRow1Cell2DropBox');
@@ -12478,7 +12628,7 @@ app.repository = {
                     body: v('rocheBPSPCustomersPlanningVersionSelector.value')
                 };
             }
-            return {title: cell.members[5].Name, body: cell.members[6].Attributes.Caption};
+            return {title: cell.members[7].Name, body: cell.members[8].Attributes.Caption};
         },
 
         headerInCompareMode: (columnIndex,
@@ -12507,11 +12657,42 @@ app.repository = {
                 };
             }
             return {
-                title: !previousCell.members || cell.members[5].Name === previousCell.members[5].Name ? '' : cell.members[5].Name,
-                body: cell.members[6].Attributes.Caption
+                title: !previousCell.members || cell.members[7].Name === previousCell.members[7].Name ? '' : cell.members[7].Name,
+                body: cell.members[8].Attributes.Caption.search('Growth') !== 0 ? cell.members[8].Attributes.Caption : cell.members[8].Attributes.Caption + ' ' +  cell.members[7].Name
+                //body: cell.members[8].Attributes.Caption
             };
         },
 
+        headerInNormalMode: (columnIndex,
+                             gridTableId = 'rocheBPSPCustomersPlanningGridTableYearly',
+                             versionSelectorId = 'rocheBPSPCustomersPlanningVersionSelector',
+                             versionSelectorId2 = 'rocheBPSPCustomersPlanningGridRow2VersionSelectorTwo') => {
+            let cells = v(gridTableId + '.cellData'), cell = cells[0][columnIndex],
+                previousCell = cells[0][columnIndex - 1];
+            if (!cell.members) {
+                return {
+                    title: '',
+                    body: ''
+                };
+            }
+            if (Repository[gridTableId].isCompareByRowMode()) {
+                return {
+                    title: !previousCell.members || cell.members[8].Name === previousCell.members[8].Name ? '' : cell.members[8].Name,
+                    body: cell.members[7].Attributes.Caption,
+                    skin: 'products_gd_header_compareByRow_bpsp'
+                };
+            }
+            if (Repository[gridTableId].isCompareByColumnMode()) {
+                return {
+                    title: !previousCell.members || cell.members[6].Name === previousCell.members[6].Name ? '' : cell.members[6].Name,
+                    body: columnIndex % 2 === 0 ? v(versionSelectorId2 + '.value') : v(versionSelectorId + '.value')
+                };
+            }
+            return {
+                title: !previousCell.members || cell.members[7].Name === previousCell.members[7].Name ? '' : cell.members[7].Name,
+                body: cell.members[8].Attributes.Caption.search('Growth') !== 0 ? cell.members[8].Attributes.Caption : cell.members[8].Attributes.Caption + ' ' +  cell.members[7].Name
+            };
+        },
     },
 
     rocheBPSPCustomerPlanningPageInit: {
@@ -12863,7 +13044,8 @@ app.repository = {
                                            [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL1' or 
                                            [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL2' or 
                                            [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL2a' or 
-                                           [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL3'
+                                           [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL3' or
+                                           [Products].[BPSP Budget].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL4'
                                           )}   
                                 -- mdx to run from JS when user focusing
                                 Set FocusedRows As
@@ -13026,6 +13208,7 @@ app.repository = {
                     product = Utils.getGridTableCell('rocheBPSPCustomersPlanningGridTableYearly', 0).productCode,
                     period = v('systemValueGlobalSegmentedControlRelativeYearValue'),
                     version = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCustomersPlanningVersionSelector', 'key'),
+                    lineItem = Utils.getGridTableCurrentCell('rocheBPSPCustomersPlanningGridTableYearly').members[8].Name,
                     parameters = [];
 
                 parameters.push(Utils.getProcessNameValuePair('pProduct', product));
@@ -13036,7 +13219,7 @@ app.repository = {
                 parameters.push(Utils.getProcessNameValuePair('pCustomer', customerCode));
                 parameters.push(Utils.getProcessNameValuePair('pValue', Utils.parseNumber(widgetValue.value)));
                 parameters.push(Utils.getProcessNameValuePair('pVersion', version));
-                parameters.push(Utils.getProcessNameValuePair('pLineItem', 'Base Plan'));
+                parameters.push(Utils.getProcessNameValuePair('pLineItem', lineItem));
 
                 return Utils.buildProcessParameters(parameters);
             }
@@ -13086,12 +13269,9 @@ app.repository = {
                 relativeYear = v('systemValueGlobalSegmentedControlRelativeYear'),
                 relativeYearValue = v('systemValueGlobalSegmentedControlRelativeYearValue'),
                 hasFocusedProduct = Repository.rocheBPSPCustomersPlanning.isFocused(),
-                customerCode = v('systemValueCustomersPlanningCustomerCode')
-            ;
-            return ` {
-                        "MDX" : 
-                            "
-                               With     Set ProductRows As
+                customerCode = v('systemValueCustomersPlanningCustomerCode');
+            return `{"MDX" :"
+                 WITH SET ProductRows As
                                 {Filter(
                                   {Filter({[Products].[BPSP ${productVersion}].Members} ,
                                   [Sales Territory to Product].([Versions].[Versions].[Live],
@@ -13101,7 +13281,8 @@ app.repository = {
                                            [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL1' or 
                                            [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL2' or 
                                            [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL2a' or 
-                                           [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL3'
+                                           [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL3' or
+                                           [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL4'
                                           )}   
                                 -- mdx to run from JS when user focusing
                                 Set FocusedRows As
@@ -13133,7 +13314,7 @@ app.repository = {
                                             [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[Final Sales Plan],
                                             [Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Comment Flag])
                                 -- Create the first 3 column with information
-                                     Set FixColumns AS
+                                    Set FixColumns AS
                                      {([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
                                        [LineItems Sales Plan by Customer].[LineItems Sales Plan by Customer].[ProductName]),
                                      ([Measures Sales Plan by Customer].[Measures Sales Plan by Customer].[Value],[Periods].[Periods].[2021],
@@ -13328,7 +13509,8 @@ app.repository = {
                            [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL1' or 
                            [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL2' or 
                            [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL2a' or 
-                           [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL3'
+                           [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL3' or
+                           [Products].[BPSP ${productVersion}].CurrentMember.Properties('BPSP ${productVersion} Product Level - Name') = 'PL4'
                           )}   
                 -- mdx to run from JS when user focusing
                 Set FocusedRows As
@@ -13777,7 +13959,7 @@ app.repository = {
             Utils.setWidgetValue('systemValueCustomerCompareByRowSelectedProductCode', cellData.productCode);
         },
 
-        // Version copy funtions
+        // Version copy functions
         getCopyVersionSource() {
             const b = Repository.rocheBPSPCustomersPlanningGridTableYearly.isCompareByRowMode();
             if (b) {
@@ -13970,12 +14152,10 @@ app.repository = {
                 if (v('systemValueCustomerCompareBy') === 'Row')
                     a = 7;
                 let index = parseInt(widgetId.split('-')[1]);
+                let header = Repository.rocheBPSPCustomerPlanning.headerInCompareModeFirstCol(index + 1);
                 return {
-                    title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareModeFirstCol(index + 1).title :
-                        //v('systemValueGlobalSegmentedControlRelativeYearValue') - 1,
-                        v('rocheBPSPCustomersPlanningGridTableYearly.cellData')[0][3].members[7].Attributes.Caption,
-                    body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareModeFirstCol(index + 1).body :
-                        v('rocheBPSPCustomersPlanningGridTableYearly.cellData')[0][3].members[a].Attributes.Caption
+                    title: header.title,
+                    body: header.body
                 }
             }
         }
@@ -13995,11 +14175,10 @@ app.repository = {
                 let index = parseInt(widgetId.split('-')[1]);
                 //let condition = parseInt(v('systemValueGlobalSegmentedControlRelativeYearValue')) === parseInt(v('systemValueGlobalStartingPlanYear'));
                 //let yearNormalMode = condition ? v('rocheBPSPCustomersPlanningGridTableYearly.cellData')[0][4].members[7].Attributes.Caption : '';
+                let header = Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1);
                 return {
-                    title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).title
-                        : v('rocheBPSPCustomersPlanningGridTableYearly.cellData')[0][4].members[7].Attributes.Caption,
-                    body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).body
-                        : v('rocheBPSPCustomersPlanningGridTableYearly.cellData')[0][4].members[a].Attributes.Caption,
+                    title: header.title,
+                    body: header.body,
                 }
             }
         }
@@ -14014,9 +14193,10 @@ app.repository = {
         init: {
             execute: (db, widgetId) => {
                 let index = parseInt(widgetId.split('-')[1]);
+                let header = Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1);
                 return {
-                    body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).body : Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogicInNormalMode(),
-                    title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).title : ''
+                    title: header.title,
+                    body: header.body,
                 }
             }
         }
@@ -14033,10 +14213,15 @@ app.repository = {
                 let condition = parseInt(v('systemValueGlobalSegmentedControlRelativeYearValue')) === parseInt(v('systemValueGlobalStartingPlanYear'));
                 let yearNormalMode = condition ? '' : v('rocheBPSPCustomersPlanningGridTableYearly.cellData')[0][6].members[7].Attributes.Caption;
                 let index = parseInt(widgetId.split('-')[1]);
+                let header = Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1);
                 return {
-                    body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).body : 'Base Plan',
-                    title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).title : yearNormalMode
+                    title: header.title,
+                    body: header.body,
                 }
+                // return {
+                //     body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).body : 'Base Plan',
+                //     title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).title : yearNormalMode
+                // }
             }
         }
     },
@@ -14051,10 +14236,15 @@ app.repository = {
         init: {
             execute: (db, widgetId) => {
                 let index = parseInt(widgetId.split('-')[1]);
+                let header = Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1);
                 return {
-                    body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).body : 'One Time Event',
-                    title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? parseInt(v('systemValueGlobalStartingPlanYear')) + 2 : ''
+                    title: header.title,
+                    body: header.body,
                 }
+                // return {
+                //     body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).body : 'One Time Event',
+                //     title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? parseInt(v('systemValueGlobalStartingPlanYear')) + 2 : ''
+                // }
             }
         }
     },
@@ -14068,10 +14258,15 @@ app.repository = {
         init: {
             execute: (db, widgetId) => {
                 let index = parseInt(widgetId.split('-')[1]);
+                let header = Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1);
                 return {
-                    title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).title : '',
-                    body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).body : 'Opportunities'
+                    title: header.title,
+                    body: header.body,
                 }
+            //     return {
+            //         title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).title : '',
+            //         body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).body : 'Opportunities'
+            //     }
             }
         }
     },
@@ -14085,10 +14280,15 @@ app.repository = {
         init: {
             execute: (db, widgetId) => {
                 let index = parseInt(widgetId.split('-')[1]);
+                let header = Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1);
                 return {
-                    body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).body : 'Final Sales Plan',
-                    title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).title : ''
+                    title: header.title,
+                    body: header.body,
                 }
+                // return {
+                //     body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).body : 'Final Sales Plan',
+                //     title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).title : ''
+                // }
             }
         }
     },
@@ -14102,10 +14302,15 @@ app.repository = {
         init: {
             execute: (db, widgetId) => {
                 let index = parseInt(widgetId.split('-')[1]);
+                let header = Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1);
                 return {
-                    title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).title : '',
-                    body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).body : 'Submitted Sales Plan'
+                    title: header.title,
+                    body: header.body,
                 }
+                // return {
+                //     title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).title : '',
+                //     body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).body : 'Submitted Sales Plan'
+                // }
             }
         }
     },
@@ -14119,11 +14324,16 @@ app.repository = {
         init: {
             execute: (db, widgetId) => {
                 let index = parseInt(widgetId.split('-')[1]);
+                let header = Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1);
                 return {
-                    body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).body
-                        : v('systemValueGlobalSegmentedControlRelativeYearValue') + ' - ' + parseInt(v('systemValueGlobalSegmentedControlRelativeYearValue') - 1),
-                    title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).title : 'Final Sales Plan '
+                    title: header.title,
+                    body: header.body,
                 }
+                // return {
+                //     body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).body
+                //         : v('systemValueGlobalSegmentedControlRelativeYearValue') + ' - ' + parseInt(v('systemValueGlobalSegmentedControlRelativeYearValue') - 1),
+                //     title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).title : 'Final Sales Plan '
+                // }
             }
         }
     },
@@ -14137,11 +14347,16 @@ app.repository = {
         init: {
             execute: (db, widgetId) => {
                 let index = parseInt(widgetId.split('-')[1]);
+                let header = Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1);
                 return {
-                    body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).body
-                        : 'Sales Plan ' + v('systemValueGlobalSegmentedControlRelativeYearValue'),
-                    title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).title : 'Growth Final '
+                    title: header.title,
+                    body: header.body,
                 }
+                // return {
+                //     body: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).body
+                //         : 'Sales Plan ' + v('systemValueGlobalSegmentedControlRelativeYearValue'),
+                //     title: Repository.rocheBPSPCustomerPlanning.gridTableHeaderLogic() ? Repository.rocheBPSPCustomerPlanning.headerInCompareMode(index + 1).title : 'Growth Final '
+                // }
             }
         }
     },
@@ -15271,7 +15486,7 @@ app.repository = {
 
             if (uiValue === 2
                 && r.Cells[index].Members[7].Name != v('systemValueGlobalSegmentedControlRelativeYearValue')
-                && r.Cells[index].Members[8].Name === 'Base Plan') {
+                && (r.Cells[index].Members[8].Name === 'Base Plan' || r.Cells[index].Members[8].Name === 'One Time Event')) {
                 skin = 'products_gd_readonly_with_icon_bpsp';
                 cellSkin = 'readonly_bpsp';
                 icon = 'icon-copy';
@@ -15340,7 +15555,7 @@ app.repository = {
                     }
                 } else { //normal customer
                     const basePlanOrOneTime = v('systemValueCustomersPlanningMonthlyTypeValue') === 'Base Plan' ||
-                        v('systemValueCustomersPlanningMonthlyTypeValue') === 'One Time Event';
+                        v('systemValueCustomersPlanningMonthlyTypeValue') === 'Covid Plan';
                     if (basePlanOrOneTime) {
                         return true
                     } else {
@@ -15380,7 +15595,7 @@ app.repository = {
                     visible: Repository.rocheBPSPCustomersPlanning.isMonthly(db),
                     data: [
                         {label: 'Base Plan', selected: e === 'Base Plan'},
-                        {label: 'One Time Event', selected: e === 'One Time Event'},
+                        {label: 'Covid Plan', selected: e === 'Covid Plan'},
                         {label: 'Opportunity', selected: e === 'Opportunity'},
                         {label: 'Final Sales Plan', selected: e === 'Final Sales Plan'}
                     ]
@@ -18376,7 +18591,7 @@ app.repository = {
                     }
                 },
         },
-    rocheBPSPCompanySettingsGridRow4Cell1MessageInput: {
+    rocheBPSPCompanySettingsMessageGridRow4Cell1MessageInput: {
         initCondition: (db) => {
             let a = Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsGridRow1Cell2DropBox');
             return a;
@@ -19056,7 +19271,8 @@ app.repository = {
                 `{
                         "Parameters": [
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox', 'key')}"},
-                                {"Name": "pModule", "Value": "Products"}
+                                {"Name": "pModule", "Value": "Products"},
+                                {"Name": "pVersion", "Value": "${v('systemValueGlobalVersionKey')}"}
                         ]
                     }`
         }
@@ -19069,7 +19285,8 @@ app.repository = {
                 `{
                         "Parameters": [
                                 {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsCheckedOutGridRow1Cell2DropBox', 'key')}"},
-                                {"Name": "pModule", "Value": "Materials"}
+                                {"Name": "pModule", "Value": "Materials"},
+                                {"Name": "pVersion", "Value": "${v('systemValueGlobalVersionKey')}"}
                         ]
                     }`
         }
@@ -19119,7 +19336,7 @@ app.repository = {
                     return `{
                           "Parameters": [
                                   {"Name": "pMessage", "Value": "${v('rocheBPSPCompanySettingsGridRow5Cell1MessageInput.value') ? v('rocheBPSPCompanySettingsGridRow5Cell1MessageInput.value') : ''}"},
-                                  {"Name": "pTitle", "Value": "${v('rocheBPSPCompanySettingsGridRow4Cell1MessageInput.value') ? v('rocheBPSPCompanySettingsGridRow4Cell1MessageInput.value') : ''}"},
+                                  {"Name": "pTitle", "Value": "${v('rocheBPSPCompanySettingsMessageGridRow4Cell1MessageInput.value') ? v('rocheBPSPCompanySettingsMessageGridRow4Cell1MessageInput.value') : ''}"},
                                   {"Name": "pCompany", "Value": "${Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsGridRow1Cell2DropBox', 'key')}"}
                           ]
                       }`
@@ -20136,7 +20353,7 @@ app.repository = {
             type: 'POST',
             body: (db, widgetId) => {
                 let product = Utils.getGridTableCell('rocheBPSPReportKPIMaterialSelectorShortcutPopupGridTable', 0).productCode === undefined ? 'PL1' :
-                    Utils.getGridTableCell('rocheBPSPReportKPIMaterialSelectorShortcutPopupGridTable', 0).productCode,
+                        Utils.getGridTableCell('rocheBPSPReportKPIMaterialSelectorShortcutPopupGridTable', 0).productCode,
                     company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPReportKPIGridRow1Cell2DropBox', 'key'),
                     receiver = Utils.getDropBoxSelectedItemAttribute('rocheBPSPReportKPIGridRow1Cell3DropBox', 'key'),
                     currency = Utils.getDropBoxSelectedItemAttribute('rocheBPSPReportKPIGridRow1Cell5DropBox', 'name'),
@@ -23480,12 +23697,12 @@ app.repository = {
             {
                 execute: (db) => {
                     let pls = {
-                            'PL1': '0,1,2,3,4,5',
-                            'PL2': '0,1,2,3,4',
-                            'PL3': '0,1,2,3',
-                            'PL4': '0,1,2',
-                            'PL5': '0,1',
-                            'PL6': '0'
+                            'PL1': '5',
+                            'PL2': '4,5',
+                            'PL3': '3,4,5',
+                            'PL4': '2,3,4,5',
+                            'PL5': '1,2,3,4,5',
+                            'PL6': '0,1,2,3,4,5'
                         },
                         result = [],
                         selected = v('rocheBPSPSimulationPLViewLimitPopUp.value');
@@ -23552,7 +23769,7 @@ app.repository = {
     rocheBPSPCompanySettingsSimulationsGridRow1Cell2DropBox: {
         choose: {
             execute: (db) => {
-                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsVersionsGridRow1Cell2DropBox', 'key');
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsSimulationsGridRow1Cell2DropBox', 'key');
 
                 Utils.setWidgetValue('systemValueGlobalSelectedCompany', company);
             }
@@ -24062,6 +24279,47 @@ app.repository = {
         }
     },
     rocheBPSPCompanySettingsSimulationsSpreadPopupGridRow4Cell1Toggle: {
+        initCondition: (db) => {
+            return Utils.isValueExistingAndNotEmpty('rocheBPSPCompanySettingsSimulationsGridRow1Cell2DropBox');
+        },
+        initDefault: (db) => {
+            return [];
+        },
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+            type: 'POST',
+            body: (db) => {
+                let company = Utils.getDropBoxSelectedItemAttribute('rocheBPSPCompanySettingsSimulationsGridRow1Cell2DropBox', 'key');
+
+                return `{
+                "MDX" : "SELECT
+                    {[Versions].[Versions].[Live]} 
+                    ON COLUMNS,
+                    {[Measures Company Information].[Measures Company Information].[Customer Data Load Ship To - Flag]}
+                    ON ROWS 
+                FROM 
+                    [Company Information] 
+                WHERE
+                    ([Companies].[Companies].[${company}])
+                "}`
+            },
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        editable: (r, x) => {
+                            // MBy 31.05.2022 Turned off until the TI process is in
+                            //return r.Cells[0].FormattedValue == 1 ? true : false
+                            return false
+                        },
+                        skin: (r, x) => {
+                            // MBy 31.05.2022 Turned off until the TI process is in
+                            //return r.Cells[0].FormattedValue == 1 ? 'deepblue_checkbox' : 'deepblue_checkbox_off'
+                            return 'deepblue_checkbox_off'
+                        }
+                    }
+            }
+        },
         switch: {
             execute: (db) => {
                 Utils.setWidgetValue('SpreadToggle2Selected', !v('SpreadToggle2Selected'));
@@ -24073,6 +24331,12 @@ app.repository = {
     rocheBPSPCompanySettingsSimulationsSpreadPopupControlPanelSpreadButton: {
         launch:
             {
+                validation: (db) => {
+                    return {
+                        success: v('SpreadToggle1Selected') || v('SpreadToggle2Selected'),
+                        message: 'Select at least one option in order to perform this action.'
+                    };
+                },
                 url: (db) => `/api/v1/Processes('MODULE - UI - Simulation Settings Spread')/tm1.ExecuteWithReturn`,
                 type: 'POST',
                 body: (db) => {

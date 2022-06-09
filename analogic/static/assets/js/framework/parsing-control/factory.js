@@ -31,13 +31,13 @@ class ParsingControlFactory {
 
         if (t) {
             if (t.type === 'matrix') {
-                return new MatrixParsingControl(ctx);
+                return new MatrixParsingControl(ctx, t);
             } else if (t.type === 'list') {
-                return new ListParsingControl(ctx);
+                return new ListParsingControl(ctx, t);
             } else if (t.type === 'script') {
-                return new ScriptParsingControl(ctx);
+                return new ScriptParsingControl(ctx, t);
             } else {
-                return new ObjectParsingControl(ctx);
+                return new ObjectParsingControl(ctx, t);
             }
         }
         return new SkipParsingControl(ctx);
