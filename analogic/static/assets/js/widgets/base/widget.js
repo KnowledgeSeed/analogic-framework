@@ -17,6 +17,136 @@ class Widget {
         this.options = options;
     }
 
+    renderStartLoader(withLoader) {
+        if (withLoader) {
+            Loader.start(true);
+        }
+    }
+
+    holderStartLoader() {
+
+    }
+
+    removeLoaderHtml(withState) {
+
+    }
+
+    renderLoaderStop(withLoader) {
+        if (withLoader) {
+            Loader.stop(true);
+        }
+    }
+
+    getHolder(id) {
+        return $('#' + id);
+    }
+
+    reRenderWidget(withState = false, withLoader = true, previouslyLoadedData = false) {
+
+        const o = this.options, holder = this.getHolder(o.id), instance = this;
+
+        this.renderStartLoader(withLoader);
+
+        Listeners.length = 0;
+
+        let holderHeight = holder.actual('height');
+
+        holder.empty().off().promise().then(() => {
+
+            instance.holderStartLoader();
+
+            instance.render(withState, true, false, QB.loadData, previouslyLoadedData).then(html => {
+                let isHeightUpdated = false, h = $(html), i;
+
+                if (holderHeight > 0) {
+                    isHeightUpdated = true;
+                    holder.css({opacity: 0, 'min-height': holderHeight});
+                }
+
+                holder.html(h.html()).promise().then(() => {
+
+                    instance.removeLoaderHtml(withState);
+
+                    if (!holder.hasClass('forcedByEventMap')) {
+                        holder.css('display', h.css('display') !== '' ? h.css('display') : 'unset');
+                    }
+
+                    if (isHeightUpdated) {
+                        holder.css('opacity', 1);
+                    }
+
+                    instance.initEvents(withState);
+
+
+                    for (i of Listeners.filter(e => e.method === 'refreshGridCell' && e.options.id.includes(holder.attr('id')))) {
+                        let event = i.eventName.split('.')[0];
+                        if ($._data(El.body[0], "events")[event].filter(e => e.data.method === 'refreshGridCell' &&
+                            e.data.options.id === i.options.id).length === 0) {
+                            El.body.on(i.eventName, {
+                                options: i.options,
+                                method: i.method,
+                                parameters: i.parameters
+                            }, i.handler);
+                        }
+                    }
+                    if (!withState) {
+                        El.body.trigger('rendered.' + o.id);
+                        instance.refreshFinished();
+                    }
+
+                    app.fn.showToolTipsChanged();
+
+                    instance.renderLoaderStop(withLoader);
+                });
+            });
+        });
+
+        return 'rendered';
+    }
+
+    renderWidget(withState = false, withLoader = true, previouslyLoadedData = false) {
+
+        const o = this.options, holder = this.getHolder(o.id), instance = this;
+
+        this.renderStartLoader(withLoader);
+
+        Listeners.length = 0;
+
+        holder.empty().off().promise().then(() => {
+
+            instance.holderStartLoader();
+
+            instance.render(withState, false, false, QB.loadData, previouslyLoadedData).then(html => {
+                let h = $(html), i;
+
+                holder.html(h.html()).promise().then(() => {
+
+                    instance.removeLoaderHtml(withState);
+
+                    instance.initEvents(false);
+
+                    for (i of Listeners) {
+                        El.body.on(i.eventName, {
+                            options: i.options,
+                            method: i.method,
+                            parameters: i.parameters
+                        }, i.handler);
+                    }
+                    El.body.trigger('bodyReady');
+                    if (!withState) {
+                        instance.initFinished();
+                    }
+
+                    app.fn.showToolTipsChanged();
+
+                    instance.renderLoaderStop(withLoader);
+                });
+            });
+        });
+
+        return 'rendered';
+    }
+
     getWidget(widgetOptions) {
         if (widgetOptions.import) {
             return Widgets[v(widgetOptions.import, WidgetConfig).id];
@@ -92,8 +222,6 @@ class Widget {
 
         let useDefaultDataForChildren = (o.visible === false && !refresh && o.notLoadIfHidden) || useDefaultData;
 
-        //rekurzív renderelés, adatbetöltéssel
-
         let afterLoad = (data) => {
             let deffered = [], w;
             for (w of widgets) {
@@ -146,8 +274,6 @@ class Widget {
         }
         html = this.getHtml(widgetHtmls, data, withState);
 
-        //TODO title ote
-        //return `<section ${write === 'off' ? `data-write="off"` : ''} ${originalId !== false ? `data-originalId="${o.originalId}"` : ''} ${o.ordinal ? `data-ordinal="${o.ordinal}"` : ''} ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" style="${gs.join('')}" id="${o.id ? o.id : Utils.getRandomId()}">${html}</section>`;
         return `<section ${write === 'off' ? `data-write="off"` : ''} ${originalId !== false ? `data-originalId="${o.originalId}"` : ''} ${o.ordinal ? `data-ordinal="${o.ordinal}"` : ''} ${o.margin ? 'class="wrapper"' : ''} style="${gs.join('')}" id="${o.id ? o.id : Utils.getRandomId()}">${html}</section>`;
 
     }
@@ -188,8 +314,6 @@ class Widget {
         if (new o.type(o).amIOnAGridTable()) {
             Listeners.push({options: o, method: 'refreshGridCell', eventName: 'forcerefresh.' + o.id, handler: h});
         }
-
-        //rekurzív renderelés, adatbetöltéssel
 
         return loadFunction(o.id, instance.name).then(function () {
             let deffered = [];
@@ -283,6 +407,7 @@ class Widget {
         }
 
         El.body.triggerHandler(eventType + '.' + o.id + '.finished');
+        L(eventType + '.' + o.id + '.finished');
 
         let actions = EventMap[eventType + '.' + o.id + '.finished'], a;
         if (actions) {

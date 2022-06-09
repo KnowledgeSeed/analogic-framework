@@ -2,18 +2,20 @@
 
 class Render {
     static showPage(page, withState = false) {
-        let widget = new WidgetConfig[page].type(WidgetConfig[page]), s = PageState;
+        let widget = Widgets[page], s = PageState;
         s.previous = s.current;
         s.current = page;
         s[s.previous] = El.body.clone();
 
-        Render.renderWidget(null, El.body, widget, withState);
+        widget.renderWidget(withState);
+
+      //  Render.renderWidget(null, El.body, widget, withState);
     }
 
     static updateContent(event, withLoader = true) {
         withLoader && Loader.start(true);
         let widget = new event.data.options.type(event.data.options);
-        widget.updateContent(event).then((r) => {
+        return widget.updateContent(event).then((r) => {L(r);
             if ('rendered' !== r) {
                 widget.updateContentFinished();
             }

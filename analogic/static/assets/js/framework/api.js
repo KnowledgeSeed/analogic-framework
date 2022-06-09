@@ -239,21 +239,25 @@ app.fn.showToolTipsChanged = function showToolTipsChanged() {
 };
 
 app.fn.forceRefresh = function forceRefresh(widgetId) {
-    El.body.triggerHandler('forcerefresh.' + widgetId);
+    Widgets[widgetId].reRenderWidget();
 };
 
 app.fn.forceRefreshWithoutLoader = function forceRefreshWithoutLoader(widgetId) {
-    El.body.triggerHandler('forcerefreshwithoutloader.' + widgetId);
+    Widgets[widgetId].reRenderWidget(false, false);
 };
 
 app.fn.forceRefreshWidgets = function forceRefreshWidgets(widgetIds) {
-    widgetIds.forEach(widgetId => El.body.triggerHandler('forcerefresh.' + widgetId));
+    widgetIds.forEach(widgetId => Widgets[widgetId].reRenderWidget());
 };
 
 app.fn.forceRefreshWithDelay = function forceRefreshWithDelay(argument) {
     setTimeout(function () {
-        El.body.triggerHandler('forcerefresh.' + argument[0]);
+        Widgets[argument[0]].reRenderWidget()
     }, argument[1]);
+};
+
+app.fn.forceRefreshWithState = function forceRefreshWithState(widgetId) {
+    Widgets[widgetId].reRenderWidget(true);
 };
 
 app.fn.goToUrl = function goToUrl(url) {

@@ -14,9 +14,9 @@ let EventMap, Repository, WidgetConfig;
     Doc.ready(() => {
         EventMap = EventMap || app.eventMap;//Todo app.eventMap megszűntetése
 
-        Repository = Repository || app.repository;
+        Repository = Repository || app.repository;//Todo app.repository megszűntetése
 
-        WidgetConfig = WidgetConfig || app.widgetConfig;
+        WidgetConfig = WidgetConfig || app.widgetConfig;//Todo app.widgetConfig megszűntetése
 
         app.clickEvent = Utils.isMobile() ? 'touchstart' : 'click touchstart';
 
@@ -45,7 +45,6 @@ let EventMap, Repository, WidgetConfig;
         } else {
             if (parent[wc.id]) {
                 L('duplicated widgetid: ' + wc.id);
-                L(wc);
             }
             let wcc = new wc.type(wc);
             parent[wc.id] = wcc;
@@ -60,7 +59,8 @@ let EventMap, Repository, WidgetConfig;
 
         WidgetValue.systemValueGlobalCompanyProductPlanVersion = 'Budget';//Todo ez mi? Ne töröld, amíg nem nézem meg a bpspben (Ote)
 
-        Render.showPage(WidgetValue.redirect !== null ? WidgetValue.redirect : app.mainPage);
+        //Render.showPage(WidgetValue.redirect !== null ? WidgetValue.redirect : app.mainPage);
+        Widgets[app.mainPage].renderWidget();
 
         WidgetValue.redirect = null;
     }

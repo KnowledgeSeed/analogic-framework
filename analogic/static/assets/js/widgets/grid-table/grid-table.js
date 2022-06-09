@@ -138,7 +138,8 @@ class GridTableWidget extends Widget {
             }
 
             if (!vv.allowFullContentUpdated && !instance.isContentUpdatable(processedData)) {
-                return Render.renderWidget(event, $('#' + o.id), instance, false, false, d);
+                instance.reRenderWidget(false, false, d);
+                //return Render.renderWidget(event, $('#' + o.id), instance, false, false, d);
             }
 
             for (widgetOptions of o.widgets || []) {
