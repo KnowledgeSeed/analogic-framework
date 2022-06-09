@@ -38,21 +38,16 @@ let EventMap, Repository, WidgetConfig;
     function loadWidget(wc, parent = Widgets, parentId = null) {
         if (wc.import) {
             let wci = v(wc.import, WidgetConfig), w = new wci.type(wci);
-            w.widgets = {};
-            if(parent[wc.id]) {
-                L('duplicated widgetid: ' + wc.id );
-                L(wc);
+            if (!parent[wci.id]) {
+                parent[wci.id] = w;
+                (wci.widgets || []).forEach(w => loadWidget(w, parent, wci.id));
             }
-            parent[wc.id] = w;
-            (wci.widgets || []).forEach(w => loadWidget(w, parent[wc.id].widgets, wc.id));
         } else {
             if (parent[wc.id]) {
                 L('duplicated widgetid: ' + wc.id);
                 L(wc);
             }
             let wcc = new wc.type(wc);
-            wcc.parentId = parentId;
-            wc.parentId = parentId;
             parent[wc.id] = wcc;
             (wc.widgets || []).forEach(w => loadWidget(w, parent, parentId));
         }
@@ -74,11 +69,11 @@ let EventMap, Repository, WidgetConfig;
         window.onbeforeunload = () => 'Logout';
     }
 
-    function requestClipboarReadPermissionForFireFox() {
+    function requestClipboarReadPermissionForFireFox() {//Todo remove?
         navigator.permissions.query({name: 'clipboard-read'}).then(result => L(result.state));
     }
 
-    app.fn.getZoomButtonsHtml = widget => {
+    app.fn.getZoomButtonsHtml = widget => { //Todo remove?
         if (!widget.options.zoomable) {
             return '';
         }
@@ -86,7 +81,7 @@ let EventMap, Repository, WidgetConfig;
         return '<div class="widget-financial-block-buttons"><span class="icon-minimize"><\/span><span id="' + widget.options.id + 'FullScreenBtn" class="icon-full-screen"><\/span><\/div>';
     };
 
-    app.fn.showInFullScreen = (headerName, content) => {
+    app.fn.showInFullScreen = (headerName, content) => { //Todo move to gauge
         const s = Doc.scrollTop();
 
         El.visibleBodyChildren = El.body.children().filter(':visible').hide();

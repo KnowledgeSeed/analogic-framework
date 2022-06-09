@@ -18,8 +18,8 @@ class Widget {
     }
 
     getWidget(widgetOptions) {
-        if (widgetOptions.parentId) {
-            return Widgets[widgetOptions.parentId].widgets[widgetOptions.id];
+        if (widgetOptions.import) {
+            return Widgets[v(widgetOptions.import, WidgetConfig).id];
         }
         return Widgets[widgetOptions.id];
     }
