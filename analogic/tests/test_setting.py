@@ -1,4 +1,6 @@
 import unittest
+import datetime
+from unittest import mock
 from analogic.setting import SettingManager
 import os
 from flask_caching import Cache
@@ -100,8 +102,8 @@ class MyTestCase(unittest.TestCase):
             self.assertEqual('http://localhost/', self.default_setting.get_host_name_url())
 
     def test_get_framework_mdx(self):
-        mdx = self.setting._get_yaml_setting(self.setting._get_framework_mdx_cache_key(), 'mdx', False, 'global')
-        self.assertEqual('testMdx', mdx)  ## tests belül keresi mdx.yml
+        with mock.patch('analogic.setting.SettingManager._get_yaml_setting', return_value=os.path.basename('C:\\Repositories\\opensource\\analogic\\global\\mdx.yml')):
+            self.assertEqual('testMdx', self.setting.get_framework_mdx('testFrameworkMdx'))
 
     def test_get_custom_object_description(self):
         custom_object = self.setting.get_custom_object_description('testappExport')
@@ -122,6 +124,11 @@ class MyTestCase(unittest.TestCase):
         with self.app.test_request_context(''):
             self.default_setting.set_tm1_session_id('testTM1SessionIdForDefault', 'default')
             self.assertEqual('testTM1SessionIdForDefault', self.default_setting.get_tm1_session_id('default'))
+
+    def test_get_tm1_session_id(self):
+        with mock.patch('analogic.setting.SettingManager._get_tm1_session_id_cache_key', return_value='dimension_framework_tm1_session_id'):
+            with mock.patch('analogic.setting.SettingManager._get_tm1_session_expires_cache_key', return_value='dimension_framework_tm1_session_expires'):
+                self.assertEqual('testTM1SessionId', self.setting.get_tm1_session_id(''))
 
     def test_get_proxy_target_url(self):
         with self.app.test_request_context('/testapp'):
