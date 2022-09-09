@@ -1,0 +1,116 @@
+.ks-tornado-inner {
+    padding-top: 15px;
+}
+
+.ks-tornado-x-holder {
+    padding-bottom: 40px;
+    top: 15px;
+}
+
+.ks-tornado-x-line {
+    background-color: #dee1e5;
+    width: 0px;
+}
+
+.ks-tornado-x-line-label {
+    color: #747b85;
+    font-size: 10px;
+    font-weight: normal;
+    line-height: 10px;
+    margin-top: 5px;
+}
+
+.ks-tornado-x-baseline {
+    background-color: #747b85;
+    bottom: -15px;
+    top: 0;
+    width: 1px;
+    display:none;
+}
+
+.ks-tornado-x-baseline-label {
+    color: #444a52;
+    font-size: 10px;
+    font-weight: normal;
+    line-height: 10px;
+    margin-top: 5px;
+    display: none;
+}
+
+.ks-input-control {
+    color: #747b85;
+    font-size: 10px;
+    font-weight: normal;
+    top: -15px;
+}
+
+.ks-input-control.ks-input-low {
+    margin-right: 5px;
+}
+
+.ks-input-control.ks-input-high {
+    margin-left: 5px;
+}
+
+.ks-input-control-icon {
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+}
+
+.ks-input-control.ks-input-low .ks-input-control-icon {
+    border-right: 8px solid #747b85;
+}
+
+.ks-input-control.ks-input-high .ks-input-control-icon {
+    border-left: 8px solid #747b85;
+}
+
+.ks-tornado-bar-holder {
+    padding-bottom: 45px;
+    top: 15px;
+}
+
+.ks-tornado-bar-holder .ks-tornado-bar-content-holder {
+    border-bottom: 2px solid #dee1e5;
+}
+
+.ks-tornado-bar-baseline {
+    width: 1px;
+}
+
+.ks-tornado-bar-row {
+    background-color: #fff;
+    height: 20px;
+}
+
+.ks-tornado-bar-label {
+    color: #000;
+    font-size: 10px;
+    font-weight: bold;
+    display:none;
+}
+
+.ks-tornado-bar.ks-left .ks-tornado-bar-label {
+    margin-right: 4px;
+}
+
+.ks-tornado-bar.ks-right .ks-tornado-bar-label {
+    margin-left: 4px;
+}
+
+.ks-tornado-bar {
+    height: 8px;
+}
+
+.ks-tornado-bar-baseline {
+    top: unset;
+}
+
+.ks-tornado {
+    width: 400px;
+}
+
+.ks-tornado-outer{
+    display:flex;
+    align-items: end;
+}

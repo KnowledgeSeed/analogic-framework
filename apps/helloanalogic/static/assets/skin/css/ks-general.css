@@ -1,0 +1,378 @@
+@font-face {
+    font-family: 'Gotham Narrow';
+    src: url('../fonts/GothamNarrow-Bold.eot');
+    src: url('../fonts/GothamNarrow-Bold.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/GothamNarrow-Bold.woff2') format('woff2'),
+        url('../fonts/GothamNarrow-Bold.woff') format('woff'),
+        url('../fonts/GothamNarrow-Bold.ttf') format('truetype'),
+        url('../fonts/GothamNarrow-Bold.svg#GothamNarrow-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+  font-family: 'icomoon';
+  src:  url('../fonts/icomoon.eot?rp6e2e');
+  src:  url('../fonts/icomoon.eot?rp6e2e#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf?rp6e2e') format('truetype'),
+    url('../fonts/icomoon.woff?rp6e2e') format('woff'),
+    url('../fonts/icomoon.svg?rp6e2e#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+    font-family: 'Gotham Narrow';
+    src: url('../fonts/GothamNarrow-Medium.eot');
+    src: url('../fonts/GothamNarrow-Medium.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/GothamNarrow-Medium.woff2') format('woff2'),
+        url('../fonts/GothamNarrow-Medium.woff') format('woff'),
+        url('../fonts/GothamNarrow-Medium.ttf') format('truetype'),
+        url('../fonts/GothamNarrow-Medium.svg#GothamNarrow-Medium') format('svg');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'swissre';
+    src:  url('../fonts/swissre.eot?j4cc4fq');
+    src:  url('../fonts/swissre.eot?j4cc4fq#iefix') format('embedded-opentype'),
+        url('../fonts/swissre.ttf?j4cc4fq') format('truetype'),
+        url('../fonts/swissre.woff?j4cc4fq') format('woff'),
+        url('../fonts/swissre.svg?j4cc4fq#swissre') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'swissre' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+    outline: 0;
+    box-sizing: border-box;
+    font-family: 'Gotham Narrow', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.aligned-center-auto {
+    display: table!important;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.aligned-center-horizontal {
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.aligned-center-vertical {
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.aligned-center-both {
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.ks-chart-holder, .ks-chart-widget {
+    position: relative;
+}
+
+.noselect {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    -khtml-user-select: none !important;
+    -khtml-user-drag: none;
+    -o-user-select: none;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.icon-target:before {
+  content: "\e900";
+}
+.icon-card-chart:before {
+  content: "\e901";
+}
+.icon-check-list:before {
+  content: "\e902";
+}
+.icon-circle:before {
+  content: "\e903";
+}
+.icon-circle1:before {
+  content: "\e904";
+}
+.icon-alert:before {
+  content: "\e905";
+}
+.icon-arrow-jump-circle:before {
+  content: "\e906";
+}
+.icon-arrow-left:before {
+  content: "\e907";
+}
+.icon-arrow-right:before {
+  content: "\e908";
+}
+.icon-badge:before {
+  content: "\e909";
+}
+.icon-arrow-swap:before {
+  content: "\e90a";
+}
+.icon-arrow-to-top:before {
+  content: "\e90b";
+}
+.icon-arrow-undo:before {
+  content: "\e90c";
+}
+.icon-c-circle:before {
+  content: "\e90d";
+}
+.icon-card:before {
+  content: "\e90e";
+}
+.icon-calendar:before {
+  content: "\e90f";
+}
+.icon-check-intermediate:before {
+  content: "\e910";
+}
+.icon-check-off:before {
+  content: "\e911";
+}
+.icon-check-on:before {
+  content: "\e912";
+}
+.icon-check-rectangle:before {
+  content: "\e913";
+}
+.icon-chevron-close-horizontal:before {
+  content: "\e914";
+}
+.icon-chevron-down:before {
+  content: "\e915";
+}
+.icon-chevron-open-horizontal:before {
+  content: "\e916";
+}
+.icon-chevron-right:before {
+  content: "\e917";
+}
+.icon-chevron-open-vertical:before {
+  content: "\e918";
+}
+.icon-circle-grid-4:before {
+  content: "\e919";
+}
+.icon-chevron-close-vertical:before {
+  content: "\e91a";
+}
+.icon-clear:before {
+  content: "\e91b";
+}
+.icon-copy:before {
+  content: "\e91c";
+}
+.icon-columns:before {
+  content: "\e91d";
+}
+.icon-comment:before {
+  content: "\e91e";
+}
+.icon-cube-front-back:before {
+  content: "\e91f";
+}
+.icon-details-list:before {
+  content: "\e920";
+}
+.icon-comment-on:before {
+  content: "\e921";
+}
+.icon-edit-circle:before {
+  content: "\e922";
+}
+.icon-edit:before {
+  content: "\e923";
+}
+.icon-envelope:before {
+  content: "\e924";
+}
+.icon-ellipsis:before {
+  content: "\e925";
+}
+.icon-filter-circle:before {
+  content: "\e926";
+}
+.icon-paw:before {
+  content: "\e927";
+}
+.icon-location:before {
+  content: "\e928";
+}
+.icon-glasses:before {
+  content: "\e929";
+}
+.icon-folder:before {
+  content: "\e92a";
+}
+.icon-forward:before {
+  content: "\e92b";
+}
+.icon-minus-circle:before {
+  content: "\e92c";
+}
+.icon-menu:before {
+  content: "\e92d";
+}
+.icon-p-circle:before {
+  content: "\e92e";
+}
+.icon-people-3-fill:before {
+  content: "\e92f";
+}
+.icon-people-3:before {
+  content: "\e930";
+}
+.icon-percent-target:before {
+  content: "\e931";
+}
+.icon-people-square-stack:before {
+  content: "\e932";
+}
+.icon-percent:before {
+  content: "\e933";
+}
+.icon-person:before {
+  content: "\e934";
+}
+.icon-plane-circle:before {
+  content: "\e935";
+}
+.icon-rectangle-stack-fill:before {
+  content: "\e936";
+}
+.icon-rewind:before {
+  content: "\e937";
+}
+.icon-rectangle-stack:before {
+  content: "\e938";
+}
+.icon-rows:before {
+  content: "\e939";
+}
+.icon-s-circle:before {
+  content: "\e93a";
+}
+.icon-plus-circle:before {
+  content: "\e93b";
+}
+.icon-search:before {
+  content: "\e93c";
+}
+.icon-settings:before {
+  content: "\e93d";
+}
+.icon-star-circle:before {
+  content: "\e93e";
+}
+.icon-time-back-arrow:before {
+  content: "\e93f";
+}
+.icon-trash-circle:before {
+  content: "\e940";
+}
+.icon-trash-fill:before {
+  content: "\e941";
+}
+.icon-table:before {
+  content: "\e942";
+}
+.icon-t-circle:before {
+  content: "\e943";
+}
+.icon-tray-arrow-down:before {
+  content: "\e944";
+}
+.icon-trash:before {
+  content: "\e945";
+}
+.icon-tray-files:before {
+  content: "\e946";
+}
+.icon-user:before {
+  content: "\e947";
+}
+.icon-x-circle:before {
+  content: "\e948";
+}
+.icon-x-rectangle:before {
+  content: "\e949";
+}
+.icon-x:before {
+  content: "\e94a";
+}
+.icon-power-bi:before {
+  content: "\e94b";
+}
+.icon-filter-circle-fill:before {
+  content: "\e94e";
+}
+.icon-logo-swissre1:before {
+  content: "\e94f";
+}
+.icon-icon-main-risks-off:before {
+  content: "\e972";
+}
+.icon-icon-main-risks-on:before {
+  content: "\e973";
+}
+.icon-group:before {
+  content: "\e980";
+}
+.icon-sort-down:before {
+  content: "\e987";
+}
+.icon-columns1:before {
+  content: "\e9e4";
+}

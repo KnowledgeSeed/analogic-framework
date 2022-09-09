@@ -1,0 +1,6 @@
+{
+  "projectName": "NoLogin Test",
+  "projectId": "nologintest",
+  "authenticationMode": "NoLogin",
+  "mainPage": ""
+}

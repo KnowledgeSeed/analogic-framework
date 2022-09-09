@@ -1,0 +1,97 @@
+config.json -> app.json
+deleted:
+ applicationAssetsFolder
+ applicationConfigFolder
+ apiLogout
+ logout
+ restRequestDebugFlag
+ tm1ExecuteMDX
+ MDXUrl
+ defaultMDXQuery
+ defaultUploadTargetFolder deleted: app.defaultUploadTargetFolder
+ defaultUploadStagingFolder deleted: app.defaultUploadStagingFolder
+ subpath
+ host
+ apiHostBackend
+ sso.adminNamespace
+ sso.appHost
+
+new parameter ssl_verify, default True for tm1 connection
+
+
+sso.getUserUrl, putUserUrl, putTokenUrl, additionalPostUrl1, additionalPostUrl2 -> subpath without host: /api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value)
+
+MainPage -> mainPage
+tm1ApiHost -> apiHost (optional, CAM, LoginBasic required)
+tm1ApiSubPath -> apiSubPath (optional)
+authenticationBridge (optional, CAM, SSO required)
+sessionExpiresInMinutes: (optional, default 20)
+useMinifiedAssets: optional, default false
+
+Export:
+
+    cnf = setting.getConfig()
+    target_url = cnf['apiHost']
+
+    -->
+
+    target_url = setting.get_proxy_target_url()
+
+required config:
+
+  "proxy": {
+    "target": "https://kseed-dc1.knowledgeseed.local:5125/rochebpspapi"
+  },
+
+
+EmailManager:
+    smtp: {
+      sender_email: '',
+      server: '',
+      port: '',
+      password: '', required in analogic, optional in analogic_pool (stored in credential manager or same way in application_settings.json)
+    }
+
+pool: {
+ users: [...
+}
+
+Export
+doPoolRequest -> do_proxy_request
+getPoolTargetUrl -> get_proxy_target_url
+
+query-builder: executeMDXS callExecute deleted -> init as function and RestRequest
+query-builder: executeMDXS mainQueryIndex deleted
+
+widgetId must be unique!!!
+
+WidgetValue -> Widgets (repository.js)
+
+app.fn -> Api
+
+removed app.widgetValue
+app.eventMap, app.repository, app.widgetConfig -> EventMap, Repository, WidgetConfig (in 3 js files)
+
+sso optional parameters (these are the defaults):
+        "getUserUrl": "/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,Value)",
+        "getUserBody": "{\"MDX\":\"SELECT { [}ElementAttributes_zSYS Analogic UserPool].[Token], [}ElementAttributes_zSYS Analogic UserPool].[Authorized]} on COLUMNS FROM [}ElementAttributes_zSYS Analogic UserPool] WHERE ([zSYS Analogic UserPool].[$username])\"}",
+        "putUserUrl": "/api/v1/Dimensions('zSYSAnalogicUserPool')/Hierarchies('zSYSAnalogicUserPool')/Elements",
+        "putUserBody": "{\"Name\":\"$username\"}",
+        "putTokenUrl": "/api/v1/Cubes('%7DElementAttributes_zSYSAnalogicUserPool')/tm1.Update",
+        "putTokenBody": "{\"Cells\": [{\"Tuple@odata.bind\": [\"Dimensions('}ElementAttributes_zSYS Analogic UserPool')/Hierarchies('}ElementAttributes_zSYS Analogic UserPool')/Elements('Token')\",\"Dimensions('zSYS Analogic UserPool')/Hierarchies('zSYS Analogic UserPool')/Elements('$username')\"]}],\"Value\": \"$token\"}",
+        "additionalPostUrl1": "",
+        "additionalPostBody1": "",
+        "additionalPostUrl2": "",
+        "additionalPostBody2": ""
+
+gridtable
+allowChangedDataUpdate: defualt true
+olyan esetben érdemes kikapcsolni, ha repositoryban közvetlenül módosítjuk a gridtable cellák értékét.
+Ebben az esetben nem fog működni a content update, mert a gridtable adata ugyanaz lesz, mint az init által visszaadott
+adat.
+
+Widget
+ muteAjaxErrorHandler: true, optional parameter
+
+ Waterfall:
+   allowLastColumnToZero default true

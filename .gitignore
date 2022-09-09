@@ -1,0 +1,16 @@
+__pycache__
+.idea
+nbproject
+*.dist
+cache
+local
+waitress_cmd_local.py
+venv
+minified*.*
+logs
+pool.db
+dist
+analogic.egg-info
+analogic_pool.egg-info
+analogic_file_upload.egg-info
+config.js

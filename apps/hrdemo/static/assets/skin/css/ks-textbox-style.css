@@ -1,0 +1,674 @@
+/* custom group */
+.ks-textbox-custom_group .ks-textbox-title {
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+    margin-left: 5px;
+}
+
+.ks-textbox-custom_group .ks-textbox-field {
+    background-color: #fff;
+    border: 1px solid #A9A9A9;
+    border-radius: 8px;
+    height: 40px;
+}
+
+.ks-textbox-custom_group .ks-textbox-field-inner.readonly {
+    background-color: #f2f2f2;
+    border: 1px #ACADAE;
+    border-radius: 8px;
+    height: 40px;
+}
+.ks-textbox-custom_group .ks-textbox-input {
+    font-size: 14px;
+    padding: 0 10px;
+}
+.ks-textbox-custom_group .ks-textbox-title {
+    font-size: 14px;
+}
+
+.ks-textbox-custom_group .ks-textbox-input::-webkit-input-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-custom_group .ks-textbox-input::-moz-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-custom_group .ks-textbox-input:-ms-input-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-custom_group .ks-textbox-input:-moz-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-custom_group.ks-textbox-icon {
+    display: flex;
+    margin-left: 10px;
+
+}
+/* template 1*/
+
+.ks-textbox-template1 .ks-textbox-title {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    padding-left: 10px;
+}
+
+
+.ks-textbox-template1 .ks-textbox-field {
+    border: 1px solid #7f7f7f;
+    border-radius: 5px;
+    height: 50px;
+}
+
+.ks-textbox-template1 .ks-textbox-input {
+    font-size: 16px;
+    padding: 0 10px;
+}
+
+.ks-textbox-template1 .ks-textbox-input::-webkit-input-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-template1 .ks-textbox-input::-moz-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-template1 .ks-textbox-input:-ms-input-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-template1 .ks-textbox-input:-moz-placeholder {
+    color: #838388;
+}
+
+/* template 2 */
+
+.ks-textbox-template2 .ks-textbox-title {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    padding-left: 10px;
+}
+
+.ks-textbox-template2 .ks-textbox-title-secondary { /* validation-hÃ¶z */
+    color: #ff3d61;
+}
+
+.ks-textbox-template2 .ks-textbox-field {
+    border: 1px solid #7f7f7f;
+    border-radius: 5px;
+    height: 50px;
+    border-color: #ff3d61; /* validation-hÃ¶z */
+}
+
+.ks-textbox-template2 .ks-textbox-input {
+    font-size: 16px;
+    padding: 0 10px;
+}
+
+.ks-textbox-template2 .ks-textbox-input::-webkit-input-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-template2 .ks-textbox-input::-moz-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-template2 .ks-textbox-input:-ms-input-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-template2 .ks-textbox-input:-moz-placeholder {
+    color: #838388;
+}
+
+/* template 3 */
+
+.ks-textbox-template3 .ks-textbox-field {
+    border: 1px solid #006cf8;
+    border-radius: 25px;
+    height: 50px;
+    padding: 1px;
+}
+
+.ks-textbox-template3 .ks-textbox-field-inner {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ebeaf2+0,ffffff+100 */
+    background: #eeedf3; /* Old browsers */
+    background: -moz-linear-gradient(top, #eeedf3 0%, #ffffff 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, #eeedf3 0%, #ffffff 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, #eeedf3 0%, #ffffff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeedf3', endColorstr='#ffffff', GradientType=0); /* IE6-9 */
+}
+
+.ks-textbox-template3 .ks-textbox-icon {
+    margin-left: 15px;
+}
+
+.ks-textbox-template3 .ks-textbox-icon img {
+    height: 15px;
+}
+
+.ks-textbox-template3 .ks-textbox-divider {
+    width: 10px;
+}
+
+.ks-textbox-template3 .ks-textbox-input {
+    font-size: 16px;
+}
+
+.ks-textbox-template3 .ks-textbox-input::-webkit-input-placeholder {
+    color: #d4d4d8;
+}
+
+.ks-textbox-template3 .ks-textbox-input::-moz-placeholder {
+    color: #d4d4d8;
+}
+
+.ks-textbox-template3 .ks-textbox-input:-ms-input-placeholder {
+    color: #d4d4d8;
+}
+
+.ks-textbox-template3 .ks-textbox-input:-moz-placeholder {
+    color: #d4d4d8;
+}
+
+/* template 4 */
+
+.ks-textbox-template4.ks-textbox {
+    background-color: #ededf2;
+    border-radius: 20px;
+    padding: 15px;
+}
+
+.ks-textbox-template4 .ks-textbox-title {
+    color: #838388;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.ks-textbox-template4 .ks-textbox-field {
+    background-color: #fff;
+    border-radius: 10px;
+    height: 40px;
+}
+
+.ks-textbox-template4 .ks-textbox-input {
+    font-size: 16px;
+    padding: 0 15px;
+}
+
+/* template 5*/
+
+.ks-textbox-deepblue_textbox .ks-textbox-title {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+
+.ks-textbox-deepblue_textbox .ks-textbox-field {
+    background-color: #fff;
+    border: 1px solid #b1b3b3;
+    border-radius: 7px;
+    height: 40px;
+}
+
+.ks-textbox-deepblue_textbox .ks-textbox-input {
+    font-size: 16px;
+    padding: 0 10px;
+    color: #000;
+}
+
+.ks-textbox-deepblue_textbox .ks-textbox-input::-webkit-input-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-deepblue_textbox .ks-textbox-input::-moz-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-deepblue_textbox .ks-textbox-input:-ms-input-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-deepblue_textbox .ks-textbox-input:-moz-placeholder {
+    color: #838388;
+}
+
+
+/* textbox*/
+
+.ks-textbox-textbox .ks-textbox-title {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+
+.ks-textbox-textbox .ks-textbox-field {
+    background-color: #fff;
+    border: 1px solid #b1b3b3;
+    border-radius: 7px;
+    height: 40px;
+}
+
+.ks-textbox-textbox .ks-textbox-input {
+    font-size: 16px;
+    padding: 0 10px;
+}
+
+.ks-textbox-textbox .ks-textbox-input::-webkit-input-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-textbox .ks-textbox-input::-moz-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-textbox .ks-textbox-input:-ms-input-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-textbox .ks-textbox-input:-moz-placeholder {
+    color: #838388;
+}
+
+
+/* inline*/
+
+.ks-textbox-inline .ks-textbox-title {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 14px;
+    margin-bottom: 5px;
+}
+
+
+.ks-textbox-inline .ks-textbox-field {
+    background-color: #fff;
+    border: 0px solid #b1b3b3;
+    border-radius: 7px;
+    height: 30px;
+}
+
+.ks-textbox-inline .ks-textbox-input {
+    font-size: 16px;
+    padding: 0 10px;
+}
+
+.ks-textbox-textbox .ks-textbox-title-secondary { /* validation-hÃ¶z */
+    color: #ff3d61;
+    display: unset;
+}
+
+.ks-textbox-textbox .ks-textbox-field.input-error { /* validation-hÃ¶z */
+    border: 1px solid #ff3d61;
+}
+
+.ks-textbox-inline .ks-textbox-input::-webkit-input-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-inline .ks-textbox-input::-moz-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-inline .ks-textbox-input:-ms-input-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-inline .ks-textbox-input:-moz-placeholder {
+    color: #838388;
+}
+
+/* searchbox skin*/
+
+.ks-textbox-searchbox .ks-textbox-title {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+
+.ks-textbox-searchbox .ks-textbox-field {
+    background-color: #fff;
+    border: 1px solid #b1b3b3;
+    border-radius: 7px;
+    height: 40px;
+}
+
+.ks-textbox-searchbox .ks-textbox-input {
+    font-size: 16px;
+    padding: 0 10px;
+}
+
+.ks-textbox-searchbox .ks-textbox-input::-webkit-input-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-searchbox .ks-textbox-input::-moz-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-searchbox .ks-textbox-input:-ms-input-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-searchbox .ks-textbox-input:-moz-placeholder {
+    color: #838388;
+}
+
+
+.ks-textbox-searchbox .ks-textbox-icon {
+    display: flex;
+    margin-left: 10px;
+
+}
+
+.ks-textbox-searchbox .ks-textbox-icon::before {
+    font-family: 'analogic' !important;
+    content: "\e936";
+    color: #000;
+    cursor: pointer;
+    font-size: 20px;
+
+}
+
+/* searchbox_material_bpsp  skin*/
+
+.ks-textbox-searchbox_material_bpsp .ks-textbox-title {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+
+.ks-textbox-searchbox_material_bpsp .ks-textbox-field {
+    background-color: #fff;
+    border: 1px solid #b1b3b3;
+    border-radius: 7px;
+    height: 40px;
+}
+
+.ks-textbox-searchbox_material_bpsp .ks-textbox-input {
+    font-size: 16px;
+}
+
+.ks-textbox-searchbox_material_bpsp .ks-textbox-input::-webkit-input-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-searchbox_material_bpsp .ks-textbox-input::-moz-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-searchbox_material_bpsp .ks-textbox-input:-ms-input-placeholder {
+    color: #838388;
+}
+
+.ks-textbox-searchbox_material_bpsp .ks-textbox-input:-moz-placeholder {
+    color: #838388;
+}
+
+
+.ks-textbox-searchbox_material_bpsp .ks-textbox-icon {
+    display: flex;
+    margin-left: 10px;
+
+}
+
+.ks-textbox-searchbox_material_bpsp .ks-textbox-icon::before {
+    font-family: 'analogic' !important;
+    color: #000;
+    cursor: pointer;
+    font-size: 20px;
+
+}
+
+/* copy_bpsp */
+.ks-textbox-copy_bpsp .ks-textbox-title {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+
+.ks-textbox-copy_bpsp .ks-textbox-field {
+    background-color: #fff;
+    border: 1px solid #b1b3b3;
+    border-radius: 7px;
+    height: 40px;
+}
+
+.ks-textbox-copy_bpsp input {
+    text-align: center;
+    font-size: 16px;
+}
+
+/* input_hrdemo */
+.ks-textbox-input_hrdemo .ks-textbox-title {
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.ks-textbox-input_hrdemo .ks-textbox-field {
+    background-color: #fff;
+    border: 1px solid #A9A9A9;
+    border-radius: 8px;
+    height: 40px;
+}
+
+.ks-textbox-input_hrdemo .ks-textbox-field-inner.readonly {
+    background-color: #f2f2f2;
+    border: 1px #ACADAE;
+    border-radius: 8px;
+    height: 40px;
+}
+.ks-textbox-input_hrdemo .ks-textbox-input {
+    font-size: 14px;
+    padding: 0 10px;
+}
+
+.ks-textbox-input_hrdemo .ks-textbox-input::-webkit-input-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-input_hrdemo .ks-textbox-input::-moz-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-input_hrdemo .ks-textbox-input:-ms-input-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-input_hrdemo .ks-textbox-input:-moz-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-input_hrdemo .ks-textbox-icon {
+    display: flex;
+    margin-left: 10px;
+
+}
+
+/**/
+/* custom group */
+.ks-textbox-custom_group .ks-textbox-title {
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+    margin-left: 5px;
+}
+
+.ks-textbox-custom_group .ks-textbox-field {
+    background-color: #fff;
+    border: 1px solid #C3CED5;
+    border-radius: 8px;
+    height: 38px;
+}
+
+.ks-textbox-custom_group .ks-textbox-inner {
+    width: 350px;
+}
+
+
+.ks-textbox-custom_group .ks-textbox-field-inner.readonly {
+    background-color: #f2f2f2;
+    border: 1px #ACADAE;
+    border-radius: 8px;
+    height: 38px;
+}
+.ks-textbox-custom_group .ks-textbox-input {
+    font-size: 14px;
+    padding: 0 10px;
+}
+
+.ks-textbox-custom_group .ks-textbox-input::-webkit-input-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-custom_group .ks-textbox-input::-moz-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-custom_group .ks-textbox-input:-ms-input-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-custom_group .ks-textbox-input:-moz-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-custom_group.ks-textbox-icon {
+    display: flex;
+    margin-left: 10px;
+
+}
+
+.ks-textbox-groups_textbox .ks-textbox-title {
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+    margin-left: 5px;
+}
+
+.ks-textbox-groups_textbox .ks-textbox-field {
+    background-color: #fff;
+    border: 1px solid #C3CED5;
+    border-radius: 8px;
+    height: 38px;
+}
+
+.ks-textbox-groups_textbox .ks-textbox-inner {
+    width: 315px;
+}
+
+
+.ks-textbox-groups_textbox .ks-textbox-field-inner.readonly {
+    background-color: #f2f2f2;
+    border: 1px #ACADAE;
+    border-radius: 8px;
+    height: 38px;
+}
+.ks-textbox-groups_textbox .ks-textbox-input {
+    font-size: 14px;
+    padding: 0 10px;
+}
+
+.ks-textbox-groups_textbox .ks-textbox-input::-webkit-input-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-groups_textbox .ks-textbox-input::-moz-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-groups_textbox .ks-textbox-input:-ms-input-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-groups_textbox .ks-textbox-input:-moz-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-groups_textbox.ks-textbox-icon {
+    display: flex;
+    margin-left: 10px;
+
+}
+.ks-textbox-custom_group2 .ks-textbox-title {
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+    margin-left: 5px;
+}
+
+.ks-textbox-custom_group2 .ks-textbox-field {
+    background-color: #fff;
+    border: 1px solid #A9A9A9;
+    border-radius: 8px;
+    height: 40px;
+}
+
+.ks-textbox-custom_group2 .ks-textbox-field-inner.readonly {
+    background-color: #f2f2f2;
+    border: 1px #ACADAE;
+    border-radius: 8px;
+    height: 40px;
+}
+.ks-textbox-custom_group2 .ks-textbox-input {
+    font-size: 14px;
+    padding: 0 10px;
+}
+.ks-textbox-custom_group2 .ks-textbox-title {
+    font-size: 14px;
+}
+
+.ks-textbox-custom_group2 .ks-textbox-input::-webkit-input-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-custom_group2 .ks-textbox-input::-moz-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-custom_group2 .ks-textbox-input:-ms-input-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-custom_group2 .ks-textbox-input:-moz-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-custom_group2.ks-textbox-icon {
+    display: flex;
+    margin-left: 10px;
+
+}

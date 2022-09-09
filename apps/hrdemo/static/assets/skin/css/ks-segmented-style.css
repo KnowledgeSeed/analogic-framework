@@ -1,0 +1,93 @@
+.ks-segmented-deepblue_segmented.ks-segmented {
+    border-radius: 7px;
+    height: 40px;
+}
+
+.ks-segmented-deepblue_segmented .ks-segment {
+    background-color: #d8d9d9;
+    color: #585959;
+    font-size: 14px;
+    font-weight: 600;
+    border-right: 1px solid #fff;
+}
+
+.ks-segmented-deepblue_segmented .ks-segment.ks-on {
+    background-color: #007AFF;
+    color: #fff;
+}
+
+
+/* Mody segmented változtatás */
+.ks-segmented-segmented.ks-segmented {
+    border-radius: 10px;
+    height: 40px;
+}
+
+.ks-segmented-segmented .ks-segment {
+    background-color: #d8d9d9;
+    color: #585959;
+    font-size: 14px;
+    font-weight: 600;
+    border-right: 1px solid #fff;
+}
+
+.ks-segmented-segmented .ks-segment.ks-on {
+    background-color: #007AFF;
+    color: #fff;
+}
+
+
+/* ote */
+.ks-segmented-without_bg_bpsp.ks-segmented {
+    border-radius: 7px;
+    height: 40px;
+}
+
+.ks-segmented-without_bg_bpsp .ks-segment {
+    color: #b1b3b3;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.ks-segmented-without_bg_bpsp .ks-segment-label:hover {
+    padding: 10px;
+    background-color: #bfd9f2;
+    border-radius: 7px;
+}
+
+.ks-segmented-without_bg_bpsp .ks-segment.ks-on .ks-segment-label:hover {
+    background-color: unset;
+}
+
+.ks-segmented-without_bg_bpsp .ks-segment.ks-on {
+    color: #007AFF;
+}
+
+.ks-segmented-item_without_bg_bpsp {
+    border-right: 2px solid #b1b3b3;
+}
+
+/* end ote */
+
+
+/* Mody segmented_left_hrdemo  */
+.ks-segmented-segmented_left_hrdemo {
+    border-radius: 20px 8px 8px 20px;
+    margin-right: 1%;
+    font-size: 13px;
+}
+
+.ks-segmented-segmented_middle_hrdemo {
+    border-radius: 8px 8px 8px 8px;
+    margin-right: 1%;
+    font-size: 13px;
+}
+
+.ks-segmented-segmented_right_hrdemo {
+    border-radius: 8px 20px 20px 8px;
+    margin-right: 1%;
+    font-size: 13px;
+}
+
+
+

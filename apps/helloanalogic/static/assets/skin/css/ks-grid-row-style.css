@@ -1,0 +1,10 @@
+
+.ks-grid-row-bottomborder.ks-grid-row {
+    border-bottom: 2px solid #F2F2F2;
+    padding-bottom: 1%;
+}
+ /*grid row with bottom border and bottom padding*/
+.ks-grid-row-bottomborder_pad.ks-grid-row {
+    border-bottom: 2px solid #F2F2F2;
+    padding-bottom: 5%;
+}

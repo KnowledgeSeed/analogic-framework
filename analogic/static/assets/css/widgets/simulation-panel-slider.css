@@ -1,0 +1,66 @@
+.widget-variable-row-value-slider, .sps {
+    border: 0 !important;
+    background: transparent !important;
+}
+
+.widget-variable-row-value-slider {
+    height: auto !important;
+    background-color: transparent !important;
+    margin-top: 18px !important;
+}
+
+.sps .noUi-handle::after, .sps .noUi-handle::before {
+    display: none !important;
+}
+
+.sps .noUi-handle {
+    background: 0 !important;
+    border: 0 !important;
+    box-shadow: inherit !important;
+}
+
+.sps.noUi-horizontal {
+    height: 4px !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+    background-color: #003366 !important;
+}
+
+.sps .noUi-tooltip {
+    border: 0 none !important;
+    color: #fff !important;
+    background-color: #003366 !important;
+    border-radius: 5px !important;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15), 0px 6px 12px rgba(0, 0, 0, 0.15) !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    height: 25px !important;
+    left: 50% !important;
+    line-height: 26px !important;
+    min-width: 60px !important;
+    padding: 0 6px !important;
+    position: absolute !important;
+    top: -25px !important;
+    text-align: center !important;
+    white-space: nowrap;
+    -webkit-transform: translateX(-50%) !important;
+    -moz-transform: translateX(-50%) !important;
+    -o-transform: translateX(-50%) !important;
+    -ms-transform: translateX(-50%) !important;
+    transform: translateX(-50%) !important;
+}
+
+.sps .noUi-tooltip:after {
+    border-top: 7px solid #003366 !important;
+    border-left: 13.5px solid transparent !important;
+    border-right: 13.5px solid transparent !important;
+    bottom: -5px !important;
+    content: "" !important;
+    left: 50% !important;
+    position: absolute !important;
+    -webkit-transform: translateX(-50%) !important;
+    -moz-transform: translateX(-50%) !important;
+    -o-transform: translateX(-50%) !important;
+    -ms-transform: translateX(-50%) !important;
+    transform: translateX(-50%) !important;
+}

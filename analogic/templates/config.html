@@ -1,0 +1,20 @@
+let app = {};
+app = {id: 0, isMobile: null, isTouched: false, url: {}};
+app.assetsUrl = '{{ url_for('static', filename='assets') }}';
+app.applicationAssetsUrl = '{{ url_for(cnf.blueprint_static, filename='assets') }}';
+app.tm1CellsetId = (cellsetId) => `Cellsets('${cellsetId}')?`;
+app.handled401 = false;
+app.pingTime = new Date().getTime();
+{% for key, value in cnf.items() %}
+    {% if value is string %}
+        app['{{ key }}'] = '{{ value|safe }}';
+    {% endif %}
+
+    {% if value is integer %}
+        app['{{ key }}'] = {{ value }};
+    {% endif %}
+
+    {% if value is boolean %}
+        app['{{ key }}'] = {% if (value == True) %}true{% else %}false{% endif %};
+    {% endif %}
+{% endfor %}

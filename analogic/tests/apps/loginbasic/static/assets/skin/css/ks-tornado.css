@@ -1,0 +1,126 @@
+.ks-tornado {
+    display: block;
+    height: 100%;
+}
+
+.ks-tornado-inner {
+    height: 100%;
+    position: relative;
+}
+
+.ks-tornado-bar-holder,
+.ks-tornado-x-holder {
+    left: 0;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.ks-tornado-content-holder {
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+    position: relative;
+    width: 100%;
+}
+
+.ks-tornado-x-line {
+    height: 100%;
+    position: relative;
+}
+
+.ks-tornado-x-line-label,
+.ks-tornado-x-baseline-label {
+    left: 50%;
+    position: absolute;
+    text-align: center;
+    top: 100%;
+    white-space: nowrap;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.ks-tornado-x-baseline {
+    position: absolute;
+}
+
+.ks-tornado-x-baseline-label b {
+    display: block;
+}
+
+.ks-input-control {
+    cursor: pointer;
+    position: absolute;
+    white-space: nowrap;
+}
+
+.ks-input-control.ks-input-low {
+    right: 0;
+    text-align: right;
+}
+
+.ks-input-control.ks-input-hight {
+    left: 0;
+    text-align: left;
+}
+
+.ks-input-control-icon {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ks-tornado-bar-content-holder {
+    height: 100%;
+    position: relative;
+    width: 100%;
+}
+
+.ks-tornado-bar-baseline {
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: absolute;
+    top: 0;
+}
+
+.ks-tornado-bar-row {
+    position: relative;
+    width: 100%;
+}
+
+.ks-tornado-bar {
+    height: 100%;
+    position: absolute;
+}
+
+.ks-tornado-bar.ks-left {
+    right: 100%;
+}
+
+.ks-tornado-bar.ks-right {
+    left: 100%;
+}
+
+.ks-tornado-bar-label {
+    position: absolute;
+    top: 50%;
+    white-space: nowrap;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.ks-tornado-bar.ks-left .ks-tornado-bar-label {
+    right: 100%;
+}
+
+.ks-tornado-bar.ks-right .ks-tornado-bar-label {
+    left: 100%;
+}

@@ -1,0 +1,502 @@
+/*businesspartner dropbox */
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-field {
+    border: 1px solid #A9A9A9;
+    border-radius: 8px;
+    height: 40px;
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-title {
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+    text-align: left;
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-input {
+    font-size: 16px;
+    padding: 0 10px;
+    float: right;
+    width: 85%;
+    margin-left: 20px;
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-input::-webkit-input-placeholder {
+    color: #FFFFFF;
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-input::-moz-placeholder {
+    color: #FFFFFF;
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-input:-ms-input-placeholder {
+    color: #FFFFFF;
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-input:-moz-placeholder {
+    color: #FFFFFF;
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-icon {
+    display: flex;
+    float: left;
+    margin-right: 140px;
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-icon:before {
+    width: 20px;
+    display: flex;
+    content: "\e93c";
+    font-family: swissre;
+    margin-top: 10px;
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-panel {
+    border-radius: 5px;
+    margin-top: 2px;
+    padding: 2px;
+    left: 8px;
+    right: 8px;
+    background-color: #fff;
+    display: block !important;
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-panel-item {
+    border-radius: 4px;
+    height: 40px;
+    padding: 0 10px;
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-panel-item:hover {
+    background-color: rgba(220, 235, 250, 0.5);
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-panel-item.on:hover {
+    background-color: rgba(220, 235, 250, 0.5);
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-panel-item-separator {
+    width: 10px;
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-panel-item-text {
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-panel-item-icon,
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-panel-item-separator {
+    display: block;
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-panel {
+    position: unset;
+}
+
+.ks-dropbox-filter_selector_businesspartner .ks-dropbox-panel-inner {
+    width: 190px;
+    float: left;
+}
+
+/* dropbox */
+.ks-dropbox-filter_selector .ks-dropbox-field {
+    border: 1px solid #A9A9A9;
+    border-radius: 8px;
+    height: 40px;
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-title {
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+    text-align: left;
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-input {
+    font-size: 16px;
+    padding: 0 10px;
+    float: right;
+    width: 85%;
+    margin-left: 20px;
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-input::-webkit-input-placeholder {
+    color: #FFFFFF;
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-input::-moz-placeholder {
+    color: #FFFFFF;
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-input:-ms-input-placeholder {
+    color: #FFFFFF;
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-input:-moz-placeholder {
+    color: #FFFFFF;
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-icon {
+    display: flex;
+    float: left;
+    margin-right: 185px;
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-icon:before {
+    width: 20px;
+    display: flex;
+    content: "\e93c";
+    font-family: swissre;
+    margin-top: 10px;
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-panel {
+    border-radius: 5px;
+    margin-top: 2px;
+    padding: 2px;
+    left: 8px;
+    right: 8px;
+    background-color: #fff;
+    display: block !important;
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-panel-item {
+    border-radius: 4px;
+    height: 40px;
+    padding: 0 10px;
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-panel-item:hover {
+    background-color: rgba(220, 235, 250, 0.5);
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-panel-item.on:hover {
+    background-color: rgba(220, 235, 250, 0.5);
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-panel-item-separator {
+    width: 10px;
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-panel-item-text {
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-panel-item-icon,
+.ks-dropbox-filter_selector .ks-dropbox-panel-item-separator {
+    display: block;
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-panel {
+    position: unset;
+}
+
+.ks-dropbox-filter_selector .ks-dropbox-panel-inner {
+    width: 215px;
+    float: left;
+}
+/*type dropbox */
+.ks-dropbox-filter_selector_type .ks-dropbox-field {
+    border: 1px solid #A9A9A9;
+    border-radius: 8px;
+    height: 40px;
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-title {
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+    text-align: left;
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-input {
+    font-size: 16px;
+    padding: 0 10px;
+    float: right;
+    width: 85%;
+    margin-left: 20px;
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-input::-webkit-input-placeholder {
+    color: #FFFFFF;
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-input::-moz-placeholder {
+    color: #FFFFFF;
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-input:-ms-input-placeholder {
+    color: #FFFFFF;
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-input:-moz-placeholder {
+    color: #FFFFFF;
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-icon {
+    display: flex;
+    float: left;
+    margin-right: 140px;
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-icon:before {
+    width: 20px;
+    display: flex;
+    content: "\e93c";
+    font-family: swissre;
+    margin-top: 10px;
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-panel {
+    border-radius: 5px;
+    margin-top: 2px;
+    padding: 2px;
+    left: 8px;
+    right: 8px;
+    background-color: #fff;
+    display: block !important;
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-panel-item {
+    border-radius: 4px;
+    height: 40px;
+    padding: 0 10px;
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-panel-item:hover {
+    background-color: rgba(220, 235, 250, 0.5);
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-panel-item.on:hover {
+    background-color: rgba(220, 235, 250, 0.5);
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-panel-item-separator {
+    width: 10px;
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-panel-item-text {
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-panel-item-icon,
+.ks-dropbox-filter_selector_type .ks-dropbox-panel-item-separator {
+    display: block;
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-panel {
+    position: unset;
+}
+
+.ks-dropbox-filter_selector_type .ks-dropbox-panel-inner {
+    width: 190px;
+    float: left;
+}
+
+/*center filter dropbox */
+.ks-dropbox-filter_center .ks-dropbox-field {
+    border: 1px solid #A9A9A9;
+    border-radius: 8px;
+    height: 40px;
+}
+
+.ks-dropbox-filter_center .ks-dropbox-title {
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+    text-align: left;
+}
+
+.ks-dropbox-filter_center .ks-dropbox-input {
+    font-size: 16px;
+    padding: 0 10px;
+    float: right;
+    width: 85%;
+    margin-left: 30px;
+}
+
+.ks-dropbox-filter_center .ks-dropbox-input::-webkit-input-placeholder {
+    color: #FFFFFF;
+}
+
+.ks-dropbox-filter_center .ks-dropbox-input::-moz-placeholder {
+    color: #FFFFFF;
+}
+
+.ks-dropbox-filter_center .ks-dropbox-input:-ms-input-placeholder {
+    color: #FFFFFF;
+}
+
+.ks-dropbox-filter_center .ks-dropbox-input:-moz-placeholder {
+    color: #FFFFFF;
+}
+
+.ks-dropbox-filter_center .ks-dropbox-icon {
+    display: flex;
+    float: left;
+    margin-right: 320px;
+}
+
+.ks-dropbox-filter_center .ks-dropbox-icon:before {
+    width: 20px;
+    display: flex;
+    content: "\e93c";
+    font-family: swissre;
+    margin-top: 10px;
+}
+
+.ks-dropbox-filter_center .ks-dropbox-panel {
+    border-radius: 5px;
+    margin-top: 2px;
+    padding: 2px;
+    left: 8px;
+    right: 8px;
+    background-color: #fff;
+    display: block !important;
+}
+
+.ks-dropbox-filter_center .ks-dropbox-panel-item {
+    border-radius: 4px;
+    height: 40px;
+    padding: 0 10px;
+}
+
+.ks-dropbox-filter_center .ks-dropbox-panel-item:hover {
+    background-color: rgba(220, 235, 250, 0.5);
+}
+
+.ks-dropbox-filter_center .ks-dropbox-panel-item.on:hover {
+    background-color: rgba(220, 235, 250, 0.5);
+}
+
+.ks-dropbox-filter_center .ks-dropbox-panel-item-separator {
+    width: 10px;
+}
+
+.ks-dropbox-filter_center .ks-dropbox-panel-item-text {
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.ks-dropbox-filter_center .ks-dropbox-panel-item-icon,
+.ks-dropbox-filter_center .ks-dropbox-panel-item-separator {
+    display: block;
+}
+
+.ks-dropbox-filter_center .ks-dropbox-panel {
+    position: unset;
+}
+
+.ks-dropbox-filter_center .ks-dropbox-panel-inner {
+    width: 190px;
+    float: left;
+}
+
+/* Version page edit popup*/
+
+.ks-dropbox-edit .ks-dropbox-field {
+    border: 1px solid #8d8d8d;
+    border-radius: 8px;
+    height: 40px;
+}
+
+.ks-dropbox-edit .ks-dropbox-title {
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 16px;
+    margin-bottom: 10px;
+    display: block;
+    margin-top: 20px
+}
+
+.ks-dropbox-edit .ks-dropbox-input {
+    font-size: 14px;
+    padding: 0 10px;
+    font-weight: 200;
+}
+
+.ks-dropbox-edit .ks-dropbox-input::-webkit-input-placeholder {
+    color: #000000;
+}
+
+.ks-dropbox-edit .ks-dropbox-input::-moz-placeholder {
+    color: #000000;
+}
+
+.ks-dropbox-edit .ks-dropbox-input:-ms-input-placeholder {
+    color: #000000;
+}
+
+.ks-dropbox-edit .ks-dropbox-input:-moz-placeholder {
+    color: #000000;
+}
+
+.ks-dropbox-edit .ks-dropbox-icon {
+    border-radius: 4px;
+    height: 40px;
+    margin: 0 5px;
+    width: 40px;
+    display: block;
+}
+
+.ks-dropbox-edit .ks-dropbox-icon:after {
+    border-top: 7px solid #000000;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+}
+
+.ks-dropbox-edit .ks-dropbox-panel {
+    border: 1px solid #8d8d8d;
+    border-radius: 8px;
+    margin-top: 2px;
+    padding: 2px;
+    left: 8px;
+    right: 8px;
+    background-color: #fff;
+}
+
+.ks-dropbox-edit .ks-dropbox-panel-item {
+    border-radius: 4px;
+    height: 40px;
+    padding: 0 10px;
+}
+
+.ks-dropbox-edit .ks-dropbox-panel-item.on {
+    background-color: #009FDA;
+}
+
+.ks-dropbox-edit .ks-dropbox-panel-item:hover {
+    background-color: #bfd9f2;
+}
+
+.ks-dropbox-edit .ks-dropbox-panel-item.on:hover {
+    background-color: #E3F1FF;
+}
+
+.ks-dropbox-edit .ks-dropbox-panel-item-separator {
+    width: 10px;
+}
+
+.ks-dropbox-edit .ks-dropbox-panel-item-text {
+    color: #000;
+    font-size: 14px;
+
+}
+
+.ks-dropbox-edit .ks-dropbox-panel-item-icon,
+.ks-dropbox-edit .ks-dropbox-panel-item-separator {
+    display: block;
+}

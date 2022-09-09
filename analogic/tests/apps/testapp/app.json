@@ -1,0 +1,23 @@
+{
+  "projectName": "Test App",
+  "projectId": "testapp",
+  "authenticationMode": "LoginBasicPool",
+  "camNamespace": "knowledgeseed",
+  "apiHost": "http://localhost:5000/testapp/proxy",
+  "mainPage": "testAppMain",
+  "proxy": {
+    "target": "https://kseed-dc1.knowledgeseed.local:5125/testappapi"
+  },
+  "pool" : {
+    "users": [
+      "admin"
+    ]
+  },
+  "usePoolUserAsActiveUser": true,
+  "smtp": {
+    "server": "knowledgeseed",
+    "port": "5125",
+    "password": "testPass",
+    "sender_email": "test_email@test.com"
+  }
+}

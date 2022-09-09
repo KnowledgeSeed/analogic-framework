@@ -1,0 +1,897 @@
+/* analogicDemomain-blue menu icon */
+.ks-button-analogicDemomain_blue.ks-button {
+    height: 145px;
+    background-color: #009FDA;
+    border-radius: 30px;
+}
+
+.ks-button-analogicDemomain_blue .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-analogicDemomain_blue .ks-button-content {
+    height: 110%
+}
+
+.ks-button-analogicDemomain_blue:active {
+    background-color: #009FDA;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* analogicDemomain-blue menu icon */
+.ks-button-analogicDemomain_light_blue.ks-button {
+    height: 145px;
+    background-color: #5EABF9;
+    border-radius: 30px;
+}
+
+.ks-button-analogicDemomain_light_blue .ks-button-icon {
+    color: white;
+    font-size: 85px;
+}
+
+.ks-button-analogicDemomain_light_blue .ks-button-content {
+    height: 110%
+}
+
+.ks-button-analogicDemomain_light_blue:active {
+    background-color: #5EABF9;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* analogicDemomain-blue menu icon */
+.ks-button-analogicDemomain_dark_gray.ks-button {
+    height: 145px;
+    background-color: #747678;
+    border-radius: 30px;
+}
+
+.ks-button-analogicDemomain_dark_gray .ks-button-icon {
+    color: white;
+    font-size: 80px;
+}
+
+.ks-button-analogicDemomain_dark_gray .ks-button-content {
+    height: 110%
+}
+
+.ks-button-analogicDemomain_dark_gray:active {
+    background-color: #747678;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* analogicDemomain-blue menu icon */
+.ks-button-analogicDemomain_normal_red.ks-button {
+    height: 145px;
+    background-color: #DC3545;
+    border-radius: 30px;
+}
+
+.ks-button-analogicDemomain_normal_red .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-analogicDemomain_normal_red .ks-button-content {
+    height: 110%
+}
+
+.ks-button-analogicDemomain_normal_red:active {
+    background-color: #DC3545;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* analogicDemomain-blue menu icon */
+.ks-button-analogicDemomain_light_purple.ks-button {
+    height: 145px;
+    background-color: #B387C3;
+    border-radius: 30px;
+}
+
+.ks-button-analogicDemomain_light_purple .ks-button-icon {
+    color: white;
+    font-size: 58px;
+}
+
+.ks-button-analogicDemomain_light_purple .ks-button-content {
+    height: 110%
+}
+
+.ks-button-analogicDemomain_light_purple:active {
+    background-color: #B387C3;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* analogicDemomain-deepblue menu icon */
+.ks-button-analogicDemomain_deepblue.ks-button {
+    height: 145px;
+    background-color: #0066cc;
+    border-radius: 30px;
+}
+
+.ks-button-analogicDemomain_deepblue .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-analogicDemomain_deepblue .ks-button-content {
+    height: 110%
+}
+
+.ks-button-analogicDemomain_deepblue:active {
+    background-color: #0066cc;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* analogicDemomain-analogicblue menu icon */
+.ks-button-analogicDemomain_analogicblue.ks-button {
+    height: 145px;
+    background-color: #007aff;
+    border-radius: 30px;
+}
+
+.ks-button-analogicDemomain_analogicblue .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-analogicDemomain_analogicblue .ks-button-content {
+    height: 110%
+}
+
+.ks-button-analogicDemomain_analogicblue:active {
+    background-color: #007aff;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* analogicDemomain-magenta menu icon */
+.ks-button-analogicDemomain_magenta.ks-button {
+    height: 145px;
+    background-color: #E20074;
+    border-radius: 30px;
+}
+
+.ks-button-analogicDemomain_magenta .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-analogicDemomain_magenta .ks-button-content {
+    height: 110%
+}
+
+.ks-button-analogicDemomain_magenta:active {
+    background-color: #E20074;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* analogicDemomain-yellow menu icon */
+.ks-button-analogicDemomain_yellow.ks-button {
+    height: 145px;
+    background-color: #F3C811;
+    border-radius: 30px;
+}
+
+.ks-button-analogicDemomain_yellow .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-analogicDemomain_yellow .ks-button-content {
+    height: 110%
+}
+
+.ks-button-analogicDemomain_yellow:active {
+    background-color: #F3C811;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* analogicDemomain-grey menu icon */
+.ks-button-analogicDemomain_grey.ks-button {
+    height: 145px;
+    widgt: 145px;
+    background-color: #A9A9A9;
+    border-radius: 30px;
+}
+
+.ks-button-analogicDemomain_grey .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-analogicDemomain_grey .ks-button-content {
+    height: 110%
+}
+
+.ks-button-analogicDemomain_grey:hover {
+    background-color: #A9A9A9
+}
+
+.ks-button-analogicDemomain_grey:active {
+    background-color: #A9A9A9;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* analogicDemomain-red menu icon */
+.ks-button-analogicDemomain_red.ks-button {
+    height: 145px;
+    background-color: #E98300;
+    border-radius: 30px;
+}
+
+.ks-button-analogicDemomain_red .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-analogicDemomain_red .ks-button-content {
+    height: 110%
+}
+
+.ks-button-analogicDemomain_red:hover {
+    background-color: #E98300;
+}
+
+.ks-button-analogicDemomain_red:active {
+    background-color: #E98300;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* analogicDemomain-green menu icon */
+.ks-button-analogicDemomain_green.ks-button {
+    height: 145px;
+    background-color: #8FAB33;
+    border-radius: 30px;
+}
+
+.ks-button-analogicDemomain_green .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-analogicDemomain_green .ks-button-content {
+    height: 110%
+}
+
+.ks-button-analogicDemomain_green:hover {
+    background-color: #8FAB33;
+}
+
+.ks-button-analogicDemomain_green:active {
+    background-color: #8FAB33;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* analogicDemomain-purple menu icon */
+.ks-button-analogicDemomain_purple.ks-button {
+    height: 145px;
+    background-color: #995FAF;
+    border-radius: 30px;
+}
+
+.ks-button-analogicDemomain_purple .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-analogicDemomain_purple .ks-button-content {
+    height: 110%;
+}
+
+.ks-button-analogicDemomain_purple:hover {
+    background-color: #995FAF;
+}
+
+.ks-button-analogicDemomain_purple:active {
+    background-color: #995FAF;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* analogicDemomain-pink menu icon */
+.ks-button-analogicDemomain_pink.ks-button {
+    height: 145px;
+    background-color: #E94C9D;
+    border-radius: 30px;
+}
+
+.ks-button-analogicDemomain_pink .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-analogicDemomain_pink .ks-button-content {
+    height: 110%;
+}
+
+.ks-button-analogicDemomain_pink:hover {
+    background-color: #E94C9D;
+}
+
+.ks-button-analogicDemomain_pink:active {
+    background-color: #E94C9D;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+
+/* rochemain_disabled menu icon */
+.ks-button-analogicDemomain_disabled.ks-button {
+    height: 145px;
+    background-color: #ebecec;
+    border-radius: 30px;
+}
+
+.ks-button-analogicDemomain_disabled.ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-analogicDemomain_disabled.ks-button-content {
+    height: 110%
+}
+
+.ks-button-analogicDemomain_disabled:hover {
+    background-color: #ebecec;
+}
+
+.ks-button-analogicDemomain_disabled:active {
+    background-color: #ebecec;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* analogicDemomain-grey menu icon */
+.ks-button-settings_grey_menu.ks-button {
+    height: 145px;
+    widgt: 145px;
+    background-color: #A9A9A9;
+    border-radius: 30px;
+}
+
+.ks-button-settings_grey_menu .ks-button-icon {
+    color: white;
+    font-size: 50px;
+}
+
+.ks-button-settings_grey_menu .ks-button-content {
+    height: 110%
+}
+
+.ks-button-settings_grey_menu:hover {
+    background-color: #A9A9A9
+}
+
+.ks-button-settings_grey_menu:active {
+    background-color: #A9A9A9;
+    /* box-shadow: 0 5px #666;
+     transform: translateY(4px);*/
+}
+
+/* user name*/
+.ks-button-userpanelmain_analogicDemo.ks-button {
+    height: 30px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #F2F2F2;
+}
+
+.ks-button-userpanelmain_analogicDemo .ks-button-inner {
+    background-color: #F2F2F2;
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-userpanelmain_analogicDemo .ks-button-icon,
+.ks-button-userpanelmain_analogicDemo .ks-button-icon img {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #585959;
+}
+
+.ks-button-userpanelmain_analogicDemo .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-userpanelmain_analogicDemo .ks-button-label {
+    color: #585959;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* material_analogicDemo  button */
+
+.ks-button-material_analogicDemo.ks-button {
+    background-color: #FFFFFF;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.ks-button-material_analogicDemo .ks-button-label {
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 2px;
+    margin-left: 6px;
+}
+
+.ks-button-material_analogicDemo .ks-button-icon {
+    color: #009FDA;
+    background-color: #FFFFFF;
+    font-size: 20px;
+    margin-right: 2px;
+    margin-left: 4px;
+    cursor: pointer;
+}
+
+/* material_analogicDemo  button */
+
+.ks-button-material .ks-button-inner {
+    background-color: #009FDA;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.ks-button-material .ks-button-label {
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 2px;
+    margin-left: 6px;
+}
+
+.ks-button-material .ks-button-icon {
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin-top: 3px;
+}
+
+/* material_green  button */
+
+.ks-button-material_green .ks-button-inner {
+    background-color: #739600;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.ks-button-material_green .ks-button-label {
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 2px;
+    margin-left: 6px;
+}
+
+.ks-button-material_green .ks-button-icon {
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin-top: 3px;
+}
+
+/* material_light button */
+
+.ks-button-material_light.ks-button {
+    background-color: #CCECF8;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.ks-button-material_light .ks-button-label {
+    color: #009FDA;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 2px;
+    margin-left: 6px;
+}
+
+.ks-button-material_light .ks-button-icon {
+    color: #009FDA;
+    font-size: 20px;
+    margin-right: 2px;
+    margin-left: 4px;
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+/* material_light button */
+
+.ks-button-material_green_light .ks-button-inner {
+    background-color: #E3EACC;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.ks-button-material_green_light .ks-button-label {
+    color: #739600;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 2px;
+    margin-left: 6px;
+}
+
+.ks-button-material_green_light .ks-button-icon {
+    color: #739600;
+    font-size: 20px;
+    cursor: pointer;
+    margin-top: 3px;
+}
+
+/* material_red button */
+
+.ks-button-material_red.ks-button {
+    background-color: rgba(220, 53, 69, 0.3);
+    height: 40px;
+    border-radius: 8px;
+    width: 130px;
+}
+
+.ks-button-material_red .ks-button-label {
+    color: rgba(220, 53, 69, 1);
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 2px;
+    margin-left: 6px;
+    appearance: none;
+}
+
+.ks-button-material_red .ks-button-icon {
+    color: rgba(220, 53, 69, 1);
+    font-size: 16px;
+    margin-right: 2px;
+    margin-left: 4px;
+}
+
+/* backbutton*/
+.ks-button-backbutton.ks-button {
+    color: #009FDA;
+    font-size: 20px;
+    font-weight: normal;
+}
+
+.ks-button-backbutton span {
+    font-size: 20px;
+}
+
+.ks-button-backbutton:hover {
+    background-color: #E3F1FF;
+    border-radius: 4px;
+}
+
+/* ... button in filters row*/
+.ks-button-point_button.ks-button {
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+    background-color: #F2F2F2;
+}
+
+.ks-button-point_button .ks-button-inner {
+    background-color: #F2F2F2;
+    border-radius: 20px;
+}
+
+.ks-button-point_button .ks-button-icon,
+.ks-button-point_button .ks-button-icon img {
+    color: #6C757D;
+    font-size: 5px;
+}
+
+/* + button in filters row*/
+.ks-button-plus_button.ks-button {
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+    padding: 0px;
+}
+
+.ks-button-plus_button .ks-button-inner {
+    background-color: #FFFFFF;
+    border-radius: 20px;
+}
+
+.ks-button-plus_button .ks-button-icon,
+.ks-button-plus_button .ks-button-icon img {
+    color: #009FDA;
+    font-size: 40px;
+}
+
+/* delete popup light blue button */
+
+.ks-button-delete_light.ks-button {
+    background-color: #E3F1FF;
+    height: 40px;
+    border-radius: 8px;
+    width: 105px;
+}
+
+.ks-button-delete_light .ks-button-label {
+    color: #007BFF;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 2px;
+    margin-left: 6px;
+}
+
+
+/* delete popup red button */
+
+.ks-button-delete_red.ks-button {
+    background-color: #DC3545;
+    height: 40px;
+    border-radius: 8px;
+    width: 105px;
+}
+
+.ks-button-delete_red .ks-button-label {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 2px;
+    margin-left: 6px;
+    appearance: none;
+}
+
+/*point popup clear all filters button buttons*/
+
+.ks-button-point_popup_clearbutton.ks-button {
+    height: 30px;
+    width: 90px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #FFFFFF;
+    position: relative;
+}
+
+.ks-button-point_popup_clearbutton .ks-button-inner {
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+    float: left;
+}
+
+.ks-button-point_popup_clearbutton .ks-button-icon,
+.ks-button-point_popup_clearbutton .ks-button-icon img {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #DC3545;
+}
+
+.ks-button-point_popup_clearbutton .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-point_popup_clearbutton .ks-button-label {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 600;
+    float: left;
+}
+
+/* */
+
+
+.ks-button-point_popup_clearbutton.ks-button:hover {
+    background-color: #E3F1FF;
+}
+
+.ks-button-point_popup_clearbutton.ks-button-inner:hover {
+    background-color: #E3F1FF;
+    border-radius: 8px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-point_popup_clearbutton.ks-button-icon:hover,
+.ks-button-point_popup_clearbutton.ks-button-icon img:hover {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #171515;
+}
+
+.ks-button-point_popup_clearbutton.ks-button-divider:hover {
+    width: 10px;
+}
+
+.ks-button-point_popup_clearbutton.ks-button-label:hover {
+    color: #171515;
+    font-size: 16px;
+    font-weight: 600;
+
+}
+
+/*point popup save all filters button buttons*/
+
+.ks-button-point_popup_savebutton.ks-button {
+    height: 30px;
+    width: 90px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #FFFFFF;
+    position: relative;
+}
+
+.ks-button-point_popup_savebutton .ks-button-inner {
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+    float: left;
+}
+
+.ks-button-point_popup_savebutton .ks-button-icon,
+.ks-button-point_popup_savebutton .ks-button-icon img {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #28A745;
+}
+
+.ks-button-point_popup_savebutton .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-point_popup_savebutton .ks-button-label {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 600;
+    float: left;
+}
+
+/* */
+
+
+.ks-button-point_popup_savebutton.ks-button:hover {
+    background-color: #E3F1FF;
+}
+
+.ks-button-point_popup_savebutton.ks-button-inner:hover {
+    background-color: #E3F1FF;
+    border-radius: 8px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-point_popup_savebutton.ks-button-icon:hover,
+.ks-button-point_popup_savebutton.ks-button-icon img:hover {
+    float: left;
+    font-size: 21px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #171515;
+}
+
+.ks-button-point_popup_savebutton.ks-button-divider:hover {
+    width: 10px;
+}
+
+.ks-button-point_popup_savebutton.ks-button-label:hover {
+    color: #171515;
+    font-size: 16px;
+    font-weight: 600;
+
+}
+
+/*point popup load all filters button buttons*/
+
+.ks-button-point_popup_loadbutton.ks-button {
+    height: 30px;
+    width: 90px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #FFFFFF;
+    position: relative;
+}
+
+.ks-button-point_popup_loadbutton .ks-button-inner {
+    border-radius: 6px;
+    padding: 0 25px 0 10px;
+    float: left;
+}
+
+.ks-button-point_popup_loadbutton .ks-button-icon,
+.ks-button-point_popup_loadbutton .ks-button-icon img {
+    float: left;
+    font-size: 18px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #007BFF;
+}
+
+.ks-button-point_popup_loadbutton .ks-button-divider {
+    width: 10px;
+}
+
+.ks-button-point_popup_loadbutton .ks-button-label {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 600;
+    float: left;
+}
+
+/* */
+
+
+.ks-button-point_popup_loadbutton.ks-button:hover {
+    background-color: #E3F1FF;
+}
+
+.ks-button-point_popup_loadbutton.ks-button-inner:hover {
+    background-color: #E3F1FF;
+    border-radius: 8px;
+    padding: 0 25px 0 10px;
+}
+
+.ks-button-point_popup_loadbutton.ks-button-icon:hover,
+.ks-button-point_popup_loadbutton.ks-button-icon img:hover {
+    float: left;
+    font-size: 18px;
+    margin-top: 4px;
+    margin-right: 8px;
+    color: #171515;
+}
+
+.ks-button-point_popup_loadbutton.ks-button-divider:hover {
+    width: 10px;
+}
+
+.ks-button-point_popup_loadbutton.ks-button-label:hover {
+    color: #171515;
+    font-size: 16px;
+    font-weight: 600;
+
+}
+
+/*User dropbox init*/
+.ks-button-dropbox_init .ks-button-inner {
+    border: 1px solid #ACADAE;
+    border-radius: 8px;
+    width: 260px;
+    height: 40px;
+    padding-top: 8px;
+    padding-left: 8px;
+    margin-top: 4px;
+    cursor: pointer;
+}
+
+.ks-button-dropbox_init .ks-button-label {
+    font-size: 16px;
+    color: #747678;
+    opacity: 1;
+    margin-bottom: 20px;
+    text-align: left;
+    white-space: nowrap;
+    margin-right: 15px;
+    margin-top: 10px;
+}
+
+.ks-button-dropbox_init {
+    padding-bottom: 3px;
+}
+.ks-button-dropbox_init .ks-button-icon {
+    margin-left: 150px;
+    margin-bottom: 7px;
+    font-size: 10px;
+}
+

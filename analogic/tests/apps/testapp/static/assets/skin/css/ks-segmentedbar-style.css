@@ -1,0 +1,73 @@
+.ks-segmentedbar {
+    height: 20px;
+}
+
+.ks-segmentedbar-block {
+    height: 100%;
+}
+
+.ks-segmentedbar-block.color-1 {
+    background-color: #dee1e5;
+}
+.ks-segmentedbar-block.color-2 {
+    background-color: #0076ff;
+}
+
+.ks-segmentedbar-block-label {
+    background-color: inherit;
+    border-radius: 2px;
+    font-size: 10px;
+    height: 12px;
+    line-height: 12px;
+    padding: 0 3px;
+}
+
+.ks-segmentedbar-block.color-1 .ks-segmentedbar-block-label {
+    color: #4c4c50;
+}
+.ks-segmentedbar-block.color-2 .ks-segmentedbar-block-label {
+    color: #fff;
+}
+
+.ks-segmentedbar-separator {
+    height: 100%;
+    width: 1px;
+}
+
+.ks-segmentedbar-separator-label {
+    color: #000;
+    font-size: 10px;
+    font-weight: bold;
+    top: -20px;
+}
+
+.ks-segmentedbar-separator-icon {
+    height: 5px;
+    top: -9px;
+    width: 10px;
+}
+
+.ks-segmentedbar-separator-icon:before {
+    border-top: 5px solid #000;
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
+    content: "";
+    left: 0;
+    position: absolute;
+    top: 0;
+}
+
+.ks-segmentedbar-separator-icon:after {
+    border-top: 3px solid #fff;
+    border-right: 3px solid transparent;
+    border-left: 3px solid transparent;
+    content: "";
+    left: 50%;
+    position: absolute;
+    top: 0;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}

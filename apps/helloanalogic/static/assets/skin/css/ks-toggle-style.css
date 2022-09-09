@@ -1,0 +1,223 @@
+/* switch_swiss toggle */
+
+.ks-toggle-switch_analogicDemo .ks-toggle-label-on {
+
+}
+
+.ks-toggle-switch_analogicDemo .ks-toggle-label-off {
+
+}
+
+.ks-toggle-switch_analogicDemo.ks-toggle .ks-toggle-icon-on {
+    color: #DC3545;
+    margin-right: 20px;
+}
+
+.ks-toggle-switch_analogicDemo.ks-toggle .ks-toggle-icon-off {
+    color: #009FDA;
+    margin-right: 20px;
+}
+
+.ks-toggle-switch_analogicDemo.ks-toggle {
+    border-radius: 3px;
+    height: 30px;
+}
+
+.ks-toggle-switch_analogicDemo .ks-toggle-icon span {
+    display: block;
+}
+
+.ks-toggle-switch_analogicDemo .ks-toggle-label {
+    display: none;
+}
+
+
+.ks-toggle-switch_analogicDemo.ks-on .ks-toggle-icon-off {
+    display: none;
+}
+
+.ks-toggle-switch_analogicDemo .ks-toggle-icon-on {
+    display: none;
+    justify-content: flex-start;
+}
+
+.ks-toggle-switch_analogicDemo .ks-toggle-icon-off {
+    display: block;
+    justify-content: flex-end;
+}
+
+.ks-toggle-switch_analogicDemo.ks-toggle.ks-on .ks-toggle-icon-on {
+    display: block;
+}
+
+.ks-toggle-switch_analogicDemo.ks-toggle.ks-on .ks-toggle-inner {
+    justify-content: flex-start;
+}
+
+/*filter popup toggle*/
+
+.ks-toggle-filter .ks-toggle-label-on {
+
+}
+
+.ks-toggle-filter .ks-toggle-label-off {
+
+}
+
+.ks-toggle-filter.ks-toggle .ks-toggle-icon-on {
+    color: #009FDA;
+    margin-right: 20px;
+}
+
+.ks-toggle-filter.ks-toggle .ks-toggle-icon-off {
+    color: #FFFFFF;
+    margin-right: 20px;
+}
+
+.ks-toggle-filter.ks-toggle {
+    border-radius: 3px;
+    height: 30px;
+}
+
+
+.ks-toggle-filter .ks-toggle-icon span {
+    display: block;
+}
+
+.ks-toggle-filter .ks-toggle-label {
+    display: none;
+}
+
+
+.ks-toggle-filter.ks-on .ks-toggle-icon-off {
+    display: none;
+}
+
+.ks-toggle-filter .ks-toggle-icon-on {
+    display: none;
+    justify-content: flex-start;
+}
+
+.ks-toggle-filter .ks-toggle-icon-off {
+    display: block;
+    justify-content: flex-end;
+}
+
+.ks-toggle-filter.ks-toggle.ks-on .ks-toggle-icon-on {
+    display: block;
+}
+
+.ks-toggle-filter.ks-toggle.ks-on .ks-toggle-inner {
+    justify-content: flex-start;
+}
+
+/* */
+
+.ks-toggle-hierarchyToggle.ks-toggle .ks-toggle-icon-on {
+    color: #009FDA;
+    cursor: pointer;
+    font-size: 16px;
+    order: 0;
+}
+
+.ks-toggle-hierarchyToggle.ks-toggle .ks-toggle-icon-off {
+    color: #009FDA;
+    cursor: pointer;
+    font-size: 16px;
+    order: 0;
+}
+
+.ks-toggle-hierarchyToggle.ks-toggle {
+    height: 60px;
+}
+
+.ks-toggle-hierarchyToggle.ks-toggle.ks-on {
+}
+
+.ks-toggle-hierarchyToggle .ks-toggle-icon span {
+    display: block;
+    margin-left: 15px;
+}
+
+.ks-toggle-hierarchyToggle .ks-toggle-label {
+    color: #000;
+    display: block;
+    font-size: 13px;
+    margin-left: 10px;
+}
+
+.ks-toggle-hierarchyToggle.ks-toggle.ks-on .ks-toggle-icon-off {
+    display: none;
+}
+
+.ks-toggle-hierarchyToggle.ks-toggle .ks-toggle-icon-on {
+    display: none;
+}
+
+.ks-toggle-hierarchyToggle.ks-toggle .ks-toggle-icon-off {
+    display: block;
+}
+
+.ks-toggle-hierarchyToggle.ks-toggle.ks-on .ks-toggle-icon-on {
+    display: block;
+}
+
+.ks-toggle-hierarchyToggle .ks-toggle-inner {
+    justify-content: flex-start;
+}
+
+/**/
+
+.ks-toggle-hierarchyToggle_last.ks-toggle .ks-toggle-icon-on {
+    color: #009FDA;
+    cursor: pointer;
+    font-size: 16px;
+    order: 0;
+}
+
+.ks-toggle-hierarchyToggle_last.ks-toggle .ks-toggle-icon-off {
+    color: #009FDA;
+    cursor: pointer;
+    font-size: 16px;
+    order: 0;
+}
+
+.ks-toggle-hierarchyToggle_last.ks-toggle {
+    height: 60px;
+}
+
+.ks-toggle-hierarchyToggle_last .ks-toggle-icon span {
+    display: block;
+    margin-left: 15px;
+}
+
+.ks-toggle-hierarchyToggle_last .ks-toggle-label {
+    color: #000;
+    display: block;
+    font-size: 13px;
+    margin-left: 10px;
+}
+
+.ks-toggle-hierarchyToggle_last.ks-toggle.ks-on .ks-toggle-icon-off {
+    display: none;
+}
+
+.ks-toggle-hierarchyToggle_last.ks-toggle .ks-toggle-icon-on {
+    display: none;
+}
+
+.ks-toggle-hierarchyToggle_last.ks-toggle .ks-toggle-icon-off {
+    display: block;
+}
+
+.ks-toggle-hierarchyToggle_last.ks-toggle.ks-on .ks-toggle-icon-on {
+    display: block;
+}
+
+.ks-toggle-hierarchyToggle_last .ks-toggle-inner {
+    justify-content: flex-start;
+}
+
+.ks-toggle-hierarchyToggle_last.ks-toggle.ks-on {
+    background-color: #CCECF8;
+}

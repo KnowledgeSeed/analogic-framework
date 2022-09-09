@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{ cnf.projectName }}</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for(cnf.blueprint_static, filename='assets/skin/favicon/apple-touch-icon.png')}}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for(cnf.blueprint_static, filename='assets/skin/favicon/favicon-32x32.png')}}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for(cnf.blueprint_static, filename='assets/skin/favicon/favicon-16x16.png')}}">
+        <link rel="manifest" href="{{ url_for(cnf.blueprint_static, filename='assets/skin/favicon/site.webmanifest')}}">
+        <link rel="mask-icon" href="{{ url_for(cnf.blueprint_static, filename='assets/skin/favicon/safari-pinned-tab.svg')}}" color="#0066b1">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="theme-color" content="#ffffff">
+        {% if (cnf.useMinifiedAssets)%}
+            <link href="{{ url_for('static', filename='assets/css/minified.css')}}?v={{ cnf.version }}" rel="stylesheet" type="text/css">
+            <link href="{{ url_for(cnf.blueprint_static, filename='assets/skin/css/minified.css')}}?v={{ cnf.version }}" rel="stylesheet" type="text/css">
+        {% else %}
+            {% include 'css.html' %}
+        {% endif %}
+    </head>
+    <body>
+        {% if (cnf.useMinifiedAssets)%}
+            <script  src="{{ url_for(cnf.blueprint_static, filename='assets/js/config.js')}}?v={{cnf.version}}"></script>
+            <script type="text/javascript" src="{{ url_for('static', filename='assets/js/minified.js')}}?v={{ cnf.version }}" charset="UTF-8"></script>
+            <script type="text/javascript" src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/minified.js')}}?v={{ cnf.version }}" charset="UTF-8"></script>
+            <script type="text/javascript" src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/repository.js')}}')}}?v={{cnf.version}}"></script>
+        {% else %}
+            {% include 'javascripts.html' %}
+        {% endif %}
+    </body>
+</html>

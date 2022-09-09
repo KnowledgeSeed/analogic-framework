@@ -1,0 +1,171 @@
+/*grey border swiss add clone gt*/
+.ks-grid-table-head-cell-grey_borders .ks-grid-table-cell-content {
+    background-color: #fff;
+    border-bottom: 1px solid #B1B3B3;
+}
+
+.ks-grid-table-cell-grey_borders .ks-grid-table-cell-content {
+    background-color: #fff;
+    border-bottom: 1px solid #B1B3B3;
+}
+
+/*grey border swiss add clone gt*/
+.ks-grid-table-head-cell-half_borders .ks-grid-table-cell-content {
+    background-color: #F2F2F2;
+}
+
+/*red bg swiss add clone gt*/
+.ks-grid-table-cell-red_bg .ks-grid-table-cell-content {
+    background-color: #ffc0cb;
+    border-bottom: 1px solid #B1B3B3;
+}
+
+/*gray bg swiss add clone gt*/
+.ks-grid-table-cell-gray_bg .ks-grid-table-cell-content {
+    background-color: #F2F2F2;
+    border-bottom: 1px solid #B1B3B3;
+}
+
+/*gray bg swiss add clone gt*/
+.ks-grid-table-cell-green_bg .ks-grid-table-cell-content {
+    background-color: #90EE90;
+    border-bottom: 1px solid #B1B3B3;
+}
+
+/*gray bg swiss add clone gt*/
+.ks-grid-table-cell-filter_border .ks-grid-table-cell-content {
+    border-left: 2px solid #F2F2F2;
+}
+
+.ks-grid-table-cell-noborders .ks-grid-table-cell-content {
+    border-left: 2px solid #FFFFFF;
+    border-right: 2px solid #FFFFFF;
+}
+
+/*  hierarchyCell  */
+.ks-grid-table-hierarchyCell .ks-grid-table-cell-content {
+    display: contents;
+}
+
+/*blue bg plan report page*/
+.ks-grid-table-cell-blue_bg .ks-grid-table-cell-content {
+    background-color: rgba(204, 236, 248, 0.5);
+    border-bottom: 1px solid #B1B3B3;
+}
+
+.ks-grid-table-head-cell-blue_bg .ks-grid-table-cell-content {
+    background-color: rgba(204, 236, 248, 0.5);
+}
+
+/*blue bg plan report page*/
+.ks-grid-table-cell-dark_blue_bg .ks-grid-table-cell-content {
+    background-color: #E1E9F2;
+    border-bottom: 1px solid #B1B3B3;
+}
+
+.ks-grid-table-head-cell-dark_blue_bg .ks-grid-table-cell-content {
+    background-color: #E1E9F2;
+    border-bottom: 1px solid #B1B3B3;
+}
+
+.ks-grid-table-cell-simple .ks-grid-table-cell-content {
+    border-bottom: 1px solid #B1B3B3;
+}
+
+/**/
+.ks-grid-table-cell-blue_gray .ks-grid-table-cell-content {
+    background-color: #E1E9F2;
+    border-bottom: 1px solid #B1B3B3;
+}
+
+.ks-grid-table-head-cell-blue_gray .ks-grid-table-cell-content {
+    background-color: #E1E9F2;
+}
+
+/*no top and right border*/
+.ks-grid-table-cell-top_and_right .ks-grid-table-cell-content {
+    border-top: 1px solid #FFFFFF;
+    border-right: 1px solid #FFFFFF;
+    border-bottom: 1px solid #B1B3B3;
+}
+
+/*no top and left border*/
+.ks-grid-table-cell-top_and_left .ks-grid-table-cell-content {
+    border-top: 1px solid #FFFFFF;
+    border-left: 1px solid #FFFFFF;
+    border-bottom: 1px solid #B1B3B3;
+    border-right: 1px solid #B1B3B3;
+}
+
+/*no top, right and left border*/
+.ks-grid-table-cell-without_three .ks-grid-table-cell-content {
+    border-top: 1px solid #FFFFFF;
+    border-left: 1px solid #FFFFFF;
+    border-right: 1px solid #FFFFFF;
+}
+
+/*all borders*/
+.ks-grid-table-cell-all_borders .ks-grid-table-cell-content {
+    border-top: 1px solid #B1B3B3;
+    border-bottom: 1px solid #B1B3B3;
+}
+
+/*all borders*/
+.ks-grid-table-cell-all_borders_head .ks-grid-table-cell-content {
+    border-left: 1px solid #B1B3B3;
+}
+
+/*all borders*/
+.ks-grid-table-cell-all_borders_bottom .ks-grid-table-cell-content {
+    border-bottom: 1px solid #B1B3B3;
+}
+
+/*all borders*/
+.ks-grid-table-cell-only_bottom .ks-grid-table-cell-content {
+    border-bottom: 1px solid #B1B3B3;
+}
+
+/*all borders*/
+.ks-grid-table-cell-bottom_dashed_right .ks-grid-table-cell-content {
+    border-bottom: 1px solid #B1B3B3;
+    border-right: 1px dashed #B1B3B3;
+}
+
+/*all borders*/
+.ks-grid-table-cell-dashed_right .ks-grid-table-cell-content {
+    border-right: 1px dashed #B1B3B3;
+}
+
+/*dashed cells*/
+/*no top and right border*/
+.ks-grid-table-cell-top_and_right_dash .ks-grid-table-cell-content {
+    border-top: 1px solid #FFFFFF;
+    border-right: 1px dashed #B1B3B3;
+    border-bottom: 1px solid #B1B3B3;
+}
+
+/*all borders*/
+.ks-grid-table-cell-all_borders_dash .ks-grid-table-cell-content {
+    border-top: 1px solid #B1B3B3;
+    border-bottom: 1px solid #B1B3B3;
+    border-right: 1px dashed #B1B3B3;
+}
+
+/*all borders*/
+.ks-grid-table-cell-all_borders_head_dash .ks-grid-table-cell-content {
+    border-left: 1px solid #B1B3B3;
+    border-right: 1px dashed #B1B3B3;
+}
+
+/*all borders*/
+.ks-grid-table-cell-all_borders_bottom_dash .ks-grid-table-cell-content {
+    border-bottom: 1px solid #B1B3B3;
+    border-right: 1px dashed #B1B3B3;
+}
+
+/*no top, right and left border*/
+.ks-grid-table-cell-without_three_dash .ks-grid-table-cell-content {
+    border-top: 1px solid #FFFFFF;
+    border-left: 1px solid #FFFFFF;
+    border-right: 1px dashed #B1B3B3;
+}

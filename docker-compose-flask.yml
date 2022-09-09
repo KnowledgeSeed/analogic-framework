@@ -1,0 +1,9 @@
+
+services:
+
+  analogic:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - ANALOGIC_LOAD_EXAMPLES=true

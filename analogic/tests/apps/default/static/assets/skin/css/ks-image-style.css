@@ -1,0 +1,10 @@
+.ks-image-warning_bpsp{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.ks-image-warning_bpsp span{
+    color: #D12D4A;
+}

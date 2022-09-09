@@ -1,0 +1,106 @@
+/*  hierarchyCell_hays  */
+.ks-grid-table-hierarchyCell_hays .ks-grid-table-cell-content {
+    display: contents;
+}
+
+.ks-grid-table-cell-standard section {
+    width: 100%;
+}
+
+.ks-grid-table-cell-simpanelstart .ks-grid-table-cell-content {
+    background-color: #fff;
+    border-left: 3px solid #dfecf8;
+    border-top: 3px solid #dfecf8;
+    border-bottom: 3px solid #dfecf8;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    height: 80px;
+    width: 100%;
+}
+
+
+.ks-grid-table-cell-simpanel .ks-grid-table-cell-content {
+    background-color: #fff;
+    height: 80px;
+    width: 100%;
+    border-top: 3px solid #dfecf8;
+    border-bottom: 3px solid #dfecf8;
+}
+
+
+.ks-grid-table-cell-simpanelend .ks-grid-table-cell-content {
+    background-color: #fff;
+    width: 20%;
+    border-top: 1px solid #d8d9d9;
+    border-bottom: 1px solid #d8d9d9;
+    border-right: 1px solid #d8d9d9;
+
+}
+
+/* ote */
+
+.ks-grid-table-cell-readonly_bpsp {
+    background-color: rgba(235, 236, 236, 0.4);
+    opacity: 90%;
+}
+
+.ks-grid-table-cell-readonly_blue_bpsp {
+    background-color: #BFD9F2;
+    opacity: 50%;
+}
+
+.ks-grid-table-cell-readonly_green_bpsp {
+    background-color: #BFE5D7;
+    opacity: 50%;
+}
+
+
+.ks-grid-table-cell-locked {
+    background-color: rgba(239, 193, 209, 0.5);
+}
+
+.ks-grid-table-cell-selected {
+    background-color: rgba(191, 229, 215, 0.5);
+}
+
+.ks-grid-table-cell-customer_right_border {
+    border-right: 1px solid #B1B3B3;
+}
+
+
+/* end ote */
+
+/* mody */
+
+
+.ks-grid-table-cell-setting_readonly_bpsp {
+    background-color: rgba(235, 236, 236, 0.4);
+    opacity: 90%;
+}
+
+.ks-grid-table-cell-setting_readonly_bpsp .ks-pos-center-right.ks-grid-table-cell-content {
+    align-items: center;
+    justify-content: flex-end;
+}
+/* end mody */
+
+
+.ks-grid-table-cell-border_bottom .ks-grid-table-cell-content{
+    border-bottom: 2px solid #f2f2f2;
+    border-bottom-style: outset;
+}
+
+.ks-grid-table-head-cell-border_bottom .ks-grid-table-cell-content{
+    border-bottom: 2px solid #f2f2f2;
+    border-bottom-style: outset;
+}
+
+.ks-grid-table-cell-view_border .ks-grid-table-cell-content{
+    border-bottom: 1px solid #D3D3D3;
+}
+
+.ks-grid-table-cell-selected_filter {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.2), 0px 4px 6px rgba(0, 0, 0, 0.2);
+}

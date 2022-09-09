@@ -1,0 +1,16 @@
+.ks-panel-hierarchy{
+    display: flex;
+}
+
+/* horizontal_align_center */
+
+.ks-panel-horizontal_align_center {
+    display: flex;
+    justify-content: center;
+}
+
+/* horizontal_align_right */
+.ks-panel-horizontal_align_right{
+    display: flex;
+    justify-content: flex-end;
+}

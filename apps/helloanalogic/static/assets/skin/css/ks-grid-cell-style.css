@@ -1,0 +1,21 @@
+/*main page refresh button border*/
+.ks-grid-cell-rightborder.ks-grid-cell {
+    border-right: 2px solid #F2F2F2;
+    padding-bottom: 1%;
+}
+
+.ks-grid-cell-bottomborder.ks-grid-cell {
+    border-bottom: 1px solid #F2F2F2;
+    padding-bottom: 1%;
+}
+
+.ks-grid-cell-two_borders.ks-grid-cell {
+    border-right: 1px solid #b1b3b3;
+    border-left: 1px solid #b1b3b3;
+    padding-bottom: 1%;
+}
+
+.ks-grid-cell-filter_cell .ks-grid-cell-content {
+    display: contents;
+}
+

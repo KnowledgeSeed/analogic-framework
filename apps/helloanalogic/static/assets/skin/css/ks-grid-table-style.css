@@ -1,0 +1,441 @@
+/* add clone page gt */
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head {
+    position: sticky;
+    background-color: white;
+    top: 0;
+    z-index: 2;
+    border-bottom: 1px solid #B1B3B3;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-row {
+    height: 40px;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table {
+    position: absolute;
+}
+
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head .ks-grid-table-row {
+    border-bottom: 0;
+    border-left: 0;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-cell-border-left {
+    border-left: 1px dashed #b1b3b3;
+    position: absolute;
+    height: 100%;
+    margin-right: 7px;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-cell-no_border .ks-grid-table-cell-border-left {
+    border-left: 0px dashed #b1b3b3;
+    position: absolute;
+    height: 100%;
+    margin-right: 7px;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head .ks-grid-table-cell {
+    border-right: unset;
+    color: #000000;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #b1b3b3;
+    position: absolute;
+    top: 20%;
+    bottom: 0;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head .ks-grid-table-head-cell-long1 .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #E3EACC;
+    position: absolute;
+    top: 0%;
+    bottom: 0;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head .ks-grid-table-head-cell-long1 .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #E3EACC;
+    position: absolute;
+    top: 0%;
+    bottom: 0;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head .ks-grid-table-head-cell-long1_blue_border {
+    background-color: #E3EACC;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head .ks-grid-table-head-cell-long1_blue_border .ks-grid-table-head-cell-border-left {
+    border-left: 2px solid #347CF6;
+    position: absolute;
+    top: 20%;
+    bottom: 0;
+    margin-bottom: -1px;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head .ks-grid-table-head-cell-long1 {
+    background-color: #E3EACC;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head .ks-grid-table-head-cell-long2 .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #E3EACC;
+    position: absolute;
+    top: 0%;
+    bottom: 0;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head .ks-grid-table-head-cell-long2 {
+    background-color: #C7D599;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head .ks-grid-table-head-cell-no_border .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #b1b3b3;
+    position: absolute;
+    top: 100%;
+    bottom: 0;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head .ks-grid-table-head-cell-blue_border .ks-grid-table-head-cell-border-left {
+    border-left: 2px solid #347CF6;
+    position: absolute;
+    top: 20%;
+    bottom: 0;
+    margin-bottom: -1px;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head .ks-grid-table-row {
+    height: 40px;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-cell {
+    color: #000;
+    font-size: 16px;
+    line-height: 16px;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-content .ks-grid-table-cell {
+    overflow: hidden;
+}
+
+/* review contracts page gt */
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head {
+    position: sticky;
+    background-color: white;
+    top: 0;
+    z-index: 2;
+    border-bottom: 0px solid #B1B3B3;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-row {
+    height: 40px;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table {
+    position: absolute;
+}
+
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head .ks-grid-table-row {
+    border-bottom: 0;
+    border-left: 0;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-cell-border-left {
+    border-left: 1px dashed #b1b3b3;
+    position: absolute;
+    height: 100%;
+    margin-right: 7px;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-cell-no_border .ks-grid-table-cell-border-left {
+    border-left: 0px dashed #b1b3b3;
+    position: absolute;
+    height: 100%;
+    margin-right: 7px;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head .ks-grid-table-cell {
+    border-right: unset;
+    color: #000000;
+}
+
+.ks-grid-table-add_clone_analogicDemo .ks-grid-table-head .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #b1b3b3;
+    position: absolute;
+    top: 20%;
+    bottom: 0;
+}
+
+.ks-grid-table-add_clone_swiss .ks-grid-table-head .ks-grid-table-head-cell-long1 .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #E3EACC;
+    position: absolute;
+    top: 0%;
+    bottom: 0;
+}
+
+.ks-grid-table-add_clone_swiss .ks-grid-table-head .ks-grid-table-head-cell-long1 .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #E3EACC;
+    position: absolute;
+    top: 0%;
+    bottom: 0;
+}
+
+.ks-grid-table-add_clone_swiss .ks-grid-table-head .ks-grid-table-head-cell-long1_blue_border {
+    background-color: #E3EACC;
+}
+
+.ks-grid-table-add_clone_swiss .ks-grid-table-head .ks-grid-table-head-cell-long1_blue_border .ks-grid-table-head-cell-border-left {
+    border-left: 2px solid #347CF6;
+    position: absolute;
+    top: 20%;
+    bottom: 0;
+    margin-bottom: -1px;
+}
+
+.ks-grid-table-add_clone_swiss .ks-grid-table-head .ks-grid-table-head-cell-long1 {
+    background-color: #E3EACC;
+}
+
+.ks-grid-table-add_clone_swiss .ks-grid-table-head .ks-grid-table-head-cell-long2 .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #E3EACC;
+    position: absolute;
+    top: 0%;
+    bottom: 0;
+}
+
+.ks-grid-table-add_clone_swiss .ks-grid-table-head .ks-grid-table-head-cell-long2 {
+    background-color: #C7D599;
+}
+
+.ks-grid-table-add_clone_swiss .ks-grid-table-head .ks-grid-table-head-cell-no_border .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #b1b3b3;
+    position: absolute;
+    top: 100%;
+    bottom: 0;
+}
+
+.ks-grid-table-add_clone_swiss .ks-grid-table-head .ks-grid-table-head-cell-blue_border .ks-grid-table-head-cell-border-left {
+    border-left: 2px solid #347CF6;
+    position: absolute;
+    top: 20%;
+    bottom: 0;
+    margin-bottom: -1px;
+}
+
+.ks-grid-table-add_clone_swiss .ks-grid-table-head .ks-grid-table-row {
+    height: 40px;
+}
+
+.ks-grid-table-add_clone_swiss .ks-grid-table-cell {
+    color: #000;
+    font-size: 16px;
+    line-height: 16px;
+}
+
+.ks-grid-table-add_clone_swiss .ks-grid-table-content .ks-grid-table-cell {
+    overflow: hidden;
+}
+/*filter gt*/
+.ks-grid-table-filter .ks-grid-table-head .ks-grid-table-title {
+    font-size: 13px;
+}
+
+/*    */
+.ks-grid-table-hierarchyGridTable_hays .ks-grid-table-row {
+    border-bottom: 1px solid #c3ced5;
+    height: 40px;
+}
+
+.ks-grid-table-hierarchyGridTable_hays .ks-grid-table-cell {
+    padding: 0px !important;
+}
+
+.ks-grid-table-hierarchyGridTable_hays {
+    border-right: 10px solid #F2F2F2;
+    height: 800px;
+}
+
+/* plan target page gt without borders */
+
+.ks-grid-table-target .ks-grid-table-head {
+    position: sticky;
+    background-color: white;
+    top: 0;
+    z-index: 2;
+    border-bottom: 1px solid #B1B3B3;
+}
+
+.ks-grid-table-target .ks-grid-table-row {
+    height: 40px;
+}
+
+.ks-grid-table-target .ks-grid-table {
+    position: absolute;
+}
+
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-row {
+    border-bottom: 0;
+    border-left: 0;
+}
+
+.ks-grid-table-target .ks-grid-table-cell-border-left {
+    border-left: 1px dashed #b1b3b3;
+    position: absolute;
+    height: 100%;
+    margin-right: 7px;
+}
+
+.ks-grid-table-target .ks-grid-table-cell-no_border .ks-grid-table-cell-border-left {
+    border-left: 0px dashed #b1b3b3;
+    position: absolute;
+    height: 100%;
+    margin-right: 7px;
+}
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-cell {
+    border-right: unset;
+    color: #000000;
+}
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #b1b3b3;
+    position: absolute;
+    top: 20%;
+    bottom: 0;
+}
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-head-cell-long1 .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #E3EACC;
+    position: absolute;
+    top: 0%;
+    bottom: 0;
+}
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-head-cell-long1 .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #E3EACC;
+    position: absolute;
+    top: 0%;
+    bottom: 0;
+}
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-head-cell-long1_blue_border {
+    background-color: #E3EACC;
+}
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-head-cell-long1_blue_border .ks-grid-table-head-cell-border-left {
+    border-left: 2px solid #347CF6;
+    position: absolute;
+    top: 20%;
+    bottom: 0;
+    margin-bottom: -1px;
+}
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-head-cell-long1 {
+    background-color: #E3EACC;
+}
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-head-cell-long2 .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #E3EACC;
+    position: absolute;
+    top: 0%;
+    bottom: 0;
+}
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-head-cell-long2 {
+    background-color: #C7D599;
+}
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-head-cell-no_border .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #b1b3b3;
+    position: absolute;
+    top: 100%;
+    bottom: 0;
+}
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-head-cell-blue_border .ks-grid-table-head-cell-border-left {
+    border-left: 2px solid #347CF6;
+    position: absolute;
+    top: 20%;
+    bottom: 0;
+    margin-bottom: -1px;
+}
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-row {
+    height: 40px;
+}
+
+.ks-grid-table-target .ks-grid-table-cell {
+    color: #000;
+    font-size: 16px;
+    line-height: 16px;
+}
+
+.ks-grid-table-target .ks-grid-table-content .ks-grid-table-cell {
+    overflow: hidden;
+}
+
+/* review contracts page gt */
+
+.ks-grid-table-target .ks-grid-table-head {
+    position: sticky;
+    background-color: white;
+    top: 0;
+    z-index: 2;
+    border-bottom: 0px solid #B1B3B3;
+}
+
+.ks-grid-table-target .ks-grid-table-row {
+    height: 50px;
+}
+
+.ks-grid-table-target .ks-grid-table {
+    position: absolute;
+}
+
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-row {
+    border-bottom: 0;
+    border-left: 0;
+}
+
+.ks-grid-table-target .ks-grid-table-cell-border-left {
+    border-left: 0px dashed #b1b3b3;
+    position: absolute;
+    height: 100%;
+    margin-right: 7px;
+}
+
+.ks-grid-table-target .ks-grid-table-cell-no_border .ks-grid-table-cell-border-left {
+    position: absolute;
+    height: 100%;
+    margin-right: 7px;
+}
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-cell {
+    border-right: unset;
+    color: #000000;
+}
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-head-cell-border-left {
+    border-left: 1px solid #b1b3b3;
+    position: absolute;
+    top: 20%;
+    bottom: 0;
+}
+
+.ks-grid-table-target .ks-grid-table-head .ks-grid-table-row {
+    height: 40px;
+}
+
+.ks-grid-table-target .ks-grid-table-cell {
+    color: #000;
+    font-size: 16px;
+    line-height: 16px;
+}
+
+.ks-grid-table-target .ks-grid-table-content .ks-grid-table-cell {
+    overflow: hidden;
+}

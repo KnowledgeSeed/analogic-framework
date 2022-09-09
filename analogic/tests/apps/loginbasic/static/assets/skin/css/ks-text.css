@@ -1,0 +1,49 @@
+.ks-text {
+	display: block;
+}
+
+.ks-text-inner {
+	height: 100%;
+}
+
+.ks-text-title,
+.ks-text-separator,
+.ks-text-body {
+	display: none;
+}
+
+.ks-text.has-title .ks-text-title {
+	display: block;
+}
+.ks-text.has-separator .ks-text-separator {
+	display: block;
+}
+.ks-text.has-body .ks-text-body {
+	display: block;
+}
+
+.ks-text.pos-icon-left .ks-text-icon {
+	order: 1;
+}
+.ks-text.pos-icon-left .ks-text-title {
+	order: 2;
+}
+.ks-text.pos-icon-left .ks-text-separator {
+	order: 3;
+}
+.ks-text.pos-icon-left .ks-text-body {
+	order: 4;
+}
+
+.ks-text.pos-icon-right .ks-text-icon {
+	order: 4;
+}
+.ks-text.pos-icon-right .ks-text-title {
+	order: 3;
+}
+.ks-text.pos-icon-right .ks-text-separator {
+	order: 2;
+}
+.ks-text.pos-icon-right .ks-text-body {
+	order: 1;
+}

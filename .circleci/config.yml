@@ -1,0 +1,26 @@
+version: 2.1
+
+jobs:
+  build-and-test:
+
+    docker:
+      - image: cimg/python:3.9
+    
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: pip install -r requirements.txt
+
+      - run:
+          name: access rights
+          command: sudo chown circleci -R *
+
+      - run:
+          name: run tests
+          command: python -m unittest analogic/tests/test_setting.py
+
+workflows:
+  build-and-test:
+    jobs:
+      - build-and-test

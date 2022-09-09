@@ -1,0 +1,7 @@
+{
+  "defaultExport": {
+    "namespace": "default.server.Export",
+    "class": "Export",
+    "method": "defaultExport"
+  }
+}

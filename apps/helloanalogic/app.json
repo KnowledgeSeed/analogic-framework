@@ -1,0 +1,6 @@
+{
+  "projectName": "Hello Analogic",
+  "projectId": "helloanalogic",
+  "authenticationMode": "NoLogin",
+  "mainPage": "analogicDemoMain"
+}
