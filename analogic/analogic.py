@@ -16,9 +16,10 @@ from datetime import timedelta
 import importlib
 
 APPLICATIONS_DIR = 'apps'
+APPLICATIONS_DIR_EXTRA = os.environ.get('APPLICATIONS_DIR_EXTRA', '')
 EXTENSIONS_DIR = 'extensions'
+EXTENSIONS_DIR_EXTRA = os.environ.get('EXTENSIONS_DIR_EXTRA', '')
 ALLOWED_EXTENSION_PREFIX = 'analogic_'
-
 
 class Analogic(Flask):
 
@@ -133,9 +134,11 @@ def create_app(instance_path):
 
     app.register_analogic_endpoint(core_endpoints)
 
-    _load_analogic_extensions(app)
+    _load_analogic_extensions(app, extensions_dir=EXTENSIONS_DIR)
+    _load_analogic_extensions(app, extensions_dir=EXTENSIONS_DIR_EXTRA)
 
-    _load_applications(app, register_func=_register_application)
+    _load_applications(app, register_func=_register_application, module_dir=APPLICATIONS_DIR)
+    _load_applications(app, register_func=_register_application, module_dir=APPLICATIONS_DIR_EXTRA)
 
     app.register_analogic_url_rules('')
 
@@ -160,8 +163,8 @@ def _load_logging(app):
         logging.config.dictConfig(log_config)
 
 
-def _load_analogic_extensions(app):
-    _append_extension_dir_to_path(app, EXTENSIONS_DIR)
+def _load_analogic_extensions(app, extensions_dir):
+    _append_extension_dir_to_path(app, extensions_dir)
 
     for directory in sys.path:
         if os.path.exists(directory) and os.path.isdir(directory) and len(os.listdir(directory)) != 0:
@@ -203,10 +206,10 @@ def _register_extension_components(app, extension_name, files):
                 app.register_analogic_endpoint(obj)
 
 
-def _load_applications(app, register_func):
-    modules_dir = os.path.join(app.instance_path, APPLICATIONS_DIR)
+def _load_applications(app, register_func, module_dir):
+    modules_dir = os.path.join(app.instance_path, module_dir)
 
-    _append_extension_dir_to_path(app, APPLICATIONS_DIR)
+    _append_extension_dir_to_path(app, module_dir)
 
     _load_modules(app, modules_dir, False, register_func)
 
