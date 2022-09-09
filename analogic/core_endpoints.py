@@ -28,6 +28,10 @@ def active_user():
 def auth():
     return get_authentication_provider().auth()
 
+@core_endpoints.analogic_endpoint_route('/logout', methods=['GET'])
+def logout():
+    return get_authentication_provider().logout()
+
 
 @core_endpoints.analogic_endpoint_route('/export', methods=['GET', 'POST'])
 def export():

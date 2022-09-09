@@ -194,5 +194,9 @@ class AuthenticationProvider(ABC):
     def active_user(self):
         return jsonify({'username': self.get_logged_in_user_name()})
 
+    def logout(self):
+        session.clear()
+        return 'ok'
+
     def getLogger(self):
         return logging.getLogger(self.setting.get_instance())

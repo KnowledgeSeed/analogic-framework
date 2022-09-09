@@ -342,7 +342,7 @@ class HorizontalTableWidget extends Widget {
 
             this.state.radio = w.data('index');
 
-            p.closest('.ks-horizontal-table-row').prop('style', '');
+            p.closest('.ks-horizontal-table-row').css('background-color', '');
             if (this.multiSelect === false) {
                 p.removeClass('ks-on');
                 w.addClass('ks-on');

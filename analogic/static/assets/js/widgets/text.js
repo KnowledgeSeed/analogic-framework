@@ -69,7 +69,7 @@ class TextWidget extends Widget {
     changeEvents(title, section, editable, performable) {
         title.unbind('contextmenu');
         title.off('click');
-        if(editable || performable) {
+        if (editable || performable) {
             TextWidget.addEdit(section, this.options, this.amIOnAGridTable());
         }
     }
@@ -80,11 +80,9 @@ class TextWidget extends Widget {
             mainDiv = section.children(), icon = section.find('.ks-text-icon span'),
             inner = section.find('.ks-text-inner');
 
-        if(this.editable !== v.editable || this.performable !== v.performable) {
-            this.changeEvents(title, section, v.editable, v.performable);
-            title.data('editable', v.editable ? '1' : '0');
-            title.data('performable', v.performable ? '1' : '0');
-        }
+        this.changeEvents(title, section, v.editable, v.performable);
+        title.data('editable', v.editable ? '1' : '0');
+        title.data('performable', v.performable ? '1' : '0');
 
         this.setValues(v);
 

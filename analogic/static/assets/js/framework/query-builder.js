@@ -48,7 +48,7 @@ QB.parsingControlFinished = (repositoryId) => {
     }
 };
 
-QB.writeData = (eventMapId, jqueryEvent, jqueryElement) => {
+QB.writeData = (eventMapId, jqueryEvent, jqueryElement, resent = false) => {
     const executor = WriteExecutorFactory.createExecutor(eventMapId, jqueryEvent, jqueryElement);
 
     try {
@@ -58,6 +58,12 @@ QB.writeData = (eventMapId, jqueryEvent, jqueryElement) => {
         functionName = executor.context ? executor.context.getEventName() : false;
         app.handleJsError(e, widgetId, functionName, 'Error in writing data');
     }
+};
+
+QB.obtainNewCellSetIdAndSendAgain = (widgetId, eventMapId) => {
+    QB.loadData(widgetId, '', false, 'init').then(d => {
+        QB.writeData(eventMapId, {}, {}, true);
+    });
 };
 
 QB.executeEventMapAction = (eventMapId, context, response) => {

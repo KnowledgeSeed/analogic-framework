@@ -11,7 +11,7 @@ Auth.loadDefault = arg => {
     });
 };
 
-Auth.getAjaxRequest = (url, data, type, widgetId = '') => {
+Auth.getAjaxRequest = (url, data, type, widgetId = '', resent = false, eventMapId = '') => {
     let urlWithWidgetId = url + (url.includes('?') ? '&' : '?') + 'widgetid=' + widgetId;
     return $.ajax({
         cache: true,
@@ -28,6 +28,15 @@ Auth.getAjaxRequest = (url, data, type, widgetId = '') => {
             L('error:', response, e, widgetId);
             Extensions.authenticationProviders.forEach(ext => ext.handleError(response, e, widgetId));
             Loader.stop(true);
+            if(type === 'PATCH' && url.includes('Cellsets')) {
+                if( resent ) {
+                    Api.showPopup('Error: after resending cellset patch: ' + widgetId);
+                    return;
+                }
+                if(response && response.status === 404){
+                    QB.obtainNewCellSetIdAndSendAgain(widgetId, eventMapId);
+                }
+            }
             if(response.status != 401) {
                 app.handleAjaxError(response, widgetId);
             }

@@ -9,6 +9,7 @@ import sys
 from importlib import resources
 from analogic.core_endpoints import core_endpoints
 from analogic.authentication_provider import AuthenticationProvider
+from analogic.condition import Condition
 import inspect
 from flask_caching import Cache
 from analogic.setting import SettingManager
@@ -32,6 +33,7 @@ class Analogic(Flask):
             'LoginBasic': 'analogic',
             'NoLogin': 'analogic'
         }
+        self.conditions = {}
         self.extension_assets = {}
         self.add_url_rule('/extension_asset', methods=['GET'], view_func=self.extension_asset)
         self.analogic_applications = {}
@@ -50,6 +52,12 @@ class Analogic(Flask):
 
     def register_authentication_provider(self, name, module_name):
         self.authentication_providers[name] = module_name
+
+    def register_condition(self, name, module_name):
+        self.conditions[name] = module_name
+
+    def get_condition_module_name(self, name):
+        return self.conditions[name]
 
     def get_authentication_provider_module_name(self, name):
         return self.authentication_providers[name]
@@ -109,21 +117,31 @@ class Analogic(Flask):
         self.permanent_session_lifetime = timedelta(minutes=config['sessionExpiresInMinutes'] - 1)
         return authentication_provider
 
-    def _get_cache(self):
-        cache_path = os.path.join(self.instance_path, 'cache')
-        return Cache(self, config={'CACHE_TYPE': 'FileSystemCache', 'CACHE_DIR': cache_path})
+    def evaluate_condition(self, config):
+        class_name = config.get('authenticationModeCondition')
+        module_name = self.get_condition_module_name(class_name)
 
+        if module_name in sys.modules:
+            module = sys.modules[module_name]
+        else:
+            module = importlib.import_module(module_name)  # Todo ModuleNotFoundError
+
+        condition_class = getattr(module, class_name)
+        condition = condition_class()
+        return condition.get_authentication_provider_name(config)
+
+    def _get_cache(self):
+            cache_path = os.path.join(self.instance_path, 'cache')
+            return Cache(self, config={'CACHE_TYPE': 'FileSystemCache', 'CACHE_DIR': cache_path})
 
 def page_not_found(e):
     return render_template('404.html'), 404
-
 
 def page_error(e):
     message = ''
     if e.original_exception:
         message += str(e.original_exception)
     return render_template('500.html', message=message), 500
-
 
 def create_app(instance_path):
     app = Analogic(__name__, instance_path=instance_path)
@@ -202,8 +220,12 @@ def _register_extension_components(app, extension_name, files):
                     issubclass(obj, AuthenticationProvider):
                 app.register_authentication_provider(name, extension_name)
 
-            if isinstance(obj, AnalogicEndpoint):
-                app.register_analogic_endpoint(obj)
+        if inspect.isclass(obj) and \
+            not inspect.isabstract(obj) and \
+                        issubclass(obj, Condition):
+                app.register_condition(name, extension_name)
+                if isinstance(obj, AnalogicEndpoint):
+                    app.register_analogic_endpoint(obj)
 
 
 def _load_applications(app, register_func, module_dir):

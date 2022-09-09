@@ -102,6 +102,9 @@ class SettingManager:
                 self.save_config_js(setting)
 
             self._cache_set(key, setting, 0)
+
+        if setting.get('authenticationModeCondition') is not None:
+            setting['authenticationMode'] = current_app.evaluate_condition(setting)
         return setting
 
     def save_config_js(self, config):

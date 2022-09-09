@@ -1,115 +1,115 @@
 <!-- libs -->
-<script  src="{{ url_for('static', filename='assets/js/lib/jquery/jquery-3.6.0.min.js')}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/lib/jquery/jquery.doubletap.js')}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/lib/jquery/jquery.cookie.js')}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/lib/jquery/tableSort.js')}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/lib/debounceAndThrottle.1.8.3.min.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/lib/jquery/jquery.actual.min.js')}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/lib/Chart-2.9.3.min.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/lib/chartjs-plugin-datalabels.min.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/lib/chartjs-plugin-dragdata.min.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/lib/nouislider.min.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/lib/Sortable.min.js')}}?v={{cnf.version}}"></script>
+<script  src="{{ url_for('static', filename='assets/js/lib/jquery/jquery-3.6.0.min.js')}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/lib/jquery/jquery.doubletap.js')}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/lib/jquery/jquery.cookie.js')}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/lib/jquery/tableSort.js')}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/lib/debounceAndThrottle.1.8.3.min.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/lib/jquery/jquery.actual.min.js')}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/lib/Chart-2.9.3.min.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/lib/chartjs-plugin-datalabels.min.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/lib/chartjs-plugin-dragdata.min.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/lib/nouislider.min.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/lib/Sortable.min.js')}}?v={{cnf.version}}" type="application/javascript"></script>
 
-<script  src="{{ url_for(cnf.blueprint_static, filename='assets/js/config.js')}}?v={{cnf.version}}"></script>
+<script  src="{{ url_for(cnf.blueprint_static, filename='assets/js/config.js')}}?v={{cnf.version}}" type="application/javascript"></script>
 <!-- end libs -->
 
 <!-- framework -->
-<script  src="{{ url_for('static', filename='assets/js/framework/app.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/utils.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/render.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/listener.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/api.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/authentication.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/rest-request.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/write-executor/factory.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/write-executor/base.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/write-executor/download.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/write-executor/grid-table.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/write-executor/function.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/write-executor/skip.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/load-executor/factory.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/load-executor/base.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/load-executor/default.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/load-executor/skip.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/load-executor/state.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/load-executor/pivot.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/load-executor/array.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/parsing-control/factory.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/parsing-control/base.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/parsing-control/skip.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/parsing-control/list.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/parsing-control/matrix.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/parsing-control/object.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/parsing-control/script.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/query-builder.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/server.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/pivot.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/extensions/authentication-provider.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/framework/extensions/write-executor.js')}}?v={{cnf.version}}"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/app.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/utils.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/render.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/listener.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/api.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/authentication.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/rest-request.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/write-executor/factory.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/write-executor/base.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/write-executor/download.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/write-executor/grid-table.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/write-executor/function.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/write-executor/skip.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/load-executor/factory.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/load-executor/base.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/load-executor/default.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/load-executor/skip.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/load-executor/state.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/load-executor/pivot.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/load-executor/array.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/parsing-control/factory.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/parsing-control/base.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/parsing-control/skip.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/parsing-control/list.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/parsing-control/matrix.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/parsing-control/object.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/parsing-control/script.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/query-builder.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/server.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/pivot.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/extensions/authentication-provider.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/framework/extensions/write-executor.js')}}?v={{cnf.version}}" type="application/javascript"></script>
 <!-- end framework -->
 
 <!-- widgets -->
-<script  src="{{ url_for('static', filename='assets/js/widgets/base/widget.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/loader.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/container.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/popup.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/swipe.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/simulation-panel.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/scroll-table.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/datepicker.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/combo-chart.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/simulation-panel-slider.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/water-fall.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/grid-table/grid-table.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/grid-table/grid-table-cell.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/grid-table/grid-table-header-row.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/grid-table/grid-table-header-cell.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/button.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/text.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/textbox.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/dropbox.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/toggle.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/slider.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/gauge.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/histogram-combo-chart.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/line-scatter-combo.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/segmented-bar.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/tornado-chart.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/page.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/image.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/segmented-control.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/segmented-control-item.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/horizontal-table.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/horizontaltable/radio-button-row.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/horizontaltable/action-button-row.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/horizontaltable/delete-button-row.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/textarea.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/system-popup.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/pie-chart.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/radar-chart.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/line-area-chart.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/vertical-line-box.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/shadow.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/pivot-table.js')}}?v={{cnf.version}}"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/base/widget.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/loader.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/container.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/popup.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/swipe.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/simulation-panel.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/scroll-table.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/datepicker.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/combo-chart.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/simulation-panel-slider.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/water-fall.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/grid-table/grid-table.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/grid-table/grid-table-cell.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/grid-table/grid-table-header-row.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/grid-table/grid-table-header-cell.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/button.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/text.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/textbox.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/dropbox.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/toggle.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/slider.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/gauge.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/histogram-combo-chart.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/line-scatter-combo.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/segmented-bar.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/tornado-chart.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/page.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/image.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/segmented-control.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/segmented-control-item.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/horizontal-table.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/horizontaltable/radio-button-row.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/horizontaltable/action-button-row.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/horizontaltable/delete-button-row.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/textarea.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/system-popup.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/pie-chart.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/radar-chart.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/line-area-chart.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/vertical-line-box.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/shadow.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/pivot-table.js')}}?v={{cnf.version}}" type="application/javascript"></script>
 
-<script  src="{{ url_for('static', filename='assets/js/widgets/horizontal-bar-chart.js')}}?v={{cnf.version}}"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/horizontal-bar-chart.js')}}?v={{cnf.version}}" type="application/javascript"></script>
 
 {% for asset_name in cnf.extension_js_asset_names %}
-    <script  src="{{ url_for('extension_asset', asset_name=asset_name)}}&v={{cnf.version}}"></script>
+    <script  src="{{ url_for('extension_asset', asset_name=asset_name)}}&v={{cnf.version}}" type="application/javascript"></script>
 {% endfor %}
 
 <!-- end widgets -->
 
 <!-- layouts -->
-<script  src="{{ url_for('static', filename='assets/js/widgets/grid/grid.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/grid/grid-row.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/grid/grid-cell.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for('static', filename='assets/js/widgets/panel.js')}}?v={{cnf.version}}"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/grid/grid.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/grid/grid-row.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/grid/grid-cell.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for('static', filename='assets/js/widgets/panel.js')}}?v={{cnf.version}}" type="application/javascript"></script>
 <!-- end layouts -->
 
 <!-- configs -->
-<script  src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/repository.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/widget-config.js')}}?v={{cnf.version}}"></script>
-<script  src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/event-map.js')}}?v={{cnf.version}}"></script>
+<script  src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/repository.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/widget-config.js')}}?v={{cnf.version}}" type="application/javascript"></script>
+<script  src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/event-map.js')}}?v={{cnf.version}}" type="application/javascript"></script>
 <!-- end configs -->

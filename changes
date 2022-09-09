@@ -28,6 +28,15 @@ authenticationBridge (optional, CAM, SSO required)
 sessionExpiresInMinutes: (optional, default 20)
 useMinifiedAssets: optional, default false
 
+modelAuthentication:
+
+   "pool" : {
+    "modelAuthentication": "Basic", Cam or Basic
+    "users": [
+      "admin"
+    ]
+  },
+
 Export:
 
     cnf = setting.getConfig()
@@ -95,3 +104,5 @@ Widget
 
  Waterfall:
    allowLastColumnToZero default true
+
+

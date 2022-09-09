@@ -4,9 +4,9 @@
 
 class WriteExecutorFactory {
 
-    static createExecutor(eventMapId, jqueryEvent, jqueryElement) {
+    static createExecutor(eventMapId, jqueryEvent, jqueryElement, resent = false) {
         let s = eventMapId.split('.'), eventName = s[0], widgetId = s[1], eventHandler,
-            context = WriteExecutorFactory.createContext(eventName, widgetId, jqueryEvent, jqueryElement),
+            context = WriteExecutorFactory.createContext(eventName, widgetId, jqueryEvent, jqueryElement, resent),
             extResponse;
 
         eventHandler = context.getEventHandler();
@@ -45,7 +45,7 @@ class WriteExecutorFactory {
         return new WriteExecutor(context);
     }
 
-    static createContext(eventName, widgetId, jqueryEvent, jqueryElement) {
+    static createContext(eventName, widgetId, jqueryEvent, jqueryElement, resent = false) {
         let z = widgetId.split('_'),
             context = Widgets,
             widget, gridTableCell, gridTableInfo;
@@ -71,14 +71,14 @@ class WriteExecutorFactory {
 
             widgetId = z.length > 3 ? z[3] : z[0];
 
-            context = WriteExecutorFactory.getContext(eventName, widgetId, jqueryEvent, jqueryElement, gridTableInfo);
+            context = WriteExecutorFactory.getContext(eventName, widgetId, jqueryEvent, jqueryElement, resent, gridTableInfo);
         } else {
-            context = WriteExecutorFactory.getContext(eventName, widgetId, jqueryEvent, jqueryElement);
+            context = WriteExecutorFactory.getContext(eventName, widgetId, jqueryEvent, jqueryElement, resent);
         }
         return context;
     }
 
-    static getContext(eventName, widgetId, jqueryEvent, jqueryElement, gridTableInfo = null) {
+    static getContext(eventName, widgetId, jqueryEvent, jqueryElement, resent = false, gridTableInfo = null) {
         let context = Object.create(Widgets);
 
             context.getId = () => {
@@ -137,6 +137,10 @@ class WriteExecutorFactory {
             };
             context.getGridTableSplitIds = () => {
                 return gridTableInfo !== null ? gridTableInfo.getSplitIds() : null;
+            }
+
+            context.isResent = () => {
+                return resent;
             }
 
             return context;
