@@ -112,8 +112,8 @@ hrdemoSimulationRow3CellGauge_init: >
           FROM [Groups FTE and Cost]
           WHERE
           (
-          [Groups].[Groups].[Group_1],
-          [Versions].[Versions].[Base Plan],
+          [Groups].[Groups].[$group],
+          [Versions].[Versions].[$version],
           [Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Total Cost]
           )
   "}
@@ -130,11 +130,20 @@ hrdemoSimulationGroupSelectorPopUpDropbox_init: >
   "}
 
 hrdemoSimulationVersionSelectorPopUpDropbox_init: >
+    {"MDX":"
+          SELECT
+             {[}ElementAttributes_Versions].[}ElementAttributes_Versions].Members}
+            ON COLUMNS ,
+           {[Versions].[Versions].[Base Plan],[Versions].[Versions].[Budget],[Versions].[Versions].[Personal Draft - Best case],[Versions].[Versions].[Personal Draft - Average case],[Versions].[Versions].[Personal Draft - Worst case]}            ON ROWS
+          FROM [}ElementAttributes_Versions]
+    "}
+
+hrdemoSimulationVersionSelectorPopUpDropbox_init_base: >
   {"MDX":"
         SELECT
            {[}ElementAttributes_Versions].[}ElementAttributes_Versions].Members}
           ON COLUMNS ,
-           {[Versions].[Versions].[Base Plan],[Versions].[Versions].[Budget],[Versions].[Versions].[Personal Draft - Best case],[Versions].[Versions].[Personal Draft - Average case],[Versions].[Versions].[Personal Draft - Worst case]}
+           {[Versions].[Versions].[Personal Draft - Best case],[Versions].[Versions].[Personal Draft - Average case],[Versions].[Versions].[Personal Draft - Worst case]}
           ON ROWS
         FROM [}ElementAttributes_Versions]
   "}
@@ -331,7 +340,7 @@ hrdemoSimulationGridTableCompareMode_init: >
           MEMBER [Versions].[Versions].[ReportType] AS \"$measure\"
 
           MEMBER [Periods].[Periods].[LastCommentID] As
-              [Groups FTE and Cost].([Periods].[Periods].[2022],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[CommentInCompare])
+                    [Groups FTE and Cost].([Periods].[Periods].[2022],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[CommentInCompare])
 
           -- Normal mode
           Set RowInNormal AS
@@ -378,19 +387,19 @@ hrdemoSimulationGridTableCompareMode_init: >
           -- PercentVariance mode
           member
           [Versions].[Versions].[PercentVarianceBasePlan] AS
-          [Versions].[Versions].[AbsoluteVarianceBasePlan] / [Versions].[Versions].[$version], FORMAT_STRING='#0.00%'
+          [Versions].[Versions].[AbsoluteVarianceBasePlan] / [Versions].[Versions].[$version] * 100
           member
           [Versions].[Versions].[PercentVarianceBudget] AS
-          [Versions].[Versions].[AbsoluteVarianceBudget] / [Versions].[Versions].[$version], FORMAT_STRING='#0.00%'
+          [Versions].[Versions].[AbsoluteVarianceBudget] / [Versions].[Versions].[$version] * 100
           member
           [Versions].[Versions].[PercentVariancePersonal Draft - Best case] AS
-          [Versions].[Versions].[AbsoluteVariancePersonal Draft - Best case] / [Versions].[Versions].[$version], FORMAT_STRING='#0.00%'
+          [Versions].[Versions].[AbsoluteVariancePersonal Draft - Best case] / [Versions].[Versions].[$version] * 100
           member
           [Versions].[Versions].[PercentVariancePersonal Draft - Average case] AS
-          [Versions].[Versions].[AbsoluteVariancePersonal Draft - Average case] / [Versions].[Versions].[$version], FORMAT_STRING='#0.00%'
+          [Versions].[Versions].[AbsoluteVariancePersonal Draft - Average case] / [Versions].[Versions].[$version] * 100
           member
           [Versions].[Versions].[PercentVariancePersonal Draft - Worst case] AS
-          [Versions].[Versions].[AbsoluteVariancePersonal Draft - Worst case] / [Versions].[Versions].[$version], FORMAT_STRING='#0.00%'
+          [Versions].[Versions].[AbsoluteVariancePersonal Draft - Worst case] / [Versions].[Versions].[$version] * 100
 
           Set RowInPercentVariance AS
           {
@@ -400,8 +409,7 @@ hrdemoSimulationGridTableCompareMode_init: >
           [Versions].[Versions].[PercentVarianceBudget],
           [Versions].[Versions].[PercentVariancePersonal Draft - Best case],
           [Versions].[Versions].[PercentVariancePersonal Draft - Average case],
-          [Versions].[Versions].[PercentVariancePersonal Draft - Worst case]}
-          ,
+          [Versions].[Versions].[PercentVariancePersonal Draft - Worst case]},
           {[Versions].[Versions].[PercentVariance$version]})
           }
 
@@ -467,7 +475,7 @@ hrdemoSimulationGridTableBudgetMode_init: >
            [Periods].[Periods].[2023]
            }
           ON COLUMNS ,
-           {[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[HC],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[FTE],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Base Salary],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Total Cost],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Total Salary],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Caculated Salary],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Bonus],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Auto allowance],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Other Benefits],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Employer contributions],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Social security],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Pension Fund],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Health Insurance]}
+           {[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Total Cost],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Total Salary],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Caculated Salary],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Bonus],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Auto allowance],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Other Benefits],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Employer contributions],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Social security],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Pension Fund],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Health Insurance]}
           ON ROWS
         FROM [Groups FTE and Cost]
         WHERE
@@ -587,7 +595,7 @@ hrdemoSimulationCompensationChangePopUpGridRow4Cell1Save_launch: >
         "Parameters": [
               {"Name": "pValue", "Value": "$pValue"},
               {"Name": "pVersions", "Value": "$pVersions"},
-              {"Name": "pPeriods", "Value": "$pPeriods"},
+              {"Name": "pMonthOfChange", "Value": "$pPeriods"},
               {"Name": "pPositions", "Value": "$pPositions"},
               {"Name": "pHeadcountTypes", "Value": "$pHeadcountTypes"},
               {"Name": "pEmployees", "Value": "$pEmployees"},
@@ -669,12 +677,11 @@ hrdemoUpdateValueGridRow2Text2_init: >
 hrdemoUpdateValueGridRow9Button_launch: >
   {
         "Parameters": [
-              {"Name": "pHeadcountType", "Value": "$type"},
-              {"Name": "pPosition", "Value": "$position"},
               {"Name": "pVersions", "Value": "$version"},
               {"Name": "pMonthOfChange", "Value": "$month"},
               {"Name": "pEmployeeName", "Value": "$employee"},
               {"Name": "pFTE", "Value": "$fte"},
+              {"Name": "pGroup", "Value": "$group"},
                 {"Name": "pUser", "Value": "$user"}
               ]
         }
@@ -1031,4 +1038,40 @@ hrdemoPeopleServiceTeamEditorShadow_init: >
   {TM1SubsetToSet([Employees].[Employees], \"$group\")}
   ON ROWS
   FROM [}ElementAttributes_Employees]
+       "}
+
+hrdemoReportWaterFall_init: >
+  {"MDX":"
+        with member
+        -- Caculated Salary
+        [Periods].[Periods].[CaculatedYear] As
+        [Periods].[Periods].[2023]
+        -
+        [Periods].[Periods].[2022]
+
+        SELECT
+        {
+        -- last year total
+        ([Periods].[Periods].[2022],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Total Cost]),
+        -- calculated cells
+        ([Periods].[Periods].[CaculatedYear],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Caculated Salary]),
+        ([Periods].[Periods].[CaculatedYear],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Bonus]),
+        ([Periods].[Periods].[CaculatedYear],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Auto allowance]),
+        ([Periods].[Periods].[CaculatedYear],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Other Benefits]),
+        ([Periods].[Periods].[CaculatedYear],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Employer contributions]),
+        ([Periods].[Periods].[CaculatedYear],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Social security]),
+        ([Periods].[Periods].[CaculatedYear],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Pension Fund]),
+        ([Periods].[Periods].[CaculatedYear],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Health Insurance]),
+        -- current year total
+        ([Periods].[Periods].[2023],[Lineitems Headcount Simulation].[Lineitems Headcount Simulation].[Total Cost])
+        }
+        ON COLUMNS ,
+        {[Employees].[Employees].[Total Employees]}
+        ON ROWS
+        FROM [Groups FTE and Cost]
+        WHERE
+        (
+        [Groups].[Groups].[Group_7],
+        [Versions].[Versions].[Personal Draft - Best case]
+        )
        "}

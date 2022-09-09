@@ -104,3 +104,21 @@
     border-radius: 8px;
     box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.2), 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
+
+.ks-grid-table-cell-group .ks-grid-table-cell-content{
+    border-right: 1px dotted #b1b3b3;
+}
+
+.ks-grid-table-cell-group2 .ks-grid-table-cell-content{
+    border-right: 1px dotted #b1b3b3;
+    border-left: 0px dotted #b1b3b3;
+}
+
+.ks-grid-table-head-cell-group .ks-grid-table-cell-content{
+    border-right: 0px dotted #b1b3b3;
+    border-left: 0px dotted #b1b3b3;
+}
+
+.ks-grid-table-head-cell-close .ks-grid-table-cell-content{
+    border-right: 1px dotted #747678;
+}

@@ -217,9 +217,9 @@
 }
 
 .ks-button-deepblue_userpanelmain .ks-button-label {
-    color: #585959;
+    color: #000000;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 300;
 }
 
 
@@ -251,9 +251,9 @@
 }
 
 .ks-button-userpanelmain .ks-button-label {
-    color: #585959;
+    color: #000000;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 300;
 }
 
 /* deepblue_userpanelbutton */
@@ -4679,7 +4679,7 @@
     margin-top: 4px;
     margin-left: 10px;
     margin-right: -2px;
-    color: #585959;
+    color: #000000;
 }
 
 .ks-button-userpanelmain .ks-button-divider {
@@ -4687,7 +4687,7 @@
 }
 
 .ks-button-userpanelmain .ks-button-label {
-    color: #585959;
+    color: #000000;
     font-size: 14px;
     font-weight: 600;
 }
@@ -4925,6 +4925,7 @@
 .ks-button-cancel_button_little .ks-button-label {
     color: #007AFF;
     font-size: 15px;
+    font-weight: normal;
 }
 
 .ks-button-cancel_button_little .ks-button-icon {
@@ -4945,6 +4946,7 @@
 .ks-button-save_button .ks-button-label {
     color: #fff;
     font-size: 20px;
+    font-weight: normal;
 }
 /* save_button_little */
 
@@ -4959,6 +4961,7 @@
 .ks-button-save_button_little .ks-button-label {
     color: #ffffff;
     font-size: 15px;
+    font-weight: normal;
 }
 /* material_hrdemo_rv button */
 .ks-button-material_hrdemo_rv.ks-button {
@@ -5034,7 +5037,7 @@
 .ks-button-material_hrdemogray .ks-button-label {
     color: #8E8E93;
     font-size: 20px;
-    font-weight: bold;
+    font-weight: normal;
     margin-right: 2px;
     margin-left: 6px;
 }
@@ -5045,6 +5048,10 @@
     margin-right: 2px;
     margin-left: 4px;
 }
+.ks-button-material_infobutton .ks-button-icon {
+    font-size: 25px;
+}
+
 
 .ks-button-delete_hrdemored.ks-button {
     background-color: #FC3B30;
@@ -5056,7 +5063,7 @@
 .ks-button-delete_hrdemored .ks-button-label {
     color: #FFFFFF;
     font-size: 20px;
-    font-weight: bold;
+    font-weight: normal;
     margin-right: 2px;
     margin-left: 6px;
     appearance: none;

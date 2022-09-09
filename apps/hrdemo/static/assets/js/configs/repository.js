@@ -106,10 +106,16 @@ Repository = {
                     length: 1,
                     query: [
                         (r, x) => {
-                            return {title: r.Cells[x].Members[1].Attributes.Long_name};
+                            return {
+                                title: r.Cells[x].Members[1].Attributes.Long_name,
+                                paddingLeft: '10px',
+                            };
                         },
                         (r, x) => {
-                            return {title: parseInt(r.Cells[x].FormattedValue)};
+                            return {
+                                title: parseInt(r.Cells[x].FormattedValue),
+                                marginLeft: '-70px'
+                            };
                         },
                         (r, x) => {
                             return {title: r.Cells[x].Members[1].Attributes.Created_DateTime};
@@ -369,14 +375,13 @@ Repository = {
             if (ctx.getCell().isActive) {
                 Utils.setWidgetValue('systemValueEmployeeLevelSelection', ctx.getGridTableInfo());
                 Api.updateWidgetsContent(['hrdemoPeopleServiceTeamEditorGridTable', 'hrdemoPeopleServiceEmployeeDetailsGridTable']).then(() => {
-                    Api.updateContent('hrdemoPeopleServiceEmployeeDetailsGridTableHeaderCell1Text')
+                    Api.forceRefresh('hrdemoPeopleServiceEmployeeDetailsGridTableHeaderCell1Text');
                 });
             }
         },
         switch(ctx) {
             if (v('systemValueSelectedEmployees').includes(ctx.getCell().employee)) {
                 const index = v('systemValueSelectedEmployees').indexOf(ctx.getCell().employee);
-                Utils.setWidgetValue('systemValueEmployeeLevelSelection', false);
                 if (index !== -1) {
                     v('systemValueSelectedEmployees').splice(index, 1);
                     v('systemValueSelectedEmployeeHierarchy').splice(index, 1);
@@ -390,7 +395,7 @@ Repository = {
                 })
             }
             Api.updateContent('hrdemoPeopleServiceTeamEditorGridTable').then(() => {
-                Api.updateWidgetsContent(['hrdemoPeopleServiceTeamEditorLevel1GridTable', 'hrdemoPeopleServiceTeamEditorLevel2GridTable']);
+                Api.updateWidgetsContent(['hrdemoPeopleServiceTeamEditorLevel1GridTable', 'hrdemoPeopleServiceTeamEditorLevel2GridTable', 'hrdemoPeopleServiceEmployeeDetailsGridTable']);
             });
         },
         restRequest: {
@@ -430,7 +435,7 @@ Repository = {
                             employee: members[1].Name,
                             team: members[1].Attributes.Team,
                             department: members[1].Attributes.Department,
-                            value: v('systemValueSelectedEmployees').includes(members[1].Name) ? 1 : v(`hrdemoPeopleServiceTeamEditorGridTable_${row}_0`).switch ? v(`hrdemoPeopleServiceTeamEditorGridTable_${row}_0`).switch.value : parseInt(cell.FormattedValue),
+                            value: v('systemValueSelectedEmployees').includes(members[1].Name) ? 1 : v(`hrdemoPeopleServiceTeamEditorGridTable_${row}_0`).switch ? v(`hrdemoPeopleServiceTeamEditorGridTable_${row}_0`).switch.value : 0,
                             cellBackgroundColor: '#ffffff'
                         }
 
@@ -512,8 +517,8 @@ Repository = {
             Utils.setWidgetValue('systemValueTeamEditorTableData', false);
             Utils.setWidgetValue('systemValueEmployeeLevelSelection', false);
             Utils.setWidgetValue('systemValueLatestClickedCellhrdemoPeopleServiceTeamEditorLevel2GridTable', false);
-            Api.updateWidgetsContent(['hrdemoPeopleServiceTeamEditorLevel1GridTable', 'hrdemoPeopleServiceTeamEditorLevel2GridTable', 'hrdemoPeopleServiceTeamEditorGridTable', 'hrdemoPeopleServiceEmployeeDetailsGridTable', 'hrdemoPeopleServiceEmployeeDetailsGridTableHeaderCell1Text']).then(() => {
-                Api.forceRefresh('hrdemoPeopleServiceTeamEditorRow3');
+            Api.updateWidgetsContent(['hrdemoPeopleServiceTeamEditorLevel1GridTable', 'hrdemoPeopleServiceTeamEditorLevel2GridTable', 'hrdemoPeopleServiceTeamEditorGridTable', 'hrdemoPeopleServiceEmployeeDetailsGridTable']).then(() => {
+                Api.forceRefreshWidgets(['hrdemoPeopleServiceTeamEditorRow3', 'hrdemoPeopleServiceEmployeeDetailsGridTableHeaderCell1Text']);
             });
         },
         init(ctx) {
@@ -604,7 +609,7 @@ Repository = {
                         d.push(c);
                         c = {
                             title: members[3].Name,
-                            body: selectedEmployeesNumber === 0 ? parseInt(cell.FormattedValue) / 12 : selectedEmployeesNumber + ' - ' + parseInt(cell.FormattedValue) / 12,
+                            body: selectedEmployeesNumber === 0 ? parseInt(cell.FormattedValue) / 12 : '<b style=color:#007AFA>' + selectedEmployeesNumber + '</b>' + ' - ' + parseInt(cell.FormattedValue) / 12,
                             cellBackgroundColor: v('systemValueBackgroundColorLevel1').title === members[3].Name ? '#f2f2f2' : '#ffffff'
                         }
                         d.push(c);
@@ -625,7 +630,8 @@ Repository = {
             Utils.setWidgetValue('systemValueTeamEditorTableData', false);
             Utils.setWidgetValue('systemValueEmployeeLevelSelection', false);
             Utils.setWidgetValue('systemValueBackgroundColorLevel2', ctx.getCell());
-            Api.updateWidgetsContent(['hrdemoPeopleServiceTeamEditorGridTable', 'hrdemoPeopleServiceEmployeeDetailsGridTable', 'hrdemoPeopleServiceEmployeeDetailsGridTableHeaderCell1Text']).then(() => {
+            Api.updateWidgetsContent(['hrdemoPeopleServiceTeamEditorGridTable', 'hrdemoPeopleServiceEmployeeDetailsGridTable']).then(() => {
+                Api.forceRefresh('hrdemoPeopleServiceEmployeeDetailsGridTableHeaderCell1Text');
                 Api.updateWidgetsContent(['hrdemoPeopleServiceTeamEditorLevel2GridTable', 'hrdemoPeopleServiceTeamEditorLevel1GridTable']);
                 Api.forceRefresh('hrdemoPeopleServiceTeamEditorRow3');
             })
@@ -718,7 +724,7 @@ Repository = {
                         d.push(c);
                         c = {
                             title: members[3].Name,
-                            body: selectedEmployeesNumber === 0 ? parseInt(cell.FormattedValue) / 12 : selectedEmployeesNumber + ' - ' + parseInt(cell.FormattedValue) / 12,
+                            body: selectedEmployeesNumber === 0 ? parseInt(cell.FormattedValue) / 12 : '<b style=color:#007AFA>' + selectedEmployeesNumber + '</b>' + ' - ' + parseInt(cell.FormattedValue) / 12,
                             cellBackgroundColor: v('systemValueBackgroundColorLevel2').title === members[3].Name ? '#f2f2f2' : '#ffffff'
                         }
 
@@ -736,15 +742,12 @@ Repository = {
     },
     hrdemoPeopleServiceEmployeeDetailsGridTableHeaderCell1Text: {
         init() {
-            if (Utils.getGridTableCurrentRow('hrdemoPeopleServiceTeamEditorGridTable')) {
+            if (Utils.isGridTableLoaded('hrdemoPeopleServiceEmployeeDetailsGridTable')) {
                 return {
-                    title: Utils.getGridTableCurrentCell('hrdemoPeopleServiceTeamEditorGridTable').title,
-                    icon: 'icon-user',
-                    skin: 'employee_details',
-                    visible: v('systemValueEmployeeLevelSelection')
+                    fileName: `${Utils.getGridTableCurrentCell('hrdemoPeopleServiceTeamEditorGridTable').employee}.jpeg`
                 }
             }
-            return {};
+            return {visible: false};
         }
     },
     hrdemoPeopleServiceEmployeeDetailsGridTable: {
@@ -772,7 +775,10 @@ Repository = {
                         cells = data.Cells,
                         members,
                         row = 0,
-                        cell;
+                        cell, a;
+
+                    a = cells[0];
+                    cells.splice(0, 0, {...a});
 
                     while (k < cells.length) {
                         cell = cells[k];
@@ -780,11 +786,19 @@ Repository = {
                         let d = [];
 
                         c = {
-                            title: members[1].Name
+                            marginLeft: 10,
+                            marginTop: row === 0 ? 7 : 0,
+                            titleFontWeight: 'normal',
+                            title: row === 0 ? '' : members[1].Name,
+                            icon: row === 0 ? Utils.getGridTableCurrentRow('hrdemoPeopleServiceTeamEditorGridTable')[0].value === 1 ? 'icon-checkbox-on11' : 'icon-checkbox-off1' : '',
+                            iconColor: '#007AFA'
                         }
                         d.push(c);
                         c = {
-                            title: cell.FormattedValue ? cell.FormattedValue : ' - '
+                            marginLeft: row === 0 ? 0 : 50,
+                            titleFontWeight: row === 0 ? 'bold' : 'normal',
+                            title: row === 0 ? members[0].Attributes.Long_name : cell.FormattedValue ? cell.FormattedValue : ' - ',
+                            titleFontSize: row === 0 ? 21 : 13
                         }
 
                         d.push(c);
@@ -826,10 +840,8 @@ Repository = {
                     script: (data, ctx, object) => {
                         let result = [],
                             k = 0, c,
-                            step = 1,
                             cells = data.Cells,
                             members,
-                            row = 0,
                             cell,
                             car = new Set(),
                             salary = new Set(),
@@ -843,33 +855,29 @@ Repository = {
                             let d = [];
                             c = {
                                 title: members[1].Attributes.Long_name === null ? '' : members[1].Attributes.Long_name,
-                                marginTop: '10px',
+                                marginTop: '12px',
                                 alignment: 'left',
-                                columnName: 'Name',
                                 cellVisible: v('hrdemoViewGroupGridTable').cellData[0][0].value === 1
                             };
                             d.push(c);
                             c = {
                                 title: members[1].Attributes.Team === null ? '' : members[1].Attributes.Team,
-                                marginTop: '10px',
+                                marginTop: '12px',
                                 alignment: 'left',
-                                columnName: 'Department',
                                 cellVisible: v('hrdemoViewGroupGridTable').cellData[1][0].value === 1
                             };
                             d.push(c);
                             c = {
                                 title: members[1].Attributes.Department === null ? '' : members[1].Attributes.Department,
-                                marginTop: '10px',
+                                marginTop: '12px',
                                 alignment: 'left',
-                                columnName: 'Team',
                                 cellVisible: v('hrdemoViewGroupGridTable').cellData[2][0].value === 1
                             };
                             d.push(c);
                             c = {
                                 title: members[1].Attributes.Salary === null ? '' : members[1].Attributes.Salary,
-                                marginTop: '10px',
+                                marginTop: '12px',
                                 alignment: 'left',
-                                columnName: 'Position',
                                 cellVisible: v('hrdemoViewGroupGridTable').cellData[3][0].value === 1
                             };
                             if (c.title !== '') {
@@ -878,17 +886,15 @@ Repository = {
                             d.push(c);
                             c = {
                                 title: members[1].Attributes.Position === null ? '' : members[1].Attributes.Position,
-                                marginTop: '10px',
+                                marginTop: '12px',
                                 alignment: 'left',
-                                columnName: 'Position',
                                 cellVisible: v('hrdemoViewGroupGridTable').cellData[4][0].value === 1
                             };
                             d.push(c);
                             c = {
                                 title: members[1].Attributes.Supervisor === null ? '' : members[1].Attributes.Supervisor,
-                                marginTop: '10px',
+                                marginTop: '12px',
                                 alignment: 'left',
-                                columnName: 'Position',
                                 cellVisible: v('hrdemoViewGroupGridTable').cellData[5][0].value === 1
                             };
                             if (c.title !== '') {
@@ -897,9 +903,8 @@ Repository = {
                             d.push(c);
                             c = {
                                 title: members[1].Attributes.Car === null ? '' : members[1].Attributes.Car,
-                                marginTop: '10px',
+                                marginTop: '12px',
                                 alignment: 'left',
-                                columnName: 'Car',
                                 cellVisible: v('hrdemoViewGroupGridTable').cellData[6][0].value === 1
                             };
                             if (c.title !== '') {
@@ -908,9 +913,8 @@ Repository = {
                             d.push(c);
                             c = {
                                 title: members[1].Attributes.Location === null ? '' : members[1].Attributes.Location,
-                                marginTop: '10px',
-                                alignment: 'left',
-                                columnName: 'Age',
+                                marginTop: '12px',
+                                alignment: 'right',
                                 cellVisible: v('hrdemoViewGroupGridTable').cellData[7][0].value === 1
                             };
                             if (c.title !== '') {
@@ -922,7 +926,6 @@ Repository = {
                                 title: members[1].Attributes.Age === null ? '' : members[1].Attributes.Age,
                                 marginTop: '10px',
                                 alignment: 'left',
-                                columnName: 'Age',
                                 cellVisible: v('hrdemoViewGroupGridTable').cellData[8][0].value === 1
                             };
                             if (c.title !== '') {
@@ -942,7 +945,7 @@ Repository = {
                         let length = v('hrdemoViewGroupGridTable').cellData.filter(e => e[0].value === 1).length;
                         return {
                             content: result,
-                            width: length * 250
+                            width: length * 220
                         };
                     }
                 }
@@ -955,6 +958,8 @@ Repository = {
         init(ctx) {
             Utils.setWidgetValue('systemValueCurrentYear', true);
             Utils.setWidgetValue('systemValueNextYear', false);
+            Utils.setWidgetValue('systemValueSelectedEmployees', []);
+            Utils.setWidgetValue('systemValueSelectedEmployeeHierarchy', []);
             Utils.setWidgetValue('systemValueGridTableMode', 'normalMode');
             Utils.setWidgetValue('systemValueDummyVersion', 'Base Plan');
             Utils.setWidgetValue('systemValueDummyPeriod', '202201');
@@ -965,7 +970,7 @@ Repository = {
 
     hrdemoSimulationRow3CellGauge: {
         initCondition: (db) => {
-            return v('hrdemoSimulationVersionSelectorPopUpDropbox').value
+            return v('hrdemoSimulationGroupSelectorPopUpDropbox').value
         },
         initDefault: (db) => {
             return {};
@@ -987,13 +992,13 @@ Repository = {
                     query:
                         {
                             values: (r, x) => {
-                                return [Utils.parseNumber(r.Cells[0].FormattedValue), Utils.parseNumber(r.Cells[1].FormattedValue)];
+                                return [Utils.parseNumber(r.Cells[0].FormattedValue) / 1000, Utils.parseNumber(r.Cells[1].FormattedValue) / 1000];
                             },
                             minRange: (r, x) => {
                                 return 0
                             },
                             maxRange: (r, x) => {
-                                return Math.round(((Math.max(Utils.parseNumber(r.Cells[0].FormattedValue), Utils.parseNumber(r.Cells[1].FormattedValue))) * 1.2));
+                                return Math.round(((Math.max(Utils.parseNumber(r.Cells[0].FormattedValue) / 1000, Utils.parseNumber(r.Cells[1].FormattedValue) / 1000)) * 1.2));
                             }
                         }
                 }
@@ -1003,7 +1008,7 @@ Repository = {
 
     hrdemoSimulationRow3Cell2PanelGridTable: {
         init() {
-            if (v('hrdemoSimulationVersionSelectorPopUpDropbox').value) {
+            if (v('hrdemoSimulationGroupSelectorPopUpDropbox').value) {
                 return new RestRequest(this.restRequest)
             }
             return [];
@@ -1028,13 +1033,13 @@ Repository = {
                             return {title: 'HR Cost'};
                         },
                         (r, x) => {
-                            return {title: r.Cells[x].FormattedValue};
+                            return {title: parseInt(r.Cells[x].FormattedValue).toLocaleString('hu-HU')};
                         },
                         (r, x) => {
-                            return {title: r.Cells[x + 1].FormattedValue};
+                            return {title: parseInt(r.Cells[x].FormattedValue).toLocaleString('hu-HU')};
                         },
                         (r, x) => {
-                            return {title: parseInt(r.Cells[x].FormattedValue) - parseInt(r.Cells[x + 1].FormattedValue)};
+                            return {title: (parseInt(r.Cells[x].FormattedValue) - parseInt(r.Cells[x + 1].FormattedValue)).toLocaleString('hu-HU')};
                         }
                     ]
                 }
@@ -1045,7 +1050,7 @@ Repository = {
         init(ctx) {
             Utils.setWidgetValue('systemValueSelectedGroup', v('systemValueSelectedGroup2'));
             return {
-                title: v('systemValueSelectedGroup2'),
+                title: 'Group: ' + '<b style=color:#000000;font-weight:normal;>' + v('systemValueSelectedGroup2') + '</b>',
             };
         }
     },
@@ -1109,31 +1114,31 @@ Repository = {
             Api.updateWidgetsContent(['hrdemoSimulationGridTable', 'hrdemoSimulationRow3Cell2PanelGridTable']);
             Api.forceRefresh('hrdemoSimulationRow3CellGauge');
         },
-        init:
-            {
-                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
-                type: 'POST',
-                server: true,
-                body: (db) => {
-                    return {
-                        key: 'hrdemoSimulationVersionSelectorPopUpDropbox_init'
-                    };
-                },
-                parsingControl: {
-                    type: 'list',
-                    query:
-                        (r, x) => {
-                            let selected = v('systemValueSelectedVersion2');
-                            return {
-                                name: r.Cells[x].FormattedValue,
-                                on: r.Cells[x].FormattedValue === selected,
-                                //key: r.Cells[x].Members[0].Name
-                            };
-                        }
+        init: {
+            execute: (db) => {
+                let selected = v('systemValueSelectedVersion2');
+                let base = [
+                        {
+                            name: 'Personal Draft - Best case',
+                            on: 'Personal Draft - Best case' === selected || selected === false
+                        },
+                        {name: 'Personal Draft - Average case', on: 'Personal Draft - Average case' === selected},
+                        {name: 'Personal Draft - Worst case', on: 'Personal Draft - Worst case' === selected},
+                    ],
+                    compare = [
+                        {name: 'Base Plan', on: 'Base Plan' === selected || selected === false},
+                        {name: 'Budget', on: 'Budget' === selected},
+                        {name: 'Personal Draft - Best case', on: 'Personal Draft - Best case' === selected},
+                        {name: 'Personal Draft - Average case', on: 'Personal Draft - Average case' === selected},
+                        {name: 'Personal Draft - Worst case', on: 'Personal Draft - Worst case' === selected},
+                    ],
+                    array = v('systemValueGridTableMode') !== 'compareMode' ? base : compare
+                return {
+                    items: array
                 }
             }
+        },
     },
-
     hrdemoSimulationGridTable: {
         text_click(ctx) {
             if (ctx.getCell().hasPopUp) {
@@ -1144,7 +1149,8 @@ Repository = {
                 }
             }
             if (ctx.getColumn() === 0 && v('systemValueGridTableMode') === 'normalMode') {
-                Api.updateWidgetsContent(['hrdemoSimulationNamePopupRow3GridTable', 'hrdemoSimulationNamePopupRow1Cell1Text']).then(() => {
+                Api.updateWidgetsContent(['hrdemoSimulationNamePopupRow3GridTable', 'hrdemoSimulationNamePopupRow3GridTableHeaderText-1']).then(() => {
+                    Api.forceRefresh('hrdemoSimulationNamePopupPanelCellImage');
                     Utils.openPopup('hrdemoSimulationNamePopup', ctx);
                 });
             }
@@ -1154,7 +1160,10 @@ Repository = {
             for (i = 0; i <= 29; i++) {
                 widgetIds.push('hrdemoSimulationGridTableHeaderCell-' + i)
             }
-            Api.updateWidgetsContent(widgetIds)
+            Api.updateWidgetsContent(widgetIds);
+        },
+        forceRefreshFinished() {
+            return this.updateContentFinished()
         },
         init() {
             Utils.setWidgetValue('hrdemoSimulationCommentPopupLoadedComments', []);
@@ -1206,9 +1215,13 @@ Repository = {
                             employeeNumber: members[1].Name,
                             titleCursor: 'pointer',
                             alignment: 'center-left',
+                            cellWidth: '10%',
                             cellSkin: row === 0 ? 'border_bottom' : '',
-                            titleFontSize: '13px',
-                            paddingLeft: '5px',
+                            titleFontSize: '13',
+                            titleFontWeight: 'normal',
+                            paddingBottom: '9px',
+                            skin: 'delta_report_data',
+                            marginLeft: '-5px',
                             mode: 'normal'
                         };
                         d.push(c);
@@ -1217,9 +1230,12 @@ Repository = {
                         c = {
                             title: row === 0 ? '' : members[1].Attributes.Position,
                             alignment: 'center-left',
-                            titleFontSize: '13px',
+                            titleFontSize: '13',
+                            titleFontWeight: 'normal',
+                            skin: 'delta_report_data',
+                            paddingBottom: '9px',
                             cellSkin: row === 0 ? 'border_bottom' : '',
-                            paddingLeft: '5px'
+                            marginLeft: '-5px'
                         };
                         d.push(c);
 
@@ -1264,14 +1280,16 @@ Repository = {
                             } else if (i > 25 && i < 28) {
                                 //total cost
                                 c = {
-                                    title: Math.round(parseInt(cells[i + k].FormattedValue)) + (v('hrdemoSimulationRow4Cell1SegmentedControl').selected === 'Δ%' ? ' %' : ''),
+                                    title: Math.round(parseInt(cells[i + k].FormattedValue)).toLocaleString('hu-HU') + (v('hrdemoSimulationRow4Cell1SegmentedControl').selected === 'Δ%' ? ' %' : ''),
                                     cellWidth: '10%',
                                     paddingRight: '15px',
                                     alignment: 'center-right',
-                                    cellSkin: row === 0 ? 'border_bottom' : '',
+                                    paddingBottom: '9px',
                                     skin: 'delta_report_data',
+                                    titleFontWeight: 'normal',
+                                    cellSkin: row === 0 ? 'border_bottom' : '',
                                     applyMeasuresToSection: true,
-                                    titleFontSize: '13px',
+                                    titleFontSize: '13',
                                 };
                                 d.push(c);
                             } else {
@@ -1282,7 +1300,7 @@ Repository = {
                                     members: {},
                                     cellSkin: row === 0 ? 'border_bottom' : '',
                                     icon: b ? 'icon-comment-off' : 'icon-comment-on',
-                                    iconColor: b ? '#E3E4E4' : '#009FDA',
+                                    iconColor: b ? '#E3E4E4' : '#007AFF',
                                     cellWidth: '1.5%',
                                     visible: row !== 0
                                 });//comment
@@ -1332,8 +1350,10 @@ Repository = {
                         c = {
                             title: (members[3].Name).replace('AbsoluteVariance', '').replace('PercentVariance', ''),
                             alignment: 'center-left',
-                            titleFontSize: '13px',
-                            paddingLeft: '5px',
+                            titleFontSize: '13',
+                            titleFontWeight: 'normal',
+                            marginLeft: '-5px',
+                            cellWidth: '10%',
                             cellSkin: row === 0 ? 'border_bottom' : '',
                             mode: 'budget'
                         };
@@ -1355,7 +1375,7 @@ Repository = {
                             //current year
                             if (i < 13) {
                                 c = {
-                                    title: v('hrdemoSimulationRow4Cell1SegmentedControl').selected === 'Δ%' ? cells[i + k].FormattedValue : parseInt(cells[i + k].FormattedValue),
+                                    title: parseInt(cells[i + k].FormattedValue).toLocaleString('hu-HU') + (v('hrdemoSimulationRow4Cell1SegmentedControl').selected === 'Δ%' && row !== 0 ?  '%' : ''),
                                     paddingRight: '5px',
                                     skin: '',
                                     cellSkin: row === 0 ? 'border_bottom' : '',
@@ -1370,7 +1390,7 @@ Repository = {
                             } else if (i > 12 && i < 26) {
                                 //next year
                                 c = {
-                                    title: v('hrdemoSimulationRow4Cell1SegmentedControl').selected === 'Δ%' ? cells[i + k].FormattedValue : parseInt(cells[i + k].FormattedValue),
+                                    title:  parseInt(cells[i + k].FormattedValue).toLocaleString('hu-HU') + (v('hrdemoSimulationRow4Cell1SegmentedControl').selected === 'Δ%' && row !== 0 ?  '%' : ''),
                                     paddingRight: '5px',
                                     skin: '',
                                     alignment: 'center-right',
@@ -1384,7 +1404,7 @@ Repository = {
                             } else if (i > 25 && i < 28) {
                                 //total cost
                                 c = {
-                                    title: Math.round(parseInt(cells[i + k].FormattedValue)) + (v('hrdemoSimulationRow4Cell1SegmentedControl').selected === 'Δ%' ? ' %' : ''),
+                                    title: Math.round(parseInt(cells[i + k].FormattedValue)).toLocaleString('hu-HU') + (v('hrdemoSimulationRow4Cell1SegmentedControl').selected === 'Δ%' && row !== 0 ? ' %' : ''),
                                     paddingRight: '5px',
                                     alignment: 'center-right',
                                     skin: '',
@@ -1395,13 +1415,13 @@ Repository = {
                                 d.push(c);
                             } else {
                                 let formattedVal = cells[28 + k].FormattedValue;
-                                let b = formattedVal === 'NA' || formattedVal === '0' || formattedVal === '';
+                                let b = formattedVal === 'NA' || formattedVal === '0,00' || formattedVal === '';
                                 d.push({
                                     commentId: formattedVal,
                                     members: {},
                                     cellSkin: row === 0 ? 'border_bottom' : '',
                                     icon: b ? 'icon-comment-off' : 'icon-comment-on',
-                                    iconColor: b ? '#E3E4E4' : '#009FDA',
+                                    iconColor: b ? '#E3E4E4' : '#007AFF',
                                     cellWidth: '1.5%',
                                     visible: row !== 0
                                 });//comment
@@ -1448,8 +1468,10 @@ Repository = {
                         c = {
                             title: members[3].Name,
                             alignment: 'center-left',
-                            titleFontSize: '13px',
-                            paddingLeft: '5px',
+                            titleFontSize: '13',
+                            titleFontWeight: 'normal',
+                            marginLeft: '-5px',
+                            cellWidth: '16%',
                             mode: 'budget'
                         };
                         d.push(c);
@@ -1467,52 +1489,37 @@ Repository = {
                         for (let i = 0; i < 29; i++) {
 
                             //current year
-                            if (i < 13) {
+                            if (i < 14) {
                                 c = {
-                                    title: parseInt(cells[i + k].FormattedValue),
-                                    paddingRight: '5px',
+                                    title: parseInt(cells[i + k].FormattedValue).toLocaleString('hu-HU'),
+                                    paddingRight: '15px',
                                     skin: '',
                                     alignment: 'center-right',
                                     applyMeasuresToSection: true,
-                                    cellWidth: '4.5%',
+                                    cellBackgroundColor: i === 12 | i === 13 ? '#F2f2f2' : '#ffffff',
+                                    cellWidth: '7.5%',
+
                                     cellVisible: v('systemValueCurrentYear') === true,
                                 };
                                 d.push(c);
 
 
-                            } else if (i > 12 && i < 26) {
+                            } else if (i > 13 && i < 28) {
                                 //next year
                                 c = {
-                                    title: parseInt(cells[i + k].FormattedValue),
-                                    paddingRight: '5px',
+                                    title: parseInt(cells[i + k].FormattedValue).toLocaleString('hu-HU'),
+                                    paddingRight: '15px',
                                     skin: '',
                                     alignment: 'center-right',
+                                    cellBackgroundColor: i === 14 | i === 27 ? '#F2f2f2' : '#ffffff',
                                     applyMeasuresToSection: true,
-                                    cellWidth: '4.5%',
+                                    cellWidth: '7.5%',
                                     cellVisible: v('systemValueNextYear') === true,
-                                };
-                                d.push(c);
-
-                            } else if (i > 25 && i < 28) {
-                                //total cost
-                                c = {
-                                    title: Math.round(parseInt(cells[i + k].FormattedValue)),
-                                    cellWidth: '10%',
-                                    paddingRight: '5px',
-                                    alignment: 'center-right',
-                                    skin: '',
-                                    applyMeasuresToSection: true,
-                                    titleFontSize: '13px',
                                 };
                                 d.push(c);
                             } else {
                                 //comment
                                 c = {
-                                    //title: parseInt(cells[i + k].FormattedValue),
-                                    alignment: 'center-center',
-                                    icon: 'icon-comment-off',
-                                    skin: '',
-                                    iconColor: '#cecece',
                                     cellVisible: false
                                 };
                                 d.push(c);
@@ -1556,7 +1563,7 @@ Repository = {
             m.version = this.isCompare() ? Utils.getGridTableCurrentRow('hrdemoSimulationGridTable')[0].title : v('hrdemoSimulationVersionSelectorPopUpDropbox').value;
             m.group = v('hrdemoSimulationGroupSelectorPopUpDropbox').value;
             m.employee = this.isCompare() ? 'Total Employees' : Utils.getGridTableCurrentRow('hrdemoSimulationGridTable')[0].employeeNumber;
-            m.key_suffix = this.isCompare() ? 'compare' : '';
+            m.key = this.isCompare() ? 'hrdemoSimulationCommentPopupCommentInput_reloadComment_compare' : 'hrdemoSimulationCommentPopupCommentInput_reloadComment';
 
             return m;
         }
@@ -1564,14 +1571,20 @@ Repository = {
 
     hrdemoSimulationRow2Cell2Button: {
         launch() {
+            Utils.setWidgetValue('systemValueCurrentYear', true);
+            Utils.setWidgetValue('systemValueNextYear', false);
             if (v('systemValueGridTableMode') === 'normalMode' || v('systemValueGridTableMode') === 'budgetMode') {
                 Utils.setWidgetValue('systemValueGridTableMode', 'compareMode');
-            } else if (v('hrdemoSimulationRow1Cell3SegmentedControl').selected === 'Simulation') {
-                Utils.setWidgetValue('systemValueGridTableMode', 'normalMode');
             } else {
-                Utils.setWidgetValue('systemValueGridTableMode', 'budgetMode');
+                Utils.setWidgetValue('systemValueGridTableMode', 'normalMode');
             }
-            Api.updateWidgetsContent(['hrdemoSimulationGridTable', 'hrdemoSimulationRow2Cell2Button', 'hrdemoSimulationRow2Cell1Text']);
+            Api.forceRefresh('hrdemoSimulationVersionSelectorPopUpDropbox').then(() => {
+                Utils.setWidgetValue('systemValueSelectedVersion2', v('hrdemoSimulationVersionSelectorPopUpDropbox.value'));
+                Api.updateWidgetsContent(['hrdemoSimulationRow3Cell2PanelGridTable', 'hrdemoSimulationRow2Cell1Text', 'hrdemoSimulationRow2Cell2Button', 'hrdemoSimulationRow2Cell1Text']);
+                Api.forceRefresh('hrdemoSimulationRow3CellGauge');
+            });
+            Api.forceRefreshWidgets(['hrdemoSimulationGridTable', 'hrdemoSimulationRow1Cell3SegmentedControl']);
+
         },
         init() {
             let compareMode = v('systemValueGridTableMode') === 'compareMode';
@@ -1842,6 +1855,13 @@ Repository = {
             Api.updateContent('hrdemoSimulationAddDummyPopUpGridTable');
         }
     },*/
+    'hrdemoSimulationGridTableHeaderText-1': {
+        init() {
+            return {
+                body: v('systemValueGridTableMode') !== 'budgetMode' ? 'Name' : '',
+            }
+        }
+    },
     'hrdemoSimulationGridTableHeaderText-2': {
         add_dummy(ctx) {
             Utils.setWidgetValue('systemValueDummyPeriod', '202201');
@@ -1861,22 +1881,139 @@ Repository = {
         perform() {
             Utils.setWidgetValue('systemValueCurrentYear', false);
             Utils.setWidgetValue('systemValueNextYear', true);
-            Api.updateContent('hrdemoSimulationGridTable');
+            Api.updateContent('hrdemoSimulationGridTable').then(() => {
+                Api.forceRefresh('hrdemoSimulationGridTableHeaderText-29');
+            });
         },
+        init() {
+            return {
+                title: v('systemValueGridTableMode') !== 'budgetMode' ? '2023' : '2022',
+            }
+        }
     },
 
     'hrdemoSimulationGridTableHeaderText-16': {
         perform() {
-            Utils.setWidgetValue('systemValueCurrentYear', true);
-            Utils.setWidgetValue('systemValueNextYear', false);
-            Api.updateContent('hrdemoSimulationGridTable');
+            if (v('systemValueNextYear')) {
+                Utils.setWidgetValue('systemValueCurrentYear', true);
+                Utils.setWidgetValue('systemValueNextYear', false);
+                Api.updateContent('hrdemoSimulationGridTable').then(() => {
+                    Api.forceRefresh('hrdemoSimulationGridTableHeaderText-29');
+                });
+            }
         },
+        init() {
+            return {
+                iconColor: v('systemValueNextYear') ? '#007AFF' : '#ffffff',
+                title: v('systemValueNextYear') ? '2022' : '2023',
+                paddingRight: v('systemValueGridTableMode') !== 'budgetMode' ? '30px' : '50px',
+            }
+        }
+    },
+    'hrdemoSimulationGridTableHeaderText-29': {
+        init() {
+            return {
+                title: v('systemValueGridTableMode') !== 'budgetMode' ? '' : '2023',
+                body: v('systemValueGridTableMode') !== 'budgetMode' ? 'HR Cost ∑ 2022' : 'Year',
+                skin: v('systemValueGridTableMode') !== 'budgetMode' ? 'simulation_header_month' : 'simulation_header_with_icon',
+                icon: v('systemValueGridTableMode') !== 'budgetMode' ? '' : 'icon-expand-arrow',
+                marginLeft: v('systemValueNextYear') === false ? '-80px' : '-50px',
+                iconColor: '#ffffff',
+                visible: v('systemValueGridTableMode') !== 'budgetMode' ? true : v('systemValueNextYear')
+            };
+        }
+    },
+
+    'hrdemoSimulationGridTableHeaderText-3': {
+        init() {
+            return {
+                paddingRight: v('systemValueGridTableMode') !== 'budgetMode' ? '30px' : '50px',
+
+            };
+        }
+    },
+    'hrdemoSimulationGridTableHeaderText-5': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-6': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-7': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-8': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-9': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-10': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-11': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-12': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-13': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-14': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-17': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-18': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-19': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-20': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-21': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-22': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-23': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-24': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-25': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-26': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-27': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-28': {
+        reference: 'hrdemoSimulationGridTableHeaderText-3'
+    },
+    'hrdemoSimulationGridTableHeaderText-30': {
+        init() {
+            return {
+                body: v('systemValueGridTableMode') !== 'budgetMode' ? 'HR Cost ∑ 2023' : 'Year',
+                title: v('systemValueGridTableMode') !== 'budgetMode' ? '' : '2023',
+                paddingRight: v('systemValueGridTableMode') !== 'budgetMode' ? '0px' : '90px',
+                paddingBottom: v('systemValueGridTableMode') !== 'budgetMode' ? '0px' : '18px'
+            };
+        }
     },
 
     'hrdemoSimulationGridTableHeaderCell-1': {
         init() {
             return {
-                cellHeaderSkin: v('systemValueGridTableMode') !== 'budgetMode' ? 'border_bottom' : ''
+                cellHeaderSkin: v('systemValueGridTableMode') !== 'budgetMode' ? 'border_bottom' : '',
+                width: v('systemValueGridTableMode') !== 'budgetMode' ? '10%' : '16%'
             };
         }
     },
@@ -1885,7 +2022,8 @@ Repository = {
         init(db) {
             return {
                 cellVisible: v('systemValueGridTableMode') === 'normalMode',
-                cellHeaderSkin: v('systemValueGridTableMode') !== 'budgetMode' ? 'border_bottom' : ''
+                cellHeaderSkin: v('systemValueGridTableMode') !== 'budgetMode' ? 'border_bottom' : '',
+
             };
         }
     },
@@ -1894,7 +2032,9 @@ Repository = {
         init(db) {
             return {
                 cellVisible: v('systemValueCurrentYear') === true,
-                cellHeaderSkin: v('systemValueGridTableMode') !== 'budgetMode' ? 'border_bottom' : ''
+                cellHeaderSkin: v('systemValueGridTableMode') !== 'budgetMode' ? 'border_bottom' : '',
+                width: v('systemValueGridTableMode') !== 'budgetMode' ? '4.5%' : '7.5%',
+
             };
         }
     },
@@ -1939,63 +2079,91 @@ Repository = {
     'hrdemoSimulationGridTableHeaderCell-16': {
         init(db) {
             return {
-                cellVisible: v('systemValueNextYear') === true,
-                cellHeaderSkin: v('systemValueGridTableMode') !== 'budgetMode' ? 'border_bottom' : ''
+                cellVisible: v('systemValueGridTableMode') !== 'budgetMode' ? v('systemValueNextYear') : true,
+                cellHeaderSkin: v('systemValueGridTableMode') !== 'budgetMode' ? 'border_bottom' : '',
+                width: v('systemValueGridTableMode') !== 'budgetMode' ? '4.5%' : '7.5%'
             }
         }
     },
     'hrdemoSimulationGridTableHeaderCell-17': {
-        reference: 'hrdemoSimulationGridTableHeaderCell-16'
+        init(db) {
+            return {
+                cellVisible: v('systemValueNextYear'),
+                cellHeaderSkin: v('systemValueGridTableMode') !== 'budgetMode' ? 'border_bottom' : '',
+                width: v('systemValueGridTableMode') !== 'budgetMode' ? '4.5%' : '7.5%'
+            }
+        }
     },
     'hrdemoSimulationGridTableHeaderCell-18': {
-        reference: 'hrdemoSimulationGridTableHeaderCell-16'
+        reference: 'hrdemoSimulationGridTableHeaderCell-17'
     },
     'hrdemoSimulationGridTableHeaderCell-19': {
-        reference: 'hrdemoSimulationGridTableHeaderCell-16'
+        reference: 'hrdemoSimulationGridTableHeaderCell-17'
     },
     'hrdemoSimulationGridTableHeaderCell-20': {
-        reference: 'hrdemoSimulationGridTableHeaderCell-16'
+        reference: 'hrdemoSimulationGridTableHeaderCell-17'
     },
     'hrdemoSimulationGridTableHeaderCell-21': {
-        reference: 'hrdemoSimulationGridTableHeaderCell-16'
+        reference: 'hrdemoSimulationGridTableHeaderCell-17'
     },
     'hrdemoSimulationGridTableHeaderCell-22': {
-        reference: 'hrdemoSimulationGridTableHeaderCell-16'
+        reference: 'hrdemoSimulationGridTableHeaderCell-17'
     },
     'hrdemoSimulationGridTableHeaderCell-23': {
-        reference: 'hrdemoSimulationGridTableHeaderCell-16'
+        reference: 'hrdemoSimulationGridTableHeaderCell-17'
     },
     'hrdemoSimulationGridTableHeaderCell-24': {
-        reference: 'hrdemoSimulationGridTableHeaderCell-16'
+        reference: 'hrdemoSimulationGridTableHeaderCell-17'
     },
     'hrdemoSimulationGridTableHeaderCell-25': {
-        reference: 'hrdemoSimulationGridTableHeaderCell-16'
+        reference: 'hrdemoSimulationGridTableHeaderCell-17'
     },
     'hrdemoSimulationGridTableHeaderCell-26': {
-        reference: 'hrdemoSimulationGridTableHeaderCell-16'
+        reference: 'hrdemoSimulationGridTableHeaderCell-17'
     },
     'hrdemoSimulationGridTableHeaderCell-27': {
-        reference: 'hrdemoSimulationGridTableHeaderCell-16'
+        reference: 'hrdemoSimulationGridTableHeaderCell-17'
     },
     'hrdemoSimulationGridTableHeaderCell-28': {
-        reference: 'hrdemoSimulationGridTableHeaderCell-16'
+        reference: 'hrdemoSimulationGridTableHeaderCell-17'
     },
     'hrdemoSimulationGridTableHeaderCell-29': {
-        reference: 'hrdemoSimulationGridTableHeaderCell-1'
+        init() {
+            return {
+                cellHeaderSkin: v('systemValueGridTableMode') !== 'budgetMode' ? 'border_bottom' : '',
+                width: v('systemValueGridTableMode') !== 'budgetMode' ? '10%' : v('systemValueNextYear') ? '7.5%' : '0%',
+                visible: v('systemValueGridTableMode') !== 'budgetMode' ? true : v('systemValueNextYear')
+            };
+        }
     },
     'hrdemoSimulationGridTableHeaderCell-30': {
-        reference: 'hrdemoSimulationGridTableHeaderCell-1'
+        reference: 'hrdemoSimulationGridTableHeaderCell-29'
     },
     'hrdemoSimulationGridTableHeaderCell-31': {
-        reference: 'hrdemoSimulationGridTableHeaderCell-1'
+        init() {
+            return {
+                cellHeaderSkin: v('systemValueGridTableMode') !== 'budgetMode' ? 'border_bottom' : '',
+                width: '1.5%'
+            };
+        }
     },
 
     hrdemoSimulationRow1Cell3SegmentedControl: {
         switch() {
+            Utils.setWidgetValue('systemValueCurrentYear', true);
+            Utils.setWidgetValue('systemValueNextYear', false);
             Api.updateWidgetsContent(['hrdemoSimulationRow2Cell2Button', 'hrdemoSimulationRow2Cell1Text']);
-            Api.forceRefresh('hrdemoSimulationGridTable');
-            Api.forceRefresh('hrdemoSimulationRow4Cell1SegmentedControl');
-            Api.forceRefresh('hrdemoSimulationRow2Cell5Button');
+            Api.forceRefreshWidgets(['hrdemoSimulationGridTable', 'hrdemoSimulationRow4Cell1', 'hrdemoSimulationRow2Cell5Button', 'hrdemoSimulationGridTableHeaderText-1']);
+        },
+        init() {
+            return [
+                {
+                    selected: 'normalMode' === v('systemValueGridTableMode') || 'compareMode' === v('systemValueGridTableMode')
+                },
+                {
+                    selected: 'budgetMode' === v('systemValueGridTableMode')
+                }
+            ];
         },
         segmentedControlTab1: {
             execute: (db) => {
@@ -2008,13 +2176,15 @@ Repository = {
             }
         }
     },
-
-    hrdemoSimulationRow4Cell1SegmentedControl: {
+    hrdemoSimulationRow4Cell1: {
         init() {
             return {
-                visible: v('systemValueGridTableMode') !== 'budgetMode'
+                visible: v('systemValueGridTableMode') !== 'budgetMode',
+                skin: 'segmented'
             }
         },
+    },
+    hrdemoSimulationRow4Cell1SegmentedControl: {
         switch() {
             Api.updateContent('hrdemoSimulationGridTable');
         }
@@ -2197,7 +2367,7 @@ Repository = {
                             title: members[3].Name,
                             alignment: 'center-left',
                             titleFontSize: '13px',
-                            paddingLeft: '5px',
+                            paddingLeft: '10px',
                             mode: 'budget'
                         };
                         d.push(c);
@@ -2206,6 +2376,7 @@ Repository = {
 
                             c = {
                                 title: '',
+                                paddingRight: '15px',
                                 ordinal: cells[i + k].Ordinal,
                                 theValueIsPercent: !(['Social Security Limit', 'Insurance (per HC)'].includes(members[3].Name)),
                                 editable: true
@@ -2430,7 +2601,7 @@ Repository = {
                                 title: members[4].Name,
                                 alignment: 'center-left',
                                 titleFontSize: '13px',
-                                paddingLeft: '5px'
+                                paddingLeft: '10px'
                             };
                             d.push(c);
 
@@ -2438,6 +2609,7 @@ Repository = {
 
                                 c = {
                                     title: '',
+                                    paddingRight:'15px',
                                     ordinal: cells[i + k].Ordinal,
                                     theValueIsPercent: 'Bonus (%)' === members[4].Name,
                                     editable: true
@@ -2710,9 +2882,28 @@ Repository = {
                 server: true,
                 body: (db) => {
                     return {
-                        key: 'chartDefaultMDX'
+                        key: 'hrdemoReportWaterFall_init'
                     };
                 },
+                parsingControl: {
+                    type: 'script',
+                    script(r) {
+                        let values = r.Cells.map(
+                            (elem, index) => r.Cells.slice(
+                                0, index + 1).map(
+                                e => Utils.parseNumber(e.FormattedValue, 'HU-hu')).reduce(
+                                (a, b) => a + b));
+
+                        values.splice(-1, 1);
+                        const max = Math.max.apply(this, values),
+                            min = Math.min.apply(this, values);
+
+                        return {
+                            maxYAxis: String(Math.round((max * 1.01))),
+                            minYAxis: String(Math.round((min * 0.99)))
+                        };
+                    }
+                }
             },
             {
                 url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Long_NameENG))`,
@@ -2720,88 +2911,63 @@ Repository = {
                 server: true,
                 body: (db) => {
                     return {
-                        key: 'chartDefaultMDX'
+                        key: 'hrdemoReportWaterFall_init'
                     };
                 },
                 parsingControl: {
                     type: 'matrix',
-                    length: 15,
+                    length: 10,
                     query: [
                         (r, x) => {
                             return {
-                                value: r.Cells[x].FormattedValue
+                                value: Utils.parseNumber(r.Cells[x].FormattedValue, 'HU-hu')
                             };
                         },
                         (r, x) => {
                             return {
-                                value: r.Cells[x + 1].FormattedValue
+                                value: Utils.parseNumber(r.Cells[x + 1].FormattedValue, 'HU-hu')
                             };
                         },
                         (r, x) => {
                             return {
-                                value: r.Cells[x + 2].FormattedValue
+                                value: Utils.parseNumber(r.Cells[x + 2].FormattedValue, 'HU-hu')
                             };
                         },
                         (r, x) => {
                             return {
-                                value: r.Cells[x + 3].FormattedValue
+                                value: Utils.parseNumber(r.Cells[x + 3].FormattedValue, 'HU-hu')
                             };
                         },
                         (r, x) => {
                             return {
-                                value: r.Cells[x + 4].FormattedValue
+                                value: Utils.parseNumber(r.Cells[x + 4].FormattedValue, 'HU-hu')
                             };
                         },
                         (r, x) => {
                             return {
-                                value: r.Cells[x + 5].FormattedValue
+                                value: Utils.parseNumber(r.Cells[x + 5].FormattedValue, 'HU-hu')
                             };
                         },
                         (r, x) => {
                             return {
-                                value: r.Cells[x + 6].FormattedValue
+                                value: Utils.parseNumber(r.Cells[x + 6].FormattedValue, 'HU-hu')
                             };
                         },
                         (r, x) => {
                             return {
-                                value: r.Cells[x + 7].FormattedValue
+                                value: Utils.parseNumber(r.Cells[x + 7].FormattedValue, 'HU-hu')
                             };
                         },
                         (r, x) => {
                             return {
-                                value: r.Cells[x + 8].FormattedValue
+                                value: Utils.parseNumber(r.Cells[x + 8].FormattedValue, 'HU-hu')
                             };
                         },
                         (r, x) => {
                             return {
-                                value: r.Cells[x + 9].FormattedValue
+                                value: Utils.parseNumber(r.Cells[x + 9].FormattedValue, 'HU-hu')
                             };
                         },
-                        (r, x) => {
-                            return {
-                                value: r.Cells[x + 10].FormattedValue
-                            };
-                        },
-                        (r, x) => {
-                            return {
-                                value: r.Cells[x + 11].FormattedValue
-                            };
-                        },
-                        (r, x) => {
-                            return {
-                                value: r.Cells[x + 12].FormattedValue
-                            };
-                        },
-                        (r, x) => {
-                            return {
-                                value: r.Cells[x + 13].FormattedValue
-                            };
-                        },
-                        (r, x) => {
-                            return {
-                                value: r.Cells[x + 14].FormattedValue
-                            };
-                        }
                     ]
                 }
 
@@ -2860,7 +3026,7 @@ Repository = {
             if (m) {
                 let y = m.slice(0, 4) + '. ' + months[Utils.parseNumber(m.slice(4, 6)) - 1];
                 return {
-                    title: Utils.getGridTableCurrentRow('hrdemoSimulationGridTable')[0].title + '  ' + '<b style=\\color: #747B85\\>' + y + '</b>',
+                    title: Utils.getGridTableCurrentRow('hrdemoSimulationGridTable')[0].title + '  ' + '<b style=color:#747B85>' + y + '</b>',
                     titleFontWeight: '600'
                 }
             }
@@ -2869,10 +3035,10 @@ Repository = {
     },
     hrdemoSimulationExitOrganisationPopUpGridRow3Text1: {
         init() {
-            if (v('hrdemoSimulationGridTable').row) {
+            if (Utils.getGridTableCurrentCell('hrdemoSimulationGridTable')) {
                 let e = Utils.getGridTableCurrentRow('hrdemoSimulationGridTable')[0].title;
                 return {
-                    title: 'Select the last working day of ' + '<b style=\\color: #747B85\\>' + e + '</b>',
+                    title: 'Select the last working day of ' + '<b style=color:#747B85>' + e + '</b>',
                     titleFontWeight: '300'
                 }
             }
@@ -2919,6 +3085,12 @@ Repository = {
                         }
                     }
             }
+        }
+    },
+    hrdemoSimulationRow1Cell1Button: {
+        launch() {
+            Api.removeWidgetValues(['hrdemoSimulationGridTable', 'hrdemoSimulationExitOrganisationPopUpGridRow3Text1']);
+            Api.openPage('hrdemoMain');
         }
     },
     hrdemoSimulationCompensationChangePopUpGridRow3Text1: {
@@ -2969,7 +3141,7 @@ Repository = {
             if (m) {
                 let y = months[Utils.parseNumber(m.slice(4, 6)) - 1];
                 return {
-                    title: m.slice(0, 4) + '. ' + '<b style=\\color: #747B85\\>' + y + '</b>',
+                    title: m.slice(0, 4) + '. ' + '<b style=color:#747B85>' + y + '</b>',
                     titleFontWeight: '300',
                     visible: true
                 }
@@ -2985,7 +3157,7 @@ Repository = {
             if (m) {
                 let y = m.slice(0, 4) + '. ' + months[Utils.parseNumber(m.slice(4, 6)) - 1];
                 return {
-                    title: Utils.getGridTableCurrentRow('hrdemoSimulationGridTable')[0].title + '  ' + '<b style=\\color: #747B85\\>' + y + '</b>',
+                    title: Utils.getGridTableCurrentRow('hrdemoSimulationGridTable')[0].title + '  ' + '<b style=color:#747B85>' + y + '</b>',
                     titleFontWeight: '600'
                 }
             }
@@ -3083,10 +3255,16 @@ Repository = {
                 length: 1,
                 query: [
                     (r, x) => {
-                        return {title: r.Cells[x].Members[0].Name};
+                        return {
+                            title: r.Cells[x].Members[0].Name,
+                            titleFontWeight: 'normal'
+                        };
                     },
                     (r, x) => {
-                        return {title: r.Cells[x].FormattedValue};
+                        return {
+                            title: (r.Cells[x].FormattedValue).replace('Department', ''),
+                            titleFontWeight: 'normal'
+                        };
                     }
                 ]
             }
@@ -3106,7 +3284,17 @@ Repository = {
             });
         }
     },
-    hrdemoSimulationNamePopupRow1Cell1Text: {
+    hrdemoSimulationNamePopupPanelCellImage: {
+        init() {
+            if (Utils.isGridTableLoaded('hrdemoSimulationGridTable')) {
+                return {
+                    fileName: `${Utils.getGridTableCurrentCell('hrdemoSimulationGridTable').employeeNumber}.jpeg`
+                }
+            }
+            return {visible: false};
+        }
+    },
+    'hrdemoSimulationNamePopupRow3GridTableHeaderText-1': {
         init() {
             return {
                 title: v('hrdemoSimulationGridTable').column == 0 ? Utils.getGridTableCurrentCell('hrdemoSimulationGridTable').title : ''
@@ -3194,15 +3382,12 @@ Repository = {
             server: true,
             body: (db) => {
                 let version = v('hrdemoSimulationVersionSelectorPopUpDropbox').value,
-                    position = Utils.getGridTableCurrentRow('hrdemoSimulationGridTable')[1].title,
-                    type = 'Permanent',
                     month = Utils.getGridTableCurrentCell('hrdemoSimulationGridTable').yearAndMonth,
                     employee = Utils.getGridTableCurrentRow('hrdemoSimulationGridTable')[0].employeeNumber,
                     fte = parseInt(v('hrdemoUpdateValueGridRow3TextBox').value);
                 return {
                     version: version,
-                    position: position,
-                    type: type,
+                    group: v('hrdemoSimulationGroupSelectorPopUpDropbox').value,
                     month: month,
                     employee: employee,
                     fte: fte,
@@ -3244,7 +3429,7 @@ Repository = {
             if (m) {
                 let y = m.slice(0, 4) + '. ' + months[Utils.parseNumber(m.slice(4, 6)) - 1];
                 return {
-                    title: v('hrdemoSimulationGroupSelectorPopUpDropbox').value + ' - ' + '<b style=\\color: #747B85\\>' + y + '</b>',
+                    title: v('hrdemoSimulationGroupSelectorPopUpDropbox').value + ' - ' + '<b style=color:#747B85>' + y + '</b>',
                 }
             }
             return {};
@@ -3257,7 +3442,7 @@ Repository = {
             if (m) {
                 let y = m.slice(0, 4) + '. ' + months[Utils.parseNumber(m.slice(4, 6)) - 1];
                 return {
-                    title: v('hrdemoSimulationGroupSelectorPopUpDropbox').value + ' - ' + '<b style=\\color: #747B85\\>' + y + '</b>',
+                    title: v('hrdemoSimulationGroupSelectorPopUpDropbox').value + ' - ' + '<b style=color:#747B85>' + y + '</b>',
                 }
             }
             return {};
@@ -3391,7 +3576,7 @@ Repository = {
                 index = parseInt(ctx.getId().split('-')[1]) - 1;
             return {
                 title: v('hrdemoViewGroupGridTable').cellData[index][0].value === 1 ? cn[index] : '',
-                cellWidth: v('hrdemoViewGroupGridTable').cellData[index][0].value === 1 ? '250px' : '0px',
+                cellWidth: v('hrdemoViewGroupGridTable').cellData[index][0].value === 1 ? '350px' : '0px',
                 paddingLeft: '8px',
                 titleFontWeight: 'bold',
                 titleFontColor: '#767D86',
@@ -3428,7 +3613,7 @@ Repository = {
         init(ctx) {
             let index = parseInt(ctx.getId().split('-')[1]) - 1;
             return {
-                width: v('hrdemoViewGroupGridTable').cellData[index][0].value === 1 ? '250px' : '0px',
+                width: v('hrdemoViewGroupGridTable').cellData[index][0].value === 1 ? '220px' : '0px',
                 alignment: 'bottom-left',
                 cellHeaderSkin: v('hrdemoViewGroupGridTable').cellData[index][0].value === 1 ? '' : 'no_border',
             };
@@ -3600,12 +3785,9 @@ Repository = {
     },
     hrdemoSimulationRow2Cell5Button: {
         init() {
-            if ((v('hrdemoSimulationRow1Cell3SegmentedControl').selected === 'Group Budget')) {
-                return {
-                    visible: false
-                }
+            return {
+                visible: !(v('hrdemoSimulationRow1Cell3SegmentedControl').selected === 'Group Budget')
             }
-            return {};
         },
     },
     hrdemoPeopleServiceTeamListRow3FilterPanelTable: {
@@ -3729,7 +3911,7 @@ Repository = {
             return results;
         },
         initCondition: (db) => {
-            return v('commentId', Utils.getGridTableCurrentCell('hrdemoSimulationGridTable')) !== false && v('hrdemoSimulationCommentPopupLoadFromLoadedComments') === false;
+            return v('commentId', Utils.getGridTableCurrentCell('hrdemoSimulationGridTable')) !== false && v('commentId', Utils.getGridTableCurrentCell('hrdemoSimulationGridTable')) !== '0,00' && v('hrdemoSimulationCommentPopupLoadFromLoadedComments') === false;
         },
         initDefault: (db) => {
             if (v('hrdemoSimulationCommentPopupLoadFromLoadedComments')) {

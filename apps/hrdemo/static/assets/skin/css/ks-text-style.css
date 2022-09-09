@@ -11,10 +11,10 @@
 
 .ks-text-template1 .ks-text-title-input {
     font-weight: bold;
-    font-size: 16px;
+    font-size: 13px;
     border-width: 0px;
-    width: 100%;
-    color: #007AFF;
+    width: 80%;
+    color: #000000;
 }
 
 /* template2*/
@@ -845,8 +845,8 @@
 }
 
 .ks-text-dropbox_text_hrdemo .ks-text-title {
-    font-weight: bold;
-    font-size: 13px;
+    font-weight: normal;
+    font-size: 14px;
     padding: 5px;
     margin-left: 30px;
     margin-right: 10px;
@@ -863,10 +863,42 @@
     margin-left: 10px;
     margin-right: 10px;
 }
+/* dropbox_text_hrdemo */
+.ks-text-dropbox_text_hrdemo2 .ks-text-inner {
+    height: 40px;
+    cursor: pointer;
+    padding-top: 2px;
+    background-color: #F2F2F2;
+    border-radius: 8px;
+    opacity: 1;
+
+}
+
+.ks-text-dropbox_text_hrdemo2 .ks-text-title {
+    font-weight: normal;
+    color: #747678;
+    font-size: 14px;
+    padding: 5px;
+    margin-left: 30px;
+    margin-right: 10px;
+    margin-top: 5px;
+    white-space: nowrap;
+}
+
+.ks-text-dropbox_text_hrdemo2 .ks-text-icon {
+    color: #007aff;
+    font-size: 16px;
+    float: left;
+    position: relative;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
 
 .ks-text-simulation_header_hrdemo .ks-text-title {
     font-weight: 900;
     color: #000000;
+    font-family: 'SFCompactText', serif;
     font-size: 12px;
     padding-left: 8px;
 }
@@ -927,6 +959,7 @@
 .ks-text-simulation_header_without_icon .ks-text-title {
     font-weight: 900;
     color: #000000;
+    font-family: 'SFCompactText', serif;
     font-size: 12px;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -936,14 +969,17 @@
     font-weight: 900;
     color: #000000;
     font-size: 12px;
-    padding-bottom: 40px;
+    font-family: 'SFCompactText', serif;
+    padding-bottom: 30px;
 }
+
 
 /*  gridTable title  */
 .ks-text-gridTable_title_taxes .ks-text-title {
     font-weight: bold;
     color: #000000;
     font-size: 13px;
+    font-family: 'SFCompactText', serif;
     padding-top: 10px;
     padding-bottom: 10px;
 }
@@ -952,8 +988,24 @@
     font-weight: bold;
     color: #000000;
     font-size: 13px;
+    font-family: 'SFCompactText', serif;
     padding-bottom: 10px;
 }
+/*  gridTable title  */
+.ks-text-gridTable_title_taxes2 .ks-text-title {
+    font-weight: bold;
+    color: #000000;
+    font-size: 13px;
+    font-family: 'SFCompactText', serif;
+}
+
+.ks-text-gridTable_title_taxes2 .ks-text-body {
+    font-weight: bold;
+    color: #000000;
+    font-size: 13px;
+    font-family: 'SFCompactText', serif;
+}
+
 
 /*submit popup text*/
 
@@ -962,6 +1014,7 @@
     color: #000000;
     font-size: 16px;
     alignment: center;
+    white-space: nowrap;
 }
 
 .ks-text-submit .ks-text-inner {
@@ -1061,13 +1114,15 @@
     font-weight: 900;
     color: #000000;
     font-size: 12px;
+    font-family: 'SFCompactText', sans-serif;
     padding-top: 10px;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
 }
 
 .ks-text-simulation_header_month .ks-text-body {
     font-weight: 900;
     color: #000000;
+     font-family: 'SFCompactText', sans-serif;
     font-size: 12px;
     padding-bottom: 22px;
 }
@@ -1076,6 +1131,7 @@
 .ks-text-simulation_header_with_icon .ks-text-title {
     font-weight: 900;
     color: #000000;
+    font-family: 'SFCompactText', sans-serif;
     font-size: 12px;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -1084,14 +1140,16 @@
 .ks-text-simulation_header_with_icon .ks-text-body {
     font-weight: 900;
     color: #000000;
+    font-family: 'SFCompactText', sans-serif;
     font-size: 12px;
-    padding-bottom: 55px;
+    padding-bottom: 45px;
 }
 
 /**/
 .ks-text-simulation_header_add_button .ks-text-title {
     font-weight: 900;
     color: #000000;
+    font-family: 'SFCompactText', sans-serif;
     font-size: 12px;
     padding-bottom: 30px;
 }
@@ -1114,8 +1172,8 @@
 .ks-text-blue_label_hrdemo .ks-text-title {
     color: #007AFF;
     font-size: 14px;
-    font-weight: bold;
-    font-family: 'imago';
+    font-weight: normal;
+    font-family: 'SFCompactDisplay', sans-serif;
 }
 
 .ks-text-blue_label_hrdemo .ks-text-icon {

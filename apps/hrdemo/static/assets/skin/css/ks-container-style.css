@@ -172,6 +172,20 @@
 .ks-container-version_popup_hrdemo4 .ks-container-content {
     padding: 5px;
 }
+/* version_popup_hrdemo5 */
+.ks-container-version_popup_hrdemo5.ks-container-backdrop {
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+.ks-container-version_popup_hrdemo5.ks-container {
+    border-radius: 7px;
+    margin-left: 490px;
+    margin-top: -240px;
+}
+
+.ks-container-version_popup_hrdemo5 .ks-container-content {
+    padding: 5px;
+}
 
 /* departurement_popup_cpm */
 .ks-container-departurement_popup_cpm.ks-container-backdrop {

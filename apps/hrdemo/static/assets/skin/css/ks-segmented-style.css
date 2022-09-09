@@ -7,7 +7,7 @@
     background-color: #d8d9d9;
     color: #585959;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: normal;
     border-right: 1px solid #fff;
 }
 
@@ -25,9 +25,9 @@
 
 .ks-segmented-segmented .ks-segment {
     background-color: #d8d9d9;
-    color: #585959;
+    color: #000000;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: normal;
     border-right: 1px solid #fff;
 }
 
@@ -46,7 +46,7 @@
 .ks-segmented-without_bg_bpsp .ks-segment {
     color: #b1b3b3;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: normal;
 }
 
 .ks-segmented-without_bg_bpsp .ks-segment-label:hover {

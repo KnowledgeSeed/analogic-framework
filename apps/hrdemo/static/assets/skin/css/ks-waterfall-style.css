@@ -11,8 +11,10 @@
 
 .ks-waterfall-y-line-label {
     bottom: -2px;
-    color: #687079;
-    font-size: 12px;
+    color: #333333;
+    font-size: 21px;
+    font-weight: normal;
+    font-family: 'SFCompactDisplay', sans-serif;
     line-height: 12px;
     -webkit-transform: translateY(0);
     -moz-transform: translateY(0);
@@ -33,6 +35,13 @@
     margin: 0 1px;
 }
 
+.ks-waterfall-bar-label {
+    background: white;
+    border-radius: 5px;
+    font-size: 12px;
+    padding: 5px;
+}
+
 .ks-waterfall-x-line-tick {
     background-color: #d9dde1;
     height: 10px;
@@ -42,8 +51,10 @@
 }
 
 .ks-waterfall-x-line-label {
-    color: #687079;
-    font-size: 12px;
+    color: #333333;
+    font-size: 14px;
+    padding-top: 10px;
+    font-family: 'SFCompactDisplay', sans-serif;;
     line-height: 12px;
     margin-top: 13px;
 }
@@ -57,4 +68,5 @@
 
 .ks-waterfall-x-line-icon.off {
     background-color: #c5c6c6;
+    display: none;
 }

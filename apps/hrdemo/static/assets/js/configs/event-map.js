@@ -54,14 +54,11 @@ EventMap = {
         {
             "action": Api.openPage,
             "argument": 'hrdemoSimulation'
-        }
-    ],
-
-    'launch.hrdemoSimulationRow1Cell1Button.finished': [
-        {
-            "action": Api.openPage,
-            "argument": 'hrdemoMain'
-        }
+        },
+          {
+            "action": Api.forceRefresh,
+            "argument": 'hrdemoSimulationVersionSelectorPopUpDropbox'
+        },
     ],
 
     'text_click.hrdemoSimulationRow2Cell3Text.finished': [

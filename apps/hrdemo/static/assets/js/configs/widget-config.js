@@ -23,7 +23,7 @@ WidgetConfig = {
                                 id: 'hrdemoMainRow1Cell1',
                                 type: GridCellWidget,
                                 marginLeft: '10',
-                                marginTop: '0',
+                                marginTop: '4',
                                 marginBottom: '0',
                                 alignment: 'center-left',
                                 width: '15%',
@@ -354,6 +354,7 @@ WidgetConfig = {
                                         id: 'hrdemoGroupSelectRow1Cell1Button',
                                         type: ButtonWidget,
                                         icon: 'icon-menu',
+                                        marginTop: '8px',
                                         iconFontSize: '20',
                                         iconColor: '#007AFF'
                                     },
@@ -431,7 +432,7 @@ WidgetConfig = {
                                     {
                                         id: 'hrdemoGroupSelectRow2Cell1SegmentedControl',
                                         type: SegmentedControlWidget,
-                                        width: '200',
+                                        width: '300',
                                         skin: 'segmented',
                                         marginBottom: '5px',
                                         visible: true,
@@ -487,6 +488,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         title: 'Group Name',
                                         paddingLeft: '8px',
+                                        skin: 'gridTable_title_taxes2',
                                         titleFontWeight: 'bold',
                                         paddingBottom: '5px',
                                     }
@@ -504,6 +506,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         title: 'Base plan',
                                         paddingLeft: '8px',
+                                        skin: 'gridTable_title_taxes2',
                                         titleFontWeight: 'bold',
                                         paddingBottom: '8px'
                                     }
@@ -521,6 +524,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         title: 'Budget',
                                         paddingLeft: '8px',
+                                        skin: 'gridTable_title_taxes2',
                                         titleFontWeight: 'bold',
                                         paddingBottom: '8px'
                                     }
@@ -538,6 +542,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         title: 'FTE Change',
                                         paddingLeft: '8px',
+                                        skin: 'gridTable_title_taxes2',
                                         titleFontWeight: 'bold',
                                         paddingBottom: '8px'
                                     }
@@ -555,6 +560,7 @@ WidgetConfig = {
                                         id: 'hrdemoGroupSelectGridTableHeaderText-5',
                                         type: TextWidget,
                                         title: 'View Simulation',
+                                        skin: 'gridTable_title_taxes2',
                                         paddingLeft: '8px',
                                         titleFontWeight: 'bold',
                                         paddingBottom: '8px'
@@ -632,6 +638,7 @@ WidgetConfig = {
                         id: 'hrdemoGroupSelectGridTableCell-5',
                         type: GridTableCellWidget,
                         alignment: 'center-center',
+                        skin: 'group',
                         width: '15%',
                         widgets: [
                             {
@@ -680,6 +687,7 @@ WidgetConfig = {
                                         id: 'hrdemoReportRow1Cell1Button',
                                         type: ButtonWidget,
                                         icon: 'icon-menu',
+                                        marginTop: '8px',
                                         iconFontSize: '20',
                                         iconColor: '#007AFF'
                                     },
@@ -761,6 +769,7 @@ WidgetConfig = {
                                         width: '20',
                                         icon: 'icon-info',
                                         marginLeft: '10',
+                                        iconFontSize: '25',
                                         skin: 'infobutton',
                                         iconColor: '#007AFF'
                                     }
@@ -795,8 +804,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         title: 'Headcount',
                                         marginLeft: '-100px',
-                                        titleFontSize: 24,
-                                        titleFontWeight: 600,
+                                        titleFontSize: 21,
                                         titleFontColor: '#a0a4ab'
                                     }
                                 ]
@@ -813,8 +821,7 @@ WidgetConfig = {
                                         id: 'hrdemoReportChart1GridTitleText2',
                                         type: TextWidget,
                                         title: 'FTE',
-                                        titleFontSize: 24,
-                                        titleFontWeight: 600,
+                                        titleFontSize: 21,
                                         titleFontColor: '#a0a4ab'
                                     }
                                 ]
@@ -875,9 +882,9 @@ WidgetConfig = {
                                         bezierCurve: false,
                                         xAxesGridLinesDisplay: true,
                                         xAxesGridLinesDrawBorder: true,
-                                        xAxesTicksFontSize: 12,
-                                        xAxesTicksFontFamily: 'imago, sans-serif',
-                                        xAxesTicksFontColor: '#747b85',
+                                        xAxesTicksFontSize: 14,
+                                        xAxesTicksFontFamily: 'SFCompactDisplay, sans-serif',
+                                        xAxesTicksFontColor: '#333333',
                                         xAxesTicksBegintAtZero: false,
                                         xAxesTicksPadding: 10,
                                         xAxesLabelFontSize: 12,
@@ -897,9 +904,11 @@ WidgetConfig = {
                                         leftYAxesLabelFontColor: '#747b85',
                                         leftYAxesLabelFontStyle: 'normal',
                                         leftYAxesLabelPadding: 10,
-                                        leftYAxesTicksFontSize: 12,
-                                        leftYAxesTicksFontFamily: 'imago, sans-serif',
-                                        leftYAxesTicksFontColor: '#747b85',
+                                        leftYAxesTicksFontSize: 21,
+                                        leftYAxesTicksPadding: 20,
+                                        leftYAxesTicksFontStyle: 'normal',
+                                        leftYAxesTicksFontFamily: 'SFCompactDisplay, sans-serif',
+                                        leftYAxesTicksFontColor: '#333333',
                                         leftYAxesTicksDisplay: true,
                                         rightYAxesLabelFontSize: 12,
                                     }
@@ -927,8 +936,11 @@ WidgetConfig = {
                                             "borderWidth": 1,
                                             "pointRadius": 1,
                                             "stack": 1,
-                                            dataLabelFontColor: "#fff",
+                                            dataLabelFontColor: "#000",
                                             dataLabelVisible: true,
+                                            dataLabelBorderWidth: 20,
+                                            dataLabelBorderRadius: 6,
+                                            dataLabelBackgroundColor: "#fff",
                                             "fill": true,
                                             "legendLabel": "Base"
                                         },
@@ -951,9 +963,9 @@ WidgetConfig = {
                                         bezierCurve: false,
                                         xAxesGridLinesDisplay: true,
                                         xAxesGridLinesDrawBorder: true,
-                                        xAxesTicksFontSize: 12,
-                                        xAxesTicksFontFamily: 'imago, sans-serif',
-                                        xAxesTicksFontColor: '#747b85',
+                                        xAxesTicksFontSize: 14,
+                                        xAxesTicksFontFamily: 'SFCompactDisplay, sans-serif',
+                                        xAxesTicksFontColor: '#333333',
                                         xAxesTicksBegintAtZero: false,
                                         xAxesTicksPadding: 10,
                                         xAxesLabelFontSize: 12,
@@ -973,9 +985,11 @@ WidgetConfig = {
                                         leftYAxesLabelFontColor: '#747b85',
                                         leftYAxesLabelFontStyle: 'normal',
                                         leftYAxesLabelPadding: 10,
-                                        leftYAxesTicksFontSize: 12,
-                                        leftYAxesTicksFontFamily: 'imago, sans-serif',
-                                        leftYAxesTicksFontColor: '#747b85',
+                                        leftYAxesTicksFontSize: 21,
+                                        leftYAxesTicksPadding: 20,
+                                        leftYAxesTicksFontStyle: 'normal',
+                                        leftYAxesTicksFontFamily: 'SFCompactDisplay, sans-serif',
+                                        leftYAxesTicksFontColor: '#333333',
                                         leftYAxesTicksDisplay: true,
                                         rightYAxesLabelFontSize: 12,
                                     }
@@ -1001,7 +1015,7 @@ WidgetConfig = {
                                         id: 'hrdemoReportChart1GridTitle2Text1',
                                         type: TextWidget,
                                         title: 'FTE / Hay or agile level',
-                                        titleFontSize: 24,
+                                        titleFontSize: 21,
                                         titleFontColor: '#a0a4ab'
                                     }
                                 ]
@@ -1072,9 +1086,9 @@ WidgetConfig = {
                                         bezierCurve: false,
                                         xAxesGridLinesDisplay: true,
                                         xAxesGridLinesDrawBorder: true,
-                                        xAxesTicksFontSize: 12,
-                                        xAxesTicksFontFamily: 'imago, sans-serif',
-                                        xAxesTicksFontColor: '#747b85',
+                                        xAxesTicksFontSize: 14,
+                                        xAxesTicksFontFamily: 'SFCompactDisplay, sans-serif',
+                                        xAxesTicksFontColor: '#000000',
                                         xAxesTicksBegintAtZero: false,
                                         xAxesTicksPadding: 10,
                                         xAxesLabelFontSize: 12,
@@ -1094,9 +1108,11 @@ WidgetConfig = {
                                         leftYAxesLabelFontColor: '#747b85',
                                         leftYAxesLabelFontStyle: 'normal',
                                         leftYAxesLabelPadding: 10,
-                                        leftYAxesTicksFontSize: 12,
-                                        leftYAxesTicksFontFamily: 'imago, sans-serif',
-                                        leftYAxesTicksFontColor: '#747b85',
+                                        leftYAxesTicksFontSize: 21,
+                                        leftYAxesTicksPadding: 20,
+                                        leftYAxesTicksFontStyle: 'normal',
+                                        leftYAxesTicksFontFamily: 'SFCompactDisplay, sans-serif',
+                                        leftYAxesTicksFontColor: '#000000',
                                         rightYAxesLabelFontColor: '#747b85',
                                         rightYAxesLabelFontSize: 12,
                                     }
@@ -1223,6 +1239,7 @@ WidgetConfig = {
                                 action: '',
                                 width: '20',
                                 icon: 'icon-info',
+                                iconFontSize: '25',
                                 marginLeft: '10',
                                 skin: 'infobutton',
                                 iconColor: '#007AFF'
@@ -1255,8 +1272,7 @@ WidgetConfig = {
                                         id: 'hrdemoReportChart2GridTitleText1',
                                         type: TextWidget,
                                         title: 'TWM (mHUF)',
-                                        titleFontSize: 24,
-                                        titleFontWeight: 600,
+                                        titleFontSize: 21,
                                         titleFontColor: '#a0a4ab'
                                     }
                                 ]
@@ -1288,7 +1304,10 @@ WidgetConfig = {
                                             "borderWidth": 1,
                                             "pointRadius": 1,
                                             "stack": 1,
-                                            dataLabelFontColor: "#fff",
+                                            dataLabelFontColor: "#000",
+                                            dataLabelBackgroundColor: "#fff",
+                                            dataLabelBorderWidth: 20,
+                                            dataLabelBorderRadius: 6,
                                             dataLabelVisible: true,
                                             "fill": true,
                                             "legendLabel": "Base"
@@ -1314,9 +1333,9 @@ WidgetConfig = {
                                         xAxesGridLinesDisplay: true,
                                         xAxesGridLinesDrawBorder: true,
                                         xAxesGridLinesColor: '#dee1e5',
-                                        xAxesTicksFontSize: 12,
-                                        xAxesTicksFontFamily: 'imago, sans-serif',
-                                        xAxesTicksFontColor: '#747b85',
+                                        xAxesTicksFontSize: 14,
+                                        xAxesTicksFontFamily: 'SFCompactDisplay, sans-serif',
+                                        xAxesTicksFontColor: '#333333',
                                         xAxesTicksBegintAtZero: false,
                                         xAxesTicksPadding: 10,
                                         xAxesLabelFontSize: 12,
@@ -1336,9 +1355,11 @@ WidgetConfig = {
                                         leftYAxesLabelFontColor: '#747b85',
                                         leftYAxesLabelFontStyle: 'normal',
                                         leftYAxesLabelPadding: 10,
-                                        leftYAxesTicksFontSize: 12,
-                                        leftYAxesTicksFontFamily: 'imago, sans-serif',
-                                        leftYAxesTicksFontColor: '#747b85',
+                                        leftYAxesTicksFontSize: 21,
+                                        leftYAxesTicksPadding: 20,
+                                        leftYAxesTicksFontStyle: 'normal',
+                                        leftYAxesTicksFontFamily: 'SFCompactDisplay, sans-serif',
+                                        leftYAxesTicksFontColor: '#333333',
                                         rightYAxesLabelFontColor: '#747b85',
                                         rightYAxesLabelFontSize: 12,
                                     }
@@ -1347,12 +1368,41 @@ WidgetConfig = {
                     },
 
                     {
+                        id: 'hrdemoReportChart2GridRow2Text',
+                        type: GridRowWidget,
+                        width: '100%',
+                        marginTop: 50,
+                        widgets: [
+                            {
+                                id: 'hrdemoReportChart2GridRow2Title',
+                                type: GridRowWidget,
+                                widgets: [
+
+                                    {
+                                        id: 'hrdemoReportChart2GridRow2TitleCell1',
+                                        type: GridCellWidget,
+                                        marginLeft: '150',
+                                        alignment: 'center-left',
+                                        width: '100%',
+                                        widgets: [
+
+                                            {
+                                                id: 'hrdemoReportChart2GridRow2TitleText',
+                                                type: TextWidget,
+                                                title: 'Total Cost',
+                                                titleFontSize: 21,
+                                                titleFontColor: '#a0a4ab'
+                                            }
+                                        ]
+                                    }]
+                            }]
+                    },
+                    {
                         id: 'hrdemoReportChart2GridRow2',
                         type: GridRowWidget,
                         width: '100%',
-                        visible: false,
+                        marginTop: 100,
                         widgets: [
-
                             {
                                 id: 'hrdemoReportChart2GridCell2',
                                 type: GridCellWidget,
@@ -1368,20 +1418,8 @@ WidgetConfig = {
                                         title: '',
                                         minYAxis: '100',
                                         maxYAxis: '1100',
-                                        /*                                        listen: [{
-                                                                                    "event": "choose.sandyDevReportControlGridDropbox1.finished",
-                                                                                    "method": "refresh"
-                                                                                }, {
-                                                                                    "event": "choose.sandyDevReportControlGridDropboxOrgUnit.finished",
-                                                                                    "method": "refresh"
-                                                                                }],*/
                                         dataset1: {
                                             datapoints: [
-                                                {positiveColor: '#34C759', negativeColor: '#FF3B30'},
-                                                {positiveColor: '#34C759', negativeColor: '#FF3B30'},
-                                                {positiveColor: '#34C759', negativeColor: '#FF3B30'},
-                                                {positiveColor: '#34C759', negativeColor: '#FF3B30'},
-                                                {positiveColor: '#34C759', negativeColor: '#FF3B30'},
                                                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
                                                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
                                                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
@@ -1397,24 +1435,20 @@ WidgetConfig = {
                                         tooltipsEnabled: true,
                                         marginBottom: '50',
                                         xAxisLabels: [
-                                            {value: 'FC 0/12'},
-                                            {value: 'Headcount Effect BAU'},
-                                            {value: 'Shared Service Centers'},
-                                            {value: 'Supplements'},
-                                            {value: 'Sales bonus'},
-                                            {value: 'Other sustainable'},
-                                            {value: 'IFRS Sales bonus'},
-                                            {value: 'Accural reversal'},
-                                            {value: 'Tax and contr. difference'},
-                                            {value: 'Wage increase difference'},
-                                            {value: 'Unused holidays'},
-                                            {value: 'Bonus over/under perfm.'},
-                                            {value: 'LTI, RPI'},
-                                            {value: 'Reorg. effect'},
-                                            {value: 'Transfer non-TWM'}
+                                            {value: 'Total Cost 2022'},
+                                            {value: 'Calculated Salary'},
+                                            {value: 'Bonus'},
+                                            {value: 'Auto Allowance'},
+                                            {value: 'Other Benefits'},
+                                            {value: 'Employer Contributions'},
+                                            {value: 'Social Security'},
+                                            {value: 'Pension Fund'},
+                                            {value: 'Health Insurance'},
+                                            {value: 'Total Cost 2023'}
                                         ],
                                         labelVisible: true,
                                         legendVisible: false,
+                                        yAxisGridLineNum: 4
                                     }
                                 ]
                             }]
@@ -1437,8 +1471,7 @@ WidgetConfig = {
                                         id: 'hrdemoReportChart6GridTitle6Text1',
                                         type: TextWidget,
                                         title: 'Budget',
-                                        titleFontSize: 24,
-                                        titleFontWeight: 600,
+                                        titleFontSize: 21,
                                         titleFontColor: '#a0a4ab'
                                     }
                                 ]
@@ -1470,8 +1503,11 @@ WidgetConfig = {
                                             "borderColor": "#34C759",
                                             "borderWidth": 1,
                                             "pointRadius": 1,
+                                            dataLabelFontColor: "#000",
+                                            dataLabelBackgroundColor: "#fff",
+                                            dataLabelBorderWidth: 20,
+                                            dataLabelBorderRadius: 6,
                                             "stack": 1,
-                                            dataLabelFontColor: "#fff",
                                             dataLabelVisible: true,
                                             "fill": true,
                                             "legendLabel": "Base Period"
@@ -1483,9 +1519,9 @@ WidgetConfig = {
                                         bezierCurve: false,
                                         xAxesGridLinesDisplay: true,
                                         xAxesGridLinesDrawBorder: true,
-                                        xAxesTicksFontSize: 12,
-                                        xAxesTicksFontFamily: 'imago, sans-serif',
-                                        xAxesTicksFontColor: '#747b85',
+                                        xAxesTicksFontSize: 14,
+                                        xAxesTicksFontFamily: 'SFCompactDisplay, sans-serif',
+                                        xAxesTicksFontColor: '#333333',
                                         xAxesTicksBegintAtZero: false,
                                         xAxesTicksPadding: 10,
                                         xAxesLabelFontSize: 12,
@@ -1506,9 +1542,11 @@ WidgetConfig = {
                                         leftYAxesLabelFontColor: '#747b85',
                                         leftYAxesLabelFontStyle: 'normal',
                                         leftYAxesLabelPadding: 10,
-                                        leftYAxesTicksFontSize: 12,
-                                        leftYAxesTicksFontFamily: 'imago, sans-serif',
-                                        leftYAxesTicksFontColor: '#747b85',
+                                        leftYAxesTicksFontSize: 21,
+                                        leftYAxesTicksPadding: 20,
+                                        leftYAxesTicksFontStyle: 'normal',
+                                        leftYAxesTicksFontFamily: 'SFCompactDisplay, sans-serif',
+                                        leftYAxesTicksFontColor: '#333333',
                                         rightYAxesLabelFontSize: 12,
                                     }
                                 ]
@@ -1552,6 +1590,7 @@ WidgetConfig = {
                                         id: 'hrdemoGroupsRow1Cell1Button',
                                         type: ButtonWidget,
                                         icon: 'icon-menu',
+                                        marginTop: '8px',
                                         iconFontSize: '20',
                                         iconColor: '#007AFF'
                                     },
@@ -1638,7 +1677,7 @@ WidgetConfig = {
                 marginTop: '30',
                 hideIfNoData: true,
                 skin: 'forecasting_forecast_hr',
-                width: '30%',
+                width: '45%',
                 title: '',
                 widgets: [
                     {
@@ -1657,7 +1696,8 @@ WidgetConfig = {
                                         id: 'hrdemoGroupsPageGridTableHeaderCell1Text',
                                         type: TextWidget,
                                         title: 'Group Name',
-                                        paddingLeft: '8px',
+                                        paddingLeft: '10px',
+                                        cellHeaderSkin: 'no_border_bpsp',
                                         titleFontWeight: 'bold',
                                         paddingBottom: '8px'
                                     }
@@ -1667,13 +1707,14 @@ WidgetConfig = {
                                 id: 'hrdemoGroupsPageGridTableHeaderCell-2',
                                 type: GridTableHeaderCellWidget,
                                 alignment: 'bottom-left',
-                                width: '20%',
+                                width: '15%',
                                 widgets: [
                                     {
                                         id: 'hrdemoGroupsPageGridTableHeaderText-02',
                                         type: TextWidget,
                                         title: 'Members',
                                         paddingLeft: '8px',
+                                        cellHeaderSkin: 'no_border_bpsp',
                                         titleFontWeight: 'bold',
                                         paddingBottom: '8px'
                                     }
@@ -1690,6 +1731,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         title: 'Created',
                                         paddingLeft: '8px',
+                                        cellHeaderSkin: 'no_border_bpsp',
                                         titleFontWeight: 'bold',
                                         paddingBottom: '8px'
                                     }
@@ -1700,13 +1742,14 @@ WidgetConfig = {
                                 type: GridTableHeaderCellWidget,
                                 width: '7.5%',
                                 alignment: 'bottom-left',
-                                cellHeaderSkin: 'no_border_bpsp',
+                                cellHeaderSkin: '',
                                 widgets: []
                             },
                             {
                                 id: 'hrdemoGroupsPageGridTableHeaderCell-4',
                                 type: GridTableHeaderCellWidget,
                                 width: '7.5%',
+                                cellHeaderSkin: 'no_border',
                                 alignment: 'bottom-left',
                                 widgets: []
                             },
@@ -1731,7 +1774,7 @@ WidgetConfig = {
                         id: 'hrdemoGroupsPageGridTableCell-2',
                         type: GridTableCellWidget,
                         alignment: 'center-center',
-                        width: '20%',
+                        width: '15%',
                         widgets: [
                             {
                                 id: 'hrdemoGroupsPageGridTableText-02',
@@ -1771,7 +1814,8 @@ WidgetConfig = {
                     {
                         id: 'hrdemoGroupsPageGridTableCell-4',
                         type: GridTableCellWidget,
-                        alignment: 'center-left',
+                        alignment: 'center-center',
+                        skin: 'group',
                         width: '7.5%',
                         widgets: [
                             {
@@ -1823,6 +1867,7 @@ WidgetConfig = {
                                         id: 'hrdemoPeopleServiceTeamEditorRow1Cell1Button',
                                         type: ButtonWidget,
                                         icon: 'icon-menu',
+                                        marginTop: '8px',
                                         iconFontSize: '20',
                                         iconColor: '#007AFF'
                                     },
@@ -1917,7 +1962,7 @@ WidgetConfig = {
                                     {
                                         id: 'hrdemoPeopleServiceTeamEditorRow2Cell1SegmentedControl',
                                         type: SegmentedControlWidget,
-                                        width: '280',
+                                        width: '320',
                                         skin: 'segmented',
                                         marginBottom: '5px',
                                         widgets: [
@@ -2261,9 +2306,11 @@ WidgetConfig = {
                                                 widgets: [
                                                     {
                                                         id: 'hrdemoPeopleServiceEmployeeDetailsGridTableHeaderCell1Text',
-                                                        type: TextWidget,
+                                                        type: ImageWidget,
                                                         title: '',
-                                                        icon: ''
+                                                        marginLeft: 25,
+                                                        width: 250,
+                                                        height: 250
                                                     }
                                                 ]
                                             }
@@ -2272,7 +2319,7 @@ WidgetConfig = {
                                     {
                                         id: 'hrdemoPeopleServiceEmployeeDetailsGridTableCell01',
                                         type: GridTableCellWidget,
-                                        width: '50%',
+                                        width: '25%',
                                         alignment: 'center-left',
                                         widgets: [
                                             {
@@ -2286,7 +2333,7 @@ WidgetConfig = {
                                     {
                                         id: 'hrdemoPeopleServiceEmployeeDetailsGridTableCell02',
                                         type: GridTableCellWidget,
-                                        width: '50%',
+                                        width: '75%',
                                         alignment: 'center-left',
                                         widgets: [
                                             {
@@ -2345,6 +2392,7 @@ WidgetConfig = {
                                         type: ButtonWidget,
                                         icon: 'icon-menu',
                                         iconFontSize: '20',
+                                        marginTop: '8px',
                                         iconColor: '#007AFF'
                                     },
                                 ]
@@ -2438,7 +2486,7 @@ WidgetConfig = {
                                     {
                                         id: 'hrdemoPeopleServiceTeamListRow2Cell1SegmentedControl',
                                         type: SegmentedControlWidget,
-                                        width: '280',
+                                        width: '320',
                                         skin: 'segmented',
                                         marginBottom: '5px',
                                         widgets: [
@@ -2464,32 +2512,7 @@ WidgetConfig = {
 
                                 ]
                             },
-                            {
-                                id: 'hrdemoPeopleServiceTeamListRow2Cell3',
-                                type: GridCellWidget,
-                                marginRight: '50px',
-                                marginTop: '40',
-                                alignment: 'top-right',
-                                width: '30%',
-                                skin: '',
-                                height: '0',
-                                widgets: [
-                                    {
-                                        id: 'hrdemoPeopleServiceTeamListRow2Cell3Tittle',
-                                        type: TextWidget,
-                                        title: 'View',
-                                        icon: 'icon-columns-3-fill',
-                                        marginTop: '4px',
-                                        titleFontSize: '13',
-                                        iconPosition: 'left',
-                                        skin: 'blue_label_hrdemo',
-                                        titleFontColor: '#007AFF',
-                                        marginLeft: '10px',
-                                        titleFontWeight: 'bold',
-                                    },
 
-                                ]
-                            },
                         ]
                     },
                     {
@@ -2506,7 +2529,7 @@ WidgetConfig = {
                                 alignment: 'bottom',
                                 marginTop: '7px',
                                 marginLeft: '15px',
-                                width: '3%',
+                                width: '100%',
                                 widgets: [
 
                                     {
@@ -2516,7 +2539,32 @@ WidgetConfig = {
                                         defaultText: 'Search...',
                                         skin: 'searchbox',
                                         height: '40'
-                                    }
+                                    },
+                                    {
+                                        id: 'hrdemoPeopleServiceTeamListRow2Cell3',
+                                        type: GridCellWidget,
+                                        marginTop: '40',
+                                        alignment: 'top-right',
+                                        width: '78%',
+                                        skin: '',
+                                        height: '0',
+                                        widgets: [
+                                            {
+                                                id: 'hrdemoPeopleServiceTeamListRow2Cell3Tittle',
+                                                type: TextWidget,
+                                                title: 'View',
+                                                icon: 'icon-columns-3-fill',
+                                                marginTop: '4px',
+                                                titleFontSize: '13',
+                                                iconPosition: 'left',
+                                                skin: 'blue_label_hrdemo',
+                                                titleFontColor: '#007AFF',
+                                                marginLeft: '10px',
+                                                titleFontWeight: 'bold',
+                                            },
+
+                                        ]
+                                    },
                                 ]
                             }
                         ]
@@ -2605,12 +2653,12 @@ WidgetConfig = {
                         type: GridTableWidget,
                         marginTop: '30',
                         hideIfNoData: true,
-                        skin: 'forecasting_forecast_hr',
+                        skin: 'hrdemo_list_table',
                         title: '',
                         listen: [
                             {
                                 event: 'writeKey.hrdemoPeopleServiceTeamListRow4Cell1Search.finished',
-                                method: 'updateContent'
+                                method: 'forceRefreshWithoutLoader'
                             }
                         ],
                         widgets: [
@@ -2841,7 +2889,7 @@ WidgetConfig = {
                                         id: 'hrdemoPeopleServiceTeamListGridTableText-09',
                                         type: TextWidget,
                                         titleAlignment: 'start',
-                                        paddingLeft: '8px',
+                                        paddingLeft: '320px',
                                         titleFontSize: 13
                                     }
                                 ]
@@ -2897,6 +2945,7 @@ WidgetConfig = {
                                         id: 'hrdemoSimulationRow1Cell1Button',
                                         type: ButtonWidget,
                                         icon: 'icon-menu',
+                                        marginTop: '8px',
                                         iconFontSize: '20',
                                         iconColor: '#007AFF'
                                     },
@@ -2938,7 +2987,7 @@ WidgetConfig = {
                                     {
                                         id: 'hrdemoSimulationRow1Cell3SegmentedControl',
                                         type: SegmentedControlWidget,
-                                        width: '280',
+                                        width: '320',
                                         skin: 'segmented',
                                         marginBottom: '5px',
                                         widgets: [
@@ -3037,14 +3086,8 @@ WidgetConfig = {
                                         width: '260px',
                                         marginLeft: 10,
                                         iconColor: '#007AFF',
-                                        skin: 'dropbox_text_hrdemo',
-                                        title: 'Group: Group A',
-                                        listen: [
-                                            /*       {
-                                                event: 'choose.hrdemoIncomePlanningProjectSelectorPopupDropbox.finished',
-                                             method: 'refresh'
-                                               }*/
-                                        ]
+                                        skin: 'dropbox_text_hrdemo2',
+                                        title: '',
                                     },
                                 ]
                             },
@@ -3078,7 +3121,7 @@ WidgetConfig = {
                                     {
                                         id: 'hrdemoSimulationRow2Cell5Button',
                                         type: ButtonWidget,
-                                        width: '170px',
+                                        width: '136px',
                                         visible: true,
                                         icon: 'icon-check-circle',
                                         label: 'Copy to budget',
@@ -3297,8 +3340,9 @@ WidgetConfig = {
                                         type: SegmentedControlWidget,
                                         width: '330',
                                         skin: 'segmented',
-                                        marginBottom: '5px',
-                                        visible: false,
+                                        marginBottom: '-25px',
+                                        marginRight: '60',
+                                        visible: true,
                                         widgets: [
 
                                             {
@@ -3372,7 +3416,7 @@ WidgetConfig = {
                                         action: '',
                                         icon: 'icon-x',
                                         marginTop: '19',
-                                        iconColor: '#009FDA',
+                                        iconColor: '#007AFF',
                                         iconFontSize: 20,
                                     }
                                 ]
@@ -3446,7 +3490,7 @@ WidgetConfig = {
                 backdrop: true,
                 visible: false,
                 closeBtn: false,
-                width: 310,
+                width: 525,
                 heightFixed: false,
                 bgScrollable: true,
                 fixed: true,
@@ -3460,70 +3504,84 @@ WidgetConfig = {
                         width: '100%',
                         widgets: [
                             {
-                                id: 'hrdemoSimulationNamePopupRow1',
-                                type: GridRowWidget,
-                                marginTop: '4%',
-                                paddingBottom: 10,
+                                id: 'hrdemoSimulationNamePopupPanelCell',
+                                type: GridCellWidget,
                                 width: '100%',
+                                alignment: 'center-left',
                                 widgets: [
+                                    {
+                                        id: 'hrdemoSimulationNamePopupPanelCellImage',
+                                        type: ImageWidget,
+                                        title: '',
+                                        fileName: '',
+                                        marginLeft: 10,
+                                        width: 180,
+                                        height: 180
+                                    },
                                     {
                                         id: 'hrdemoSimulationNamePopupRow1Cell1',
                                         type: GridCellWidget,
-                                        width: '100%',
-                                        alignment: 'center-left',
+                                        width: '50%',
+                                        alignment: 'top-left',
                                         widgets: [
                                             {
-                                                id: 'hrdemoSimulationNamePopupRow1Cell1Text',
-                                                type: TextWidget,
-                                                titleFontWeight: '600',
-                                                titleFontSize: 20,
-                                                marginBottom: 15,
-                                                marginLeft: 10,
-                                                skin: 'submit',
+                                                id: 'hrdemoSimulationNamePopupRow3GridTable',
+                                                type: GridTableWidget,
+                                                marginLeft: '10',
+                                                marginRight: '10',
                                                 title: '',
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                id: 'hrdemoSimulationNamePopupRow3',
-                                type: GridRowWidget,
-                                width: '100%',
-                                marginTop: '4%',
-                                widgets: [
-                                    {
-                                        id: 'hrdemoSimulationNamePopupRow3GridTable',
-                                        type: GridTableWidget,
-                                        marginLeft: '10',
-                                        marginRight: '10',
-                                        title: '',
-                                        width: '290',
-                                        widgets: [
-                                            {
-                                                id: 'hrdemoSimulationNamePopupRow3GridTableCell-01',
-                                                type: GridTableCellWidget,
-                                                width: '50%',
-                                                alignment: 'center-left',
+                                                width: '290',
                                                 widgets: [
                                                     {
-                                                        id: 'hrdemoSimulationNamePopupRow3GridTableText-01',
-                                                        type: TextWidget,
-                                                        titleFontColor: '#747B85',
-                                                        marginBottom: 5
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                id: 'hrdemoSimulationNamePopupRow3GridTableCell-02',
-                                                type: GridTableCellWidget,
-                                                width: '50%',
-                                                alignment: 'center-left',
-                                                widgets: [
+                                                        id: 'hrdemoSimulationNamePopupRow3GridTableHeaderRow',
+                                                        type: GridTableHeaderRowWidget,
+                                                        widgets: [
+                                                            {
+                                                                id: 'hrdemoSimulationNamePopupRow3GridTableHeaderCell-1',
+                                                                type: GridTableHeaderCellWidget,
+                                                                width: '10%',
+                                                                alignment: 'center-left',
+                                                                widgets: [
+                                                                    {
+                                                                        id: 'hrdemoSimulationNamePopupRow3GridTableHeaderText-1',
+                                                                        type: TextWidget,
+                                                                        titleFontWeight: '600',
+                                                                        titleFontSize: 20,
+                                                                        marginBottom: 15,
+                                                                        skin: 'submit',
+                                                                        title: ''
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    },
                                                     {
-                                                        id: 'hrdemoSimulationNamePopupRow3GridTableText-02',
-                                                        type: TextWidget,
-                                                        marginBottom: 5
+                                                        id: 'hrdemoSimulationNamePopupRow3GridTableCell-01',
+                                                        type: GridTableCellWidget,
+                                                        width: '50%',
+                                                        alignment: 'center-left',
+                                                        widgets: [
+                                                            {
+                                                                id: 'hrdemoSimulationNamePopupRow3GridTableText-01',
+                                                                type: TextWidget,
+                                                                titleFontColor: '#747B85',
+                                                                marginBottom: 5
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        id: 'hrdemoSimulationNamePopupRow3GridTableCell-02',
+                                                        type: GridTableCellWidget,
+                                                        width: '50%',
+                                                        alignment: 'center-left',
+                                                        widgets: [
+                                                            {
+                                                                id: 'hrdemoSimulationNamePopupRow3GridTableText-02',
+                                                                type: TextWidget,
+                                                                title: '',
+                                                                marginBottom: 5
+                                                            }
+                                                        ]
                                                     }
                                                 ]
                                             }
@@ -3550,7 +3608,7 @@ WidgetConfig = {
                 fixed: true,
                 behaviour: 'popup',
                 positionAndCalculateBestSpace: 'bottom',
-                skin: 'version_popup_hrdemo2',
+                skin: 'version_popup_hrdemo4',
                 fadingSpeed: 0,
                 widgets: [
                     {
@@ -3837,7 +3895,7 @@ WidgetConfig = {
                                         id: 'hrdemoSimulationGridTableHeaderText-1',
                                         type: TextWidget,
                                         paddingLeft: '5px',
-                                        marginLeft: 15,
+                                        marginLeft: 5,
                                         body: 'Name',
                                         title: '',
                                         skin: 'simulation_header_month',
@@ -3855,7 +3913,7 @@ WidgetConfig = {
                                         id: 'hrdemoSimulationGridTableHeaderText-2',
                                         type: TextWidget,
                                         title: 'Position',
-                                        marginLeft: 15,
+                                        marginLeft: 5,
                                         paddingLeft: '5px',
                                         titleFontWeight: 'bold',
                                         skin: 'simulation_header_add_button',
@@ -3883,6 +3941,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         skin: 'simulation_header_without_icon',
                                         title: '2022',
+                                        paddingRight: '30px',
                                         body: 'Jan'
                                     }
                                 ]
@@ -3896,6 +3955,7 @@ WidgetConfig = {
                                         id: 'hrdemoSimulationGridTableHeaderText-4',
                                         type: TextWidget,
                                         skin: 'simulation_header_month',
+                                        paddingRight: '30px',
                                         title: '',
                                         body: 'Feb'
                                     }
@@ -3910,6 +3970,7 @@ WidgetConfig = {
                                         id: 'hrdemoSimulationGridTableHeaderText-5',
                                         type: TextWidget,
                                         title: '',
+                                        paddingRight: '30px',
                                         skin: 'simulation_header_month',
                                         body: 'Mar'
                                     }
@@ -3924,6 +3985,7 @@ WidgetConfig = {
                                         id: 'hrdemoSimulationGridTableHeaderText-6',
                                         type: TextWidget,
                                         title: '',
+                                        paddingRight: '30px',
                                         skin: 'simulation_header_month',
                                         body: 'Apr'
                                     }
@@ -3938,6 +4000,7 @@ WidgetConfig = {
                                         id: 'hrdemoSimulationGridTableHeaderText-7',
                                         type: TextWidget,
                                         title: '',
+                                        paddingRight: '30px',
                                         skin: 'simulation_header_month',
                                         body: 'May'
                                     }
@@ -3952,6 +4015,7 @@ WidgetConfig = {
                                         id: 'hrdemoSimulationGridTableHeaderText-8',
                                         type: TextWidget,
                                         title: '',
+                                        paddingRight: '30px',
                                         skin: 'simulation_header_month',
                                         body: 'Jun'
                                     }
@@ -3966,6 +4030,7 @@ WidgetConfig = {
                                         id: 'hrdemoSimulationGridTableHeaderText-9',
                                         type: TextWidget,
                                         title: '',
+                                        paddingRight: '30px',
                                         skin: 'simulation_header_month',
                                         body: 'Jul'
                                     }
@@ -3980,6 +4045,7 @@ WidgetConfig = {
                                         id: 'hrdemoSimulationGridTableHeaderText-10',
                                         type: TextWidget,
                                         title: '',
+                                        paddingRight: '30px',
                                         skin: 'simulation_header_month',
                                         body: 'Aug'
                                     }
@@ -3995,6 +4061,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         skin: 'simulation_header_month',
                                         title: '',
+                                        paddingRight: '30px',
                                         body: 'Sep'
                                     }
                                 ]
@@ -4008,6 +4075,7 @@ WidgetConfig = {
                                         id: 'hrdemoSimulationGridTableHeaderText-12',
                                         type: TextWidget,
                                         title: '',
+                                        paddingRight: '30px',
                                         skin: 'simulation_header_month',
                                         body: 'Oct'
                                     }
@@ -4022,6 +4090,7 @@ WidgetConfig = {
                                         id: 'hrdemoSimulationGridTableHeaderText-13',
                                         type: TextWidget,
                                         title: '',
+                                        paddingRight: '30px',
                                         skin: 'simulation_header_month',
                                         body: 'Nov'
                                     }
@@ -4036,6 +4105,7 @@ WidgetConfig = {
                                         id: 'hrdemoSimulationGridTableHeaderText-14',
                                         type: TextWidget,
                                         title: '',
+                                        paddingRight: '30px',
                                         skin: 'simulation_header_month',
                                         body: 'Dec'
                                     }
@@ -4049,6 +4119,7 @@ WidgetConfig = {
                                     {
                                         id: 'hrdemoSimulationGridTableHeaderText-15',
                                         type: TextWidget,
+                                        paddingRight: '30px',
                                         skin: 'simulation_header_with_icon',
                                         icon: 'icon-expand-arrow',
                                         iconColor: '#007AFF',
@@ -4068,6 +4139,7 @@ WidgetConfig = {
                                         skin: 'simulation_header_with_icon',
                                         icon: 'icon-expand-arrow',
                                         iconColor: '#007AFF',
+                                        paddingRight: '30px',
                                         title: '2022',
                                         body: 'Year'
                                     }
@@ -4083,6 +4155,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         skin: 'simulation_header_without_icon',
                                         title: '2023',
+                                        paddingRight: '30px',
                                         body: 'Jan'
                                     }
                                 ]
@@ -4097,6 +4170,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         skin: 'simulation_header_month',
                                         title: '',
+                                        paddingRight: '30px',
                                         body: 'Feb'
                                     }
                                 ]
@@ -4111,6 +4185,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         skin: 'simulation_header_month',
                                         title: '',
+                                        paddingRight: '30px',
                                         body: 'Mar'
                                     }
                                 ]
@@ -4125,6 +4200,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         skin: 'simulation_header_month',
                                         title: '',
+                                        paddingRight: '30px',
                                         body: 'Apr'
                                     }
                                 ]
@@ -4139,6 +4215,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         skin: 'simulation_header_month',
                                         title: '',
+                                        paddingRight: '30px',
                                         body: 'May'
                                     }
                                 ]
@@ -4153,6 +4230,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         skin: 'simulation_header_month',
                                         title: '',
+                                        paddingRight: '30px',
                                         body: 'Jun'
                                     }
                                 ]
@@ -4167,6 +4245,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         skin: 'simulation_header_month',
                                         title: '',
+                                        paddingRight: '30px',
                                         body: 'Jul'
                                     }
                                 ]
@@ -4181,6 +4260,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         skin: 'simulation_header_month',
                                         title: '',
+                                        paddingRight: '30px',
                                         body: 'Aug'
                                     }
                                 ]
@@ -4195,6 +4275,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         skin: 'simulation_header_month',
                                         title: '',
+                                        paddingRight: '30px',
                                         body: 'Sep'
                                     }
                                 ]
@@ -4209,6 +4290,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         skin: 'simulation_header_month',
                                         title: '',
+                                        paddingRight: '30px',
                                         body: 'Oct'
                                     }
                                 ]
@@ -4223,7 +4305,8 @@ WidgetConfig = {
                                         type: TextWidget,
                                         skin: 'simulation_header_month',
                                         title: '',
-                                        body: 'Nov'
+                                        body: 'Nov',
+                                        paddingRight: '30px',
                                     }
                                 ]
                             },
@@ -4237,6 +4320,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         skin: 'simulation_header_month',
                                         title: '',
+                                        paddingRight: '30px',
                                         body: 'Dec'
                                     }
                                 ]
@@ -4249,11 +4333,12 @@ WidgetConfig = {
                                     {
                                         id: 'hrdemoSimulationGridTableHeaderText-29',
                                         type: TextWidget,
+                                        marginLeft: '-80px',
                                         paddingLeft: '5px',
                                         title: '',
                                         bodyAlignment: 'start',
                                         skin: 'simulation_header_month',
-                                        body: 'HR Cost ∑ 2022',
+                                        body: '',
                                         titleFontWeight: 'bold',
                                     }
                                 ]
@@ -4267,6 +4352,7 @@ WidgetConfig = {
                                         id: 'hrdemoSimulationGridTableHeaderText-30',
                                         type: TextWidget,
                                         paddingLeft: '5px',
+                                        marginLeft: '-80px',
                                         bodyAlignment: 'start',
                                         title: '',
                                         skin: 'simulation_header_month',
@@ -4293,7 +4379,6 @@ WidgetConfig = {
                     {
                         id: 'hrdemoSimulationGridTableCell1',
                         type: GridTableCellWidget,
-                        width: '10%',
                         widgets: [
                             {
                                 id: 'hrdemoSimulationGridTableText1',
@@ -4672,7 +4757,8 @@ WidgetConfig = {
                 backdrop: true,
                 visible: false,
                 closeBtn: false,
-                width: 275,
+                width: 280,
+                height: 260,
                 heightFixed: false,
                 bgScrollable: true,
                 fixed: true,
@@ -6226,6 +6312,7 @@ WidgetConfig = {
                                         id: 'hrdemoPositionParametersRow1Cell1Button',
                                         type: ButtonWidget,
                                         icon: 'icon-menu',
+                                        marginTop: '8px',
                                         iconFontSize: '20',
                                         iconColor: '#007AFF'
                                     },
@@ -6337,13 +6424,12 @@ WidgetConfig = {
                 type: GridTableWidget,
                 marginTop: '40',
                 hideIfNoData: true,
-                skin: 'forecasting_forecast_hr',
+                skin: 'customer_status_report_bpsp',
                 listen: [
                     {
                         event: 'write.hrdemoPositionParametersGridTable.finished',
                         method: 'refresh'
                     },
-                    //{event: 'choose.dropbox.finished', method: 'refresh'}
                 ],
                 width: '80%',
                 title: '',
@@ -6364,7 +6450,9 @@ WidgetConfig = {
                                         id: 'hrdemoPositionParametersGridTableHeaderCell1Text',
                                         type: TextWidget,
                                         body: 'Parameter name',
-                                        paddingLeft: '8px',
+                                        paddingLeft: '10px',
+                                        paddingTop: '10px',
+                                        skin: 'gridTable_title_taxes',
                                         bodyFontWeight: 'bold'
 
                                     }
@@ -6400,6 +6488,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         body: 'Feb',
+                                        skin: 'gridTable_title_taxes2',
                                         bodyFontWeight: 'bold'
                                     }
                                 ]
@@ -6415,6 +6504,7 @@ WidgetConfig = {
                                         id: 'hrdemoPositionParametersGridTableHeaderText-04',
                                         type: TextWidget,
                                         paddingLeft: '8px',
+                                        skin: 'gridTable_title_taxes2',
                                         body: 'Mar',
                                         bodyFontWeight: 'bold'
                                     }
@@ -6431,6 +6521,7 @@ WidgetConfig = {
                                         id: 'hrdemoPositionParametersGridTableHeaderText-5',
                                         type: TextWidget,
                                         paddingLeft: '8px',
+                                        skin: 'gridTable_title_taxes2',
                                         body: 'Apr',
                                         bodyFontWeight: 'bold'
                                     }
@@ -6448,6 +6539,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         body: 'May',
+                                        skin: 'gridTable_title_taxes2',
                                         bodyFontWeight: 'bold'
                                     }
                                 ]
@@ -6464,6 +6556,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         bodyFontWeight: 'bold',
+                                        skin: 'gridTable_title_taxes2',
                                         body: 'Jun'
                                     }
                                 ]
@@ -6479,6 +6572,7 @@ WidgetConfig = {
                                         id: 'hrdemoPositionParametersGridTableHeaderText-8',
                                         type: TextWidget,
                                         paddingLeft: '8px',
+                                        skin: 'gridTable_title_taxes2',
                                         bodyFontWeight: 'bold',
                                         body: 'July'
                                     }
@@ -6495,6 +6589,7 @@ WidgetConfig = {
                                         id: 'hrdemoPositionParametersGridTableHeaderText-9',
                                         type: TextWidget,
                                         paddingLeft: '8px',
+                                        skin: 'gridTable_title_taxes2',
                                         bodyFontWeight: 'bold',
                                         body: 'Aug'
                                     }
@@ -6512,6 +6607,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         bodyFontWeight: 'bold',
+                                        skin: 'gridTable_title_taxes2',
                                         body: 'Sep'
                                     }
                                 ]
@@ -6527,7 +6623,8 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         bodyFontWeight: 'bold',
-                                        body: 'Okt'
+                                        skin: 'gridTable_title_taxes2',
+                                        body: 'Oct'
                                     }
                                 ]
                             },
@@ -6542,6 +6639,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         bodyFontWeight: 'bold',
+                                        skin: 'gridTable_title_taxes2',
                                         body: 'Nov'
                                     }
                                 ]
@@ -6550,12 +6648,14 @@ WidgetConfig = {
                                 id: 'hrdemoPositionParametersGridTableHeaderCell-13',
                                 type: GridTableHeaderCellWidget,
                                 alignment: 'center-left',
+                                cellHeaderSin: 'close',
                                 width: '6.5%',
                                 widgets: [
                                     {
                                         id: 'hrdemoPositionParametersGridTableHeaderText-13',
                                         type: TextWidget,
                                         paddingLeft: '8px',
+                                        skin: 'gridTable_title_taxes2',
                                         bodyFontWeight: 'bold',
                                         body: 'Dec'
                                     }
@@ -6858,6 +6958,7 @@ WidgetConfig = {
                                     {
                                         id: 'hrdemoSocialSecurityRow1Cell1Button',
                                         type: ButtonWidget,
+                                        marginTop: '8px',
                                         icon: 'icon-menu',
                                         iconFontSize: '20',
                                         iconColor: '#007AFF'
@@ -6967,7 +7068,7 @@ WidgetConfig = {
                 type: GridTableWidget,
                 marginTop: '40',
                 hideIfNoData: true,
-                skin: 'forecasting_forecast_hr',
+                skin: 'customer_status_report_bpsp',
                 listen: [
                     {
                         event: 'write.hrdemoSocialSecurityGridTable.finished',
@@ -6993,8 +7094,10 @@ WidgetConfig = {
                                         id: 'hrdemoSocialSecurityGridTableHeaderCell1Text',
                                         type: TextWidget,
                                         body: 'Parameter Name',
-                                        paddingLeft: '8px',
-                                        bodyFontWeight: 'bold'
+                                        paddingLeft: '10px',
+                                        paddingTop: '10px',
+                                        bodyFontWeight: 'bold',
+                                        skin: 'gridTable_title_taxes'
 
                                     }
                                 ]
@@ -7029,6 +7132,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         body: 'Feb',
+                                        skin: 'gridTable_title_taxes2',
                                         bodyFontWeight: 'bold'
                                     }
                                 ]
@@ -7045,6 +7149,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         body: 'Mar',
+                                        skin: 'gridTable_title_taxes2',
                                         bodyFontWeight: 'bold'
                                     }
                                 ]
@@ -7061,6 +7166,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         body: 'Apr',
+                                        skin: 'gridTable_title_taxes2',
                                         bodyFontWeight: 'bold'
                                     }
                                 ]
@@ -7077,6 +7183,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         body: 'May',
+                                        skin: 'gridTable_title_taxes2',
                                         bodyFontWeight: 'bold'
                                     }
                                 ]
@@ -7093,7 +7200,8 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         bodyFontWeight: 'bold',
-                                        body: 'Jun'
+                                        body: 'Jun',
+                                        skin: 'gridTable_title_taxes2'
                                     }
                                 ]
                             },
@@ -7109,6 +7217,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         bodyFontWeight: 'bold',
+                                        skin: 'gridTable_title_taxes2',
                                         body: 'July'
                                     }
                                 ]
@@ -7125,6 +7234,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         bodyFontWeight: 'bold',
+                                        skin: 'gridTable_title_taxes2',
                                         body: 'Aug'
                                     }
                                 ]
@@ -7141,6 +7251,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         bodyFontWeight: 'bold',
+                                        skin: 'gridTable_title_taxes2',
                                         body: 'Sep'
                                     }
                                 ]
@@ -7156,7 +7267,8 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         bodyFontWeight: 'bold',
-                                        body: 'Okt'
+                                        skin: 'gridTable_title_taxes2',
+                                        body: 'Oct'
                                     }
                                 ]
                             },
@@ -7171,6 +7283,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         bodyFontWeight: 'bold',
+                                        skin: 'gridTable_title_taxes2',
                                         body: 'Nov'
                                     }
                                 ]
@@ -7186,6 +7299,7 @@ WidgetConfig = {
                                         type: TextWidget,
                                         paddingLeft: '8px',
                                         bodyFontWeight: 'bold',
+                                        skin: 'gridTable_title_taxes2',
                                         body: 'Dec'
                                     }
                                 ]
@@ -7375,7 +7489,6 @@ WidgetConfig = {
                         alignment: 'center-right',
                         width: '6.5%',
                         widgets: [
-
                             {
                                 id: 'hrdemoSocialSecurityGridTableButton-13',
                                 type: TextWidget,
@@ -8090,7 +8203,7 @@ WidgetConfig = {
             closeBtn: false,
             skin: '',
             width: '350px',
-            height: '270px',
+            height: '250px',
             paddingLeft: '120px',
             bgScrollable: true,
             fadingSpeed: 0,
@@ -8155,7 +8268,7 @@ WidgetConfig = {
                                     id: 'hrdemoDeleteGroupGridRow3Text1',
                                     type: TextWidget,
                                     titleFontSize: '13',
-                                    marginTop: '15px',
+                                    marginTop: '5px',
                                     skin: 'delete',
                                     title: 'All the data will be lost.',
                                     titleCursor: 'pointer',
@@ -8174,7 +8287,7 @@ WidgetConfig = {
                                     id: 'hrdemoDeleteGroupGridRow4Text1',
                                     type: TextWidget,
                                     titleFontSize: '13',
-                                    marginTop: '15px',
+                                    marginTop: '5px',
                                     title: 'The operation cannot be undone.',
                                     skin: 'delete_message',
                                     titleCursor: 'pointer',
@@ -8192,7 +8305,7 @@ WidgetConfig = {
                                     id: 'hrdemoDeleteGroupGridRow5Button',
                                     type: ButtonWidget,
                                     width: '320px',
-                                    marginTop: '10px',
+                                    marginTop: '15px',
                                     marginLeft: '6px',
                                     label: 'Remove',
                                     skin: 'delete_hrdemored'

@@ -1,13 +1,14 @@
 {
   "projectName": "Dimension HR",
   "projectId": "hrdemo",
-  "authenticationMode": "LoginBasicPool",
+  "authenticationMode": "LoginPool",
   "camNamespace": "knowledgeseed",
   "mainPage": "hrdemoMain",
   "proxy": {
     "target": "https://dev.knowledgeseed.ch:5125/hrdemoappapi"
   },
   "pool": {
+    "modelAuthentication": "Basic",
     "users": [
       "admin"
     ]
