@@ -13,9 +13,9 @@ class SettingManager:
     TM1SessionId = 'dimension_framework_tm1_session_id'
     TM1SessionExpires = 'dimension_framework_tm1_session_expires'
 
-    def __init__(self, cache, site_root, instance='default'):
+    def __init__(self, cache, analogic_application_path, instance='default'):
         self.cache = cache
-        self.site_root = site_root
+        self.site_root = analogic_application_path
         self.instance = instance
 
     def clear_cache(self):
@@ -63,21 +63,17 @@ class SettingManager:
         return url + ('/'.join(filter(lambda x : x != 'default' and x is not None, sub_path)))
 
     def _get_repository(self):
-        return self._get_yaml_setting(self._get_repository_cache_key(), 'repository', False,
-                                      os.path.join('apps', self.get_instance(), 'server', 'configs'))
+        return self._get_yaml_setting(self._get_repository_cache_key(), os.path.join('server', 'configs', 'repository'))
 
     def get_mdx(self, key):
         repository = self._get_repository()
         mdx = repository[key]
         return mdx
 
-    def _get_json_setting(self, key, file_name, by_instance=True, folder='apps'):
+    def _get_json_setting(self, key, file_name):
         setting = self._cache_get(key)
         if setting is None:
-            file_path = file_name
-            if by_instance:
-                file_path = os.path.join(self.instance, file_name)
-            json_url = os.path.join(self.site_root, folder, file_path + '.json')
+            json_url = os.path.join(self.site_root, file_name + '.json')
             with open(json_url, encoding="utf-8") as f:
                 setting = json.load(f)
 
@@ -109,25 +105,20 @@ class SettingManager:
         return setting
 
     def save_config_js(self, config):
-        js_url = os.path.join(self.site_root, 'apps', self.instance, 'static', 'assets', 'js', 'config.js')
+        js_url = os.path.join(self.site_root, 'static', 'assets', 'js', 'config.js')
         with open(js_url, 'w', encoding="utf-8") as f:
             f.write(render_template('config.html', cnf=config))
 
-
-    def _get_yaml_setting(self, key, file_name, by_instance=True, folder='apps'):
+    def _get_yaml_setting(self, key, file_path):
         setting = self._cache_get(key)
         if setting is None:
-            file_path = file_name
-            if by_instance:
-                file_path = os.path.join(self.instance, file_name)
-            with open(os.path.join(self.site_root, folder, file_path + '.yml'), encoding="utf-8") as file:
+            with open(os.path.join(self.site_root, file_path + '.yml'), encoding="utf-8") as file:
                 setting = yaml.safe_load(file)
                 self._cache_set(key, setting, 0)
         return setting
 
     def get_custom_object_description(self, key):
-        classes = self._get_json_setting(self._get_classes_cache_key(), 'custom_objects', False,
-                                         os.path.join('apps', self.get_instance(), 'server', 'configs'))
+        classes = self._get_json_setting(self._get_classes_cache_key(), os.path.join('server', 'configs', 'custom_objects'))
         return classes[key]
 
     def set_tm1_session_id(self, tm1_session_id, suffix=''):

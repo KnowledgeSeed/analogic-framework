@@ -16,8 +16,7 @@ class EmailManager:
         if 'email_template' not in post_data:
             return self._error('missing email_template parameter from request', logger)
 
-        customer_email_template_dir = os.path.join(setting.site_root, APPLICATIONS_DIR, setting.get_instance(),
-                                                   'server', 'configs', 'email_templates')
+        customer_email_template_dir = os.path.join(setting.site_root, 'server', 'configs', 'email_templates')
 
         if not os.path.exists(customer_email_template_dir):
             return self._error(customer_email_template_dir + ' does not exist', logger)

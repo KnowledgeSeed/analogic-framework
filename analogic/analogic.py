@@ -54,18 +54,18 @@ class Analogic(Flask):
     def get_authentication_provider_module_name(self, name):
         return self.authentication_providers[name]
 
-    def register_application(self, blueprint: "Blueprint", **options: t.Any) -> None:
+    def register_application(self, application_dir, blueprint: "Blueprint", **options: t.Any) -> None:
         instance = '/' + blueprint.name
         self.register_analogic_url_rules(instance)
 
-        self.analogic_applications[blueprint.name] = True
+        self.analogic_applications[blueprint.name] = application_dir
 
         super().register_blueprint(blueprint, **options)
 
     def get_analogic_application(self):
         s = request.path.split('/')
         if len(s) > 2 and s[1] in self.analogic_applications:
-            return s[1]
+            return s[1], self.analogic_applications[s[1]]
         else:
             return 'default'
 
@@ -88,10 +88,10 @@ class Analogic(Flask):
         return list(filter(lambda x: x.endswith(ext), list(self.extension_assets.keys())))
 
     def get_authentication_provider(self):
-        analogic_application = self.get_analogic_application()
+        analogic_application, analogic_application_path = self.get_analogic_application()
         cache = self._get_cache()
 
-        setting = SettingManager(cache, self.instance_path, analogic_application)
+        setting = SettingManager(cache, analogic_application_path, analogic_application)
         config = setting.get_config()
 
         class_name = config['authenticationMode']
@@ -237,7 +237,7 @@ def _register_application(app, application_dir, application_name, files):
 
         for name, obj in inspect.getmembers(sys.modules[module]):
             if isinstance(obj, Blueprint):
-                app.register_application(obj)
+                app.register_application(application_dir=application_dir, blueprint=obj)
 
 
 def _fast_scan_dir(directory, ext):
