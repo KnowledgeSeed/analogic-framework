@@ -1,3 +1,4 @@
+import glob
 import os
 from flask import Flask, Blueprint, request, send_file, session, render_template
 import typing as t
@@ -155,8 +156,8 @@ def create_app(instance_path):
     _load_analogic_extensions(app, extensions_dir=EXTENSIONS_DIR)
     _load_analogic_extensions(app, extensions_dir=EXTENSIONS_DIR_EXTRA)
 
-    _load_applications(app, register_func=_register_application, module_dir=APPLICATIONS_DIR)
-    _load_applications(app, register_func=_register_application, module_dir=APPLICATIONS_DIR_EXTRA)
+    _load_applications(app, register_func=_register_application, module_dirs=APPLICATIONS_DIR)
+    _load_applications(app, register_func=_register_application, module_dirs=APPLICATIONS_DIR_EXTRA)
 
     app.register_analogic_url_rules('')
 
@@ -228,21 +229,27 @@ def _register_extension_components(app, extension_name, files):
                     app.register_analogic_endpoint(obj)
 
 
-def _load_applications(app, register_func, module_dir):
-    modules_dir = os.path.join(app.instance_path, module_dir)
+def _load_applications(app, register_func, module_dirs):
+    for module_dir in module_dirs.split(";"):
+        modules_dir_path = os.path.join(app.instance_path, module_dir)
 
-    _append_extension_dir_to_path(app, module_dir)
+        _append_extension_dir_to_path(app, module_dir)
 
-    _load_modules(app, modules_dir, False, register_func)
-
+        _load_modules(app, modules_dir_path, False, register_func)
 
 def _load_modules(app, modules_dir, check_prefix, register_func):
     for module_dir_name in os.listdir(modules_dir):
+
         module_dir = os.path.join(modules_dir, module_dir_name)
 
         if os.path.isdir(module_dir) and (
                 check_prefix is False or (
                 module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX) and not module_dir_name.endswith('dist-info'))):
+
+            # workaround to handle repeating names in module path
+            if module_dir_name == modules_dir.rsplit('/', 1)[-1]:
+                module_dir_name = module_dir_name + '.' + module_dir_name
+
             files = resources.contents(module_dir_name)
 
             modules = [f[:-3] for f in files if f.endswith(".py") and f[0] != "_"]
