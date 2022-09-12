@@ -23,6 +23,7 @@ EXTENSIONS_DIR = 'extensions'
 EXTENSIONS_DIR_EXTRA = os.environ.get('EXTENSIONS_DIR_EXTRA', '')
 ALLOWED_EXTENSION_PREFIX = 'analogic_'
 
+
 class Analogic(Flask):
 
     def __init__(self, *args, **kwargs):
@@ -48,8 +49,9 @@ class Analogic(Flask):
                               **url_rule['options'])
 
     def register_analogic_endpoint(self, endpoint: "AnalogicEndpoint", **options: t.Any):
-        self.endpoint_rules.extend(endpoint.endpoint_rules)
-        super().register_blueprint(endpoint, **options)
+        if endpoint.name not in self.blueprints:
+            self.endpoint_rules.extend(endpoint.endpoint_rules)
+            super().register_blueprint(endpoint, **options)
 
     def register_authentication_provider(self, name, module_name):
         self.authentication_providers[name] = module_name
@@ -76,7 +78,7 @@ class Analogic(Flask):
         if len(s) > 2 and s[1] in self.analogic_applications:
             return s[1], self.analogic_applications[s[1]]
         else:
-            return 'default'
+            return 'default', self.analogic_applications['default']
 
     def register_extension_assets(self, assets):
         self.extension_assets.update(assets)
@@ -132,17 +134,20 @@ class Analogic(Flask):
         return condition.get_authentication_provider_name(config)
 
     def _get_cache(self):
-            cache_path = os.path.join(self.instance_path, 'cache')
-            return Cache(self, config={'CACHE_TYPE': 'FileSystemCache', 'CACHE_DIR': cache_path})
+        cache_path = os.path.join(self.instance_path, 'cache')
+        return Cache(self, config={'CACHE_TYPE': 'FileSystemCache', 'CACHE_DIR': cache_path})
+
 
 def page_not_found(e):
     return render_template('404.html'), 404
+
 
 def page_error(e):
     message = ''
     if e.original_exception:
         message += str(e.original_exception)
     return render_template('500.html', message=message), 500
+
 
 def create_app(instance_path):
     app = Analogic(__name__, instance_path=instance_path)
@@ -154,10 +159,14 @@ def create_app(instance_path):
     app.register_analogic_endpoint(core_endpoints)
 
     _load_analogic_extensions(app, extensions_dir=EXTENSIONS_DIR)
-    _load_analogic_extensions(app, extensions_dir=EXTENSIONS_DIR_EXTRA)
+
+    if EXTENSIONS_DIR_EXTRA != '':
+        _load_analogic_extensions(app, extensions_dir=EXTENSIONS_DIR_EXTRA)
 
     _load_applications(app, register_func=_register_application, module_dirs=APPLICATIONS_DIR)
-    _load_applications(app, register_func=_register_application, module_dirs=APPLICATIONS_DIR_EXTRA)
+
+    if APPLICATIONS_DIR_EXTRA != '':
+        _load_applications(app, register_func=_register_application, module_dirs=APPLICATIONS_DIR_EXTRA)
 
     app.register_analogic_url_rules('')
 
@@ -221,12 +230,13 @@ def _register_extension_components(app, extension_name, files):
                     issubclass(obj, AuthenticationProvider):
                 app.register_authentication_provider(name, extension_name)
 
-        if inspect.isclass(obj) and \
-            not inspect.isabstract(obj) and \
-                        issubclass(obj, Condition):
+            if inspect.isclass(obj) and \
+                    not inspect.isabstract(obj) and \
+                    issubclass(obj, Condition):
                 app.register_condition(name, extension_name)
-                if isinstance(obj, AnalogicEndpoint):
-                    app.register_analogic_endpoint(obj)
+
+            if isinstance(obj, AnalogicEndpoint):
+                app.register_analogic_endpoint(obj)
 
 
 def _load_applications(app, register_func, module_dirs):
@@ -236,6 +246,7 @@ def _load_applications(app, register_func, module_dirs):
         _append_extension_dir_to_path(app, module_dir)
 
         _load_modules(app, modules_dir_path, False, register_func)
+
 
 def _load_modules(app, modules_dir, check_prefix, register_func):
     for module_dir_name in os.listdir(modules_dir):
