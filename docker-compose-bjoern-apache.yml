@@ -5,7 +5,7 @@ services:
     build: .
     environment:
       - ANALOGIC_WSGI_SERVER=bjoern
-      - ANALOGIC_LOAD_EXAMPLES=true
+      - ANALOGIC_LOAD_SAMPLE_APPS=true
 
   apache:
     image: 'bitnami/apache:latest'
