@@ -253,7 +253,7 @@ def _load_modules(app, modules_dir, check_prefix, register_func):
 
         module_dir = os.path.join(modules_dir, module_dir_name)
 
-        if os.path.isdir(module_dir) and (
+        if os.path.isdir(module_dir) and module_dir_name != '.git' and (
                 check_prefix is False or (
                 module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX) and not module_dir_name.endswith('dist-info'))):
 

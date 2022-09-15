@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='analogic',
-    version='4.0.10',
+    version='4.0.0-dev1',
     packages=[
         'analogic'
     ],
@@ -21,6 +21,7 @@ setup(
         'xlrd==2.0.1',
         'openpyxl==3.0.10',
         'Flask-Cors==3.0.10',
-        'json_logging==1.3.0'
+        'json_logging==1.3.0',
+        'flask_talisman'
     ],
 )
