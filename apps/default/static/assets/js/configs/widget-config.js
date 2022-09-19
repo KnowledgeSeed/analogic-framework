@@ -12,12 +12,12 @@ WidgetConfig = {
                         url: '/helloanalogic',
                         label: 'Hello analogic application'
                     },
-                    {
-                        id: 'analogicMainHrDemo',
-                        type: ButtonWidget,
-                        url: '/hrdemo',
-                        label: 'Hrdemo application'
-                    }
+                    // {
+                    //     id: 'analogicMainHrDemo',
+                    //     type: ButtonWidget,
+                    //     url: '/hrdemo',
+                    //     label: 'Hrdemo application'
+                    // }
                 ]
             }
 };
