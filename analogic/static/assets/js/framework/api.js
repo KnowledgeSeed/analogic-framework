@@ -18,7 +18,7 @@ Api.hide = function hide(widgetId) {
     $('#' + widgetId).hide();
 };
 
-Api.showWidget = function showWidgets(id) {
+Api.showWidget = function showWidget(id) {
     $('#' + id).show().addClass('forcedByEventMap');
 };
 
@@ -26,7 +26,7 @@ Api.hideWidgets = function hideWidgets(ids) {
     ids.forEach(Api.hideWidget);
 };
 
-Api.hideWidget = function hideWidgets(id) {
+Api.hideWidget = function hideWidget(id) {
     $('#' + id).hide().addClass('forcedByEventMap');
 };
 

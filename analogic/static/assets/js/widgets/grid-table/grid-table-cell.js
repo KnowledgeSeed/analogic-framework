@@ -26,7 +26,7 @@ class GridTableCellWidget extends Widget {
 
     getParameters(data) {
         return {
-            alignment: this.getRealValue('alignment', data, 'center-center',),
+            alignment: this.getRealValue('alignment', data, 'center-center'),
             borderLeft: this.getRealValue('borderLeft', data, false),
             borderRight: this.getRealValue('borderRight', data, false),
             cellBackgroundColor: this.getRealValue('cellBackgroundColor', data, false),
