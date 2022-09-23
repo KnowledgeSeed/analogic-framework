@@ -9,9 +9,20 @@ The Analogic Framework is a software development framework for building advanced
 
 ## Requirements
 
+Python >= 3.9
+
 ## Getting Started
 
 ### Running from code
+
+1. git clone https://github.com/KnowledgeSeed/analogic
+2. cd analogic
+3. py -m venv venv
+4. venv\Scripts\activate
+5. pip install -r requirements.txt
+6. set EXTENSIONS_DIR_EXTRA=../extensions
+7. py run.py 
+8. open the following url in browser: http://localhost:5000/helloanalogic
 
 ### Running in Docker
 
