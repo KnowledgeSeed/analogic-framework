@@ -21,7 +21,7 @@ Python >= 3.9
  	```
 2. 
 	```
-	$ cd analogic
+	cd analogic
  	```
 3. Create python virtual env and activate it
 	```
