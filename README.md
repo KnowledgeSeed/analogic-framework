@@ -15,13 +15,34 @@ Python >= 3.9
 
 ### Running from code
 
-1. git clone https://github.com/KnowledgeSeed/analogic
-2. cd analogic
-3. py -m venv venv
-4. venv\Scripts\activate
-5. pip install -r requirements.txt
-6. set EXTENSIONS_DIR_EXTRA=../extensions
-7. py run.py 
+1. Clone Repository
+	```
+	git clone https://github.com/KnowledgeSeed/analogic
+ 	```
+2. 
+	```
+	$ cd analogic
+ 	```
+3. Create python virtual env and activate it
+	```
+	py -m venv venv
+ 	```
+ 
+ 	```
+	 source venv/Scripts/activate
+ 	```
+4. Install requirements 
+	```
+	pip install -r requirements.txt
+ 	```
+5. Set up the following env variable for loading sample apps
+	```
+	export ANALOGIC_LOAD_SAMPLE_APPS=True
+ 	```
+6. Launch analogic
+	```
+	py run.py
+ 	``` 
 8. open the following url in browser: http://localhost:5000/helloanalogic
 
 ### Running in Docker

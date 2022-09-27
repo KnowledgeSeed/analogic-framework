@@ -16,6 +16,7 @@ from flask_caching import Cache
 from analogic.setting import SettingManager
 from datetime import timedelta
 import importlib
+from analogic.version import version
 
 APPLICATIONS_DIR = 'apps'
 APPLICATIONS_DIR_EXTRA = os.environ.get('APPLICATIONS_DIR_EXTRA', '')

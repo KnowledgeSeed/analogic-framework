@@ -1,8 +1,9 @@
 from setuptools import setup
+from analogic import version
 
 setup(
     name='analogic',
-    version='4.0.0-dev1',
+    version=version,
     packages=[
         'analogic'
     ],
