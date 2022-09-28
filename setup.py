@@ -4,6 +4,8 @@ from analogic import version
 setup(
     name='analogic',
     version=version,
+    author='',
+    python_requires='>=3.9',
     packages=[
         'analogic'
     ],
