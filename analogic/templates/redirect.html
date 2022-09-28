@@ -5,8 +5,8 @@
         <title>{{ cnf.projectName }}</title>
     </head>
     <body>
-        <script type="text/javascript" src="{{ url_for('static', filename='assets/js/lib/jquery/jquery-3.6.0.min.js')}}"></script>
-        <script  src="{{ url_for(cnf.blueprint_static, filename='assets/js/config.js')}}?v={{cnf.version}}"></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='assets/js/framework/redirect.js')}}"></script>
+        <script src="{{ url_for('static', filename='assets/js/lib/jquery/jquery-3.6.0.min.js')}}"></script>
+        <script src="{{ url_for(cnf.blueprint_static, filename='assets/js/config.js')}}?v={{cnf.version}}"></script>
+        <script src="{{ url_for('static', filename='assets/js/framework/redirect.js')}}"></script>
     </body>
 </html>

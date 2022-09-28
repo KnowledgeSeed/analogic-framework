@@ -1,4 +1,4 @@
-/* global app, El, EventMap, Loader, Auth, FileUpload, Repository, Server, Utils, Widgets, Pivot, RestRequest */
+/* global app, El, EventMap, Loader, Auth, FileUpload, Repository, Server, Utils, Widgets, RestRequest */
 
 'use strict';
 const QB = {};
