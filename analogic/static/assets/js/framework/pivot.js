@@ -1,4 +1,4 @@
-/* global app, Auth, Loader, Server, Extensions */
+/* global Auth, Loader, Server */
 
 Pivot = {callNum: 0};
 

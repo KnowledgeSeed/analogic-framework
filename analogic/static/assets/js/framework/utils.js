@@ -495,7 +495,7 @@ const Utils = {
     focus(idOrObj, moveCursorToEnd = true) {
         let o = 'object' === typeof idOrObj ? idOrObj : $('#' + idOrObj), len = moveCursorToEnd ? o.val().length * 2 : 0;
 
-        o.focus();
+        o.focus().promise().then(() => o[0].setSelectionRange(len, len));
 
         return o;
     }

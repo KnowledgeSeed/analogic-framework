@@ -37,8 +37,15 @@ def call(tm1:TM1Service, username, cube_name=None, dimension_name=None, hierarch
         data['defaultMember'] = hierarchy.default_member
         data['aliasAttributeNames'] = get_alias_attribute_names(hierarchy)
         children, data['privateSubsets'] = get_public_and_private_subsets(tm1, dimension_name, hierarchy_name, username, options)
+    elif 'process' in options:
+        p = options['processParams']
+        p['pUser'] = username
+        p['pValue'] = json.dumps(p['pValue'])
+        r = tm1.processes.execute_with_return(options['process'], **p)
+        return jsonify(r)
     elif dimension_name is None:
         children = tm1.cubes.get_dimension_names(cube_name)
+        data = get_presets_data(tm1, username)
     elif hierarchy_name is None:
         children = tm1.hierarchies.get_all_names(dimension_name)
     elif subset_name is None:
@@ -57,6 +64,42 @@ def call(tm1:TM1Service, username, cube_name=None, dimension_name=None, hierarch
         data['children'] = get_elements_with_aliases(tm1, subset, is_private_subset)
 
     return jsonify({'children': children, 'data': data})
+
+def get_presets_data(tm1, username):
+    mdx = """WITH
+MEMBER [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sType]
+AS [zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].CurrentMember.Properties('Type')
+MEMBER [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sOwner]
+AS
+IIF('""" + username + """' = [zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].CurrentMember.Properties('CreatedBy'),
+1,0)
+MEMBER [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sID]
+AS [zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].CurrentMember.Name
+SELECT
+   {[Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sID],
+    [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sType],
+    [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sOwner],
+    [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sName],
+    [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sValue]
+   }
+  ON COLUMNS ,
+   UNION({
+        FILTER({
+            [zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].Members
+        }, INSTR([zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].CurrentMember.Properties('Type'), 'Public') > 0)
+},{
+    FILTER({
+        [zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].Members
+    }, INSTR([zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].CurrentMember.Properties('CreatedBy'), '""" + username + """') > 0)
+})
+  ON ROWS
+FROM [zSYS Analogic Pivot Presets]"""
+
+    cellset_id = tm1.cells.create_cellset(mdx)
+    url = "/api/v1/Cellsets('" + cellset_id + "')?$expand=Cells($select=FormattedValue)"
+    data = tm1._tm1_rest.GET(url).json()
+
+    return data['Cells']
 
 
 def get_public_and_private_subsets(tm1:TM1Service, dimension_name, hierarchy_name, username, options):
@@ -85,7 +128,7 @@ def get_filtered_subsets(subsets, options, username_prefix=None):
 
 
 def get_elements_with_aliases(tm1:TM1Service, subset:Subset, is_private_subset):
-    d = {}
+    d = []
 
     element_names = subset.elements
     hierarchy = tm1.hierarchies.get(subset.dimension_name, subset.hierarchy_name)
@@ -97,10 +140,10 @@ def get_elements_with_aliases(tm1:TM1Service, subset:Subset, is_private_subset):
 
     for element_name in element_names:
         element = hierarchy.get_element(element_name)
-        aliases = {}
+        aliases = {0: element_name}
         for alias_attribute_name in alias_attribute_names:
             aliases[alias_attribute_name] = element.element_attributes[alias_attribute_name]
-        d[element_name] = aliases
+        d.append(aliases)
 
     return d
 

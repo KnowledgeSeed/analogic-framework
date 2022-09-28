@@ -20,10 +20,10 @@
     </head>
     <body>
         {% if (cnf.useMinifiedAssets)%}
-            <script  src="{{ url_for(cnf.blueprint_static, filename='assets/js/config.js')}}?v={{cnf.version}}"></script>
-            <script type="text/javascript" src="{{ url_for('static', filename='assets/js/minified.js')}}?v={{ cnf.version }}" charset="UTF-8"></script>
-            <script type="text/javascript" src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/minified.js')}}?v={{ cnf.version }}" charset="UTF-8"></script>
-            <script type="text/javascript" src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/repository.js')}}')}}?v={{cnf.version}}"></script>
+            <script src="{{ url_for(cnf.blueprint_static, filename='assets/js/config.js')}}?v={{cnf.version}}"></script>
+            <script src="{{ url_for('static', filename='assets/js/minified.js')}}?v={{ cnf.version }}" charset="UTF-8"></script>
+            <script src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/minified.js')}}?v={{ cnf.version }}" charset="UTF-8"></script>
+            <script src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/repository.js')}}')}}?v={{cnf.version}}"></script>
         {% else %}
             {% include 'javascripts.html' %}
         {% endif %}
