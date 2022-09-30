@@ -10,6 +10,7 @@ setup(
         'analogic'
     ],
     include_package_data=True,
+    package_data={'': ['version.config']},
     install_requires=[
         'Flask==2.1.2',
         'Flask-Caching==2.0.0',
