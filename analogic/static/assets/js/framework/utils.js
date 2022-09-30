@@ -141,7 +141,7 @@ const Utils = {
     escapeText: str => JSON.stringify(str).slice(1, -1),
     stripHtml: str => isNaN(str) ? str.replace(/(<([^>]+)>)/gi, "") : str,
     nl2br: s => s.replace(/(?:\r\n|\r|\n)/g, '<br>'),
-    htmlEncode: s => ('' + s).replaceAll({'"': '&quot;', "'": '&apos;'}),
+    htmlEncode: s => isNaN(s) ? ('' + s).replaceAll('"', '&quot;').replaceAll("'", '&apos;') : s,
     adjustHeightsToMax(elements) {
         let i, height, maxHeight = 0, len = elements.length;
         // testing with maybe "outerHeight"
@@ -495,7 +495,7 @@ const Utils = {
     focus(idOrObj, moveCursorToEnd = true) {
         let o = 'object' === typeof idOrObj ? idOrObj : $('#' + idOrObj), len = moveCursorToEnd ? o.val().length * 2 : 0;
 
-        o.focus();
+        o.focus().promise().then(() => o[0].setSelectionRange(len, len));
 
         return o;
     }

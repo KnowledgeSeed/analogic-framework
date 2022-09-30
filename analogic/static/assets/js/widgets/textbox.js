@@ -49,7 +49,7 @@ class TextBoxWidget extends Widget {
             <div class="ks-textbox-field-inner ${v.editable === false ? 'readonly' : ''}">
                 <div class="ks-textbox-icon">${v.icon !== false ? `style="${iconStyles.join('')}"<img src="${app.applicationAssetsUrl}/skin/images/${v.icon}">` : ''}</div>
                 <div class="ks-textbox-divider"></div>
-                <input ${v.editable === false ? 'readonly' : ''} style="${textStyles.join('')}" data-action="writeEnd" data-id="${o.id}"  type="${v.textBoxType}" value="${d.value}" class="ks-textbox-input" placeholder="${v.defaultText ? v.defaultText : ''}">
+                <input ${v.editable === false ? 'readonly' : ''} style="${textStyles.join('')}" data-action="writeEnd" data-id="${o.id}"  type="${v.textBoxType}" value="${Utils.htmlEncode(d.value)}" class="ks-textbox-input" placeholder="${v.defaultText ? v.defaultText : ''}">
             </div>
         </div>
     </div>
@@ -69,7 +69,7 @@ class TextBoxWidget extends Widget {
         this.value = data.value;
 
         input.attr('placeholder', p.defaultText === false ? '' : p.defaultText);
-        input.attr('value', data.value);
+        input.attr('value', Utils.htmlEncode(data.value));
         input.val(data.value);
 
     }
@@ -108,7 +108,7 @@ class TextBoxWidget extends Widget {
 
                 Widgets[id].value = value;
 
-                w.attr('value', value);
+                //w.attr('value', value);
 
                 Widget.doHandleSystemEvent(w, e);
 
@@ -125,7 +125,7 @@ class TextBoxWidget extends Widget {
 
                 Widgets[id].value = value;
 
-                w.attr('value', value);
+                //w.attr('value', value);
 
                 element = $('<div>');
                 element.data({action: 'writeKey', id: id, value: value});

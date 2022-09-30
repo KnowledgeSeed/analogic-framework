@@ -15,7 +15,7 @@ class TextAreaWidget extends Widget {
 
         const v = this.getParameters(d);
         this.editable = v.editable;
-        this.value = d.value;
+        this.value = Utils.escapeText(d.value);
 
         let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d),
             titleStyles = this.getHtmlComponentStylesArray('title', d),
@@ -98,7 +98,8 @@ class TextAreaWidget extends Widget {
         textarea = section.find('textarea');
 
         this.editable = p.editable;
-        this.value = d.value;
+        this.value = Utils.escapeText(d.value);
+
         textarea.html(d.value);
     }
 

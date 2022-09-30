@@ -1,6 +1,4 @@
-import logging
 import os
-from distutils.util import strtobool
 
 from flask import Blueprint
 

@@ -40,10 +40,6 @@ class LoadExecutorFactory {
             return loaderFunction; // Todo check
         }
 
-        if (loaderFunction.pivot) {
-            return new PivotLoadExecutor(ctx);
-        }
-
         return new LoadExecutor(ctx);
     }
 

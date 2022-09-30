@@ -20,17 +20,6 @@
     font-style: normal;
 }
 
-@font-face {
-    font-family: 'roche';
-    src:  url('../fonts/roche.eot?esdioh');
-    src:  url('../fonts/roche.eot?esdioh#iefix') format('embedded-opentype'),
-        url('../fonts/roche.ttf?esdioh') format('truetype'),
-        url('../fonts/roche.woff?esdioh') format('woff'),
-        url('../fonts/roche.svg?esdioh#roche') format('svg');
-    font-weight: normal;
-    font-style: normal;
-    font-display: block;
-}
 
 @font-face {
   font-family: 'analogic';

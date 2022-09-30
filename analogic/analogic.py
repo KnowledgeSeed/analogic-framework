@@ -16,6 +16,7 @@ from flask_caching import Cache
 from analogic.setting import SettingManager
 from datetime import timedelta
 import importlib
+from analogic.version import version
 
 APPLICATIONS_DIR = 'apps'
 APPLICATIONS_DIR_EXTRA = os.environ.get('APPLICATIONS_DIR_EXTRA', '')
@@ -253,7 +254,7 @@ def _load_modules(app, modules_dir, check_prefix, register_func):
 
         module_dir = os.path.join(modules_dir, module_dir_name)
 
-        if os.path.isdir(module_dir) and (
+        if os.path.isdir(module_dir) and module_dir_name != '.git' and (
                 check_prefix is False or (
                 module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX) and not module_dir_name.endswith('dist-info'))):
 
@@ -263,7 +264,7 @@ def _load_modules(app, modules_dir, check_prefix, register_func):
 
             files = resources.contents(module_dir_name)
 
-            modules = [f[:-3] for f in files if f.endswith(".py") and f[0] != "_"]
+            modules = [f[:-3] for f in files if f.endswith(".py") and f[0] != "_" and f != 'setup.py']
             register_func(app, module_dir, module_dir_name, modules)
 
 

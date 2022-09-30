@@ -1,4 +1,5 @@
 from .analogic import Analogic as Analogic
+from .version import version
 from .analogic import create_app
 from .authentication_provider import get_authentication_provider
 from .authentication_provider import login_required
@@ -13,3 +14,4 @@ from .setting import SettingManager
 from . import pivot
 from .loginbasic import LoginBasic
 from .nologin import NoLogin
+from . import core_endpoints

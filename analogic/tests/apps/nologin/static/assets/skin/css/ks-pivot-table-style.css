@@ -30,17 +30,17 @@
     src:  url('../fonts/pivot.eot?4cc4fq#iefix') format('embedded-opentype'),
         url('../fonts/pivot.ttf?4cc4fq') format('truetype'),
         url('../fonts/pivot.woff?4cc4fq') format('woff'),
-        url('../fonts/pivot.svg?4cc4fq#pivot') format('svg');
+        url('../fonts/pivot.svg?4cc4fq.ks-pivot') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
 }
 
-#pivot * {
+.ks-pivot * {
     font-family: 'Gotham Narrow';
 }
 
-#pivot [class^="icon-"], #pivot [class*=" icon-"] {
+.ks-pivot [class^="icon-"], .ks-pivot [class*=" icon-"] {
     /* use !important to prevent issues with browser extensions that change fonts */
     font-family: 'pivot' !important;
     speak: never;
@@ -54,115 +54,121 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-#pivot .icon-aa:before {
+.ks-pivot .icon-aa:before {
     content: "\e94a";
 }
-#pivot .icon-check:before {
+.ks-pivot .icon-check:before {
     content: "\e948";
 }
-#pivot .icon-arrow-swap:before {
+.ks-pivot .icon-arrow-swap:before {
     content: "\e906";
 }
-#pivot .icon-arrow-to-top:before {
+.ks-pivot .icon-arrow-to-top:before {
     content: "\e907";
 }
-#pivot .icon-check-intermediate:before {
+.ks-pivot .icon-check-intermediate:before {
     content: "\e90d";
 }
-#pivot .icon-check-off:before {
+.ks-pivot .icon-check-off:before {
     content: "\e90e";
 }
-#pivot .icon-check-on:before {
+.ks-pivot .icon-check-on:before {
     content: "\e90f";
 }
-#pivot .icon-chevron-close-horizontal:before {
+.ks-pivot .icon-chevron-close-horizontal:before {
     content: "\e911";
 }
-#pivot .icon-chevron-open-horizontal:before {
+.ks-pivot .icon-chevron-open-horizontal:before {
     content: "\e913";
 }
-#pivot .icon-chevron-right:before {
+.ks-pivot .icon-chevron-right:before {
     content: "\e914";
 }
-#pivot .icon-clear:before {
+.ks-pivot .icon-clear:before {
     content: "\e918";
 }
-#pivot .icon-columns:before {
+.ks-pivot .icon-columns:before {
     content: "\e91a";
 }
-#pivot .icon-ellipsis:before {
+.ks-pivot .icon-ellipsis:before {
     content: "\e94b";
 }
-#pivot .icon-filter-circle:before {
+.ks-pivot .icon-filter-circle:before {
     content: "\e923";
 }
-#pivot .icon-rows:before {
+.ks-pivot .icon-rows:before {
     content: "\e936";
 }
-#pivot .icon-plus-circle:before {
+.ks-pivot .icon-plus-circle:before {
     content: "\e938";
 }
-#pivot .icon-search:before {
+.ks-pivot .icon-search:before {
     content: "\e939";
 }
-#pivot .icon-trash-fill:before {
+.ks-pivot .icon-trash-fill:before {
     content: "\e93e";
 }
-#pivot .icon-tray-arrow-down:before {
+.ks-pivot .icon-tray-arrow-down:before {
     content: "\e941";
 }
-#pivot .icon-tray-files:before {
+.ks-pivot .icon-tray-files:before {
     content: "\e943";
 }
-#pivot .icon-x-circle:before {
+.ks-pivot .icon-x-circle:before {
     content: "\e945";
 }
-#pivot .icon-doc-arrow-down:before {
+.ks-pivot .icon-doc-arrow-down:before {
     content: "\e94d";
 }
-#pivot .icon-zero-square-outline:before {
+.ks-pivot .icon-zero-square-outline:before {
     content: "\e94e";
 }
-#pivot .icon-person:before {
+.ks-pivot .icon-person:before {
     content: "\e931";
 }
-#pivot .icon-trash:before {
+.ks-pivot .icon-trash:before {
     content: "\e942";
 }
-#pivot .icon-glasses:before {
+.ks-pivot .icon-glasses:before {
     content: "\e926";
 }
-#pivot .icon-person-outline:before {
+.ks-pivot .icon-person-outline:before {
     content: "\e94f";
 }
-#pivot .icon-cursor:before {
+.ks-pivot .icon-cursor:before {
     content: "\e950";
 }
-#pivot .icon-globe-lines:before {
+.ks-pivot .icon-globe-lines:before {
     content: "\e951";
 }
 
-#slicerFilterBox .ks-pivot-scrollable {
+.ks-pivot-filterbox .ks-pivot-scrollable {
     max-height: 200px;
 }
 
-#slicerFilterBox .ks-pivot-scrollable a, #slicerFilterBox .ks-pivot-scrollable span {
+.ks-pivot-filterbox .ks-pivot-scrollable a, .ks-pivot-filterbox .ks-pivot-scrollable span {
     font-size: 13px;
     height: 30px;
     line-height: 30px;
 }
 
-#slicerFilterBox .ks-pivot-btn {
+.ks-pivot-filterbox .ks-pivot-btn {
     text-align: center;
     margin: 10px 0;
     width: 100%;
+}
+
+.ks-pivot-filterbox .icon-trash {
+    float: right;
+    color: red;
+    margin: 0;
 }
 
 .ks-pivot-table-presets-dropdown .icon-check {
     color: #1d7bff;
 }
 
-.ks-pivot-table-presets-dropdown .icon-check.off {
+.icon-check.off {
     visibility: hidden;
 }
 
@@ -263,6 +269,7 @@
 }
 
 .ks-pivot-table-presets-dropdown a:hover {
+    cursor: pointer;
     background-color: #E5F2FF;
 }
 
@@ -877,6 +884,14 @@
     border: 2px solid red;
 }
 
+.ks-pivot-tag-add-popup > .ks-pivot-filterbox {
+    position: relative;
+    display: block;
+    box-shadow: none;
+    width: 380px;
+    border: 1px solid #A9A9A9;
+}
+
 .ks-pivot-tag-add-popup-button-holder {
     padding-top: 10px;
     border-top: 1px solid #e1e1e1;
@@ -886,6 +901,18 @@
 
 .ks-pivot-tag-add-popup-button-holder .ks-pivot-btn {
     margin: 0 5px;
+}
+
+.ks-pivot-popup-check-holder {
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+    padding-left: 5px;
+    margin-top: 10px;
+}
+
+.ks-pivot-popup-check-holder span {
+    margin-right: 15px;
 }
 
 .ks-pivot-add-tag-search-holder {
@@ -976,7 +1003,7 @@
 .ks-pivot-table-col-group-sign-cell, .ks-pivot-table-header-cell, .ks-pivot-table-content-cell, h5 {
     width: 90px;
     min-width: 90px;
-    max-width: 90px;
+    max-width: 120px;
 }
 
 .nav {

@@ -1,8 +1,11 @@
 from setuptools import setup
+from analogic import version
 
 setup(
     name='analogic',
-    version='4.0.10',
+    version=version,
+    author='',
+    python_requires='>=3.9',
     packages=[
         'analogic'
     ],
@@ -21,6 +24,7 @@ setup(
         'xlrd==2.0.1',
         'openpyxl==3.0.10',
         'Flask-Cors==3.0.10',
-        'json_logging==1.3.0'
+        'json_logging==1.3.0',
+        'flask_talisman'
     ],
 )
