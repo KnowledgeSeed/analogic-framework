@@ -18,11 +18,11 @@ class SettingTestCase(unittest.TestCase):
         cache = Cache(self.app, config={'CACHE_TYPE': 'FileSystemCache', 'CACHE_DIR': cache_path})
 
         self.instance = 'testapp'
-        self.setting = SettingManager(cache, site_root, self.instance)
+        self.setting = SettingManager(cache, site_root + '/apps/testapp', self.instance)
         self.setting.clear_cache()
 
         self.default_instance = 'default'
-        self.default_setting = SettingManager(cache, site_root, self.default_instance)
+        self.default_setting = SettingManager(cache, site_root+ '/apps/default/', self.default_instance)
         self.default_setting.clear_cache()
 
     def tearDown(self):
