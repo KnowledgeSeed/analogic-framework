@@ -1,5 +1,9 @@
 from setuptools import setup
-from analogic import version
+import os
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
+f = open(dir_path + "/analogic/version.config")
+version = f.read().rstrip()
 
 setup(
     name='analogic',
