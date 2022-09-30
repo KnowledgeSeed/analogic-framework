@@ -31,4 +31,4 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Run tests
-        run: python -m unittest analogic\tests\test_setting.py
+        run: python -m unittest analogic/tests/test_setting.py
