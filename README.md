@@ -1,7 +1,6 @@
 # Analogic
 
-[![CircleCI](https://circleci.com/gh/KnowledgeSeed/Analogic/tree/opensource.svg?style=svg&circle-token=06a3190fab78aa16c209796996ab9c14b5edab17)](https://circleci.com/gh/KnowledgeSeed/Analogic/tree/opensource)
-[![License](https://img.shields.io/:license-Apache%202-blue.svg)](https://github.com/KnowledgeSeed/Analogic/blob/opensource/LICENSE)
+![CI Build](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml/badge.svg?branch=main) [![License](https://img.shields.io/:license-Apache%202-blue.svg)](https://github.com/KnowledgeSeed/Analogic/blob/opensource/LICENSE)
 
 The Analogic Framework is a software development framework for building advanced financial planning and business simulation applications using the IBM Planning Analytics Engine as a database. 
 
