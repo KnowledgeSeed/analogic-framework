@@ -37,7 +37,8 @@ jobs:
       - name: Run Cypress e2e tests
         uses: cypress-io/github-action@v4
         with:
-          spec: cypress/e2e/helloanalogic_base.cy.js
+          working-directory: cypress
+          spec: e2e/helloanalogic_base.cy.js
           wait-on: "http://localhost:5000"
           browser: chrome
 
