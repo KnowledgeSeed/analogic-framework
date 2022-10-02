@@ -41,6 +41,7 @@ jobs:
           spec: e2e/helloanalogic_base.cy.js
           wait-on: "http://localhost:5000"
           browser: chrome
+          record: true
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
