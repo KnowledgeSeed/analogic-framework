@@ -6,4 +6,4 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - ANALOGIC_LOAD_SAMPLE_APPS=true
+      - ANALOGIC_LOAD_SAMPLE_APPS=True
