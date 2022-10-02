@@ -30,3 +30,11 @@ jobs:
         
       - name: Run Unit tests
         run: python -m unittest analogic/tests/test_setting.py
+        
+      - name: Start containers
+        run: docker-compose -f docker-compose-flask.yml up -d
+        
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f docker-compose-flask.yml down
+
