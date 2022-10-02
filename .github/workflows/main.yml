@@ -41,6 +41,7 @@ jobs:
           spec: e2e/helloanalogic_base.cy.js
           wait-on: "http://localhost:5000"
           browser: chrome
+          supportFile: false
 
       - name: Stop containers
         if: always()
