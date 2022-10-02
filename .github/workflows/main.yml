@@ -32,7 +32,15 @@ jobs:
         run: python -m unittest analogic/tests/test_setting.py
         
       - name: Start containers
-        run: docker-compose -f docker-compose-flask.yml up -d
+        run: docker-compose -f docker-compose-flask.yml up -d --build
+        
+      - name: Run Cypress e2e tests
+        uses: cypress-io/github-action@v4
+        with:
+          spec: cypress/e2e/helloanalogic_base.cy.js
+          wait-on: "http://localhost:5000"
+          browser: chrome
+          headless: true
         
       - name: Stop containers
         if: always()
