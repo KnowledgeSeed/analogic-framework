@@ -18,7 +18,6 @@ The framework consists of two main parts
 
    The Python middleware, which is a Flask-based application layer between the frontend and the database. It allows for database users to be leveraged and be used by multiple application users. It also enables functions that cannot be implemented (securely) in JavaScript, such as file uploads, export functions and complex widget-backend communications.
 
-## Project Focus
 
 ## Requirements
 
@@ -29,34 +28,115 @@ Python >= 3.9
 ### Running from code
 
 1. Clone Repository
-	```
-	git clone https://github.com/KnowledgeSeed/analogic
- 	```
+```
+git clone https://github.com/KnowledgeSeed/analogic-framework analogic
+ ```
 2. 
-	```
-	cd analogic
- 	```
+```
+cd analogic
+ ```
 3. Create python virtual env and activate it
-	```
-	py -m venv venv
- 	```
- 
- 	```
-	 source venv/Scripts/activate
- 	```
-4. Install requirements 
-	```
-	pip install -r requirements.txt
- 	```
+```
+python -m venv venv
+
+#git bash
+source venv/Scripts/activate 
+
+#command line
+venv\Scripts\activate.bat 
+```
+4. Install requirements
+```
+pip install -r requirements.txt
+ ```
 5. Set up the following env variable for loading sample apps
-	```
-	export ANALOGIC_LOAD_SAMPLE_APPS=True
- 	```
+```
+# git bash
+export ANALOGIC_LOAD_SAMPLE_APPS=True
+
+# command line
+set ANALOGIC_LOAD_SAMPLE_APPS=True
+```
 6. Launch analogic
-	```
-	py run.py
- 	``` 
+```
+py run.py
+ ``` 
 8. open the following url in browser: http://localhost:5000/helloanalogic
+
+### Using pip
+
+1. Create a folder where analogic's root will be. e.g:
+
+   yourpath/analogicroot
+
+2. 
+```
+cd analogicroot
+ ```
+3. Create python virtual env and activate it
+```
+python -m venv venv
+
+#git bash
+source venv/Scripts/activate 
+
+#command line
+venv\Scripts\activate.bat 
+``` 
+
+4. Install analogic-framework with pip
+
+```
+pip install analogic-framework
+```
+
+5. Create a run.py file in analogicroot folder with this content
+
+```
+from analogic import create_app
+import os
+
+site_root = os.path.realpath(os.path.dirname(__file__))
+app = create_app(site_root)
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port='5000')
+```
+
+6. Create apps folder in analogicroot folder.
+7. Create an app
+   
+   ### Hello world app
+   - create a "default" folder in apps folder.
+   - download and unzip [this](https://github.com/KnowledgeSeed/analogic/blob/main/app_structure.zip)
+     into "default" folder
+     
+   or
+
+   ### Demo app(s):
+   
+   - you can find [demo apps](https://github.com/KnowledgeSeed/analogic-framework/tree/main/apps)
+    
+
+8. If you installed demo app set up the following env variable for loading sample apps
+```
+# git bash
+export ANALOGIC_LOAD_SAMPLE_APPS=True
+
+# command line
+set ANALOGIC_LOAD_SAMPLE_APPS=True
+```
+
+9. Launch analogic
+```
+py run.py
+ ``` 
+
+10. Open browser
+
+- default app will be available http://localhost:5000
+- helloanalogic app will be available http://localhost:5000/helloanalogic
+
 
 ### Running in Docker
 
@@ -156,4 +236,3 @@ The main parts are 1) setting up a base url `/proxy` and 2) routing the static w
 	</Location>
 	...
 
-## Architecture
