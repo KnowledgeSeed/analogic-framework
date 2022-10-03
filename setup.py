@@ -6,7 +6,7 @@ f = open(dir_path + "/analogic/version.config")
 version = f.read().rstrip()
 
 setup(
-    name='analogic',
+    name='analogic-framework',
     version=version,
     author='',
     python_requires='>=3.9',
