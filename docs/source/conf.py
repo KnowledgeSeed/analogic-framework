@@ -7,7 +7,7 @@ copyright = '2022, Analogic'
 author = 'Analogic'
 
 release = '4.0'
-version = '4.0.0'
+version = '4.0.2'
 
 # -- General configuration
 
