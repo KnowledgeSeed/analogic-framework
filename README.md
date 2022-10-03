@@ -8,6 +8,16 @@
 
 The Analogic Framework is a software development framework for building advanced financial planning and business simulation applications using the IBM Planning Analytics Engine as a database. 
 
+The framework consists of two main parts
+
+1. ### JS Frontend framework
+
+   The frontend framework is in essence a collection of JavaScript elements called “widgets”. Widgets are the main building blocks of the applications built using the Analogic Framework. Every element in the final application UI is always an instance of a widget. Some widgets are very simple both in appearance and function (eg. a Button widget or a Text widget) some can be complex and can contain other widgets (e.g. a GridTable widget). The widgets usually communicate directly with the Planning Analytics database using REST API calls sending MDX queries as requests and getting JSONs as responses.
+
+2. ### Python middleware
+
+   The Python middleware, which is a Flask-based application layer between the frontend and the database. It allows for database users to be leveraged and be used by multiple application users. It also enables functions that cannot be implemented (securely) in JavaScript, such as file uploads, export functions and complex widget-backend communications.
+
 ## Project Focus
 
 ## Requirements
