@@ -264,7 +264,7 @@ def _load_modules(app, modules_dir, check_prefix, register_func):
 
             files = resources.contents(module_dir_name)
 
-            modules = [f[:-3] for f in files if f.endswith(".py") and f[0] != "_" and f != 'setup.py']
+            modules = [f[:-3] for f in files if f.endswith(".py") and f[0] != "_" and 'setup' not in f]
             register_func(app, module_dir, module_dir_name, modules)
 
 
