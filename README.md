@@ -2,9 +2,9 @@
 
 
 
-|Linux i386|License|
-|:---:|:---:|
-|[![CI Build](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml/badge.svg)](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml?query=branch%3Amain++) | [![License](https://img.shields.io/:license-Apache%202-blue.svg)](https://github.com/KnowledgeSeed/Analogic/blob/opensource/LICENSE) |
+|CI Build & Tests|PyPI stable version|License|
+|:---:|:---:|:---:|
+|[![CI Build](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml/badge.svg)](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml?query=branch%3Amain++) | [![PyPI version](https://badge.fury.io/py/analogic-framework.svg)](https://badge.fury.io/py/analogic-framework) | [![License](https://img.shields.io/:license-Apache%202-blue.svg)](https://github.com/KnowledgeSeed/Analogic/blob/opensource/LICENSE) |
 
 The Analogic Framework is a software development framework for building advanced financial planning and business simulation applications using the IBM Planning Analytics Engine as a database. 
 
