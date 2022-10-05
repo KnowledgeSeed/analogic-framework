@@ -18,7 +18,7 @@ The Python middleware, which is a Flask-based application layer between the fron
    
  3. #### Sample applications
  
-A sample application called `helloanalogic` is shipped with the framework. This application indents to demonstrate the Web UI features without needing to
+A sample application called `helloanalogic` comes with the framework. This application intents to demonstrate the Web UI features without needing to
 install and hook up with a TM1 server.
 
 
