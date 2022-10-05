@@ -1,8 +1,8 @@
 # Analogic Framework
 
-|CI Build & Tests|PyPI stable version|License|
-|:---:|:---:|:---:|
-|[![CI Build](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml/badge.svg)](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml?query=branch%3Amain++) | [![PyPI version](https://badge.fury.io/py/analogic-framework.svg)](https://badge.fury.io/py/analogic-framework) | [![License](https://img.shields.io/:license-Apache%202-blue.svg)](https://github.com/KnowledgeSeed/Analogic/blob/opensource/LICENSE) |
+|CI Build & Tests|PyPI stable version| Cypress e2e tests | License|
+|:---:|:---:|:---:|:---:|
+|[![CI Build](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml/badge.svg)](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml?query=branch%3Amain++) | [![PyPI version](https://badge.fury.io/py/analogic-framework.svg)](https://badge.fury.io/py/analogic-framework) | [![analogic-framework](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/simple/i4hkps&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/i4hkps/runs) | [![License](https://img.shields.io/:license-Apache%202-blue.svg)](https://github.com/KnowledgeSeed/Analogic/blob/opensource/LICENSE) |
 
 The Analogic Framework is a software development framework for building advanced financial planning and business simulation applications using the IBM Planning Analytics Engine as a database. 
 
