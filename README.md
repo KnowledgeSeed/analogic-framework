@@ -8,48 +8,54 @@
 
 The Analogic Framework is a software development framework for building advanced financial planning and business simulation applications using the IBM Planning Analytics Engine as a database. 
 
-The framework consists of two main parts
+The framework consists of the following main parts:
 
-1. ### JS Frontend framework
+1. #### JS Frontend framework
 
-   The frontend framework is in essence a collection of JavaScript elements called “widgets”. Widgets are the main building blocks of the applications built using the Analogic Framework. Every element in the final application UI is always an instance of a widget. Some widgets are very simple both in appearance and function (eg. a Button widget or a Text widget) some can be complex and can contain other widgets (e.g. a GridTable widget). The widgets usually communicate directly with the Planning Analytics database using REST API calls sending MDX queries as requests and getting JSONs as responses.
+The frontend framework is in essence a collection of JavaScript elements called “widgets”. Widgets are the main building blocks of the applications built using the Analogic Framework. Every element in the final application UI is always an instance of a widget. Some widgets are very simple both in appearance and function (eg. a Button widget or a Text widget) some can be complex and can contain other widgets (e.g. a GridTable widget). The widgets usually communicate directly with the Planning Analytics database using REST API calls sending MDX queries as requests and getting JSONs as responses.
 
-2. ### Python middleware
+2. #### Python middleware
 
-   The Python middleware, which is a Flask-based application layer between the frontend and the database. It allows for database users to be leveraged and be used by multiple application users. It also enables functions that cannot be implemented (securely) in JavaScript, such as file uploads, export functions and complex widget-backend communications.
+The Python middleware, which is a Flask-based application layer between the frontend and the database. It allows for database users to be leveraged and be used by multiple application users. It also enables functions that cannot be implemented (securely) in JavaScript, such as file uploads, export functions and complex widget-backend communications.
+   
+ 3. #### Sample applications
+ 
+ The framework comes with two sample web-applications to allow users to have a quick grasp of the capabilities of the widgets.
 
 
 ## Requirements
 
-Python >= 3.9
+The framework requires Python >= 3.9.
 
 ## Getting Started
 
 ### Running from code
 
-1. Clone Repository
+To launch the framework including the sample web-applications from code, Python >= 3.9 must be available. Then the repository needs to be cloned to a local development environment, a virtualenv created, some environment variables set and the main entry point `run.py` executed:
+
+1. Clone repository:
 ```
-git clone https://github.com/KnowledgeSeed/analogic-framework analogic
- ```
-2. 
+git clone https://github.com/KnowledgeSeed/analogic-framework
+cd analogic-framework
 ```
-cd analogic
- ```
-3. Create python virtual env and activate it
+
+2. Create python virtual env and activate it:
 ```
 python -m venv venv
 
-#git bash
+# git bash
 source venv/Scripts/activate 
 
-#command line
+# command line
 venv\Scripts\activate.bat 
 ```
-4. Install requirements
+
+3. Install requirements:
 ```
 pip install -r requirements.txt
- ```
-5. Set up the following env variable for loading sample apps
+```
+
+4. Set up the following env variable for loading sample apps:
 ```
 # git bash
 export ANALOGIC_LOAD_SAMPLE_APPS=True
@@ -57,40 +63,49 @@ export ANALOGIC_LOAD_SAMPLE_APPS=True
 # command line
 set ANALOGIC_LOAD_SAMPLE_APPS=True
 ```
-6. Launch analogic
+5. Launch analogic:
 ```
 py run.py
  ``` 
-8. open the following url in browser: http://localhost:5000/helloanalogic
+6. Open the following url in browser: http://localhost:5000/helloanalogic
 
-### Using pip
+### Using stable version from PyPI
 
-1. Create a folder where analogic's root will be. e.g:
-
-   yourpath/analogicroot
-
-2. 
+1. Clone repository:
 ```
-cd analogicroot
+git clone https://github.com/KnowledgeSeed/analogic-framework
  ```
+
+2. Create a folder for the application:
+``` 
+# git bash
+mkdir -p analogic-sample-app/apps/helloanalogic
+cd analogic-sample-app
+cp -r ../analogic-framework/apps/helloanalogic/* apps/helloanalogic
+
+# command line
+mkdir analogic-sample-app\apps\helloanalogic
+cd analogic-sample-app
+xcopy ..\analogic-framework\apps\helloanalogic apps\helloanalogic /s /e
+```
+
 3. Create python virtual env and activate it
 ```
 python -m venv venv
 
-#git bash
+# git bash
 source venv/Scripts/activate 
 
-#command line
+# command line
 venv\Scripts\activate.bat 
 ``` 
 
 4. Install analogic-framework with pip
-
 ```
 pip install analogic-framework
 ```
 
-5. Create a run.py file in analogicroot folder with this content
+5. Create a `run.py` file in analogic-sample-app folder with the following content:
 
 ```
 from analogic import create_app
@@ -103,22 +118,7 @@ if __name__ == "__main__":
     app.run(host='0.0.0.0', port='5000')
 ```
 
-6. Create apps folder in analogicroot folder.
-7. Create an app
-   
-   ### Hello world app
-   - create a "default" folder in apps folder.
-   - download and unzip [this](https://github.com/KnowledgeSeed/analogic/blob/main/app_structure.zip)
-     into "default" folder
-     
-   or
-
-   ### Demo app(s):
-   
-   - you can find [demo apps](https://github.com/KnowledgeSeed/analogic-framework/tree/main/apps)
-    
-
-8. If you installed demo app set up the following env variable for loading sample apps
+5. Set up the following env variable for loading sample apps:
 ```
 # git bash
 export ANALOGIC_LOAD_SAMPLE_APPS=True
@@ -126,17 +126,11 @@ export ANALOGIC_LOAD_SAMPLE_APPS=True
 # command line
 set ANALOGIC_LOAD_SAMPLE_APPS=True
 ```
-
-9. Launch analogic
+6. Launch analogic:
 ```
 py run.py
  ``` 
-
-10. Open browser
-
-- default app will be available http://localhost:5000
-- helloanalogic app will be available http://localhost:5000/helloanalogic
-
+7. Open the following url in browser: http://localhost:5000/helloanalogic
 
 ### Running in Docker
 
