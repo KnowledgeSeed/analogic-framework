@@ -1,7 +1,5 @@
 # Analogic Framework
 
-
-
 |CI Build & Tests|PyPI stable version|License|
 |:---:|:---:|:---:|
 |[![CI Build](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml/badge.svg)](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml?query=branch%3Amain++) | [![PyPI version](https://badge.fury.io/py/analogic-framework.svg)](https://badge.fury.io/py/analogic-framework) | [![License](https://img.shields.io/:license-Apache%202-blue.svg)](https://github.com/KnowledgeSeed/Analogic/blob/opensource/LICENSE) |
@@ -20,7 +18,8 @@ The Python middleware, which is a Flask-based application layer between the fron
    
  3. #### Sample applications
  
- The framework comes with two sample web-applications to allow users to have a quick grasp of the capabilities of the widgets.
+A sample application called `helloanalogic` is shipped with the framework. This application indents to demonstrate the Web UI features without needing to
+install and hook up with a TM1 server.
 
 
 ## Requirements
@@ -76,7 +75,7 @@ py run.py
 git clone https://github.com/KnowledgeSeed/analogic-framework
  ```
 
-2. Create a folder for the application:
+2. Create a folder for the application and copy helloanalogic app from the GitHub repository:
 ``` 
 # git bash
 mkdir -p analogic-sample-app/apps/helloanalogic
@@ -149,10 +148,6 @@ Follow these steps to install the necessary tools.
 	Docker Compose version v2.6.0
 	 ```
 #### Launching Analogic 
-
-A sample application called `helloanalogic` is shipped with the framework.
-This application indents to demonstrate the Web UI features without needing to
-install and hook up with a TM1 server.
 
 There are some sample `docker-compose` recipes provided in this repository to begin with.
 It's important to note that these are considered samples and patterns. 
@@ -230,3 +225,16 @@ The main parts are 1) setting up a base url `/proxy` and 2) routing the static w
 	</Location>
 	...
 
+## Creating a new application
+
+There is a bare application skeleton located at https://github.com/KnowledgeSeed/analogic/blob/main/app_structure.zip.
+
+Follow the steps at [Using stable version from PyPI](https://github.com/KnowledgeSeed/analogic-framework#using-stable-version-from-pypi)  to set up the application environment and add the content of app_structure.zip into the `apps` folder.
+
+## Contribution
+
+TBD
+
+## Links
+
+[Analogic Widgets Reference Documentation](https://analogic-framework.readthedocs.io/en/latest/)
