@@ -242,12 +242,13 @@ Contributions to the framework as well as the widgets are welcomed!
 3. Complete the development
 4. Create a PR into the main repository's main branch
 5. If you're a first-time external contributor, wait for the repository maintainer to approve the CI build to run upon the PR. If you already have at least one approved PR, the CI build on the PR will run automatically.
+6. Wait for the repository maintainers (a.k.a code owners) to review and approve the PR.
 6. If every status check is complete, the reposiotry maintainer will merge the PR.
 
 #### For internal contributors
 
 KnowledgSeed team members are considered internal contributors. In addition, the most active external contributors are promoted as internal contributors.
-Internal contributors can create feature branches in the main repository, but are not allowed to merge PR-s into the main branch.
+Internal contributors can create feature branches in the main repository and merge PR-s that pass the status checks.
 
 
 ## Links
