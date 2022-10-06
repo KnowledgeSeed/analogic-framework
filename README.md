@@ -253,4 +253,6 @@ Internal contributors can create feature branches in the main repository and mer
 
 ## Links
 
+[Analogic Framework Codecov Dashboard](https://app.codecov.io/github/KnowledgeSeed/analogic-framework)
+[Analogic Framework Cypress Dashboard](https://dashboard.cypress.io/projects/i4hkps)
 [Analogic Widgets Reference Documentation](https://analogic-framework.readthedocs.io/en/latest/)
