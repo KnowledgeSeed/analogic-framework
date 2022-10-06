@@ -233,7 +233,20 @@ Follow the steps at [Using stable version from PyPI](https://github.com/Knowledg
 
 ## Contribution
 
-TBD
+#### For external contributors
+
+1. Create a fork
+2. Create a feature branch on the fork
+3. Complete the development
+4. Create a PR into the main repository's main branch
+5. If you're a first-time external contributor, wait for the repository maintainer to approve the CI build to run upon the PR. If you already have at least one approved PR, the CI build on the PR will run automatically.
+6. If every status check is complete, the reposiotry maintainer will merge the PR.
+
+#### For internal contributors
+
+KnowledgSeed team members are considered internal contributors. In addition, the most active external contributors are promoted as internal contributors.
+Internal contributors can create feature branches in the main repository.
+
 
 ## Links
 
