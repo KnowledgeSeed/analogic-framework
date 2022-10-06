@@ -233,6 +233,8 @@ Follow the steps at [Using stable version from PyPI](https://github.com/Knowledg
 
 ## Contribution
 
+Contributions to the framework as well as the widgets are welcomed!
+
 #### For external contributors
 
 1. Create a fork
