@@ -28,23 +28,21 @@ jobs:
          python -m pip install --upgrade pip
          pip install -r requirements.txt pytest-cov
         
-      - name: Run tests and collect coverage
+      - name: Run unit tests and collect coverage
         run: PYTHONPATH=. pytest --cov .
-      - name: Upload coverage reports to Codecov
+        
+      - name: Upload coverage reports to Codecov Dashboard
         run: |
           # Replace `linux` below with the appropriate OS
           # Options are `alpine`, `linux`, `macos`, `windows`
           curl -Os https://uploader.codecov.io/latest/linux/codecov
           chmod +x codecov
           ./codecov
-          
-      - name: Run Unit tests
-        run: python -m unittest analogic/tests/test_setting.py
-        
+
       - name: Start containers
         run: docker-compose -f docker-compose-flask.yml up -d --build
         
-      - name: Run Cypress e2e tests
+      - name: Run Cypress e2e tests and upload results to Cypress Dashboard
         uses: cypress-io/github-action@v4
         with:
           working-directory: cypress
