@@ -8,6 +8,5 @@ describe('empty spec', () => {
     cy.get('#analogicDemoMainRow3Cell3Button').should('exist');
     cy.get('#analogicDemoMainRow3Cell4Button').should('exist');
     cy.get('#analogicDemoMainRow3Cell5Button').should('exist');
-
   })
 })
