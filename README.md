@@ -247,7 +247,7 @@ Contributions to the framework as well as the widgets are welcomed!
 #### For internal contributors
 
 KnowledgSeed team members are considered internal contributors. In addition, the most active external contributors are promoted as internal contributors.
-Internal contributors can create feature branches in the main repository. The repository maintainer is @ote82
+Internal contributors can create feature branches in the main repository, but are not allowed to merge PR-s into the main branch.
 
 
 ## Links
