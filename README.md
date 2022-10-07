@@ -11,7 +11,7 @@ The framework consists of the following main parts:
 
 1. #### JS Frontend framework
 
-The frontend framework is in essence a collection of JavaScript elements called “widgets”. Widgets are the main building blocks of the applications built using the Analogic Framework. Every element in the final application UI is always an instance of a widget. Some widgets are very simple both in appearance and function (eg. a Button widget or a Text widget) some can be complex and can contain other widgets (e.g. a GridTable widget). The widgets usually communicate directly with the Planning Analytics database using REST API calls sending MDX queries as requests and getting JSONs as responses.
+The frontend framework is in essence a collection of JavaScript elements called “widgets”.  [Widgets](https://analogic-framework.readthedocs.io/en/latest/) are the main building blocks of the applications built using the Analogic Framework. Every element in the final application UI is always an instance of a widget. Some widgets are very simple both in appearance and function (eg. a Button widget or a Text widget) some can be complex and can contain other widgets (e.g. a GridTable widget). The widgets usually communicate directly with the Planning Analytics database using REST API calls sending MDX queries as requests and getting JSONs as responses.
 
 2. #### Python middleware
 
@@ -255,5 +255,7 @@ Internal contributors can create feature branches in the main repository and mer
 ## Links
 
 [Analogic Framework Codecov Dashboard](https://app.codecov.io/github/KnowledgeSeed/analogic-framework)
+ 
 [Analogic Framework Cypress Dashboard](https://dashboard.cypress.io/projects/i4hkps)
+
 [Analogic Widgets Reference Documentation](https://analogic-framework.readthedocs.io/en/latest/)
