@@ -1,55 +1,61 @@
 # Analogic Framework
 
+|CI Build & Tests|PyPI stable version| Codecov | Cypress e2e tests | License|
+|:---:|:---:|:---:|:---:|:---:|
+|[![CI Build](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml/badge.svg)](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml?query=branch%3Amain++) | [![PyPI version](https://badge.fury.io/py/analogic-framework.svg)](https://badge.fury.io/py/analogic-framework) | [![codecov](https://codecov.io/gh/KnowledgeSeed/analogic-framework/branch/main/graph/badge.svg?token=NQWFP5QD5X)](https://codecov.io/gh/KnowledgeSeed/analogic-framework) | [![analogic-framework](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/simple/i4hkps&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/i4hkps/runs) | [![License](https://img.shields.io/:license-Apache%202-blue.svg)](https://github.com/KnowledgeSeed/Analogic/blob/opensource/LICENSE) |
 
-
-|CI Build & Tests|PyPI stable version|License|
-|:---:|:---:|:---:|
-|[![CI Build](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml/badge.svg)](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml?query=branch%3Amain++) | [![PyPI version](https://badge.fury.io/py/analogic-framework.svg)](https://badge.fury.io/py/analogic-framework) | [![License](https://img.shields.io/:license-Apache%202-blue.svg)](https://github.com/KnowledgeSeed/Analogic/blob/opensource/LICENSE) |
 
 The Analogic Framework is a software development framework for building advanced financial planning and business simulation applications using the IBM Planning Analytics Engine as a database. 
 
-The framework consists of two main parts
+The framework consists of the following main parts:
 
-1. ### JS Frontend framework
+1. #### JS Frontend framework
 
-   The frontend framework is in essence a collection of JavaScript elements called “widgets”. Widgets are the main building blocks of the applications built using the Analogic Framework. Every element in the final application UI is always an instance of a widget. Some widgets are very simple both in appearance and function (eg. a Button widget or a Text widget) some can be complex and can contain other widgets (e.g. a GridTable widget). The widgets usually communicate directly with the Planning Analytics database using REST API calls sending MDX queries as requests and getting JSONs as responses.
+The frontend framework is in essence a collection of JavaScript elements called “widgets”.  [Widgets](https://analogic-framework.readthedocs.io/en/latest/widgets) are the main building blocks of the applications built using the Analogic Framework. Every element in the final application UI is always an instance of a widget. Some widgets are very simple both in appearance and function (eg. a Button widget or a Text widget) some can be complex and can contain other widgets (e.g. a GridTable widget). The widgets usually communicate directly with the Planning Analytics database using REST API calls sending MDX queries as requests and getting JSONs as responses.
 
-2. ### Python middleware
+2. #### Python middleware
 
-   The Python middleware, which is a Flask-based application layer between the frontend and the database. It allows for database users to be leveraged and be used by multiple application users. It also enables functions that cannot be implemented (securely) in JavaScript, such as file uploads, export functions and complex widget-backend communications.
+The Python middleware, which is a Flask-based application layer between the frontend and the database. It allows for database users to be leveraged and be used by multiple application users. It also enables functions that cannot be implemented (securely) in JavaScript, such as file uploads, export functions and complex widget-backend communications.
+   
+ 3. #### Sample applications
+ 
+A sample application called `helloanalogic` comes with the framework. This application intents to demonstrate the Web UI features without needing to
+install and hook up with a TM1 server.
 
 
 ## Requirements
 
-Python >= 3.9
+The framework requires Python >= 3.9.
 
 ## Getting Started
 
 ### Running from code
 
-1. Clone Repository
+To launch the framework including the sample web-applications from code, Python >= 3.9 must be available. Then the repository needs to be cloned to a local development environment, a virtualenv created, some environment variables set and the main entry point `run.py` executed:
+
+1. Clone repository:
 ```
-git clone https://github.com/KnowledgeSeed/analogic-framework analogic
- ```
-2. 
+git clone https://github.com/KnowledgeSeed/analogic-framework
+cd analogic-framework
 ```
-cd analogic
- ```
-3. Create python virtual env and activate it
+
+2. Create python virtual env and activate it:
 ```
 python -m venv venv
 
-#git bash
+# git bash
 source venv/Scripts/activate 
 
-#command line
+# command line
 venv\Scripts\activate.bat 
 ```
-4. Install requirements
+
+3. Install requirements:
 ```
 pip install -r requirements.txt
- ```
-5. Set up the following env variable for loading sample apps
+```
+
+4. Set up the following env variable for loading sample apps:
 ```
 # git bash
 export ANALOGIC_LOAD_SAMPLE_APPS=True
@@ -57,40 +63,49 @@ export ANALOGIC_LOAD_SAMPLE_APPS=True
 # command line
 set ANALOGIC_LOAD_SAMPLE_APPS=True
 ```
-6. Launch analogic
+5. Launch analogic:
 ```
 py run.py
  ``` 
-8. open the following url in browser: http://localhost:5000/helloanalogic
+6. Open the following url in browser: http://localhost:5000/helloanalogic
 
-### Using pip
+### Using stable version from PyPI
 
-1. Create a folder where analogic's root will be. e.g:
-
-   yourpath/analogicroot
-
-2. 
+1. Clone repository:
 ```
-cd analogicroot
+git clone https://github.com/KnowledgeSeed/analogic-framework
  ```
+
+2. Create a folder for the application and copy helloanalogic app from the GitHub repository:
+``` 
+# git bash
+mkdir -p analogic-sample-app/apps/helloanalogic
+cd analogic-sample-app
+cp -r ../analogic-framework/apps/helloanalogic/* apps/helloanalogic
+
+# command line
+mkdir analogic-sample-app\apps\helloanalogic
+cd analogic-sample-app
+xcopy ..\analogic-framework\apps\helloanalogic apps\helloanalogic /s /e
+```
+
 3. Create python virtual env and activate it
 ```
 python -m venv venv
 
-#git bash
+# git bash
 source venv/Scripts/activate 
 
-#command line
+# command line
 venv\Scripts\activate.bat 
 ``` 
 
 4. Install analogic-framework with pip
-
 ```
 pip install analogic-framework
 ```
 
-5. Create a run.py file in analogicroot folder with this content
+5. Create a `run.py` file in analogic-sample-app folder with the following content:
 
 ```
 from analogic import create_app
@@ -103,22 +118,7 @@ if __name__ == "__main__":
     app.run(host='0.0.0.0', port='5000')
 ```
 
-6. Create apps folder in analogicroot folder.
-7. Create an app
-   
-   ### Hello world app
-   - create a "default" folder in apps folder.
-   - download and unzip [this](https://github.com/KnowledgeSeed/analogic/blob/main/app_structure.zip)
-     into "default" folder
-     
-   or
-
-   ### Demo app(s):
-   
-   - you can find [demo apps](https://github.com/KnowledgeSeed/analogic-framework/tree/main/apps)
-    
-
-8. If you installed demo app set up the following env variable for loading sample apps
+5. Set up the following env variable for loading sample apps:
 ```
 # git bash
 export ANALOGIC_LOAD_SAMPLE_APPS=True
@@ -126,17 +126,11 @@ export ANALOGIC_LOAD_SAMPLE_APPS=True
 # command line
 set ANALOGIC_LOAD_SAMPLE_APPS=True
 ```
-
-9. Launch analogic
+6. Launch analogic:
 ```
 py run.py
  ``` 
-
-10. Open browser
-
-- default app will be available http://localhost:5000
-- helloanalogic app will be available http://localhost:5000/helloanalogic
-
+7. Open the following url in browser: http://localhost:5000/helloanalogic
 
 ### Running in Docker
 
@@ -155,10 +149,6 @@ Follow these steps to install the necessary tools.
 	Docker Compose version v2.6.0
 	 ```
 #### Launching Analogic 
-
-A sample application called `helloanalogic` is shipped with the framework.
-This application indents to demonstrate the Web UI features without needing to
-install and hook up with a TM1 server.
 
 There are some sample `docker-compose` recipes provided in this repository to begin with.
 It's important to note that these are considered samples and patterns. 
@@ -236,3 +226,36 @@ The main parts are 1) setting up a base url `/proxy` and 2) routing the static w
 	</Location>
 	...
 
+## Creating a new application
+
+There is a bare application skeleton located at https://github.com/KnowledgeSeed/analogic/blob/main/app_structure.zip.
+
+Follow the steps at [Using stable version from PyPI](https://github.com/KnowledgeSeed/analogic-framework#using-stable-version-from-pypi)  to set up the application environment and add the content of app_structure.zip into the `apps` folder.
+
+## Contribution
+
+Contributions to the framework as well as the widgets are welcomed!
+
+#### For external contributors
+
+1. Create a fork
+2. Create a feature branch on the fork
+3. Complete the development
+4. Create a PR into the main repository's main branch
+5. If you're a first-time external contributor, wait for the repository maintainer to approve the CI build to run upon the PR. If you already have at least one approved PR, the CI build on the PR will run automatically.
+6. Wait for the repository maintainers (a.k.a code owners) to review and approve the PR.
+6. If every status check is complete, the reposiotry maintainer will merge the PR.
+
+#### For internal contributors
+
+KnowledgSeed team members are considered internal contributors. In addition, the most active external contributors are promoted as internal contributors.
+Internal contributors can create feature branches in the main repository and merge PR-s that pass the status checks.
+
+
+## Links
+
+[Analogic Framework Codecov Dashboard](https://app.codecov.io/github/KnowledgeSeed/analogic-framework)
+ 
+[Analogic Framework Cypress Dashboard](https://dashboard.cypress.io/projects/i4hkps)
+
+[Analogic Widgets Reference Documentation](https://analogic-framework.readthedocs.io/en/latest/widgets)
