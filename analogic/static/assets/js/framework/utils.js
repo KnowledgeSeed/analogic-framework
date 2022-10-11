@@ -16,16 +16,16 @@ const Utils = {
         return e;
     },
     cleanStr: s => Utils.replaceAll(s, {
-            'ö': 'o',
-            'ü': 'u',
-            'ó': 'o',
-            'ő': 'o',
-            'ú': 'u',
-            'é': 'e',
-            'á': 'a',
-            'ű': 'u',
-            'í': 'i'
-        }),
+        'ö': 'o',
+        'ü': 'u',
+        'ó': 'o',
+        'ő': 'o',
+        'ú': 'u',
+        'é': 'e',
+        'á': 'a',
+        'ű': 'u',
+        'í': 'i'
+    }),
     clone: (object, deep) => deep ? $.extend(true, {}, object) : $.extend({}, object),
     replaceAll: (s, m) => s.replace(RegExp(Object.keys(m).join('|'), 'gi'), r => m[r.toLowerCase()]),
     scrollTop: duration => $('html, body').animate({scrollTop: 0}, duration || 500),
@@ -268,6 +268,9 @@ const Utils = {
     },
     getDropBoxSelectedItemAttribute(widgetId, attributeName) {
         let selectedValue = Widgets[widgetId].value;
+        if (!Widgets[widgetId].items) {
+            return false;
+        }
         let item = Widgets[widgetId].items.find(e => e.name === selectedValue);
         return item ? item[attributeName] : false;
     },
@@ -493,11 +496,19 @@ const Utils = {
         return result;
     },
     focus(idOrObj, moveCursorToEnd = true) {
-        let o = 'object' === typeof idOrObj ? idOrObj : $('#' + idOrObj), len = moveCursorToEnd ? o.val().length * 2 : 0;
+        let o = 'object' === typeof idOrObj ? idOrObj : $('#' + idOrObj),
+            len = moveCursorToEnd ? o.val().length * 2 : 0;
 
         o.focus().promise().then(() => o[0].setSelectionRange(len, len));
 
         return o;
+    },
+    separatesThousands(n, separator=' ') {
+        var parts = n.toString().split(".");
+        const numberPart = parts[0];
+        const decimalPart = parts[1];
+        const thousands = /\B(?=(\d{3})+(?!\d))/g;
+        return numberPart.replace(thousands, separator) + (decimalPart ? "." + decimalPart : "");
     }
 };
 

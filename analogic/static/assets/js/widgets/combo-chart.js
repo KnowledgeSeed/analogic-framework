@@ -151,6 +151,7 @@ class ComboChartWidget extends Widget {
             leftYAxesStepSize: this.getRealValue('leftYAxesStepSize', data, false),
             leftYAxesLabelConcat: this.getRealValue('leftYAxesLabelConcat', data, false),
             leftYAxesZeroLineColor: this.getRealValue('leftYAxesZeroLineColor', data, 'black'),
+            leftYAxesLabelSeparatesThousands: this.getRealValue('leftYAxesLabelSeparatesThousands', data, true),
 
             canvasHeight: this.getRealValue('canvasHeight', data, false),
             canvasWidth: this.getRealValue('canvasWidth', data, false),
@@ -160,7 +161,8 @@ class ComboChartWidget extends Widget {
             maintainAspectRatio: this.getRealValue('maintainAspectRatio', data, true),
             bezierCurve: this.getRealValue('bezierCurve', data, false),
             showLinearXAxes: this.getRealValue('showLinearXAxes', data, false),
-            customLabelsForYAxes: this.getRealValue('customLabelsForYAxes', data, false)
+            customLabelsForYAxes: this.getRealValue('customLabelsForYAxes', data, false),
+            tooltipsSeparatesThousands: this.getRealValue('tooltipsSeparatesThousands', data, false)
         };
 
         this.value = v;
@@ -320,6 +322,10 @@ class ComboChartWidget extends Widget {
             leftYAxesTicks.callback = (value, index, values) => value + v.leftYAxesLabelConcat;
         }
 
+        if (v.leftYAxesLabelSeparatesThousands !== false) {
+            leftYAxesTicks.callback = (value, index, values) => Utils.separatesThousands(value);
+        }
+
         yAxes.push({
             id: 'leftYAxes',
             display: v.leftYAxesDisplay,
@@ -443,7 +449,15 @@ class ComboChartWidget extends Widget {
                 tooltips: {
                     enabled: v.tooltipsEnabled,
                     mode: v.tooltipsMode,
-                    intersect: true
+                    intersect: true,
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            if(v.tooltipsSeparatesThousands) {
+                                return Utils.separatesThousands(tooltipItem.value);
+                            }
+                            return tooltipItem.value;
+                        }
+                    }
                 },
                 title: {
                     display: true
