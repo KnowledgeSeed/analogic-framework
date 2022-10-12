@@ -27,7 +27,8 @@ class GaugeWidget extends Widget {
             colors: this.getRealValue('colors', d),
             title: this.getRealValue('title', d, ''),
             fontFamily: this.getRealValue('fontFamily', d, 'imago'),
-            skin: this.getRealValue('skin', d, 'standard')
+            skin: this.getRealValue('skin', d, 'standard'),
+            separatesThousands: this.getRealValue('separatesThousands', d, false),
         };
 
         if (v.maxRange === 0) {
@@ -126,6 +127,7 @@ class GaugeWidget extends Widget {
 
         return {
             type: 'gauge',
+            separatesThousands: d.separatesThousands,
             data: {
                 datasets: datasets,
                 labels: []
@@ -191,14 +193,14 @@ Chart.controllers.gauge = Chart.controllers.doughnut.extend({
 
         const chart = this.chart, x = chart.ctx, chartData = GaugeWidget.chartDataByIds[chart.canvas.id];
         const min = chartData.minRange, max = chartData.maxRange, step = (max - min) / 5 === 0 ? 1 : (max - min) / 5,
-            labels = [];
+            labels = [], separatesThousands = chart.config.separatesThousands;
         const maxLen = max.toString().length, widthOffset = 6 * (maxLen - 2);
         const width = chart.width - widthOffset, height = chart.height, fontSize = (height / 140);
 
         let i, m;
 
         for (i = min; i <= max + min; i += step) {
-            labels.push(Math.round(i));
+            labels.push(separatesThousands ? Utils.separatesThousands(Math.round(i)) : Math.round(i));
         }
 
         x.font = fontSize + 'em ' + chartData.fontFamily;

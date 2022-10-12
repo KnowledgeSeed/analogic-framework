@@ -22,6 +22,7 @@ class WaterFallWidget extends Widget {
             maxYAxis: parseFloat(this.getRealValue('maxYAxis', d, 60)),
             yAxisGridLineNum: parseInt(this.getRealValue('yAxisGridLineNum', d, 11)),
             yAxisDecimalNum: parseInt(this.getRealValue('yAxisDecimalNum', d, 2)),
+            yAxisSeparatesThousands: this.getRealValue('yAxisSeparatesThousands', d, false),
             height: parseFloat(Utils.getSize(this.getRealValue('height', d, 300), false, 'height')),
             defaultColor: this.getRealValue('defaultColor', d, '#F3F4F6'),
             skin: this.getRealValue('skin', d, 'attila-1'),
@@ -69,12 +70,12 @@ class WaterFallWidget extends Widget {
         let i, j = max, d, label, isLastCol, hb, lastHeights = [zeroHeight, zeroHeight], val;
 
         for (i = 0; i < v.yAxisGridLineNum; ++i) {
-            yAxisHtml.push('<div class="ks-waterfall-y-line ks-primary"><div class="ks-waterfall-y-line-tick ks-left"><\/div><div class="ks-waterfall-y-line-label ks-left">', Utils.precisionRound(j, yAxisDecimalNum), '<\/div><div class="ks-waterfall-y-line-tick ks-right"><\/div><div class="ks-waterfall-y-line-label ks-right"><\/div><\/div>');
+            yAxisHtml.push('<div class="ks-waterfall-y-line ks-primary"><div class="ks-waterfall-y-line-tick ks-left"><\/div><div class="ks-waterfall-y-line-label ks-left">', v.yAxisSeparatesThousands ? Utils.separatesThousands(Utils.precisionRound(j, yAxisDecimalNum)) : Utils.precisionRound(j, yAxisDecimalNum), '<\/div><div class="ks-waterfall-y-line-tick ks-right"><\/div><div class="ks-waterfall-y-line-label ks-right"><\/div><\/div>');
 
             j -= yAxisStep;
         }
 
-        yAxisHtml.push('<div class="ks-waterfall-y-line ks-axis"><div class="ks-waterfall-y-line-tick ks-left"></div><div class="ks-waterfall-y-line-label ks-left ks-waterfall-label-origo">' + min + '</div><div class="ks-waterfall-y-line-tick ks-right"></div><div class="ks-waterfall-y-line-label ks-right"></div><div class="ks-waterfall-reset"' + resetBtnVisibility + '><span class="">i</span> Reset</div></div>');
+        yAxisHtml.push('<div class="ks-waterfall-y-line ks-axis"><div class="ks-waterfall-y-line-tick ks-left"></div><div class="ks-waterfall-y-line-label ks-left ks-waterfall-label-origo">' + (v.yAxisSeparatesThousands ? Utils.separatesThousands(min) : min )+ '</div><div class="ks-waterfall-y-line-tick ks-right"></div><div class="ks-waterfall-y-line-label ks-right"></div><div class="ks-waterfall-reset"' + resetBtnVisibility + '><span class="">i</span> Reset</div></div>');
 
         for (i = 0; i < len; ++i) {
             d = datapoints1[i];
