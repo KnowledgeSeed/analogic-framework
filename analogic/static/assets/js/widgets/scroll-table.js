@@ -11,7 +11,7 @@ class ScrollTableWidget extends Widget {
     }
 
     getHtml(widgets, data, withState) {
-        this.value = this.value.comment ? this.value : {};
+        this.value = this.value ? this.value : {};
         this.options.headerWidth = this.options.headerWidth || 160;
 
         let e, childId, parent, i, j, parentsByChildren = {}, parentIdsByRowIds = {}, hiddenRowIds = [], label, labelId, isExpanded;
