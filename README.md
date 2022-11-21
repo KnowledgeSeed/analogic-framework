@@ -15,7 +15,7 @@ The frontend framework is in essence a collection of JavaScript elements called 
 
 2. #### Python middleware
 
-The Python middleware, which is a Flask-based application layer between the frontend and the database. It allows for database users to be leveraged and be used by multiple application users. It also enables functions that cannot be implemented (securely) in JavaScript, such as file uploads, export functions and complex widget-backend communications.
+The Python middleware is a Flask-based application layer between the frontend and the database. It enables functions that cannot be implemented (securely) in JavaScript, such as file uploads, export functions and complex widget-backend communications.
    
  3. #### Sample applications
  
