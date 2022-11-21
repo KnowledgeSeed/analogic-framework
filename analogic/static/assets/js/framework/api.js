@@ -237,14 +237,14 @@ Api.removePageValues = function removePageValues(pageId) {
     let page = WidgetConfig[pageId], w;
 
     for (w of page.widgets) {
-        Widgets[w.id] = new Widgets[id].reset();
+        Widgets[w.id].reset();
         Api.removeValuesRecursively(w.widgets);
     }
 };
 
 Api.removeValuesRecursively = function removeValuesRecursively(widgets) {
     for (let w of widgets || []) {
-        Widgets[w.id] = new Widgets[id].reset();
+        Widgets[w.id].reset();
         Api.removeValuesRecursively(w.widgets);
     }
 };

@@ -9,11 +9,10 @@ class ParsingControlFactory {
         const widgetId = context.getWidgetId(),
             repositoryObject = context.getRepositoryObject(), p = context.getRestRequest() !== false ? context.getRestRequest() : context.getLoaderFunction();
 
-        let dataContext = {
-          getLoaderResponse() {
-              return data;
-          }
-        }, ctx = {...context, ...dataContext};
+        let ctx = Object.create(context);
+        ctx.getLoaderResponse = () => {
+            return data;
+        };
 
         if(isClass(p.parsingControl)){
             return new p.parsingControl(ctx); //Todo check
