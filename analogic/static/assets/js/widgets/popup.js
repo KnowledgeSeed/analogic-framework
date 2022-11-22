@@ -54,7 +54,7 @@ class PopupWidget extends Widget {
 ${v.backdrop ? `<div style="${backdropStyle.join('')}" class="ks-container-backdrop ks-container-${v.skin}"  ${b}></div>` : ''}
 <div class="ks-container ${alignmentClass} ks-container-${v.skin}" style="${s.join('')}">
     <div style="${backgroundStyle.join('')}" class="ks-container-background">
-        <div style="${contentStyle.join('')}"  class="ks-container-content">${v.closeBtn ? `<div style="${closeBtnStyle.join('')}" class="div-x" onclick="$(this).trigger('close');"><span class="icon-x"></span></div>` : ''}${widgets.join('')}</div>
+        <div style="${contentStyle.join('')}"  class="ks-container-content">${v.closeBtn ? `<div style="${closeBtnStyle.join('')}" class="div-x"><span class="icon-x"></span></div>` : ''}${widgets.join('')}</div>
     </div>
 </div>`;
     }
@@ -104,7 +104,8 @@ ${v.backdrop ? `<div style="${backdropStyle.join('')}" class="ks-container-backd
             this.backdrop.on('click', () => this.close());
         }
 
-        this.section.on('open', () => this.open()).on('close', () => this.close());
+        this.section.on('open', () => this.open());
+        this.section.find('.div-x').on('click', () => this.close());
 
         if (a) {
             if ('string' === typeof a) {

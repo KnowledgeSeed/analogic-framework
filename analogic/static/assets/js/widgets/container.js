@@ -40,6 +40,10 @@ class ContainerWidget {
         this.c.initEventHandlers(s);
     }
 
+    reset() {
+        this.c.reset();
+    }
+
     open() {
         this.c.open();
     }

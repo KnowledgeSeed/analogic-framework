@@ -61,7 +61,7 @@ class SwipeWidget extends Widget {
 ${v.backdrop ? '<div class="ks-container-backdrop" style="display: none;"><\/div>' : ''}
 <div class="ks-container ${alignmentClass} ks-container-${v.skin}" style="${s.join('')}">
     <div class="ks-container-background">
-        <div class="ks-container-content">${v.closeBtn ? '<div class="div-x" onclick="$(this).trigger(\'close\');"><span class="icon-x"><\/span><\/div>' : ''}${widgets.join('')}</div>
+        <div class="ks-container-content">${v.closeBtn ? '<div class="div-x"><span class="icon-x"><\/span><\/div>' : ''}${widgets.join('')}</div>
     </div>
 </div>`;
     }
@@ -69,7 +69,9 @@ ${v.backdrop ? '<div class="ks-container-backdrop" style="display: none;"><\/div
     initEventHandlers() {
         const section = this.getSection(), v = this.value;
 
-        this.section = section.on('close', () => this.close());
+        this.section = section;
+        this.section.find('.div-x').on('click', () => this.close());
+
         this.container = section.children().last();
         this.backdrop = this.container.prev();
 
