@@ -1,0 +1,1011 @@
+@font-face {
+    font-family: 'Gotham Narrow';
+    src: url('../fonts/GothamNarrow-Bold.eot');
+    src: url('../fonts/GothamNarrow-Bold.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/GothamNarrow-Bold.woff2') format('woff2'),
+        url('../fonts/GothamNarrow-Bold.woff') format('woff'),
+        url('../fonts/GothamNarrow-Bold.ttf') format('truetype'),
+        url('../fonts/GothamNarrow-Bold.svg#GothamNarrow-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Gotham Narrow';
+    src: url('../fonts/GothamNarrow-Medium.eot');
+    src: url('../fonts/GothamNarrow-Medium.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/GothamNarrow-Medium.woff2') format('woff2'),
+        url('../fonts/GothamNarrow-Medium.woff') format('woff'),
+        url('../fonts/GothamNarrow-Medium.ttf') format('truetype'),
+        url('../fonts/GothamNarrow-Medium.svg#GothamNarrow-Medium') format('svg');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'pivot';
+    src:  url('../fonts/pivot.eot?4cc4fq');
+    src:  url('../fonts/pivot.eot?4cc4fq#iefix') format('embedded-opentype'),
+        url('../fonts/pivot.ttf?4cc4fq') format('truetype'),
+        url('../fonts/pivot.woff?4cc4fq') format('woff'),
+        url('../fonts/pivot.svg?4cc4fq.ks-pivot') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+.ks-pivot * {
+    font-family: 'Gotham Narrow';
+}
+
+.ks-pivot [class^="icon-"], .ks-pivot [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'pivot' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.ks-pivot .icon-aa:before {
+    content: "\e94a";
+}
+.ks-pivot .icon-check:before {
+    content: "\e948";
+}
+.ks-pivot .icon-arrow-swap:before {
+    content: "\e906";
+}
+.ks-pivot .icon-arrow-to-top:before {
+    content: "\e907";
+}
+.ks-pivot .icon-check-intermediate:before {
+    content: "\e90d";
+}
+.ks-pivot .icon-check-off:before {
+    content: "\e90e";
+}
+.ks-pivot .icon-check-on:before {
+    content: "\e90f";
+}
+.ks-pivot .icon-chevron-close-horizontal:before {
+    content: "\e911";
+}
+.ks-pivot .icon-chevron-open-horizontal:before {
+    content: "\e913";
+}
+.ks-pivot .icon-chevron-right:before {
+    content: "\e914";
+}
+.ks-pivot .icon-clear:before {
+    content: "\e918";
+}
+.ks-pivot .icon-columns:before {
+    content: "\e91a";
+}
+.ks-pivot .icon-ellipsis:before {
+    content: "\e94b";
+}
+.ks-pivot .icon-filter-circle:before {
+    content: "\e923";
+}
+.ks-pivot .icon-rows:before {
+    content: "\e936";
+}
+.ks-pivot .icon-plus-circle:before {
+    content: "\e938";
+}
+.ks-pivot .icon-search:before {
+    content: "\e939";
+}
+.ks-pivot .icon-trash-fill:before {
+    content: "\e93e";
+}
+.ks-pivot .icon-tray-arrow-down:before {
+    content: "\e941";
+}
+.ks-pivot .icon-tray-files:before {
+    content: "\e943";
+}
+.ks-pivot .icon-x-circle:before {
+    content: "\e945";
+}
+.ks-pivot .icon-doc-arrow-down:before {
+    content: "\e94d";
+}
+.ks-pivot .icon-zero-square-outline:before {
+    content: "\e94e";
+}
+.ks-pivot .icon-person:before {
+    content: "\e931";
+}
+.ks-pivot .icon-trash:before {
+    content: "\e942";
+}
+.ks-pivot .icon-glasses:before {
+    content: "\e926";
+}
+.ks-pivot .icon-person-outline:before {
+    content: "\e94f";
+}
+.ks-pivot .icon-cursor:before {
+    content: "\e950";
+}
+.ks-pivot .icon-globe-lines:before {
+    content: "\e951";
+}
+
+.ks-pivot-filterbox .ks-pivot-scrollable {
+    max-height: 200px;
+}
+
+.ks-pivot-filterbox .ks-pivot-scrollable a, .ks-pivot-filterbox .ks-pivot-scrollable span {
+    font-size: 13px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.ks-pivot-filterbox .ks-pivot-btn {
+    text-align: center;
+    margin: 10px 0;
+    width: 100%;
+}
+
+.ks-pivot-filterbox .icon-trash {
+    float: right;
+    color: red;
+    margin: 0;
+}
+
+.ks-pivot-table-presets-dropdown .icon-check {
+    color: #1d7bff;
+}
+
+.icon-check.off {
+    visibility: hidden;
+}
+
+.ks-pivot-scrollable {
+    overflow: auto;
+    scrollbar-color: #636366 light-gray;
+    scrollbar-width: thin;
+}
+
+.ks-pivot-scrollable::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: lightgray;
+}
+
+.ks-pivot-scrollable::-webkit-scrollbar {
+    width: 5px;
+}
+
+.ks-pivot-scrollable::-webkit-scrollbar-thumb {
+    background-color: #636366;
+}
+
+.ks-pivot-table-presets-dropdown hr {
+    border-top: 1px solid #e1e1e1;
+    border-bottom: 0;
+}
+
+.supressZeroBtn {
+    margin-left: 20px;
+}
+
+.ks-pivot-table-title-row {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #E3E4E4;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    padding: 30px 10px;
+}
+
+.ks-pivot-table-title-row h1 {
+    color: #000000;
+    font-size: 36px;
+    line-height: 40px;
+}
+
+.ks-pivot-table-title-row h1 span {
+    color: #009FDA;
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.ks-pivot-table-control-row {
+    align-items: center;
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.ks-pivot-table-control-row.presets-row {
+    justify-content: flex-end;
+}
+
+.ks-pivot-table-presets-btn {
+    background-color: #F2F2F2;
+    border-radius: 50%;
+    color: #6C757D;
+    cursor: pointer;
+    font-size: 25px;
+    height: 40px;
+    line-height: 42px;
+    position: relative;
+    text-align: center;
+    width: 40px;
+}
+
+.ks-pivot-table-presets-dropdown {
+    display: none;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0px 6px 24px rgba(0, 0, 0, 0.16);
+    padding: 10px;
+    position: absolute;
+    right: 0;
+    top: 80%;
+    width: 270px;
+    z-index: 9;
+}
+
+.ks-pivot-table-presets-dropdown a {
+    border-radius: 8px;
+    color: #000;
+    display: block;
+    font-size: 16px;
+    height: 40px;
+    line-height: 40px;
+    text-align: left;
+    text-decoration: none;
+}
+
+.ks-pivot-table-presets-dropdown a:hover {
+    cursor: pointer;
+    background-color: #E5F2FF;
+}
+
+.ks-pivot-table-presets-dropdown a span {
+    float: left;
+    font-size: 14px;
+    line-height: 40px;
+    margin-right: 5px;
+    text-align: center;
+    width: 30px;
+}
+
+.ks-pivot-table-tag-holder {
+    background-color: #f2f2f2;
+    border-radius: 12px;
+    display: flex;
+    padding: 10px;
+    padding-right: 40px;
+    position: relative;
+    width: 100%;
+}
+
+.ks-pivot-table-add-tag {
+    color: #007BFF;
+    cursor: pointer;
+    font-size: 22px;
+    height: 22px;
+    line-height: 22px;
+    margin-top: -10px;
+    position: absolute;
+    right: 15px;
+    text-decoration: none;
+    top: 50%;
+}
+
+.ks-pivot-table-tag {
+    background-color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    height: 40px;
+    margin-right: 10px;
+    min-width: 120px;
+    padding: 7px 40px 7px 32px;
+    position: relative;
+}
+
+.ks-pivot-table-tag.has-next:after {
+    border-top: 13px solid transparent;
+    border-bottom: 13px solid transparent;
+    border-left: 4px solid #fff;
+    content: "";
+    margin-top: -13px;
+    position: absolute;
+    right: -4px;
+    top: 50%;
+}
+
+.ks-pivot-table-tag.has-prev:before {
+    border-top: 13px solid transparent;
+    border-bottom: 13px solid transparent;
+    border-left: 4px solid #f2f2f2;
+    content: "";
+    margin-top: -13px;
+    position: absolute;
+    left: 0px;
+    top: 50%;
+}
+
+.ks-pivot-table-tag-color {
+    border-radius: 50%;
+    left: 10px;
+    height: 14px;
+    margin-top: -7px;
+    position: absolute;
+    top: 50%;
+    width: 14px;
+}
+
+.ks-pivot-table-tag h3 {
+    color: #000;
+    font-size: 13px;
+}
+
+.ks-pivot-table-tag h4 {
+    color: #000;
+    font-size: 10px;
+}
+
+.ks-pivot-table-tag .icon-x-circle {
+    color: #A9A9A9;
+    font-size: 16px;
+    height: 16px;
+    margin-top: -8px;
+    position: absolute;
+    right: 13px;
+    top: 50%;
+}
+
+.ks-pivot-table-tag-switch {
+    color: #347CF6;
+    flex-grow: 1;
+    flex-shrink: 0;
+    font-size: 24px;
+    line-height: 40px;
+    text-align: center;
+    width: 40px;
+    cursor: pointer;
+}
+
+.ks-pivot-table-tag-switch span {
+    display: block;
+}
+
+.ks-pivot-table-tag-holder-icon {
+    color: #6c757d;
+    font-size: 14px;
+    margin-right: 10px;
+    line-height: 40px;
+    text-align: center;
+    width: 40px;
+}
+
+.ks-pivot-table-tag-holder-icon span {
+    display: block;
+    line-height: 40px;
+}
+
+.ks-pivot-table-tag-holder-icon .icon-columns {
+    font-size: 20px;
+}
+
+.ks-pivot-table {
+    border-collapse: collapse;
+    width: auto;
+}
+
+.ks-pivot-table td {
+    height: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-pivot-table-close-header-cell {
+    border-right: 2px solid #a9a9a9;
+    font-size: 6px;
+    padding: 6px 5px;
+    text-align: right;
+    vertical-align: top;
+}
+
+.ks-pivot-table-col-group-sign-cell {
+    color: #000;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 3px 3px 3px 10px;
+    position: relative;
+    vertical-align: top;
+}
+
+.ks-pivot-table-close-category-cell {
+    border-right: 1px solid #a9a9a9;
+    border-bottom: 2px solid #a9a9a9;
+    font-size: 18px;
+    padding: 0 5px;
+}
+
+.ks-pivot-table-header-cell {
+    border-right: 1px solid #e1e1e1;
+    border-bottom: 2px solid #a9a9a9;
+    color: #000;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0 10px;
+    vertical-align: bottom;
+}
+
+.ks-pivot-table-category-cell {
+    border-right: 1px dotted #B1B3B3;
+    color: #000;
+    font-size: 13px;
+    font-weight: bold;
+    width: 100px;
+    padding: 0 10px;
+}
+
+.ks-pivot-table-group-sign-cell {
+    position: relative;
+    width: 22px;
+}
+
+.ks-pivot-table-group-sign-start {
+    background-color: #fff;
+    border: 2px solid;
+    border-radius: 50%;
+    cursor: pointer;
+    height: 16px;
+    margin: 0 auto;
+    width: 16px;
+}
+
+.ks-pivot-table-group-sign-start div {
+    height: 50%;
+    left: 50%;
+    margin-left: -1px;
+    position: absolute;
+    top: 50%;
+    width: 2px;
+    z-index: -1;
+}
+
+.ks-pivot-table-col-group-sign-cell .ks-pivot-table-group-sign-start {
+    margin: 0;
+    margin-left: -5px;
+}
+
+.ks-pivot-table-col-group-sign-cell .ks-pivot-table-group-sign-start div {
+    height: 2px;
+    left: 5px;
+    margin-top: -1px;
+    margin-left: 0;
+    top: 11px;
+    width: 100%;
+}
+
+.ks-pivot-table-group-sign-middle {
+    height: 100%;
+    margin: 0 auto;
+    width: 2px;
+}
+
+.ks-pivot-table-col-group-sign-cell .ks-pivot-table-group-sign-middle {
+    height: 2px;
+    left: 0px;
+    margin-top: -1px;
+    margin-left: 0;
+    position: absolute;
+    top: 11px;
+    width: 100%;
+}
+
+.ks-pivot-table-group-sign-end {
+    border-radius: 50%;
+    cursor: pointer;
+    height: 8px;
+    margin: 0 auto;
+    width: 8px;
+}
+
+.ks-pivot-table-col-group-sign-cell .ks-pivot-table-group-sign-end {
+    margin: 4px 0;
+}
+
+.ks-pivot-table-group-sign-end div {
+    bottom: 50%;
+    height: 50%;
+    left: 50%;
+    margin-left: -1px;
+    position: absolute;
+    width: 2px;
+    z-index: -1;
+}
+
+.ks-pivot-table-col-group-sign-cell .ks-pivot-table-group-sign-end div {
+    height: 2px;
+    left: 0px;
+    margin-top: -1px;
+    margin-left: 0;
+    top: 11px;
+    width: 10px;
+}
+
+.ks-pivot-table-group-sign-closed {
+    border: 2px solid;
+    border-radius: 50%;
+    cursor: pointer;
+    height: 16px;
+    margin: 0 auto;
+    padding: 2px;
+    width: 16px;
+}
+
+.ks-pivot-table-group-sign-closed div {
+    border-radius: 50%;
+    height: 8px;
+    width: 8px;
+}
+
+.ks-pivot-table-col-group-sign-cell .ks-pivot-table-group-sign-closed {
+    margin: 0;
+    margin-left: -5px;
+}
+
+.ks-pivot-table-group-sign-cell.closed-cell {
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.ks-pivot-table-title-cell {
+    border-right: 1px solid #e1e1e1;
+    border-bottom: 1px solid #e1e1e1;
+    color: #000;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 0 10px 0 30px;
+}
+
+.ks-pivot-table-group-title-cell {
+    border-right: 1px solid #e1e1e1;
+    border-bottom: 1px solid #e1e1e1;
+    color: #000;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 0 8px;
+}
+
+.ks-pivot-table-content-cell {
+    border: 1px solid #e1e1e1;
+    color: #000;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0 4px;
+    text-align: right;
+}
+
+.ks-pivot-table-content-cell.sel {
+    border: 2px solid #a9a9a9;
+}
+.ks-pivot-table-content-cell.ok {
+    border: 2px solid #739600;
+}
+.ks-pivot-table-content-cell.err {
+    border: 2px solid red;
+}
+
+.ks-pivot-table-content-cell input {
+    width: 100%;
+}
+
+.ks-pivot-tag-add-holder {
+    align-items: stretch;
+    align-content: stretch;
+    display: flex;
+}
+
+.ks-pivot-tag-add-col {
+    align-self: stretch;
+    width: 20%;
+}
+
+.ks-pivot-tag-add-col-content {
+    border-right: 10px solid #f2f2f2;
+}
+
+.ks-pivot-tag-add-item {
+    border-bottom: 1px solid #e1e1e1;
+    color: #000;
+    cursor: pointer;
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+    padding: 11px 30px 11px 20px;
+    position: relative;
+}
+
+.checkable-col .ks-pivot-tag-add-item {
+    padding-left: 40px;
+}
+
+.ks-pivot-tag-add-item.title-item {
+    color: #A9A9A9;
+}
+
+.ks-pivot-tag-add-item.title-item .icon-aa {
+    color: #1d7bff;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 40px;
+    margin-top: -20px;
+    position: absolute;
+    right: 5px;
+    text-align: center;
+    top: 50%;
+    width: 40px;
+}
+
+.ks-pivot-tag-add-item.title-item .icon-aa .ks-pivot-table-presets-dropdown {
+    left: 0;
+}
+
+.ks-pivot-tag-add-item.ks-on {
+    background-color: #e3f1ff;
+}
+
+.ks-pivot-tag-add-item .icon-chevron-right {
+    color: #007BFF;
+    font-size: 13px;
+    line-height: 20px;
+    margin-top: -10px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+}
+
+.ks-pivot-tag-add-item .icon-check-off,
+.ks-pivot-tag-add-item .icon-check-on,
+.ks-pivot-tag-add-item .icon-check-intermediate {
+    color: #1d7bff;
+    font-size: 16px;
+    left: 0px;
+    height: 40px;
+    line-height: 39px;
+    margin-top: -20px;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    width: 40px;
+}
+
+.ks-pivot-tag-add-item .icon-trash {
+    color: red;
+    position: absolute;
+    right: 27px;
+    top: 12px;
+}
+
+.ks-pivot-tag-add-item .icon-globe-lines, .ks-pivot-tag-add-item .icon-person-outline, .ks-pivot-tag-add-item .icon-cursor {
+    margin-right: 5px;
+}
+
+.ks-pivot-tag-add-controls {
+    align-items: flex-end;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+    padding: 0 10px;
+}
+
+.ks-pivot-tag-color-dropdown-holder {
+    width: 260px;
+}
+
+.ks-pivot-tag-color-dropdown-holder label {
+    color: #000000;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 15px;
+    margin-bottom: 5px;
+}
+
+.ks-pivot-tag-color-dropdown {
+    border: 1px solid #A9A9A9;
+    border-radius: 8px;
+    color: #000000;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: normal;
+    height: 40px;
+    line-height: 38px;
+    padding: 0 40px;
+    position: relative;
+}
+
+.ks-pivot-tag-color-dropdown:after {
+    border-top: 5px solid #000;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    content: "";
+    margin-top: -2.5px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+}
+
+.ks-pivot-tag-color-dropdown .ks-pivot-tag-color-icon {
+    border-radius: 50%;
+    height: 16px;
+    left: 12px;
+    margin-top: -8px;
+    position: absolute;
+    top: 50%;
+    width: 16px;
+}
+
+.ks-pivot-tag-color-dropdown-chooser {
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0px 6px 24px #00000029;
+    display: flex;
+    flex-wrap: wrap;
+    left: -1px;
+    padding: 15px 1px 1px 15px;
+    position: absolute;
+    top: 38px;
+    z-index: 9;
+    width: 280px;
+}
+
+.ks-pivot-tag-color-dropdown-chooser-item {
+    border-radius: 8px;
+    color: #FFFFFF;
+    font-size: 12px;
+    height: 30px;
+    line-height: 32px;
+    margin: 0 14px 14px 0;
+    text-align: center;
+    width: 30px;
+}
+
+.ks-pivot-tag-button-holder {
+    display: flex;
+}
+
+.ks-pivot-btn {
+    cursor: pointer;
+    border-radius: 8px;
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    height: 40px;
+    line-height: 40px;
+    margin-left: 10px;
+    text-align: center;
+    text-decoration: none;
+    width: 105px;
+    white-space: nowrap;
+}
+
+.ks-pivot-btn span {
+    color: #009FDA;
+    margin-right: 10px;
+}
+
+.ks-pivot-btn.btn-wide {
+    width: 240px;
+}
+.ks-pivot-btn.btn-auto {
+    padding: 0 15px;
+    width: auto;
+}
+
+.ks-pivot-btn.btn-red {
+    background-color: #fbeaec;
+    color: #DC3545;
+}
+.ks-pivot-btn.btn-red-bg {
+    background-color: #DC3545;
+    color: #FFF;
+}
+.ks-pivot-btn.btn-blue-light {
+    background-color: #e5f2ff;
+    color: #007BFF;
+}
+.ks-pivot-btn.btn-blue {
+    background-color: #007BFF;
+    color: #FFFFFF;
+}
+
+.ks-pivot-btn.btn-gray {
+    background-color: #F2F2F2;
+    color: #000000;
+}
+
+.ks-pivot-btn.disabled {
+    opacity: 0.5;
+}
+
+.ks-pivot-tag-add-popup {
+    z-index: 9999;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0px 6px 24px #00000029;
+    left: 50%;
+    padding: 0px 10px 20px;
+    position: fixed;
+    top: 50%;
+    width: 400px;
+    transform: translate(-50%, -50%);
+}
+
+.ks-pivot-tag-add-popup h3 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    padding: 20px 0;
+    text-align: center;
+    margin: 0;
+}
+
+.ks-pivot-tag-add-popup label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 15px;
+    margin-bottom: 5px;
+}
+
+.ks-pivot-tag-add-popup input {
+    border: 1px solid #A9A9A9;
+    border-radius: 8px;
+    color: #000000;
+    display: block;
+    font-size: 13px;
+    font-weight: normal;
+    height: 40px;
+    margin-bottom: 20px;
+    padding: 0 10px;
+    width: 100%;
+}
+
+.ks-pivot-tag-add-popup .error {
+    border: 2px solid red;
+}
+
+.ks-pivot-tag-add-popup > .ks-pivot-filterbox {
+    position: relative;
+    display: block;
+    box-shadow: none;
+    width: 380px;
+    border: 1px solid #A9A9A9;
+}
+
+.ks-pivot-tag-add-popup-button-holder {
+    padding-top: 10px;
+    border-top: 1px solid #e1e1e1;
+    justify-content: center;
+    display: flex;
+}
+
+.ks-pivot-tag-add-popup-button-holder .ks-pivot-btn {
+    margin: 0 5px;
+}
+
+.ks-pivot-popup-check-holder {
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+    padding-left: 5px;
+    margin-top: 10px;
+}
+
+.ks-pivot-popup-check-holder span {
+    margin-right: 15px;
+}
+
+.ks-pivot-add-tag-search-holder {
+    height: 40px;
+    margin-bottom: 10px;
+    padding: 0 20px 0 10px;
+}
+
+.ks-pivot-add-tag-search {
+    border: 1px solid #ACADAE;
+    border-radius: 8px;
+    height: 40px;
+    position: relative;
+}
+
+.ks-pivot-add-tag-search input {
+    background-color: transparent;
+    border: 0;
+    display: block;
+    font-size: 16px;
+    height: 100%;
+    padding: 0 10px 0px 35px;
+    width: 100%;
+}
+
+.ks-pivot-add-tag-search .icon-search {
+    color: #000000;
+    font-size: 16px;
+    left: 10px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.icon-chevron-close-horizontal, .icon-chevron-open-horizontal {
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+.h0 {
+    border-top: 2px solid #A9A9A9;
+    border-right: 1px solid #A9A9A9;
+    height: 100px;
+    position: relative;
+    width: 22px;
+    max-width: 22px;
+    vertical-align: top;
+}
+
+.h0 div {
+    top: 10px;
+    left: 2px;
+    position: absolute;
+    white-space: nowrap;
+    font-size: 13px;
+    -webkit-transform: rotate(-90deg) translateX(-100%);
+    -moz-transform: rotate(-90deg) translateX(-100%);
+    -o-transform: rotate(-90deg) translateX(-100%);
+    -ms-transform: rotate(-90deg) translateX(-100%);
+    transform: rotate(-90deg) translateX(-100%);
+    transform-origin: top left;
+}
+
+.h1 {
+    display: none !important;
+}
+
+.h2 {
+    border-left: 2px solid #a9a9a9;
+}
+
+.h3 {
+    border-right: 1px solid #a9a9a9;
+}
+
+.h4 {
+    border-right: 2px solid #a9a9a9;
+}
+
+.h5 {
+    border-left: 1px solid #e1e1e1;
+    border-right: 1px solid #e1e1e1;
+    color: #000;
+    font-size: 13px;
+    padding: 0 10px;
+}
+
+.ks-pivot-table-col-group-sign-cell, .ks-pivot-table-header-cell, .ks-pivot-table-content-cell, h5 {
+    width: 90px;
+    min-width: 90px;
+    max-width: 120px;
+}
+
+.nav {
+    border: 3px solid #1d7bff;
+}
