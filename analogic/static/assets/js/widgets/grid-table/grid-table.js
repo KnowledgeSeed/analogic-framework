@@ -195,7 +195,7 @@ class GridTableWidget extends Widget {
                         Widgets[dd.cellId] = new w.type(w);
                         rendered.push(Widgets[dd.cellId].render(false, processedData[i][j]));
                     } else {
-                        if(false === vv.allowChangedDataUpdate ||
+                        if (false === vv.allowChangedDataUpdate ||
                             !GridTableWidget.deepEqual(instance.cellData[i][j], processedData[i][j])) {
                             Widgets[processedData[i][j].cellId].updateContent(processedData[i][j]);
                             instance.cellData[i][j] = processedData[i][j];
@@ -366,6 +366,93 @@ class GridTableWidget extends Widget {
 
     reset() {
         delete this.cellData;
+    }
+
+    triggerFillRight(params) {
+        let requests = this.getFillPatchRequest(params);
+        Repository[this.id]['fillRight'] = {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db) => {
+                return requests;
+            }
+        };
+        return Api.executeRequest('fillRight.' + this.id);
+    }
+
+    triggerFillLeft(params) {
+        if (!params.iterationNumber) {
+            params.iterationNumber = -1;
+        }
+
+        let requests = this.getFillPatchRequest(params);
+
+        Repository[this.id]['fillLeft'] = {
+            url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
+            type: 'PATCH',
+            body: (db) => {
+                return requests;
+            }
+        };
+        return Api.executeRequest('fillLeft.' + this.id);
+    }
+
+    getFillPatchRequest(params) {
+        //value, propertyName
+        //valueTransformation
+        //until, iterationNumber, cellCondition
+        if (this.cellData && this.row && this.column) {
+
+            if (typeof params.value == 'undefined' && !params.propertyName) {
+                alert(this.id + ' getFillPatchRequest must have value or propertyName parameters!');
+                return;
+            }
+
+            if (params.iterationNumber && params.iterationNumber === 0) {
+                alert(this.id + ' getFillPatchRequest params.iterationNumber can not be 0!');
+                return;
+            }
+
+            if (params.until && params.until < 0) {
+                alert(this.id + ' getFillPatchRequest params.until must be greater than or equal to 0!');
+                return;
+            }
+
+            let val = params.value !== false && typeof params.value !== 'undefined' ? params.value : this.cellData[this.row][this.column][params.propertyName],
+                requests = [], start = parseInt(this.column),
+                iterationNumber = params.iterationNumber ? params.iterationNumber : 1,
+                end = params.until ? params.until : iterationNumber > 0 ? this.cellData[this.row].length : 0,
+                cell, cellCondition = params.cellCondition ? params.cellCondition : () => true,
+                template = (ordinal, value) => `{"Ordinal": \"${ordinal}\","Value": \"${value}\"}`;
+
+            if (iterationNumber < 0) {
+                const t = start;
+                start = end;
+                end = t;
+                iterationNumber *= -1;
+            }
+
+            if (end > this.cellData.length) {
+                alert(this.id + ' getFillPatchRequest wrong range params (params.until, params.iterationNumber)');
+                return;
+            }
+
+            if (params.valueTransformation) {
+                val = params.valueTransformation(val);
+            }
+
+            while (start < end) {
+                cell = this.cellData[this.row][start];
+                if (cellCondition(cell)) {
+                    requests.push(template(cell.ordinal, val));
+                }
+                start += iterationNumber;
+            }
+
+            return `[
+                       ${requests.join(',')}
+                   ]`;
+        }
     }
 
     addGridTableListeners() {
