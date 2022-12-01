@@ -120,6 +120,9 @@ class WriteExecutorFactory {
             context.getCell = () => {
                 return gridTableInfo !== null ? gridTableInfo.getCell() : null;
             };
+            context.getCellId = () => {
+                return context.getCell() ? context.getCell().id : null;
+            },
             context.getRow = () => {
                 return gridTableInfo !== null ? gridTableInfo.getRow() : null;
             };

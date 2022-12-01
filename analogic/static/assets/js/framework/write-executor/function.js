@@ -2,11 +2,17 @@
 
 class FunctionWriteExecutor extends WriteExecutor {
     execute() {
-        let eventHandler = this.context.getEventHandler(),
-            result = eventHandler(this.context);
+        let result = Repository[this.context.getWidgetId()][this.context.getEventName()](this.context);
 
         if (result instanceof WriteExecutor) {
             return result.execute(this.context);
+        }
+
+        if (result instanceof RestRequest) {
+            this.context.getEventHandler = () => {
+                return result.getDescription();
+            }
+            return new WriteExecutor(this.context).execute();
         }
 
         return $.Deferred().resolve({
