@@ -503,13 +503,31 @@ const Utils = {
 
         return o;
     },
-    separatesThousands(n, separator=' ') {
+    separatesThousands(n, separator = ' ') {
         var parts = n.toString().split(".");
         const numberPart = parts[0];
         const decimalPart = parts[1];
         const thousands = /\B(?=(\d{3})+(?!\d))/g;
         return numberPart.replace(thousands, separator) + (decimalPart ? "." + decimalPart : "");
-    }
+    },
+    saveGridTableToggles(widgetId) {
+        let cellData = v(widgetId + '.cellData'), i, result = [], len = cellData.length;
+
+        for (i = 0; i < len; ++i) {
+            result[i] = v(widgetId + '_' + i + '_1').switch ? v(widgetId + '_' + i + '_1').switch.value : cellData[i][1].value;
+        }
+
+        Utils.setWidgetValue('systemValue' + widgetId + 'Toggles', result);
+    },
+    getGridTableToggleValue(widgetId, index) {
+            let res = v('systemValue' + widgetId + 'Toggles');
+
+            if (index < res.length) {
+                return res[index];
+            }
+
+            return 0;
+        }
 };
 
 app.utils = Utils;
