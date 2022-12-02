@@ -1,4 +1,4 @@
-/* global app, El, Doc, Intl, Widgets, WidgetState */
+/* global Api, app, El, Doc, Intl, Widgets, WidgetState */
 
 'use strict';
 const L = console.log,
@@ -16,16 +16,16 @@ const Utils = {
         return e;
     },
     cleanStr: s => Utils.replaceAll(s, {
-        'ö': 'o',
-        'ü': 'u',
-        'ó': 'o',
-        'ő': 'o',
-        'ú': 'u',
-        'é': 'e',
-        'á': 'a',
-        'ű': 'u',
-        'í': 'i'
-    }),
+            'ö': 'o',
+            'ü': 'u',
+            'ó': 'o',
+            'ő': 'o',
+            'ú': 'u',
+            'é': 'e',
+            'á': 'a',
+            'ű': 'u',
+            'í': 'i'
+        }),
     clone: (object, deep) => deep ? $.extend(true, {}, object) : $.extend({}, object),
     replaceAll: (s, m) => s.replace(RegExp(Object.keys(m).join('|'), 'gi'), r => m[r.toLowerCase()]),
     scrollTop: duration => $('html, body').animate({scrollTop: 0}, duration || 500),
@@ -520,14 +520,27 @@ const Utils = {
         Utils.setWidgetValue('systemValue' + widgetId + 'Toggles', result);
     },
     getGridTableToggleValue(widgetId, index) {
-            let res = v('systemValue' + widgetId + 'Toggles');
+        let res = v('systemValue' + widgetId + 'Toggles');
 
-            if (index < res.length) {
-                return res[index];
-            }
-
-            return 0;
+        if (index < res.length) {
+            return res[index];
         }
+
+        return 0;
+    },
+    hexToRgb(hex, opacity = 1, asObject) {
+        hex = hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m, r, g, b) => r + r + g + g + b + b);
+
+        let r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+        r = {r: parseInt(r[1], 16), g: parseInt(r[2], 16), b: parseInt(r[3], 16), a: opacity};
+
+        if (asObject) {
+            return r;
+        }
+
+        return 'rgb' + (opacity < 1 ? 'a' : '') + '(' + Object.values(r).slice(0, opacity < 1 ? 4 : -1).join(',') + ')';
+    }
 };
 
 app.utils = Utils;
