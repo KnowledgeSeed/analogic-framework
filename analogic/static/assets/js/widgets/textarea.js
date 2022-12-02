@@ -100,7 +100,7 @@ class TextAreaWidget extends Widget {
         this.editable = p.editable;
         this.value = Utils.escapeText(d.value);
 
-        textarea.html(d.value);
+        textarea.val(d.value);
     }
 
     reset() {
