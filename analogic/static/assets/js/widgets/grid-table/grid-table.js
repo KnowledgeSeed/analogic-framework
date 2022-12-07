@@ -195,8 +195,11 @@ class GridTableWidget extends Widget {
                         Widgets[dd.cellId] = new w.type(w);
                         rendered.push(Widgets[dd.cellId].render(false, processedData[i][j]));
                     } else {
-                        if (false === vv.allowChangedDataUpdate ||
+                        if (false === vv.allowChangedDataUpdate || processedData[i][j].manipulated ||
                             !GridTableWidget.deepEqual(instance.cellData[i][j], processedData[i][j])) {
+                            if(processedData[i][j].manipulated) {
+                                delete processedData[i][j].manipulated;
+                            }
                             Widgets[processedData[i][j].cellId].updateContent(processedData[i][j]);
                             instance.cellData[i][j] = processedData[i][j];
                         }
