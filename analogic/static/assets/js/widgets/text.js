@@ -10,7 +10,7 @@ class TextWidget extends Widget {
 
         this.setValues(v);
 
-        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d),
+        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d).concat(this.getHtmlComponentStylesArray('main', d)),
             titleStyles = this.getHtmlComponentStylesArray('title', d),
             bodyStyles = this.getHtmlComponentStylesArray('body', d),
             innerStyles = this.getHtmlComponentStylesArray('inner', d),
@@ -85,6 +85,12 @@ class TextWidget extends Widget {
         title.data('performable', v.performable ? '1' : '0');
 
         this.setValues(v);
+
+        this.updateHtmlComponent('main', data, mainDiv);
+        this.updateHtmlComponent('inner', data, inner);
+        this.updateHtmlComponent('title', data, title);
+        this.updateHtmlComponent('body', data, body);
+        this.updateHtmlComponent('icon', data, icon);
 
         //section
         if (v.applyMeasuresToSection) {
