@@ -540,6 +540,9 @@ const Utils = {
         }
 
         return 'rgb' + (opacity < 1 ? 'a' : '') + '(' + Object.values(r).slice(0, opacity < 1 ? 4 : -1).join(',') + ')';
+    },
+    getActiveUserString(value) {
+        return value.includes('CAMID') ? value : value.replace(/\\/g, '/');
     }
 };
 
