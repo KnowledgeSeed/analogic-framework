@@ -74,7 +74,7 @@ class GridTableCellWidget extends Widget {
         paddingLeft = p.cellPaddingLeft !== false ? p.cellPaddingLeft : o.paddingLeft ? o.paddingLeft : false;
         Widget.setOrRemoveMeasure(mainDiv, 'padding-left', paddingLeft);
 
-        Widget.setSkin(mainDiv, 'ks-grid-table-cell-', p.cellSkin);
+        Widget.setSkin(mainDiv, 'ks-grid-table-cell-', p.cellSkin ? p.cellSkin : p.skin);
     }
 
     render(withState, childrenData) {
