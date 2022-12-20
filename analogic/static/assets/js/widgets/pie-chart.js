@@ -51,7 +51,7 @@ class PieChartWidget extends Widget {
     }
 
     initEventHandlers() {
-        const canvas = $('#' + this.options.id + 'Canvas'), ctx = canvas[0].getctx('2d'), c = new Chart(ctx, PieChartWidget.getChartConfig(this.value));
+        const canvas = $('#' + this.options.id + 'Canvas'), ctx = canvas[0].getContext('2d'), c = new Chart(ctx, PieChartWidget.getChartConfig(this.value));
 
         canvas.parent().next().html(c.generateLegend()).on('click', '.ks-legend-item', e => {
             let legend = $(e.target).closest('.ks-legend-item').toggleClass('off'), id = legend.data('id');
