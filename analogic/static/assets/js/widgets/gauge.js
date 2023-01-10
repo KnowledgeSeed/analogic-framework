@@ -1,4 +1,4 @@
-/* global app, Chart, Utils */
+/* global app, Chart, Doc, El, Utils */
 
 'use strict';
 
@@ -24,11 +24,12 @@ class GaugeWidget extends Widget {
             labels: this.getRealValue('labels', d),
             minRange: this.getRealValue('minRange', d),
             maxRange: this.getRealValue('maxRange', d),
+            showAxisValues: this.getRealValue('showAxisValues', d, true),
             colors: this.getRealValue('colors', d),
             title: this.getRealValue('title', d, ''),
             fontFamily: this.getRealValue('fontFamily', d, 'imago'),
             skin: this.getRealValue('skin', d, 'standard'),
-            separatesThousands: this.getRealValue('separatesThousands', d, false),
+            separatesThousands: this.getRealValue('separatesThousands', d, false)
         };
 
         if (v.maxRange === 0) {
@@ -69,7 +70,6 @@ class GaugeWidget extends Widget {
     }
 
     initShowInFullScreenEventHandler(v) {
-
         const section = this.getSection();
 
         $('#' + v.id + 'FullScreenBtn').on('click', () => {
@@ -137,7 +137,7 @@ class GaugeWidget extends Widget {
                     padding: {
                         left: p,
                         right: p,
-                        top: 15,
+                        top: d.showAxisValues ? 15 : 0,
                         bottom: 5
                     }
                 }
@@ -192,14 +192,17 @@ Chart.controllers.gauge = Chart.controllers.doughnut.extend({
         Chart.controllers.doughnut.prototype.draw.apply(this, arguments);
 
         const chart = this.chart, x = chart.ctx, chartData = GaugeWidget.chartDataByIds[chart.canvas.id];
+
+        if (!chartData.showAxisValues) {
+            return;
+        }
+
         const min = chartData.minRange, max = chartData.maxRange, step = (max - min) / 5 === 0 ? 1 : (max - min) / 5,
             labels = [], separatesThousands = chart.config.separatesThousands;
         const maxLen = max.toString().length, widthOffset = 6 * (maxLen - 2);
         const width = chart.width - widthOffset, height = chart.height, fontSize = (height / 140);
 
-        let i, m;
-
-        for (i = min; i <= max + min; i += step) {
+        for (let i = min; i <= max + min; i += step) {
             labels.push(separatesThousands ? Utils.separatesThousands(Math.round(i)) : Math.round(i));
         }
 
