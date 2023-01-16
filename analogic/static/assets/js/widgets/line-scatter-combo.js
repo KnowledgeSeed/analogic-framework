@@ -173,7 +173,8 @@ class LineScatterComboWidget extends Widget {
                 fill: false,
                 pointStyle: e.pointStyle || 'circle',
                 showLine: false !== e.showLine,
-                hidden: true === e.hidden
+                hidden: true === e.hidden,
+                static: e.static
             };
 
             data.push(o);
