@@ -514,13 +514,13 @@ class Widget {
     static executeEventMapActions(eventMapId, event, element, write = true, ...args) {
         L(eventMapId, event, element, args);
 
-        let actions = EventMap[eventMapId], a;
+        let actions = EventMap[eventMapId], a, writeResponse = true;
 
         if (write === true) {
-            QB.writeData(eventMapId, event, element);
+            writeResponse = QB.writeData(eventMapId, event, element);
         }
 
-        if (actions) {
+        if (actions && writeResponse !== false) {
             for (a of actions) {
                 a.action(a.argument, event, element);
             }
