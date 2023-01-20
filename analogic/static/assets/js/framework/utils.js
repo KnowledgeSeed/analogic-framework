@@ -2,7 +2,15 @@
 
 'use strict';
 const L = console.log,
-    v = (path, obj = Widgets) => path.split(".").reduce((o, key) => o && o[key] ? o[key] : false, obj),
+    v = (path, obj = Widgets) => {
+        let p = path.split('.');
+        if (p.length > 1 && obj[p[0]] && obj[p[0]] instanceof Widget &&
+            typeof obj[p[0]]['value'] === 'object' &&
+            typeof w(path, obj) === 'undefined') {
+            p.splice(1, 0, 'value');
+        }
+        return p.reduce((o, key) => o && o[key] ? o[key] : false, obj)
+    },
     w = (path, obj = Widgets) => path.split('.').reduce((o, key) => (o || {})[key], obj);
 
 const isClass = fn => fn && /^\s*class/.test(fn.toString());
@@ -16,16 +24,16 @@ const Utils = {
         return e;
     },
     cleanStr: s => Utils.replaceAll(s, {
-            'ö': 'o',
-            'ü': 'u',
-            'ó': 'o',
-            'ő': 'o',
-            'ú': 'u',
-            'é': 'e',
-            'á': 'a',
-            'ű': 'u',
-            'í': 'i'
-        }),
+        'ö': 'o',
+        'ü': 'u',
+        'ó': 'o',
+        'ő': 'o',
+        'ú': 'u',
+        'é': 'e',
+        'á': 'a',
+        'ű': 'u',
+        'í': 'i'
+    }),
     clone: (object, deep) => deep ? $.extend(true, {}, object) : $.extend({}, object),
     replaceAll: (s, m) => s.replace(RegExp(Object.keys(m).join('|'), 'gi'), r => m[r.toLowerCase()]),
     scrollTop: duration => $('html, body').animate({scrollTop: 0}, duration || 500),
@@ -363,9 +371,18 @@ const Utils = {
         return Widgets[key1];
     },
     setWidgetValue(key, value) {
+        if (Widgets[key] && Widgets[key] instanceof Widget) {
+            if (!value) {
+                Widgets[key].reset();
+            }
+            return;
+        }
         Widgets[key] = value;
     },
     setWidgetValueByOther(key1, key2) {
+        if (Widgets[key1] && Widgets[key1] instanceof Widget) {
+            return;
+        }
         Widgets[key1] = Widgets[key2];
     },
     getPropertyOrFunctionValue(object, property) {
