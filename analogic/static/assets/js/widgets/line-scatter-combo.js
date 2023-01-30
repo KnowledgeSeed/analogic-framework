@@ -250,7 +250,7 @@ class LineScatterComboWidget extends Widget {
                     showTooltip: v.tooltipsEnabled
                 },
                 onDragStart: (e, element) => {
-                    let d = datasets[element._datasetIndex];
+                    let d = element._chart.data.datasets[element._datasetIndex];
 
                     if (d.static || d.values[element._index].static) {
                         return false;
