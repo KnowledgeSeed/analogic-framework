@@ -38,6 +38,7 @@ class LineScatterComboWidget extends Widget {
         ];
 
         const f = this.getRealValue('defaultFontFamily', d, 'imago, sans-serif'), c = '#A6A7A7', b = '#000', e = 'bold';
+        const yAxisGridLinesDisplay = this.getRealValue('yAxisGridLinesDisplay', d, true);
 
         const v = {
             datasets: $.extend(true, [], this.options.datasets || [], d.datasets || demo),
@@ -52,10 +53,12 @@ class LineScatterComboWidget extends Widget {
             maintainAspectRatio: this.getRealValue('maintainAspectRatio', d, true),
             xAxisVisible: this.getRealValue('xAxisVisible', d, true),
             xAxisGridLinesDisplay: this.getRealValue('xAxisGridLinesDisplay', d, true),
+            xAxisGridLinesDrawOnChartArea: this.getRealValue('xAxisGridLinesDrawOnChartArea', d, false),
             xAxisTicksDisplay: this.getRealValue('xAxisTicksDisplay', d, true),
             xAxisTicksLabelDisplay: this.getRealValue('xAxisTicksLabelDisplay', d, true),
             yAxisVisible: this.getRealValue('yAxisVisible', d, true),
-            yAxisGridLinesDisplay: this.getRealValue('yAxisGridLinesDisplay', d, true),
+            yAxisGridLinesDisplay: yAxisGridLinesDisplay,
+            yAxisGridLinesDrawOnChartArea: this.getRealValue('yAxisGridLinesDrawOnChartArea', d, yAxisGridLinesDisplay),
             yAxisTicksDisplay: this.getRealValue('yAxisTicksDisplay', d, true),
             yAxisTicksLabelDisplay: this.getRealValue('yAxisTicksLabelDisplay', d, true),
             xAxisTicksFontSize: this.getRealValue('xAxisTicksFontSize', d, 10),
@@ -70,9 +73,14 @@ class LineScatterComboWidget extends Widget {
             yAxisTicksPadding: this.getRealValue('yAxisTicksPadding', d, 5),
             xAxisTicksOffset: this.getRealValue('xAxisTicksOffset', d, 0),
             yAxisTicksOffset: this.getRealValue('yAxisTicksOffset', d, 0),
+            yAxisTicksPrecision: this.getRealValue('yAxisTicksPrecision', d, 1),
             yAxisGridLinesNum: this.getRealValue('yAxesGridLinesNum', d, 10),
+            rightBorderVisible: this.getRealValue('rightBorderVisible', d, false),
+            topBorderVisible: this.getRealValue('topBorderVisible', d, false),
             xMin: this.getRealValue('xMin', d, false),
             xMax: this.getRealValue('xMax', d, false),
+            yMin: this.getRealValue('yMin', d, false),
+            yMax: this.getRealValue('yMax', d, false),
             xAxisOffset: this.getRealValue('xAxisOffset', d, 0),
             bezierCurveBorderWidth: this.getRealValue('bezierCurveBorderWidth', d, 1.5),
             bezierCurveTension: this.getRealValue('bezierCurveTension', d, 0.3)
@@ -223,8 +231,8 @@ class LineScatterComboWidget extends Widget {
 
         const yBuffer = (yMax - yMin) * 0.1;
 
-        yMin -= yBuffer;
-        yMax += yBuffer;
+        yMin = $.isNumeric(v.yMin) ? v.yMin : yMin - yBuffer;
+        yMax = $.isNumeric(v.yMax) ? v.yMax : yMax + yBuffer;
 
         for (e of Utils.filterUnique(verticalLineXCoords)) {
             data.push({
@@ -292,8 +300,8 @@ class LineScatterComboWidget extends Widget {
                             },
                             ticks: {
                                 display: v.xAxisTicksLabelDisplay,
-                                min: (v.xMin || parseInt(Math.min(...xEdges))) + v.xAxisOffset,
-                                max: (v.xMax || parseInt(Math.max(...xEdges))) + v.xAxisOffset,
+                                min: ($.isNumeric(v.xMin) ? v.xMin : parseInt(Math.min(...xEdges))) + v.xAxisOffset,
+                                max: ($.isNumeric(v.xMax) ? v.xMax : parseInt(Math.max(...xEdges))) + v.xAxisOffset,
                                 stepSize: 1,
                                 fontSize: v.xAxisTicksFontSize,
                                 fontFamily: v.xAxisTicksFontFamily,
@@ -306,7 +314,19 @@ class LineScatterComboWidget extends Widget {
                             gridLines: {
                                 drawTicks: v.xAxisTicksDisplay,
                                 display: v.xAxisGridLinesDisplay,
-                                drawOnChartArea: false
+                                drawOnChartArea: v.xAxisGridLinesDrawOnChartArea
+                            }
+                        }, {
+                            id: 'topBorder',
+                            display: v.topBorderVisible,
+                            position: 'top',
+                            ticks: {
+                                display: false
+                            },
+                            gridLines: {
+                                display: true,
+                                drawOnChartArea: false,
+                                drawTicks: false
                             }
                         }
                     ],
@@ -320,7 +340,7 @@ class LineScatterComboWidget extends Widget {
                                 min: yMin,
                                 max: yMax,
                                 stepSize: stepSize ? (yMax - yMin) / stepSize : 0,
-                                callback: (v, i, all) => (!i && stepSize && all.length > stepSize + 1) ? '' : Utils.precisionRound(v, 1),
+                                callback: (val, i, all) =>  (!i && stepSize && all.length > stepSize + 1) ? '' : Utils.precisionRound(val, v.yAxisTicksPrecision),
                                 fontSize: v.yAxisTicksFontSize,
                                 fontFamily: v.yAxisTicksFontFamily,
                                 fontStyle: v.yAxisTicksFontStyle,
@@ -333,7 +353,19 @@ class LineScatterComboWidget extends Widget {
                             gridLines: {
                                 drawTicks: v.yAxisTicksDisplay,
                                 display: v.yAxisGridLinesDisplay,
-                                drawOnChartArea: v.yAxisGridLinesDisplay
+                                drawOnChartArea: v.yAxisGridLinesDrawOnChartArea
+                            }
+                        }, {
+                            id: 'rightBorder',
+                            display: v.rightBorderVisible,
+                            position: 'right',
+                            ticks: {
+                                display: false
+                            },
+                            gridLines: {
+                                display: true,
+                                drawOnChartArea: false,
+                                drawTicks: false
                             }
                         }
                     ]
