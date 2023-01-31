@@ -85,7 +85,10 @@ class LineScatterComboWidget extends Widget {
             yMax: this.getRealValue('yMax', d, false),
             xAxisOffset: this.getRealValue('xAxisOffset', d, 0),
             bezierCurveBorderWidth: this.getRealValue('bezierCurveBorderWidth', d, 1.5),
-            bezierCurveTension: this.getRealValue('bezierCurveTension', d, 0.3)
+            bezierCurveTension: this.getRealValue('bezierCurveTension', d, 0.3),
+            auxLineColor: this.getRealValue('auxLineColor', d, 'rgba(162,228,184,0.2)'),
+            auxLineWidth: this.getRealValue('auxLineWidth', d, 1),
+            auxLineDash: this.getRealValue('auxLineDashStyle', d, 0)
         };
 
         this.value = v;
@@ -158,7 +161,7 @@ class LineScatterComboWidget extends Widget {
         const data = [], xEdges = [], v = this.value, selectedDatasetIds = [], datasets = v.datasets, auxLineData = [], id = this.id, len = datasets.length;
         const stepSize = v.yAxisGridLinesNum ? v.yAxisGridLinesNum + 1 : 0, defaultBorderWidth = v.bezierCurveBorderWidth, defaultLineTension = v.bezierCurveTension;
 
-        let e, f, yMin = Infinity, yMax = -Infinity, c, d, r, o, i, j = 0;
+        let e, f, yMin = Infinity, yMax = -Infinity, c, d, r, o, i, j = 0, order;
 
         for (i = 0; i < len; ++i) {
             d = datasets[i];
@@ -193,10 +196,18 @@ class LineScatterComboWidget extends Widget {
             d = e.values;
             c = e.color;
             r = e.pointRadius || (e.pointStyle ? 7 : 1);
+            order = 0;
 
             if (hasSelectedDataset && !e.static) {
                 if (selectedDatasetIds.includes(i)) {
-                    auxLineData.push({xValues: d.map(e => e.x), auxLineColor: e.auxLineColor, auxLineWidth: e.auxLineWidth, auxLineDash: e.auxLineDash, datasetId: i});
+                    order = -1;
+                    o = [];
+                    for (j of d) {
+                        if (!j.static) {
+                            o.push(j.x);
+                        }
+                    }
+                    auxLineData.push({xValues: o, auxLineColor: e.auxLineColor, auxLineWidth: e.auxLineWidth, auxLineDash: e.auxLineDash, datasetId: i});
                 } else {
                     e.static = true;
 
@@ -217,7 +228,8 @@ class LineScatterComboWidget extends Widget {
                 pointStyle: e.pointStyle || 'circle',
                 showLine: false !== e.showLine,
                 hidden: true === e.hidden,
-                static: e.static
+                static: e.static,
+                order: order
             };
 
             data.push(o);
@@ -235,7 +247,7 @@ class LineScatterComboWidget extends Widget {
             }
         }
 
-        const yBuffer = (yMax - yMin) * 0.1;
+        const yBuffer = (yMax - yMin) * 0.1, defaultAuxLineColor = v.auxLineColor, defaultAuxLineWidth = v.auxLineWidth, defaultAuxLineDash = v.auxLineDash;
 
         yMin = $.isNumeric(v.yMin) ? v.yMin : yMin - yBuffer;
         yMax = $.isNumeric(v.yMax) ? v.yMax : yMax + yBuffer;
@@ -244,9 +256,9 @@ class LineScatterComboWidget extends Widget {
            o = [];
 
             for (f of e.xValues) {
-                c = e.auxLineColor || 'rgba(162,228,184,0.2)';
-                d = e.auxLineWidth || 1;
-                r = e.auxLineDash || 0;
+                c = e.auxLineColor || defaultAuxLineColor;
+                d = e.auxLineWidth || defaultAuxLineWidth;
+                r = e.auxLineDash || defaultAuxLineDash;
 
                 i = data.push({
                     data: [{x: f, y: yMin}, {x: f, y: yMax}],
