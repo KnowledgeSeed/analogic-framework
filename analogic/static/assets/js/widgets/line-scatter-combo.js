@@ -43,10 +43,10 @@ class LineScatterComboWidget extends Widget {
         const v = {
             datasets: $.extend(true, [], this.options.datasets || [], d.datasets || demo),
             legendVisible: this.getRealValue('legendVisible', d, true),
-            paddingTop: this.getRealValue('paddingTop', d, 0),
-            paddingRight: this.getRealValue('paddingRight', d, 0),
-            paddingBottom: this.getRealValue('paddingBottom', d, 0),
-            paddingLeft: this.getRealValue('paddingLeft', d, 0),
+            canvasPaddingTop: this.getRealValue('canvasPaddingTop', d, 0),
+            canvasPaddingRight: this.getRealValue('canvasPaddingRight', d, 0),
+            canvasPaddingBottom: this.getRealValue('canvasPaddingBottom', d, 0),
+            canvasPaddingLeft: this.getRealValue('canvasPaddingLeft', d, 0),
             tooltipsEnabled: this.getRealValue('tooltipsEnabled', d, true),
             tooltipsMode: this.getRealValue('tooltipsMode', d, 'nearest'),
             aspectRatio: this.getRealValue('aspectRatio', d, null),
@@ -406,10 +406,10 @@ class LineScatterComboWidget extends Widget {
                 },
                 layout: {
                     padding: {
-                        left: v.paddingLeft,
-                        right: v.paddingRight,
-                        top: v.paddingTop,
-                        bottom: v.paddingBottom
+                        left: v.canvasPaddingLeft,
+                        right: v.canvasPaddingRight,
+                        top: v.canvasPaddingTop,
+                        bottom: v.canvasPaddingBottom
                     }
                 },
                 elements: {
