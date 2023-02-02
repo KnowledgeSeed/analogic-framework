@@ -163,10 +163,10 @@ const Utils = {
         elements.height(maxHeight);
     },
     formatIntForChart: intVal => intVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "),
-    precisionRound(number, precision) {
-        const factor = Math.pow(10, precision);
+    precisionRound(number, precision, toFixed = false) {
+        const factor = Math.pow(10, precision), n = Math.round(number * factor) / factor;
 
-        return Math.round(number * factor) / factor;
+        return toFixed ? n.toFixed(precision) : n;
     },
     backdrop: {
         show: () => {

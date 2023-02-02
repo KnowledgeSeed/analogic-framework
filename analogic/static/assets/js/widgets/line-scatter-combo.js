@@ -76,7 +76,8 @@ class LineScatterComboWidget extends Widget {
             xAxisTicksOffset: this.getRealValue('xAxisTicksOffset', d, 0),
             yAxisTicksOffset: this.getRealValue('yAxisTicksOffset', d, 0),
             yAxisTicksPrecision: this.getRealValue('yAxisTicksPrecision', d, 1),
-            yAxisGridLinesNum: this.getRealValue('yAxesGridLinesNum', d, 10),
+            yAxisTicksPrecisionFixed: this.getRealValue('yAxisTicksPrecisionFixed', d, false),
+            yAxisGridLinesNum: this.getRealValue('yAxisGridLinesNum', d, 10),
             rightBorderVisible: this.getRealValue('rightBorderVisible', d, false),
             topBorderVisible: this.getRealValue('topBorderVisible', d, false),
             xMin: this.getRealValue('xMin', d, false),
@@ -86,6 +87,7 @@ class LineScatterComboWidget extends Widget {
             xAxisOffset: this.getRealValue('xAxisOffset', d, 0),
             xAxisOffsetRight: this.getRealValue('xAxisOffsetRight', d, 0),
             xAxisOffsetLeft: this.getRealValue('xAxisOffsetLeft', d, 0),
+            yAxisUnit: this.getRealValue('yAxisUnit', d, ''),
             bezierCurveBorderWidth: this.getRealValue('bezierCurveBorderWidth', d, 1.5),
             bezierCurveTension: this.getRealValue('bezierCurveTension', d, 0.3),
             auxLineColor: this.getRealValue('auxLineColor', d, 'rgba(162,228,184,0.2)'),
@@ -161,6 +163,7 @@ class LineScatterComboWidget extends Widget {
 
     getChartConfig() {
         const data = [], xEdges = [], v = this.value, selectedDatasetIds = [], datasets = v.datasets, auxLineData = [], id = this.id, len = datasets.length;
+        const yAxisTicksPrecision = v.yAxisTicksPrecision, yAxisTicksPrecisionFixed = v.yAxisTicksPrecisionFixed, yAxisUnit = v.yAxisUnit;
         const stepSize = v.yAxisGridLinesNum ? v.yAxisGridLinesNum + 1 : 0, defaultBorderWidth = v.bezierCurveBorderWidth, defaultLineTension = v.bezierCurveTension;
 
         let e, f, yMin = Infinity, yMax = -Infinity, c, d, r, o, i, j = 0, order;
@@ -321,7 +324,10 @@ class LineScatterComboWidget extends Widget {
                 tooltips: {
                     enabled: v.tooltipsEnabled,
                     mode: v.tooltipsMode,
-                    intersect: false
+                    intersect: false,
+                    callbacks: {
+                        label: (tooltipItem, data) => Utils.precisionRound(tooltipItem.value, yAxisTicksPrecision, yAxisTicksPrecisionFixed) + yAxisUnit
+                    }
                 },
                 legend: {
                     display: false
@@ -376,7 +382,7 @@ class LineScatterComboWidget extends Widget {
                                 min: yMin,
                                 max: yMax,
                                 stepSize: stepSize ? (yMax - yMin) / stepSize : 0,
-                                callback: (val, i, all) =>  (!i && stepSize && all.length > stepSize + 1) ? '' : Utils.precisionRound(val, v.yAxisTicksPrecision),
+                                callback: (val, i, all) =>  (!i && stepSize && (all.length > stepSize + 1)) ? '' : Utils.precisionRound(val, yAxisTicksPrecision, yAxisTicksPrecisionFixed) + yAxisUnit,
                                 fontSize: v.yAxisTicksFontSize,
                                 fontFamily: v.yAxisTicksFontFamily,
                                 fontStyle: v.yAxisTicksFontStyle,
