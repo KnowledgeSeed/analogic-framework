@@ -48,7 +48,7 @@ class WriteExecutorFactory {
     static createContext(eventName, widgetId, jqueryEvent, jqueryElement, resent = false) {
         let z = widgetId.split('_'),
             context = Widgets,
-            widget, gridTableCell, gridTableInfo;
+            widget, gridTableCell, gridTableInfo, widgetEventValue;
 
         if (z.length > 2 && z[1] !== 'row') { //grid table
             widget = context[z[0]];
@@ -59,8 +59,12 @@ class WriteExecutorFactory {
             widget.row = z[1];
             widget.column = z[2];
 
-            if(v(widgetId + '.' + eventName)){
+            if (v(widgetId + '.' + eventName)) {
                 widget[eventName] = v(widgetId + '.' + eventName);
+                widgetEventValue = v(widgetId + '.' + eventName + '.value');
+                if (widgetEventValue) {
+                    widget.value = widgetEventValue
+                }
             }
 
             gridTableCell = v(z[0] + '.cellData')[z[1]][z[2]];
@@ -81,72 +85,72 @@ class WriteExecutorFactory {
     static getContext(eventName, widgetId, jqueryEvent, jqueryElement, resent = false, gridTableInfo = null) {
         let context = Object.create(Widgets);
 
-            context.getId = () => {
-                return widgetId;
-            };
-            context.getWidgetId = () => {
-                return widgetId;
-            };
-            context.getEventMapId = () => {
-                return context.getEventName() + '.' + context.getId();
-            };
-            context.getEventName = () => {
-                return eventName;
-            };
-            context.getEventHandler = () => {
-                return (context.getObject() || {})[context.getEventName()];
-            };
-            context.getObject = () => {
-                return Repository[widgetId];
-            };
-            context.getJQueryEvent = () => {
-                return jqueryEvent;
-            };
-            context.getJQueryElement = () => {
-                return jqueryElement;
-            };
-            context.getEvent = () => {
-                return jqueryEvent;
-            };
-            context.getElement = () => {
-                return jqueryElement;
-            };
-            context.getWidgetValue = (property = false)  => {
-                return v(context.getId() + (property ? '.' + property : ''));
-            };
-            context.getEventValues = () => {
-                return context.getWidgetValue(context.getEventName());
-            };
-            context.getCell = () => {
-                return gridTableInfo !== null ? gridTableInfo.getCell() : null;
-            };
-            context.getCellId = () => {
-                return context.getCell() ? context.getCell().id : null;
-            },
+        context.getId = () => {
+            return widgetId;
+        };
+        context.getWidgetId = () => {
+            return widgetId;
+        };
+        context.getEventMapId = () => {
+            return context.getEventName() + '.' + context.getId();
+        };
+        context.getEventName = () => {
+            return eventName;
+        };
+        context.getEventHandler = () => {
+            return (context.getObject() || {})[context.getEventName()];
+        };
+        context.getObject = () => {
+            return Repository[widgetId];
+        };
+        context.getJQueryEvent = () => {
+            return jqueryEvent;
+        };
+        context.getJQueryElement = () => {
+            return jqueryElement;
+        };
+        context.getEvent = () => {
+            return jqueryEvent;
+        };
+        context.getElement = () => {
+            return jqueryElement;
+        };
+        context.getWidgetValue = (property = false) => {
+            return v(context.getId() + (property ? '.' + property : ''));
+        };
+        context.getEventValues = () => {
+            return context.getWidgetValue(context.getEventName());
+        };
+        context.getCell = () => {
+            return gridTableInfo !== null ? gridTableInfo.getCell() : null;
+        };
+        context.getCellId = () => {
+            return context.getCell() ? context.getCell().id : null;
+        },
             context.getRow = () => {
                 return gridTableInfo !== null ? gridTableInfo.getRow() : null;
             };
-            context.getColumn = () => {
-                return gridTableInfo !== null ? gridTableInfo.getColumn() : null;
-            };
-            context.getGridTableInfo = () => {
-                return gridTableInfo;
-            };
-            context.isGridTable = () => {
-                return context.getGridTableInfo() !== null;
-            };
-            context.getGridTableOriginalEventMapId = () => {
-                return gridTableInfo !== null ? gridTableInfo.getOriginalEventMapId() : null;
-            };
-            context.getGridTableSplitIds = () => {
-                return gridTableInfo !== null ? gridTableInfo.getSplitIds() : null;
-            }
+        context.getColumn = () => {
+            return gridTableInfo !== null ? gridTableInfo.getColumn() : null;
+        };
+        context.getGridTableInfo = () => {
+            return gridTableInfo;
+        };
+        context.isGridTable = () => {
+            return context.getGridTableInfo() !== null;
+        };
+        context.getGridTableOriginalEventMapId = () => {
+            return gridTableInfo !== null ? gridTableInfo.getOriginalEventMapId() : null;
+        };
+        context.getGridTableSplitIds = () => {
+            return gridTableInfo !== null ? gridTableInfo.getSplitIds() : null;
+        }
 
-            context.isResent = () => {
-                return resent;
-            }
+        context.isResent = () => {
+            return resent;
+        }
 
-            return context;
+        return context;
     }
 
     static getGridTableInfo(cell, row, column, splitIds, originalEventMapId) {
