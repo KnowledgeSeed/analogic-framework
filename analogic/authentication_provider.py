@@ -17,7 +17,7 @@ def endpoint_login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         auth_provider = get_authentication_provider()
-        if auth_provider.check_app_authenticated() is False:
+        if auth_provider.check_app_authenticated is False:
             return auth_provider.get_authentication_required_response()
         return f(*args, **kwargs)
 
@@ -28,7 +28,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         auth_provider = args[0]
-        if auth_provider.check_app_authenticated() is False:
+        if auth_provider.check_app_authenticated is False:
             return auth_provider.get_authentication_required_response()
         return f(*args, **kwargs)
 
@@ -37,9 +37,18 @@ def login_required(f):
 
 class AuthenticationProvider(ABC):
 
+    HEADERS = {'Connection': 'keep-alive',
+               'User-Agent': 'Analogic',
+               'Content-Type': 'application/json; odata.streaming=true; charset=utf-8',
+               'Accept': 'application/json;odata.metadata=none,text/plain',
+               'TM1-SessionContext': 'Analogic'}
+
     def __init__(self, setting):
         self.setting = setting
         self.logged_in_user_session_name = self.setting.get_instance() + '_logged_in_user_name'
+
+    def initialize(self):
+        self.setting.initialize()
 
     def get_setting(self):
         return self.setting
@@ -154,8 +163,7 @@ class AuthenticationProvider(ABC):
 
         method = request.method
 
-        headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
-                                   'Accept-Encoding': 'gzip, deflate, br'}
+        headers: dict[str, str] = self.HEADERS.copy()
         cookies: dict[str, str] = {}
 
         response = self.do_proxy_request(url, method, mdx, headers, cookies)
@@ -170,8 +178,7 @@ class AuthenticationProvider(ABC):
     def do_proxy_request(self, url, method, mdx, headers=None, cookies=None):
 
         if headers is None:
-            headers: dict[str, str] = {'Content-Type': 'application/json; charset=utf-8',
-                                       'Accept-Encoding': 'gzip, deflate, br'}
+            headers: dict[str, str] = self.HEADERS.copy()
 
         if cookies is None:
             cookies: dict[str, str] = {}

@@ -70,16 +70,37 @@ class Analogic(Flask):
         instance = '/' + blueprint.name
         self.register_analogic_url_rules(instance)
 
-        self.analogic_applications[blueprint.name] = application_dir
+        self.analogic_applications[blueprint.name] = self.create_authentication_provider(blueprint.name,
+                                                                                         application_dir)
 
         super().register_blueprint(blueprint, **options)
+
+    def create_authentication_provider(self, analogic_application, analogic_application_path):
+
+        setting = SettingManager(analogic_application_path, analogic_application)
+        config = setting.get_config()
+
+        class_name = config['authenticationMode']
+        module_name = self.get_authentication_provider_module_name(class_name)
+
+        if module_name in sys.modules:
+            module = sys.modules[module_name]
+        else:
+            module = importlib.import_module(module_name)  # Todo ModuleNotFoundError
+
+        authentication_provider_class = getattr(module, class_name)
+        authentication_provider = authentication_provider_class(setting)
+
+        authentication_provider.initialize()
+
+        return authentication_provider
 
     def get_analogic_application(self):
         s = request.path.split('/')
         if len(s) > 2 and s[1] in self.analogic_applications:
-            return s[1], self.analogic_applications[s[1]]
+            return self.analogic_applications[s[1]]
         else:
-            return 'default', self.analogic_applications['default']
+            return self.analogic_applications['default']
 
     def register_extension_assets(self, assets):
         self.extension_assets.update(assets)
@@ -100,25 +121,13 @@ class Analogic(Flask):
         return list(filter(lambda x: x.endswith(ext), list(self.extension_assets.keys())))
 
     def get_authentication_provider(self):
-        analogic_application, analogic_application_path = self.get_analogic_application()
-        cache = self._get_cache()
+        authentication_provider = self.get_analogic_application()
 
-        setting = SettingManager(cache, analogic_application_path, analogic_application)
-        config = setting.get_config()
-
-        class_name = config['authenticationMode']
-        module_name = self.get_authentication_provider_module_name(class_name)
-
-        if module_name in sys.modules:
-            module = sys.modules[module_name]
-        else:
-            module = importlib.import_module(module_name)  # Todo ModuleNotFoundError
-
-        authentication_provider_class = getattr(module, class_name)
-        authentication_provider = authentication_provider_class(setting)
-
+        # Todo check!!!!
         session.permanent = True
+        config = authentication_provider.get_setting().get_config();
         self.permanent_session_lifetime = timedelta(minutes=config['sessionExpiresInMinutes'] - 1)
+
         return authentication_provider
 
     def evaluate_condition(self, config):

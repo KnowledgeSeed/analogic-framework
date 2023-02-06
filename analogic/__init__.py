@@ -11,6 +11,7 @@ from .endpoint import AnalogicEndpoint
 from .loader import ClassLoader
 from .email import EmailManager
 from .setting import SettingManager
+from .analogic_tm1_service import AnalogicTM1Service
 from . import pivot
 from .loginbasic import LoginBasic
 from .nologin import NoLogin

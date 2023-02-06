@@ -19,6 +19,7 @@ class Cam(AuthenticationProvider):
         resp.set_cookie('camPassport', request.form.get('c_pp'))
 
         cam_name = self.set_tm1_session_id_for_tm1_service(request.form.get('c_pp'))
+        session['TM1SessionId'] = request.form.get('c_pp')
         session[self.logged_in_user_session_name] = cam_name
         return self._add_authenticated_cookies(resp)
 
