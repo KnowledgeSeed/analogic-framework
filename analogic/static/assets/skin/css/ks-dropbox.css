@@ -62,7 +62,8 @@
 
 .ks-dropbox-panel {
     left: 0;
-    overflow: hidden;
+    overflow: scroll;
+    max-height: 300px;
     position: absolute;
     right: 0;
     top: 100%;
