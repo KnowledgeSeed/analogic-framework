@@ -107,7 +107,8 @@ class GridTableWidget extends Widget {
     }
 
     renderPage() {
-        return this.getHtml(this.state['widgets'], this.state['headerRowWidgetHtml'], this.cellData);
+        this.getHolder(this.id).html(this.getHtml(this.state['widgets'], this.state['headerRowWidgetHtml'], this.cellData));
+        this.initEvents();
     }
 
     isContentUpdatable(refreshedData) {
