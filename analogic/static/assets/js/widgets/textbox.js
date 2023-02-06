@@ -19,6 +19,8 @@ class TextBoxWidget extends Widget {
 
         const v = this.getParameters(d);
 
+        this.addDynamicData(d, v);
+
         let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d),
             titleStyles = this.getHtmlComponentStylesArray('title', d),
             iconStyles = this.getHtmlComponentStylesArray('icon', d),
@@ -68,10 +70,22 @@ class TextBoxWidget extends Widget {
 
         this.value = data.value;
 
+        this.addDynamicData(data, p);
+
         input.attr('placeholder', p.defaultText === false ? '' : p.defaultText);
         input.attr('value', Utils.htmlEncode(data.value));
         input.val(data.value);
 
+    }
+
+    addDynamicData(data, parameters) {
+        const exclude = Object.keys(parameters);
+        exclude.push('value', 'id', 'type', 'options');
+        for (const [key, value] of Object.entries(data)) {
+            if (exclude.indexOf(key) === -1) {
+                this[key] = value;
+            }
+        }
     }
 
     getParameters(d) {
