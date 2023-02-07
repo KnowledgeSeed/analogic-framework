@@ -76,24 +76,24 @@ class Analogic(Flask):
         super().register_blueprint(blueprint, **options)
 
     def create_authentication_provider(self, analogic_application, analogic_application_path):
+        with self.app_context():
+            setting = SettingManager(analogic_application_path, analogic_application)
+            config = setting.config
 
-        setting = SettingManager(analogic_application_path, analogic_application)
-        config = setting.get_config()
+            class_name = config['authenticationMode']
+            module_name = self.get_authentication_provider_module_name(class_name)
 
-        class_name = config['authenticationMode']
-        module_name = self.get_authentication_provider_module_name(class_name)
+            if module_name in sys.modules:
+                module = sys.modules[module_name]
+            else:
+                module = importlib.import_module(module_name)  # Todo ModuleNotFoundError
 
-        if module_name in sys.modules:
-            module = sys.modules[module_name]
-        else:
-            module = importlib.import_module(module_name)  # Todo ModuleNotFoundError
+            authentication_provider_class = getattr(module, class_name)
+            authentication_provider = authentication_provider_class(setting)
 
-        authentication_provider_class = getattr(module, class_name)
-        authentication_provider = authentication_provider_class(setting)
+            authentication_provider.initialize()
 
-        authentication_provider.initialize()
-
-        return authentication_provider
+            return authentication_provider
 
     def get_analogic_application(self):
         s = request.path.split('/')
@@ -125,7 +125,7 @@ class Analogic(Flask):
 
         # Todo check!!!!
         session.permanent = True
-        config = authentication_provider.get_setting().get_config();
+        config = authentication_provider.get_setting().get_config()
         self.permanent_session_lifetime = timedelta(minutes=config['sessionExpiresInMinutes'] - 1)
 
         return authentication_provider

@@ -28,6 +28,7 @@ def active_user():
 def auth():
     return get_authentication_provider().auth()
 
+
 @core_endpoints.analogic_endpoint_route('/logout', methods=['GET'])
 def logout():
     return get_authentication_provider().logout()
@@ -43,9 +44,9 @@ def clear_cache():
     return get_authentication_provider().setting.clear_cache()
 
 
-@core_endpoints.analogic_endpoint_route('/ping', methods=['GET'])
-def ping():
-    return get_authentication_provider().ping()
+# @core_endpoints.analogic_endpoint_route('/ping', methods=['GET'])
+# def ping():
+#     return get_authentication_provider().ping()
 
 
 @core_endpoints.analogic_endpoint_route('/pivot', methods=['GET', 'POST'])
@@ -56,4 +57,3 @@ def pivot():
 @core_endpoints.analogic_endpoint_route('/middleware', methods=['GET', 'POST'])
 def middleware():
     return get_authentication_provider().middleware()
-

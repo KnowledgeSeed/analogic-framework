@@ -60,19 +60,19 @@ Auth.handleSuccessLogin = () => {
         //$.cookie("camPassport", 0);
     }
 
-    if (('Cam' === app.authenticationMode) && ((new Date().getTime() - app.pingTime) / 1000 >= 30)) {
-        app.pingTime = new Date().getTime();
-        $.ajax({
-            url: 'ping',
-            method: 'GET',
-            global: false,
-            success: function (data) {
-            },
-            error: function (response, e) {
-            },
-            statusCode: {}
-        });
-    }
+    // if (('Cam' === app.authenticationMode) && ((new Date().getTime() - app.pingTime) / 1000 >= 30)) {
+    //     app.pingTime = new Date().getTime();
+    //     $.ajax({
+    //         url: 'ping',
+    //         method: 'GET',
+    //         global: false,
+    //         success: function (data) {
+    //         },
+    //         error: function (response, e) {
+    //         },
+    //         statusCode: {}
+    //     });
+    // }
 
     Extensions.authenticationProviders.forEach(ext => ext.handleSuccessLogin());
 };

@@ -29,10 +29,17 @@ class SettingManager:
         return self._get_json_setting('app')
 
     def get_config(self):
+        if not os.path.exists(os.path.join(self.site_root, 'static', 'assets', 'js', 'config.js')):
+            self.save_config_js()
+
+        if self.config.get('authenticationModeCondition') is not None:
+            self.config['authenticationMode'] = current_app.evaluate_condition(self.config)
+
         if self.config is not None:
             return self.config
-        cnf = self._get_json_setting('app')
-        return cnf
+        self.config = self._get_json_setting('app')
+        self.save_config_js()
+        return self.config
 
     def _get_param(self, param_name):
         cnf = self.get_config()
@@ -85,10 +92,6 @@ class SettingManager:
             if setting.get('ssl_verify') is None:
                 setting['ssl_verify'] = True
 
-            self.save_config_js()
-
-        if setting.get('authenticationModeCondition') is not None:
-            setting['authenticationMode'] = current_app.evaluate_condition(setting)
         return setting
 
     def save_config_js(self):
@@ -145,5 +148,5 @@ class SettingManager:
         cnf = self.get_config()
         return cnf['ssl_verify']
 
-    def get_logger(self):
+    def getLogger(self):
         return logging.getLogger(self.get_instance())

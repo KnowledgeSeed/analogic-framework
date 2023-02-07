@@ -1,8 +1,6 @@
-import requests
 from analogic.authentication_provider import AuthenticationProvider
 from analogic.analogic_tm1_service import AnalogicTM1Service
 from flask import render_template, request, make_response, redirect, session
-from TM1py.Services import TM1Service
 import logging
 
 
@@ -53,7 +51,11 @@ class LoginBasic(AuthenticationProvider):
 
     def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies):
         tm1_service = self.setting.get_tm1_service(session[self.logged_in_user_session_name])
-        tm1_service.get_session().request(method, url, data=mdx, headers=headers, verify=self.setting.get_ssl_verify())
+        response = tm1_service.get_session().request(method, url, data=mdx, headers=headers, verify=self.setting.get_ssl_verify())
+        if response.status_code == 401:
+            tm1_service.re_authenticate()
+            response = tm1_service.get_session().request(method, url, data=mdx, headers=headers, verify=self.setting.get_ssl_verify())
+        return response
         # tm1_session_id = self.setting.get_tm1_session_id(session[self.logged_in_user_session_name])
         #
         # cookies["TM1SessionId"] = tm1_session_id
