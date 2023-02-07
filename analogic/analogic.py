@@ -17,6 +17,7 @@ from analogic.setting import SettingManager
 from datetime import timedelta
 import importlib
 from analogic.version import version
+from analogic.task import scheduler
 
 APPLICATIONS_DIR = 'apps'
 APPLICATIONS_DIR_EXTRA = os.environ.get('APPLICATIONS_DIR_EXTRA', '')
@@ -182,6 +183,10 @@ def create_app(instance_path):
 
     app.register_error_handler(404, page_not_found)
     app.register_error_handler(500, page_error)
+
+    scheduler.init_app(app)
+
+    scheduler.start()
 
     return app
 

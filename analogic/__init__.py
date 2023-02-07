@@ -16,3 +16,4 @@ from . import pivot
 from .loginbasic import LoginBasic
 from .nologin import NoLogin
 from . import core_endpoints
+from .task import scheduler

@@ -30,6 +30,7 @@ setup(
         'openpyxl==3.0.10',
         'Flask-Cors==3.0.10',
         'json_logging==1.3.0',
-        'flask_talisman'
+        'flask_talisman',
+        'Flask-APScheduler==1.12.4'
     ],
 )

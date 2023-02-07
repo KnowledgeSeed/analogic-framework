@@ -14,3 +14,4 @@ Flask-Cors==3.0.10
 json_logging==1.3.0
 pytest
 flask_talisman
+Flask-APScheduler==1.12.4
