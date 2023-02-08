@@ -1,4 +1,3 @@
-import datetime
 import yaml
 import os
 from flask import json, current_app, url_for, request, render_template
@@ -13,13 +12,18 @@ class SettingManager:
         self.instance = instance
         self.config = self._create_config()
         self.repository = self._create_repository()
+        self.custom_objects = self._create_custom_objects()
         self.tm1_services = {}
 
     def initialize(self):
         pass
 
     def clear_cache(self):
-        #Todo
+        self.repository = self._create_repository()
+        self.custom_objects = self._create_custom_objects()
+        self.config = None
+        self.config = self._create_config()
+        self.save_config_js()
         return "OK"
 
     def get_instance(self):
@@ -42,8 +46,7 @@ class SettingManager:
         return self.config
 
     def _get_param(self, param_name):
-        cnf = self.get_config()
-        return cnf[param_name]
+        return self.config[param_name]
 
     def get_base_url(self, route=''):
         base = url_for('core_endpoints.index')
@@ -104,9 +107,13 @@ class SettingManager:
             setting = yaml.safe_load(file)
         return setting
 
+    def _create_custom_objects(self):
+        return self._get_json_setting(os.path.join('server', 'configs', 'custom_objects'))
+
     def get_custom_object_description(self, key):
-        classes = self._get_json_setting(os.path.join('server', 'configs', 'custom_objects'))
-        return classes[key]
+        if self.custom_objects is None:
+            self.custom_objects = self._create_custom_objects()
+        return self.custom_objects[key]
 
     def set_tm1_service(self, user_name, tm1_service):
         self.tm1_services[user_name] = tm1_service
@@ -114,39 +121,17 @@ class SettingManager:
     def get_tm1_service(self, user_name):
         return self.tm1_service[user_name]
 
-    # def set_tm1_session_id(self, tm1_session_id, suffix=''):
-        # cnf = self.get_config()
-        # self._cache_set(self._get_tm1_session_id_cache_key() + suffix, tm1_session_id, 0)
-        # expires = datetime.datetime.now() + datetime.timedelta(minutes=cnf['sessionExpiresInMinutes'] - 1)
-        # self._cache_set(self._get_tm1_session_expires_cache_key() + suffix, expires, 0)
-
-    # def get_tm1_session_id(self, suffix=''):
-        # logger = self.getLogger()
-        # logger.info(self._get_tm1_session_id_cache_key() + suffix)
-        # tm1_session_id = self._cache_get(self._get_tm1_session_id_cache_key() + suffix)
-        # logger.info(tm1_session_id)
-        # tm1_session_id_exp = self._cache_get(self._get_tm1_session_expires_cache_key() + suffix)
-        # logger.info(tm1_session_id_exp)
-        # if tm1_session_id is None or (
-        #         tm1_session_id_exp is not None and datetime.datetime.now() >= tm1_session_id_exp):
-        #     return None
-        # return tm1_session_id
-
     def get_proxy_target_url(self):
-        cnf = self.get_config()
-        return cnf['proxy']['target']
+        return self.config['proxy']['target']
 
     def get_app_cam_namespace(self):
-        cnf = self.get_config()
-        return cnf['camNamespace']
+        return self.config['camNamespace']
 
     def get_smtp_password(self):
-        cnf = self.get_config()
-        return cnf['smtp']['password']
+        return self.config['smtp']['password']
 
     def get_ssl_verify(self):
-        cnf = self.get_config()
-        return cnf['ssl_verify']
+        return self.config['ssl_verify']
 
     def getLogger(self):
         return logging.getLogger(self.get_instance())
