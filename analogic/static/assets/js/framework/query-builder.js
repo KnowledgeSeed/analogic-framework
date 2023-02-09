@@ -7,10 +7,10 @@ QB.loadData = (widgetId, widgetTypeName, useDefaultData = false, loaderFunctionP
     const executor = LoadExecutorFactory.createExecutor(widgetId, widgetTypeName, useDefaultData, loaderFunctionPath, extraParams);
 
     try {
-      return executor.execute();
+        return executor.execute();
     } catch (e) {
         const widgetId = executor.context ? executor.context.getWidgetId() : false,
-        functionName = executor.context ? executor.context.getLoaderFunctionName() : false;
+            functionName = executor.context ? executor.context.getLoaderFunctionName() : false;
         app.handleJsError(e, widgetId, functionName, 'Error in loading data');
     }
 };
@@ -23,7 +23,7 @@ QB.refreshGridCellData = (argument, type) => {
 QB.getUserData = () => {
     let extResponse, ext;
 
-    for(ext in Extensions.authenticationProviders) {
+    for (ext in Extensions.authenticationProviders) {
         extResponse = Extensions.authenticationProviders[ext].getUserData();
         if (false !== extResponse) {
             return extResponse;
@@ -52,10 +52,10 @@ QB.writeData = (eventMapId, jqueryEvent, jqueryElement, resent = false) => {
     const executor = WriteExecutorFactory.createExecutor(eventMapId, jqueryEvent, jqueryElement);
 
     try {
-      return executor.execute();
+        return executor.execute();
     } catch (e) {
         const widgetId = executor.context ? executor.context.getWidgetId() : false,
-        functionName = executor.context ? executor.context.getEventName() : false;
+            functionName = executor.context ? executor.context.getEventName() : false;
         app.handleJsError(e, widgetId, functionName, 'Error in writing data');
     }
 };
@@ -79,7 +79,7 @@ QB.executeEventMapAction = (eventMapId, context, response) => {
 QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
     let params = [], keyAdded = false,
         subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&server=1' : '' : '?server=1';
-    let newUrl = url.includes('proxy') ? url : app.apiHost ? url.replace(app.apiHost, 'proxy') : 'proxy' + url;
+    let newUrl = url.includes('proxy') ? url : url.includes(app.apiHost) ? url.replace(app.apiHost, 'proxy') : 'proxy' + url;
 
     for (const [key, value] of Object.entries(body)) {
         params.push(`"${key}": "${value}"`);
@@ -93,5 +93,8 @@ QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
 };
 
 QB.getUrl = (url) => {
-    return app.apiHost ? app.apiHost + url : url.includes('proxy') ? url : 'proxy' + url;
+    if (url.includes('proxy')) {
+        return url;
+    }
+    return app.apiHost ? app.apiHost + url : 'proxy' + url;
 };
