@@ -25,7 +25,7 @@ class Cam(AuthenticationProvider):
     def set_tm1_service(self, cam_passport):
         cnf = self.setting.get_config()
 
-        tm1_service = AnalogicTM1Service(base_url=cnf['apiHost'], cam_passport=cam_passport, ssl=self.get_ssl_verify())
+        tm1_service = AnalogicTM1Service(base_url=cnf['apiHost'], cam_passport=cam_passport, ssl=self.setting.get_ssl_verify())
 
         response = tm1_service.get_session().request('GET', cnf['apiHost'] + cnf['apiSubPath'] + 'ActiveUser',
                                                      headers=self.HEADERS, verify=self.setting.get_ssl_verify())

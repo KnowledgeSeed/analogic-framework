@@ -119,7 +119,7 @@ class SettingManager:
         self.tm1_services[user_name] = tm1_service
 
     def get_tm1_service(self, user_name):
-        return self.tm1_service[user_name]
+        return self.tm1_services[user_name]
 
     def get_proxy_target_url(self):
         return self.config['proxy']['target']
