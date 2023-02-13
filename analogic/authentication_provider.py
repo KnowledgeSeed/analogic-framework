@@ -46,6 +46,7 @@ class AuthenticationProvider(ABC):
     def __init__(self, setting):
         self.setting = setting
         self.logged_in_user_session_name = self.setting.get_instance() + '_logged_in_user_name'
+        self._logger = logging.getLogger(self.setting.get_instance())
 
     def initialize(self):
         self.setting.initialize()
@@ -169,9 +170,11 @@ class AuthenticationProvider(ABC):
         response = self.do_proxy_request(url, method, mdx, headers, cookies)
 
         if response.status_code == 400 or response.status_code == 500:
-            logger = self.getLogger()
-            logger.error('MDX error: ' + response.text)
-            logger.error('MDX: ' + mdx.decode('utf-8'))
+            self._logger.error('MDX error: ' + response.text)
+            self._logger.error('MDX: ' + mdx.decode('utf-8'))
+
+        if response.status_code == 401:
+            return 'Authentication required', 401, {'Content-Type': 'application/json'}
 
         return response.text, response.status_code, {'Content-Type': 'application/json'}
 
@@ -206,4 +209,4 @@ class AuthenticationProvider(ABC):
         return 'ok'
 
     def getLogger(self):
-        return logging.getLogger(self.setting.get_instance())
+        return self._logger

@@ -17,7 +17,7 @@
       "level": "INFO",
       "formatter": "simple",
       "filename": "logs/info.log",
-      "maxBytes": 10485,
+      "maxBytes": 10485760,
       "backupCount": 20,
       "encoding": "utf8"
     },
@@ -97,7 +97,7 @@
       "level": "INFO",
       "formatter": "simple",
       "filename": "logs/scheduler.log",
-      "maxBytes": 10485,
+      "maxBytes": 10485760,
       "backupCount": 20,
       "encoding": "utf8"
     },

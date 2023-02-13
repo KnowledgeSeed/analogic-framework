@@ -13,6 +13,7 @@ class SettingManager:
         self.config = self._create_config()
         self.repository = self._create_repository()
         self.custom_objects = self._create_custom_objects()
+        self._logger = logging.getLogger(self.get_instance())
         self.tm1_services = {}
 
     def initialize(self):
@@ -119,7 +120,7 @@ class SettingManager:
         self.tm1_services[user_name] = tm1_service
 
     def get_tm1_service(self, user_name):
-        return self.tm1_services[user_name]
+        return self.tm1_services.get(user_name)
 
     def get_proxy_target_url(self):
         return self.config['proxy']['target']
@@ -134,4 +135,4 @@ class SettingManager:
         return self.config['ssl_verify']
 
     def getLogger(self):
-        return logging.getLogger(self.get_instance())
+        return self._logger

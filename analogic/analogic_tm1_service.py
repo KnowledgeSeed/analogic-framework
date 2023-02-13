@@ -9,3 +9,6 @@ class AnalogicTM1Service(TM1Service):
     def get_session(self):
         return self._tm1_rest._s
 
+    def close_session(self):
+        self._tm1_rest._s.close()
+
