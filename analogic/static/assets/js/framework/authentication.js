@@ -60,6 +60,10 @@ Auth.handleSuccessLogin = () => {
         //$.cookie("camPassport", 0);
     }
 
+    if('LoginBasic' === app.authenticationMode || 'LoginCam' === app.authenticationMode) {
+        app.handled401 = false;
+    }
+
     Extensions.authenticationProviders.forEach(ext => ext.handleSuccessLogin());
 };
 
@@ -68,6 +72,13 @@ Auth.handle401 = () => {
         app.handled401 = true;
         $.cookie("authenticated", 0);
         window.location.href = app.authenticationBridge;
+    }
+    if('LoginBasic' === app.authenticationMode || 'LoginCam' === app.authenticationMode) {
+        if (app.handled401 === false) {
+            app.handled401 = true;
+            // $.cookie("authenticated", 0);
+            window.location.href = 'login';
+        }
     }
     Extensions.authenticationProviders.forEach(ext => ext.handle401());
 };

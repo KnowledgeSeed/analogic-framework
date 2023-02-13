@@ -35,6 +35,7 @@ class Analogic(Flask):
         self.authentication_providers = {
             'Cam': 'analogic',
             'LoginBasic': 'analogic',
+            'LoginCam': 'analogic',
             'NoLogin': 'analogic'
         }
         self.conditions = {}

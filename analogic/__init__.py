@@ -14,6 +14,7 @@ from .setting import SettingManager
 from .analogic_tm1_service import AnalogicTM1Service
 from . import pivot
 from .loginbasic import LoginBasic
+from .logincam import LoginCam
 from .nologin import NoLogin
 from . import core_endpoints
 from .task import scheduler

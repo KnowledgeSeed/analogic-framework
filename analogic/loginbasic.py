@@ -1,7 +1,6 @@
 from analogic.authentication_provider import AuthenticationProvider
 from analogic.analogic_tm1_service import AnalogicTM1Service
-from flask import render_template, request, make_response, redirect, session
-import logging
+from flask import render_template, request, make_response, redirect, session, Response
 
 
 class LoginBasic(AuthenticationProvider):
@@ -15,60 +14,53 @@ class LoginBasic(AuthenticationProvider):
             return render_template('index.html', authenticated=True, cnf=cnf)
         return redirect(self.setting.get_base_url('login'))
 
+    def get_connection_params(self, user_name, password):
+        return {'base_url': self.setting.get_proxy_target_url(), 'ssl': self.setting.get_ssl_verify(), 'user': user_name,
+                'password': password}
     def login(self):
         cnf = self.setting.get_config()
         if request.method == 'POST':
-
-            p = {'base_url': self.get_proxy_target_url(), 'ssl': self.get_ssl_verify(), 'user': request.form['username'],
-                 'password':  request.form['password']}
+            user_name = request.form.get('username')
+            p = self.get_connection_params(user_name, request.form.get('password'))
 
             try:
-                tm1_service = AnalogicTM1Service(**p)
-                self.setting.set_tm1_service(request.form['username'], tm1_service)
-                session[self.logged_in_user_session_name] = request.form['username']
+                tm1_service = self.setting.get_tm1_service(user_name)
+                is_connected = False
+                if tm1_service is not None:
+                    try:
+                        is_connected = tm1_service.connection.is_connected()
+                    except Exception as e:
+                        self._logger.error('exception while checking connection: ' + str(e))
+
+                if not is_connected:
+                    if tm1_service is not None:
+                        try:
+                            tm1_service.close_session()
+                        except Exception as e:
+                            self._logger.error('exception while closing session: ' + str(e))
+
+                    tm1_service = AnalogicTM1Service(**p)
+                    self.setting.set_tm1_service(user_name, tm1_service)
+
+                session[self.logged_in_user_session_name] = user_name
                 resp = make_response(redirect(self.setting.get_base_url()))
                 return self._add_authenticated_cookies(resp)
 
             except Exception as e:
-                self.getLogger().error(e)
-            # response = requests.request(url=self.setting.get_proxy_target_url() + cnf['apiSubPath'] + 'ActiveUser',
-            #                             method='GET',
-            #                             auth=(request.form['username'], request.form['password']),
-            #                             verify=False)
-            #
-            # if response.status_code == 200:
-            #     session[self.logged_in_user_session_name] = request.form['username']
-            #     session['permanent'] = True
-            #
-            #     self.setting.set_tm1_session_id(response.cookies.get('TM1SessionId'),
-            #                                     session[self.logged_in_user_session_name])
-            #
-            #     resp = make_response(redirect(self.setting.get_base_url()))
-            #
-            #     return self._add_authenticated_cookies(resp)
+                self._logger.error(e)
 
         return render_template('login.html', cnf=cnf)
 
     def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies):
-        tm1_service = self.setting.get_tm1_service(session[self.logged_in_user_session_name])
+        user_name = session[self.logged_in_user_session_name]
+        tm1_service = self.setting.get_tm1_service(user_name)
+        if tm1_service is None:
+            return Response('Unauthorized', status=401, mimetype='application/json')
         response = tm1_service.get_session().request(method, url, data=mdx, headers=headers, verify=self.setting.get_ssl_verify())
         if response.status_code == 401:
             tm1_service.re_authenticate()
             response = tm1_service.get_session().request(method, url, data=mdx, headers=headers, verify=self.setting.get_ssl_verify())
         return response
-        # tm1_session_id = self.setting.get_tm1_session_id(session[self.logged_in_user_session_name])
-        #
-        # cookies["TM1SessionId"] = tm1_session_id
-        #
-        # response = requests.request(
-        #     url=url,
-        #     method=method,
-        #     data=mdx,
-        #     headers=headers,
-        #     cookies=cookies,
-        #     verify=False)
-        #
-        # return response
 
     def check_app_authenticated(self):
         if self.logged_in_user_session_name in session:
@@ -84,5 +76,3 @@ class LoginBasic(AuthenticationProvider):
     def get_tm1_service(self):
         return self.setting.get_tm1_service(session[self.logged_in_user_session_name])
 
-    def getLogger(self):
-        return logging.getLogger(__name__)

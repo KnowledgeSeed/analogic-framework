@@ -1,7 +1,6 @@
 from analogic.authentication_provider import AuthenticationProvider
 from flask import render_template, request, make_response, redirect, session, Response
 from analogic.analogic_tm1_service import AnalogicTM1Service
-import logging
 
 
 class Cam(AuthenticationProvider):
@@ -75,9 +74,6 @@ class Cam(AuthenticationProvider):
 
     def get_tm1_service(self):
         return self.setting.get_tm1_service(session[self.logged_in_user_session_name])
-
-    def getLogger(self):
-        return logging.getLogger(__name__)
 
     def _extend_login_session(self):
         pass
