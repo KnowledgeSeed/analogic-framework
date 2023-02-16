@@ -84,7 +84,10 @@ window.onerror =  (msg, url, lineNum, colNum, error) => {
 
         Widgets.systemValueGlobalCompanyProductPlanVersion = 'Budget';//Todo ez mi? Ne töröld, amíg nem nézem meg a bpspben (Ote)
 
-        Widgets[app.mainPage].renderWidget();
+        Widgets[app.mainPage].renderWidget().then(() => {
+            L($('body').width());
+            L(window.innerWidth);
+        });
     }
 
     function initEvents() {
