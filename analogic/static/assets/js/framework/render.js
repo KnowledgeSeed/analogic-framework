@@ -8,7 +8,7 @@ class Render {
         s.current = page;
         s[s.previous] = El.body.clone();
 
-        widget.renderWidget(withState);
+        widget.renderWidget(withState).then(() => Utils.checkScreenResolution());
     }
 
 }

@@ -80,14 +80,13 @@ window.onerror =  (msg, url, lineNum, colNum, error) => {
 
         app.id = Utils.getRandomId();
 
+        app.checkScreenResolutionWarningDisplayed = false;
+
         initEvents();
 
         Widgets.systemValueGlobalCompanyProductPlanVersion = 'Budget';//Todo ez mi? Ne töröld, amíg nem nézem meg a bpspben (Ote)
 
-        Widgets[app.mainPage].renderWidget().then(() => {
-            L($('body').width());
-            L(window.innerWidth);
-        });
+        Widgets[app.mainPage].renderWidget().then(() => Utils.checkScreenResolution());
     }
 
     function initEvents() {

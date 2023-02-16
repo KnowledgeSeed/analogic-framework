@@ -560,6 +560,12 @@ const Utils = {
     },
     getActiveUserString(value) {
         return value.includes('CAMID') ? value : value.replace(/\\/g, '/');
+    },
+    checkScreenResolution() {
+        if (!app.checkScreenResolutionWarningDisplayed && $('body').width() - 100 > window.innerWidth) {
+            Api.showPopup('Your current screen resolution is below the recommended 1920*1080. For optimal user experience please lower your browser zoom to 90% or 80%.');
+            app.checkScreenResolutionWarningDisplayed = true;
+        }
     }
 };
 
