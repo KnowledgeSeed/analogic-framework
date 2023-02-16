@@ -54,13 +54,11 @@ Auth.handleSuccessLogin = () => {
         let date = new Date();
         date.setTime(date.getTime() + (app.sessionExpiresInMinutes * 60 * 1000));
         $.cookie("authenticated", 'authenticated', {expires: date});
-        if ('Cam' === app.authenticationMode) {
-            app.handled401 = false;
-        }
+        app.handled401 = false;
         //$.cookie("camPassport", 0);
     }
 
-    if('LoginBasic' === app.authenticationMode || 'LoginCam' === app.authenticationMode) {
+    if(['LoginBasic', 'LoginCam', 'CamSecure'].includes(app.authenticationMode)) {
         app.handled401 = false;
     }
 
@@ -68,7 +66,7 @@ Auth.handleSuccessLogin = () => {
 };
 
 Auth.handle401 = () => {
-    if ('Cam' === app.authenticationMode && app.handled401 === false) {
+    if (['Cam', 'CamSecure'].includes(app.authenticationMode) && app.handled401 === false) {
         app.handled401 = true;
         $.cookie("authenticated", 0);
         window.location.href = app.authenticationBridge;

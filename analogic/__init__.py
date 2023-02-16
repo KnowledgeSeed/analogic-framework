@@ -16,5 +16,6 @@ from . import pivot
 from .loginbasic import LoginBasic
 from .logincam import LoginCam
 from .nologin import NoLogin
+from .camsecure import CamSecure
 from . import core_endpoints
 from .task import scheduler

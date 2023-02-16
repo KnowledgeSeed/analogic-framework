@@ -20,13 +20,16 @@ class Cam(AuthenticationProvider):
         session[self.logged_in_user_session_name] = cam_name
         return self._add_authenticated_cookies(resp)
 
+    def get_base_url(self):
+        return self.setting.get_config()['apiHost']
+
     def set_tm1_service(self, cam_passport):
         cnf = self.setting.get_config()
 
-        tm1_service = AnalogicTM1Service(base_url=cnf['apiHost'], cam_passport=cam_passport,
+        tm1_service = AnalogicTM1Service(base_url=self.get_base_url(), cam_passport=cam_passport,
                                          ssl=self.setting.get_ssl_verify())
 
-        response = tm1_service.get_session().request('GET', cnf['apiHost'] + cnf['apiSubPath'] + 'ActiveUser',
+        response = tm1_service.get_session().request('GET', self.get_base_url() + cnf['apiSubPath'] + 'ActiveUser',
                                                      headers=self.HEADERS, verify=self.setting.get_ssl_verify())
 
         json_object = response.json()
@@ -76,4 +79,4 @@ class Cam(AuthenticationProvider):
         return self.setting.get_tm1_service(session[self.logged_in_user_session_name])
 
     def _extend_login_session(self):
-        pass
+        session.modified = True

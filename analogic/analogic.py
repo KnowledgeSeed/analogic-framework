@@ -34,6 +34,7 @@ class Analogic(Flask):
         self.endpoint_rules = []
         self.authentication_providers = {
             'Cam': 'analogic',
+            'CamSecure': 'analogic',
             'LoginBasic': 'analogic',
             'LoginCam': 'analogic',
             'NoLogin': 'analogic'
@@ -125,10 +126,12 @@ class Analogic(Flask):
     def get_authentication_provider(self):
         authentication_provider = self.get_analogic_application()
 
-        # Todo check!!!!
         session.permanent = True
         config = authentication_provider.get_setting().get_config()
-        self.permanent_session_lifetime = timedelta(minutes=config['sessionExpiresInMinutes'] - 1)
+        if config['authenticationMode'] != 'Cam':
+            self.permanent_session_lifetime = timedelta(minutes=config['sessionExpiresInMinutes'] - 1)
+        else:
+            self.permanent_session_lifetime = timedelta(days=31)
 
         return authentication_provider
 
