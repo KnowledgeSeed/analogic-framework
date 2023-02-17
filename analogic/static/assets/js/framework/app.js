@@ -84,7 +84,7 @@ window.onerror =  (msg, url, lineNum, colNum, error) => {
 
         initEvents();
 
-        Widgets.systemValueGlobalCompanyProductPlanVersion = 'Budget';//Todo ez mi? Ne töröld, amíg nem nézem meg a bpspben (Ote)
+        Widgets.systemValueGlobalCompanyProductPlanVersion = 'Budget';
 
         Widgets[app.mainPage].renderWidget().then(() => Utils.checkScreenResolution());
     }
