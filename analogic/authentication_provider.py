@@ -114,10 +114,10 @@ class AuthenticationProvider(ABC):
             if body.get('key_suffix') is not None:
                 key = key + '_' + body['key_suffix']
             mdx = self.setting.get_mdx(key)
+            mdx = self._set_custom_mdx_data(mdx)
             for k in body:
                 mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
 
-            mdx = self._set_custom_mdx_data(mdx)
             return mdx.encode('utf-8')
 
         return mdx
