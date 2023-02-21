@@ -9,7 +9,7 @@ class Cam(AuthenticationProvider):
         super().__init__(setting)
 
     def index(self):
-        authenticated = request.cookies.get('authenticated') is not None
+        authenticated = request.cookies.get('authenticated') is not None and self.check_app_authenticated()
         return render_template('index.html', authenticated=authenticated, cnf=self.setting.get_config())
 
     def auth(self):
@@ -55,21 +55,21 @@ class Cam(AuthenticationProvider):
 
         return cam_name
 
-    def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies):
-        tm1_service = self.setting.get_tm1_service(session[self.logged_in_user_session_name])
+    def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies, decode_content=True):
+        tm1_service = self.setting.get_tm1_service(session.get(self.logged_in_user_session_name))
         if tm1_service is None:
             return Response('Unauthorized', status=401, mimetype='application/json')
 
         response = tm1_service.get_session().request(method, url, data=mdx, headers=headers,
-                                                     verify=self.setting.get_ssl_verify())
+                                                     verify=self.setting.get_ssl_verify(), decode_content=decode_content)
         if response.status_code == 401:
             tm1_service.re_authenticate()
             response = tm1_service.get_session().request(method, url, data=mdx, headers=headers,
-                                                         verify=self.setting.get_ssl_verify())
+                                                         verify=self.setting.get_ssl_verify(), decode_content=decode_content)
         return response
 
     def check_app_authenticated(self):
-        return session.get(self.logged_in_user_session_name, '') != '' and self.setting.get_tm1_session_id(
+        return session.get(self.logged_in_user_session_name, '') != '' and self.setting.get_tm1_service(
             session.get(self.logged_in_user_session_name)) is not None
 
     def get_authentication_required_response(self):

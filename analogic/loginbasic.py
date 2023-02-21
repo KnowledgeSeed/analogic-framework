@@ -15,8 +15,12 @@ class LoginBasic(AuthenticationProvider):
         return redirect(self.setting.get_base_url('login'))
 
     def get_connection_params(self, user_name, password):
-        return {'base_url': self.setting.get_proxy_target_url(), 'ssl': self.setting.get_ssl_verify(), 'user': user_name,
-                'password': password}
+        return {
+                'base_url': self.setting.get_proxy_target_url(),
+                'ssl': self.setting.get_ssl_verify(),
+                'user': user_name,
+                'password': password
+        }
     def login(self):
         cnf = self.setting.get_config()
         if request.method == 'POST':
@@ -51,15 +55,15 @@ class LoginBasic(AuthenticationProvider):
 
         return render_template('login.html', cnf=cnf)
 
-    def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies):
+    def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies, decode_content=True):
         user_name = session[self.logged_in_user_session_name]
         tm1_service = self.setting.get_tm1_service(user_name)
         if tm1_service is None:
             return Response('Unauthorized', status=401, mimetype='application/json')
-        response = tm1_service.get_session().request(method, url, data=mdx, headers=headers, verify=self.setting.get_ssl_verify())
+        response = tm1_service.get_session().request(method, url, data=mdx, headers=headers, verify=self.setting.get_ssl_verify(), decode_content=decode_content)
         if response.status_code == 401:
             tm1_service.re_authenticate()
-            response = tm1_service.get_session().request(method, url, data=mdx, headers=headers, verify=self.setting.get_ssl_verify())
+            response = tm1_service.get_session().request(method, url, data=mdx, headers=headers, verify=self.setting.get_ssl_verify(), decode_content=decode_content)
         return response
 
     def check_app_authenticated(self):

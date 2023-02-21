@@ -36,11 +36,11 @@ def login_required(f):
 
 
 class AuthenticationProvider(ABC):
-
     HEADERS = {'Connection': 'keep-alive',
                'User-Agent': 'Analogic',
                'Content-Type': 'application/json; odata.streaming=true; charset=utf-8',
                'Accept': 'application/json;odata.metadata=none,text/plain',
+               'Accept-Encoding': 'gzip, deflate, br',
                'TM1-SessionContext': 'Analogic'}
 
     def __init__(self, setting):
@@ -167,7 +167,7 @@ class AuthenticationProvider(ABC):
         headers: dict[str, str] = self.HEADERS.copy()
         cookies: dict[str, str] = {}
 
-        response = self.do_proxy_request(url, method, mdx, headers, cookies)
+        response = self.do_proxy_request(url, method, mdx, headers, cookies, False)
 
         if response.status_code == 400 or response.status_code == 500:
             self._logger.error('MDX error: ' + response.text)
@@ -176,9 +176,11 @@ class AuthenticationProvider(ABC):
         if response.status_code == 401:
             return 'Authentication required', 401, {'Content-Type': 'application/json'}
 
-        return response.text, response.status_code, {'Content-Type': 'application/json'}
+        return response.content, response.status_code, {
+            'Content-Type': 'application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8',
+            'Content-Encoding': 'gzip'}
 
-    def do_proxy_request(self, url, method, mdx, headers=None, cookies=None):
+    def do_proxy_request(self, url, method, mdx, headers=None, cookies=None, decode_content=True):
 
         if headers is None:
             headers: dict[str, str] = self.HEADERS.copy()
@@ -186,10 +188,10 @@ class AuthenticationProvider(ABC):
         if cookies is None:
             cookies: dict[str, str] = {}
 
-        return self._create_request_with_authenticated_user(url, method, mdx, headers, cookies)
+        return self._create_request_with_authenticated_user(url, method, mdx, headers, cookies, decode_content)
 
     @abstractmethod
-    def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies):
+    def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies, decode_content=True):
         pass
 
     @abstractmethod
