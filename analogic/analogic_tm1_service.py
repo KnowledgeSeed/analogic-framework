@@ -26,6 +26,7 @@ from urllib3.exceptions import ResponseError
 from urllib3.exceptions import LocationValueError
 from urllib3.exceptions import DecodeError
 from urllib3.exceptions import InvalidHeader as _InvalidHeader
+from urllib3.response import GzipDecoder
 
 from requests.exceptions import (ConnectionError, ConnectTimeout, ReadTimeout, SSLError,
                                  ProxyError, RetryError, InvalidURL, ContentDecodingError,
@@ -35,6 +36,7 @@ from requests.structures import CaseInsensitiveDict
 from requests.cookies import extract_cookies_to_jar
 from requests.utils import get_encoding_from_headers
 from requests.utils import (stream_decode_response_unicode, iter_slices)
+import logging
 
 
 class Session(BaseSession):
@@ -200,6 +202,15 @@ class Response(BaseResponse):
             chunks = stream_decode_response_unicode(chunks, self)
 
         return chunks
+
+    def get_decompressed_data(self):
+        text = ''
+        try:
+            gzip_decoder = GzipDecoder()
+            text = gzip_decoder.decompress(self.content).decode('utf-8')
+        except Exception:
+            logging.getLogger(__name__).error('Failed to decompress data')
+        return text
 
 
 class HTTPAdapter(BaseHTTPAdapter):

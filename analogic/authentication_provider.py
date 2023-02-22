@@ -1,10 +1,11 @@
-from flask import session, current_app, send_file, json, request, jsonify
+from flask import session, current_app, send_file, request, jsonify
 from analogic.loader import ClassLoader
 import analogic.pivot as PivotApi
 import logging
 import pandas as pd
 from abc import ABC, abstractmethod
 from functools import wraps
+import orjson
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
@@ -69,7 +70,7 @@ class AuthenticationProvider(ABC):
         element_names = v.getlist('element_names[]')
         subset_name_to_remove = v.get('subset_name_to_remove')
         selected_cards = v.get('selected_cards')
-        options = json.loads(v.get('options', '{}'))
+        options = orjson.loads(v.get('options', '{}'))
         export_data = v.get('export_data')
 
         return PivotApi.call(self.get_tm1_service(), username, cube_name, dimension_name, hierarchy_name, subset_name,
@@ -109,7 +110,7 @@ class AuthenticationProvider(ABC):
     def _get_server_side_mdx(self):
         mdx = request.data
         if request.args.get('server') is not None:
-            body = json.loads(request.data)
+            body = orjson.loads(request.data)
             key = body['key']
             if body.get('key_suffix') is not None:
                 key = key + '_' + body['key_suffix']
@@ -170,7 +171,7 @@ class AuthenticationProvider(ABC):
         response = self.do_proxy_request(url, method, mdx, headers, cookies, False)
 
         if response.status_code == 400 or response.status_code == 500:
-            self._logger.error('MDX error: ' + response.text)
+            self._logger.error('MDX error: ' + response.get_decompressed_data())
             self._logger.error('MDX: ' + mdx.decode('utf-8'))
 
         if response.status_code == 401:
