@@ -18,6 +18,7 @@ from datetime import timedelta
 import importlib
 from analogic.version import version
 from analogic.task import scheduler
+import atexit
 
 APPLICATIONS_DIR = 'apps'
 APPLICATIONS_DIR_EXTRA = os.environ.get('APPLICATIONS_DIR_EXTRA', '')
@@ -148,9 +149,10 @@ class Analogic(Flask):
         condition = condition_class()
         return condition.get_authentication_provider_name(config)
 
-    def _get_cache(self):
-        cache_path = os.path.join(self.instance_path, 'cache')
-        return Cache(self, config={'CACHE_TYPE': 'FileSystemCache', 'CACHE_DIR': cache_path})
+    def on_exit(self):
+        print('on_exit')
+        for app_name in self.analogic_applications:
+            self.analogic_applications[app_name].on_exit()
 
 
 def page_not_found(e):
@@ -191,6 +193,8 @@ def create_app(instance_path):
     scheduler.init_app(app)
 
     scheduler.start()
+
+    atexit.register(app.on_exit)
 
     return app
 

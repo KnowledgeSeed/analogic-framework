@@ -548,6 +548,10 @@ class AnalogicTM1Service(TM1Service):
         self.sandboxes = SandboxService(self._tm1_rest)
         self.git = GitService(self._tm1_rest)
 
+    def re_authenticate(self):
+        self._tm1_rest = AnalogicRestService(**self.connection._kwargs)
+        self._instantiate_services()
+
     def get_session(self):
         return self._tm1_rest._s
 

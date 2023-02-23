@@ -213,3 +213,6 @@ class AuthenticationProvider(ABC):
 
     def getLogger(self):
         return self._logger
+
+    def on_exit(self):
+        pass
