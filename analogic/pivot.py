@@ -45,7 +45,7 @@ def call(tm1:TM1Service, username, cube_name=None, dimension_name=None, hierarch
         return jsonify(r)
     elif dimension_name is None:
         children = tm1.cubes.get_dimension_names(cube_name)
-        data = get_presets_data(tm1, username)
+        data = get_presets_data(tm1, username, options['widgetId'])
     elif hierarchy_name is None:
         children = tm1.hierarchies.get_all_names(dimension_name)
     elif subset_name is None:
@@ -65,7 +65,7 @@ def call(tm1:TM1Service, username, cube_name=None, dimension_name=None, hierarch
 
     return jsonify({'children': children, 'data': data})
 
-def get_presets_data(tm1, username):
+def get_presets_data(tm1, username, widget_id):
     mdx = """WITH
 MEMBER [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sType]
 AS [zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].CurrentMember.Properties('Type')
@@ -75,15 +75,18 @@ IIF('""" + username + """' = [zSYS Analogic Pivot Presets].[zSYS Analogic Pivot 
 1,0)
 MEMBER [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sID]
 AS [zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].CurrentMember.Name
+MEMBER [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sWidgetID]
+AS [zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].CurrentMember.Properties('WidgetID')
 SELECT
    {[Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sID],
+    [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sWidgetID],
     [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sType],
     [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sOwner],
     [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sName],
     [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sValue]
    }
   ON COLUMNS ,
-   UNION({
+   FILTER(UNION({
         FILTER({
             [zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].Members
         }, INSTR([zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].CurrentMember.Properties('Type'), 'Public') > 0)
@@ -91,7 +94,7 @@ SELECT
     FILTER({
         [zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].Members
     }, INSTR([zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].CurrentMember.Properties('CreatedBy'), '""" + username + """') > 0)
-})
+}),INSTR([zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].CurrentMember.Properties('WidgetID'), '""" + widget_id + """') > 0)
   ON ROWS
 FROM [zSYS Analogic Pivot Presets]"""
 
