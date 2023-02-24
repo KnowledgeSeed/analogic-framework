@@ -19,3 +19,5 @@ from .nologin import NoLogin
 from .camsecure import CamSecure
 from . import core_endpoints
 from .task import scheduler
+from .exceptions import AnalogicException
+from .exceptions import AnalogicProxyException

@@ -1,6 +1,7 @@
 from flask import session, current_app, send_file, request, jsonify
 from analogic.loader import ClassLoader
 import analogic.pivot as PivotApi
+from analogic.exceptions import AnalogicProxyException
 import logging
 import pandas as pd
 from abc import ABC, abstractmethod
@@ -168,7 +169,11 @@ class AuthenticationProvider(ABC):
         headers: dict[str, str] = self.HEADERS.copy()
         cookies: dict[str, str] = {}
 
-        response = self.do_proxy_request(url, method, mdx, headers, cookies, False)
+        try:
+            response = self.do_proxy_request(url, method, mdx, headers, cookies, False)
+        except AnalogicProxyException as e:
+            self._logger.error(e)
+            return 'Something went wrong', 500, {'Content-Type': 'application/json'}
 
         if response.status_code == 400 or response.status_code == 500:
             self._logger.error('MDX error: ' + response.get_decompressed_data())
