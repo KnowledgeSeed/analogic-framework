@@ -26,6 +26,7 @@ class LoginBasic(AuthenticationProvider):
         if request.method == 'POST':
             user_name = request.form.get('username')
             p = self.get_connection_params(user_name, request.form.get('password'))
+            p['connection_pool_size'] = 100
 
             try:
                 tm1_service = self.setting.get_tm1_service(user_name)
