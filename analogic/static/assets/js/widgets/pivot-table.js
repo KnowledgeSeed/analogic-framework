@@ -50,7 +50,7 @@ class PivotTableWidget extends Widget {
         this.expandedCollapsedMembers = [{}, {}];
         this.suppressOptions = {nonEmptyRows: true, nonEmptyColumns: true};
 
-        Pivot.call({data: {cube_name: o.cubeName}}).then(d => {
+        Pivot.call({data: {cube_name: o.cubeName, options: JSON.stringify({widgetId: this.id})}}).then(d => {
             this.presets = this.parsePresetsData(d.data);
 
             this.doLoadPreset(this.presetId);
@@ -93,10 +93,10 @@ class PivotTableWidget extends Widget {
     }
 
     parsePresetsData(d) {
-        let i, p = [], len = d.length - 4;
+        let i, p = [], len = d.length - 5;
 
-        for (i = 0; i < len; i += 5) {
-            p.push({data: JSON.parse(d[i + 4].FormattedValue), id: d[i].FormattedValue, name: d[i + 3].FormattedValue, type: d[i + 1].FormattedValue, isOwner: parseInt(d[i + 2].FormattedValue)});
+        for (i = 0; i < len; i += 6) {
+            p.push({data: JSON.parse(d[i + 5].FormattedValue), id: d[i].FormattedValue, name: d[i + 4].FormattedValue, type: d[i + 2].FormattedValue, isOwner: parseInt(d[i + 3].FormattedValue)});
         }
 
         return p;
@@ -1121,9 +1121,9 @@ class PivotTableWidget extends Widget {
 
         this.presetId = k;
 
-        f = {pValue: d, pID: p[k].id, pName: presetName, pType: p[k].type};
+        f = {pValue: d, pID: p[k].id, pName: presetName, pType: p[k].type, pWidgetID: this.id};
 
-        Pivot.call({data: {options: JSON.stringify({process: 'zSYS Analogic Save Pivot Preset', processParams: f})}}).then(r => this.saveOrDeletePresetFinished(r));
+        Pivot.call({data: {options: JSON.stringify({process: 'zSYS Analogic Save Pivot Preset', processParams: f, widgetId: this.id})}}).then(r => this.saveOrDeletePresetFinished(r));
     }
 
     saveOrDeletePresetFinished(r) {
@@ -1131,7 +1131,7 @@ class PivotTableWidget extends Widget {
             return app.popup.show('Error during saving/deleting the Preset!', 400);
         }
 
-        Pivot.call({data: {cube_name: this.cubeName}}).then(d => {
+        Pivot.call({data: {cube_name: this.cubeName, options: JSON.stringify({widgetId: this.id})}}).then(d => {
             this.presets = this.parsePresetsData(d.data);
 
             this.doLoadPreset(this.presetId);
