@@ -789,12 +789,13 @@ class PivotTableWidget extends Widget {
     }
 
     adjustElementAliases(elements, aliasAttrName, data) {
-        let i, n, e, len = elements.length;
+        let i, n, e, len = elements.length, d;
 
         for (i = 0; i < len; ++i) {
             e = elements.eq(i);
             n = e.data('name');
-            e.contents().eq(1)[0].textContent = n + ' (' + data[n][aliasAttrName] + ')';
+            d = data[i];
+            e.contents().eq(1)[0].textContent = n + ' (' + (d[aliasAttrName] || d[0]) + ')';
         }
     }
 
