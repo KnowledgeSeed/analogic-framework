@@ -527,11 +527,11 @@ const Utils = {
         const thousands = /\B(?=(\d{3})+(?!\d))/g;
         return numberPart.replace(thousands, separator) + (decimalPart ? "." + decimalPart : "");
     },
-    saveGridTableToggles(widgetId) {
+    saveGridTableToggles(widgetId, col) {
         let cellData = v(widgetId + '.cellData'), i, result = [], len = cellData.length;
 
         for (i = 0; i < len; ++i) {
-            result[i] = v(widgetId + '_' + i + '_1').switch ? v(widgetId + '_' + i + '_1').switch.value : cellData[i][1].value;
+            result[i] = v(widgetId + '_' + i + '_' + col).switch ? v(widgetId + '_' + i + '_' + col).switch.value : cellData[i][col].value;
         }
 
         Utils.setWidgetValue('systemValue' + widgetId + 'Toggles', result);
