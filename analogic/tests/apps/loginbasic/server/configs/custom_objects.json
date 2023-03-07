@@ -1,7 +1,0 @@
-{
-  "testappExport": {
-    "namespace": "testapp.server.Export",
-    "class": "Export",
-    "method": "testappExport"
-  }
-}

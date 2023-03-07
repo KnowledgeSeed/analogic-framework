@@ -126,10 +126,10 @@ class WriteExecutorFactory {
         };
         context.getCellId = () => {
             return context.getCell() ? context.getCell().id : null;
-        },
-            context.getRow = () => {
-                return gridTableInfo !== null ? gridTableInfo.getRow() : null;
-            };
+        };
+        context.getRow = () => {
+            return gridTableInfo !== null ? gridTableInfo.getRow() : null;
+        };
         context.getColumn = () => {
             return gridTableInfo !== null ? gridTableInfo.getColumn() : null;
         };

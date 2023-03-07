@@ -1,17 +1,10 @@
 {
   "projectName": "Default App",
   "projectId": "default",
-  "authenticationMode": "LoginBasicPool",
+  "authenticationMode": "LoginBasic",
   "camNamespace": "knowledgeseed",
-  "apiHost": "http://localhost:5000/pool",
   "mainPage": "defaultMain",
   "proxy": {
-    "target": "https://kseed-dc1.knowledgeseed.local:5125/defaultapi"
-  },
-  "pool" : {
-    "users": [
-      "admin"
-    ]
-  },
-  "usePoolUserAsActiveUser": true
+    "target": "https://dev.knowledgessed.ch:9610/seederbpspapi"
+  }
 }

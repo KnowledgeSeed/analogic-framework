@@ -8,30 +8,35 @@ from analogic.analogic import create_app
 
 
 class SettingTestCase(unittest.TestCase):
-
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         site_root = os.path.realpath(os.path.dirname(__file__))
 
-        self.app = create_app(site_root)
+        cls.app = create_app(site_root)
 
-        cache_path = os.path.join(site_root, 'cache')
-        cache = Cache(self.app, config={'CACHE_TYPE': 'FileSystemCache', 'CACHE_DIR': cache_path})
+        # self.setting = self.app.analogic_applications['default'].get_setting()
 
-        self.instance = 'testapp'
-        self.setting = SettingManager(cache, site_root + '/apps/testapp', self.instance)
-        self.setting.clear_cache()
+        # self.instance = 'testapp'
+        # self.setting = SettingManager(site_root + '/apps/testapp', self.instance)
+        # self.setting.clear_cache()
 
-        self.default_instance = 'default'
-        self.default_setting = SettingManager(cache, site_root+ '/apps/default/', self.default_instance)
-        self.default_setting.clear_cache()
+        # self.default_instance = 'default'
+        # self.default_setting = SettingManager(site_root + '/apps/default/', self.default_instance)
+        # self.default_setting.clear_cache()
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
 
     def tearDown(self):
-        self.setting = ''
+        pass
 
     def test_clear_cache(self):
-        self.assertEqual('OK', self.setting.clear_cache())
-
-        self.assertEqual('OK', self.default_setting.clear_cache())
+        with self.app.test_request_context(''):
+            version = self.app.analogic_applications['default'].get_setting().get_config()['version']
+            self.assertEqual('OK', self.app.analogic_applications['default'].get_setting().clear_cache())
+            new_version = self.app.analogic_applications['default'].get_setting().get_config()['version']
+            self.assertNotEqual(version, new_version)
 
     def test_get_base_url(self):
         with self.app.test_request_context('/testapp'):

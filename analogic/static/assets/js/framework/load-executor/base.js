@@ -93,8 +93,15 @@ class LoadExecutor {
 
         const ctx = this.context;
 
+
         if (data && data.ID) {
-            ctx.getRepositoryObject().cellsetId = data.ID;
+            const loaderFunctionNames = ctx.getLoaderFunctionName().split('_');
+            if (loaderFunctionNames.length > 1 && Array.isArray(ctx.getRepositoryObject()[loaderFunctionNames[0]])) {
+                const index = parseInt(loaderFunctionNames[1]) - 1;
+                ctx.getRepositoryObject()[loaderFunctionNames[0]][index].cellsetId = data.ID;
+            } else {
+                ctx.getRepositoryObject().cellsetId = data.ID;
+            }
         }
 
         if (!this.context.runParsingControl()) {
