@@ -71,13 +71,16 @@ class Analogic(Flask):
         return self.authentication_providers[name]
 
     def register_application(self, application_dir, blueprint: "Blueprint", **options: t.Any) -> None:
-        instance = '/' + blueprint.name
-        self.register_analogic_url_rules(instance)
+        try:
+            instance = '/' + blueprint.name
+            self.register_analogic_url_rules(instance)
 
-        self.analogic_applications[blueprint.name] = self.create_authentication_provider(blueprint.name,
+            self.analogic_applications[blueprint.name] = self.create_authentication_provider(blueprint.name,
                                                                                          application_dir)
 
-        super().register_blueprint(blueprint, **options)
+            super().register_blueprint(blueprint, **options)
+        except Exception as e:
+            logging.getLogger(__name__).error('Error registering application' + blueprint.name + ': ' + str(e))
 
     def create_authentication_provider(self, analogic_application, analogic_application_path):
         with self.app_context():
