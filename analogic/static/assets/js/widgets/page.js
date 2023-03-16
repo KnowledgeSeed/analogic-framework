@@ -25,6 +25,7 @@ class PageWidget extends Widget {
     }
 
     render(withState, refresh, useDefaultData = false, loadFunction = QB.loadData, previouslyLoadedData = false) {
+        this.isRendering = true;
         const o = this.options;
 
         if (withState) {

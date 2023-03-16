@@ -206,6 +206,7 @@ class HorizontalTableWidget extends Widget {
     }
 
     render(withState) {
+        this.isRendering = true;
         const o = this.options, instance = this;
 
         let widgetOptions, widgets = [];

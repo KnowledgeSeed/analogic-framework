@@ -64,8 +64,11 @@ window.onerror =  (msg, url, lineNum, colNum, error) => {
                 (wci.widgets || []).forEach(w => loadWidget(w, parent, wci.id));
             }
         } else {
+            if(wc.id.includes('_')) {
+                console.warn('Widget id must not contain underscore: ' + wc.id);
+            }
             if (parent[wc.id]) {
-                L('duplicated widgetid: ' + wc.id);
+                console.error('duplicated widgetid: ' + wc.id);
             }
             let wcc = new wc.type(wc);
             parent[wc.id] = wcc;

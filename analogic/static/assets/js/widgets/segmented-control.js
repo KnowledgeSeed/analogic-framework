@@ -33,6 +33,7 @@ class SegmentedControlWidget extends Widget {
     }
 
     embeddedRender(withState, data, loadFunction = QB.loadData) {
+        this.isRendering = true;
         const o = {...this.options, ...data}, instance = this, h = Listeners.handle;
 
         let widgetOptions, widgets = [], i = 0, childrenData, w, widgetHtmls = [];
@@ -62,6 +63,7 @@ class SegmentedControlWidget extends Widget {
     }
 
     render(withState) {
+        this.isRendering = true;
         const o = this.options, instance = this;
 
         let widgetOptions, widgets = [];

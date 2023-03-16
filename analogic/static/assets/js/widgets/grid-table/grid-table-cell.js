@@ -46,6 +46,7 @@ class GridTableCellWidget extends Widget {
     initEvents(withState, childId) {
         Widgets[childId].initEvents(withState);
         this.initEventHandlers(withState);
+        this.isRendering = false;
     }
 
     updateContent(data = false, loadFunction = QB.loadData) {
@@ -78,6 +79,7 @@ class GridTableCellWidget extends Widget {
     }
 
     render(withState, childrenData) {
+        this.isRendering = true;
         const o = {...this.options, ...childrenData}, instance = this;
 
         let widgetOptions, w, widgetHtmls = [], newWidgetOptions;

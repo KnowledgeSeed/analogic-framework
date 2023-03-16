@@ -100,7 +100,6 @@ class ToggleWidget extends Widget {
         const o = this.options;
 
         let isGridTableHierarchyExpander = this.isGridTableHierarchyExpander;
-
         section.find('.ks-toggle').on('click', e => {
             const s = $(e.currentTarget), isActive = !s.hasClass('ks-on');
 

@@ -15,6 +15,7 @@ class Widget {
         }
 
         this.options = options;
+        this.isRendering = false;
     }
 
     reset() {
@@ -82,6 +83,10 @@ class Widget {
     }
 
     reRenderWidget(withState = false, withLoader = true, previouslyLoadedData = false) {
+        if(this.isRendering) {
+            this.renderError();
+        }
+        this.isRendering = true;
 
         const o = this.options, holder = this.getHolder(o.id), instance = this;
 
@@ -146,7 +151,16 @@ class Widget {
         });
     }
 
+    renderError() {
+        console.error('Duplicate render calls at the same time for the ' + this.options.id + ' widget!');
+        console.error('Please check the forceRefresh function call');
+    }
+
     renderWidget(withState = false, withLoader = true, previouslyLoadedData = false) {
+        if(this.isRendering) {
+            this.renderError();
+        }
+        this.isRendering = true;
 
         const o = this.options, holder = this.getHolder(o.id), instance = this;
 
@@ -241,6 +255,7 @@ class Widget {
     }
 
     render(withState, refresh, useDefaultData = false, loadFunction = QB.loadData, previouslyLoadedData = false) {
+        this.isRendering = true;
         const o = this.options, instance = this;
         let ww;
 
@@ -312,13 +327,14 @@ class Widget {
     }
 
     embeddedRender(withState, data, loadFunction = QB.loadData) {
+        this.isRendering = true;
         const o = {...this.options, ...data}, instance = this, h = Listeners.handle;
 
         this.addListeners(false);
 
         this.addDependents();
 
-        if (new o.type(o).amIOnAGridTable()) { //Todo check
+        if (new o.type(o).amIOnAGridTable()) {
             Listeners.push({options: o, method: 'refreshGridCell', eventName: 'forcerefresh.' + o.id, handler: h});
         }
 
@@ -443,6 +459,8 @@ class Widget {
         }
 
         this.initEventHandlers(withState);
+
+        this.isRendering = false;
     }
 
     initEventHandlers() {

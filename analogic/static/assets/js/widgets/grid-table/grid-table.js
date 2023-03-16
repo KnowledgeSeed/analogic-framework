@@ -235,6 +235,7 @@ class GridTableWidget extends Widget {
     }
 
     render(withState, refresh, useDefaultData = false, loadFunction = QB.loadData, previouslyLoadedData = false) {
+        this.isRendering = true;
         const o = this.options, instance = this;
 
         let widgetOptions, widgets = [], headerRowWidget = false;
@@ -250,8 +251,6 @@ class GridTableWidget extends Widget {
         this.addListeners(false);
 
         let afterLoad = (data) => {
-
-            L('start load', o.id, new Date(), data);
 
             let deferred = [], w, cw, processedData = instance.processData(data), i, j = 0, rows, colNum,
                 widgetHtmls = [];
@@ -273,13 +272,10 @@ class GridTableWidget extends Widget {
             instance.state = {rows: rows};
             instance.cellData = [];
 
-            L('render header', o.id, new Date());
-
             if (headerRowWidget !== false) {
                 deferred.push(headerRowWidget.render(withState, processedData.length > 0 ? processedData[0] : []));
             }
 
-            L('render cells', o.id, new Date());
             for (i = 0; i < rows; ++i) {
                 instance.cellData[i] = [];
                 j = 0;
@@ -296,11 +292,7 @@ class GridTableWidget extends Widget {
                 }
             }
 
-            L('end render cells', o.id, new Date());
-
             return $.when.apply($, deferred).then(function (...results) {
-
-                L('apply deferred', o.id, new Date());
 
                 let r, first = true, headerRowWidgetHtml = false;
 
@@ -320,8 +312,6 @@ class GridTableWidget extends Widget {
                     gs.push('display:none;');
                 }
 
-                L('return html', o.id, new Date());
-
                 return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}"  style="${gs.join('')}"  id="${o.id}">${ghtml}</section>`;
             });
         };
@@ -338,8 +328,6 @@ class GridTableWidget extends Widget {
     initEvents(withState) {
         const o = this.options;
 
-        L('start init events', o.id, new Date());
-
         if (o.errorMessage) {
             return;
         }
@@ -352,8 +340,6 @@ class GridTableWidget extends Widget {
             }
         }
 
-        L('widget initialized', o.id, new Date());
-
         let headerRowWidget = o.widgets.filter(e => e.type.name === 'GridTableHeaderRowWidget');
 
         for (w of headerRowWidget) {
@@ -361,7 +347,7 @@ class GridTableWidget extends Widget {
         }
 
         this.initEventHandlers(withState);
-        L('init events finished', o.id, new Date());
+        this.isRendering = false;
     }
 
     initEventHandlers() {

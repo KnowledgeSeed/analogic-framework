@@ -15,6 +15,7 @@ class GridTableHeaderRowWidget extends Widget {
     }
 
     render(withState, d, loadFunction = QB.loadData) {
+        this.isRendering = true;
         const o = this.options, instance = this;
 
         let widgetOptions, widgets = [];
