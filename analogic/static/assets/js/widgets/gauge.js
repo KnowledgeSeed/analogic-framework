@@ -5,7 +5,7 @@
 class GaugeWidget extends Widget {
 
     getHtml(widgets, d) {
-        const labelsHtml = [], valuesHtml = [];
+        const labelsHtml = [], valuesHtml = [], id = this.options.id;
 
         if (!d) {
             d = {
@@ -18,7 +18,7 @@ class GaugeWidget extends Widget {
         }
 
         const v = {
-            canvasId: this.options.id + 'Canvas',
+            canvasId: id + 'Canvas',
             values: this.getRealValue('values', d),
             valueLabels: this.getRealValue('valueLabels', d, []),
             labels: this.getRealValue('labels', d),
@@ -43,9 +43,6 @@ class GaugeWidget extends Widget {
             valuesHtml.push('<div class="ks-gauge-label ks-gauge-value" style="color: ', v.colors[i], '">', v.valueLabels.length > i ? v.valueLabels[i] : v.values[i].toFixed(1), '<\/div>');
         }
 
-        GaugeWidget.chartDataByIds = GaugeWidget.chartDataByIds || {};
-        GaugeWidget.chartDataByIds[v.canvasId] = {minRange: v.minRange, maxRange: v.maxRange, fontFamily: v.fontFamily};
-
         return `
 <div class="ks-gauge ks-gauge-${v.skin}" style="${this.getGeneralStyles(d).join('')}">
     <div class="ks-gauge-inner">
@@ -53,7 +50,7 @@ class GaugeWidget extends Widget {
             <div class="ks-gauge-title-content">${v.title}</div>
             <div class="ks-gauge-title-border"></div>
         </div>
-        <div class="ks-gauge-canvas"><canvas id="${v.canvasId}" height="1" width="2"></canvas></div>
+        <div class="ks-gauge-canvas"><canvas id="${v.canvasId}" data-widget_id="${id}" height="1" width="2"></canvas></div>
         <div class="ks-gauge-labels">
             <div class="ks-gauge-labels-col">${labelsHtml.join('')}</div>
             <div class="ks-gauge-labels-col">${valuesHtml.join('')}</div>
@@ -191,7 +188,7 @@ Chart.controllers.gauge = Chart.controllers.doughnut.extend({
     draw: function () {
         Chart.controllers.doughnut.prototype.draw.apply(this, arguments);
 
-        const chart = this.chart, x = chart.ctx, chartData = GaugeWidget.chartDataByIds[chart.canvas.id];
+        const chart = this.chart, x = chart.ctx, chartData = Widgets[chart.canvas.dataset.widget_id].value;
 
         if (!chartData.showAxisValues) {
             return;
