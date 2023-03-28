@@ -58,7 +58,11 @@ window.onerror =  (msg, url, lineNum, colNum, error) => {
 
     function loadWidget(wc, parent = Widgets, parentId = null) {
         if (wc.import) {
-            let wci = v(wc.import, WidgetConfig), w = new wci.type(wci);
+            let wci = v(wc.import, WidgetConfig);
+            if(wci === false) {
+                console.error('WidgetConfig import error: ' + wc.import + ' not found');
+            }
+            let w = new wci.type(wci);
             if (!parent[wci.id]) {
                 parent[wci.id] = w;
                 (wci.widgets || []).forEach(w => loadWidget(w, parent, wci.id));
