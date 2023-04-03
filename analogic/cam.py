@@ -1,6 +1,11 @@
 from analogic.authentication_provider import AuthenticationProvider
-from flask import render_template, request, make_response, redirect, session, Response
+from flask import render_template, request, make_response, redirect, session, Response, send_file
 from analogic.analogic_tm1_service import AnalogicTM1Service
+import orjson
+import analogic.pivot as PivotApi
+from analogic.exceptions import AnalogicTM1ServiceException
+from analogic.loader import ClassLoader
+from analogic.authentication_provider import login_required
 
 
 class Cam(AuthenticationProvider):
@@ -39,21 +44,22 @@ class Cam(AuthenticationProvider):
 
         existing_tm1_service = self.setting.get_tm1_service(cam_name)
 
-        is_connected = False
+        # is_connected = False
+        # if existing_tm1_service is not None:
+        #     try:
+        #         is_connected = existing_tm1_service.connection.is_connected()
+        #     except Exception as e:
+        #         self._logger.error('exception while checking connection: ' + str(e))
+
+
+        # if not is_connected:
         if existing_tm1_service is not None:
             try:
-                is_connected = existing_tm1_service.connection.is_connected()
+                existing_tm1_service.close_session()
             except Exception as e:
-                self._logger.error('exception while checking connection: ' + str(e))
+                self._logger.error('exception while closing session: ' + str(e))
 
-
-        if not is_connected:
-            if existing_tm1_service is not None:
-                try:
-                    existing_tm1_service.close_session()
-                except Exception as e:
-                    self._logger.error('exception while closing session: ' + str(e))
-            self.setting.set_tm1_service(cam_name, tm1_service)
+        self.setting.set_tm1_service(cam_name, tm1_service)
 
         return cam_name
 
@@ -65,7 +71,11 @@ class Cam(AuthenticationProvider):
         response = tm1_service.get_session().request(method, url, data=mdx, headers=headers,
                                                      verify=self.setting.get_ssl_verify(), decode_content=decode_content)
         if response.status_code == 401:
-            tm1_service.re_authenticate()
+            try:
+                tm1_service.re_authenticate()
+            except Exception as e:
+                self._logger.error('exception while re-authenticating: ' + str(e))
+                return Response('Unauthorized', status=401, mimetype='application/json')
             response = tm1_service.get_session().request(method, url, data=mdx, headers=headers,
                                                          verify=self.setting.get_ssl_verify(), decode_content=decode_content)
         return response
@@ -74,11 +84,70 @@ class Cam(AuthenticationProvider):
         return session.get(self.logged_in_user_session_name, '') != '' and self.setting.get_tm1_service(
             session.get(self.logged_in_user_session_name)) is not None
 
+    @login_required
+    def pivot(self):
+        username = self.get_logged_in_user_name()
+
+        v = request.values
+        cube_name = v.get('cube_name')
+        dimension_name = v.get('dimension_name')
+        hierarchy_name = v.get('hierarchy_name')
+        subset_name = v.get('subset_name')
+        element_names = v.getlist('element_names[]')
+        subset_name_to_remove = v.get('subset_name_to_remove')
+        selected_cards = v.get('selected_cards')
+        options = orjson.loads(v.get('options', '{}'))
+        export_data = v.get('export_data')
+
+        try:
+            tm1_service = self.get_tm1_service()
+        except AnalogicTM1ServiceException as e:
+            return Response('Unauthorized', status=401, mimetype='application/json')
+
+        return PivotApi.call(tm1_service, username, cube_name, dimension_name, hierarchy_name, subset_name,
+                             element_names, subset_name_to_remove, selected_cards, options, export_data)
+
+    @login_required
+    def export(self):
+
+        file_name = request.args.get('file_name', default='export.xlsx')
+        export_key = request.args.get('export_key')
+
+        if export_key is None:
+            return self.get_not_found_response()
+
+        export_description = self.setting.get_custom_object_description(export_key)
+
+        if export_description is None:
+            return self.get_not_found_response()
+
+        try:
+            tm1_service = self.get_tm1_service()
+        except AnalogicTM1ServiceException as e:
+            return Response('Unauthorized', status=401, mimetype='application/json')
+
+        return send_file(ClassLoader().call(export_description, request, tm1_service, self.setting, self),
+                         attachment_filename=file_name,
+                         as_attachment=True,
+                         cache_timeout=0,
+                         mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
     def get_authentication_required_response(self):
         return 'Authentication required', 401, {'Content-Type': 'application/json'}
 
     def get_tm1_service(self):
-        return self.setting.get_tm1_service(session[self.logged_in_user_session_name])
+        tm1_service = self.setting.get_tm1_service(session[self.logged_in_user_session_name])
+        if tm1_service is None:
+            raise AnalogicTM1ServiceException('Unauthorized')
+
+        if tm1_service.connection.is_connected() is False:
+            try:
+                tm1_service.re_authenticate()
+            except Exception as e:
+                self._logger.error('exception while re-authenticating: ' + str(e))
+                raise AnalogicTM1ServiceException('Unauthorized')
+
+        return tm1_service
 
     def _extend_login_session(self):
         session.modified = True
