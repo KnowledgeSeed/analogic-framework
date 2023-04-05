@@ -3,6 +3,8 @@ import os
 from flask import json, current_app, url_for, request, render_template
 import logging
 import uuid
+import sys
+import importlib
 
 
 class SettingManager:
@@ -25,7 +27,17 @@ class SettingManager:
         self.config = None
         self.config = self._create_config()
         self.save_config_js()
+        self.reload_custom_objects()
         return "OK"
+
+    def reload_custom_objects(self):
+        namespaces = set(map(lambda o: self.custom_objects[o].get('namespace'), self.custom_objects))
+        for namespace in namespaces:
+            if namespace is not None:
+                try:
+                    importlib.reload(sys.modules[namespace])
+                except Exception as e:
+                    self._logger.error(e)
 
     def get_instance(self):
         return self.instance
