@@ -71,30 +71,32 @@ Api.jumpTo = function jumpTo(id) {
 };
 
 Api.openPage = function openPage(page) {
-    Render.showPage(page);
+    return Render.showPage(page);
 };
 
 Api.backToMain = function backToMain() {
-    Render.showPage(app.mainPage);
+    return Render.showPage(app.mainPage);
 };
 
 Api.openPrevPage = function openPrevPage() {
     if (PageState.previous !== '') {
-        Render.showPage(PageState.previous);
+        return Render.showPage(PageState.previous);
     }
+    return $.Deferred().resolve('');
 };
 
 Api.openPrevPageWithState = function openPrevPageWithState() {
     if (PageState.previous !== '') {
-        Render.showPage(PageState.previous, true);
+        return Render.showPage(PageState.previous, true);
     }
+    return $.Deferred().resolve('');
 };
 
 Api.openPageWithWaitingForEvent = function openPageWithWaitingForEvent(arg) {
     if (!Array.isArray(arg) || arg.length < 2) {
         alert('openPageWithWaitingForEvent has 2 mandatory argument: ["eventName", "pageId"] !');
 
-        return;
+        return $.Deferred().resolve('');;
     }
 
     Loader.start();
@@ -103,19 +105,20 @@ Api.openPageWithWaitingForEvent = function openPageWithWaitingForEvent(arg) {
 };
 
 Api.openPageAndScrollToSection = function openPageAndScrollToSection(arg) {
-    Render.showPage(arg[0]);
+    let r = Render.showPage(arg[0]);
 
     El.body.on('bodyReady', () => {
         El.body.off('bodyReady');
         Api.jumpTo(arg[1]);
     });
+    return r;
 };
 
 Api.openPageWithWaitingForEventAndScrollToSection = function openPageWithWaitingForEventAndScrollToSection(arg) {
     if (!Array.isArray(arg) || arg.length < 3) {
         alert('openPageWithWaitingForEventAndScrollToSection has 3 mandatory argument: ["eventName", "pageId", "section"] !');
 
-        return;
+        return $.Deferred().resolve('');
     }
     Loader.start();
 
@@ -129,34 +132,35 @@ Api.openPageWithWaitingForEventAndScrollToSection = function openPageWithWaiting
     });
 };
 
-Api.openPageWithState = function openPageWithState(page) {
+Api.openPageWithState = function openPageWithState(page, alsoForceRefreshWidgetsWithState=false) {
     if (Array.isArray(page)) {
         if (PageState[page[0]]) {
-            Render.showPage(page[0], true);
+            let r = Render.showPage(page[0], true);
             El.body.on('bodyReady', () => {
                 El.body.off('bodyReady');
 
                 if (page.length > 1) {
                     for (let i = 1; i < page.length; ++i) {
-                        Api.forceRefresh(page[i]);
+                        alsoForceRefreshWidgetsWithState ? Api.forceRefreshWithState(page[i]) : Api.forceRefresh(page[i]);
                     }
                 }
             });
+            return r;
         } else {
-            Render.showPage(page[0]);
+            return Render.showPage(page[0]);
 
         }
     } else {
         if (PageState[page]) {
-            Render.showPage(page, true);
+            return Render.showPage(page, true);
         } else {
-            Render.showPage(page);
+            return Render.showPage(page);
         }
     }
 };
 
 Api.openPageWithStateAndScrollToSection = function openPageWithStateAndScrollToSection(arg) {
-    Render.showPage(arg[0], true);
+    let r = Render.showPage(arg[0], true);
 
     El.body.on('bodyReady', () => {
         El.body.off('bodyReady');
@@ -168,13 +172,14 @@ Api.openPageWithStateAndScrollToSection = function openPageWithStateAndScrollToS
             }
         }
     });
+    return r;
 };
 
 Api.openPageWithStateAndWaitingForEvent = function openPageWithStateAndWaitingForEvent(arg) {
     if (!Array.isArray(arg) || arg.length < 2) {
         alert('openPageWithStateAndWaitingForEvent has 2 mandatory argument: ["eventName", "pageId"] !');
 
-        return;
+        return $.Deferred().resolve('');
     }
 
     Loader.start();
@@ -198,7 +203,7 @@ Api.openPageWithStateAndWaitingForEventAndScrollToSection = function openPageWit
     if (!Array.isArray(arg) || arg.length < 3) {
         alert('openPageWithStateAndWaitingForEventAndScrollToSection has 3 mandatory argument: ["eventName", "pageId", "sectionName"] !');
 
-        return;
+        return $.Deferred().resolve('');
     }
 
     Loader.start();
