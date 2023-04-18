@@ -42,6 +42,7 @@ class DatePickerWidget extends Widget {
         this.panelFixed = v.panelFixed;
         this.local = v.local;
         this.closeAfterSelectingTheDate = v.closeAfterSelectingTheDate;
+        this.isMonthPicker = v.monthPicker;
 
 
         const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
@@ -136,7 +137,7 @@ class DatePickerWidget extends Widget {
             }
 
             return false;
-        }).on('dateChange.' + id, (_, date) => {
+        }).on('dateChange.' + id, (_, date, source) => {
             let m = datePicker.data('monthpicker'), minDateStr = String(datePicker.data('min-date')),
                 maxDateStr = String(datePicker.data('max-date')),
                 minDate = minDateStr ? DatePickerWidget.getDateFromString(minDateStr, m) : '',
@@ -175,30 +176,40 @@ class DatePickerWidget extends Widget {
                 }
             });
 
-            if (_this.panelFixed || _this.closeAfterSelectingTheDate) {
-                DatePickerWidget.triggerPickEvent(id, pickerHolder, {});
-                if(_this.closeAfterSelectingTheDate) {
+            if (_this.closeAfterSelectingTheDate) {
+                const triggerEvent = _this.isMonthPicker && source === 'month' ? true : !_this.isMonthPicker && source === 'day';
+                if (triggerEvent) {
+                    DatePickerWidget.triggerPickEvent(id, pickerHolder, {});
                     pickerHolder.slideUp(50);
                 }
             }
+
+            if (_this.panelFixed) {
+                DatePickerWidget.triggerPickEvent(id, pickerHolder, {});
+            }
         });
+
+        let source = '';
 
         const pickerHolder = $('#' + id + ' .ks-datepicker-panel').on('click touch', '.ks-datepicker-panel-pager', e => {
             let mod = $(e.currentTarget).hasClass('ks-left') ? -1 : 1;
             date = DatePickerWidget.getDateFromString(_this.value, datePicker.data('monthpicker'));
             date.setYear(Number(date.getFullYear()) + mod);
+            source = 'pager';
         }).on('click touch', '.ks-datepicker-panel-month-item', e => {
             target = $(e.currentTarget);
             date = DatePickerWidget.getDateFromString(_this.value, datePicker.data('monthpicker'));
             date.setMonth(target.data('month'));
+            source = 'month';
         }).on('click touch', '.ks-datepicker-panel-day-item[data-enabled="true"]', e => {
             target = $(e.currentTarget);
             date = DatePickerWidget.getDateFromString(_this.value, datePicker.data('monthpicker'));
             date.setDate(target.data('day'));
+            source = 'day';
         }).on('click touch', e => {
             e.stopPropagation();
             $('#' + id + ' .ks-datepicker-input').val(DatePickerWidget.getFormattedDateString(date, datePicker.data('monthpicker'), Widgets[id].local));
-            datePicker.trigger('dateChange.' + id, [date]);
+            datePicker.trigger('dateChange.' + id, [date, source]);
         });
 
         dateInput.on('input', e => {
@@ -206,8 +217,9 @@ class DatePickerWidget extends Widget {
             if (!date) {
                 return false;
             }
+            source = 'input';
 
-            datePicker.trigger('dateChange.' + id, [date]);
+            datePicker.trigger('dateChange.' + id, [date, source]);
         }).on('focusout', e => {
             let date = DatePickerWidget.getDateFromString($(e.currentTarget).val(), $(e.currentTarget).data('monthpicker'));
             $('#' + id + ' .ks-datepicker-input').val(DatePickerWidget.getFormattedDateString(date, datePicker.data('monthpicker'), _this.local));
@@ -227,7 +239,7 @@ class DatePickerWidget extends Widget {
 
         const catcher = Doc.not(datePicker).on('click touch', e => {
             if (pickerHolder.is(':visible') && !_this.panelFixed) {
-                if(!_this.closeAfterSelectingTheDate) {
+                if (!_this.closeAfterSelectingTheDate) {
                     let element = $('<div>');
                     element.data({
                         action: 'pick',

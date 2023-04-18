@@ -62,7 +62,8 @@ class GridTableCellWidget extends Widget {
     }
 
     updateHtml(data) {
-        const o = this.options, p = this.getParameters(data), mainDiv = $('#' + p.cellId);
+        delete data['skin'];
+        const o = this.options, p = this.getParameters(data), mainDiv = $('#' + p.cellId), content = mainDiv.find('.ks-grid-table-cell-content');
         p.cellVisible === false ? mainDiv.css('display', 'none') : mainDiv.css('display', 'block');
         p.cellWidth && mainDiv.css('width', Widget.getPercentOrPixel(p.cellWidth));
         let paddingRight, paddingLeft;
@@ -76,6 +77,11 @@ class GridTableCellWidget extends Widget {
         Widget.setOrRemoveMeasure(mainDiv, 'padding-left', paddingLeft);
 
         Widget.setSkin(mainDiv, 'ks-grid-table-cell-', p.cellSkin ? p.cellSkin : p.skin);
+
+        Widget.addOrRemoveClass(mainDiv, 'border-right', p.borderRight);
+        Widget.addOrRemoveClass(mainDiv, 'border-left', p.borderLeft);
+
+        Widget.addOrRemoveClass(content, 'ks-pos-' + p.alignment, true);
     }
 
     render(withState, childrenData) {
