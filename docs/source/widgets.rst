@@ -1821,7 +1821,7 @@ contributions.
 .. |image32| image:: https://lh6.googleusercontent.com/Mr0NltbgmXNdS_kXi7CI5w7lhYwhzkXeU4m1d9QpH0XBEEN2Ov-R5fzpGJJbjdQ8HFTp5G2mL5oUDbeQJSjJrs7S0H3ccyNWvxT0B5FY7vq37GKiLRAU9ntTjBhfHFhkyHv57Wgk
 .. |image33| image:: https://lh6.googleusercontent.com/4ZhmiZ3XaeXxdH3OmZ4ZITkP3zlZ1QGkCAOCxvze-qJwIWeXRRLK_LXJfs2RNUpC_nME8e0IF1bx4gJYJcLVq6L4maAxS6bwKOVk5KfjHF8PIP4ZPsH6gOO6kMnsjuGPgB4LEU32
 .. |image34| image:: https://lh6.googleusercontent.com/s6y-Q3WuQzRYJQNMIhTsWG1_JSLOu0HtafZ0APACYcv31RBsRTkY6BKe3Mk8lqWvYDnIyrcdhp2hohIVBFZE8kTdTkijKFAfB81BoaxxZACgcnUEBexL5FLU-wZ7_BXgDvejlkCq
-.. |image35| image:: https://lh6.googleusercontent.com/G67-FA1WcnLoUlSsroyfYXJVLswTm5pWXSZEh4T5usckdFoHJIcwkxJbniY1G7RG92L1ElXJbQzGSX-hQnkhO_jU6TP8XObYmuiSxs4bF_1ces_0o1icJhfpmZyQrB3asWipDnbi
+.. |image35| image:: /page_widget.jpg
 .. |image36| image:: https://lh6.googleusercontent.com/EnLN3juFGijG6DGbfmYXbd5ji4ZpUJF9mctX9E8e6USkqIcfC05DvS_CmYVYp9ehZiUpXdYuQ3i99gpcyaqSzZogjuqDC_JJafd-cQHb-3aHJgBsgLC2VopQpfZ2tDxZTOrByuMP
 .. |image37| image:: https://lh4.googleusercontent.com/AeYNu17E0r-ZokbV_ngf_QFqgZuj7_AXTSD9pHQJZ-E9kD6OnWLrvTpIM9GDWKM8HVqgxbRX9p0OCFsBg9iyY6HK8jyRCoVUPE218DWsxp5wLqFgFIXs5uOUFcIQbFi006KOEw09
 .. |image38| image:: https://lh3.googleusercontent.com/iVaWEJL8ZoDo_RsuVAD-tN7EKnXpB8Z_gReioUiLoR07JVhchlePSh6vnJpFD4Lq42OaUCOAfr3rRjz6nwAcCcWLMsCOrg-nAAZteLCn79VjOpQ14bHZhmhi3ueZGoOUu2Grn2kC
