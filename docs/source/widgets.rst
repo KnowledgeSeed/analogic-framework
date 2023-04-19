@@ -22,6 +22,7 @@ Methods
 -  refresh
 -  refreshWithWaitingForEvent: waits for specified event in parameter
 -  parameter is valid only for method refreshWithWaitingForEvent
+-  updateContent: updates only the data, not refresh the HTML code
 
 Common Parameters
 -----------------
@@ -50,7 +51,7 @@ end of the rows.
 
 |image0|
 
-**Config Parameters:** 
+**Config Parameters:**
 
 -  id\ **:** widget id which used for reference in framework
 -  type\ **:** type of widget
@@ -88,7 +89,7 @@ labelled with both texts and icons.
 
 |image2|
 
-**Config Parameters:** 
+**Config Parameters:**
 
 -  backgroundColor: Background color of the button
 -  borderColor: Border color of the button
@@ -114,13 +115,38 @@ labelled with both texts and icons.
 -  url: if button links to an URL, not an action
 -  visible: if widget visible (flag)
 
-**Data connection to TM1:**\ NO 
+**Data connection to TM1:**\ NO
 
 **Data repository specifics:**
 
 -  optional launch query, that can launch for example processes.
 -  only url, body and type settings are used. parsingControl settings is
    not available.
+
+.. code-block:: json
+    Widget Config:
+
+   {
+          id: 'hrdemoGroupsRow1Cell1Button',
+          type: ButtonWidget,
+          icon: 'icon-menu',
+          marginTop: '8px',
+          iconFontSize: '20',
+          iconColor: '#007AFF'
+   }
+
+    Repository.js:
+
+   {
+      hrdemoGroupsRow1Cell1Button: {
+        launch() {
+            Api.openPage('hrdemoMain');
+        }
+    },
+   }
+
+
+
 
 
 ComboChartWidget
@@ -135,13 +161,7 @@ bar chart and a line chart.
 
 |image4|
 
-**Config Parameters:** 
-
--  data:
--  datasets:
-
 .. code-block:: json
-
    {
         type:string,
         label:string,
@@ -153,6 +173,14 @@ bar chart and a line chart.
         stack:int
    }
 
+**Config Parameters:** 
+
+-  data:
+-  datasets:
+- paddingTop:
+- paddingRight:
+- padding Bottom:
+- PaddingLeft:
 -  tooltipsEnabled\ **:** true or false, parameters of dataset are shown
    on mouse hover
 -  tooltipsMode\ **:** mode of hover tooltip menu
@@ -225,6 +253,7 @@ bar chart and a line chart.
    ticks
 -  leftYAxesTicksOffset\ **:** offset (distance) between ticks of left Y
    axes
+-  leftYAxesLabelSeparatesThousands\ **:** Separates the Y Axes
 -  rightYAxesBorderDash\ **:**  length and spacing of dashes on grid
    lines
 -  rightYAxesTicksBegintAtZero\ **:** begin at zero the right y axes
@@ -265,7 +294,8 @@ bar chart and a line chart.
 -  maintainAspectRatio\ **:** true or false, width depends on height
 -  bezierCurve\ **:** true or false, display the bezier curve
 -  showLinearXAxes\ **:**  true or false, display the linear x axes
--  customLabelsForYAxes:
+-  customLabelsForYAxes:\ **:** Labels For Y Axes like %
+-  tooltipsSeparatesThousands:\ **:** Separates the the tooltips
 
 **Data connection to TM1:**\ YES
 
@@ -280,6 +310,131 @@ bar chart and a line chart.
 2. query for data Structure: {value:}
 
 **parsingControl type:** matrix
+
+.. code-block:: json
+   {
+    Widgetconfig:
+
+    {
+            id: 'hrdemoReportChart1',
+            type: ComboChartWidget,
+            width: '800',
+            height: '400',
+            title: '',
+            datasets: [{
+                "type": "line",
+                "backgroundColor": "rgba(52,199,89,0.4)",
+                "borderColor": "#34C759",
+                "borderWidth": 1,
+                "pointRadius": 0,
+                "stack": 1,
+                legendBackgroundColor: "#34C759",
+                "dataLabelFontColor": "#fff",
+                "dataLabelVisible": false,
+                "fill": true,
+                dataLabelBorderRadius: 5,
+                "legendLabel": "Base"
+            },
+                {
+                    "type": "line",
+                    "backgroundColor": "rgba(0,122,255,0.4)",
+                    "borderColor": "#007AFF",
+                    "borderWidth": 2,
+                    "pointRadius": 0,
+                    legendBackgroundColor: "#007AFF",
+                    "stack": 2,
+                    dataLabelBorderRadius: 5,
+                    "dataLabelFontColor": "#fff",
+                    "dataLabelVisible": false,
+                    "fill": true,
+                    "legendLabel": "Budget"
+                }],
+            tooltipsEnabled: true,
+            marginBottom: '50',
+            skin: 'combochartFTE',
+            legendGroupByStack: true,
+            bezierCurve: false,
+            xAxesGridLinesDisplay: true,
+            xAxesGridLinesDrawBorder: true,
+            xAxesTicksFontSize: 14,
+            xAxesTicksFontFamily: 'SFCompactDisplay, sans-serif',
+            xAxesTicksFontColor: '#333333',
+            xAxesTicksBegintAtZero: false,
+            xAxesTicksPadding: 10,
+            xAxesLabelFontSize: 12,
+            xAxesLabelFontFamily: 'imago, sans-serif',
+            xAxesLabelFontColor: '#747b85',
+            xAxesZeroLineColor: '#dee1e5',
+            leftYAxesDisplay: true,
+            leftYAxesStacked: false,
+            leftYAxesZeroLineColor: '#dee1e5',
+            leftYAxesGridLinesDisplay: true,
+            leftYAxesGridLinesDrawBorder: true,
+            leftYAxesGridLinesColor: '#dee1e5',
+            leftYAxesGridLinesDrawOnChartArea: true,
+            leftYAxesGridLinesDrawTicks: true,
+            leftYAxesLabelFontSize: 12,
+            leftYAxesLabelFontFamily: 'imago, sans-serif',
+            leftYAxesLabelFontColor: '#747b85',
+            leftYAxesLabelFontStyle: 'normal',
+            leftYAxesLabelPadding: 10,
+            leftYAxesTicksFontSize: 21,
+            leftYAxesTicksPadding: 20,
+            leftYAxesTicksFontStyle: 'normal',
+            leftYAxesTicksFontFamily: 'SFCompactDisplay, sans-serif',
+            leftYAxesTicksFontColor: '#333333',
+            leftYAxesTicksDisplay: true,
+            rightYAxesLabelFontSize: 12,
+        }
+
+    Repository.js
+     init: [
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+                type: 'POST',
+                server: true,
+                body: (db) => {
+                    return {
+                        key: 'hrdemoReportChart1_init_1',
+                        year: v('hrdemoReportRow1Cell3SegmentedControl').selected === '2024' ? '2024' : '2023'
+                    };
+                },
+                parsingControl: {
+                    type: 'list',
+                    query:
+                        (r, x) => {
+                            return {
+                                value: (r.Cells[x].Members[4].Name).slice(4, 6),
+                                label: (r.Cells[x].Members[4].Name).slice(4, 6)
+                            };
+                        }
+                }
+            },
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+                type: 'POST',
+                server: true,
+                body: (db) => {
+                    return {
+                        key: 'hrdemoReportChart1_init_2',
+                        year: v('hrdemoReportRow1Cell3SegmentedControl').selected === '2024' ? '2024' : '2023'
+                    };
+                },
+                parsingControl: {
+                    type: 'matrix',
+                    length: 2,
+                    query: [
+                        (r, x) => {
+                            return {value: parseInt(r.Cells[x].FormattedValue)};
+                        },
+                        (r, x) => {
+                            return {value: parseInt(r.Cells[x + 1].FormattedValue)};
+                        }
+                    ]
+                }
+            }
+        ]
+   }
 
 ContainerWidget
 ----------------
@@ -321,6 +476,41 @@ popup)
 
 **Data connection to TM1:** NO
 
+.. code-block:: json
+    Widget Config:
+
+   {
+         {
+                id: 'hrdemoSimulationVersionSelectorPopUp',
+                type: ContainerWidget,
+                anchorVisible: false,
+                anchorOnClick: true,
+                backdrop: true,
+                visible: false,
+                closeBtn: false,
+                width: '285px',
+                heightFixed: false,
+                bgScrollable: true,
+                fixed: true,
+                behaviour: 'popup',
+                positionAndCalculateBestSpace: 'bottom',
+                skin: 'version_popup4',
+                fadingSpeed: 0,
+                widgets: [
+                    {
+                        id: 'hrdemoSimulationVersionSelectorPopUpDropbox',
+                        type: DropBoxWidget,
+                        skin: 'version_dropbox',
+                        multiSelect: false,
+                        hideIfNoData: false,
+                        selectFirst: true,
+                    }
+                ]
+            },
+   }
+
+   }
+
 DatePickerWidget
 ------------------
 
@@ -359,14 +549,37 @@ DatePickerWidget
       -  minDate
       -  maxDate
 
--  choose query:
+-  pick query:
 
    -  optional query, that will be fired every time, once a date is
       selected
 
-**Code example:**
+.. code-block:: json
+    Widget Config:
 
-|image9|
+   {
+          id: 'hrdemoSimulationHireOrganisationPopUpGridRow4DatePicker',
+          type: DatePickerWidget,
+          width: '319px',
+          skin: 'headcount_popup_datepicker',
+          icon: 'icon-calendar',
+          label: '',
+          panelFixed: true,
+          multiSelect: false,
+          hideIfNoData: false,
+          selectFirst: true,
+   }
+
+    Repository.js:
+
+
+     hrdemoAddDummyPopupGridRow5Cell2DatePicker: {
+        pick() {
+            Api.updateWidgetsContent(['hrdemoAddDummyPopupGridRow9Cell2Text', 'hrdemoAddDummyPopupGridRow11Cell2Text', 'hrdemoAddDummyPopupGridRow10Cell2TextBox']);
+        }
+    },
+
+   }
 
 
 DeleteButtonRowWidget
@@ -423,7 +636,7 @@ items at a time from a given list of items.
 -  editable: boolean, default true
 -  itemIconOff: string, icon
 -  itemIconOn: string, icon
--  panelWidth:
+-  panelWidth:\ **:** Width of the panel
 -  placeHolder:
 -  selectFirst: boolean, default false, if there is no selected item the first displayed as selected
 -  serverSideFilter:
@@ -460,6 +673,44 @@ items at a time from a given list of items.
    -  optional query, that will be fired every time, once an element is
       selected or deselected
 
+.. code-block:: json
+    Repository.js:
+
+   {
+          hrdemoSimulationCompensationChangePopUpGridRow6Cell2DropBox: {
+        choose() {
+            Utils.setWidgetValue('compChangePosition', v('hrdemoAddDummyPopupGridRow6Cell2DropBox').value);
+            Utils.setWidgetValue('systemValueNewBonusValue', '0');
+            Api.updateWidgetsContent(['hrdemoSimulationCompensationChangePopUpGridRow9Cell2Text', 'hrdemoSimulationCompensationChangePopUpGridRow11Cell2Text', 'hrdemoSimulationCompensationChangePopUpGridRow10Cell2TextBox']);
+        },
+        init() {
+            return new RestRequest(this.restRequest)
+        },
+        restRequest:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+                type: 'POST',
+                server: true,
+                body: (db) => {
+                    return {
+                        key: 'hrdemoAddDummyPopupGridRow6Cell2DropBox_init'
+                    };
+                },
+                parsingControl: {
+                    type: 'list',
+                    query:
+                        (r, x) => {
+                            let selected = v('compChangePosition');
+                            return {
+                                name: r.Cells[x].FormattedValue,
+                                on: r.Cells[x].FormattedValue === selected
+                            };
+                        }
+                }
+            }
+    },
+   }
+
 GaugeWidget
 -----------
 
@@ -478,12 +729,14 @@ reports to show KPI-s.
 -  title: Widget title text
 -  colors: color of the widget
 -  skin\ **:** Selected skin of widget
--  values:
+-  values: The values on the chart
 -  valuesLabels:
--  labels:
--  minRange:
--  maxRange:
--  fontFamily:
+-  labels: the labels on the chart
+-  minRange: the minimum value on the chart
+-  maxRange: the maximum value on the chart
+-  showAxisValues: It's a boolean, default true
+-  separatesThousands: It's separates the values
+-  fontFamily: font family of the chart
 
 **Data connection to TM1:**\ YES
 
@@ -495,6 +748,56 @@ reports to show KPI-s.
       minRange:, maxRange:}**
    -  **parsingControl type: matrix**
        
+
+.. code-block:: json
+    Widget Config:
+
+   {
+           id: 'hrdemoSimulationRow3CellGauge',
+           type: GaugeWidget,
+           width: '200',
+           showAxisValues: true,
+           colors: ["#007AFF", "#858686"],
+           fontFamily: 'imago, sans-serif',
+           skin: 'simulation_gauge',
+           separatesThousands: true
+   }
+
+    Repository.js:
+
+
+      hrdemoSimulationCompensationChangePopUpGridRow6Cell2DropBox: {
+        choose() {
+            Utils.setWidgetValue('compChangePosition', v('hrdemoAddDummyPopupGridRow6Cell2DropBox').value);
+            Utils.setWidgetValue('systemValueNewBonusValue', '0');
+            Api.updateWidgetsContent(['hrdemoSimulationCompensationChangePopUpGridRow9Cell2Text', 'hrdemoSimulationCompensationChangePopUpGridRow11Cell2Text', 'hrdemoSimulationCompensationChangePopUpGridRow10Cell2TextBox']);
+        },
+        init() {
+            return new RestRequest(this.restRequest)
+        },
+        restRequest:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+                type: 'POST',
+                server: true,
+                body: (db) => {
+                    return {
+                        key: 'hrdemoAddDummyPopupGridRow6Cell2DropBox_init'
+                    };
+                },
+                parsingControl: {
+                    type: 'list',
+                    query:
+                        (r, x) => {
+                            let selected = v('compChangePosition');
+                            return {
+                                name: r.Cells[x].FormattedValue,
+                                on: r.Cells[x].FormattedValue === selected
+                            };
+                        }
+                }
+            }
+    },
 
 GridCellWidget
 ----------------
@@ -521,6 +824,19 @@ GridRowWidget
    do
 
 **Data connection to TM1:**\ NO
+
+.. code-block:: json
+    Widget Config:
+
+   {
+        id: 'hrdemoSimulationRow3Cell2',
+        type: GridCellWidget,
+        alignment: 'center-left',
+        width: '65%',
+        widgets: []
+   }
+
+
 
 
 GridRowWidget
@@ -552,6 +868,20 @@ GridWidget
 **Data connection to TM1:** 
 
 **Data connection to TM1:**\ NO
+
+.. code-block:: json
+    Widget Config:
+
+   {
+           id: 'hrdemoSimulationRow4',
+           type: GridRowWidget,
+           width: '100%',
+           height: '70px',
+           widgets: []
+   }
+
+
+
 
 GridTableCellWidget
 ----------------------
@@ -596,6 +926,19 @@ followingtypes text, textbox, dropBox, slider, toggle, datepicker  
 **Data connection to TM1:**\ NO
 
 
+.. code-block:: json
+    Widget Config:
+
+   {
+           id: 'hrdemoSimulationCell4',
+           type: GridTableCellWidget,
+           width: '100%',
+           height: '70px',
+           widgets: []
+   }
+
+
+
 GridTableHeaderCellWidget
 -------------------------
 
@@ -635,6 +978,17 @@ GridTableHeaderRowWidget.
 
 **Data connection to TM1:**\ NO
 
+.. code-block:: json
+    Widget Config:
+
+   {
+           id: 'hrdemoSimulationHeaderCell4',
+           type: GridTableHeaderCellWidget,
+           width: '100%',
+           height: '70px',
+           widgets: []
+   }
+
 
 GridTableHeaderRowWidget
 ------------------------
@@ -658,6 +1012,18 @@ GridTableHeaderCellWidgets.
 -  height:
 
 **Data connection to TM1:** NO
+
+
+.. code-block:: json
+    Widget Config:
+
+   {
+           id: 'hrdemoSimulationHeaderRow4',
+           type: GridTableHeaderRowWidget,
+           width: '100%',
+           height: '70px',
+           widgets: []
+   }
 
 
 GridTableWidget
@@ -703,6 +1069,8 @@ widget (except for the header row).
 -  cell background color: cellBackgroundColor parameter in parsing
 
 
+
+
 GridWidget
 ----------
 
@@ -736,8 +1104,26 @@ histogram and a line chart.
 
 -  **id:** Widget Id which used for reference in framework
 -  type\ **:** Type of Widget
--  zoomable\ **:** If the widget can be enlarged
 -  title\ **:** title of the widget
+-  paddingTop:
+-  paddingRight:
+-  paddingBottom:
+-  paddingLeft:
+-  xAxesDisplay: Display of the x Axes
+-  yAxesGridLinesDrawBorder: display the lines on y axes
+-  xAxesGridLinesDrawBorder: display the lines on x axes
+-  yAxesTicksPadding: Padding of the y Axes ticks
+-  xAxesTicksPadding: Padding of the x Axes ticks
+-  xAxesTicksOffset: Off sett of the x Axes ticks
+-  yAxesTicksOffset: Off sett of the y Axes ticks
+-  xAxesLabelDisplay: Boolean, display of the x Axes label
+-  yAxesLabelDisplay: Boolean, display of the y Axes label
+-  xAxesLabelFontSize: Font size of the x Axes label
+-  yAxesLabelFontSize: Font size of the y Axes label
+-  yAxesLabelPadding: Padding of the y axes label
+-  xAxesLabelPadding: Padding of the x axes label
+-  aspectRatio:
+-  maintainAspectRatio:
 -  datasetHistogram\ **:** dataset of the histogram
 -  datasetsLine\ **:** dataset of the line(s)
 -  listen\ **:** {event, method} events for the widget listen to and
@@ -854,6 +1240,20 @@ ImageWidget
 
 **Data connection to TM1:** NO
 
+.. code-block:: json
+    Widget Config:
+
+   {
+          id: 'hrdemoSettingsRow1Cell1Logo',
+          type: ImageWidget,
+          titleFontColor: '#AEAEB2',
+          fileName: 'knowledgeseed_stratos.png',
+          titleFontSize: '22px',
+          width: 290,
+          height: 90
+   }
+
+
 
 LineAreaChartWidget
 ----------------------
@@ -920,6 +1320,13 @@ LineAreaChartWidget
 -  yAxesTicksDisplay\ **:** true or false, display the left y axes ticks
 -  yAxesTicksOffs\ **et:** offset (distance) between ticks of left Y
    axes
+-  tooltipsEnabled: Boolean , it's enable the mouse over info
+-  tooltipsMode:
+-  tooltipsIntersect: Boolean
+-  aspectRatio:
+-  maintainAspectRatio: Boolean
+
+
 
 **Data connection to TM1:**\ YES
 
@@ -935,6 +1342,106 @@ LineAreaChartWidget
 
 **parsingControl type:** matrix
 
+.. code-block:: json
+    Widget Config:
+
+   {
+            id: 'hrdemoReportChart9',
+            type: LineAreaChartWidget,
+            width: '1000',
+            height: '600',
+            title: 'Base Business',
+            datasets: [
+                {
+                    "legendLabel": "Marketing and Management",
+                    "borderColor": "#f8bfd1",
+                    "borderWidth": 2,
+                    "backgroundColor": "#f8bfd1",
+                    "fill": false,
+                    "lineTension": 0.5,
+                    "pointRadius": 2
+                },
+                {
+                    "legendLabel": "Finance and HR",
+                    "borderColor": "#8a8a8a",
+                    "borderWidth": 0,
+                    "backgroundColor": "#8a8a8a",
+                    "fill": false,
+                    "lineTension": 0.5,
+                    "pointRadius": 2
+                },
+
+            ],
+            legendSkin: 'pieChart',
+            visible: true,
+            defaultFontFamily: 'imago, sans-serif',
+            yAxisLabel: 'Sales',
+            xAxesDisplay: true,
+            xAxesGridLinesDisplay: false,
+            xAxesGridLinesDrawBorder: false,
+            yAxesDisplay: true,
+            yAxesGridLinesDisplay: false,
+            yAxesGridLinesDrawBorder: false,
+            xAxesTicksDisplay: true,
+            yAxesTicksDisplay: true,
+            xAxesTicksLabelDisplay: true,
+            yAxesTicksLabelDisplay: true,
+            xAxesLabelDisplay: true,
+            yAxesLabelDisplay: true
+   }
+
+    Repository.js:
+
+
+          hrdemoReportChart9: {
+        init: [
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+                type: 'POST',
+                server: true,
+                body: (db) => {
+                    return {};
+                },
+                parsingControl: {
+                    type: 'list',
+                    query:
+                        (r, x) => {
+                            return {
+                                value: r.Cells[x].Value,
+                                label: r.Cells[x].Members[4].Name
+                            };
+                        }
+                }
+            },
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+                type: 'POST',
+                server: true,
+                body: (db) => {
+                    return {};
+                },
+                parsingControl: {
+                    type: 'matrix',
+                    length: 5,
+                    query: [
+                        (r, x) => {
+                            return {value: r.Cells[x].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 1].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 2].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 3].FormattedValue};
+                        }, (r, x) => {
+                            return {value: r.Cells[x + 4].FormattedValue};
+                        }]
+                }
+            }
+        ],
+    },
+    },
+
+
 
 LineScatterComboWidget
 ----------------------
@@ -949,11 +1456,132 @@ scatter plot diagram and a line chart.
 **Config Parameters:** 
 
 -  datasets:
--  legendVisible:
--  tooltipsEnabled:
+-  legendVisible: Boolean, Set the visibility of the legend
+-  canvasPaddingTop:
+-  canvasPaddingRight:
+-  canvasPaddingBottom:
+-  canvasPaddingLeft:
+-  tooltipsEnabled: Boolean, Mouse Over
 -  tooltipsMode:
 -  aspectRatio:
 -  maintainAspectRatio:
+-  xAxisVisible: Boolean, It's set the visibility of the x Axis
+-  xAxisGridLinesDisplay:  Boolean, It's set the visibility of the x Axis Grid Lines
+-  xAxisGridLinesDrawOnChartArea:  Boolean, It's set the visibility of the x Axis GridLines on chart
+-  xAxisTicksDisplay: Boolean, It's set the visibility of the x Axis ticks
+-  xAxisTicksLabelDisplay: Boolean, It's set the visibility of the x Axis ticks label
+-  xAxisTicksStepSize: It's set the step of the x Axis ticks
+-  xAxisOffsetGridLines: Boolean, It's set the off sett of the y axis
+-  yAxisVisible: Boolean, It's set the visibility of the x Axis
+-  yAxisGridLinesDisplay:  Boolean, It's set the visibility of the y Axis Grid Lines
+-  yAxisGridLinesDrawOnChartArea: Boolean, It's set the visibility of the y Axis GridLines on chart
+-  yAxisTicksDisplay: Boolean, It's set the visibility of the y Axis ticks
+-  yAxisTicksLabelDisplay: Boolean, It's set the visibility of the y Axis ticks label
+-  xAxisTicksFontSize: It's set the size of the x axis ticks font size
+-  yAxisTicksFontSize: It's set the size of the y axis ticks font size
+-  xAxisTicksFontFamily: It's set the size of the x axis ticks font family
+-  yAxisTicksFontFamily: It's set the size of the y axis ticks font family
+-  xAxisTicksFontStyle: It's set the size of the x axis ticks font style
+-  yAxisTicksFontStyle: It's set the size of the y axis ticks font style
+-  xAxisTicksFontColor: It's set the size of the x axis ticks font color
+-  yAxisTicksFontColor: It's set the size of the y axis ticks font color
+-  xAxisTicksPadding: It's set the size of the x axis ticks padding
+-  yAxisTicksPadding: It's set the size of the y axis ticks padding
+-  xAxisTicksOffset: It's set the size of the x axis ticks off set
+-  yAxisTicksOffset: It's set the size of the y axis ticks off set
+-  yAxisTicksPrecision: It's set the size of the y axis ticks precision
+-  yAxisTicksPrecisionFixed: Boolean, It's set the size of the y axis ticks precision
+-  yAxisGridLinesNum: Boolean, It's set the size of the y axis gird line nuzms
+-  rightBorderVisible: Boolean, It's set the visibility of the right border
+-  topBorderVisible: Boolean, It's set the visibility of the top border
+-  xMin: It's set the size of the x axis min value
+-  xMax: It's set the size of the x axis max value
+-  yMin: It's set the size of the y axis min value
+-  yMax: It's set the size of the y axis max value
+-  xAxisOffset: Boolean, It's set the visibility of the x axes off set
+-  xAxisOffsetRight: It's set the visibility of the x axes off set right
+-  xAxisOffsetLeft: It's set the visibility of the x axes off set left
+-  yAxisUnit:
+-  bezierCurveBorderWidth:
+-  bezierCurveTension:
+-  auxLineColor:
+-  auxLineWidth:
+-  auxLineDash:
+
+.. code-block:: json
+    Widget Config:
+
+   {
+           id: 'hrdemoReportChart10',
+           type: LineScatterComboWidget,
+           yAxisGridLinesDisplay: false,
+           width: '1000',
+           height: '440',
+           tooltipsEnabled: false,
+           maintainAspectRatio: false,
+           yAxisGridLinesNum: 9,
+           //xAxisOffset: 0.5,
+           xAxisTicksLabelDisplay: true,
+           xAxisTicksDisplay: false
+   }
+
+    Repository.js:
+
+
+      hrdemoReportChart10: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+            type: 'POST',
+            server: true,
+            body: (db) => {
+                return {
+                    key: 'hrdemoReportChart10_init_2'
+                };
+            },
+            parsingControl: {
+                type: 'script',
+                script: (data, object) => {
+                    let items = [{
+                        label: data.Cells[0].Members[5].Name,
+                        pointRadius: 5,
+                        showLine: true,
+                        static: false,
+                        selected: true,
+                        color: '#009FDA',
+                        hidden: false,
+                        values: []
+                    }, {
+                        label: data.Cells[1].Members[5].Name,
+                        pointRadius: 5,
+                        showLine: false,
+                        static: false,
+                        selected: true,
+                        color: '#747678',
+                        hidden: false,
+                        values: []
+                    }];
+                    let start = 202300;
+                    for (let i = 0; i < data.Cells.length; i += 2) {
+                        items[0].values.push({
+                            x: i / 2 + 1,
+                            y: Utils.parseNumber(data.Cells[i].FormattedValue, 'HU-hu')
+                        })
+                        items[1].values.push({
+                            x: i / 2 + 1,
+                            y: Utils.parseNumber(data.Cells[i + 1].FormattedValue, 'HU-hu')
+                        })
+                    }
+                    let values = [...items[0].values, ...items[1].values];
+                    return {
+                        datasets: items, legendVisible: true, legendSkin: 'combochartFTE',
+                        yMax: Utils.precisionRound(Math.max(...values.map(e => e.y)), 0),
+                        yMin: Utils.precisionRound(Math.min(...values.map(e => e.y)), 0)
+                    };
+                }
+            }
+        }
+    },
+    },
 
 
 PageWidget
@@ -1050,16 +1678,69 @@ label:,backgroundColor:,borderWidth:,borderColor:}
 example response:
 
 .. code-block:: json
+    Widget Config:
 
-    [
-        {value: 78, label: 'A', backgroundColor:'#ffb3cc', borderWidth: 2, borderColor: 'red'},
-        {value: 35, label: 'B', backgroundColor:'#80dfff', borderWidth: 2, borderColor: 'blue'},
-        {value: 19, label: 'C', backgroundColor:'#80ff80', borderWidth: 2, borderColor: 'green'}
-    ]
+   {
+          id: 'hrdemoReportChart6',
+         type: PieChartWidget,
+         width: '1000',
+         height: '600',
+         title: '',
+         tooltipsEnabled: true,
+         marginBottom: '50',
+         skin: 'skin4',
+         legendSkin: 'pieChart',
+         legendGroupByStack: false,
+         labelAlign: 'end',
+         labelAnchor: 'end',
+         labelDisplay: true,
+         labelBackgroundColor: '#FFFFFF',
+         labelFontColor: '#000',
+   }
 
-this data generates the following pie chart:
+    Repository.js:
 
-|image38|
+
+      hrdemoReportChart6: {
+        init: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Long_name))`,
+            type: 'POST',
+            server: true,
+            body: (db) => {
+                return {
+                    key: 'hrdemoReportChart6_init_2',
+                    year: v('hrdemoReportRow1Cell3SegmentedControl').selected === '2024' ? '2024' : '2023'
+                };
+            },
+            parsingControl: {
+                type: 'script',
+                script: (data, object) => {
+                    let items = [];
+                    for (let i = 0; i < data.Cells.length; i++) {
+                        items.push({
+                            value: Utils.parseNumber(data.Cells[i].FormattedValue, "HU-hu"),
+                            label: data.Cells[i].Members[4].Attributes['Long_name'],
+                            backgroundColor: Repository.hrdemoReportChart6.iconColor[i]
+                        })
+                    }
+                    return {dataset: items};
+                }
+            }
+        },
+        iconColor: {
+            '0': '#F44336',
+            '1': '#673AB7',
+            '2': '#03A9F4',
+            '3': '#4CAF50',
+            '4': '#FFC107',
+            '5': '#015D52',
+            '6': '#6A5D4D',
+            '7': '#DE4C8A',
+        }
+    },
+    },
+
+
 
 PivotTableWidget
 -----------------
@@ -1107,6 +1788,15 @@ points of two or more different data sets.
 -  tickFontSize: font size of the tick labels
 -  tickFontStyle: font style of the tick labels
 -  canvasHeight: height of the canvas
+-  canvasWidth: width of the canvas
+-  bezierCurveBorderWidth:
+-  bezierCurveTension:
+-  paddingTop:
+-  paddingRight:
+-  paddingBottom:
+-  paddingLeft:
+-  tooltipsEnabled:
+-  tooltipsMode:
 -  canvas Width: width of the canvas
 -  legendSkin: skin of the legend
 -  legendVisible: legend visible flag
@@ -1155,6 +1845,34 @@ points of two or more different data sets.
 
    1. query for data Structure: {value:}
    2. parsingControl type: matrix
+
+.. code-block:: json
+    Widget Config:
+
+   {
+         id: 'hrdemoReportChart12',
+         type: RadarChartWidget,
+         skin: 'skin3',
+         title: '',
+         titleVisible: true,
+         visible: true,
+         canvasWidth: '750',
+         canvasHeight: '750',
+         height: '750',
+         width: '750',
+         legendVisible: true,
+         legendSkin: 'skin3'
+   }
+
+    Repository.js:
+
+   
+      hrdemoGroupsRow1Cell1Button: {
+        launch() {
+            Api.openPage('hrdemoMain');
+        }
+    },
+   
 
 RadioButtonRowWidget
 -----------------------
@@ -1306,7 +2024,9 @@ SegmentedControlWidget options. 
 **Data connection to TM1:** NO
 
 
+
 SegmentedControlWidget
+------------------
 
 **Description**: This widget is used to switch between displaying
 different sets of data.
@@ -1327,6 +2047,50 @@ different sets of data.
 
 **Data connection to TM1:**\ NO 
 
+.. code-block:: json
+    Widget Config:
+
+   {
+            id: 'hrdemoPeopleServiceTeamEditorRow2Cell1SegmentedControl',
+            type: SegmentedControlWidget,
+            width: '320',
+            skin: 'segmented',
+            marginBottom: '5px',
+            widgets: [
+
+                {
+                    id: 'hrdemoPeopleServiceTeamEditorRow2Cell1SegmentedControlItem1',
+                    type: SegmentedControlItemWidget,
+                    action: 'segmentedControlTab1',
+                    skin: 'segmented_left_hrdemo',
+                    selected: true,
+                    label: 'Editor',
+                },
+                {
+                    id: 'hrdemoPeopleServiceTeamEditorRow2Cell1SegmentedControlItem2',
+                    type: SegmentedControlItemWidget,
+                    action: 'segmentedControlTab2',
+                    skin: 'segmented_right_hrdemo',
+                    selected: false,
+                    label: 'List',
+                }
+   }
+
+    Repository.js:
+
+   
+      hrdemoPeopleServiceTeamEditorRow2Cell1SegmentedControl: {
+        switch(db) {
+            Utils.setWidgetValue('systemValueTeamEditorTableData', false);
+            Utils.setWidgetValue('systemValueClickedElementGroup', false);
+            Utils.setWidgetValue('systemValueClickedRow', false);
+            Repository.hrdemoPeopleServiceTeamEditorRow1Cell1Button.clearValues();
+            Api.openPage('hrdemoPeopleServiceTeamList');
+        }
+    },
+    },
+   
+
 ShadowWidget
 -------------
 
@@ -1338,6 +2102,53 @@ ShadowWidget
 **Config Parameters:** 
 
 **Data connection to TM1:**\ NO 
+
+.. code-block:: json
+    Widget Config:
+
+   {
+          id: 'hrdemoPeopleServiceTeamEditorShadow',
+          type: ShadowWidget
+   }
+
+    Repository.js:
+
+
+      hrdemoPeopleServiceTeamEditorShadow: {
+        initFinished() {
+            Api.forceRefresh('hrdemoPeopleServiceTeamEditorLevel1GridTable');
+        },
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Caption, Attributes/Normal_Name))`,
+                type: 'POST',
+                server: true,
+                body: (db) => {
+                    return {
+                        group: v('systemValueSelectedGroup')
+                    };
+                },
+                parsingControl: {
+                    type: 'object',
+                    query:
+                        {
+                            value: (r, x) => {
+                                for (let i = 0; i < r.Cells.length; ++i) {
+                                    v('systemValueSelectedEmployees').push(r.Cells[i].Members[0].Name);
+                                    v('systemValueSelectedEmployeeHierarchy').push({
+                                        department: r.Cells[i + 1].FormattedValue,
+                                        team: r.Cells[i].FormattedValue,
+                                        employee: r.Cells[i].Members[0].Name
+                                    });
+                                    i++;
+                                }
+                                return true;
+                            }
+                        }
+                }
+            }
+    },
+    },
 
 SimulationPanelWidget
 -----------------------
@@ -1400,6 +2211,11 @@ SliderWidget
 -  largeIncrement: The larger value you can increase
 -  listen: {event, method} events for the widget listen to and method to
    do
+-  unit:
+-  updateableWidgetId:
+-  updateableWidgetValueHandler:
+-  updateCallBack:
+-  originalValue:
 -  maxRange\ **:** Maximal value
 -  minRange\ **:** Minimal value
 -  skin: Selected skin of the widget
@@ -1431,6 +2247,74 @@ SliderWidget
       -  unit
       -  ordinal
 
+.. code-block:: json
+    Widget Config:
+
+   {
+           id: 'hrdemoUpdateValueGridRow4Slider',
+            type: SliderWidget,
+            width: '320px',
+            hideIfNoData: false,
+            skin: 'hrdemo_cell_value',
+            minRange: -100,
+            maxRange: 100,
+            alignment: 'center',
+            unit: '%',
+            updateableWidgetId: 'hrdemoUpdateValueGridRow3TextBox',
+            trackFillStartValue: -100,
+            buttonsVisible: false,
+            listen: [
+                {
+                    event: 'launch.hrdemoUpdateValueGridRow3Button.finished',
+                    method: 'refreshWithoutLoader'
+                }
+                                        ]
+   }
+
+    Repository.js:
+
+   
+       hrdemoUpdateValueGridRow4Slider: {
+        getOriginalValue() {
+            return Utils.parseNumber(Utils.replaceDecimal(v('hrdemoUpdateValueGridRow2Text2').value), 'HU-hu');
+        },
+        init() {
+            if (v('hrdemoUpdateValueGridRow2Text2').value) {
+                return {
+                    value: 0,
+                    updateableWidgetValueHandler: (sliderValue) => {
+                        let originalValue = this.getOriginalValue(),
+                            newValue;
+
+                        if (sliderValue === 0) {
+                            newValue = originalValue;
+                        } else {
+                            newValue = (originalValue * (1 + (sliderValue / 100))).toFixed(2);
+                        }
+
+                        return newValue;
+                    },
+                    calculateSliderValue: (value) => {
+                        let sliderWidgetValue = v('hrdemoUpdateValueGridRow4Slider');
+                        sliderWidgetValue.value = value;
+
+                        Utils.setWidgetValue('hrdemoUpdateValueGridRow4Slider', sliderWidgetValue);
+
+                        let originalValue = this.getOriginalValue();
+
+                        if (originalValue === 0) {
+                            return originalValue;
+                        }
+
+                        return ((value / originalValue) - 1) * 100;
+                    }
+                };
+            }
+            return {};
+        }
+    },
+    },
+   
 
 
 TextAreaWidget
@@ -1451,6 +2335,7 @@ text. The widget is resizable by bottom right corner drag and drop
 -  type\ **:** type of widget
 -  listen: {event, method} events for the widget listen to and method to
    do
+-  editable: Boolean, It's set editable true or false
 -  skin: Selected skin of widget:
 -  title: title of the textbox
 -  titleVisible: visibility
@@ -1462,12 +2347,12 @@ text. The widget is resizable by bottom right corner drag and drop
 -  icon:
 -  highlight:
 -  placeholder:
--  textAlignment:
--  textFontColor:
--  textFontSzite:
--  titleFontColor:
--  titleFontSize:
--  titleTextAlignment:
+-  textAlignment: alignment of the text
+-  textFontColor: font color of the text
+-  textFontSzite: font size of the text
+-  titleFontColor: font color of the title
+-  titleFontSize: font size of the title
+-  titleTextAlignment: alignment of the title
 
 **Data connection to TM1:** YES
 
@@ -1480,6 +2365,70 @@ text. The widget is resizable by bottom right corner drag and drop
       -  text
       -  ordinal
 
+.. code-block:: json
+    Widget Config:
+
+   {
+           id: 'hrdemoSimulationCommentPopupCommentInput',
+            type: TextAreaWidget,
+            placeholder: 'Add comment ...',
+            marginBottom: '30',
+            width: '280px',
+            height: '105px',
+            icon: 'icon-send.png',
+            skin: 'comment_message
+   }
+
+    Repository.js:
+
+   
+          hrdemoSimulationCommentPopupCommentInput: {
+        save: {
+            url: (db) => {
+                return `/api/v1/Processes('zSYS Analogic UI Add Comment')/tm1.ExecuteWithReturn`;
+            },
+            type: 'POST',
+            server: true,
+            body: (db) => {
+                let parameters = Repository.hrdemoSimulationGridTable.getCommentSaveProcessParameters();
+                parameters['comment'] = v('hrdemoSimulationCommentPopupCommentInput.value');
+                parameters['activeUser'] = v('activeUser').replace(/\\/g, '/');
+                Utils.setWidgetValue('hrdemoSimulationCommentPopupCommentAdded', true);
+                return parameters;
+            },
+            callback() {
+                Api.executeQueryRequest(['hrdemoSimulationCommentPopupCommentInput', 'reloadComment']);
+            }
+        },
+        reloadComment: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue)`,
+            type: 'POST',
+            server: true,
+            body: (db) => {
+                return Repository.hrdemoSimulationGridTable.getCommentReloadParametersAfterSave();
+            },
+            parsingControl: {
+                type: 'script',
+                script: (data) => {
+                    let r = {
+                        previousCommentId: data.Cells[0].FormattedValue,
+                        commentId: data.Cells[1].FormattedValue,
+                        text: data.Cells[2].FormattedValue,
+                        user: data.Cells[3].FormattedValue,
+                        date: data.Cells[4].FormattedValue
+                    };
+                    Utils.setWidgetValue('hrdemoSimulationCommentPopupLoadedComments', v('hrdemoSimulationCommentPopupLoadedComments').length !== 0 ? [r].concat(v('hrdemoSimulationCommentPopupLoadedComments')) : [r]);
+                    Utils.setWidgetValue('hrdemoSimulationCommentPopupLoadFromLoadedComments', true);
+                    Api.forceRefresh('hrdemoSimulationCommentPopupPreviousCommentsGridTable');
+                    Api.forceRefresh('hrdemoSimulationCommentPopupCommentInput');
+                    Api.forceRefresh('hrdemoSimulationCommentPopupControlPanelLoadMoreButton');
+                    return {};
+                }
+            }
+        }
+    },
+    },
+   
 
 TextBoxWidget
 -------------
@@ -1516,16 +2465,9 @@ TextBoxWidget
 -  icon\ **:** icon of the widget (drop-down)n to and method to do
 -  highlight:
 -  defaultText:
--  editable:
+-  editable: Boolean, It's set editable true or false
 -  skin:
--  textBoxType:
--  textAlignment:
--  textFontColor:
--  textFontSize:
--  title:
--  titleFontColor:
--  titleFontSize:
--  titleTextAlignment:
+
 
 **Data connection to TM1:**\ OPTIONAL
 
@@ -1542,9 +2484,59 @@ TextBoxWidget
    -  optional query, that will be fired every time, once finished
       editing the TextBox (clicked out from the textbox area)
 
-**Code example:**
+.. code-block:: json
+    Widget Config:
 
-|image55|
+   {
+         id: 'hrdemoSimulationCompensationChangePopUpGridRow12Cell2TextBox',
+         type: TextBoxWidget,
+         width: 350,
+         marginTop: '10px',
+         editable: true,
+         skin: 'custom_group',
+         height: '40px'
+   }
+
+    Repository.js:
+
+   
+      hrdemoSimulationCompensationChangePopUpGridRow12Cell2TextBox: {
+        init() {
+            if (Utils.getGridTableCurrentCell('hrdemoSimulationGridTable').yearAndMonth) {
+                return new RestRequest(this.restRequest);
+            }
+            return [];
+        },
+        restRequest: {
+            url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+            type: 'POST',
+            server: true,
+            body: (db) => {
+                return {
+                    version: v('systemValueSelectedVersion2'),
+                    period: Utils.getGridTableCurrentCell('hrdemoSimulationGridTable').yearAndMonth,
+                    employee: Utils.getGridTableCurrentRow('hrdemoSimulationGridTable')[0].employeeNumber,
+                    group: v('hrdemoSimulationGroupSelectorPopUpDropbox').value
+                };
+            },
+            parsingControl: {
+                type: 'object',
+                query:
+                    {
+                        value: (r, x) => {
+                            Utils.setWidgetValue('systemValueNewBonusValue', r.Cells[x].FormattedValue);
+                            Api.updateWidgetsContent(['hrdemoSimulationCompensationChangePopUpGridRow9Cell2Text', 'hrdemoSimulationCompensationChangePopUpGridRow11Cell2Text', 'hrdemoSimulationCompensationChangePopUpGridRow10Cell2TextBox']);
+                            return 0;
+                        },
+                        defaultText: (r, x) => {
+                            return 0;
+                        }
+                    }
+            }
+        }
+    },
+    },
+   
 
 TextWidget
 ----------
@@ -1599,9 +2591,37 @@ TextWidget
 
       -  text
 
-**Code example:**
+.. code-block:: json
+    Widget Config:
 
-|image58|
+   {
+         id: 'hrdemoSimulationCompensationChangeGroupPopUpGridRow2Text1',
+         type: TextWidget,
+         titleFontSize: '13',
+         title: 'Group - 2023. June',
+         marginTop: '15px',
+         marginBottom: '15px',
+         marginLeft: '9px',
+   }
+
+    Repository.js:
+
+   
+      hrdemoSimulationCompensationChangeGroupPopUpGridRow2Text1: {
+        init() {
+            let m = Utils.getGridTableCurrentCell('hrdemoSimulationGridTable').yearAndMonth,
+                months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            if (m) {
+                let y = m.slice(0, 4) + '. ' + months[Utils.parseNumber(m.slice(4, 6)) - 1];
+                return {
+                    title: v('hrdemoSimulationGroupSelectorPopUpDropbox').value + ' - ' + '<b style=color:#747B85>' + y + '</b>',
+                }
+            }
+            return {};
+        }
+    },
+    },
+   
 
 
 ToggleWidget
@@ -1659,12 +2679,34 @@ exclusive options. (for example: on-off choice)
 
 **Data repository specifics:**
 
--  optional launch query, that can launch for example processes
+-  optional switch query, that can switch for example processes
 -  optional query for value (0 or 1)
 -  only url, body and type settings are used. parsingControl settings is
    not available
 
+.. code-block:: json
+    Widget Config:
 
+   {
+         id: 'hrdemoViewGroupGridTableCell01Toggle1',
+             type: ToggleWidget,
+             titleFontSize: '13',
+             skin: 'page_toggle',
+             iconColor: '#007AFF',
+             icon: 'icon-checkbox-on11',
+             iconOff: 'icon-checkbox-off1',
+             titleFontWeight: '600'
+   }
+
+    Repository.js:
+
+   
+      hrdemoGroupsRow1Cell1Button: {
+        launch() {
+            Api.openPage('hrdemoMain');
+        }
+    },
+   
 TornadoChartWidget
 ------------------
 
@@ -1717,6 +2759,69 @@ rightColor:, legendLabel:}
 
  matrix
 
+.. code-block:: json
+    Widget Config:
+
+   {
+          id: 'hrdemoReportChart11',
+         type: TornadoChartWidget,
+         width: '1700',
+         height: '400',
+         marginLeft: '1600px',
+         dataset: [
+             {
+                 leftColor: '#F44336',
+                 rightColor: '#F44336'
+             },
+             {
+                 leftColor: '#673AB7',
+                 rightColor: '#673AB7'
+             },
+
+         ],
+         xMin: 0,
+         xMax: 150,
+         skin: ''
+   }
+
+    Repository.js:
+
+   
+       hrdemoReportChart11: {
+        init:
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name))`,
+                type: 'POST',
+                server: true,
+                body: (db) => {
+                    return {
+                        key: 'hrdemoReportChart11_init'
+                    };
+                },
+                parsingControl: {
+                    type: 'script',
+                    script: (r) => {
+                        let results = [], maxValue = 0, minValue = 0, leftValue, rightValue;
+                        for (let x = 0; x < r.Cells.length; x += 2) {
+                            leftValue = Utils.parseNumber(r.Cells[x].FormattedValue, 'HU-hu');
+                            rightValue = Utils.parseNumber(r.Cells[x + 1].FormattedValue, 'HU-hu');
+                            results.push({
+                                leftValue: 0 - leftValue,
+                                rightValue: rightValue,
+                            });
+                            if (rightValue > maxValue) {
+                                maxValue = rightValue;
+                            }
+                            if (leftValue > minValue) {
+                                minValue = leftValue;
+                            }
+                        }
+                        return {dataset: results, baseValue: 0, xMin: 0, xMax: maxValue * 1.3};
+                    }
+                }
+
+    },
+   
 
 VerticalLineBoxWidget
 ------------------------
@@ -1786,6 +2891,113 @@ contributions.
 
 **Data repository specifics:**
 
+.. code-block:: json
+    Widget Config:
+
+   {
+            id: 'hrdemoReportWaterFall',
+         type: WaterFallWidget,
+         width: '1400',
+         height: '400',
+         title: '',
+         minYAxis: '100',
+         maxYAxis: '1100',
+         dataset1: {
+             datapoints: [
+                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
+                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
+                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
+                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
+                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
+                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
+                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
+                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
+                 {positiveColor: '#34C759', negativeColor: '#FF3B30'}
+             ]
+         },
+         tooltipsEnabled: true,
+         marginBottom: '50',
+         xAxisLabels: [
+             {value: 'Total Cost 2023'},
+             {value: 'Calculated Salary'},
+             {value: 'Bonus'},
+             {value: 'Auto Allowance'},
+             {value: 'Other Benefits'},
+             {value: 'Social Security'},
+             {value: 'Pension Fund'},
+             {value: 'Health Insurance'},
+             {value: 'Total Cost 2024'}
+         ],
+         labelVisible: true,
+         legendVisible: false,
+         yAxisGridLineNum: 4,
+         yAxisSeparatesThousands: true
+   }
+
+    Repository.js:
+
+   
+          hrdemoReportWaterFall: {
+        init: [
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Long_NameENG))`,
+                type: 'POST',
+                server: true,
+                body: (db) => {
+                    return {
+                        key: 'hrdemoReportWaterFall_init'
+                    };
+                },
+                parsingControl: {
+                    type: 'script',
+                    script(r) {
+                        let values = r.Cells.map(
+                            (elem, index) => r.Cells.slice(
+                                0, index + 1).map(
+                                e => Utils.parseNumber(e.FormattedValue, 'HU-hu')).reduce(
+                                (a, b) => a + b));
+
+
+                        values.splice(-1, 1);
+                        const max = Math.max.apply(this, values),
+                            min = Math.min.apply(this, values);
+
+                        return {
+                            maxYAxis: String(Math.round((max * 1.01))),
+                            minYAxis: String(Math.round((min * 0.99)))
+                        };
+                    }
+                }
+            },
+            {
+                url: (db) => `/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Long_NameENG))`,
+                type: 'POST',
+                server: true,
+                body: (db) => {
+                    return {
+                        key: 'hrdemoReportWaterFall_init'
+                    };
+                },
+                parsingControl: {
+                    type: 'script',
+                    script(r) {
+                        const process = function (cell, index) {
+                            const val = Utils.parseNumber(cell.FormattedValue, 'HU-hu')
+
+                            return {
+                                value: val,
+                                displayValue: Utils.separatesThousands(val)
+                            };
+                        }
+                        return Utils.getGridtableMatrix(r.Cells, 9, process);
+                    }
+                }
+            }
+        ]
+    },
+    },
+   
+
 .. |image0| image:: https://lh6.googleusercontent.com/Y_aekcROYQHVtXePeqcNS2pjy3kSgO5DF4Y0wWTFLogYmCWdC3i55yXHexkbJuZ4dv8ecpIGhUsrz_1jJURnMOin1NBMNnhlGMiYk-lAIzVHkiPY4hz9cwLGK58Yb3Rg018xc0PH
 .. |image1| image:: https://lh6.googleusercontent.com/jfMcQEj7QHtK7vPeQeg0QIqCs4SQiHmhdAzRZI2lS-wucQvZgc7F5FiX1zgxEL7TTSNh6zHVl3gmbTZ8HHxjtMtBzoNKFUWr9NjEl9yegG24LyzQ_qFOFrzI7DfEUF-yfd6vmRtV
 .. |image2| image:: https://lh6.googleusercontent.com/lT0rdiUGxjZibMn_Ha1m2jTdat2yBziamtlG6eMNnByCsA0FHx3UMnLfql05B5KDK4yLcZ7mQpGEI9sJpNfOGHpsud4BYPKg2WmGI-G9r1uREUo01fPrr6mOmXnnrC34OrESWbci
@@ -1854,3 +3066,4 @@ contributions.
 .. |image65| image:: https://lh3.googleusercontent.com/DPgcnvbo5Qut_aHamNCFazuYMp42w3ZATT1adkAGEg9W07haPd1p9cAxzDIJkQKUiHsKvJBMHy27Nyc0CEHCq8kwfvLE6Liuo3PCLbyTf2HdajbGu9GtzotF1IE7DMU3UEChXox-
 .. |image66| image:: /sliderWidget.png
 .. |image67| image:: /slider_example.png
+
