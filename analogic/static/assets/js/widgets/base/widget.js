@@ -721,4 +721,8 @@ class Widget {
     static setOrRemoveMeasure(element, measureName, value) {
         Widget.setOrRemoveStyle(element, measureName, value ? Widget.getPercentOrPixel(value) : false);
     }
+
+    static addOrRemoveClass(element, className, add) {
+        add ? !element.hasClass(className) && element.addClass(className) : element.removeClass(className);
+    }
 }

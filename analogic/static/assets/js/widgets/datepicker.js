@@ -12,6 +12,8 @@ class DatePickerWidget extends Widget {
             monthPicker = this.getRealValue('monthPicker', d, false);
 
         const v = {
+            allowEmptyDate: this.getRealValue('allowEmptyDate', d, false),
+            closeAfterSelectingTheDate: this.getRealValue('closeAfterSelectingTheDate', d, false),
             datePicked: this.getRealValue('datePicked', d, DatePickerWidget.getStandardizedDateString(new Date(), monthPicker)),
             editable: this.getRealValue('editable', d, true),
             local: this.getRealValue('local', d, false),
@@ -30,11 +32,17 @@ class DatePickerWidget extends Widget {
             minDate = v.minDate ? DatePickerWidget.getDateFromString(v.minDate, v.monthPicker) : '',
             maxDate = v.maxDate ? DatePickerWidget.getDateFromString(v.maxDate, v.monthPicker) : '';
 
+        if (v.allowEmptyDate && (!d['datePicked'] || d['datePicked'] === '')) {
+            dateText = '';
+        }
+
         this.value = v.datePicked;
         this.minDate = minDate;
         this.maxDate = maxDate;
         this.panelFixed = v.panelFixed;
         this.local = v.local;
+        this.closeAfterSelectingTheDate = v.closeAfterSelectingTheDate;
+        this.isMonthPicker = v.monthPicker;
 
 
         const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
@@ -100,9 +108,9 @@ class DatePickerWidget extends Widget {
 
     initEventHandlers() {
         const id = this.id, datePicker = $('#' + id + ' .ks-datepicker'),
-            dateInput = $('#' + id + ' .ks-datepicker-input');
+            dateInput = $('#' + id + ' .ks-datepicker-input'), _this = this;
 
-        let date = DatePickerWidget.getDateFromString(Widgets[id].value, datePicker.data('monthpicker')),
+        let date = DatePickerWidget.getDateFromString(_this.value, datePicker.data('monthpicker')),
             yearHolder = $('#' + id + ' .ks-datepicker-panel-year'),
             monthHolders = $('#' + id + ' .ks-datepicker-panel-month-item'),
             dayHolders = $('#' + id + ' .ks-datepicker-panel-day-item'),
@@ -118,14 +126,18 @@ class DatePickerWidget extends Widget {
             if (pickerHolder.is(':visible')) {
                 DatePickerWidget.triggerPickEvent(id, pickerHolder, e);
             } else {
-                pickerHolder.slideDown(50, () => $(e.currentTarget).parent().get(0).scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                }));
+                if (window.innerHeight - dateInput.get(0).getBoundingClientRect().y < 300) {
+                    pickerHolder.slideDown(50, () => $(e.currentTarget).parent().get(0).scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    }));
+                } else {
+                    pickerHolder.slideDown(50);
+                }
             }
 
             return false;
-        }).on('dateChange.' + id, (_, date) => {
+        }).on('dateChange.' + id, (_, date, source) => {
             let m = datePicker.data('monthpicker'), minDateStr = String(datePicker.data('min-date')),
                 maxDateStr = String(datePicker.data('max-date')),
                 minDate = minDateStr ? DatePickerWidget.getDateFromString(minDateStr, m) : '',
@@ -134,18 +146,18 @@ class DatePickerWidget extends Widget {
             if (minDateStr && DatePickerWidget.isValidDateString(minDateStr, m)) {
                 if (date < minDate) {
                     date = minDate;
-                    dateInput.val(DatePickerWidget.getFormattedDateString(date, m, Widgets[id].local));
+                    dateInput.val(DatePickerWidget.getFormattedDateString(date, m, _this.local));
                 }
             }
 
             if (maxDateStr && DatePickerWidget.isValidDateString(maxDateStr, m)) {
                 if (date > maxDate) {
                     date = maxDate;
-                    dateInput.val(DatePickerWidget.getFormattedDateString(date, m, Widgets[id].local));
+                    dateInput.val(DatePickerWidget.getFormattedDateString(date, m, _this.local));
                 }
             }
 
-            Widgets[id].value = DatePickerWidget.getStandardizedDateString(date, m);
+            _this.value = DatePickerWidget.getStandardizedDateString(date, m);
 
             $('#' + id + ' .ks-datepicker-panel-days').empty().append(DatePickerWidget.getPickerHolderDaysHtml(date, minDate, maxDate));
             yearHolder.data('year', date.getFullYear()).text(date.getFullYear());
@@ -164,27 +176,40 @@ class DatePickerWidget extends Widget {
                 }
             });
 
-            if (Widgets[id].panelFixed) {
+            if (_this.closeAfterSelectingTheDate) {
+                const triggerEvent = _this.isMonthPicker && source === 'month' ? true : !_this.isMonthPicker && source === 'day';
+                if (triggerEvent) {
+                    DatePickerWidget.triggerPickEvent(id, pickerHolder, {});
+                    pickerHolder.slideUp(50);
+                }
+            }
+
+            if (_this.panelFixed) {
                 DatePickerWidget.triggerPickEvent(id, pickerHolder, {});
             }
         });
 
+        let source = '';
+
         const pickerHolder = $('#' + id + ' .ks-datepicker-panel').on('click touch', '.ks-datepicker-panel-pager', e => {
             let mod = $(e.currentTarget).hasClass('ks-left') ? -1 : 1;
-            date = DatePickerWidget.getDateFromString(Widgets[id].value, datePicker.data('monthpicker'));
+            date = DatePickerWidget.getDateFromString(_this.value, datePicker.data('monthpicker'));
             date.setYear(Number(date.getFullYear()) + mod);
+            source = 'pager';
         }).on('click touch', '.ks-datepicker-panel-month-item', e => {
             target = $(e.currentTarget);
-            date = DatePickerWidget.getDateFromString(Widgets[id].value, datePicker.data('monthpicker'));
+            date = DatePickerWidget.getDateFromString(_this.value, datePicker.data('monthpicker'));
             date.setMonth(target.data('month'));
+            source = 'month';
         }).on('click touch', '.ks-datepicker-panel-day-item[data-enabled="true"]', e => {
             target = $(e.currentTarget);
-            date = DatePickerWidget.getDateFromString(Widgets[id].value, datePicker.data('monthpicker'));
+            date = DatePickerWidget.getDateFromString(_this.value, datePicker.data('monthpicker'));
             date.setDate(target.data('day'));
+            source = 'day';
         }).on('click touch', e => {
             e.stopPropagation();
             $('#' + id + ' .ks-datepicker-input').val(DatePickerWidget.getFormattedDateString(date, datePicker.data('monthpicker'), Widgets[id].local));
-            datePicker.trigger('dateChange.' + id, [date]);
+            datePicker.trigger('dateChange.' + id, [date, source]);
         });
 
         dateInput.on('input', e => {
@@ -192,11 +217,12 @@ class DatePickerWidget extends Widget {
             if (!date) {
                 return false;
             }
+            source = 'input';
 
-            datePicker.trigger('dateChange.' + id, [date]);
+            datePicker.trigger('dateChange.' + id, [date, source]);
         }).on('focusout', e => {
             let date = DatePickerWidget.getDateFromString($(e.currentTarget).val(), $(e.currentTarget).data('monthpicker'));
-            $('#' + id + ' .ks-datepicker-input').val(DatePickerWidget.getFormattedDateString(date, datePicker.data('monthpicker'), Widgets[id].local));
+            $('#' + id + ' .ks-datepicker-input').val(DatePickerWidget.getFormattedDateString(date, datePicker.data('monthpicker'), _this.local));
         }).on('keypress', e => {
             if (e.which === 13) {
                 $(e.currentTarget).blur();
@@ -212,20 +238,22 @@ class DatePickerWidget extends Widget {
         });
 
         const catcher = Doc.not(datePicker).on('click touch', e => {
-            if (pickerHolder.is(':visible') && !Widgets[id].panelFixed) {
-                let element = $('<div>');
-                element.data({
-                    action: 'pick',
-                    id: id,
-                    value: $('#' + id + ' .ks-datepicker-input').val().slice(0, -1),
-                    ordinal: $('#' + id + ' .ks-datepicker').data('ordinal')
-                });
-                Widget.doHandleSystemEvent(element, e, true);
+            if (pickerHolder.is(':visible') && !_this.panelFixed) {
+                if (!_this.closeAfterSelectingTheDate) {
+                    let element = $('<div>');
+                    element.data({
+                        action: 'pick',
+                        id: id,
+                        value: $('#' + id + ' .ks-datepicker-input').val().slice(0, -1),
+                        ordinal: $('#' + id + ' .ks-datepicker').data('ordinal')
+                    });
+                    Widget.doHandleSystemEvent(element, e, true);
+                }
                 pickerHolder.slideUp(50);
             }
         });
 
-        if (!Widgets[id].panelFixed) {
+        if (!_this.panelFixed) {
             pickerHolder.hide();
         }
     }
