@@ -123,7 +123,8 @@ labelled with both texts and icons.
 -  only url, body and type settings are used. parsingControl settings is
    not available.
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -161,7 +162,8 @@ bar chart and a line chart.
 
 |image4|
 
-.. code-block:: json
+.. code-block:: javascript
+
    {
         type:string,
         label:string,
@@ -311,7 +313,8 @@ bar chart and a line chart.
 
 **parsingControl type:** matrix
 
-.. code-block:: json
+.. code-block:: javascript
+
    {
     Widgetconfig:
 
@@ -476,7 +479,8 @@ popup)
 
 **Data connection to TM1:** NO
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -554,7 +558,8 @@ DatePickerWidget
    -  optional query, that will be fired every time, once a date is
       selected
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -673,7 +678,8 @@ items at a time from a given list of items.
    -  optional query, that will be fired every time, once an element is
       selected or deselected
 
-.. code-block:: json
+.. code-block:: javascript
+
     Repository.js:
 
    {
@@ -749,7 +755,8 @@ reports to show KPI-s.
    -  **parsingControl type: matrix**
        
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -825,7 +832,8 @@ GridRowWidget
 
 **Data connection to TM1:**\ NO
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -869,7 +877,8 @@ GridWidget
 
 **Data connection to TM1:**\ NO
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -926,7 +935,8 @@ followingtypes text, textbox, dropBox, slider, toggle, datepicker  
 **Data connection to TM1:**\ NO
 
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -978,7 +988,8 @@ GridTableHeaderRowWidget.
 
 **Data connection to TM1:**\ NO
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -1014,7 +1025,8 @@ GridTableHeaderCellWidgets.
 **Data connection to TM1:** NO
 
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -1240,7 +1252,8 @@ ImageWidget
 
 **Data connection to TM1:** NO
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -1342,7 +1355,8 @@ LineAreaChartWidget
 
 **parsingControl type:** matrix
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -1508,7 +1522,8 @@ scatter plot diagram and a line chart.
 -  auxLineWidth:
 -  auxLineDash:
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -1677,7 +1692,8 @@ label:,backgroundColor:,borderWidth:,borderColor:}
 
 example response:
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -1846,7 +1862,8 @@ points of two or more different data sets.
    1. query for data Structure: {value:}
    2. parsingControl type: matrix
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -2047,7 +2064,8 @@ different sets of data.
 
 **Data connection to TM1:**\ NO 
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -2103,7 +2121,8 @@ ShadowWidget
 
 **Data connection to TM1:**\ NO 
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -2247,7 +2266,8 @@ SliderWidget
       -  unit
       -  ordinal
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -2365,7 +2385,8 @@ text. The widget is resizable by bottom right corner drag and drop
       -  text
       -  ordinal
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -2484,7 +2505,8 @@ TextBoxWidget
    -  optional query, that will be fired every time, once finished
       editing the TextBox (clicked out from the textbox area)
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -2591,7 +2613,8 @@ TextWidget
 
       -  text
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -2684,7 +2707,8 @@ exclusive options. (for example: on-off choice)
 -  only url, body and type settings are used. parsingControl settings is
    not available
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -2759,7 +2783,8 @@ rightColor:, legendLabel:}
 
  matrix
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
@@ -2891,7 +2916,8 @@ contributions.
 
 **Data repository specifics:**
 
-.. code-block:: json
+.. code-block:: javascript
+
     Widget Config:
 
    {
