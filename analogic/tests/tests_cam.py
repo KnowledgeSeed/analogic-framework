@@ -41,3 +41,19 @@ def test_logged_in(app, client, mocker):
         assert response.request.base_url == 'http://localhost/cam/'
         assert response.request.host == 'localhost'
         assert 'redirect.js' not in response.text
+
+
+def test_auth(app, client, mocker):
+    with client:
+        mocker.patch('analogic.cam.Cam.set_tm1_service', return_value='dddd')
+        response = client.post('/cam/auth', data={'c_pp': 'fsdlfj'})
+        assert response.status_code == 302
+
+
+def test_auth_follow(app, client, mocker):
+    with client:
+        mocker.patch('analogic.cam.Cam.set_tm1_service', return_value='dddd')
+        mocker.patch('analogic.cam.Cam.check_app_authenticated', return_value=True)
+        response = client.post('/cam/auth', data={'c_pp': 'fsdlfj'}, follow_redirects=True)
+        assert response.status_code == 200
+        assert 'redirect.js' not in response.text
