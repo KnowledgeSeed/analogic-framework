@@ -92,9 +92,9 @@ class AuthenticationProvider(ABC):
             return self.get_not_found_response()
 
         return send_file(ClassLoader().call(export_description, request, self.get_tm1_service(), self.setting, self),
-                         attachment_filename=file_name,
+                         download_name=file_name,
                          as_attachment=True,
-                         cache_timeout=0,
+                         max_age=0,
                          mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
     @login_required

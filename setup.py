@@ -16,8 +16,7 @@ setup(
     include_package_data=True,
     package_data={'': ['version.config']},
     install_requires=[
-        'Flask==2.1.2',
-        'Flask-Caching==2.0.0',
+        'Flask==2.3.2',
         'TM1py==1.9.1',
         'PyJWT==2.4.0',
         'requests==2.28.1',

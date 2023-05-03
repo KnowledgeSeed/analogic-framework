@@ -44,15 +44,6 @@ class Cam(AuthenticationProvider):
 
         existing_tm1_service = self.setting.get_tm1_service(cam_name)
 
-        # is_connected = False
-        # if existing_tm1_service is not None:
-        #     try:
-        #         is_connected = existing_tm1_service.connection.is_connected()
-        #     except Exception as e:
-        #         self._logger.error('exception while checking connection: ' + str(e))
-
-
-        # if not is_connected:
         if existing_tm1_service is not None:
             try:
                 existing_tm1_service.close_session()
@@ -127,9 +118,9 @@ class Cam(AuthenticationProvider):
             return Response('Unauthorized', status=401, mimetype='application/json')
 
         return send_file(ClassLoader().call(export_description, request, tm1_service, self.setting, self),
-                         attachment_filename=file_name,
+                         download_name=file_name,
                          as_attachment=True,
-                         cache_timeout=0,
+                         max_age=0,
                          mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
     def get_authentication_required_response(self):

@@ -12,11 +12,9 @@ from analogic.core_endpoints import core_endpoints
 from analogic.authentication_provider import AuthenticationProvider
 from analogic.condition import Condition
 import inspect
-from flask_caching import Cache
 from analogic.setting import SettingManager
 from datetime import timedelta
 import importlib
-from analogic.version import version
 from analogic.task import scheduler
 import atexit
 
@@ -146,7 +144,7 @@ class Analogic(Flask):
         if module_name in sys.modules:
             module = sys.modules[module_name]
         else:
-            module = importlib.import_module(module_name)  # Todo ModuleNotFoundError
+            module = importlib.import_module(module_name)
 
         condition_class = getattr(module, class_name)
         condition = condition_class()

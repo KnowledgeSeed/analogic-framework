@@ -354,5 +354,5 @@ def export_to_excel(selected_cards_data, pivot_data, export_data):
     return send_file(output,
                      download_name='pivot_export.xlsx',
                      as_attachment=True,
-                     cache_timeout=0,
+                     max_age=0,
                      mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
