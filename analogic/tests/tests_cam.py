@@ -16,11 +16,6 @@ def client(app):
     return app.test_client()
 
 
-@pytest.fixture()
-def runner(app):
-    return app.test_cli_runner()
-
-
 def test_index(app, client):
     with client:
         response = client.get("/cam", follow_redirects=True)

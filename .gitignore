@@ -14,3 +14,4 @@ analogic.egg-info
 analogic_pool.egg-info
 analogic_file_upload.egg-info
 config.js
+cam.ini
