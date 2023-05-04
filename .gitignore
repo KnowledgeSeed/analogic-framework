@@ -15,3 +15,5 @@ analogic_pool.egg-info
 analogic_file_upload.egg-info
 config.js
 cam.ini
+analogic/tests/apps/cam/app.json
+analogic/tests/apps/default/app.json
