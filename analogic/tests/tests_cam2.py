@@ -7,6 +7,8 @@ from analogic.analogic import create_app
 from unittest.mock import patch
 import requests
 from requests_ntlm import HttpNtlmAuth
+import orjson
+import gzip
 
 
 class TestCamAuthenticationProvider(unittest.TestCase):
@@ -60,6 +62,19 @@ class TestCamAuthenticationProvider(unittest.TestCase):
             response = self.client.post('/cam/auth', data={'c_pp': cam_passport}, follow_redirects=True)
             assert response.status_code == 200
             assert 'redirect.js' not in response.text
+            assert self.app.get_authentication_provider().get_tm1_service().connection.is_connected()
+
+    def test_call_server_side_mdx(self):
+        cam_passport = self.get_cam_passport()
+        with self.client:
+            response = self.client.post('/cam/auth', data={'c_pp': cam_passport}, follow_redirects=True)
+            params = {
+                'key': 'test_mdx'
+            }
+            url = '/cam/proxy/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name,%20Attributes))),Cells($select=Ordinal,Value)&server=1'
+            response = self.client.post(url, data=orjson.dumps(params), follow_redirects=True, content_type='application/json')
+            assert response.status_code == 201
+            assert orjson.loads(gzip.decompress(response.data)).get('Cells') is not None
 
     def get_cam_passport(self):
         tm1_config = self.config['tm1']
