@@ -277,7 +277,7 @@ def _load_modules(app, modules_dir, check_prefix, register_func):
 
         module_dir = os.path.join(modules_dir, module_dir_name)
 
-        if os.path.isdir(module_dir) and module_dir_name != '.git' and (
+        if os.path.isdir(module_dir) and module_dir_name != '.git' and module_dir_name != 'tests' and (
                 check_prefix is False or (
                 module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX) and not module_dir_name.endswith('dist-info'))):
 
@@ -306,6 +306,8 @@ def _register_application(app, application_dir, application_name, files):
 
 def _fast_scan_dir(directory, ext):
     sub_folders, files = [], {}
+    if '.git' in directory or 'tests' in directory:
+        return sub_folders, files
 
     for f in os.scandir(directory):
         if f.is_dir():
