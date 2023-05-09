@@ -2,9 +2,11 @@ import json
 import re
 import io
 import xlsxwriter
+import orjson
 
-from TM1py.Objects import Subset
+from TM1py.Objects import Subset, Hierarchy
 from TM1py.Services import TM1Service
+from TM1py.Utils import format_url
 from flask import jsonify, send_file, current_app
 
 
@@ -22,19 +24,19 @@ def call(tm1:TM1Service, username, cube_name=None, dimension_name=None, hierarch
             data = get_pivot_data(tm1, mdx, selected_cards_data, bool(export_data))
         if export_data:
             return export_to_excel(selected_cards_data, data, json.loads(export_data))
-        return jsonify({'mdx': mdx, 'cell_count': cell_count, 'data': data})
+        return orjson.dumps({'mdx': mdx, 'cell_count': cell_count, 'data': data}), 200, {'Content-Type': 'application/json'}
     elif element_names:
         subset_name = username + '_' + subset_name
         new_subset = Subset(subset_name, dimension_name, hierarchy_name, None, None, element_names)
         tm1.subsets.update_or_create(new_subset, True)
-        hierarchy = tm1.hierarchies.get(dimension_name, hierarchy_name)
-        data['defaultMember'] = hierarchy.default_member
+        hierarchy = get_hierarchy(tm1, dimension_name, hierarchy_name)
+        data['defaultMember'] = hierarchy['DefaultMember']['Name']
         data['aliasAttributeNames'] = get_alias_attribute_names(hierarchy)
         children, data['privateSubsets'] = get_public_and_private_subsets(tm1, dimension_name, hierarchy_name, username, options)
     elif subset_name_to_remove:
         tm1.subsets.delete(username + '_' + subset_name_to_remove, dimension_name, hierarchy_name, True)
-        hierarchy = tm1.hierarchies.get(dimension_name, hierarchy_name)
-        data['defaultMember'] = hierarchy.default_member
+        hierarchy = get_hierarchy(tm1, dimension_name, hierarchy_name)
+        data['defaultMember'] = hierarchy['DefaultMember']['Name']
         data['aliasAttributeNames'] = get_alias_attribute_names(hierarchy)
         children, data['privateSubsets'] = get_public_and_private_subsets(tm1, dimension_name, hierarchy_name, username, options)
     elif 'process' in options:
@@ -42,19 +44,19 @@ def call(tm1:TM1Service, username, cube_name=None, dimension_name=None, hierarch
         p['pUser'] = username
         p['pValue'] = json.dumps(p['pValue'])
         r = tm1.processes.execute_with_return(options['process'], **p)
-        return jsonify(r)
+        return orjson.dumps(r), 200, {'Content-Type': 'application/json'}
     elif dimension_name is None:
         children = tm1.cubes.get_dimension_names(cube_name)
         data = get_presets_data(tm1, username, options['widgetId'])
     elif hierarchy_name is None:
         children = tm1.hierarchies.get_all_names(dimension_name)
     elif subset_name is None:
-        hierarchy = tm1.hierarchies.get(dimension_name, hierarchy_name)
-        data['defaultMember'] = hierarchy.default_member
+        hierarchy = get_hierarchy(tm1, dimension_name, hierarchy_name)
+        data['defaultMember'] = hierarchy['DefaultMember']['Name']
         data['aliasAttributeNames'] = get_alias_attribute_names(hierarchy)
         children, data['privateSubsets'] = get_public_and_private_subsets(tm1, dimension_name, hierarchy_name, username, options)
     else:
-        current_app.config['JSON_SORT_KEYS'] = False
+        #current_app.config['JSON_SORT_KEYS'] = False
         children = []
         is_private_subset = options['isPrivateSubset']
         if is_private_subset:
@@ -62,8 +64,14 @@ def call(tm1:TM1Service, username, cube_name=None, dimension_name=None, hierarch
         subset = tm1.subsets.get(subset_name, dimension_name, hierarchy_name, is_private_subset)
         data['defaultAliasAttributeName'] = subset.alias
         data['children'] = get_elements_with_aliases(tm1, subset, is_private_subset)
+    return orjson.dumps({'children': children, 'data': data}, option=orjson.OPT_NON_STR_KEYS), 200, {'Content-Type': 'application/json'}
 
-    return jsonify({'children': children, 'data': data})
+def get_hierarchy(tm1:TM1Service, dimension_name, hierarchy_name, **kwargs):
+    url = format_url(
+        "/api/v1/Dimensions('{}')/Hierarchies('{}')?$expand=ElementAttributes,Subsets,DefaultMember",
+        dimension_name,
+        hierarchy_name)
+    return tm1._tm1_rest.GET(url, **kwargs).json()
 
 def get_presets_data(tm1, username, widget_id):
     mdx = """WITH
@@ -131,31 +139,34 @@ def get_filtered_subsets(subsets, options, username_prefix=None):
 
 
 def get_elements_with_aliases(tm1:TM1Service, subset:Subset, is_private_subset):
+    hierarchy = get_hierarchy(tm1, subset.dimension_name, subset.hierarchy_name)
+    alias_attribute_names = get_alias_attribute_names(hierarchy)
+    alias_attributes = 'Attributes/' + ',Attributes/'.join(alias_attribute_names)
+
+    if subset.is_static:
+        epx_prefix = '[' + subset.dimension_name + '].[' + subset.hierarchy_name + '].['
+        expression = '{'
+        for e in subset.elements:
+            expression += epx_prefix + e + '],'
+        expression = expression[:-1] + '}'
+    else:
+        expression = subset.expression
+
+    names_and_aliases = tm1.elements.execute_set_mdx(expression, None, ['Name', alias_attributes], None, None)
+
     d = []
 
-    element_names = subset.elements
-    hierarchy = tm1.hierarchies.get(subset.dimension_name, subset.hierarchy_name)
-
-    if not element_names:
-        element_names = tm1.subsets.get_element_names(subset.dimension_name, hierarchy.name, subset.name, is_private_subset)
-
-    alias_attribute_names = get_alias_attribute_names(hierarchy)
-
-    for element_name in element_names:
-        element = hierarchy.get_element(element_name)
-        aliases = {0: element_name}
-        for alias_attribute_name in alias_attribute_names:
-            aliases[alias_attribute_name] = element.element_attributes[alias_attribute_name]
-        d.append(aliases)
+    for e in names_and_aliases:
+        d.append(e[0]['Attributes'] | {0: e[0]['Name']})
 
     return d
 
 
 def get_alias_attribute_names(hierarchy):
     d = []
-    for attribute in hierarchy.element_attributes:
-        if 'Alias' == attribute.attribute_type:
-            d.append(attribute.name)
+    for attribute in hierarchy['ElementAttributes']:
+        if 'Alias' == attribute['Type']:
+            d.append(attribute['Name'])
     return d
 
 
