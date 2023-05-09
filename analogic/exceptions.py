@@ -10,6 +10,7 @@ class AnalogicProxyException(Exception):
     def __init__(self, message: str):
         super(AnalogicProxyException, self).__init__(message)
 
+
 class AnalogicTM1ServiceException(Exception):
     def __init__(self, message):
         self.message = message

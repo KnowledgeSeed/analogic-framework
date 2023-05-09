@@ -110,10 +110,10 @@ class SettingManager:
 
         return setting
 
-    def save_config_js(self):
+    def save_config_js(self, exclude=[]):
         js_url = os.path.join(self.site_root, 'static', 'assets', 'js', 'config.js')
         with open(js_url, 'w', encoding="utf-8") as f:
-            f.write(render_template('config.html', cnf=self.config))
+            f.write(render_template('config.html', cnf=self.config, exclude=exclude))
 
     def _get_yaml_setting(self, file_path):
         with open(os.path.join(self.site_root, file_path + '.yml'), encoding="utf-8") as file:
