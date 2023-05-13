@@ -129,7 +129,7 @@ class DropBoxWidget extends Widget {
             let previouslySelected = this.items.filter(e => e.on === true),
                 previouslySelectedName = previouslySelected.map(e => e.name);
             this.items = previouslySelected.concat(data.items.filter(e => !previouslySelectedName.includes(e.name)));
-            inner.html(this.getItems(data, p));
+            inner.html(this.getItems({items: this.items}, p));
         } else {
             const pi = this.processItems(data, this.options, p);
             inner.html(this.getItems(pi.data, p));
