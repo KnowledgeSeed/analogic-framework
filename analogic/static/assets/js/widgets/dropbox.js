@@ -156,6 +156,11 @@ class DropBoxWidget extends Widget {
                 // $(e.currentTarget).parent().get(0).scrollIntoView({behavior: "smooth", block: "start"});
             });
 
+            if (state.serverSideFilter) {
+                const previousFilterValue = v(id + '.filter.value');
+                section.find('input[type="text"]').val(previousFilterValue !== false ? previousFilterValue : '');
+            }
+
             return false;
         });
 
@@ -187,6 +192,9 @@ class DropBoxWidget extends Widget {
 
         const catcher = Doc.not(dropbox).on('touch click', e => {
             itemHolder.is(':visible') ? itemHolder.slideUp(50) : false;
+            if (itemHolder.is(':visible') && state.serverSideFilter) {
+                section.find('input[type="text"]').val('');
+            }
         });
 
         itemHolder.hide();
