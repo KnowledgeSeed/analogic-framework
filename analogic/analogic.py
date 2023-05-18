@@ -78,7 +78,7 @@ class Analogic(Flask):
 
             super().register_blueprint(blueprint, **options)
         except Exception as e:
-            logging.getLogger(__name__).error('Error registering application' + blueprint.name + ': ' + str(e))
+            logging.getLogger(__name__).error('Error registering application ' + blueprint.name + ': ' + str(e))
 
     def create_authentication_provider(self, analogic_application, analogic_application_path):
         with self.app_context():

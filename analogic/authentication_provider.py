@@ -19,7 +19,7 @@ def endpoint_login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         auth_provider = get_authentication_provider()
-        if auth_provider.check_app_authenticated is False:
+        if auth_provider.check_app_authenticated() is False:
             return auth_provider.get_authentication_required_response()
         return f(*args, **kwargs)
 
@@ -30,7 +30,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         auth_provider = args[0]
-        if auth_provider.check_app_authenticated is False:
+        if auth_provider.check_app_authenticated() is False:
             return auth_provider.get_authentication_required_response()
         return f(*args, **kwargs)
 
