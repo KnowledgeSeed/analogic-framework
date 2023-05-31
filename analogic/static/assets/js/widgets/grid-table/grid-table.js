@@ -60,7 +60,7 @@ class GridTableWidget extends Widget {
 
             th = this.buildTableHeadHtml(this.buildTableHeaderRowHtml(c.join(''), v.rowHeight, v.borderTop, v.borderBottom));
         }
-        return this.getWidgetHtml(this.buildTableHtml([th, tb].join(''), v.skin), o.title, mainDivStyle);
+        return this.getWidgetHtml(this.buildTableHtml([th, tb].join(''), v.skin), o.title || '', mainDivStyle);
     }
 
     getParameters(data) {
