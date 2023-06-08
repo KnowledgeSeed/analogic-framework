@@ -117,7 +117,13 @@ class Cam(AuthenticationProvider):
         except AnalogicTM1ServiceException as e:
             return Response('Unauthorized', status=401, mimetype='application/json')
 
-        return send_file(ClassLoader().call(export_description, request, tm1_service, self.setting, self),
+        try:
+            response = ClassLoader().call(export_description, request, tm1_service, self.setting, self)
+        except Exception as e:
+            self.getLogger().error(e, exc_info=True)
+            return {'message': str(e)}, 404, {'Content-type': 'application/json'}
+
+        return send_file(response,
                          download_name=file_name,
                          as_attachment=True,
                          max_age=0,

@@ -126,7 +126,7 @@ class SettingManager:
     def get_custom_object_description(self, key):
         if self.custom_objects is None:
             self.custom_objects = self._create_custom_objects()
-        return self.custom_objects[key]
+        return self.custom_objects.get(key)
 
     def set_tm1_service(self, user_name, tm1_service):
         self.tm1_services[user_name] = tm1_service
