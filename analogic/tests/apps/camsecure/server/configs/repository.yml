@@ -1,0 +1,9 @@
+test_mdx: >
+  {
+    "MDX": "SELECT 
+               {[Value Type].[Numeric],[Value Type].[String]} 
+              ON COLUMNS , 
+               {TM1SubsetToSet([Measures Control].[Measures Control], \"Default\")}  
+              ON ROWS 
+            FROM [Control]"
+  }
