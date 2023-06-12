@@ -207,3 +207,7 @@
     align-items: center;
     cursor: pointer;
 }
+
+.ks-datepicker-full-year-button.on {
+    background-color: #0066cc;
+}

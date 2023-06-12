@@ -5,6 +5,6 @@
   "camNamespace": "namespace (fill)",
   "mainPage": "defaultMain",
   "proxy": {
-    "target": ""
+    "target": "(fill)"
   }
 }

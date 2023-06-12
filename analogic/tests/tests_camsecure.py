@@ -9,7 +9,6 @@ import requests
 from requests_ntlm import HttpNtlmAuth
 import orjson
 import gzip
-from flask import session
 
 
 class TestCamAuthenticationProvider(unittest.TestCase):

@@ -16,6 +16,7 @@ analogic_file_upload.egg-info
 config.js
 cam.ini
 camsecure.ini
+loginbasic.ini
 analogic/tests/apps/cam/app.json
 analogic/tests/apps/camsecure/app.json
 analogic/tests/apps/default/app.json
