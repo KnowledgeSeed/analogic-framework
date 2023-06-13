@@ -1,0 +1,10 @@
+{
+  "projectName": "Default App",
+  "projectId": "default",
+  "authenticationMode": "LoginCam",
+  "camNamespace": "namespace (fill)",
+  "mainPage": "defaultMain",
+  "proxy": {
+    "target": "(fill)"
+  }
+}

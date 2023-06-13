@@ -91,7 +91,13 @@ class AuthenticationProvider(ABC):
         if export_description is None:
             return self.get_not_found_response()
 
-        return send_file(ClassLoader().call(export_description, request, self.get_tm1_service(), self.setting, self),
+        try:
+            response = ClassLoader().call(export_description, request, self.get_tm1_service(), self.setting, self)
+        except Exception as e:
+            self.getLogger().error(e, exc_info=True)
+            return {'message': str(e)}, 404, {'Content-type': 'application/json'}
+
+        return send_file(response,
                          download_name=file_name,
                          as_attachment=True,
                          max_age=0,

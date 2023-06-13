@@ -17,6 +17,8 @@ config.js
 cam.ini
 camsecure.ini
 loginbasic.ini
+logincam.ini
 analogic/tests/apps/cam/app.json
 analogic/tests/apps/camsecure/app.json
 analogic/tests/apps/default/app.json
+analogic/tests/apps/logincam/app.json
