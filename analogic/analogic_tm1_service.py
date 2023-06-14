@@ -2,16 +2,20 @@ from TM1py import TM1Service
 from TM1py.Services import HierarchyService, SecurityService, ApplicationService, SubsetService, ServerService, \
     MonitoringService, ProcessService, PowerBiService, AnnotationService, ViewService, RestService, CellService, \
     ChoreService, DimensionService, CubeService, ElementService, SandboxService, GitService
+from TM1py.Services.FileService import FileService
 from TM1py.Utils import case_and_space_insensitive_equals
-from typing import Union
+import json
+from json import JSONDecodeError
 from requests import Session as BaseSession
 from requests.adapters import HTTPAdapter as BaseHTTPAdapter
-from requests.adapters import (DEFAULT_POOLBLOCK, DEFAULT_POOLSIZE, DEFAULT_RETRIES, DEFAULT_POOL_TIMEOUT)
+from requests.adapters import (DEFAULT_POOLBLOCK, DEFAULT_POOLSIZE, DEFAULT_RETRIES)
 from requests import Request
 from requests import Response as BaseResponse
 import http.client as http_client
+import socket
+import requests
 
-from urllib3.response import HTTPResponse
+import urllib3
 from urllib3.util import Timeout as TimeoutSauce
 from urllib3.exceptions import ClosedPoolError
 from urllib3.exceptions import ConnectTimeoutError
@@ -61,7 +65,7 @@ class Session(BaseSession):
             verify=None,
             cert=None,
             json=None,
-            decode_content=True
+            decode_content=True  # mod
     ):
         """Constructs a :class:`Request <Request>`, prepares it and sends it.
         Returns :class:`Response <Response>` object.
@@ -129,7 +133,7 @@ class Session(BaseSession):
         send_kwargs = {
             "timeout": timeout,
             "allow_redirects": allow_redirects,
-            "decode_content": decode_content
+            "decode_content": decode_content  # mod
         }
         send_kwargs.update(settings)
         resp = self.send(prep, **send_kwargs)
@@ -138,9 +142,9 @@ class Session(BaseSession):
 
 
 class Response(BaseResponse):
-    def __init__(self, decode_content=True):
+    def __init__(self, decode_content=True):  # mod
         super().__init__()
-        self._decode_content = decode_content
+        self._decode_content = decode_content  # mod
 
     def iter_content(self, chunk_size=1, decode_unicode=False):
         """Iterates over the response data.  When stream=True is set on the
@@ -163,7 +167,7 @@ class Response(BaseResponse):
             # Special case for urllib3.
             if hasattr(self.raw, "stream"):
                 try:
-                    yield from self.raw.stream(chunk_size, decode_content=self._decode_content)
+                    yield from self.raw.stream(chunk_size, decode_content=self._decode_content)  # mod
                 except ProtocolError as e:
                     raise ChunkedEncodingError(e)
                 except DecodeError as e:
@@ -175,10 +179,10 @@ class Response(BaseResponse):
             else:
                 # Standard file-like object.
                 while True:
-                    if self._decode_content:
-                        chunk = self.raw.read(chunk_size)
-                    else:
-                        chunk = self.raw.read(chunk_size, decode_content=False)
+                    if self._decode_content:  # mod
+                        chunk = self.raw.read(chunk_size)  # mod
+                    else:  # mod
+                        chunk = self.raw.read(chunk_size, decode_content=False)  # mod
                     if not chunk:
                         break
                     yield chunk
@@ -203,7 +207,7 @@ class Response(BaseResponse):
 
         return chunks
 
-    def get_decompressed_data(self):
+    def get_decompressed_data(self):  # mod add
         text = ''
         try:
             gzip_decoder = GzipDecoder()
@@ -221,7 +225,7 @@ class HTTPAdapter(BaseHTTPAdapter):
         super().__init__(pool_connections, pool_maxsize, max_retries, pool_block)
 
     def send(
-            self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None, decode_content=True
+            self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None, decode_content=True  # mod
     ):
         """Sends PreparedRequest object. Returns Response object.
 
@@ -272,63 +276,19 @@ class HTTPAdapter(BaseHTTPAdapter):
             timeout = TimeoutSauce(connect=timeout, read=timeout)
 
         try:
-            if not chunked:
-                resp = conn.urlopen(
-                    method=request.method,
-                    url=url,
-                    body=request.body,
-                    headers=request.headers,
-                    redirect=False,
-                    assert_same_host=False,
-                    preload_content=False,
-                    decode_content=False,
-                    retries=self.max_retries,
-                    timeout=timeout,
-                )
-
-            # Send the request.
-            else:
-                if hasattr(conn, "proxy_pool"):
-                    conn = conn.proxy_pool
-
-                low_conn = conn._get_conn(timeout=DEFAULT_POOL_TIMEOUT)
-
-                try:
-                    skip_host = "Host" in request.headers
-                    low_conn.putrequest(
-                        request.method,
-                        url,
-                        skip_accept_encoding=True,
-                        skip_host=skip_host,
-                    )
-
-                    for header, value in request.headers.items():
-                        low_conn.putheader(header, value)
-
-                    low_conn.endheaders()
-
-                    for i in request.body:
-                        low_conn.send(hex(len(i))[2:].encode("utf-8"))
-                        low_conn.send(b"\r\n")
-                        low_conn.send(i)
-                        low_conn.send(b"\r\n")
-                    low_conn.send(b"0\r\n\r\n")
-
-                    # Receive the response from the server
-                    r = low_conn.getresponse()
-
-                    resp = HTTPResponse.from_httplib(
-                        r,
-                        pool=conn,
-                        connection=low_conn,
-                        preload_content=False,
-                        decode_content=False,
-                    )
-                except Exception:
-                    # If we hit any problems here, clean up the connection.
-                    # Then, raise so that we can handle the actual exception.
-                    low_conn.close()
-                    raise
+            resp = conn.urlopen(
+                method=request.method,
+                url=url,
+                body=request.body,
+                headers=request.headers,
+                redirect=False,
+                assert_same_host=False,
+                preload_content=False,
+                decode_content=False,
+                retries=self.max_retries,
+                timeout=timeout,
+                chunked=chunked,
+            )
 
         except (ProtocolError, OSError) as err:
             raise ConnectionError(err, request=request)
@@ -368,9 +328,9 @@ class HTTPAdapter(BaseHTTPAdapter):
             else:
                 raise
 
-        return self.build_response(request, resp, decode_content)
+        return self.build_response(request, resp, decode_content)  # mod
 
-    def build_response(self, req, resp, decode_content=True):
+    def build_response(self, req, resp, decode_content=True):  # mod
         """Builds a :class:`Response <requests.Response>` object from a urllib3
         response. This should not be called from user code, and is only exposed
         for use when subclassing the
@@ -380,7 +340,7 @@ class HTTPAdapter(BaseHTTPAdapter):
         :param resp: The urllib3 response object.
         :rtype: requests.Response
         """
-        response = Response(decode_content=decode_content)
+        response = Response(decode_content=decode_content)  # mod
 
         # Fallback to None if there's no status_code, for whatever reason.
         response.status_code = getattr(resp, "status", None)
@@ -408,6 +368,17 @@ class HTTPAdapter(BaseHTTPAdapter):
         return response
 
 
+class HTTPAdapterWithSocketOptions(HTTPAdapter):  # mod added for our adapter
+    def __init__(self, *args, **kwargs):
+        self.socket_options = kwargs.pop("socket_options", None)
+        super(HTTPAdapterWithSocketOptions, self).__init__(*args, **kwargs)
+
+    def init_poolmanager(self, *args, **kwargs):
+        if self.socket_options is not None:
+            kwargs["socket_options"] = self.socket_options
+        super(HTTPAdapterWithSocketOptions, self).init_poolmanager(*args, **kwargs)
+
+
 class AnalogicRestService(RestService):
 
     def __init__(self, **kwargs):
@@ -423,13 +394,16 @@ class AnalogicRestService(RestService):
         :param cam_passport: String - the cam passport
         :param session_id: String - TM1SessionId e.g. q7O6e1w49AixeuLVxJ1GZg
         :param session_context: String - Name of the Application. Controls "Context" column in Arc / TM1top.
-        If None, use default: TM1py
+                If None, use default: TM1py
         :param verify: path to .cer file or 'True' / True / 'False' / False (if no ssl verification is required)
         :param logging: boolean - switch on/off verbose http logging into sys.stdout
         :param timeout: Float - Number of seconds that the client will wait to receive the first byte.
+        :param cancel_at_timeout: Abort operation in TM1 when timeout is reached
         :param async_requests_mode: changes internal REST execution mode to avoid 60s timeout on IBM cloud
-        :param connection_pool_size - In a multithreaded environment, you should set this value to a
-        higher number, such as the number of threads
+        :param tcp_keepalive: maintain the TCP connection all the time, users should choose either async_requests_mode or tcp_keepalive to run a long-run request
+                If both are True, use async_requests_mode by default
+        :param connection_pool_size - In a multi threaded environment, you should set this value to a
+                higher number, such as the number of threads
         :param integrated_login: True for IntegratedSecurityMode3
         :param integrated_login_domain: NT Domain name.
                 Default: '.' for local account.
@@ -440,14 +414,43 @@ class AnalogicRestService(RestService):
         :param integrated_login_delegate: Indicates that the user's credentials are to be delegated to the server.
                 Default: False
         :param impersonate: Name of user to impersonate
+        :param re_connect_on_session_timeout: attempt to reconnect once if session is timed out
+        :param proxies: pass a dictionary with proxies e.g.
+                {'http': 'http://proxy.example.com:8080', 'https': 'http://secureproxy.example.com:8090'}
         """
+        # store kwargs for future use e.g. re_connect on 401 session timeout
         self._kwargs = kwargs
+
         self._ssl = self.translate_to_boolean(kwargs.get('ssl', True))
         self._address = kwargs.get('address', None)
         self._port = kwargs.get('port', None)
         self._verify = False
         self._timeout = None if kwargs.get('timeout', None) is None else float(kwargs.get('timeout'))
+        self._cancel_at_timeout = kwargs.get('cancel_at_timeout', False)
         self._async_requests_mode = self.translate_to_boolean(kwargs.get('async_requests_mode', False))
+        # Set tcp_keepalive to False explicitly to turn it off when async_requests_mode is enabled
+        self._tcp_keepalive = self.translate_to_boolean(
+            kwargs.get('tcp_keepalive', False)) \
+            if self._async_requests_mode is not True \
+            else False
+        self._connection_pool_size = kwargs.get('connection_pool_size', None)
+        self._re_connect_on_session_timeout = kwargs.get('re_connect_on_session_timeout', True)
+
+        # Logging
+        if 'logging' in kwargs:
+            if self.translate_to_boolean(value=kwargs['logging']):
+                http_client.HTTPConnection.debuglevel = 1
+
+        self._proxies = kwargs.get('proxies', None)
+        # handle invalid types and potential string argument
+        if not isinstance(self._proxies, (dict, str, type(None))):
+            raise ValueError("Argument of 'proxies' must be None, dictionary or JSON string")
+        elif isinstance(self._proxies, str):
+            try:
+                self._proxies = json.loads(self._proxies)
+            except JSONDecodeError:
+                raise ValueError("Invalid JSON passed for argument 'proxies': %s", self._proxies)
+
         # populated on the fly
         if kwargs.get('user'):
             self._is_admin = True if case_and_space_insensitive_equals(kwargs.get('user'), 'ADMIN') else None
@@ -483,51 +486,99 @@ class AnalogicRestService(RestService):
             self._headers["TM1-SessionContext"] = kwargs["session_context"]
 
         self.disable_http_warnings()
-        # re-use or create tm1 http session
-        self._s = Session()
 
-        # manage connection pool
-        if "connection_pool_size" in kwargs:
-            self._manage_http_connection_pool(kwargs.get("connection_pool_size"))
+        self._s = Session()  # mod out Session
 
-        if "session_id" in kwargs:
-            self._s.cookies.set("TM1SessionId", kwargs["session_id"])
-        else:
-            self._start_session(
-                user=kwargs.get("user", None),
-                password=kwargs.get("password", None),
-                namespace=kwargs.get("namespace", None),
-                gateway=kwargs.get("gateway", None),
-                cam_passport=kwargs.get("cam_passport", None),
-                decode_b64=self.translate_to_boolean(kwargs.get("decode_b64", False)),
-                integrated_login=self.translate_to_boolean(kwargs.get("integrated_login", False)),
-                integrated_login_domain=kwargs.get("integrated_login_domain"),
-                integrated_login_service=kwargs.get("integrated_login_service"),
-                integrated_login_host=kwargs.get("integrated_login_host"),
-                integrated_login_delegate=kwargs.get("integrated_login_delegate"),
-                impersonate=kwargs.get("impersonate", None))
+        if self._tcp_keepalive or self._connection_pool_size is not None: #mod move from end of method
+            self._manage_http_adapter()
+
+        if self._proxies:
+            self._s.proxies = self._proxies
+
+        self.connect()
 
         if not self._version:
             self.set_version()
 
+        # is retrieved on demand and cached
         self._sandboxing_disabled = None
 
-        # Logging
-        if 'logging' in kwargs:
-            if self.translate_to_boolean(value=kwargs['logging']):
-                http_client.HTTPConnection.debuglevel = 1
+    def _manage_http_adapter(self):  # mod override for using our base adapter
+        if self._tcp_keepalive:
+            # SO_KEEPALIVE: set 1 to enable TCP keepalive
+            socket_options = urllib3.connection.HTTPConnection.default_socket_options + [
+                (socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1),
+                (socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, self.TCP_SOCKET_OPTIONS['TCP_KEEPIDLE']),
+                (socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, self.TCP_SOCKET_OPTIONS['TCP_KEEPINTVL']),
+                (socket.IPPROTO_TCP, socket.TCP_KEEPCNT, self.TCP_SOCKET_OPTIONS['TCP_KEEPCNT'])]
 
-    def _manage_http_connection_pool(self, connection_pool_size: Union[str, int]):
-        self._s.mount(
-            self._base_url,
-            HTTPAdapter(
-                pool_connections=int(connection_pool_size),
-                pool_maxsize=int(connection_pool_size)))
+            if self._connection_pool_size is not None:
+                adapter = HTTPAdapterWithSocketOptions(
+                    pool_connections=int(self._connection_pool_size),
+                    pool_maxsize=int(self._connection_pool_size),
+                    socket_options=socket_options)
+            else:
+                adapter = HTTPAdapterWithSocketOptions(socket_options=socket_options)
+
+        else:
+            adapter = HTTPAdapterWithSocketOptions(
+                pool_connections=int(self._connection_pool_size),
+                pool_maxsize=int(self._connection_pool_size))
+
+        self._s.mount(self._base_url, adapter)
+
+    # @staticmethod
+    # def build_response_from_raw_bytes(data: bytes) -> Response:
+    #     urllib_response = RestService.urllib3_response_from_bytes(data)
+    #
+    #     adapter = HTTPAdapter()
+    #     requests_response = adapter.build_response(requests.PreparedRequest(), urllib_response)
+    #     # actual content of response needs to be set explicitly
+    #     requests_response._content = urllib_response.data
+    #
+    #     return requests_response
 
 
 class AnalogicTM1Service(TM1Service):
 
     def __init__(self, **kwargs):
+        """ Initiate the TM1Service
+
+            :param address: String - address of the TM1 instance
+            :param port: Int - HTTPPortNumber as specified in the tm1s.cfg
+            :param base_url - base url e.g. https://localhost:12354/api/v1
+            :param user: String - name of the user
+            :param password String - password of the user
+            :param decode_b64 - whether password argument is b64 encoded
+            :param namespace String - optional CAM namespace
+            :param ssl: boolean -  as specified in the tm1s.cfg
+            :param cam_passport: String - the cam passport
+            :param session_id: String - TM1SessionId e.g. q7O6e1w49AixeuLVxJ1GZg
+            :param session_context: String - Name of the Application. Controls "Context" column in Arc / TM1top.
+                If None, use default: TM1py
+            :param verify: path to .cer file or 'True' / True / 'False' / False (if no ssl verification is required)
+            :param logging: boolean - switch on/off verbose http logging into sys.stdout
+            :param timeout: Float - Number of seconds that the client will wait to receive the first byte.
+            :param cancel_at_timeout: Abort operation in TM1 when timeout is reached
+            :param async_requests_mode: changes internal REST execution mode to avoid 60s timeout on IBM cloud
+            :param tcp_keepalive: maintain the TCP connection all the time, users should choose either async_requests_mode or tcp_keepalive to run a long-run request
+                    If both are True, use async_requests_mode by default
+            :param connection_pool_size - In a multi threaded environment, you should set this value to a
+                    higher number, such as the number of threads
+            :param integrated_login: True for IntegratedSecurityMode3
+            :param integrated_login_domain: NT Domain name.
+                    Default: '.' for local account.
+            :param integrated_login_service: Kerberos Service type for remote Service Principal Name.
+                    Default: 'HTTP'
+            :param integrated_login_host: Host name for Service Principal Name.
+                    Default: Extracted from request URI
+            :param integrated_login_delegate: Indicates that the user's credentials are to be delegated to the server.
+                    Default: False
+            :param impersonate: Name of user to impersonate
+            :param re_connect_on_session_timeout: attempt to reconnect once if session is timed out
+            :param proxies: pass a dictionary with proxies e.g.
+                    {'http': 'http://proxy.example.com:8080', 'https': 'http://secureproxy.example.com:8090'}
+            """
         self._tm1_rest = AnalogicRestService(**kwargs)
         self.annotations = AnnotationService(self._tm1_rest)
         self.cells = CellService(self._tm1_rest)
@@ -546,11 +597,12 @@ class AnalogicTM1Service(TM1Service):
         self.applications = ApplicationService(self._tm1_rest)
         self.views = ViewService(self._tm1_rest)
         self.sandboxes = SandboxService(self._tm1_rest)
-        self.git = GitService(self._tm1_rest)
+        self.files = FileService(self._tm1_rest)
 
-    def re_authenticate(self):
-        self._tm1_rest = AnalogicRestService(**self.connection._kwargs)
-        self._instantiate_services()
+    # def re_authenticate(self):
+    #     # self._tm1_rest = AnalogicRestService(**self.connection._kwargs)
+    #     # self._instantiate_services()
+    #     self._tm1_rest.connect()
 
     def get_session(self):
         return self._tm1_rest._s

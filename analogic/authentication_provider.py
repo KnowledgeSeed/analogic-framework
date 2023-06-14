@@ -93,7 +93,7 @@ class AuthenticationProvider(ABC):
 
         try:
             response = ClassLoader().call(export_description, request, self.get_tm1_service(), self.setting, self)
-        except Exception as e:
+        except Exception as e: #Todo 500, 401
             self.getLogger().error(e, exc_info=True)
             return {'message': str(e)}, 404, {'Content-type': 'application/json'}
 

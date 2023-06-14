@@ -53,7 +53,7 @@ class LoginBasic(AuthenticationProvider):
                 return self._add_authenticated_cookies(resp)
 
             except Exception as e:
-                self._logger.error(e)
+                self._logger.error(e, exc_info=True)
 
         return render_template('login.html', cnf=cnf)
 
