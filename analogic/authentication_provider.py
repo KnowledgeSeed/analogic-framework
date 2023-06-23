@@ -42,7 +42,7 @@ def check_access(f):
     def decorated_function(*args, **kwargs):
         auth_provider = args[0]
         try:
-            if auth_provider.has_access() is False:
+            if auth_provider.has_access(kwargs.get('force_server_side_query')) is False:
                 return auth_provider.get_access_denied_response()
         except Exception as e:
             return {'message': str(e)}, 400, {'Content-Type': 'application/json'}
@@ -128,9 +128,12 @@ class AuthenticationProvider(ABC):
 
         return ClassLoader().call(description, request, self.get_tm1_service(), self.setting, self)
 
-    def _get_check_access_mdx(self):
-        if request.args.get('server') is not None:
-            body = orjson.loads(request.data)
+    def _get_check_access_mdx(self, force_server_side_query=False):
+        if request.args.get('server') is not None or force_server_side_query is True:
+            if request.method == 'GET':
+                body = request.args
+            else:
+                body = orjson.loads(request.data)
             key = body.get('key')
             if body.get('key_suffix') is not None:
                 key = key + '_' + body['key_suffix']
@@ -149,9 +152,12 @@ class AuthenticationProvider(ABC):
 
         return None
 
-    def _get_server_side_mdx(self):
-        if request.args.get('server') is not None:
-            body = orjson.loads(request.data)
+    def _get_server_side_mdx(self, force_server_side_query=False):
+        if request.args.get('server') is not None or force_server_side_query is True:
+            if request.method == 'GET':
+                body = request.args
+            else:
+                body = orjson.loads(request.data)
             key = body['key']
             if body.get('key_suffix') is not None:
                 key = key + '_' + body['key_suffix']
@@ -194,8 +200,8 @@ class AuthenticationProvider(ABC):
     def get_access_denied_response(self):
         return {'message': 'Access denied'}, 403, {'Content-Type': 'application/json'}
 
-    def has_access(self):
-        mdx = self._get_check_access_mdx()
+    def has_access(self, force_server_side_query=False):
+        mdx = self._get_check_access_mdx(force_server_side_query)
         if mdx is None:
             return True
 
@@ -236,35 +242,42 @@ class AuthenticationProvider(ABC):
 
     @login_required
     @check_access
-    def proxy(self, sub_path):
+    def proxy(self, sub_path, encode_content=False, method=None, force_server_side_query=False,
+              forward_query_string=True):
 
         self._extend_login_session()
 
         target_url = self.setting.get_proxy_target_url()
 
-        mdx = self._get_server_side_mdx()
+        mdx = self._get_server_side_mdx(force_server_side_query)
 
         url = target_url + "/" + sub_path + (
             "?" + request.query_string.decode('UTF-8') if len(
-                request.query_string) > 0 else "")
+                request.query_string) > 0 and forward_query_string is True else "")
 
-        method = request.method
+        meth = request.method if method is None else method
 
         headers: dict[str, str] = self.HEADERS.copy()
         cookies: dict[str, str] = {}
 
         try:
-            response = self.do_proxy_request(url, method, mdx, headers, cookies, False)
+            response = self.do_proxy_request(url, meth, mdx, headers, cookies, encode_content)
         except AnalogicProxyException as e:
             self._logger.error(e)
             return 'Something went wrong', 500, {'Content-Type': 'application/json'}
 
         if response.status_code == 400 or response.status_code == 500:
-            self._logger.error('MDX error: ' + response.get_decompressed_data())
+            if encode_content is False:
+                self._logger.error('MDX error: ' + response.get_decompressed_data())
+            else:
+                self._logger.error('MDX error: ' + response.json())
             self._logger.error('MDX: ' + mdx.decode('utf-8'))
 
         if response.status_code == 401:
             return 'Authentication required', 401, {'Content-Type': 'application/json'}
+
+        if encode_content is True:
+            return response.json(), 200, {'Content-Type': 'application/json'}
 
         return response.content, response.status_code, {
             'Content-Type': 'application/json; odata.metadata=minimal; odata.streaming=true; charset=utf-8',

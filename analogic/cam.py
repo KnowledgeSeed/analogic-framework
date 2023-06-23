@@ -71,7 +71,7 @@ class Cam(AuthenticationProvider):
                                                          verify=self.setting.get_ssl_verify(), decode_content=decode_content)
         return response
 
-    def _get_server_side_mdx(self):
+    def _get_server_side_mdx(self, force_server_side_query=False):
         mdx = request.data
         if request.args.get('server') is not None:
             body = orjson.loads(request.data)
