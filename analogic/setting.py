@@ -77,7 +77,7 @@ class SettingManager:
 
     def get_mdx(self, key):
         repository = self._get_repository()
-        mdx = repository[key]
+        mdx = repository.get(key)
         return mdx
 
     def _get_json_setting(self, file_name):

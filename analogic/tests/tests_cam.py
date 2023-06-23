@@ -74,6 +74,18 @@ class TestCamAuthenticationProvider(unittest.TestCase):
             assert response.status_code == 201
             assert orjson.loads(gzip.decompress(response.data)).get('Cells') is not None
 
+    def test_call_client_side_mdx(self):
+        with self.client:
+            self.login_into_app()
+            params = {
+                'MDX': 'SELECT  {[}ClientSettings].[}ClientSettings].Members}  ON COLUMNS ,  {[}Clients].[}Clients].Members}  ON ROWS  FROM [}ClientSettings] '
+            }
+            url = '/cam/proxy/api/v1/ExecuteMDX?$expand=Axes($expand=Tuples($expand=Members($select=Name,%20Attributes))),Cells($select=Ordinal,Value)'
+            response = self.client.post(url, data=orjson.dumps(params), follow_redirects=True,
+                                        content_type='application/json')
+            assert response.status_code == 201
+            assert orjson.loads(gzip.decompress(response.data)).get('Cells') is not None
+
     def test_logout(self):
         with self.client:
             self.login_into_app()

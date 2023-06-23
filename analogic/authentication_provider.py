@@ -37,6 +37,20 @@ def login_required(f):
     return decorated_function
 
 
+def check_access(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        auth_provider = args[0]
+        try:
+            if auth_provider.has_access() is False:
+                return auth_provider.get_access_denied_response()
+        except Exception as e:
+            return {'message': str(e)}, 400, {'Content-Type': 'application/json'}
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
 class AuthenticationProvider(ABC):
     HEADERS = {'Connection': 'keep-alive',
                'User-Agent': 'Analogic',
@@ -93,7 +107,7 @@ class AuthenticationProvider(ABC):
 
         try:
             response = ClassLoader().call(export_description, request, self.get_tm1_service(), self.setting, self)
-        except Exception as e: #Todo 500, 401
+        except Exception as e:  # Todo 500, 401
             self.getLogger().error(e, exc_info=True)
             return {'message': str(e)}, 404, {'Content-type': 'application/json'}
 
@@ -114,8 +128,28 @@ class AuthenticationProvider(ABC):
 
         return ClassLoader().call(description, request, self.get_tm1_service(), self.setting, self)
 
+    def _get_check_access_mdx(self):
+        if request.args.get('server') is not None:
+            body = orjson.loads(request.data)
+            key = body.get('key')
+            if body.get('key_suffix') is not None:
+                key = key + '_' + body['key_suffix']
+            key = key + '_analogic_check_access'
+            mdx = self.setting.get_mdx(key)
+
+            if mdx is None:
+                return None
+            else:
+                mdx = self._set_custom_mdx_data(mdx)
+
+            for k in body:
+                mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
+
+            return mdx.encode('utf-8')
+
+        return None
+
     def _get_server_side_mdx(self):
-        mdx = request.data
         if request.args.get('server') is not None:
             body = orjson.loads(request.data)
             key = body['key']
@@ -127,8 +161,8 @@ class AuthenticationProvider(ABC):
                 mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
 
             return mdx.encode('utf-8')
-
-        return mdx
+        else:
+            return ''.encode('utf-8')
 
     @abstractmethod
     def index(self):
@@ -157,7 +191,51 @@ class AuthenticationProvider(ABC):
     def _set_custom_mdx_data(self, mdx):
         return mdx
 
+    def get_access_denied_response(self):
+        return {'message': 'Access denied'}, 403, {'Content-Type': 'application/json'}
+
+    def has_access(self):
+        mdx = self._get_check_access_mdx()
+        if mdx is None:
+            return True
+
+        self._extend_login_session()
+
+        target_url = self.setting.get_proxy_target_url()
+
+        sub_path = '/api/v1/ExecuteMDX?$expand=Cells($select=Value)'
+
+        url = target_url + "/" + sub_path
+
+        headers: dict[str, str] = self.HEADERS.copy()
+        cookies: dict[str, str] = {}
+
+        try:
+            response = self.do_proxy_request(url, 'POST', mdx, headers, cookies, True)
+        except AnalogicProxyException as e:
+            self._logger.error(e, exc_info=True)
+            raise e
+
+        if response.status_code == 400 or response.status_code == 500:
+            self._logger.error('MDX error: ' + response.text)
+            self._logger.error('MDX: ' + mdx.decode('utf-8'))
+            raise Exception(response.text)
+
+        if response.status_code == 401:
+            raise Exception('401 tm1 authentication failed')
+
+        resp = response.json()
+
+        if resp.get('Cells') is None:
+            return False
+
+        if len(resp.get('Cells')) < 1:
+            return False
+
+        return resp.get('Cells')[0].get('Value') == 1
+
     @login_required
+    @check_access
     def proxy(self, sub_path):
 
         self._extend_login_session()

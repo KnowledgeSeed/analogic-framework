@@ -71,6 +71,22 @@ class Cam(AuthenticationProvider):
                                                          verify=self.setting.get_ssl_verify(), decode_content=decode_content)
         return response
 
+    def _get_server_side_mdx(self):
+        mdx = request.data
+        if request.args.get('server') is not None:
+            body = orjson.loads(request.data)
+            key = body['key']
+            if body.get('key_suffix') is not None:
+                key = key + '_' + body['key_suffix']
+            mdx = self.setting.get_mdx(key)
+            mdx = self._set_custom_mdx_data(mdx)
+            for k in body:
+                mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
+
+            return mdx.encode('utf-8')
+
+        return mdx
+
     def check_app_authenticated(self):
         return session.get(self.logged_in_user_session_name, '') != '' and self.setting.get_tm1_service(
             session.get(self.logged_in_user_session_name)) is not None
