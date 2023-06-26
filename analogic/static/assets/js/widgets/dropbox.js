@@ -36,7 +36,7 @@ class DropBoxWidget extends Widget {
         </div>
         <div class="ks-dropbox-field ${v.editable === false ? 'readonly' : ''}">
             <div class="ks-dropbox-field-inner">
-                <input ${v.editable === false ? 'readonly' : ''} style="${textStyles.join('')}" type="text" class="ks-dropbox-input search-text" placeholder="${pi.selectedItems !== '' ? pi.selectedItems : v.placeHolder}">
+                <input ${v.editable === false || v.disableSearch === true  ? 'readonly' : ''} style="${textStyles.join('')}" type="text" class="ks-dropbox-input search-text" placeholder="${pi.selectedItems !== '' ? pi.selectedItems : v.placeHolder}">
                 <div class="ks-dropbox-icon"></div>
             </div>
         </div>
@@ -101,6 +101,7 @@ class DropBoxWidget extends Widget {
     getParameters(d) {
         return {
             backdrop: this.getRealValue('backdrop', d, false),
+            disableSearch: this.getRealValue('disableSearch', d, false),
             editable: this.getRealValue('editable', d, true),
             itemIconOff: this.getRealValue('itemIconOff', d, false),
             itemIconOn: this.getRealValue('itemIconOn', d, false),

@@ -205,11 +205,9 @@ class AuthenticationProvider(ABC):
         if mdx is None:
             return True
 
-        self._extend_login_session()
-
         target_url = self.setting.get_proxy_target_url()
 
-        sub_path = '/api/v1/ExecuteMDX?$expand=Cells($select=Value)'
+        sub_path = 'api/v1/ExecuteMDX?$expand=Cells($select=Value)'
 
         url = target_url + "/" + sub_path
 

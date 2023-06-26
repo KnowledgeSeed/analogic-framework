@@ -70,6 +70,8 @@ class Analogic(Flask):
 
     def register_application(self, application_dir, blueprint: "Blueprint", **options: t.Any) -> None:
         try:
+            if blueprint.name != 'sanlam':
+                return
             instance = '/' + blueprint.name
             self.register_analogic_url_rules(instance)
 
