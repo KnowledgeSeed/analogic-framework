@@ -49,6 +49,7 @@ class LoginBasic(AuthenticationProvider):
                     self.setting.set_tm1_service(user_name, tm1_service)
 
                 session[self.logged_in_user_session_name] = user_name
+                self.load_permissions()
                 resp = make_response(redirect(self.setting.get_base_url()))
                 return self._add_authenticated_cookies(resp)
 

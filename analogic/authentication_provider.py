@@ -59,6 +59,9 @@ class AuthenticationProvider(ABC):
                'Accept-Encoding': 'gzip, deflate, br',
                'TM1-SessionContext': 'Analogic'}
 
+    PERMISSION_QUERIES_KEY = 'analogic_permissions'
+    PERMISSIONS_SESSION_NAME = 'analogic_permission'
+
     def __init__(self, setting):
         self.setting = setting
         self.logged_in_user_session_name = self.setting.get_instance() + '_logged_in_user_name'
@@ -238,6 +241,44 @@ class AuthenticationProvider(ABC):
 
         return resp.get('Cells')[0].get('Value') == 1
 
+    def check_permission(self, required_permissions):
+        available_permissions = session.get(self.PERMISSIONS_SESSION_NAME)
+        return any(permission in required_permissions for permission in available_permissions)
+
+    def load_permissions(self):
+        permission_queries = self.setting.get_mdx(self.PERMISSION_QUERIES_KEY)
+        if permission_queries is not None:
+            for permission_query_params in self.setting.get_permission_queries():
+                self.execute_permission_query(permission_query_params)
+
+    def execute_permission_query(self, params):
+        try:
+            target_url = self.setting.get_proxy_target_url()
+            sub_path = params['url']
+            url = target_url + ('/' if sub_path[0] != '/' else '') + sub_path
+            body = self._set_custom_mdx_data(params['body'])
+
+            headers: dict[str, str] = self.HEADERS.copy()
+            cookies: dict[str, str] = {}
+
+            response = self.do_proxy_request(url, params['method'], body.encode('utf-8'), headers, cookies, True)
+
+            if response.status_code > 300:
+                self._logger.error('MDX error: ' + response.text)
+                self._logger.error('MDX: ' + body.decode('utf-8'))
+            else:
+                r = response.json()
+                permissions = [str(x['Value']) for x in r['Cells']]
+
+                existing_permissions = session.get(self.PERMISSIONS_SESSION_NAME, [])
+                existing_permissions_list = existing_permissions.split(',')
+
+                union = list(set(existing_permissions_list + permissions))
+                session[self.PERMISSIONS_SESSION_NAME] = ','.join(union)
+
+        except Exception as e:
+            self.getLogger().error(e, exc_info=True)
+
     @login_required
     @check_access
     def proxy(self, sub_path, encode_content=False, method=None, force_server_side_query=False,
@@ -261,7 +302,7 @@ class AuthenticationProvider(ABC):
         try:
             response = self.do_proxy_request(url, meth, mdx, headers, cookies, encode_content)
         except AnalogicProxyException as e:
-            self._logger.error(e)
+            self._logger.error(e, exc_info=True)
             return 'Something went wrong', 500, {'Content-Type': 'application/json'}
 
         if response.status_code == 400 or response.status_code == 500:
