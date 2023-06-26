@@ -23,6 +23,7 @@ class Cam(AuthenticationProvider):
 
         cam_name = self.set_tm1_service(request.form.get('c_pp'))
         session[self.logged_in_user_session_name] = cam_name
+        self.load_permissions()
         return self._add_authenticated_cookies(resp)
 
     def get_base_url(self):

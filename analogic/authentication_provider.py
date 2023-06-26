@@ -1,7 +1,7 @@
 from flask import session, current_app, send_file, request, jsonify
 from analogic.loader import ClassLoader
 import analogic.pivot as PivotApi
-from analogic.exceptions import AnalogicProxyException
+from analogic.exceptions import AnalogicProxyException, AnalogicAccessDeniedException
 import logging
 import pandas as pd
 from abc import ABC, abstractmethod
@@ -58,6 +58,9 @@ class AuthenticationProvider(ABC):
                'Accept': 'application/json;odata.metadata=none,text/plain',
                'Accept-Encoding': 'gzip, deflate, br',
                'TM1-SessionContext': 'Analogic'}
+
+    PERMISSION_QUERIES_KEY = 'analogic_permissions'
+    PERMISSIONS_SESSION_NAME = 'analogic_permission'
 
     def __init__(self, setting):
         self.setting = setting
@@ -162,6 +165,13 @@ class AuthenticationProvider(ABC):
             if body.get('key_suffix') is not None:
                 key = key + '_' + body['key_suffix']
             mdx = self.setting.get_mdx(key)
+
+            if isinstance(mdx, dict):
+                if 'required_permissions' in mdx and self.check_permission(mdx.get('required_permissions')) is False:
+                    raise AnalogicAccessDeniedException('You do not have access to run the query {}'.format(key))
+
+                mdx = mdx['query']
+
             mdx = self._set_custom_mdx_data(mdx)
             for k in body:
                 mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
@@ -238,6 +248,45 @@ class AuthenticationProvider(ABC):
 
         return resp.get('Cells')[0].get('Value') == 1
 
+    def check_permission(self, required_permissions):
+        available_permissions = session.get(self.PERMISSIONS_SESSION_NAME)
+        available_permissions_list = available_permissions.split(',') if available_permissions is not None else []
+        return any(permission in required_permissions for permission in available_permissions_list)
+
+    def load_permissions(self):
+        permission_queries = self.setting.get_mdx(self.PERMISSION_QUERIES_KEY)
+        if permission_queries is not None:
+            for permission_query_params in permission_queries:
+                self.execute_permission_query(permission_query_params)
+
+    def execute_permission_query(self, params):
+        try:
+            target_url = self.setting.get_proxy_target_url()
+            sub_path = params['url']
+            url = target_url + ('/' if sub_path[0] != '/' else '') + sub_path
+            body = self._set_custom_mdx_data(params['body'])
+
+            headers: dict[str, str] = self.HEADERS.copy()
+            cookies: dict[str, str] = {}
+
+            response = self.do_proxy_request(url, params['method'], body.encode('utf-8'), headers, cookies, True)
+
+            if response.status_code > 300:
+                self._logger.error('MDX error: ' + response.text)
+                self._logger.error('MDX: ' + body.decode('utf-8'))
+            else:
+                r = response.json()
+                permissions = [str(x['Value']) for x in r['Cells']]
+
+                existing_permissions = session.get(self.PERMISSIONS_SESSION_NAME)
+                existing_permissions_list = existing_permissions.split(',') if existing_permissions is not None else []
+
+                union = list(set(existing_permissions_list + permissions))
+                session[self.PERMISSIONS_SESSION_NAME] = ','.join(union)
+
+        except Exception as e:
+            self.getLogger().error(e, exc_info=True)
+
     @login_required
     @check_access
     def proxy(self, sub_path, encode_content=False, method=None, force_server_side_query=False,
@@ -246,8 +295,6 @@ class AuthenticationProvider(ABC):
         self._extend_login_session()
 
         target_url = self.setting.get_proxy_target_url()
-
-        mdx = self._get_server_side_mdx(force_server_side_query)
 
         url = target_url + "/" + sub_path + (
             "?" + request.query_string.decode('UTF-8') if len(
@@ -259,10 +306,15 @@ class AuthenticationProvider(ABC):
         cookies: dict[str, str] = {}
 
         try:
+            mdx = self._get_server_side_mdx(force_server_side_query)
             response = self.do_proxy_request(url, meth, mdx, headers, cookies, encode_content)
         except AnalogicProxyException as e:
-            self._logger.error(e)
-            return 'Something went wrong', 500, {'Content-Type': 'application/json'}
+            self._logger.error(e, exc_info=True)
+            return { 'message' : 'Something went wrong {}'.format(e)}, 500, {'Content-Type': 'application/json'}
+        except AnalogicAccessDeniedException as e:
+            self._logger.error(e, exc_info=True)
+            return { 'message' : 'Something went wrong {}'.format(e)}, 403, {'Content-Type': 'application/json'}
+
 
         if response.status_code == 400 or response.status_code == 500:
             if encode_content is False:
