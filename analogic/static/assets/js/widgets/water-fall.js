@@ -1,6 +1,7 @@
 /* global app, Utils, Widget, Widgets */
 
 'use strict';
+
 class WaterFallWidget extends Widget {
 
     getHtml(widgets, d) {
@@ -8,20 +9,28 @@ class WaterFallWidget extends Widget {
 
         const dataset1Config = o.dataset1 || {datapoints: []}, dataset2Config = o.dataset2 || {datapoints: []};
 
-        //const demoDataSet1 = {legendLabel: 'Dataset One', legendColor: 'pink', datapoints: [{value: 9.06}, {value: -0.06}, {value: 0.5}, {value: 0}, {value: 9.5}, {value: 9.06}, {value: -0.06}, {value: 0.5}, {value: 0}, {value: 9.5}, {value: 9.06}, {value: -0.06}, {value: 0.5}, {value: 0}, {value: 9.5}, {value: 9.5}]};
-        //const demoDataSet2 = {legendLabel: 'Dataset Two', legendColor: 'red', datapoints: [{value: 8.06}, {value: -3.06}, {value: 1.5}, {value: 5}, {value: 4.5}, {value: 8.06}, {value: -3.06}, {value: 1.5}, {value: 5}, {value: 4.5}, {value: 8.06}, {value: -3.06}, {value: 1.5}, {value: 5}, {value: 4.5}, {value: 4.5}]};
+        //Simple Demo With 2 Datasets:
+        //const dataset1 = {legendLabel: 'Dataset One', legendColor: 'pink', datapoints: [{value: 9.06, positiveColor: 'green', negativeColor: 'red'}, {value: -3.06, positiveColor: 'green', negativeColor: 'red'}, {value: 0.5, positiveColor: 'green', negativeColor: 'red'}, {value: 0, positiveColor: 'green', negativeColor: 'red'}, {value: 9.5, positiveColor: 'green', negativeColor: 'red'}, {value: 9.06, positiveColor: 'green', negativeColor: 'red'}, {value: -0.06, positiveColor: 'green', negativeColor: 'red'}, {value: 0.5, positiveColor: 'green', negativeColor: 'red'}, {value: 0, positiveColor: 'green', negativeColor: 'red'}, {value: 9.5, positiveColor: 'green', negativeColor: 'red'}, {value: 9.06, positiveColor: 'green', negativeColor: 'red'}, {value: -0.06, positiveColor: 'green', negativeColor: 'red'}, {value: 0.5, positiveColor: 'green', negativeColor: 'red'}, {value: 0, positiveColor: 'green', negativeColor: 'red'}, {value: 9.5, positiveColor: 'green', negativeColor: 'red'}, {value: 9.5, positiveColor: 'green', negativeColor: 'red'}]};
+        //const dataset2 = {legendLabel: 'Dataset Two', legendColor: 'red', datapoints: [{value: 8.06}, {value: -3.06}, {value: 1.5}, {value: 5}, {value: 4.5}, {value: 8.06}, {value: -3.06}, {value: 1.5}, {value: 5}, {value: 4.5}, {value: 8.06}, {value: -3.06}, {value: 1.5}, {value: 5}, {value: 4.5}, {value: 4.5}]};
+        //const xAxisLabels = [{value: 'FC 0/12'}, {value: 'Headcount Effect BAU'}, {value: 'Shared Service Centers'}, {value: 'Supplements'}, {value: 'Sales bonus'}, {value: 'Other sustainable'}, {value: 'IFRS Sales bonus'}, {value: 'Accural reversal'}, {value: 'Tax and contr. difference'}, {value: 'Wage increase difference'}, {value: 'Unused holidays'}, {value: 'Bonus over/under perfm.'}, {value: 'LTI, RPI'}, {value: 'Reorg. effect'}, {value: 'Transfer non-TWM'}, {value: 'YTD Aug actual'}]
+
+        //Demo With 2 Totals and Con Lines:
+        //const dataset1 = {showConnectionLines: true, legendLabel: 'Dataset One', legendColor: 'pink', datapoints: [{value: 840000, positiveColor: 'green', negativeColor: 'red'}, {value: 760000, positiveColor: 'green', negativeColor: 'red'}, {value: -190000, positiveColor: 'green', negativeColor: 'red'}, {value: -210000, displayValue: 210000, positiveColor: 'green', negativeColor: 'red'}, {value: 1283000, isTotal: true, positiveColor: 'green', negativeColor: 'red'}, {value: 84000, displayValue: -84000, positiveColor: 'green', negativeColor: 'red'}, {value: -75000, displayValue: 75000, positiveColor: 'green', negativeColor: 'red'}, {value: -100000, displayValue: 100000, positiveColor: 'green', negativeColor: 'red'}, {value: 1016000, positiveColor: 'green', negativeColor: 'red'}]};
+        //const xAxisLabels = [{value: 'Total Cost 2022'}, {value: 'Calculated Salary'}, {value: 'Bonus'}, {value: 'Auto Allowance'}, {value: 'Other Benefits'}, {value: 'Employer Contributions'}, {value: 'Social Security'}, {value: 'Pension Fund'}, {value: 'Health Insurance'}];
 
         const v = {
             id: o.id,
             dataset1: $.extend(true, {}, dataset1Config, d.dataset1),
             dataset2: $.extend(true, {}, dataset2Config, d.dataset2),
-            xAxisLabels: this.getRealValue('xAxisLabels', d, [{value: 'FC 0/12'}, {value: 'Headcount Effect BAU'}, {value: 'Shared Service Centers'}, {value: 'Supplements'}, {value: 'Sales bonus'}, {value: 'Other sustainable'}, {value: 'IFRS Sales bonus'}, {value: 'Accural reversal'}, {value: 'Tax and contr. difference'}, {value: 'Wage increase difference'}, {value: 'Unused holidays'}, {value: 'Bonus over/under perfm.'}, {value: 'LTI, RPI'}, {value: 'Reorg. effect'}, {value: 'Transfer non-TWM'}, {value: 'YTD Aug actual'}]),
+            xAxisLabels: this.getRealValue('xAxisLabels', d, []),
             labelVisible: this.getRealValue('labelVisible', d, true),
             legendVisible: this.getRealValue('legendVisible', d, true),
             minYAxis: parseFloat(this.getRealValue('minYAxis', d, -10)),
             maxYAxis: parseFloat(this.getRealValue('maxYAxis', d, 60)),
             yAxisGridLineNum: parseInt(this.getRealValue('yAxisGridLineNum', d, 11)),
+            yAxisUnit: this.getRealValue('yAxisUnit', d, ''),
             yAxisDecimalNum: parseInt(this.getRealValue('yAxisDecimalNum', d, 2)),
+            yAxisTicksPrecisionFixed: this.getRealValue('yAxisTicksPrecisionFixed', d, false),
             yAxisSeparatesThousands: this.getRealValue('yAxisSeparatesThousands', d, false),
             height: parseFloat(Utils.getSize(this.getRealValue('height', d, 300), false, 'height')),
             defaultColor: this.getRealValue('defaultColor', d, '#F3F4F6'),
@@ -52,7 +61,6 @@ class WaterFallWidget extends Widget {
     }
 
     initEventHandlers() {
-
         const section = this.getSection();
 
         this.renderWaterFall(section);
@@ -63,19 +71,23 @@ class WaterFallWidget extends Widget {
     }
 
     renderWaterFall(section, minYAxis) {
-        const v = this.value, min = minYAxis || v.minYAxis, max = v.maxYAxis, yAxisRange = max - min, yAxisStep = yAxisRange / v.yAxisGridLineNum, defaultColor = v.defaultColor, labels = v.xAxisLabels;
+        const v = this.value, min = minYAxis || v.minYAxis, max = v.maxYAxis, yAxisRange = max - min, yAxisStep = yAxisRange / v.yAxisGridLineNum, labels = v.xAxisLabels;
         const yAxisHtml = [], h = [], dataset1 = v.dataset1, datapoints1 = dataset1.datapoints, dataset2 = v.dataset2, datapoints2 = dataset2.datapoints, len = datapoints1.length;
         const chartDiv = section.find('.ks-waterfall'), chartHeight = chartDiv.height(), zeroHeight = (-min / yAxisRange) * chartHeight, labelVisible = v.labelVisible;
-        const resetBtnVisibility = (minYAxis && (minYAxis !== v.minYAxis)) ? '' : ' style="display: none;"', yAxisDecimalNum = v.yAxisDecimalNum;
+        const resetBtnVisibility = (minYAxis && (minYAxis !== v.minYAxis)) ? '' : ' style="display: none;"';
         let i, j = max, d, label, isLastCol, hb, lastHeights = [zeroHeight, zeroHeight], val;
 
         for (i = 0; i < v.yAxisGridLineNum; ++i) {
-            yAxisHtml.push('<div class="ks-waterfall-y-line ks-primary"><div class="ks-waterfall-y-line-tick ks-left"><\/div><div class="ks-waterfall-y-line-label ks-left">', v.yAxisSeparatesThousands ? Utils.separatesThousands(Utils.precisionRound(j, yAxisDecimalNum)) : Utils.precisionRound(j, yAxisDecimalNum), '<\/div><div class="ks-waterfall-y-line-tick ks-right"><\/div><div class="ks-waterfall-y-line-label ks-right"><\/div><\/div>');
+            val = Utils.precisionRound(j, v.yAxisDecimalNum, v.yAxisTicksPrecisionFixed);
+
+            yAxisHtml.push('<div class="ks-waterfall-y-line ks-primary"><div class="ks-waterfall-y-line-tick ks-left"></div><div class="ks-waterfall-y-line-label ks-left">', v.yAxisSeparatesThousands ? Utils.separatesThousands(val) : val, v.yAxisUnit, '</div><div class="ks-waterfall-y-line-tick ks-right"></div><div class="ks-waterfall-y-line-label ks-right"></div></div>');
 
             j -= yAxisStep;
         }
 
-        yAxisHtml.push('<div class="ks-waterfall-y-line ks-axis"><div class="ks-waterfall-y-line-tick ks-left"></div><div class="ks-waterfall-y-line-label ks-left ks-waterfall-label-origo">' + (v.yAxisSeparatesThousands ? Utils.separatesThousands(min) : min )+ '</div><div class="ks-waterfall-y-line-tick ks-right"></div><div class="ks-waterfall-y-line-label ks-right"></div><div class="ks-waterfall-reset"' + resetBtnVisibility + '><span class="">i</span> Reset</div></div>');
+        val = Utils.precisionRound(min, v.yAxisDecimalNum, v.yAxisTicksPrecisionFixed);
+
+        yAxisHtml.push('<div class="ks-waterfall-y-line ks-axis"><div class="ks-waterfall-y-line-tick ks-left"></div><div class="ks-waterfall-y-line-label ks-left ks-waterfall-label-origo">' + (v.yAxisSeparatesThousands ? Utils.separatesThousands(val) : val) + v.yAxisUnit + '</div><div class="ks-waterfall-y-line-tick ks-right"></div><div class="ks-waterfall-y-line-label ks-right"></div><div class="ks-waterfall-reset"' + resetBtnVisibility + '><span class="">i</span> Reset</div></div>');
 
         for (i = 0; i < len; ++i) {
             d = datapoints1[i];
@@ -83,7 +95,7 @@ class WaterFallWidget extends Widget {
 
             isLastCol = (len - 1 === i);
 
-            if (v.allowLastColumnToZero && isLastCol) {
+            if (v.allowLastColumnToZero && (isLastCol || d.isTotal)) {
                 lastHeights = [zeroHeight, zeroHeight];
             }
 
@@ -95,9 +107,9 @@ class WaterFallWidget extends Widget {
 
             h.push('<div class="ks-waterfall-bar-group"><div class="ks-waterfall-bar-group-content">');
 
-            this.addBarHtml(h, d, val, hb[0], hb[1], labelVisible, v.hiddenDatasets[0]);
+            this.addBarHtml(h, d, val, hb[0], hb[1], labelVisible, v.hiddenDatasets[0], isLastCol, dataset1.showConnectionLines);
 
-            h.push('<div class="ks-waterfall-x-line ks-primary"><div class="ks-waterfall-x-line-tick"><\/div><div class="ks-waterfall-x-line-label">', label.value, '<div class="ks-waterfall-x-line-icon', (label.comment ? '' : ' off'), '"><\/div><\/div><\/div>');
+            h.push('<div class="ks-waterfall-x-line ks-primary"><div class="ks-waterfall-x-line-tick"></div><div class="ks-waterfall-x-line-label">', label.value, '<div class="ks-waterfall-x-line-icon', (label.comment ? '' : ' off'), '"></div></div></div>');
 
             d = datapoints2[i];
 
@@ -106,10 +118,10 @@ class WaterFallWidget extends Widget {
 
                 hb = this.calculateHeightAndBottom(val, d, yAxisRange, min, chartHeight, lastHeights, 1);
 
-                this.addBarHtml(h, d, val, hb[0], hb[1], labelVisible, v.hiddenDatasets[1]);
+                this.addBarHtml(h, d, val, hb[0], hb[1], labelVisible, v.hiddenDatasets[1], isLastCol, dataset1.showConnectionLines);
             }
 
-            h.push('<\/div><\/div>');
+            h.push('</div></div>');
         }
 
         this.addSecondaryHtml(h);
@@ -157,14 +169,29 @@ class WaterFallWidget extends Widget {
         return [height, bottom];
     }
 
-    addBarHtml(h, d, value, height, bottom, labelVisible, isHidden) {
-        const color = d[value > 0 ? 'positiveColor' : 'negativeColor'] || this.value.defaultColor;
+    addBarHtml(h, d, val, height, bottom, labelVisible, isHidden, isLastCol, showConnectionLines) {
+        const v = this.value, color = d[val > 0 ? 'positiveColor' : 'negativeColor'] || v.defaultColor, s = 'background-color:' + color + ';' + (isHidden ? ' display:none;' : '');
+        const c = (showConnectionLines && !isLastCol) ? ('<div style="' + s + '" class="ks-waterfall-con-line-' + (val > 0 ? 'top' : 'bottom') + '"></div>') : '';
 
-        h.push('<div class="ks-waterfall-bar" style="background-color:', color, '; height: ', height, 'px; bottom: ', bottom, 'px;' + (isHidden ? ' display:none;' : '') + '"><div', (labelVisible ? '' : ' style="display: none;"'), ' class="ks-waterfall-bar-label">', (undefined === d.displayValue ? d.value : d.displayValue), '<\/div><\/div>');
+        let l = '';
+
+        if (labelVisible) {
+            if (undefined === d.displayValue) {
+                val = Utils.precisionRound(val, v.yAxisDecimalNum, v.yAxisTicksPrecisionFixed);
+
+                val = (v.yAxisSeparatesThousands ? Utils.separatesThousands(val) : val) + v.yAxisUnit;
+            } else {
+                val = d.displayValue;
+            }
+
+            l = '<div class="ks-waterfall-bar-label">' + val + '</div>';
+        }
+
+        h.push('<div class="ks-waterfall-bar" style="', s, ' height: ', height, 'px; bottom: ', bottom, 'px;">', l, c, '</div>');
     }
 
     addSecondaryHtml(h) {
-        h.push('<div class="ks-waterfall-x-line ks-secondary"><div class="ks-waterfall-x-line-tick"></div><div class="ks-waterfall-x-line-label"><\/div><\/div>');
+        h.push('<div class="ks-waterfall-x-line ks-secondary"><div class="ks-waterfall-x-line-tick"></div><div class="ks-waterfall-x-line-label"></div></div>');
     }
 
     createLegend(chartDiv, datasets) {
@@ -175,7 +202,7 @@ class WaterFallWidget extends Widget {
             c = d.legendColor;
             b = 'background-color: ' + c + ';';
 
-            h.push('<div class="ks-legend-item"><div class="ks-legend-item-inner"><div class="ks-legend-icon" style="border-color: ', c, ';', b, '"><\/div><div class="ks-legend-label" style="background-color: ', c, ';">', d.legendLabel, '<\/div><\/div><\/div>');
+            h.push('<div class="ks-legend-item"><div class="ks-legend-item-inner"><div class="ks-legend-icon" style="border-color: ', c, ';', b, '"></div><div class="ks-legend-label" style="background-color: ', c, ';">', d.legendLabel, '</div></div></div>');
         }
 
         legendDiv.html(h.join('')).on('click', '.ks-legend-item', e => this.legendClicked(e, bars));
@@ -227,4 +254,3 @@ class WaterFallWidget extends Widget {
         return d;
     }
 }
-;

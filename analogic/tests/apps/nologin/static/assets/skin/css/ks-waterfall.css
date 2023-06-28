@@ -59,6 +59,7 @@
     -o-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
+    white-space: nowrap;
 }
 
 .ks-waterfall-y-line-label.ks-left {
@@ -146,8 +147,27 @@
     -o-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
+    white-space: nowrap;
 }
 
 .ks-legend-item {
     cursor: pointer;
+}
+
+.ks-waterfall-con-line-top {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 29px;
+    height: 1px;
+    background-color: #F3F4F6;
+}
+
+.ks-waterfall-con-line-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 100%;
+    width: 29px;
+    height: 1px;
+    background-color: #F3F4F6;
 }
