@@ -96,9 +96,9 @@ class LineAreaChartWidget extends Widget {
             xAxesLabelRotation: this.getRealValue('xAxesLabelRotation', d, 0),
             xMin: this.getRealValue('xMin', d, false),
             xMax: this.getRealValue('xMax', d, false),
-            xAxisOffset: this.getRealValue('xAxisOffset', d, 0),
-            xAxisOffsetRight: this.getRealValue('xAxisOffsetRight', d, 0),
-            xAxisOffsetLeft: this.getRealValue('xAxisOffsetLeft', d, 0),
+            xAxesOffset: this.getRealValue('xAxesOffset', d, 0),
+            xAxesOffsetRight: this.getRealValue('xAxesOffsetRight', d, 0),
+            xAxesOffsetLeft: this.getRealValue('xAxesOffsetLeft', d, 0),
             yAxesLabelDisplay: this.getRealValue('yAxesLabelDisplay', d, true),
             yAxesLabelFontSize: this.getRealValue('yAxesLabelFontSize', d, 14),
             yAxesLabelFontFamily: this.getRealValue('yAxesLabelFontFamily', d, f),
@@ -106,11 +106,11 @@ class LineAreaChartWidget extends Widget {
             yAxesLabelFontStyle: this.getRealValue('yAxesLabelFontStyle', d, e),
             yAxesLabelPadding: this.getRealValue('yAxesLabelPadding', d, 0),
             yAxesLabelRotation: this.getRealValue('yAxesLabelRotation', d, 0),
-
-            yAxisUnit: this.getRealValue('yAxisUnit', d, ''),
-            yAxisDecimalNum: parseInt(this.getRealValue('yAxisDecimalNum', d, 2)),
-            yAxisSeparatesThousands: this.getRealValue('yAxisSeparatesThousands', d, false),
-            yAxisTicksPrecisionFixed: this.getRealValue('yAxisTicksPrecisionFixed', d, false),
+            yAxesStacked: this.getRealValue('yAxesStacked', d, false),
+            yAxesUnit: this.getRealValue('yAxesUnit', d, ''),
+            yAxesDecimalNum: parseInt(this.getRealValue('yAxesDecimalNum', d, 2)),
+            yAxesSeparatesThousands: this.getRealValue('yAxesSeparatesThousands', d, false),
+            yAxesTicksPrecisionFixed: this.getRealValue('yAxesTicksPrecisionFixed', d, false),
 
             tooltipsEnabled: this.getRealValue('tooltipsEnabled', d, true),
             tooltipsMode: this.getRealValue('tooltipsMode', d, 'index'),
@@ -152,7 +152,7 @@ class LineAreaChartWidget extends Widget {
     getChartConfig(v) {
         let datasets = v.datasets, d = v.data[v.data.length - 1], j, i, xValues = v.data[0].map(e => e.label), data, len = d.length;
 
-        const yAxisUnit = v.yAxisUnit, yAxisDecimalNum = v.yAxisDecimalNum, yAxisSeparatesThousands = v.yAxisSeparatesThousands, yAxisTicksPrecisionFixed = v.yAxisTicksPrecisionFixed;
+        const yAxesUnit = v.yAxesUnit, yAxesDecimalNum = v.yAxesDecimalNum, yAxesSeparatesThousands = v.yAxesSeparatesThousands, yAxesTicksPrecisionFixed = v.yAxesTicksPrecisionFixed;
 
         for (i = 0; i < datasets.length; ++i) {
             data = [];
@@ -187,8 +187,8 @@ class LineAreaChartWidget extends Widget {
                         },
                         ticks: {
                             display: v.xAxesTicksLabelDisplay,
-                            min: parseFloat($.isNumeric(v.xMin) ? v.xMin : xValues[0]) - (v.xAxisOffsetLeft || v.xAxisOffset),
-                            max: parseFloat($.isNumeric(v.xMax) ? v.xMax : xValues.slice(-1)) + (v.xAxisOffsetRight || v.xAxisOffset),
+                            min: parseFloat($.isNumeric(v.xMin) ? v.xMin : xValues[0]) - (v.xAxesOffsetLeft || v.xAxesOffset),
+                            max: parseFloat($.isNumeric(v.xMax) ? v.xMax : xValues.slice(-1)) + (v.xAxesOffsetRight || v.xAxesOffset),
                             fontSize: v.xAxesTicksFontSize,
                             fontFamily: v.xAxesTicksFontFamily,
                             fontStyle: v.xAxesTicksFontStyle,
@@ -222,6 +222,7 @@ class LineAreaChartWidget extends Widget {
                         }
                     }],
                     yAxes: [{
+                        stacked: v.yAxesStacked,
                         display: v.yAxesDisplay,
                         offset: false,
                         gridLines: {
@@ -245,9 +246,9 @@ class LineAreaChartWidget extends Widget {
                             maxRotation: v.yAxesLabelRotation,
                             autoSkip: true,
                             callback: v => {
-                                v = Utils.precisionRound(v, yAxisDecimalNum, yAxisTicksPrecisionFixed);
+                                v = Utils.precisionRound(v, yAxesDecimalNum, yAxesTicksPrecisionFixed);
 
-                                return (yAxisSeparatesThousands ? Utils.separatesThousands(v) : v) + yAxisUnit;
+                                return (yAxesSeparatesThousands ? Utils.separatesThousands(v) : v) + yAxesUnit;
                             }
                         },
                         scaleLabel: {
@@ -294,9 +295,9 @@ class LineAreaChartWidget extends Widget {
                             bottom: 0
                         },
                         formatter: v => {
-                            v = Utils.precisionRound('number' === typeof v ? v : v.y, yAxisDecimalNum, yAxisTicksPrecisionFixed);
+                            v = Utils.precisionRound('number' === typeof v ? v : v.y, yAxesDecimalNum, yAxesTicksPrecisionFixed);
 
-                            return (yAxisSeparatesThousands ? Utils.separatesThousands(v) : v) + yAxisUnit;
+                            return (yAxesSeparatesThousands ? Utils.separatesThousands(v) : v) + yAxesUnit;
                         }
                     }
                 },
@@ -306,9 +307,9 @@ class LineAreaChartWidget extends Widget {
                     intersect: v.tooltipsIntersect,
                     callbacks: {
                         label: d => {
-                            d = Utils.precisionRound(d.value, yAxisDecimalNum, yAxisTicksPrecisionFixed);
+                            d = Utils.precisionRound(d.value, yAxesDecimalNum, yAxesTicksPrecisionFixed);
 
-                            return (yAxisSeparatesThousands ? Utils.separatesThousands(d) : d) + yAxisUnit;
+                            return (yAxesSeparatesThousands ? Utils.separatesThousands(d) : d) + yAxesUnit;
                         }
                     }
                 },
