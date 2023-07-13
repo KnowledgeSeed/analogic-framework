@@ -171,7 +171,11 @@ class ComboChartWidget extends Widget {
 
     updateHtml(data) {
         this.getParameters(data);
-        this.initEventHandlers();
+        let c = ComboChartWidget.getChartConfig(this.value);
+        this.chart.data = c.data;
+        this.chart.options = c.options;
+
+        this.chart.update();
     }
 
     initEventHandlers() {
@@ -185,6 +189,7 @@ class ComboChartWidget extends Widget {
 
             c.update();
         });
+        this.chart = c;
     }
 
     static getChartConfig(v) {

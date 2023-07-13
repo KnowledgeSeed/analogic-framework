@@ -5,11 +5,41 @@
 class LineAreaChartWidget extends Widget {
 
     getHtml(verticalLineBoxWidget, d) {
+        const o = this.options, v = this.getParameters(d);
+
+        return `
+<div class="ks-line-area-chart ks-line-area-chart-${v.skin}" style="${this.getGeneralStyles(v.data, {width: 450, height: 450}).join('')}">
+    ${verticalLineBoxWidget.join('')}
+    <div class="ks-line-area-chart-widget">
+        <canvas id="${o.id}Canvas"></canvas>
+    </div>
+    <div class="ks-legend ks-legend-${v.legendSkin}"></div>
+</div>`;
+    }
+
+    updateHtml(data) {
+        this.getParameters(data);
+
+        let c = this.getChartConfig();
+
+        this.chart.data = c.data;
+        this.chart.options = c.options;
+
+        this.chart.update();
+    }
+
+    getParameters(d) {
         const o = this.options, f = this.getRealValue('defaultFontFamily', d, 'imago, sans-serif'), c = '#A6A7A7', b = '#000', e = 'bold';
 
-        const defaultDatasets = [{borderColor: 'black', borderWidth: 3, backgroundColor: 'rgba(255, 10, 13, 0.4)', fill: true, lineTension: 0.5}, {legendLabel: 'Legend2', borderWidth: 2, borderColor: 'red', backgroundColor: 'rgba(10, 255, 13, 0.4)', fill: true, lineTension: 0.5}, {legendLabel: 'Legend3', borderColor: 'blue', backgroundColor: 'blue', fill: true, lineTension: 0.5}, {legendLabel: 'Legend4', borderColor: 'brown', backgroundColor: 'brown', fill: true, lineTension: 0.5}, {legendLabel: 'Legend5', borderColor: 'orange', backgroundColor: 'orange', fill: true, lineTension: 0.5}];
+        const demoDatasets = [
+            {borderColor: 'black', labelBorderColor: '#000000', labelBackgroundColor: '#FFFFFF', labelColor: 'blue', labelBorderWidth: 2, borderWidth: 3, backgroundColor: 'rgba(255, 10, 13, 0.4)', fill: false, legendLabel: 'Legend1', labelVisible: true, borderDash: [5, 5]},
+            {legendLabel: 'Legend2', borderWidth: 2, borderColor: 'red', backgroundColor: 'rgba(10, 255, 13, 0.4)', fill: true, lineTension: 0.5, labelVisible: true},
+            {legendLabel: 'Legend3', borderColor: 'blue', backgroundColor: 'blue', fill: true, lineTension: 0.5},
+            {legendLabel: 'Legend4', borderColor: 'brown', backgroundColor: 'brown', fill: true, lineTension: 0.5},
+            {legendLabel: 'Legend5', borderColor: 'orange', backgroundColor: 'orange', fill: true, lineTension: 0.5}
+        ];
 
-        const defaultData = [
+        const demoData = [
             [{label: '2019'}, {label: '2020'}, {label: '2021'}, {label: '2022'}, {label: '2023'}, {label: '2024'}, {label: '2025'}],
             [
                 [{value: 20}, {value: 10}, {value: 15}, {value: 18}, {value: 20}],
@@ -22,9 +52,9 @@ class LineAreaChartWidget extends Widget {
             ]
         ];
 
-        const data = $.extend(true, [], o.data || [], d.data.length ? d.data : defaultData);
+        const data = $.extend(true, [], o.data || [], d.data.length ? d.data : demoData);
 
-        const datasets = !o.datasets && !d.datasets ? defaultDatasets : $.extend(true, [], o.datasets || [], d.datasets || []);
+        const datasets = !o.datasets && !d.datasets ? demoDatasets : $.extend(true, [], o.datasets || [], d.datasets || []);
 
         const v = {
             data: data,
@@ -64,6 +94,11 @@ class LineAreaChartWidget extends Widget {
             xAxesLabelFontStyle: this.getRealValue('xAxesLabelFontStyle', d, e),
             xAxesLabelPadding: this.getRealValue('xAxesLabelPadding', d, 0),
             xAxesLabelRotation: this.getRealValue('xAxesLabelRotation', d, 0),
+            xMin: this.getRealValue('xMin', d, false),
+            xMax: this.getRealValue('xMax', d, false),
+            xAxesOffset: this.getRealValue('xAxesOffset', d, 0),
+            xAxesOffsetRight: this.getRealValue('xAxesOffsetRight', d, 0),
+            xAxesOffsetLeft: this.getRealValue('xAxesOffsetLeft', d, 0),
             yAxesLabelDisplay: this.getRealValue('yAxesLabelDisplay', d, true),
             yAxesLabelFontSize: this.getRealValue('yAxesLabelFontSize', d, 14),
             yAxesLabelFontFamily: this.getRealValue('yAxesLabelFontFamily', d, f),
@@ -71,23 +106,23 @@ class LineAreaChartWidget extends Widget {
             yAxesLabelFontStyle: this.getRealValue('yAxesLabelFontStyle', d, e),
             yAxesLabelPadding: this.getRealValue('yAxesLabelPadding', d, 0),
             yAxesLabelRotation: this.getRealValue('yAxesLabelRotation', d, 0),
+            yAxesStacked: this.getRealValue('yAxesStacked', d, false),
+            yAxesUnit: this.getRealValue('yAxesUnit', d, ''),
+            yAxesDecimalNum: parseInt(this.getRealValue('yAxesDecimalNum', d, 2)),
+            yAxesSeparatesThousands: this.getRealValue('yAxesSeparatesThousands', d, false),
+            yAxesTicksPrecisionFixed: this.getRealValue('yAxesTicksPrecisionFixed', d, false),
+
             tooltipsEnabled: this.getRealValue('tooltipsEnabled', d, true),
             tooltipsMode: this.getRealValue('tooltipsMode', d, 'index'),
             tooltipsIntersect: this.getRealValue('tooltipsIntersect', d, false),
             aspectRatio: this.getRealValue('aspectRatio', d, null),
-            maintainAspectRatio: this.getRealValue('maintainAspectRatio', d, true)
+            maintainAspectRatio: this.getRealValue('maintainAspectRatio', d, true),
+            defaultBezierCurveTension: this.getRealValue('defaultBezierCurveTension', d, 0)
         };
 
         this.value = v;
 
-        return `
-<div class="ks-line-area-chart ks-line-area-chart-${v.skin}" style="${this.getGeneralStyles(v.data, {width: 450, height: 450}).join('')}">
-    ${verticalLineBoxWidget.join('')}
-    <div class="ks-line-area-chart-widget">
-        <canvas id="${o.id}Canvas"></canvas>
-    </div>
-    <div class="ks-legend ks-legend-${v.legendSkin}"></div>
-</div>`;
+        return v;
     }
 
     initEventHandlers() {
@@ -108,7 +143,6 @@ class LineAreaChartWidget extends Widget {
 
         if (o.widgets) {
             this.verticalLineBox = this.getSection().find('.ks-vertical-line-box');
-            app.q = this.verticalLineBox;
             this.verticalLines = this.verticalLineBox.children('.ks-vertical-line');
 
             this.adjustVerticalLineBox();
@@ -116,108 +150,117 @@ class LineAreaChartWidget extends Widget {
     }
 
     getChartConfig(v) {
-        let datasets = v.datasets, d = v.data[v.data.length - 1], j, i, e;
+        let datasets = v.datasets, d = v.data[v.data.length - 1], j, i, xValues = v.data[0].map(e => e.label), data, len = d.length;
 
-        for (i = 0; i < d.length; ++i) {
-            for (j = 0; j < datasets.length; ++j) {
-                e = datasets[j];
+        const yAxesUnit = v.yAxesUnit, yAxesDecimalNum = v.yAxesDecimalNum, yAxesSeparatesThousands = v.yAxesSeparatesThousands, yAxesTicksPrecisionFixed = v.yAxesTicksPrecisionFixed;
 
-                if (!datasets[j].data) {
-                    datasets[j].data = [];
-                }
+        for (i = 0; i < datasets.length; ++i) {
+            data = [];
 
-                datasets[j].data.push(Utils.parseNumber(d[i][j].value || '0'));
+            for (j = 0; j < len; ++j) {
+                data.push({x: parseInt(xValues[j]), y: Utils.parseNumber(d[j][i].value || '0')});
             }
+
+            datasets[i].data = data;
         }
 
         return {
             type: 'line',
             data: {
-                labels: v.data[0].map(item => item.label),
+                labels: xValues,
                 datasets: datasets
             },
             options: {
                 scales: {
                     xAxes: [{
-                            offset: false,
-                            display: v.xAxesDisplay,
-                            gridLines: {
-                                display: v.xAxesGridLinesDisplay,
-                                drawTicks: v.xAxesTicksDisplay,
-                                drawOnChartArea: v.xAxesGridLinesDisplay,
-                                drawBorder: v.yAxesGridLinesDrawBorder,
-                                color: v.xAxesGridLinesColor,
-                                zeroLineColor: v.xAxesGridLinesColor,
-                                offsetGridLines: false
-                            },
-                            ticks: {
-                                display: v.xAxesTicksLabelDisplay,
-                                fontSize: v.xAxesTicksFontSize,
-                                fontFamily: v.xAxesTicksFontFamily,
-                                fontStyle: v.xAxesTicksFontStyle,
-                                fontColor: v.xAxesTicksFontColor,
-                                autoSkip: true,
-                                minRotation: v.xAxesLabelRotation,
-                                maxRotation: v.xAxesLabelRotation,
-                                labelOffset: v.xAxesTicksOffset,
-                                padding: v.xAxesTicksPadding
-                            },
-                            scaleLabel: {
-                                display: v.xAxesLabelDisplay,
-                                labelString: v.xAxisLabel,
-                                fontSize: v.xAxesLabelFontSize,
-                                fontFamily: v.xAxesLabelFontFamily,
-                                fontColor: v.xAxesLabelFontColor,
-                                fontStyle: v.xAxesLabelFontStyle,
-                                padding: v.xAxesLabelPadding
-                            }
-                        }, {
-                            display: v.yAxesGridLinesDrawBorder,
-                            position: 'top',
-                            ticks: {
-                                display: false
-                            },
-                            gridLines: {
-                                color: v.xAxesGridLinesColor,
-                                lineWidth: 1.5,
-                                drawOnChartArea: false,
-                                drawTicks: false
-                            }
-                        }],
+                        type: 'linear',
+                        offset: false,
+                        display: v.xAxesDisplay,
+                        gridLines: {
+                            display: v.xAxesGridLinesDisplay,
+                            drawTicks: v.xAxesTicksDisplay,
+                            drawOnChartArea: v.xAxesGridLinesDisplay,
+                            drawBorder: v.yAxesGridLinesDrawBorder,
+                            color: v.xAxesGridLinesColor,
+                            zeroLineColor: v.xAxesGridLinesColor,
+                            offsetGridLines: false
+                        },
+                        ticks: {
+                            display: v.xAxesTicksLabelDisplay,
+                            min: parseFloat($.isNumeric(v.xMin) ? v.xMin : xValues[0]) - (v.xAxesOffsetLeft || v.xAxesOffset),
+                            max: parseFloat($.isNumeric(v.xMax) ? v.xMax : xValues.slice(-1)) + (v.xAxesOffsetRight || v.xAxesOffset),
+                            fontSize: v.xAxesTicksFontSize,
+                            fontFamily: v.xAxesTicksFontFamily,
+                            fontStyle: v.xAxesTicksFontStyle,
+                            fontColor: v.xAxesTicksFontColor,
+                            autoSkip: true,
+                            minRotation: v.xAxesLabelRotation,
+                            maxRotation: v.xAxesLabelRotation,
+                            labelOffset: v.xAxesTicksOffset,
+                            padding: v.xAxesTicksPadding
+                        },
+                        scaleLabel: {
+                            display: v.xAxesLabelDisplay,
+                            labelString: v.xAxisLabel,
+                            fontSize: v.xAxesLabelFontSize,
+                            fontFamily: v.xAxesLabelFontFamily,
+                            fontColor: v.xAxesLabelFontColor,
+                            fontStyle: v.xAxesLabelFontStyle,
+                            padding: v.xAxesLabelPadding
+                        }
+                    }, {
+                        display: v.yAxesGridLinesDrawBorder,
+                        position: 'top',
+                        ticks: {
+                            display: false
+                        },
+                        gridLines: {
+                            color: v.xAxesGridLinesColor,
+                            lineWidth: 1.5,
+                            drawOnChartArea: false,
+                            drawTicks: false
+                        }
+                    }],
                     yAxes: [{
-                            display: v.yAxesDisplay,
-                            offset: false,
-                            gridLines: {
-                                lineWidth: v.yAxesGridLinesDrawBorder ? [] : [0],
-                                display: v.yAxesGridLinesDisplay,
-                                color: v.yAxesGridLinesColor,
-                                zeroLineColor: v.yAxesGridLinesColor,
-                                drawBorder: v.xAxesGridLinesDrawBorder,
-                                drawOnChartArea: v.yAxesGridLinesDisplay,
-                                drawTicks: v.yAxesTicksDisplay
-                            },
-                            ticks: {
-                                display: v.yAxesTicksLabelDisplay,
-                                labelOffset: v.yAxesTicksOffset,
-                                padding: v.yAxesTicksPadding,
-                                fontSize: v.yAxesTicksFontSize,
-                                fontFamily: v.yAxesTicksFontFamily,
-                                fontStyle: v.yAxesTicksFontStyle,
-                                fontColor: v.yAxesTicksFontColor,
-                                minRotation: v.yAxesLabelRotation,
-                                maxRotation: v.yAxesLabelRotation,
-                                autoSkip: true
-                            },
-                            scaleLabel: {
-                                display: v.yAxesLabelDisplay,
-                                labelString: v.yAxisLabel,
-                                fontSize: v.yAxesLabelFontSize,
-                                fontFamily: v.yAxesLabelFontFamily,
-                                fontColor: v.yAxesLabelFontColor,
-                                fontStyle: v.yAxesLabelFontStyle,
-                                padding: v.yAxesLabelPadding
+                        stacked: v.yAxesStacked,
+                        display: v.yAxesDisplay,
+                        offset: false,
+                        gridLines: {
+                            lineWidth: v.yAxesGridLinesDrawBorder ? [] : [0],
+                            display: v.yAxesGridLinesDisplay,
+                            color: v.yAxesGridLinesColor,
+                            zeroLineColor: v.yAxesGridLinesColor,
+                            drawBorder: v.xAxesGridLinesDrawBorder,
+                            drawOnChartArea: v.yAxesGridLinesDisplay,
+                            drawTicks: v.yAxesTicksDisplay
+                        },
+                        ticks: {
+                            display: v.yAxesTicksLabelDisplay,
+                            labelOffset: v.yAxesTicksOffset,
+                            padding: v.yAxesTicksPadding,
+                            fontSize: v.yAxesTicksFontSize,
+                            fontFamily: v.yAxesTicksFontFamily,
+                            fontStyle: v.yAxesTicksFontStyle,
+                            fontColor: v.yAxesTicksFontColor,
+                            minRotation: v.yAxesLabelRotation,
+                            maxRotation: v.yAxesLabelRotation,
+                            autoSkip: true,
+                            callback: v => {
+                                v = Utils.precisionRound(v, yAxesDecimalNum, yAxesTicksPrecisionFixed);
+
+                                return (yAxesSeparatesThousands ? Utils.separatesThousands(v) : v) + yAxesUnit;
                             }
-                        }]
+                        },
+                        scaleLabel: {
+                            display: v.yAxesLabelDisplay,
+                            labelString: v.yAxisLabel,
+                            fontSize: v.yAxesLabelFontSize,
+                            fontFamily: v.yAxesLabelFontFamily,
+                            fontColor: v.yAxesLabelFontColor,
+                            fontStyle: v.yAxesLabelFontStyle,
+                            padding: v.yAxesLabelPadding
+                        }
+                    }]
                 },
                 plugins: {
                     datalabels: {
@@ -228,7 +271,8 @@ class LineAreaChartWidget extends Widget {
                         clip: false,
                         display: c => v.tooltipsEnabled ? false : (c.active ? true : (datasets[c.datasetIndex].labelVisible ? 'auto' : false)),
                         borderRadius: 5,
-                        borderWidth: 0,
+                        borderWidth: c => datasets[c.datasetIndex].labelBorderWidth || 0,
+                        borderColor: c => datasets[c.datasetIndex].labelBorderColor,
                         color: c => {
                             c = datasets[c.datasetIndex];
                             return c.labelColor || v.yAxesTicksFontColor || c.borderColor;
@@ -239,7 +283,7 @@ class LineAreaChartWidget extends Widget {
                         },
                         font: {
                             size: v.yAxesTicksFontSize,
-                            color: v.yAxesTicksFontColor,
+                            weight: 'normal',
                             style: v.yAxesTicksFontStyle,
                             family: v.yAxesTicksFontFamily,
                             lineHeight: 1
@@ -247,15 +291,27 @@ class LineAreaChartWidget extends Widget {
                         padding: {
                             top: 7,
                             left: 10,
-                            right: 10
+                            right: 10,
+                            bottom: 0
                         },
-                        formatter: p => 'object' === typeof p ? p.y : p[1]
+                        formatter: v => {
+                            v = Utils.precisionRound('number' === typeof v ? v : v.y, yAxesDecimalNum, yAxesTicksPrecisionFixed);
+
+                            return (yAxesSeparatesThousands ? Utils.separatesThousands(v) : v) + yAxesUnit;
+                        }
                     }
                 },
                 tooltips: {
                     enabled: v.tooltipsEnabled,
                     mode: v.tooltipsMode,
-                    intersect: v.tooltipsIntersect
+                    intersect: v.tooltipsIntersect,
+                    callbacks: {
+                        label: d => {
+                            d = Utils.precisionRound(d.value, yAxesDecimalNum, yAxesTicksPrecisionFixed);
+
+                            return (yAxesSeparatesThousands ? Utils.separatesThousands(d) : d) + yAxesUnit;
+                        }
+                    }
                 },
                 legend: {
                     display: false
@@ -265,11 +321,19 @@ class LineAreaChartWidget extends Widget {
                 },
                 elements: {
                     line: {
-                        tension: 0
+                        tension: v.defaultBezierCurveTension
                     }
                 },
                 animation: {
                     duration: 0
+                },
+                layout: {
+                    padding: {
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0
+                    }
                 },
                 hover: {
                     mode: 'nearest',
@@ -294,7 +358,7 @@ class LineAreaChartWidget extends Widget {
                         h.push(`<div data-id="${i}" class="ks-legend-item"><div class="ks-legend-item-inner"><div style="color: ${c};" class="ks-legend-icon"></div><div style="color: ${c};" class="ks-legend-label">${e.legendLabel}</div></div></div>`);
                     }
 
-                    return h.join('') + '<\/div>';
+                    return h.join('') + '</div>';
                 }
             }
         };
@@ -324,4 +388,3 @@ class LineAreaChartWidget extends Widget {
         return d;
     }
 }
-;

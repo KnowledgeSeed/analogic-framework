@@ -1,0 +1,13 @@
+{
+  "testExport": {
+      "namespace": "logincam.server.Export",
+      "class": "Export",
+      "method": "test_export"
+    },
+
+  "fakeExport": {
+      "namespace": "logincam.server.Export",
+      "class": "Export",
+      "method": "fake_export"
+    }
+}

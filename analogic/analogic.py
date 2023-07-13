@@ -12,11 +12,9 @@ from analogic.core_endpoints import core_endpoints
 from analogic.authentication_provider import AuthenticationProvider
 from analogic.condition import Condition
 import inspect
-from flask_caching import Cache
 from analogic.setting import SettingManager
 from datetime import timedelta
 import importlib
-from analogic.version import version
 from analogic.task import scheduler
 import atexit
 
@@ -80,7 +78,7 @@ class Analogic(Flask):
 
             super().register_blueprint(blueprint, **options)
         except Exception as e:
-            logging.getLogger(__name__).error('Error registering application' + blueprint.name + ': ' + str(e))
+            logging.getLogger(__name__).error('Error registering application ' + blueprint.name + ': ' + str(e))
 
     def create_authentication_provider(self, analogic_application, analogic_application_path):
         with self.app_context():
@@ -146,7 +144,7 @@ class Analogic(Flask):
         if module_name in sys.modules:
             module = sys.modules[module_name]
         else:
-            module = importlib.import_module(module_name)  # Todo ModuleNotFoundError
+            module = importlib.import_module(module_name)
 
         condition_class = getattr(module, class_name)
         condition = condition_class()
@@ -279,7 +277,7 @@ def _load_modules(app, modules_dir, check_prefix, register_func):
 
         module_dir = os.path.join(modules_dir, module_dir_name)
 
-        if os.path.isdir(module_dir) and module_dir_name != '.git' and (
+        if os.path.isdir(module_dir) and module_dir_name != '.git' and module_dir_name != 'tests' and (
                 check_prefix is False or (
                 module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX) and not module_dir_name.endswith('dist-info'))):
 
@@ -308,6 +306,8 @@ def _register_application(app, application_dir, application_name, files):
 
 def _fast_scan_dir(directory, ext):
     sub_folders, files = [], {}
+    if '.git' in directory or 'tests' in directory:
+        return sub_folders, files
 
     for f in os.scandir(directory):
         if f.is_dir():

@@ -1,0 +1,47 @@
+.ks-textarea {
+	display: block;
+}
+
+.ks-textarea-inner {
+	height: 100%;
+}
+
+.ks-textarea-title,
+.ks-textarea-title-secondary,
+.ks-textarea-icon,
+.ks-textarea-divider {
+	display: none;
+}
+
+.ks-textarea.has-title .ks-textarea-title {
+	display: block;
+}
+.ks-textarea.has-title-secondary .ks-textarea-title-secondary {
+	display: inline;
+}
+.ks-textarea.has-icon .ks-textarea-icon,
+.ks-textarea.has-icon .ks-textarea-divider{
+	display: block;
+}
+
+.ks-textarea-field {
+	overflow: hidden;
+}
+
+.ks-textarea-field-inner {
+	-ms-flex-align: center;
+	align-items: center;
+	display: flex;
+	height: 100%;
+	overflow: hidden;
+}
+
+.ks-textarea-input {
+	appearance: none;
+	-webkit-appearance: none;
+	background-color: transparent;
+	border: 0;
+	display: block;
+	height: 100%;
+	width: 100%;
+}

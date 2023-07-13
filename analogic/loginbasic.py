@@ -1,5 +1,6 @@
 from analogic.authentication_provider import AuthenticationProvider
 from analogic.analogic_tm1_service import AnalogicTM1Service
+from analogic.exceptions import AnalogicTM1ServiceException
 from flask import render_template, request, make_response, redirect, session, Response
 
 
@@ -48,11 +49,12 @@ class LoginBasic(AuthenticationProvider):
                     self.setting.set_tm1_service(user_name, tm1_service)
 
                 session[self.logged_in_user_session_name] = user_name
+                self.load_permissions()
                 resp = make_response(redirect(self.setting.get_base_url()))
                 return self._add_authenticated_cookies(resp)
 
             except Exception as e:
-                self._logger.error(e)
+                self._logger.error(e, exc_info=True)
 
         return render_template('login.html', cnf=cnf)
 
@@ -79,5 +81,16 @@ class LoginBasic(AuthenticationProvider):
         session.modified = True
 
     def get_tm1_service(self):
-        return self.setting.get_tm1_service(session[self.logged_in_user_session_name])
+        tm1_service = self.setting.get_tm1_service(session[self.logged_in_user_session_name])
+        if tm1_service is None:
+            raise AnalogicTM1ServiceException('Unauthorized')
+
+        if tm1_service.connection.is_connected() is False:
+            try:
+                tm1_service.re_authenticate()
+            except Exception as e:
+                self._logger.error('exception while re-authenticating: ' + str(e))
+                raise AnalogicTM1ServiceException('Unauthorized')
+
+        return tm1_service
 

@@ -59,6 +59,7 @@
     -o-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
+    white-space: nowrap;
 }
 
 .ks-waterfall-y-line-label.ks-left {
@@ -137,17 +138,42 @@
 }
 
 .ks-waterfall-bar-label {
-    left: 50%;
     position: absolute;
+    color: #0066CC;
+    background: #FFFFFF;
+    border-radius: 5px;
+    font-size: 11px;
+    padding: 1px 5px;
+    top: 0;
+    left: 50%;
+    -webkit-transform: translate(-50%, -120%);
+    -moz-transform: translate(-50%, -120%);
+    -o-transform: translate(-50%, -120%);
+    -ms-transform: translate(-50%, -120%);
+    transform: translate(-50%, -120%);
+    box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.2), 0px 8px 12px rgba(0, 0, 0, 0.2);
     text-align: center;
-    top: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -o-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+    white-space: nowrap;
 }
 
 .ks-legend-item {
     cursor: pointer;
+}
+
+.ks-waterfall-con-line-top {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 29px;
+    height: 1px;
+    background-color: #F3F4F6;
+}
+
+.ks-waterfall-con-line-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 100%;
+    width: 29px;
+    height: 1px;
+    background-color: #F3F4F6;
 }

@@ -1,0 +1,93 @@
+.ks-scrolltable-pager {
+    align-items: center;
+    display: flex;
+    position: relative;
+}
+
+.ks-scrolltable-pager-item {
+    flex-grow: 1;
+}
+
+.ks-scrolltable-pager-range {
+    position: absolute;
+    -ms-touch-action: none;
+    touch-action: none;
+}
+
+.ks-scrolltable-pager-range::before {
+    content: "";
+    cursor: pointer;
+    position: absolute;
+}
+
+.ks-scrolltable-pager-range::after {
+    content: "";
+    cursor: pointer;
+    position: absolute;
+}
+
+.ks-scrolltable-holder {
+    position: relative;
+    width: 100%;
+}
+
+.ks-scrolltable-holder-inner {
+    overflow: hidden;
+    width: 100%;
+}
+
+.ks-scrolltable-table {
+    border-collapse: collapse;
+    table-layout: auto;
+    width: auto;
+}
+
+.ks-scrolltable-table-names {
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: min-content;
+    z-index: 9;
+}
+
+.ks-scrolltable-table thead th.ks-scrolltable-name-col {
+    background-color: transparent;
+    width: 160px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ks-scrolltable-header-col-body {
+    display: block !important;
+    overflow: hidden !important;
+}
+
+.ks-scrolltable-table td {
+    background-clip: padding-box;
+    position: relative;
+}
+
+.ks-scrolltable-header {
+    display: block !important;
+}
+
+.ks-scrolltable-body {
+    display: block !important;
+    overflow-x: hidden !important;
+    overflow-y: scroll !important;
+}
+
+.ks-scrolltable-body td > span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ks-scrolltable-table td.ks-selected {
+    position: relative !important;
+}
+
+.icon-comment-on, .icon-comment-off, .icon-tooltip-arrow  {
+    cursor: pointer;
+}

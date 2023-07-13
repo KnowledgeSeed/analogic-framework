@@ -77,7 +77,7 @@ class SettingManager:
 
     def get_mdx(self, key):
         repository = self._get_repository()
-        mdx = repository[key]
+        mdx = repository.get(key)
         return mdx
 
     def _get_json_setting(self, file_name):
@@ -110,10 +110,10 @@ class SettingManager:
 
         return setting
 
-    def save_config_js(self):
+    def save_config_js(self, exclude=[]):
         js_url = os.path.join(self.site_root, 'static', 'assets', 'js', 'config.js')
         with open(js_url, 'w', encoding="utf-8") as f:
-            f.write(render_template('config.html', cnf=self.config))
+            f.write(render_template('config.html', cnf=self.config, exclude=exclude))
 
     def _get_yaml_setting(self, file_path):
         with open(os.path.join(self.site_root, file_path + '.yml'), encoding="utf-8") as file:
@@ -126,7 +126,7 @@ class SettingManager:
     def get_custom_object_description(self, key):
         if self.custom_objects is None:
             self.custom_objects = self._create_custom_objects()
-        return self.custom_objects[key]
+        return self.custom_objects.get(key)
 
     def set_tm1_service(self, user_name, tm1_service):
         self.tm1_services[user_name] = tm1_service

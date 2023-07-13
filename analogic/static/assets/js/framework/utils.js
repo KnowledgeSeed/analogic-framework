@@ -566,6 +566,9 @@ const Utils = {
             Api.showPopup('Your current screen resolution is below the recommended 1920*1080. For optimal user experience please lower your browser zoom to 90% or 80%.');
             app.checkScreenResolutionWarningDisplayed = true;
         }
+    },
+    undefinedOrFalse(val) {
+        return typeof val === 'undefined' || val === false;
     }
 };
 

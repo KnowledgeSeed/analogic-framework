@@ -1,2 +1,10 @@
-defaultTestMdx: >
-  default_mdx_for_test
+test_mdx: >
+  {
+    "MDX": "SELECT 
+               {[Measures UI Page Control].[Measures UI Page Control].Members} 
+              ON COLUMNS , 
+               {[Pages].[Pages].Members} 
+              ON ROWS 
+            FROM [UI Page Control] 
+            "
+  }

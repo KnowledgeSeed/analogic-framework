@@ -7,6 +7,16 @@
 	height: 100%;
 }
 
+.ks-datepicker-field {
+    background-color: #fff;
+    border: 1px solid #b1b3b3;
+    border-radius: 7px;
+    color: #000;
+    display: block;
+    font-size: 16px;
+    height: 40px;
+}
+
 .ks-datepicker-field-inner {
 	-ms-flex-align: center;
 	align-items: center;
@@ -21,18 +31,15 @@
 	height: 100%;
 	position: absolute;
 	right: 0;
+	color: #000;
+    font-size: 20px;
+    left: 14px;
+    line-height: 20px;
+    margin-top: -10px;
+    top: 50%;
 }
 
 .ks-datepicker-icon:after {
-	content: "";
-	left: 50%;
-	position: absolute;
-	top: 50%;
-	-webkit-transform: translate(-50%, -50%);
-	-moz-transform: translate(-50%, -50%);
-	-o-transform: translate(-50%, -50%);
-	-ms-transform: translate(-50%, -50%);
-	transform: translate(-50%, -50%);
 }
 
 .ks-datepicker-input {
@@ -44,6 +51,8 @@
 	height: 100%;
 	outline: none;
 	width: 100%;
+	font-size: 16px;
+    padding: 0 12px 0 50px;
 }
 
 .ks-datepicker-panel {
@@ -52,6 +61,15 @@
 	top: 100%;
 	width: 100%;
 	z-index: 9;
+	background-color: #fff;
+    border: 1px solid #b1b3b3;
+    border-radius: 7px;
+    padding: 4px 4px 0;
+}
+
+.ks-datepicker-panel-header {
+    border-bottom: 1px solid #d8d9d9;
+    padding: 13px 0;
 }
 
 .ks-datepicker-panel-header-inner {
@@ -61,32 +79,135 @@
 	position: relative;
 }
 
+.ks-datepicker-panel-year {
+    color: #000;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 18px;
+    margin: 0 10px;
+}
+
 .ks-datepicker-panel-pager {
 	cursor: pointer;
 	position: relative;
+	background-color: #0066cc;
+    border-radius: 50%;
+    height: 18px;
+    padding-top: 5px;
+    width: 18px;
 }
 
 .ks-datepicker-panel-pager:after {
 	content: "";
 	position: absolute;
+	border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    height: 0;
+    padding: 0;
+    width: 0;
+}
+
+.ks-datepicker-panel-pager.ks-left {
+    padding-left: 5px;
+}
+
+.ks-datepicker-panel-pager.ks-left:after {
+    border-right: 6px solid #fff;
+}
+
+.ks-datepicker-panel-pager.ks-right {
+    padding-left: 6px;
+}
+
+.ks-datepicker-panel-pager.ks-right:after {
+    border-left: 6px solid #fff;
 }
 
 .ks-datepicker-panel-months {
 	display: flex;
 	flex-wrap: wrap;
+	border-bottom: 1px solid #d8d9d9;
+    padding: 5px 0;
 }
 
 .ks-datepicker-panel-month-item {
 	cursor: pointer;
 	flex: 1 0 16%;
+	border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.ks-datepicker-panel-month-item.on {
+    background-color: #0066cc;
+    color: #fff;
 }
 
 .ks-datepicker-panel-days {
 	display: flex;
 	flex-wrap: wrap;
+	padding: 5px 0;
 }
 
 .ks-datepicker-panel-day-item {
 	cursor: pointer;
 	flex: 1 0 14%;
+	border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.ks-datepicker-title {
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 14px;
+    margin-bottom: 8px;
+}
+
+.ks-datepicker-panel-day-item.ks-weekend {
+    background-color: #f2f2f2;
+}
+
+.ks-datepicker-panel-day-item.ks-weekend-1 {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.ks-datepicker-panel-day-item.ks-weekend-2 {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.ks-datepicker-panel-day-item.on {
+    background-color: #0066cc;
+    border-radius: 7px;
+    color: #fff;
+}
+
+.ks-datepicker-panel-month-item.disabled,
+.ks-datepicker-panel-day-item.disabled {
+    color: #C5C6C6;
+}
+
+.ks-datepicker-full-year-button {
+    display: flex;
+    justify-content: center;
+    height: 40px;
+    background-color: #ECEFF1;
+    border-radius: 9px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.ks-datepicker-full-year-button.on {
+    background-color: #0066cc;
 }

@@ -1,0 +1,13 @@
+{
+  "testExport": {
+      "namespace": "camsecure.server.Export",
+      "class": "Export",
+      "method": "test_export"
+    },
+
+  "fakeExport": {
+      "namespace": "camsecure.server.Export",
+      "class": "Export",
+      "method": "fake_export"
+    }
+}

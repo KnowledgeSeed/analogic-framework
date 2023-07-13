@@ -23,6 +23,7 @@ class Cam(AuthenticationProvider):
 
         cam_name = self.set_tm1_service(request.form.get('c_pp'))
         session[self.logged_in_user_session_name] = cam_name
+        self.load_permissions()
         return self._add_authenticated_cookies(resp)
 
     def get_base_url(self):
@@ -44,15 +45,6 @@ class Cam(AuthenticationProvider):
 
         existing_tm1_service = self.setting.get_tm1_service(cam_name)
 
-        # is_connected = False
-        # if existing_tm1_service is not None:
-        #     try:
-        #         is_connected = existing_tm1_service.connection.is_connected()
-        #     except Exception as e:
-        #         self._logger.error('exception while checking connection: ' + str(e))
-
-
-        # if not is_connected:
         if existing_tm1_service is not None:
             try:
                 existing_tm1_service.close_session()
@@ -79,6 +71,22 @@ class Cam(AuthenticationProvider):
             response = tm1_service.get_session().request(method, url, data=mdx, headers=headers,
                                                          verify=self.setting.get_ssl_verify(), decode_content=decode_content)
         return response
+
+    def _get_server_side_mdx(self, force_server_side_query=False):
+        mdx = request.data
+        if request.args.get('server') is not None:
+            body = orjson.loads(request.data)
+            key = body['key']
+            if body.get('key_suffix') is not None:
+                key = key + '_' + body['key_suffix']
+            mdx = self.setting.get_mdx(key)
+            mdx = self._set_custom_mdx_data(mdx)
+            for k in body:
+                mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
+
+            return mdx.encode('utf-8')
+
+        return mdx
 
     def check_app_authenticated(self):
         return session.get(self.logged_in_user_session_name, '') != '' and self.setting.get_tm1_service(
@@ -126,10 +134,16 @@ class Cam(AuthenticationProvider):
         except AnalogicTM1ServiceException as e:
             return Response('Unauthorized', status=401, mimetype='application/json')
 
-        return send_file(ClassLoader().call(export_description, request, tm1_service, self.setting, self),
-                         attachment_filename=file_name,
+        try:
+            response = ClassLoader().call(export_description, request, tm1_service, self.setting, self)
+        except Exception as e:
+            self.getLogger().error(e, exc_info=True)
+            return {'message': str(e)}, 404, {'Content-type': 'application/json'}
+
+        return send_file(response,
+                         download_name=file_name,
                          as_attachment=True,
-                         cache_timeout=0,
+                         max_age=0,
                          mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
     def get_authentication_required_response(self):

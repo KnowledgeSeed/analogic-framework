@@ -1,7 +1,13 @@
 {
-  "defaultExport": {
-    "namespace": "default.server.Export",
-    "class": "Export",
-    "method": "defaultExport"
-  }
+  "testExport": {
+      "namespace": "default.server.Export",
+      "class": "Export",
+      "method": "test_export"
+    },
+
+  "fakeExport": {
+      "namespace": "default.server.Export",
+      "class": "Export",
+      "method": "fake_export"
+    }
 }

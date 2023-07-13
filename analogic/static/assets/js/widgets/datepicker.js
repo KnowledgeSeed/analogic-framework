@@ -16,13 +16,16 @@ class DatePickerWidget extends Widget {
             closeAfterSelectingTheDate: this.getRealValue('closeAfterSelectingTheDate', d, false),
             datePicked: this.getRealValue('datePicked', d, DatePickerWidget.getStandardizedDateString(new Date(), monthPicker)),
             editable: this.getRealValue('editable', d, true),
+            fullYearButtonText: this.getRealValue('fullYearButtonText', d, 'Full year'),
+            fullYearButtonVisible: this.getRealValue('fullYearButtonVisible', d, false),
             local: this.getRealValue('local', d, false),
-            skin: this.getRealValue('skin', d, 'standard'),
             maxDate: this.getRealValue('maxDate', d, false),
             minDate: this.getRealValue('minDate', d, false),
+            monthLocale: this.getRealValue('monthLocale', d, 'en-US'), //[] - browser default
             monthPicker: monthPicker,
             ordinal: this.getRealValue('ordinal', d, ''),
             panelFixed: this.getRealValue('panelFixed', d, false),
+            skin: this.getRealValue('skin', d, 'standard'),
             title: this.getRealValue('title', d, ''),
             titleVisible: this.getRealValue('titleVisible', d, true)
         };
@@ -43,6 +46,7 @@ class DatePickerWidget extends Widget {
         this.local = v.local;
         this.closeAfterSelectingTheDate = v.closeAfterSelectingTheDate;
         this.isMonthPicker = v.monthPicker;
+        this.fullYearButtonVisible = v.fullYearButtonVisible;
 
 
         const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
@@ -54,7 +58,7 @@ class DatePickerWidget extends Widget {
                 disabled = 'disabled';
             }
 
-            return '<div data-month=' + i + ' class="' + disabled + ' ks-datepicker-panel-month-item ' + ((i === date.getMonth()) ? 'on' : '') + '">' + month + '</div>';
+            return '<div data-month=' + i + ' class="' + disabled + ' ks-datepicker-panel-month-item ' + ((i === date.getMonth()) ? 'on' : '') + '">' + ym.toLocaleString(v.monthLocale, {month: 'short'}).substring(0, 3) + '</div>';
         });
 
         const html = `
@@ -71,7 +75,7 @@ class DatePickerWidget extends Widget {
         </div>
     </div>
     ${v.editable ?
-            `<div class="ks-datepicker-panel holder" ${v.panelFixed ? '' : 'style="display:none;'}">
+            `<div class="ks-datepicker-panel holder" ${v.panelFixed ? '' : 'style="display:none;"'}>
         <div class="ks-datepicker-panel-header">
             <div class="ks-datepicker-panel-header-inner">
                 <div class="ks-datepicker-panel-pager ks-left"></div>
@@ -79,8 +83,9 @@ class DatePickerWidget extends Widget {
                 <div class="ks-datepicker-panel-pager ks-right"></div>
             </div>
         </div>
-        <div class="ks-datepicker-panel-months">${monthsHtml.join('')}</div>
-        <div class="ks-datepicker-panel-days">${DatePickerWidget.getPickerHolderDaysHtml(date, minDate, maxDate)}</div>
+        <div class="ks-datepicker-full-year-button" ${v.fullYearButtonVisible ? '' : 'style="display:none;"'}>${v.fullYearButtonText}</div>
+        <div class="ks-datepicker-panel-months" >${monthsHtml.join('')}</div>
+        <div class="ks-datepicker-panel-days" ${v.monthPicker ? 'style="display:none;"' : ''}>${v.monthPicker ? '' : DatePickerWidget.getPickerHolderDaysHtml(date, minDate, maxDate)}</div>
     </div>` : ''}
 </div>`;
 
@@ -114,6 +119,7 @@ class DatePickerWidget extends Widget {
             yearHolder = $('#' + id + ' .ks-datepicker-panel-year'),
             monthHolders = $('#' + id + ' .ks-datepicker-panel-month-item'),
             dayHolders = $('#' + id + ' .ks-datepicker-panel-day-item'),
+            yearButton = $('#' + id + ' .ks-datepicker-full-year-button'),
             target;
 
         datePicker.on('click touch', e => {
@@ -157,6 +163,8 @@ class DatePickerWidget extends Widget {
                 }
             }
 
+            _this.fullYearButtonVisible && yearButton.removeClass('on');
+
             _this.value = DatePickerWidget.getStandardizedDateString(date, m);
 
             $('#' + id + ' .ks-datepicker-panel-days').empty().append(DatePickerWidget.getPickerHolderDaysHtml(date, minDate, maxDate));
@@ -193,9 +201,16 @@ class DatePickerWidget extends Widget {
 
         const pickerHolder = $('#' + id + ' .ks-datepicker-panel').on('click touch', '.ks-datepicker-panel-pager', e => {
             let mod = $(e.currentTarget).hasClass('ks-left') ? -1 : 1;
-            date = DatePickerWidget.getDateFromString(_this.value, datePicker.data('monthpicker'));
-            date.setYear(Number(date.getFullYear()) + mod);
-            source = 'pager';
+            if (_this.fullYearButtonVisible && yearButton.hasClass('on')) {
+                e.stopPropagation();
+                let year = Number(yearHolder.data('year')) + mod;
+                yearHolder.data('year', year + '').text(year);
+                handleYearButtonClick();
+            } else {
+                date = DatePickerWidget.getDateFromString(_this.value, datePicker.data('monthpicker'));
+                date.setYear(Number(date.getFullYear()) + mod);
+                source = 'pager';
+            }
         }).on('click touch', '.ks-datepicker-panel-month-item', e => {
             target = $(e.currentTarget);
             date = DatePickerWidget.getDateFromString(_this.value, datePicker.data('monthpicker'));
@@ -206,6 +221,10 @@ class DatePickerWidget extends Widget {
             date = DatePickerWidget.getDateFromString(_this.value, datePicker.data('monthpicker'));
             date.setDate(target.data('day'));
             source = 'day';
+        }).on('click touch', '.ks-datepicker-full-year-button', e => {
+            e.stopPropagation();
+            handleYearButtonClick();
+
         }).on('click touch', e => {
             e.stopPropagation();
             $('#' + id + ' .ks-datepicker-input').val(DatePickerWidget.getFormattedDateString(date, datePicker.data('monthpicker'), Widgets[id].local));
@@ -226,25 +245,38 @@ class DatePickerWidget extends Widget {
         }).on('keypress', e => {
             if (e.which === 13) {
                 $(e.currentTarget).blur();
-                let element = $('<div>');
+                let element = $('<div>'), value =  $('#' + id + ' .ks-datepicker-input').val();
                 element.data({
                     action: 'pick',
                     id: id,
-                    value: $('#' + id + ' .ks-datepicker-input').val().slice(0, -1),
+                    value: value.length !== 4 ? value.slice(0, -1) :  value,
                     ordinal: $('#' + id + ' .ks-datepicker').data('ordinal')
                 });
                 Widget.doHandleSystemEvent(element, e, true);
             }
         });
 
+        const handleYearButtonClick = () => {
+            let year = yearHolder.data('year');
+            $('#' + id + ' .ks-datepicker-input').val(year);
+            _this.value = year;
+            monthHolders.removeClass('on');
+            dayHolders.removeClass('on');
+            yearButton.addClass('on');
+            if (_this.closeAfterSelectingTheDate) {
+                DatePickerWidget.triggerPickEvent(id, pickerHolder, {});
+                pickerHolder.slideUp(50);
+            }
+        };
+
         const catcher = Doc.not(datePicker).on('click touch', e => {
             if (pickerHolder.is(':visible') && !_this.panelFixed) {
                 if (!_this.closeAfterSelectingTheDate) {
-                    let element = $('<div>');
+                    let element = $('<div>'), value =  $('#' + id + ' .ks-datepicker-input').val();
                     element.data({
                         action: 'pick',
                         id: id,
-                        value: $('#' + id + ' .ks-datepicker-input').val().slice(0, -1),
+                        value: value.length !== 4 ? value.slice(0, -1) :  value,
                         ordinal: $('#' + id + ' .ks-datepicker').data('ordinal')
                     });
                     Widget.doHandleSystemEvent(element, e, true);
@@ -264,14 +296,15 @@ class DatePickerWidget extends Widget {
         delete this.maxDate;
         delete this.panelFixed;
         delete this.local;
+        delete this.fullYearButtonVisible;
     }
 
     static triggerPickEvent(id, pickerHolder, e) {
-        let element = $('<div>');
+        let element = $('<div>'), value = $('#' + id + ' .ks-datepicker-input').val();
         element.data({
             action: 'pick',
             id: id,
-            value: $('#' + id + ' .ks-datepicker-input').val().slice(0, -1),
+            value: value.length !== 4 ? value.slice(0, -1) : value,
             ordinal: $('#' + id + ' .ks-datepicker').data('ordinal')
         });
         Widget.doHandleSystemEvent(element, e, true);

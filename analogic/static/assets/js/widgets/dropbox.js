@@ -36,7 +36,7 @@ class DropBoxWidget extends Widget {
         </div>
         <div class="ks-dropbox-field ${v.editable === false ? 'readonly' : ''}">
             <div class="ks-dropbox-field-inner">
-                <input ${v.editable === false ? 'readonly' : ''} style="${textStyles.join('')}" type="text" class="ks-dropbox-input search-text" placeholder="${pi.selectedItems !== '' ? pi.selectedItems : v.placeHolder}">
+                <input ${v.editable === false || v.disableSearch === true  ? 'readonly' : ''} style="${textStyles.join('')}" type="text" class="ks-dropbox-input search-text" placeholder="${pi.selectedItems !== '' ? pi.selectedItems : v.placeHolder}">
                 <div class="ks-dropbox-icon"></div>
             </div>
         </div>
@@ -101,6 +101,7 @@ class DropBoxWidget extends Widget {
     getParameters(d) {
         return {
             backdrop: this.getRealValue('backdrop', d, false),
+            disableSearch: this.getRealValue('disableSearch', d, false),
             editable: this.getRealValue('editable', d, true),
             itemIconOff: this.getRealValue('itemIconOff', d, false),
             itemIconOn: this.getRealValue('itemIconOn', d, false),
@@ -129,7 +130,7 @@ class DropBoxWidget extends Widget {
             let previouslySelected = this.items.filter(e => e.on === true),
                 previouslySelectedName = previouslySelected.map(e => e.name);
             this.items = previouslySelected.concat(data.items.filter(e => !previouslySelectedName.includes(e.name)));
-            inner.html(this.getItems(data, p));
+            inner.html(this.getItems({items: this.items}, p));
         } else {
             const pi = this.processItems(data, this.options, p);
             inner.html(this.getItems(pi.data, p));
@@ -155,6 +156,11 @@ class DropBoxWidget extends Widget {
             itemHolder.is(':visible') ? itemHolder.slideUp(50) : itemHolder.slideDown(50, function () {
                 // $(e.currentTarget).parent().get(0).scrollIntoView({behavior: "smooth", block: "start"});
             });
+
+            if (state.serverSideFilter) {
+                const previousFilterValue = v(id + '.filter.value');
+                section.find('input[type="text"]').val(previousFilterValue !== false ? previousFilterValue : '');
+            }
 
             return false;
         });
@@ -187,6 +193,9 @@ class DropBoxWidget extends Widget {
 
         const catcher = Doc.not(dropbox).on('touch click', e => {
             itemHolder.is(':visible') ? itemHolder.slideUp(50) : false;
+            if (itemHolder.is(':visible') && state.serverSideFilter) {
+                section.find('input[type="text"]').val('');
+            }
         });
 
         itemHolder.hide();

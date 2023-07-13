@@ -681,3 +681,11 @@ Api.toggleInfoWidget = function toggleInfoWidget(arg) {
         }
     }
 };
+
+Api.logout = function logout() {
+    return Auth.logout();
+};
+
+Api.goToStartPage = function goToStartPage() {
+   Auth.goToStartPage();
+};

@@ -11,6 +11,18 @@ Auth.loadDefault = arg => {
     });
 };
 
+Auth.logout = () => {
+    return $.ajax({
+        url: 'logout',
+        method: 'GET'
+    });
+};
+
+Auth.goToStartPage = () => {
+   window.onbeforeunload = null;
+   Api.goToUrl('');
+};
+
 Auth.getAjaxRequest = (url, data, type, widgetId = '', resent = false, eventMapId = '') => {
     let urlWithWidgetId = url + (url.includes('?') ? '&' : '?') + 'widgetid=' + widgetId;
     return $.ajax({

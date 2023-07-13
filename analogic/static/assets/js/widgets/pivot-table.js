@@ -1420,6 +1420,11 @@ class PivotTableWidget extends Widget {
                 n = cards.eq(j).data();
                 cardData = {...n};
 
+                cardData.dimension += '';
+                cardData.hierarchy += '';
+                cardData.subset += '';
+                cardData.element += '';
+
                 if (i) {
                     n = cardData.dimension;
 
