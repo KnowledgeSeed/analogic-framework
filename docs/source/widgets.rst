@@ -2896,7 +2896,7 @@ VerticalLineBoxWidget
    1. **query for data Structure: {value:}**
    2. **parsingControl type: matrix**
 
-WaterfallWidget
+StackedColumnChartWidget
 ----------------
 **Description:** A chart widget used to show how a net value is arrived
 at, by breaking down the aggregate effect of negative and positive contributions.
@@ -3054,7 +3054,7 @@ at, by breaking down the aggregate effect of negative and positive contributions
 
 
 
-WterfallWidget
+WaterfallWidget
 ----------
 
 **Description:** A chart widget used to show how a net value is arrived
@@ -3132,12 +3132,12 @@ contributions.
             yAxisSeparatesThousands: true,
             xAxisLabels : [
       {value: 'Total Cost 2022'},
-      {value: 'Calculated Salary'}, 
+      {value: 'Calculated Salary'},
       {value: 'Bonus'},
       {value: 'Auto Allowance'},
-      {value: 'Other Benefits'}, 
+      {value: 'Other Benefits'},
       {value: 'Employer Contributions'},
-      {value: 'Social Security'}, 
+      {value: 'Social Security'},
       {value: 'Pension Fund'},
       {value: 'Health Insurance'}
             ]
