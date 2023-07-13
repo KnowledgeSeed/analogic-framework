@@ -1284,14 +1284,17 @@ LineAreaChartWidget
 -  title: Widget title text
 -  listen: {event, method} events for the widget listen to and method to
    do
+- skin: Selected skin of widget
 -  datasets: [{legendLabel: string, borderColor: string, borderWidth:
    int, backgroundColor: string, fill: boolean, lineTension: float,
    pointRadius: int},…]
 -  legendSkin\ **:** Selected skin of widget
--  xAxesLabel\ **:** label of X axes
+-  xAxisLabel\ **:** label of X axes
 -  xAxesDisplay\ **:** true or false,, default true, display the x axes
 -  xAxesGridLinesDisplay\ **:**  true or false, display the x axes grid
    lines
+-  xAxesTicksDisplay: the ticks of the X axes
+-  xAxesTicksLabelDisplay: the labes of the ticks of the Y axes
 -  xAxesGridLinesDrawBorder\ **:**  true or false, display the x axes
    grid lines drow border
 -  xAxesGridLinesColor\ **:** color of the x axes grid lines
@@ -1307,15 +1310,25 @@ LineAreaChartWidget
 -  xAxesLabelFontStyle\ **:** style of the x axes label
 -  xAxesLabelPadding\ **:** padding between X axes label
 -  xAxesLabelRotation\ **:** vertical, horizontal
+-  xAxesTicksOffset: Off sett of the x Axes ticks
+-  xAxesOffset: Off sett of the X
 -  xAxesOffsetGridLines\ **:** if true, grid lines will be shifted to be
    between labels
--  yAxesDisplay\ **:**  true or false, display the left y axes
+-  xAxesOffsetRight: Off sett of the X on right
+-  xAxesOffsetLeft: Off sett of the X on left
+-  xMin: the max value of theX axis
+-  yAxisLabel\ **:** label of Y axes
+-  yAxisDisplay\ **:**  true or false, display the left y axes
 -  yAxesGridLinesDisplay\ **:**  true or false, display the left y axes
    grid lines
 -  yAxesGridLinesDrawBorder\ **:** first grid line is visible, even if
    others are not
+-  yMin: the max value of the Y axis
+-  yAxesTicksDisplay: the ticks of the Y axes
+-  yAxesTicksLabelDisplay: the labes of the ticks of the Y axes
 -  yAxesGridLinesColor\ **:** color of the left y axes grid lines
 -  yAxesLabel\ **:** label of the left y axes
+-  yAxesLabelDisplay\ **:**  true or false, display the y axes label
 -  yAxesLabelConcat\ **:** str to add to the left Y axes ticks
 -  yAxesLabelFontSize\ **:** font size of the left y axes label
 -  yAxesLabelFontFamily\ **:** font family of the left y axes label
@@ -1323,8 +1336,14 @@ LineAreaChartWidget
 -  yAxesLabelFontStyle\ **:** font style of the left y axes label
 -  yAxesLabelPadding\ **:** padding between Y axes label
 -  yAxesLabelRotation\ **:** vertical, horizontal
+-  yAxesTicksOffset: Off sett of the Y Axes ticks
 -  yAxesTicksBegintAtZero\ **:**  true or false, begin the left y axes
    with zero
+-  yAxesStacked: true or false,
+-  yAxesUnit:
+-  yAxesDecimalNum:
+-  yAxesSeparatesThousands: true or false,
+-  yAxesTicksPrecisionFixed: true or false,
 -  yAxesTicksFontSize\ **:** font size of the left y axes ticks
 -  yAxesTicksFontFamily\ **:** font family of the left y axes ticks
 -  yAxesTicksFontStyle\ **:** font style of the left y axes ticks
@@ -1883,13 +1902,13 @@ points of two or more different data sets.
 
     Repository.js:
 
-   
+
       hrdemoGroupsRow1Cell1Button: {
         launch() {
             Api.openPage('hrdemoMain');
         }
     },
-   
+
 
 RadioButtonRowWidget
 -----------------------
@@ -2096,7 +2115,7 @@ different sets of data.
 
     Repository.js:
 
-   
+
       hrdemoPeopleServiceTeamEditorRow2Cell1SegmentedControl: {
         switch(db) {
             Utils.setWidgetValue('systemValueTeamEditorTableData', false);
@@ -2107,7 +2126,7 @@ different sets of data.
         }
     },
     },
-   
+
 
 ShadowWidget
 -------------
@@ -2293,7 +2312,7 @@ SliderWidget
 
     Repository.js:
 
-   
+
        hrdemoUpdateValueGridRow4Slider: {
         getOriginalValue() {
             return Utils.parseNumber(Utils.replaceDecimal(v('hrdemoUpdateValueGridRow2Text2').value), 'HU-hu');
@@ -2334,7 +2353,7 @@ SliderWidget
         }
     },
     },
-   
+
 
 
 TextAreaWidget
@@ -2402,7 +2421,7 @@ text. The widget is resizable by bottom right corner drag and drop
 
     Repository.js:
 
-   
+
           hrdemoSimulationCommentPopupCommentInput: {
         save: {
             url: (db) => {
@@ -2449,7 +2468,7 @@ text. The widget is resizable by bottom right corner drag and drop
         }
     },
     },
-   
+
 
 TextBoxWidget
 -------------
@@ -2521,7 +2540,7 @@ TextBoxWidget
 
     Repository.js:
 
-   
+
       hrdemoSimulationCompensationChangePopUpGridRow12Cell2TextBox: {
         init() {
             if (Utils.getGridTableCurrentCell('hrdemoSimulationGridTable').yearAndMonth) {
@@ -2558,7 +2577,7 @@ TextBoxWidget
         }
     },
     },
-   
+
 
 TextWidget
 ----------
@@ -2629,7 +2648,7 @@ TextWidget
 
     Repository.js:
 
-   
+
       hrdemoSimulationCompensationChangeGroupPopUpGridRow2Text1: {
         init() {
             let m = Utils.getGridTableCurrentCell('hrdemoSimulationGridTable').yearAndMonth,
@@ -2644,7 +2663,7 @@ TextWidget
         }
     },
     },
-   
+
 
 
 ToggleWidget
@@ -2724,13 +2743,13 @@ exclusive options. (for example: on-off choice)
 
     Repository.js:
 
-   
+
       hrdemoGroupsRow1Cell1Button: {
         launch() {
             Api.openPage('hrdemoMain');
         }
     },
-   
+
 TornadoChartWidget
 ------------------
 
@@ -2811,7 +2830,7 @@ rightColor:, legendLabel:}
 
     Repository.js:
 
-   
+
        hrdemoReportChart11: {
         init:
             {
@@ -2846,7 +2865,7 @@ rightColor:, legendLabel:}
                 }
 
     },
-   
+
 
 VerticalLineBoxWidget
 ------------------------
@@ -2877,9 +2896,166 @@ VerticalLineBoxWidget
    1. **query for data Structure: {value:}**
    2. **parsingControl type: matrix**
 
+StackedColumnChartWidget
+----------------
+**Description:** A chart widget used to show how a net value is arrived
+at, by breaking down the aggregate effect of negative and positive contributions.
+
+**Config Parameters:** 
+
+-  fontFamily : font family of the chart
+-  fontSize : font size of the chart
+-  fontStyle :font style of the chart
+-  fontWeight : font weight of the chart
+-  fontLineHeight : font line height of the chart
+-  fontColor : font color of the chart
+-  gridColor : grid color of the chart
+-  gridWidth : gird Width of the chart
+-  xAxisGridDisplay : true or false
+-  yAxisGridDisplay : true or false
+-  aspectRatio:
+-  maintainAspectRatio: true or false
+-  tooltipsEnabled: true or false
+-  animationEnabled: true or false
+-  rightBorderVisible: true or false, visible of the right border
+-  rightBorderWidth: width of the right border
+-  rightBorderColor: color of the right border
+-  topBorderVisible: true or false, visible of the top border
+-  topBorderWidth: width of the top border
+-  topBorderColor: color of the top border
+-  interactionMode:
+-  interactionAxis:
+-  interactionIsIntersect: true or false
+-  lineColor: color of the line
+-  lineWidth: width of the line
+-  lineTension: Tension of the line
+-  barBorderColor: Color of the border bar
+-  barBorderRadius: Radius of the border bar
+-  barBorderWidth: width of the border bar
+-  barInflateAmount:
+-  barPercentage: percentage of the bar
+-  barCategoryPercentage:
+-  barThickness: thickness of the bar
+-  barMaxThickness: max thickness of the bar
+-  barMinLength: min length of the bar
+-  canvasPaddingTop: paddingTop of the canvas
+-  canvasPaddingRight: paddingRight of the canvas
+-  canvasPaddingBottom: paddingBottom of the canvas
+-  canvasPaddingLeft: paddingLeft of the canvas
+-  legendVisible: true or false, Visible of the legend
+-  legendPosition: position of the legend
+-  legendAlign: alignment of the legend
+-  legendFontFamily: family of the legend
+-  legendFontSize: font size of the legend
+-  legendFontStyle: font style of the legend
+-  legendFontWeight: font weight of the legend
+-  legendFontLineHeight: font line height of the legend
+-  xAxisBorderDisplay: true or false, display the border of x axis
+-  xAxisDisplay: true or false, display the x axis
+-  xAxisAlignToPixels: true or false, align the x axis to pixels
+-  xAxisStacked: true or false
+-  xAxisBorderColor: Color of the x axis border
+-  xAxisBorderWidth: width of the x axis border
+-  xAxisTicksLabelDisplay: true or false, display the ticks of the x axis label
+-  xAxisTicksFontColor: Color of the x axis ticks
+-  xAxisTicksFontFamily: Font family of the x axis ticks
+-  xAxisTicksFontSize: Font size of the x axis ticks
+-  xAxisTicksFontStyle: Font style of the x axis ticks
+-  xAxisTicksFontWeight: Font weight of the x axis ticks
+-  xAxisTicksFontLineHeight: Font line height of the x axis ticks
+-  xAxisTicksLabelPadding: Padding of the x axis ticks label
+-  xAxisGridDisplay: display of the x axis grid
+-  xAxisGridColor: color of the x axis grid
+-  xAxisGridOffset: true or false, offset of the x axis grid
+-  xAxisTicksDisplay: display of the x axis ticks
+-  xAxisGridDrawOnChartArea: Draw on chart area of the x axis
+-  xAxisGridLineWidth: line width of the x axis grid
+-  yMin: minimum value of the y axis
+-  yMax: maximum value of the y axis
+-  yMarginTop: margin top of the y axis
+-  yMarginBottom: margin bottom of y axis
+-  yMarginLeft: margin left of the y axis
+-  yMarginRight: margin right of the y axis
+-  yAxisDisplay: ture or false, display the y axis
+-  yAxisAlignToPixels: true or false, align to pixels of the y axis
+-  yAxisStacked: true or false
+-  yAxisBorderDisplay: true or false, display the y axis
+-  yAxisBorderColor: Color of the y axis border
+-  yAxisBorderWidth: width of the y axis border
+-  yAxisGridDisplay: display the y axis grid
+-  yAxisGridDrawOnChartArea:
+-  yAxisGridLineWidth: width of the y axis gird line
+-  yAxisTicksDisplay: display of the y axis ticks
+-  yAxisTicksLabelDisplay: display of the y axis ticks labels
+-  yAxisTicksFontColor: font color of the y axis ticks
+-  yAxisTicksFontFamily: font family of the y axis ticks
+-  yAxisTicksFontSize: font size of the y axis ticks
+-  yAxisTicksFontStyle: font style of the y axis ticks
+-  yAxisTicksFontWeight: font weight of the y axis ticks
+-  yAxisTicksFontLineHeight: font line height of the y axis ticks
+-  yAxisTicksLabelPadding: padding of the y axis ticks labels
+-  yAxisTicksCount: number of y axis ticks
+-  yAxisTicksLimit: limit of the y axis ticks
+-  yAxisGridColor: color of the y axis
+-  yAxisGridLinesNum: number of y axis lines
+-  yAxisShowOnlyZeroLine: true or false,show only zero line
+-  yAxisUnit: unit of the y axis
+-  yAxisDecimalNum: decimal number of the y axis
+-  yAxisSeparatesThousands: true or false
+-  yAxiyAxisTicksPrecisionFixed: true or false
+-  labelColor: Color of the label
+-  labelBackgroundColor: Color of the label background
+-  labelFontFamily: Font family of the label
+-  labelFontSize: Font size of the label
+-  labelFontStyle: Font style of the label
+-  labelFontWeight: Font weight of the label
+-  labelFontLineHeight: Font line height of the label
+-  labelPaddingTop: padding top of the label
+-  labelPaddingLeft: padding left of the label
+-  labelPaddingRight: padding right of the label
+-  labelPaddingBottom: padding bottom of the label
+-  labelAlign: align of the label
+-  labelOffset: offset of the label
+-  labelAnchor: anchor of the label
+-  labelClamp: true or false, clamp of the label
+-  labelClip: true or false, clip of the label
+-  labelBorderRadius: border radius of the label
+-  arrowEnabled: true or false
+-  arrowMarginTop: margin top of the arrow
+-  arrowMarginMiddle: margin middle of the arrow
+-  arrowMarginBottom: margin bottom of the arrow
+-  arrowLength: length of the arrow
+-  arrowLineColor: line color of the arrow
+-  arrowLineWidth: line width of the arrow
+-  arrowCircleColor: circle color of the arrow
+-  arrowCircleRadius: circle radius of the arrow
+-  arrowCircleWidth: circle width of the arrow
+-  arrowTriangleColor: Trinagle color of the arrow
+-  arrowTriangleSize: triangle size of the arrow
+-  arrowLabelVisible: true or false
+-  arrowLabelColor: label color of the arrow
+-  arrowLabelBackgroundColor: background color of the arrow
+-  arrowLabelFontFamily: font family of the arrow
+-  arrowLabelFontSize: font size of the arrow
+-  arrowLabelFontStyle: font style of the arrow
+-  arrowLabelFontWeight: font weight of the arrow
+-  arrowLabelFontLineHeight: font line height of the arrow
+-  arrowLabelPaddingTop: padding top of the arrow label
+-  arrowLabelPaddingLeft: padding left of the arrow label
+-  arrowLabelPaddingRight: padding right of the arrow label
+-  arrowLabelPaddingBottom: padding bottom of the arrow label
+-  arrowLabelAlign: align of the arrow label
+-  arrowLabelOffset: offset of the arrow label
+-  arrowLabelAnchor: anchor of the arrow label
+-  arrowLabelClamp: true or false, clamp of the arrow label
+-  arrowLabelClip: true or false, clip of the arrow label
+-  arrowLabelBorderRadius: border radius of the arrow label
+
+
+
 
 WaterfallWidget
-----------------
+----------
 
 **Description:** A chart widget used to show how a net value is arrived
 at, by breaking down the aggregate effect of negative and positive
@@ -2908,9 +3084,14 @@ contributions.
 -  maxYAxis\ **:** maximum value of the y-axis
 -  yAxisGridLineNum\ **:** number of horizontal grid lines
 -  yAxisDecimalNum:
+-  yAxisUnit:
 -  defaultColor\ **:** default color of the widget (currently #F3F4F6)
 -  skin\ **:** skin of the widget
+-  yAxisTicksPrecisionFixed: true or false,
+-  yAxisSeparatesThousands: true or false,
+-  height: height of the chart
 -  hiddenDatasets:
+-  allowLastColumnToZero: true or false
 
 **Data connection to TM1:** 
 
@@ -2923,41 +3104,43 @@ contributions.
    {
             id: 'hrdemoReportWaterFall',
          type: WaterFallWidget,
-         width: '1400',
-         height: '400',
-         title: '',
-         minYAxis: '100',
-         maxYAxis: '1100',
-         dataset1: {
-             datapoints: [
-                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
-                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
-                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
-                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
-                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
-                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
-                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
-                 {positiveColor: '#34C759', negativeColor: '#FF3B30'},
-                 {positiveColor: '#34C759', negativeColor: '#FF3B30'}
-             ]
-         },
-         tooltipsEnabled: true,
-         marginBottom: '50',
-         xAxisLabels: [
-             {value: 'Total Cost 2023'},
-             {value: 'Calculated Salary'},
-             {value: 'Bonus'},
-             {value: 'Auto Allowance'},
-             {value: 'Other Benefits'},
-             {value: 'Social Security'},
-             {value: 'Pension Fund'},
-             {value: 'Health Insurance'},
-             {value: 'Total Cost 2024'}
-         ],
-         labelVisible: true,
-         legendVisible: false,
-         yAxisGridLineNum: 4,
-         yAxisSeparatesThousands: true
+            width: '1600',
+            height: '400',
+            title: '',
+            minYAxis: 0,
+            maxYAxis: 200000,
+            dataset1 : {showConnectionLines: true, legendLabel: 'Dataset One', legendColor: '#007AFF',
+            datapoints:
+          [
+          {value: 84000, positiveColor: '#B1B3B3', negativeColor: '#B1B3B3'},
+          {value: 76000, positiveColor: '#007AFF', negativeColor: '#CFE0F5'},
+          {value: -190000, positiveColor: '#007AFF', negativeColor: '#CFE0F5'},
+          {value: -210000, displayValue: 210000, positiveColor: '#007AFF', negativeColor: '#CFE0F5'},
+          {value: 128300, isTotal: true, positiveColor: '#B1B3B3', negativeColor: '#B1B3B3'},
+          {value: 84000, displayValue: -84000, positiveColor: '#007AFF', negativeColor: '#CFE0F5'},
+          {value: -75000, displayValue: 75000, positiveColor: '#007AFF', negativeColor: '#CFE0F5'},
+          {value: -100000, displayValue: 100000, positiveColor: '#007AFF', negativeColor: '#CFE0F5'},
+          {value: 101600, positiveColor: '#B1B3B3', negativeColor: '#B1B3B3'}
+            ]
+            },
+            marginTop: '150',
+            marginBottom: '50',
+            marginLeft: 300,
+            labelVisible: true,
+            legendVisible: false,
+            yAxisGridLineNum: 4,
+            yAxisSeparatesThousands: true,
+            xAxisLabels : [
+      {value: 'Total Cost 2022'},
+      {value: 'Calculated Salary'},
+      {value: 'Bonus'},
+      {value: 'Auto Allowance'},
+      {value: 'Other Benefits'},
+      {value: 'Employer Contributions'},
+      {value: 'Social Security'},
+      {value: 'Pension Fund'},
+      {value: 'Health Insurance'}
+            ]
    }
 
     Repository.js:
