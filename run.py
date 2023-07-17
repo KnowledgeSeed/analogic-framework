@@ -13,7 +13,9 @@ csp_policy = {
     'object-src': '\'none\'',
     'style-src': '\'self\' \'unsafe-inline\''
 }
-Talisman(app, force_https=False, content_security_policy=csp_policy, x_content_type_options=False)
+
+if bool(os.getenv('ANALOGIC_TALISMAN_ENABLED', 'True')):
+    Talisman(app, force_https=False, content_security_policy=csp_policy, x_content_type_options=False)
 
 
 if __name__ == "__main__":
