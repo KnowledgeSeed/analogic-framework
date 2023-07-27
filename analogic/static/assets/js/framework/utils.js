@@ -34,7 +34,7 @@ const Utils = {
         'ű': 'u',
         'í': 'i'
     }),
-    clone: (object, deep) => deep ? $.extend(true, {}, object) : $.extend({}, object),
+    clone: (object, deep, isObject = true) => deep ? $.extend(true, isObject ? {} : [], object) : $.extend(isObject ? {} : [], object),
     replaceAll: (s, m) => s.replace(RegExp(Object.keys(m).join('|'), 'gi'), r => m[r.toLowerCase()]),
     scrollTop: duration => $('html, body').animate({scrollTop: 0}, duration || 500),
     scrollTo(idOrObj, duration, topOffset = 0) {
