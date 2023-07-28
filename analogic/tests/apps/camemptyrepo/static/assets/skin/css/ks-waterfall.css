@@ -1,0 +1,179 @@
+.ks-waterfall {
+    display: block;
+    height: 100%;
+    padding-bottom: 40px;
+}
+
+.ks-waterfall-inner {
+    height: 100%;
+    position: relative;
+}
+
+.ks-waterfall-y-holder,
+.ks-waterfall-x-holder {
+    left: 0;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.ks-waterfall-y-title {
+    position: absolute;
+}
+
+.ks-waterfall-y-line-holder {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.ks-waterfall-y-line {
+    position: relative;
+}
+
+.ks-waterfall-y-line-tick {
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-25%);
+    -moz-transform: translateY(-25%);
+    -o-transform: translateY(-25%);
+    -ms-transform: translateY(-25%);
+    transform: translateY(-25%);
+}
+
+.ks-waterfall-y-line-tick.ks-left {
+    right: 100%;
+}
+
+.ks-waterfall-y-line-tick.ks-right {
+    left: 100%;
+}
+
+.ks-waterfall-y-line-label {
+    position: absolute;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    white-space: nowrap;
+}
+
+.ks-waterfall-y-line-label.ks-left {
+    right: 100%;
+    text-align: right;
+}
+.ks-waterfall-y-line-label.ks-right {
+    left: 100%;
+    text-align: left;
+}
+
+.ks-waterfall-x-title {
+    bottom: 0;
+    left: 50%;
+    position: absolute;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.ks-waterfall-x-content-holder {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.ks-waterfall-bar-group {
+    flex-grow: 1;
+    height: 100%;
+    position: relative;
+}
+
+.ks-waterfall-bar-group-content {
+    align-items: flex-end;
+    display: flex;
+    height: 100%;
+    padding: 0 3px;
+    position: relative;
+    width: 100%;
+}
+
+.ks-waterfall-bar {
+    flex-grow: 1;
+    position: relative;
+}
+
+.ks-waterfall-x-line {
+    height: 100%;
+    position: relative;
+}
+
+.ks-waterfall-x-line.ks-primary {
+    left: 50%;
+    position: absolute;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.ks-waterfall-x-line-tick,
+.ks-waterfall-x-line-label {
+    cursor: pointer;
+    left: 50%;
+    position: absolute;
+    text-align: center;
+    top: 100%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.ks-waterfall-bar-label {
+    position: absolute;
+    color: #0066CC;
+    background: #FFFFFF;
+    border-radius: 5px;
+    font-size: 11px;
+    padding: 1px 5px;
+    top: 0;
+    left: 50%;
+    -webkit-transform: translate(-50%, -120%);
+    -moz-transform: translate(-50%, -120%);
+    -o-transform: translate(-50%, -120%);
+    -ms-transform: translate(-50%, -120%);
+    transform: translate(-50%, -120%);
+    box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.2), 0px 8px 12px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    white-space: nowrap;
+}
+
+.ks-legend-item {
+    cursor: pointer;
+}
+
+.ks-waterfall-con-line-top {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 29px;
+    height: 1px;
+    background-color: #F3F4F6;
+}
+
+.ks-waterfall-con-line-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 100%;
+    width: 29px;
+    height: 1px;
+    background-color: #F3F4F6;
+}

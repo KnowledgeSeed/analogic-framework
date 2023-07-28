@@ -1,0 +1,12 @@
+{
+  "projectName": "Test Cam",
+  "projectId": "testcam",
+  "authenticationMode": "Cam",
+  "camNamespace": "namespace (fill)",
+  "authenticationBridge": "",
+  "apiHost": "restapi url (fill)",
+  "mainPage": "main",
+  "proxy": {
+    "target": "restapi url (fill)"
+  }
+}

@@ -1,0 +1,63 @@
+.ks-button {
+	cursor: pointer;
+	display: block;
+	text-decoration: none;
+}
+
+.ks-button-inner {
+	height: 100%;
+}
+
+.ks-button-content {
+	-ms-flex-align: center;
+	align-items: center;
+	display: flex;
+	height: 100%;
+	-ms-flex-pack: center!important;
+	justify-content: center!important;
+}
+
+.ks-button-icon img {
+	display: block;
+	max-height: 100%;
+}
+
+.ks-button-icon,
+.ks-button-divider,
+.ks-button-label {
+	display: none;
+	max-height: 100%;
+}
+
+.ks-button.has-icon .ks-button-icon {
+	display: block;
+}
+.ks-button.has-icon.has-label .ks-button-divider {
+	display: block;
+}
+.ks-button.has-label .ks-button-label {
+	display: block;
+}
+
+.ks-button.pos-icon-left .ks-button-icon {
+	order: 1;
+}
+.ks-button.pos-icon-left .ks-button-divider {
+	order: 2;
+}
+.ks-button.pos-icon-left .ks-button-label {
+	order: 3;
+}
+
+.ks-button.pos-icon-right .ks-button-icon {
+	order: 3;
+}
+.ks-button.pos-icon-right .ks-button-divider {
+	order: 2;
+}
+.ks-button.pos-icon-right .ks-button-label {
+	order: 1;
+}
+.ks-button.has-box-shadow {
+    box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.2), 0px 8px 12px rgba(0, 0, 0, 0.2);
+}

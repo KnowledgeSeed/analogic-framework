@@ -1,0 +1,12 @@
+{
+  "projectName": "Test Cam",
+  "projectId": "testcam",
+  "authenticationMode": "Cam",
+  "camNamespace": "knowledgeseed",
+  "authenticationBridge": "",
+  "apiHost": "https://dev.knowledgeseed.ch:5125/rochelucyapi",
+  "mainPage": "main",
+  "proxy": {
+    "target": "https://dev.knowledgeseed.ch:5125/rochelucyapi"
+  }
+}

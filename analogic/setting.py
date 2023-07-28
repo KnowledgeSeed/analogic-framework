@@ -77,6 +77,8 @@ class SettingManager:
 
     def get_mdx(self, key):
         repository = self._get_repository()
+        if repository is None:
+            return None
         mdx = repository.get(key)
         return mdx
 
