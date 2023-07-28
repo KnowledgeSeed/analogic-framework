@@ -1534,6 +1534,7 @@ scatter plot diagram and a line chart.
 -  xAxisOffset: Boolean, It's set the visibility of the x axes off set
 -  xAxisOffsetRight: It's set the visibility of the x axes off set right
 -  xAxisOffsetLeft: It's set the visibility of the x axes off set left
+-  yAxisSeparatesThousand: It's seperate the y axis
 -  yAxisUnit:
 -  bezierCurveBorderWidth:
 -  bezierCurveTension:
