@@ -390,7 +390,7 @@ class LineAreaChartWidget extends Widget {
     }
 
     setHoverBackgroundForDataset(i) {
-        let b = this.value.datasets[i].hoverBackgroundColor;
+        let b = (this.value.datasets[i] ?? {}).hoverBackgroundColor;
 
         if (!b) {
             return;
