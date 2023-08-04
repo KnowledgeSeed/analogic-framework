@@ -24,6 +24,14 @@ class PageWidget extends Widget {
         return El.body;
     }
 
+    reRenderWidget(withState = false, withLoader = true, previouslyLoadedData = false) {
+        return super.reRenderWidget(withState, withLoader, previouslyLoadedData).then(() => Extensions.pageRender.forEach(ext => ext.afterPageRendered()));
+    }
+
+    renderWidget(withState = false, withLoader = true, previouslyLoadedData = false) {
+        return super.renderWidget(withState, withLoader, previouslyLoadedData).then(() => Extensions.pageRender.forEach(ext => ext.afterPageRendered()));
+    }
+
     render(withState, refresh, useDefaultData = false, loadFunction = QB.loadData, previouslyLoadedData = false) {
         this.isRendering = true;
         const o = this.options;
