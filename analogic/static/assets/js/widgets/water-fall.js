@@ -248,6 +248,10 @@ class WaterFallWidget extends Widget {
 
         let d = data[0];
 
+        if (!d) {
+            return data;
+        }
+
         d.dataset1 = {datapoints: data.length > 1 ? data[1][0] || [] : []}; //matrix!!
         d.dataset2 = {datapoints: data.length > 2 ? data[2][0] || [] : []}; //matrix!!
 

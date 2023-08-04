@@ -128,7 +128,7 @@ class LineAreaChartWidget extends Widget {
     initEventHandlers() {
         const o = this.options, a = $('#' + o.id + 'Canvas');
 
-        const c = new Chart(a[0].getContext('2d'), this.getChartConfig(this.value));
+        const c = new Chart(a[0].getContext('2d'), this.getChartConfig());
 
         a.parent().next().html(c.generateLegend()).on('click', '.ks-legend-item', e => {
             let legend = $(e.target).closest('.ks-legend-item').toggleClass('off'), id = legend.data('id');
@@ -149,8 +149,8 @@ class LineAreaChartWidget extends Widget {
         }
     }
 
-    getChartConfig(v) {
-        let datasets = Utils.clone(v.datasets, true, false), d = v.data[v.data.length - 1], j, i, xValues = v.data[0].map(e => e.label), data, len = d.length, lastHoveredDatasetIndex;
+    getChartConfig() {
+        let v = this.value, datasets = Utils.clone(v.datasets, true, false), d = v.data[v.data.length - 1], j, i, xValues = v.data[0].map(e => e.label), data, len = d.length, lastHoveredDatasetIndex;
 
         const yAxesUnit = v.yAxesUnit, yAxesDecimalNum = v.yAxesDecimalNum, yAxesSeparatesThousands = v.yAxesSeparatesThousands, yAxesTicksPrecisionFixed = v.yAxesTicksPrecisionFixed;
 
@@ -390,7 +390,7 @@ class LineAreaChartWidget extends Widget {
     }
 
     setHoverBackgroundForDataset(i) {
-        let b = this.value.datasets[i].hoverBackgroundColor;
+        let b = (this.value.datasets[i] ?? {}).hoverBackgroundColor;
 
         if (!b) {
             return;
