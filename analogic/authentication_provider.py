@@ -359,6 +359,9 @@ class AuthenticationProvider(ABC):
     def active_user(self):
         return jsonify({'username': self.get_logged_in_user_name()})
 
+    def login(self):
+        pass
+
     def logout(self):
         session.clear()
         return 'ok'

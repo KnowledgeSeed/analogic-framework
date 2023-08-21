@@ -622,7 +622,11 @@ Api.updateWidgetsContent = function updateWidgetsContent(widgetIds) {
 Api.updateWidgetsContentWithoutLoader = function updateWidgetsContentWithoutLoader(widgetIds) {
     let deferred = [];
 
-    widgetIds.forEach(widgetId => deferred.push(Widgets[widgetId].updateWidgetContent(false)));
+    widgetIds.forEach(widgetId => {
+        if(Widgets[widgetId]) {
+            deferred.push(Widgets[widgetId].updateWidgetContent(false));
+        }
+    });
 
     return $.when.apply($, deferred);
 };

@@ -236,6 +236,8 @@ class GridTableWidget extends Widget {
 
     render(withState, refresh, useDefaultData = false, loadFunction = QB.loadData, previouslyLoadedData = false) {
         this.isRendering = true;
+        delete this.row;
+        delete this.column;
         const o = this.options, instance = this;
 
         let widgetOptions, widgets = [], headerRowWidget = false;
@@ -356,6 +358,8 @@ class GridTableWidget extends Widget {
 
     reset() {
         delete this.cellData;
+        delete this.row;
+        delete this.column;
     }
 
     triggerFillRight(params) {
