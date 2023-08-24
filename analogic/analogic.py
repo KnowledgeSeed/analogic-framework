@@ -20,10 +20,10 @@ import atexit
 
 APPLICATIONS_DIR = 'apps'
 APPLICATIONS_DIR_EXTRA = os.environ.get('APPLICATIONS_DIR_EXTRA', '')
-APPLICATIONS_EXTRA = os.environ.get('APPLICATIONS_EXTRA', '').split(",")
+APPLICATIONS_EXTRA = [] if not os.environ.get('APPLICATIONS_EXTRA') else os.environ.get('APPLICATIONS_EXTRA').split(',')
 EXTENSIONS_DIR = 'extensions'
 EXTENSIONS_DIR_EXTRA = os.environ.get('EXTENSIONS_DIR_EXTRA', '')
-EXTENSIONS_EXTRA = os.environ.get('EXTENSIONS_EXTRA', '').split(",")
+EXTENSIONS_EXTRA = [] if not os.environ.get('EXTENSIONS_EXTRA') else os.environ.get('EXTENSIONS_EXTRA').split(',')
 ALLOWED_EXTENSION_PREFIX = 'analogic_'
 
 
