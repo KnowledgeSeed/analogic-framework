@@ -20,8 +20,10 @@ import atexit
 
 APPLICATIONS_DIR = 'apps'
 APPLICATIONS_DIR_EXTRA = os.environ.get('APPLICATIONS_DIR_EXTRA', '')
+APPLICATIONS_EXTRA = os.environ.get('APPLICATIONS_EXTRA', '').split(",")
 EXTENSIONS_DIR = 'extensions'
 EXTENSIONS_DIR_EXTRA = os.environ.get('EXTENSIONS_DIR_EXTRA', '')
+EXTENSIONS_EXTRA = os.environ.get('EXTENSIONS_EXTRA', '').split(",")
 ALLOWED_EXTENSION_PREFIX = 'analogic_'
 
 
@@ -181,10 +183,26 @@ def create_app(instance_path):
     if EXTENSIONS_DIR_EXTRA != '':
         _load_analogic_extensions(app, extensions_dir=EXTENSIONS_DIR_EXTRA)
 
+    if EXTENSIONS_EXTRA:
+        for extension_path in EXTENSIONS_EXTRA:
+            extension_abs_path = os.path.abspath(os.path.normpath(extension_path))
+            extension_folder = os.path.dirname(extension_abs_path)
+            extension_name = os.path.basename(extension_abs_path)
+            _append_extension_dir_to_path(app, extension_folder)
+            _load_module(app, True, extension_name, extension_folder, _register_extension)
+
     _load_applications(app, register_func=_register_application, module_dirs=APPLICATIONS_DIR)
 
     if APPLICATIONS_DIR_EXTRA != '':
         _load_applications(app, register_func=_register_application, module_dirs=APPLICATIONS_DIR_EXTRA)
+
+    if APPLICATIONS_EXTRA:
+        for application_path in APPLICATIONS_EXTRA:
+            application_abs_path = os.path.abspath(os.path.normpath(application_path))
+            application_folder = os.path.dirname(application_abs_path)
+            application_name = os.path.basename(application_abs_path)
+            _append_extension_dir_to_path(app, application_folder)
+            _load_module(app, False, application_name, application_folder, _register_application)
 
     app.register_analogic_url_rules('')
 
@@ -274,21 +292,23 @@ def _load_applications(app, register_func, module_dirs):
 
 def _load_modules(app, modules_dir, check_prefix, register_func):
     for module_dir_name in os.listdir(modules_dir):
+        _load_module(app, check_prefix, module_dir_name, modules_dir, register_func)
 
-        module_dir = os.path.join(modules_dir, module_dir_name)
 
-        if os.path.isdir(module_dir) and module_dir_name != '.git' and module_dir_name != 'tests' and (
-                check_prefix is False or (
-                module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX) and not module_dir_name.endswith('dist-info'))):
+def _load_module(app, check_prefix, module_dir_name, modules_dir, register_func):
+    module_dir = os.path.join(modules_dir, module_dir_name)
+    if os.path.isdir(module_dir) and module_dir_name != '.git' and module_dir_name != 'tests' and (
+            check_prefix is False or (
+            module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX) and not module_dir_name.endswith('dist-info'))):
 
-            # workaround to handle repeating names in module path
-            if module_dir_name == modules_dir.rsplit('/', 1)[-1]:
-                module_dir_name = module_dir_name + '.' + module_dir_name
+        # workaround to handle repeating names in module path
+        if module_dir_name == modules_dir.rsplit('/', 1)[-1]:
+            module_dir_name = module_dir_name + '.' + module_dir_name
 
-            files = resources.contents(module_dir_name)
+        files = resources.contents(module_dir_name)
 
-            modules = [f[:-3] for f in files if f.endswith(".py") and f[0] != "_" and 'setup' not in f]
-            register_func(app, module_dir, module_dir_name, modules)
+        modules = [f[:-3] for f in files if f.endswith(".py") and f[0] != "_" and 'setup' not in f]
+        register_func(app, module_dir, module_dir_name, modules)
 
 
 def _register_application(app, application_dir, application_name, files):
