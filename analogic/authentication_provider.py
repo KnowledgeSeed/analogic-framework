@@ -310,11 +310,10 @@ class AuthenticationProvider(ABC):
             response = self.do_proxy_request(url, meth, mdx, headers, cookies, encode_content)
         except AnalogicProxyException as e:
             self._logger.error(e, exc_info=True)
-            return { 'message' : 'Something went wrong {}'.format(e)}, 500, {'Content-Type': 'application/json'}
+            return {'message': 'Something went wrong {}'.format(e)}, 500, {'Content-Type': 'application/json'}
         except AnalogicAccessDeniedException as e:
             self._logger.error(e, exc_info=True)
-            return { 'message' : 'Something went wrong {}'.format(e)}, 403, {'Content-Type': 'application/json'}
-
+            return {'message': 'Something went wrong {}'.format(e)}, 403, {'Content-Type': 'application/json'}
 
         if response.status_code == 400 or response.status_code == 500:
             if encode_content is False:
@@ -371,3 +370,34 @@ class AuthenticationProvider(ABC):
 
     def on_exit(self):
         pass
+
+    @staticmethod
+    def get_setting_parameter_descriptions():
+        result = {
+            'projectName': {
+                'required': True,
+                'description': 'Free text, displayed on the header of html title.'
+            },
+            'projectId': {
+                'required': True,
+                'description': 'The same text as the app directory. Accented, special characters are not allowed.'
+            },
+            'authenticationMode': {
+                'required': True,
+                'description': 'Authenticaton provider class name.'
+            },
+            'mainPage': {
+                'required': True,
+                'description': 'Javascript client start page.'
+            },
+            'ssl_verify': {
+                'required': False,
+                'description': 'Server side requests parameter, default value true. In case of disabling self signed certificate of api will not be checked'
+            },
+            'sessionExpiresInMinutes': {
+                'required': False,
+                'description': 'Numeric value. Session will expire after the added value. Default 20'
+            }
+        }
+
+        return result

@@ -165,3 +165,28 @@ class Cam(AuthenticationProvider):
 
     def _extend_login_session(self):
         session.modified = True
+
+    @staticmethod
+    def get_setting_parameter_descriptions():
+        result = super(Cam, Cam).get_setting_parameter_descriptions()
+        result['camNamespace'] = {
+            'required': True,
+            'description': 'The Cognos Access Management namespace ID.'
+        }
+        result['proxy'] = {
+            'target': {
+                'required': True,
+                'description': 'Tm1 restapi url.'
+            }
+        }
+        result['apiHost'] = {
+            'required': True,
+            'description': 'Tm1 restapi url for the javascript client.'
+        }
+        result['authenticationBridge'] = {
+            'required': True,
+            'description': 'ibmcognos url for authentication, e.g.: https://<url>/ibmcognos/bi/v1?b_action=xts.run&m=portal/bridge.xts&c_env=portal/variables_TM1.xml&c_cmd=../tm1/web/tm1web.html&ps=http://localhost:5000&pg=../<frameworkappname>/auth&host=dev.knowledgeseed.ch&server=<tm1servername>'
+        }
+
+        return result
+

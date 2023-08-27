@@ -17,3 +17,9 @@ class CamSecure(Cam):
 
     def get_base_url(self):
         return self.setting.get_proxy_target_url()
+
+    @staticmethod
+    def get_setting_parameter_descriptions():
+        result = super(CamSecure, CamSecure).get_setting_parameter_descriptions()
+        del result['apiHost']
+        return result

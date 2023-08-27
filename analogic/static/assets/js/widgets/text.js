@@ -442,6 +442,8 @@ class TextWidget extends Widget {
 
                                     Widget.doHandleSystemEvent(pp, f);
                                 }).catch(err => L('Read from clipboard failed: ', err));
+                                c.html('pasting..');
+                                ksText.removeClass('ks-on');
                                 TextWidget.addEdit(section, o, amIOnGridTable, pasteDataByServerSide);
                                 return false;
                             }
