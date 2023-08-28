@@ -272,6 +272,7 @@ def _register_extension_components(app, extension_name, files):
                     issubclass(obj, AuthenticationProvider):
                 app.register_authentication_provider(name, extension_name)
 
+
             if inspect.isclass(obj) and \
                     not inspect.isabstract(obj) and \
                     issubclass(obj, Condition):
@@ -300,7 +301,7 @@ def _load_module(app, check_prefix, module_dir_name, modules_dir, register_func)
     module_dir = os.path.join(modules_dir, module_dir_name)
     if os.path.isdir(module_dir) and module_dir_name != '.git' and module_dir_name != 'tests' and (
             check_prefix is False or (
-            module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX) and not module_dir_name.endswith('dist-info'))):
+            module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX) and not module_dir_name.endswith('dist-info') and not module_dir_name.endswith('egg-info'))):
 
         # workaround to handle repeating names in module path
         if module_dir_name == modules_dir.rsplit('/', 1)[-1]:
