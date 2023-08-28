@@ -189,7 +189,7 @@ def create_app(instance_path):
             extension_folder = os.path.dirname(extension_abs_path)
             extension_name = os.path.basename(extension_abs_path)
             _append_extension_dir_to_path(app, extension_folder)
-            _load_module(app, True, extension_name, extension_folder, _register_extension)
+            _load_module(app, False, extension_name, extension_folder, _register_extension)
 
     _load_applications(app, register_func=_register_application, module_dirs=APPLICATIONS_DIR)
 
@@ -291,8 +291,9 @@ def _load_applications(app, register_func, module_dirs):
 
 
 def _load_modules(app, modules_dir, check_prefix, register_func):
-    for module_dir_name in os.listdir(modules_dir):
-        _load_module(app, check_prefix, module_dir_name, modules_dir, register_func)
+    if os.path.isdir(modules_dir):
+        for module_dir_name in os.listdir(modules_dir):
+            _load_module(app, check_prefix, module_dir_name, modules_dir, register_func)
 
 
 def _load_module(app, check_prefix, module_dir_name, modules_dir, register_func):
@@ -312,6 +313,11 @@ def _load_module(app, check_prefix, module_dir_name, modules_dir, register_func)
 
 
 def _register_application(app, application_dir, application_name, files):
+
+    _register_extension_components(app, application_name, files)
+    assets_extra = _fast_scan_dir(application_dir + "/static/assets/extra", ['.css', '.js'])[1]
+    app.register_extension_assets(assets_extra)
+
     for file in files:
         module = application_name + '.' + file
 
