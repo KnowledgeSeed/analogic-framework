@@ -309,7 +309,7 @@ def _load_module(app, check_prefix, module_dir_name, modules_dir, register_func)
             module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX) and not module_dir_name.endswith('dist-info') and not module_dir_name.endswith('egg-info'))):
 
         # workaround to handle repeating names in module path
-        if module_dir_name == modules_dir.rsplit('/', 1)[-1]:
+        if module_dir_name == modules_dir.rsplit('/', 1)[-1] or module_dir_name == modules_dir.rsplit('\\', 1)[-1]:
             module_dir_name = module_dir_name + '.' + module_dir_name
 
         files = resources.contents(module_dir_name)
