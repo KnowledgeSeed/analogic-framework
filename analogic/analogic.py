@@ -320,8 +320,10 @@ def _load_module(app, check_prefix, module_dir_name, modules_dir, register_func)
 
 def _register_application(app, application_dir, application_name, files):
     _register_extension_components(app, application_name, files)
-    assets_extra = _fast_scan_dir(application_dir + "/static/assets/extra", ['.css', '.js'])[1]
-    app.register_extension_assets(assets_extra)
+    assets_extra_dir = os.path.join(application_dir, 'static', 'assets', 'extra')
+    if os.path.exists(assets_extra_dir):
+        assets_extra = _fast_scan_dir(assets_extra_dir, ['.css', '.js'])[1]
+        app.register_extension_assets(assets_extra)
 
     for file in files:
         module = application_name + '.' + file
