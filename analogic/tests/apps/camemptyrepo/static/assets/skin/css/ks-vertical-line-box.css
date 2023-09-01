@@ -1,0 +1,39 @@
+.ks-vertical-line-box {
+    position: absolute;
+    z-index: 9999;
+}
+
+.ks-vertical-line {
+    position: absolute;
+    height: 100%;
+}
+
+.ks-vertical-label {
+    padding: 2px;
+    position: absolute;
+    transform: translate(-50%, -100%);
+    white-space: nowrap;
+}
+
+.ks-vertical-label.hidden {
+    opacity: 0;
+}
+
+.ks-vertical-title {
+    padding: 2px;
+    position: absolute;
+    transform: translate(-50%, -200%);
+    white-space: nowrap;
+}
+
+.ks-vertical-line-has-label, .ks-vertical-line-has-title {
+    height: 20px;
+}
+
+.ks-vertical-line-has-label.ks-vertical-line-has-title {
+    height: 40px;
+}
+
+.ks-vertical-line.ks-vertical-line-has-title  {
+    height: 100%;
+}

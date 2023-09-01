@@ -332,8 +332,6 @@ class Widget {
 
         this.addListeners(false);
 
-        this.addDependents();
-
         if (new o.type(o).amIOnAGridTable()) {
             Listeners.push({options: o, method: 'refreshGridCell', eventName: 'forcerefresh.' + o.id, handler: h});
         }

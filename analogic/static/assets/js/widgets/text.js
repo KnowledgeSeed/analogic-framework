@@ -10,7 +10,8 @@ class TextWidget extends Widget {
 
         this.setValues(v);
 
-        let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d).concat(this.getHtmlComponentStylesArray('main', d)),
+        let mainDivClass = [],
+            mainDivStyle = this.getGeneralStyles(d).concat(this.getHtmlComponentStylesArray('main', d)),
             titleStyles = this.getHtmlComponentStylesArray('title', d),
             bodyStyles = this.getHtmlComponentStylesArray('body', d),
             innerStyles = this.getHtmlComponentStylesArray('inner', d),
@@ -48,7 +49,7 @@ class TextWidget extends Widget {
 <div class="ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}" style="${mainDivStyle.join('')}">
     <div class="ks-text-inner" style="${innerStyles.join('')}" data-id="${o.id}" data-action="text_click" data-ordinal="${v.ordinal}">
         <div class="ks-text-icon" data-id="${o.id}" data-action="${v.iconCustomEventName ? v.iconCustomEventName : 'perform'}" data-ordinal="${v.ordinal}"><span style="${iconStyles.join('')}" class="${v.icon}"></span></div>
-        <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title ? Utils.htmlEncode(Utils.stripHtml(v.title))  : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title !== false ? v.title : ''}</div>
+        <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title ? Utils.htmlEncode(Utils.stripHtml(v.title)) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title !== false ? v.title : ''}</div>
         <div class="ks-text-body" style="${bodyStyles.join('')}">${v.body !== false ? v.body : ''}</div>
     </div>
 </div>`;
@@ -58,19 +59,21 @@ class TextWidget extends Widget {
         this.value = v.title;
         this.editable = v.editable;
         this.performable = v.performable;
+        this.pasteDataByServerSide = v.pasteDataByServerSide;
     }
 
     reset() {
         delete this.value;
         delete this.editable;
         delete this.performable;
+        delete this.pasteDataByServerSide;
     }
 
     changeEvents(title, section, editable, performable) {
         title.unbind('contextmenu');
         title.off('click');
         if (editable || performable) {
-            TextWidget.addEdit(section, this.options, this.amIOnAGridTable());
+            TextWidget.addEdit(section, this.options, this.amIOnAGridTable(), this.pasteDataByServerSide);
         }
     }
 
@@ -159,6 +162,7 @@ class TextWidget extends Widget {
             innerHeight: this.getRealValue('innerHeight', d, false),
             innerWidth: this.getRealValue('innerWidth', d, false),
             innerCursor: this.getRealValue('innerCursor', d, false),
+            pasteDataByServerSide: this.getRealValue('pasteDataByServerSide', d, false),
             performable: this.getRealValue('performable', d, false),
             skin: this.getRealValue('skin', d, 'template1'),
             title: this.getRealValue('title', d, false),
@@ -179,7 +183,7 @@ class TextWidget extends Widget {
         const section = this.getSection(), o = this.options;
 
         if (this.editable || this.performable) {
-            TextWidget.addEdit(section, o, this.amIOnAGridTable());
+            TextWidget.addEdit(section, o, this.amIOnAGridTable(), this.pasteDataByServerSide);
         }
 
         section.find('.ks-text-inner').on('click', (e) => {
@@ -282,7 +286,7 @@ class TextWidget extends Widget {
         }
 
         section.find('.ks-text').removeClass('ks-on');
-        TextWidget.addEdit(section, o, true);
+        TextWidget.addEdit(section, o, true, false);
     }
 
     static createEditableRows(editables, currentIndex) {
@@ -341,7 +345,7 @@ class TextWidget extends Widget {
         return j;
     }
 
-    static addEdit(section, o, amIOnGridTable) {
+    static addEdit(section, o, amIOnGridTable, pasteDataByServerSide) {
         let textTitle = section.find('.ks-text-title');
         if (amIOnGridTable === true) {
             textTitle.bind('contextmenu', e => {
@@ -383,7 +387,7 @@ class TextWidget extends Widget {
 
                     c.html(r.val());
                     ksText.removeClass('ks-on');
-                    TextWidget.addEdit(section, o, amIOnGridTable);
+                    TextWidget.addEdit(section, o, amIOnGridTable, pasteDataByServerSide);
                 });
                 if (amIOnGridTable === true) {
                     let gridId = r.data('id').split('_')[0];
@@ -401,7 +405,7 @@ class TextWidget extends Widget {
                             }
                             c.html(r.val());
                             ksText.removeClass('ks-on');
-                            TextWidget.addEdit(section, o, amIOnGridTable);
+                            TextWidget.addEdit(section, o, amIOnGridTable, pasteDataByServerSide);
                         }
                         if (f.keyCode === 39 || f.keyCode === 37) {
                             let editables = TextWidget.getEditables(gridId),
@@ -429,6 +433,20 @@ class TextWidget extends Widget {
                         }
 
                         if (f.ctrlKey && f.keyCode === 86) {
+                            if (pasteDataByServerSide) {
+                                navigator.clipboard.readText().then(text => {
+                                    let ppId = section.attr('id'), pp = $('<div>').data('id', ppId).data('action', 'pasteDataByServerSide').data('value', text);
+                                    if (amIOnGridTable) {
+                                        Widget.doHandleGridTableSystemEvent(pp, f);
+                                    }
+
+                                    Widget.doHandleSystemEvent(pp, f);
+                                }).catch(err => L('Read from clipboard failed: ', err));
+                                c.html('pasting..');
+                                ksText.removeClass('ks-on');
+                                TextWidget.addEdit(section, o, amIOnGridTable, pasteDataByServerSide);
+                                return false;
+                            }
                             let editables = TextWidget.getEditables(gridId),
                                 j = TextWidget.getCurrentIndex(editables, c);
                             if (j >= 0 && editables.length > 0) {

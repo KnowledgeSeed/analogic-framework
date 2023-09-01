@@ -33,8 +33,8 @@ class LineAreaChartWidget extends Widget {
 
         const demoDatasets = [
             {borderColor: 'black', labelBorderColor: '#000000', labelBackgroundColor: '#FFFFFF', labelColor: 'blue', labelBorderWidth: 2, borderWidth: 3, backgroundColor: 'rgba(255, 10, 13, 0.4)', fill: false, legendLabel: 'Legend1', labelVisible: true, borderDash: [5, 5]},
-            {legendLabel: 'Legend2', borderWidth: 2, borderColor: 'red', backgroundColor: 'rgba(10, 255, 13, 0.4)', fill: true, lineTension: 0.5, labelVisible: true},
-            {legendLabel: 'Legend3', borderColor: 'blue', backgroundColor: 'blue', fill: true, lineTension: 0.5},
+            {legendLabel: 'Legend2', borderWidth: 2, borderColor: 'red', backgroundColor: 'red', hoverBackgroundColor: 'darkblue', fill: true, lineTension: 0.5, labelVisible: true},
+            {legendLabel: 'Legend3', borderColor: 'blue', backgroundColor: 'blue', hoverBackgroundColor: 'yellow', fill: true, lineTension: 0.5},
             {legendLabel: 'Legend4', borderColor: 'brown', backgroundColor: 'brown', fill: true, lineTension: 0.5},
             {legendLabel: 'Legend5', borderColor: 'orange', backgroundColor: 'orange', fill: true, lineTension: 0.5}
         ];
@@ -42,7 +42,7 @@ class LineAreaChartWidget extends Widget {
         const demoData = [
             [{label: '2019'}, {label: '2020'}, {label: '2021'}, {label: '2022'}, {label: '2023'}, {label: '2024'}, {label: '2025'}],
             [
-                [{value: 20}, {value: 10}, {value: 15}, {value: 18}, {value: 20}],
+                [{value: 20, displayValue: 'Display Value'}, {value: 10}, {value: 15}, {value: 18}, {value: 20}],
                 [{value: 30}, {value: 20}, {value: 25}, {value: 28}, {value: 30}],
                 [{value: 40}, {value: 30}, {value: 35}, {value: 38}, {value: 40}],
                 [{value: 50}, {value: 40}, {value: 45}, {value: 48}, {value: 50}],
@@ -128,7 +128,7 @@ class LineAreaChartWidget extends Widget {
     initEventHandlers() {
         const o = this.options, a = $('#' + o.id + 'Canvas');
 
-        const c = new Chart(a[0].getContext('2d'), this.getChartConfig(this.value));
+        const c = new Chart(a[0].getContext('2d'), this.getChartConfig());
 
         a.parent().next().html(c.generateLegend()).on('click', '.ks-legend-item', e => {
             let legend = $(e.target).closest('.ks-legend-item').toggleClass('off'), id = legend.data('id');
@@ -149,8 +149,8 @@ class LineAreaChartWidget extends Widget {
         }
     }
 
-    getChartConfig(v) {
-        let datasets = v.datasets, d = v.data[v.data.length - 1], j, i, xValues = v.data[0].map(e => e.label), data, len = d.length;
+    getChartConfig() {
+        let v = this.value, datasets = Utils.clone(v.datasets, true, false), d = v.data[v.data.length - 1], j, i, xValues = v.data[0].map(e => e.label), data, len = d.length, lastHoveredDatasetIndex;
 
         const yAxesUnit = v.yAxesUnit, yAxesDecimalNum = v.yAxesDecimalNum, yAxesSeparatesThousands = v.yAxesSeparatesThousands, yAxesTicksPrecisionFixed = v.yAxesTicksPrecisionFixed;
 
@@ -163,7 +163,7 @@ class LineAreaChartWidget extends Widget {
 
             datasets[i].data = data;
         }
-
+        L(d)
         return {
             type: 'line',
             data: {
@@ -294,8 +294,8 @@ class LineAreaChartWidget extends Widget {
                             right: 10,
                             bottom: 0
                         },
-                        formatter: v => {
-                            v = Utils.precisionRound('number' === typeof v ? v : v.y, yAxesDecimalNum, yAxesTicksPrecisionFixed);
+                        formatter: (v, o) => {
+                            v = d[o.dataIndex][o.datasetIndex].displayValue ?? Utils.precisionRound('number' === typeof v ? v : v.y, yAxesDecimalNum, yAxesTicksPrecisionFixed);
 
                             return (yAxesSeparatesThousands ? Utils.separatesThousands(v) : v) + yAxesUnit;
                         }
@@ -306,10 +306,10 @@ class LineAreaChartWidget extends Widget {
                     mode: v.tooltipsMode,
                     intersect: v.tooltipsIntersect,
                     callbacks: {
-                        label: d => {
-                            d = Utils.precisionRound(d.value, yAxesDecimalNum, yAxesTicksPrecisionFixed);
+                        label: v => {
+                            v = d[v.index][v.datasetIndex].displayValue ?? Utils.precisionRound(v.value, yAxesDecimalNum, yAxesTicksPrecisionFixed);
 
-                            return (yAxesSeparatesThousands ? Utils.separatesThousands(d) : d) + yAxesUnit;
+                            return (yAxesSeparatesThousands ? Utils.separatesThousands(v) : v) + yAxesUnit;
                         }
                     }
                 },
@@ -340,6 +340,21 @@ class LineAreaChartWidget extends Widget {
                     intersect: false,
                     animationDuration: 0
                 },
+                onHover: (e, c) => {
+                    let t = e.type, i = (c[0] || {})._datasetIndex;
+
+                    if ('mousemove' === t && i !== lastHoveredDatasetIndex) {
+                        lastHoveredDatasetIndex = i;
+
+                        this.setOriginalBackgroundForDatasets();
+
+                        this.setHoverBackgroundForDataset(i);
+                    } else if ('mouseout' === t) {
+                        lastHoveredDatasetIndex = null;
+
+                        this.setOriginalBackgroundForDatasets();
+                    }
+                },
                 onResize: () => setTimeout(() => this.adjustVerticalLineBox(), 100),
                 responsiveAnimationDuration: 0,
                 responsive: true,
@@ -362,6 +377,28 @@ class LineAreaChartWidget extends Widget {
                 }
             }
         };
+    }
+
+    setOriginalBackgroundForDatasets() {
+        let o = this.value.datasets, i;
+
+        for (i = 0; i < o.length; ++i) {
+            this.chart.data.datasets[i].backgroundColor = o[i].backgroundColor;
+        }
+
+        this.chart.update();
+    }
+
+    setHoverBackgroundForDataset(i) {
+        let b = (this.value.datasets[i] ?? {}).hoverBackgroundColor;
+
+        if (!b) {
+            return;
+        }
+
+        this.chart.data.datasets[i].backgroundColor = b;
+
+        this.chart.update();
     }
 
     adjustVerticalLineBox() {

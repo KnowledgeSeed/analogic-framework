@@ -1,7 +1,7 @@
-
 /* global app, Chart, Infinity, Utils, Widget */
 
 'use strict';
+
 class LineScatterComboWidget extends Widget {
 
     getHtml(widgets, d) {
@@ -77,6 +77,7 @@ class LineScatterComboWidget extends Widget {
             yAxisTicksOffset: this.getRealValue('yAxisTicksOffset', d, 0),
             yAxisTicksPrecision: this.getRealValue('yAxisTicksPrecision', d, 1),
             yAxisTicksPrecisionFixed: this.getRealValue('yAxisTicksPrecisionFixed', d, false),
+            yAxisSeparatesThousands: this.getRealValue('yAxisSeparatesThousands', d, true),
             yAxisGridLinesNum: this.getRealValue('yAxisGridLinesNum', d, 10),
             rightBorderVisible: this.getRealValue('rightBorderVisible', d, false),
             topBorderVisible: this.getRealValue('topBorderVisible', d, false),
@@ -163,7 +164,7 @@ class LineScatterComboWidget extends Widget {
 
     getChartConfig() {
         const data = [], xEdges = [], v = this.value, selectedDatasetIds = [], datasets = v.datasets, auxLineData = [], id = this.id, len = datasets.length;
-        const yAxisTicksPrecision = v.yAxisTicksPrecision, yAxisTicksPrecisionFixed = v.yAxisTicksPrecisionFixed, yAxisUnit = v.yAxisUnit;
+        const yAxisTicksPrecision = v.yAxisTicksPrecision, yAxisTicksPrecisionFixed = v.yAxisTicksPrecisionFixed, yAxisUnit = v.yAxisUnit, yAxisSeparatesThousands = v.yAxisSeparatesThousands;
         const stepSize = v.yAxisGridLinesNum ? v.yAxisGridLinesNum + 1 : 0, defaultBorderWidth = v.bezierCurveBorderWidth, defaultLineTension = v.bezierCurveTension;
 
         let e, f, yMin = Infinity, yMax = -Infinity, c, d, r, o, i, j = 0, order;
@@ -184,7 +185,7 @@ class LineScatterComboWidget extends Widget {
             }
 
             if (f.length) {
-                d.staticDatasetId = len -1 + ++j;
+                d.staticDatasetId = len - 1 + ++j;
                 r = {...d};
                 r.values = f;
                 r.showLine = false;
@@ -258,7 +259,7 @@ class LineScatterComboWidget extends Widget {
         yMax = $.isNumeric(v.yMax) ? v.yMax : yMax + yBuffer;
 
         for (e of auxLineData) {
-           o = [];
+            o = [];
 
             for (f of e.xValues) {
                 c = e.auxLineColor || defaultAuxLineColor;
@@ -326,7 +327,11 @@ class LineScatterComboWidget extends Widget {
                     mode: v.tooltipsMode,
                     intersect: false,
                     callbacks: {
-                        label: (tooltipItem, data) => Utils.precisionRound(tooltipItem.value, yAxisTicksPrecision, yAxisTicksPrecisionFixed) + yAxisUnit
+                        label: tooltipItem => {
+                            let v = Utils.precisionRound(tooltipItem.value, yAxisTicksPrecision, yAxisTicksPrecisionFixed);
+
+                            return (yAxisSeparatesThousands ? Utils.separatesThousands(v) : v) + yAxisUnit;
+                        }
                     }
                 },
                 legend: {
@@ -334,83 +339,86 @@ class LineScatterComboWidget extends Widget {
                 },
                 scales: {
                     xAxes: [{
-                            type: 'linear',
-                            display: v.xAxisVisible,
-                            scaleLabel: {
-                                display: false
-                            },
-                            ticks: {
-                                display: v.xAxisTicksLabelDisplay,
-                                min: ($.isNumeric(v.xMin) ? v.xMin : parseInt(Math.min(...xEdges))) - (v.xAxisOffsetLeft || v.xAxisOffset),
-                                max: ($.isNumeric(v.xMax) ? v.xMax : parseInt(Math.max(...xEdges))) + (v.xAxisOffsetRight || v.xAxisOffset),
-                                stepSize: v.xAxisTicksStepSize,
-                                fontSize: v.xAxisTicksFontSize,
-                                fontFamily: v.xAxisTicksFontFamily,
-                                fontStyle: v.xAxisTicksFontStyle,
-                                fontColor: v.xAxisTicksFontColor,
-                                labelOffset: v.xAxisTicksOffset,
-                                padding: v.xAxisTicksPadding,
-                                autoSkip: true
-                            },
-                            gridLines: {
-                                offsetGridLines: v.xAxisOffsetGridLines,
-                                drawTicks: v.xAxisTicksDisplay,
-                                display: v.xAxisGridLinesDisplay,
-                                drawOnChartArea: v.xAxisGridLinesDrawOnChartArea
-                            }
-                        }, {
-                            id: 'topBorder',
-                            display: v.topBorderVisible,
-                            position: 'top',
-                            ticks: {
-                                display: false
-                            },
-                            gridLines: {
-                                drawOnChartArea: false,
-                                drawTicks: false,
-                                lineWidth: 2
-                            }
+                        type: 'linear',
+                        display: v.xAxisVisible,
+                        scaleLabel: {
+                            display: false
+                        },
+                        ticks: {
+                            display: v.xAxisTicksLabelDisplay,
+                            min: ($.isNumeric(v.xMin) ? v.xMin : parseInt(Math.min(...xEdges))) - (v.xAxisOffsetLeft || v.xAxisOffset),
+                            max: ($.isNumeric(v.xMax) ? v.xMax : parseInt(Math.max(...xEdges))) + (v.xAxisOffsetRight || v.xAxisOffset),
+                            stepSize: v.xAxisTicksStepSize,
+                            fontSize: v.xAxisTicksFontSize,
+                            fontFamily: v.xAxisTicksFontFamily,
+                            fontStyle: v.xAxisTicksFontStyle,
+                            fontColor: v.xAxisTicksFontColor,
+                            labelOffset: v.xAxisTicksOffset,
+                            padding: v.xAxisTicksPadding,
+                            autoSkip: true
+                        },
+                        gridLines: {
+                            offsetGridLines: v.xAxisOffsetGridLines,
+                            drawTicks: v.xAxisTicksDisplay,
+                            display: v.xAxisGridLinesDisplay,
+                            drawOnChartArea: v.xAxisGridLinesDrawOnChartArea
                         }
+                    }, {
+                        id: 'topBorder',
+                        display: v.topBorderVisible,
+                        position: 'top',
+                        ticks: {
+                            display: false
+                        },
+                        gridLines: {
+                            drawOnChartArea: false,
+                            drawTicks: false,
+                            lineWidth: 2
+                        }
+                    }
                     ],
                     yAxes: [{
-                            display: v.yAxisVisible,
-                            scaleLabel: {
-                                display: false
+                        display: v.yAxisVisible,
+                        scaleLabel: {
+                            display: false
+                        },
+                        ticks: {
+                            display: v.yAxisTicksLabelDisplay,
+                            min: yMin,
+                            max: yMax,
+                            stepSize: stepSize ? (yMax - yMin) / stepSize : 0,
+                            callback: (val, i, all) => {
+                                i = (!i && stepSize && (all.length > stepSize + 1)) ? '' : Utils.precisionRound(val, yAxisTicksPrecision, yAxisTicksPrecisionFixed);
+
+                                return (yAxisSeparatesThousands ? Utils.separatesThousands(i) : i) + yAxisUnit;
                             },
-                            ticks: {
-                                display: v.yAxisTicksLabelDisplay,
-                                min: yMin,
-                                max: yMax,
-                                stepSize: stepSize ? (yMax - yMin) / stepSize : 0,
-                                callback: (val, i, all) =>  (!i && stepSize && (all.length > stepSize + 1)) ? '' : Utils.precisionRound(val, yAxisTicksPrecision, yAxisTicksPrecisionFixed) + yAxisUnit,
-                                fontSize: v.yAxisTicksFontSize,
-                                fontFamily: v.yAxisTicksFontFamily,
-                                fontStyle: v.yAxisTicksFontStyle,
-                                fontColor: v.yAxisTicksFontColor,
-                                labelOffset: v.yAxisTicksOffset,
-                                padding: v.yAxisTicksPadding,
-                                autoSkip: false,
-                                beginAtZero: false
-                            },
-                            gridLines: {
-                                drawTicks: v.yAxisTicksDisplay,
-                                display: v.yAxisGridLinesDisplay,
-                                drawOnChartArea: v.yAxisGridLinesDrawOnChartArea
-                            }
-                        }, {
-                            id: 'rightBorder',
-                            display: v.rightBorderVisible,
-                            position: 'right',
-                            ticks: {
-                                display: false
-                            },
-                            gridLines: {
-                                drawOnChartArea: false,
-                                drawTicks: false,
-                                lineWidth: 2
-                            }
+                            fontSize: v.yAxisTicksFontSize,
+                            fontFamily: v.yAxisTicksFontFamily,
+                            fontStyle: v.yAxisTicksFontStyle,
+                            fontColor: v.yAxisTicksFontColor,
+                            labelOffset: v.yAxisTicksOffset,
+                            padding: v.yAxisTicksPadding,
+                            autoSkip: false,
+                            beginAtZero: false
+                        },
+                        gridLines: {
+                            drawTicks: v.yAxisTicksDisplay,
+                            display: v.yAxisGridLinesDisplay,
+                            drawOnChartArea: v.yAxisGridLinesDrawOnChartArea
                         }
-                    ]
+                    }, {
+                        id: 'rightBorder',
+                        display: v.rightBorderVisible,
+                        position: 'right',
+                        ticks: {
+                            display: false
+                        },
+                        gridLines: {
+                            drawOnChartArea: false,
+                            drawTicks: false,
+                            lineWidth: 2
+                        }
+                    }]
                 },
                 layout: {
                     padding: {

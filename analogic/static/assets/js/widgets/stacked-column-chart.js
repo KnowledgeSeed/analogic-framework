@@ -300,6 +300,12 @@ class StackedColumnChartWidget extends Widget {
             }
         }
 
+        for (d of datasets) {
+            if ('line' === d.type) {
+                d.yAxisID = 'y1';
+            }
+        }
+
         yTotal = yMax - yMin;
 
         yMin -= this.calculateYMarginValue(v.yMarginBottom, yTotal);
@@ -591,6 +597,94 @@ class StackedColumnChartWidget extends Widget {
     }
 
     getDemoData() {
+        return {
+            labels: [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032],
+            arrows: [
+                {label: 'CAGR 16%', arrowLength: 0.985, labelAlign: 'bottom', labelAnchor: 'start', labelOffset: 10},
+                {label: '- 3%'}, {label: '2%'}, {label: '- 3%'}, {label: '2%'}, {label: '- 3%'}, {label: '2%'}, {label: '- 3%'}, {label: '2%'}, {label: '- 3%'}, {label: '2%'}, {label: '- 3%'}, {label: '2%'}, {label: '- 3%'}, {label: '2%'}
+            ],
+            datasets: [
+                {
+
+                    label: 'Sales',
+                    type: 'line',
+                    data: [890000, 80570, 89140, 89171, 892800, 89850, 89320, 893090, 89560, 89530, 89700, 892700, 89840, 89710, 97980],
+                    backgroundColor: '#E40046',
+                    labelBackgroundColor: '#E40046',
+                    borderColor: '#E40046',
+                    parsing: true,
+                    labelVisible: false,
+                    borderDash: [5, 5],
+                    lineTension: 0.1,
+                    tooltipsEnabled: false,
+                    //order: 1,
+                    //stack: 'stackId',
+                    //clip: {left: 105, top: false, right: -200, bottom: -20},
+                    //hidden: false,
+                },
+                {
+                    label: 'Other revenue',
+                    data: [164000, 164492, 164984, 165476, 165968, 166460, 166952, 167444, 167936, 168428, 168920, 169412, 169904, 170396, 170888],
+                    backgroundColor: '#80B3E6',
+
+                    labelBackgroundColor: '#80B3E6',
+                    tooltipsEnabled: false
+                },
+                {
+                    label: 'Cost of Sales',
+                    data: [84000, 84252, 84504, 84756, 85008, 85260, 85512, 85764, 86016, 86268, 86520, 86772, 87024, 87276, 87528],
+                    backgroundColor: '#0066CC',
+                    labelBackgroundColor: '#0066CC',
+                },
+                {
+                    label: 'Gross Profit',
+                    data: [110000, 110330, 110660, 110990, 111320, 111650, 111980, 112310, 112640, 112970, 113300, 113630, 113960, 114290, 114620],
+                    backgroundColor: '#E40046',
+                    labelBackgroundColor: '#E40046',
+                },
+                {
+                    label: 'Research & Development',
+                    type: 'line',
+                    lineTension: 0.1,
+                    data: [40000, 40120, 40240, 40360, 40480, 40600, 40720, 40840, 40960, 41080, 41200, 41320, 41440, 41560, 41680],
+                    backgroundColor: '#ED8B00',
+                    borderColor: '#ED8B00',
+                    labelBackgroundColor: '#ED8B00',
+                },
+                {
+                    label: 'Selling, General & Admin',
+                    data: [164000, 164492, 164984, 165476, 165968, 166460, 166952, 167444, 167936, 168428, 168920, 169412, 169904, 170396, 170888],
+                    backgroundColor: '#A05EB5',
+                    labelBackgroundColor: '#A05EB5',
+                },
+                {
+                    label: 'Other op (Income) & Exp',
+                    data: [84000, 84252, 84504, 84756, 85008, 85260, 85512, 85764, 86016, 86268, 86520, 86772, 87024, 87276, 87528],
+                    backgroundColor: '#B1B3B3',
+                    labelBackgroundColor: '#B1B3B3',
+                },
+                {
+                    label: 'Operating Profit',
+                    data: [110000, 110330, 110660, 110990, 111320, 111650, 111980, 112310, 112640, 112970, 113300, 113630, 113960, 114290, 114620],
+                    backgroundColor: '#1DCE8C',
+                    labelBackgroundColor: '#1DCE8C',
+                },
+                {
+                    label: 'Market Share',
+                    type: 'line',
+                    lineTension: 0.1,
+                    arrowMarginTop: '40%',
+                    data: [40000, 40120, 40240, 40360, 40480, 40600, 40720, 20840, 40960, 41080, 41200, 41320, 41440, 41560, 41680],
+                    backgroundColor: '#00965E',
+                    borderColor: '#00965E',
+                    labelBackgroundColor: '#00965E',
+                }
+            ]
+
+        }
+    }
+
+    getDemoData2() {
         return {
             labels: [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032],
             arrows: [

@@ -94,3 +94,15 @@ class LoginBasic(AuthenticationProvider):
 
         return tm1_service
 
+    @staticmethod
+    def get_setting_parameter_descriptions():
+        result = super(LoginBasic, LoginBasic).get_setting_parameter_descriptions()
+        result['proxy'] = {
+            'target': {
+                'required': True,
+                'description': 'Tm1 restapi url.'
+            }
+        }
+
+        return result
+

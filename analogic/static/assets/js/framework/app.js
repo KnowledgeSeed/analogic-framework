@@ -5,7 +5,9 @@
 const Doc = $(document), El = {body: $('body')}, PageState = {current: '', previous: ''},
     Extensions = {
         authenticationProviders: [],
-        writeExecutors: []
+        writeExecutors: [],
+        pageRender: [],
+        appInitialization: []
     },
     Widgets = {infoData: {}},
     Api = {};
@@ -13,9 +15,9 @@ const Doc = $(document), El = {body: $('body')}, PageState = {current: '', previ
 let EventMap, Repository, WidgetConfig;
 
 app.handleAjaxError = (response, widgetId) => {
-    const m = (response.responseJSON ? response.responseJSON.error.message : response.responseText);
+    const m = (response.responseJSON ? response.responseJSON.message : response.responseText);
 
-    if( Widgets[widgetId] && Widgets[widgetId].options.muteAjaxErrorHandler) {
+    if (Widgets[widgetId] && Widgets[widgetId].options.muteAjaxErrorHandler) {
         return;
     }
 
@@ -32,9 +34,9 @@ app.handleJsError = (error, widgetId, functionName, message) => {
     throw error;
 };
 
-window.onerror =  (msg, url, lineNum, colNum, error) => {
+window.onerror = (msg, url, lineNum, colNum, error) => {
     app.hasError = true;
-    Api.showPopup(msg + '<br/>' + url + '<br/> in line ' + lineNum + ' column ' + colNum , 800);
+    Api.showPopup(msg + '<br/>' + url + '<br/> in line ' + lineNum + ' column ' + colNum, 800);
     return false;
 };
 
@@ -59,7 +61,7 @@ window.onerror =  (msg, url, lineNum, colNum, error) => {
     function loadWidget(wc, parent = Widgets, parentId = null) {
         if (wc.import) {
             let wci = v(wc.import, WidgetConfig);
-            if(wci === false) {
+            if (wci === false) {
                 console.error('WidgetConfig import error: ' + wc.import + ' not found');
             }
             let w = new wci.type(wci);
@@ -68,7 +70,7 @@ window.onerror =  (msg, url, lineNum, colNum, error) => {
                 (wci.widgets || []).forEach(w => loadWidget(w, parent, wci.id));
             }
         } else {
-            if(wc.id.includes('_')) {
+            if (wc.id.includes('_')) {
                 console.warn('Widget id must not contain underscore: ' + wc.id);
             }
             if (parent[wc.id]) {
@@ -87,6 +89,8 @@ window.onerror =  (msg, url, lineNum, colNum, error) => {
 
         app.id = Utils.getRandomId();
 
+        Extensions.appInitialization.forEach(ext => ext.execute());
+
         app.checkScreenResolutionWarningDisplayed = false;
 
         initEvents();
@@ -95,6 +99,7 @@ window.onerror =  (msg, url, lineNum, colNum, error) => {
 
         Widgets[app.mainPage].renderWidget().then(() => Utils.checkScreenResolution());
     }
+
 
     function initEvents() {
         window.onbeforeunload = () => 'Logout';
