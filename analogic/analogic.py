@@ -249,7 +249,6 @@ def _append_extension_dir_to_path(app, modules_dir_name):
 
 def _register_extension(app, extension_dir, extension_dir_name, modules):
     _register_extension_components(app, extension_dir_name, modules)
-
     _register_extension_assets(app, extension_dir)
 
 
@@ -269,15 +268,22 @@ def _register_extension_components(app, extension_name, files):
         for name, obj in inspect.getmembers(sys.modules[module]):
             if inspect.isclass(obj) and \
                     not inspect.isabstract(obj) and \
-                    issubclass(obj, AuthenticationProvider):
+                    issubclass(obj, AuthenticationProvider) and \
+                    app.authentication_providers.get(name) is None:
+                logging.getLogger(__name__).info('Registering authentication provider ' + extension_name + "." + name)
                 app.register_authentication_provider(name, extension_name)
+
 
             if inspect.isclass(obj) and \
                     not inspect.isabstract(obj) and \
-                    issubclass(obj, Condition):
+                    issubclass(obj, Condition) and \
+                    app.conditions.get(name) is None:
+                logging.getLogger(__name__).info('Registering condition ' + extension_name + "." + name)
                 app.register_condition(name, extension_name)
 
+
             if isinstance(obj, AnalogicEndpoint):
+                logging.getLogger(__name__).info('Registering analogic endpoing ' + name)
                 app.register_analogic_endpoint(obj)
 
 
@@ -300,10 +306,10 @@ def _load_module(app, check_prefix, module_dir_name, modules_dir, register_func)
     module_dir = os.path.join(modules_dir, module_dir_name)
     if os.path.isdir(module_dir) and module_dir_name != '.git' and module_dir_name != 'tests' and (
             check_prefix is False or (
-            module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX) and not module_dir_name.endswith('dist-info'))):
+            module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX) and not module_dir_name.endswith('dist-info') and not module_dir_name.endswith('egg-info'))):
 
         # workaround to handle repeating names in module path
-        if module_dir_name == modules_dir.rsplit('/', 1)[-1]:
+        if module_dir_name == modules_dir.rsplit('/', 1)[-1] or module_dir_name == modules_dir.rsplit('\\', 1)[-1]:
             module_dir_name = module_dir_name + '.' + module_dir_name
 
         files = resources.contents(module_dir_name)
@@ -313,10 +319,11 @@ def _load_module(app, check_prefix, module_dir_name, modules_dir, register_func)
 
 
 def _register_application(app, application_dir, application_name, files):
-
     _register_extension_components(app, application_name, files)
-    assets_extra = _fast_scan_dir(application_dir + "/static/assets/extra", ['.css', '.js'])[1]
-    app.register_extension_assets(assets_extra)
+    assets_extra_dir = os.path.join(application_dir, 'static', 'assets', 'extra')
+    if os.path.exists(assets_extra_dir):
+        assets_extra = _fast_scan_dir(assets_extra_dir, ['.css', '.js'])[1]
+        app.register_extension_assets(assets_extra)
 
     for file in files:
         module = application_name + '.' + file
@@ -326,8 +333,9 @@ def _register_application(app, application_dir, application_name, files):
             continue
 
         for name, obj in inspect.getmembers(sys.modules[module]):
-            if isinstance(obj, Blueprint):
+            if isinstance(obj, Blueprint) and app.analogic_applications.get(obj.name) is None:
                 app.register_application(application_dir=application_dir, blueprint=obj)
+                logging.getLogger(__name__).info('Registering application ' + application_name + " with blueprint " + name)
 
 
 def _fast_scan_dir(directory, ext):
