@@ -5,7 +5,7 @@ app.applicationAssetsUrl = '{{ url_for(cnf.blueprint_static, filename='assets') 
 app.tm1CellsetId = (cellsetId) => `Cellsets('${cellsetId}')?`;
 app.handled401 = false;
 app.pingTime = new Date().getTime();
-{% for key, value in cnf.items() if key not in exclude%}
+{% for key, value in cnf.items() if key not in exclude and not key.startswith('_')%}
     {% if value is string %}
         app['{{ key }}'] = '{{ value|safe }}';
     {% endif %}
