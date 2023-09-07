@@ -12,6 +12,7 @@ class SettingManager:
     def __init__(self, analogic_application_path, instance='default'):
         self.site_root = analogic_application_path
         self.instance = instance
+        self.config_js_name = self.get_config_js_name()
         self.config = self._create_config()
         self.repository = self._create_repository()
         self.custom_objects = self._create_custom_objects()
@@ -46,7 +47,7 @@ class SettingManager:
         return self._get_json_setting('app')
 
     def get_config(self):
-        if not os.path.exists(os.path.join(self.site_root, 'static', 'assets', 'js', 'config.js')):
+        if not os.path.exists(os.path.join(self.site_root, 'static', 'assets', 'js', self.config_js_name)):
             self.save_config_js()
 
         if self.config.get('authenticationModeCondition') is not None:
@@ -89,31 +90,36 @@ class SettingManager:
             setting = json.load(f)
 
         if file_name == 'app':
-            setting['instance'] = self.instance
-            setting['blueprint_static'] = self.instance + '.static'
-            setting['extension_css_asset_names'] = current_app.get_extension_css_asset_names()
-            setting['extension_js_asset_names'] = current_app.get_extension_js_asset_names()
-            setting['version'] = uuid.uuid4().hex[:6].upper()
+            return self.get_app_setting(setting)
 
-            if setting.get('apiSubPath') is None:
-                setting['apiSubPath'] = '/api/v1/'
+        return setting
 
-            if setting.get('authenticationBridge') is None:
-                setting['authenticationBridge'] = ''
+    def get_app_setting(self, setting):
+        setting['instance'] = self.instance
+        setting['blueprint_static'] = self.instance + '.static'
+        setting['extension_css_asset_names'] = current_app.get_extension_css_asset_names()
+        setting['extension_js_asset_names'] = current_app.get_extension_js_asset_names()
+        setting['version'] = uuid.uuid4().hex[:6].upper()
 
-            if setting.get('sessionExpiresInMinutes') is None:
-                setting['sessionExpiresInMinutes'] = 20
+        if setting.get('apiSubPath') is None:
+            setting['apiSubPath'] = '/api/v1/'
 
-            if setting.get('useMinifiedAssets') is None:
-                setting['useMinifiedAssets'] = False
+        if setting.get('authenticationBridge') is None:
+            setting['authenticationBridge'] = ''
 
-            if setting.get('ssl_verify') is None:
-                setting['ssl_verify'] = True
+        if setting.get('sessionExpiresInMinutes') is None:
+            setting['sessionExpiresInMinutes'] = 20
+
+        if setting.get('useMinifiedAssets') is None:
+            setting['useMinifiedAssets'] = False
+
+        if setting.get('ssl_verify') is None:
+            setting['ssl_verify'] = True
 
         return setting
 
     def save_config_js(self, exclude=[]):
-        js_url = os.path.join(self.site_root, 'static', 'assets', 'js', 'config.js')
+        js_url = os.path.join(self.site_root, 'static', 'assets', 'js', self.config_js_name)
         with open(js_url, 'w', encoding="utf-8") as f:
             f.write(render_template('config.html', cnf=self.config, exclude=exclude))
 
@@ -147,6 +153,9 @@ class SettingManager:
 
     def get_ssl_verify(self):
         return self.config['ssl_verify']
+
+    def get_config_js_name(self):
+        return 'config.js'
 
     def getLogger(self):
         return self._logger

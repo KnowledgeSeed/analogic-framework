@@ -1,0 +1,40 @@
+from analogic.authentication_provider import AuthenticationProvider
+from analogic.multi_setting import MultiSettingManager
+from flask import current_app, request
+
+
+class MultiAuthenticationProvider(AuthenticationProvider):
+
+    def __init__(self, setting):
+        super().__init__(setting)
+        self.authentication_providers = {}
+
+    def initialize(self):
+        cnf = self.setting.get_config()
+        for name, app_config in cnf.get(MultiSettingManager.AUTHENTICATION_PROVIDERS_APP_KEY_NAME, {}).items():
+            setting = MultiSettingManager(self.setting.site_root, self.setting.get_instance(), name)
+            self.authentication_providers[name] = current_app.create_authentication_provider_by_setting(setting)
+
+    def get_authentication_provider_by_request(self):
+        return self.authentication_providers.get(
+            request.args.get('auth_prov', MultiSettingManager.PRIMARY_AUTHENTICATION_PROVIDER_NAME))
+
+    def check_app_authenticated(self):
+        return self.get_authentication_provider_by_request().check_app_authenticated()
+
+    def get_authentication_required_response(self):
+        return self.get_authentication_provider_by_request().get_authentication_required_response()
+
+    def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies, decode_content=True):
+        return self.get_authentication_provider_by_request()._create_request_with_authenticated_user(url, method, mdx,
+                                                                                                     headers, cookies,
+                                                                                                     decode_content)
+
+    def _extend_login_session(self):
+        self.get_authentication_provider_by_request()._extend_login_session()
+
+    def get_tm1_service(self):
+        return self.get_authentication_provider_by_request().get_tm1_service()
+
+    def index(self):
+        return self.get_authentication_provider_by_request().index()
