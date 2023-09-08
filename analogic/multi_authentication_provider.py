@@ -13,11 +13,16 @@ class MultiAuthenticationProvider(AuthenticationProvider):
         cnf = self.setting.get_config()
         for name, app_config in cnf.get(MultiSettingManager.AUTHENTICATION_PROVIDERS_APP_KEY_NAME, {}).items():
             setting = MultiSettingManager(self.setting.site_root, self.setting.get_instance(), name)
+            if name != MultiSettingManager.PRIMARY_AUTHENTICATION_PROVIDER_NAME:
+                current_app.register_analogic_url_rules('/' + self.setting.get_instance() + '/' + name)
             self.authentication_providers[name] = current_app.create_authentication_provider_by_setting(setting)
 
     def get_authentication_provider_by_request(self):
-        return self.authentication_providers.get(
-            request.args.get('auth_prov', MultiSettingManager.PRIMARY_AUTHENTICATION_PROVIDER_NAME))
+        s = request.path.split('/')
+        if len(s) > 2 and s[2] in self.authentication_providers:
+            return self.authentication_providers[s[2]]
+        else:
+            return self.authentication_providers.get(MultiSettingManager.PRIMARY_AUTHENTICATION_PROVIDER_NAME)
 
     def check_app_authenticated(self):
         return self.get_authentication_provider_by_request().check_app_authenticated()
@@ -38,3 +43,6 @@ class MultiAuthenticationProvider(AuthenticationProvider):
 
     def index(self):
         return self.get_authentication_provider_by_request().index()
+
+    def on_exit(self):
+        pass #Todo implement

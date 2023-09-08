@@ -54,6 +54,7 @@ class Analogic(Flask):
                               provide_automatic_options=url_rule['provide_automatic_options'],
                               **url_rule['options'])
 
+
     def register_analogic_endpoint(self, endpoint: "AnalogicEndpoint", **options: t.Any):
         if endpoint.name not in self.blueprints:
             self.endpoint_rules.extend(endpoint.endpoint_rules)
