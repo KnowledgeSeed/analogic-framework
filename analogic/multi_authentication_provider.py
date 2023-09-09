@@ -1,6 +1,8 @@
 from analogic.authentication_provider import AuthenticationProvider
 from analogic.multi_setting import MultiSettingManager
 from flask import current_app, request
+from analogic.logged_in_signal import logged_in
+from analogic.multi_authentication_provider_interface import MultiAuthenticationProviderInterface
 
 
 class MultiAuthenticationProvider(AuthenticationProvider):
@@ -16,6 +18,15 @@ class MultiAuthenticationProvider(AuthenticationProvider):
             if name != MultiSettingManager.PRIMARY_AUTHENTICATION_PROVIDER_NAME:
                 current_app.register_analogic_url_rules('/' + self.setting.get_instance() + '/' + name)
             self.authentication_providers[name] = current_app.create_authentication_provider_by_setting(setting)
+            logged_in.connect(self.authentication_provider_logged_in, self.authentication_providers[name])
+
+    def authentication_provider_logged_in(self, auth_prov, user_name, password):
+        for name, registered_auth_prov in self.authentication_providers.items():
+            if registered_auth_prov is not auth_prov and isinstance(registered_auth_prov, MultiAuthenticationProviderInterface):
+                try:
+                    registered_auth_prov.do_login(user_name, password)
+                except Exception as e:
+                    self._logger.error(e, exc_info=True)
 
     def get_authentication_provider_by_request(self):
         s = request.path.split('/')
