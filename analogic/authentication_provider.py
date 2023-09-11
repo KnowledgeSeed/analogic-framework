@@ -2,6 +2,7 @@ from flask import session, current_app, send_file, request, jsonify
 from analogic.loader import ClassLoader
 import analogic.pivot as PivotApi
 from analogic.exceptions import AnalogicProxyException, AnalogicAccessDeniedException
+from analogic.session_handler import SessionHandler
 import logging
 import pandas as pd
 from abc import ABC, abstractmethod
@@ -60,12 +61,13 @@ class AuthenticationProvider(ABC):
                'TM1-SessionContext': 'Analogic'}
 
     PERMISSION_QUERIES_KEY = 'analogic_permissions'
-    PERMISSIONS_SESSION_NAME = 'analogic_permission'
+    PERMISSIONS_SESSION_NAME = '_analogic_permission'
 
     def __init__(self, setting):
         self.setting = setting
-        self.logged_in_user_session_name = self.setting.get_instance() + '_logged_in_user_name'
+        self.logged_in_user_session_name = '_logged_in_user_name'
         self._logger = logging.getLogger(self.setting.get_instance())
+        self.session_handler = SessionHandler(self.setting.get_instance() + '_ ' + self.setting.get_name())
 
     def initialize(self):
         self.setting.initialize()
@@ -74,7 +76,7 @@ class AuthenticationProvider(ABC):
         return self.setting
 
     def get_logged_in_user_name(self):
-        return session.get(self.logged_in_user_session_name)
+        return self.session_handler.get(self.logged_in_user_session_name)
 
     @login_required
     def pivot(self):
@@ -249,7 +251,7 @@ class AuthenticationProvider(ABC):
         return resp.get('Cells')[0].get('Value') == 1
 
     def check_permission(self, required_permissions):
-        available_permissions = session.get(self.PERMISSIONS_SESSION_NAME)
+        available_permissions = self.session_handler.get(self.PERMISSIONS_SESSION_NAME)
         available_permissions_list = available_permissions.split(',') if available_permissions is not None else []
         return any(permission in required_permissions for permission in available_permissions_list)
 
@@ -278,11 +280,11 @@ class AuthenticationProvider(ABC):
                 r = response.json()
                 permissions = [str(x['Value']) for x in r['Cells']]
 
-                existing_permissions = session.get(self.PERMISSIONS_SESSION_NAME)
+                existing_permissions = self.session_handler.get(self.PERMISSIONS_SESSION_NAME)
                 existing_permissions_list = existing_permissions.split(',') if existing_permissions is not None else []
 
                 union = list(set(existing_permissions_list + permissions))
-                session[self.PERMISSIONS_SESSION_NAME] = ','.join(union)
+                self.session_handler.set(self.PERMISSIONS_SESSION_NAME,  ','.join(union))
 
         except Exception as e:
             self.getLogger().error(e, exc_info=True)

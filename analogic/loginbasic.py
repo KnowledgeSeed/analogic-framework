@@ -13,7 +13,7 @@ class LoginBasic(AuthenticationProvider, MultiAuthenticationProviderInterface):
 
     def index(self):
         cnf = self.setting.get_config()
-        if self.logged_in_user_session_name in session:
+        if self.session_handler.is_exist(self.logged_in_user_session_name):
             return render_template('index.html', authenticated=True, cnf=cnf)
         return redirect(self.setting.get_base_url('login'))
 
@@ -61,11 +61,11 @@ class LoginBasic(AuthenticationProvider, MultiAuthenticationProviderInterface):
             tm1_service = AnalogicTM1Service(**p)
             self.setting.set_tm1_service(user_name, tm1_service)
 
-        session[self.logged_in_user_session_name] = user_name
+        self.session_handler.set(self.logged_in_user_session_name, user_name)
         self.load_permissions()
 
     def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies, decode_content=True):
-        user_name = session[self.logged_in_user_session_name]
+        user_name = self.get_logged_in_user_name()
         tm1_service = self.setting.get_tm1_service(user_name)
         if tm1_service is None:
             return Response('Unauthorized', status=401, mimetype='application/json')
@@ -80,9 +80,7 @@ class LoginBasic(AuthenticationProvider, MultiAuthenticationProviderInterface):
         return response
 
     def check_app_authenticated(self):
-        if self.logged_in_user_session_name in session:
-            return True
-        return False
+        return self.session_handler.is_exist(self.logged_in_user_session_name)
 
     def get_authentication_required_response(self):
         return redirect(self.setting.get_base_url('login'))
@@ -91,7 +89,7 @@ class LoginBasic(AuthenticationProvider, MultiAuthenticationProviderInterface):
         session.modified = True
 
     def get_tm1_service(self):
-        tm1_service = self.setting.get_tm1_service(session[self.logged_in_user_session_name])
+        tm1_service = self.setting.get_tm1_service(self.get_logged_in_user_name())
         if tm1_service is None:
             raise AnalogicTM1ServiceException('Unauthorized')
 

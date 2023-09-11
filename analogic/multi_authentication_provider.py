@@ -15,14 +15,23 @@ class MultiAuthenticationProvider(AuthenticationProvider):
         cnf = self.setting.get_config()
         for name, app_config in cnf.get(MultiSettingManager.AUTHENTICATION_PROVIDERS_APP_KEY_NAME, {}).items():
             setting = MultiSettingManager(self.setting.site_root, self.setting.get_instance(), name)
-            if name != MultiSettingManager.PRIMARY_AUTHENTICATION_PROVIDER_NAME:
-                current_app.register_analogic_url_rules('/' + self.setting.get_instance() + '/' + name)
-            self.authentication_providers[name] = current_app.create_authentication_provider_by_setting(setting)
-            logged_in.connect(self.authentication_provider_logged_in, self.authentication_providers[name])
+
+            child_auth_prov = current_app.create_authentication_provider_by_setting(setting, False)
+
+            if isinstance(child_auth_prov, MultiAuthenticationProviderInterface):
+                if name != MultiSettingManager.PRIMARY_AUTHENTICATION_PROVIDER_NAME:
+                    current_app.register_analogic_url_rules('/' + self.setting.get_instance() + '/' + name)
+                child_auth_prov.initialize()
+                self.authentication_providers[name] = child_auth_prov
+                logged_in.connect(self.authentication_provider_logged_in, self.authentication_providers[name])
+            else:
+                message = 'Unable to add {0} to multiauthentication provider. It must implement MultiAuthenticationProviderInterface.'.format(
+                    name)
+                self.getLogger().error(message)
 
     def authentication_provider_logged_in(self, auth_prov, user_name, password):
         for name, registered_auth_prov in self.authentication_providers.items():
-            if registered_auth_prov is not auth_prov and isinstance(registered_auth_prov, MultiAuthenticationProviderInterface):
+            if registered_auth_prov is not auth_prov:
                 try:
                     registered_auth_prov.do_login(user_name, password)
                 except Exception as e:
@@ -56,4 +65,9 @@ class MultiAuthenticationProvider(AuthenticationProvider):
         return self.get_authentication_provider_by_request().index()
 
     def on_exit(self):
-        pass #Todo implement
+        for name, registered_auth_prov in self.authentication_providers.items():
+            registered_auth_prov.on_exit()
+
+    def logout(self):
+        for name, registered_auth_prov in self.authentication_providers.items():
+            registered_auth_prov.logout()

@@ -51,6 +51,9 @@ class MultiSettingManager(SettingManager):
     def get_config_js_name(self):
         return 'config{0}.js'.format(self.name)
 
+    def get_name(self):
+        return self.name
+
     def get_base_url(self, route=''):
         base = url_for('core_endpoints.index')
         url = request.environ.get('wsgi.url_scheme') + '://' + request.environ.get('HTTP_HOST')

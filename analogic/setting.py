@@ -50,9 +50,6 @@ class SettingManager:
         if not os.path.exists(os.path.join(self.site_root, 'static', 'assets', 'js', self.config_js_name)):
             self.save_config_js()
 
-        if self.config.get('authenticationModeCondition') is not None:
-            self.config['authenticationMode'] = current_app.evaluate_condition(self.config)
-
         if self.config is not None:
             return self.config
         self.config = self._get_json_setting('app')
@@ -156,6 +153,9 @@ class SettingManager:
 
     def get_config_js_name(self):
         return 'config.js'
+
+    def get_name(self):
+        return ''
 
     def getLogger(self):
         return self._logger

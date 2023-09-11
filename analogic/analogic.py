@@ -10,7 +10,6 @@ import sys
 from importlib import resources
 from analogic.core_endpoints import core_endpoints
 from analogic.authentication_provider import AuthenticationProvider
-from analogic.condition import Condition
 import inspect
 from analogic.setting import SettingManager
 from datetime import timedelta
@@ -91,7 +90,7 @@ class Analogic(Flask):
             setting = SettingManager(analogic_application_path, analogic_application)
             return self.create_authentication_provider_by_setting(setting)
 
-    def create_authentication_provider_by_setting(self, setting):
+    def create_authentication_provider_by_setting(self, setting, initialize=True):
 
         class_name = setting.config['authenticationMode']
         module_name = self.get_authentication_provider_module_name(class_name)
@@ -104,7 +103,8 @@ class Analogic(Flask):
         authentication_provider_class = getattr(module, class_name)
         authentication_provider = authentication_provider_class(setting)
 
-        authentication_provider.initialize()
+        if initialize:
+            authentication_provider.initialize()
 
         return authentication_provider
 
@@ -148,19 +148,6 @@ class Analogic(Flask):
             return authentication_provider.get_authentication_provider_by_request()
 
         return authentication_provider
-
-    def evaluate_condition(self, config):
-        class_name = config.get('authenticationModeCondition')
-        module_name = self.get_condition_module_name(class_name)
-
-        if module_name in sys.modules:
-            module = sys.modules[module_name]
-        else:
-            module = importlib.import_module(module_name)
-
-        condition_class = getattr(module, class_name)
-        condition = condition_class()
-        return condition.get_authentication_provider_name(config)
 
     def on_exit(self):
         print('on_exit')
@@ -282,13 +269,6 @@ def _register_extension_components(app, extension_name, files):
                     app.authentication_providers.get(name) is None:
                 logging.getLogger(__name__).info('Registering authentication provider ' + extension_name + "." + name)
                 app.register_authentication_provider(name, extension_name)
-
-            if inspect.isclass(obj) and \
-                    not inspect.isabstract(obj) and \
-                    issubclass(obj, Condition) and \
-                    app.conditions.get(name) is None:
-                logging.getLogger(__name__).info('Registering condition ' + extension_name + "." + name)
-                app.register_condition(name, extension_name)
 
             if isinstance(obj, AnalogicEndpoint):
                 logging.getLogger(__name__).info('Registering analogic endpoing ' + name)
