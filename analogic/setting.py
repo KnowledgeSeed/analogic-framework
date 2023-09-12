@@ -157,5 +157,8 @@ class SettingManager:
     def get_name(self):
         return ''
 
+    def get_instance_and_name(self):
+        return self.get_instance() + '_' + self.get_name()
+
     def getLogger(self):
         return self._logger

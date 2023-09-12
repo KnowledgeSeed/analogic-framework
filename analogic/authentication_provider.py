@@ -67,7 +67,7 @@ class AuthenticationProvider(ABC):
         self.setting = setting
         self.logged_in_user_session_name = '_logged_in_user_name'
         self._logger = logging.getLogger(self.setting.get_instance())
-        self.session_handler = SessionHandler(self.setting.get_instance() + '_ ' + self.setting.get_name())
+        self.session_handler = SessionHandler(self.setting.get_instance_and_name())
 
     def initialize(self):
         self.setting.initialize()
