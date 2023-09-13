@@ -373,6 +373,9 @@ class AuthenticationProvider(ABC):
     def on_exit(self):
         pass
 
+    def install(self, params):
+        pass
+
     @staticmethod
     def get_setting_parameter_descriptions():
         result = {

@@ -10,8 +10,9 @@ class MultiAuthenticationProvider(AuthenticationProvider):
     def __init__(self, setting):
         super().__init__(setting)
         self.authentication_providers = {}
+        self.instantiate_authentication_providers()
 
-    def initialize(self):
+    def instantiate_authentication_providers(self):
         cnf = self.setting.get_config()
         for name, app_config in cnf.get(MultiSettingManager.AUTHENTICATION_PROVIDERS_APP_KEY_NAME, {}).items():
             setting = MultiSettingManager(self.setting.site_root, self.setting.get_instance(), name)
@@ -71,3 +72,9 @@ class MultiAuthenticationProvider(AuthenticationProvider):
     def logout(self):
         for name, registered_auth_prov in self.authentication_providers.items():
             registered_auth_prov.logout()
+
+    def install(self, params):
+        for name, registered_auth_prov in self.authentication_providers.items():
+            print('Install {0} authentication provider'.format(name))
+            registered_auth_prov.install(params)
+            print('\n')

@@ -44,6 +44,7 @@ class Analogic(Flask):
         self.extension_assets = {}
         self.add_url_rule('/extension_asset', methods=['GET'], view_func=self.extension_asset)
         self.analogic_applications = {}
+        self.initialize_auth_providers = True
 
     def register_analogic_url_rules(self, instance):
         for url_rule in self.endpoint_rules:
@@ -103,7 +104,7 @@ class Analogic(Flask):
         authentication_provider_class = getattr(module, class_name)
         authentication_provider = authentication_provider_class(setting)
 
-        if initialize:
+        if initialize and self.initialize_auth_providers:
             authentication_provider.initialize()
 
         return authentication_provider
@@ -166,8 +167,9 @@ def page_error(e):
     return render_template('500.html', message=message), 500
 
 
-def create_app(instance_path):
+def create_app(instance_path, start_scheduler=True, initialize_auth_providers=True):
     app = Analogic(__name__, instance_path=instance_path)
+    app.initialize_auth_providers = initialize_auth_providers
 
     app.secret_key = b'\x18m\x18\\]\xec\xcf\xbd\xf2\x89\xb9\xa3\x06N\x07\xfd'
 
@@ -208,7 +210,8 @@ def create_app(instance_path):
 
     scheduler.init_app(app)
 
-    scheduler.start()
+    if start_scheduler:
+        scheduler.start()
 
     atexit.register(app.on_exit)
 
