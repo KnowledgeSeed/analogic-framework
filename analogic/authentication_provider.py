@@ -284,7 +284,7 @@ class AuthenticationProvider(ABC):
                 existing_permissions_list = existing_permissions.split(',') if existing_permissions is not None else []
 
                 union = list(set(existing_permissions_list + permissions))
-                self.session_handler.set(self.PERMISSIONS_SESSION_NAME,  ','.join(union))
+                self.session_handler.set(self.PERMISSIONS_SESSION_NAME, ','.join(union))
 
         except Exception as e:
             self.getLogger().error(e, exc_info=True)
@@ -375,6 +375,15 @@ class AuthenticationProvider(ABC):
 
     def install(self, params):
         pass
+
+    def uninstall(self, params):
+        pass
+
+    def add_command_line_parameters(self, ap):
+        pass
+
+    def get_available_backend_methods(self):
+        return ['install']
 
     @staticmethod
     def get_setting_parameter_descriptions():

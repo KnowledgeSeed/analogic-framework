@@ -3,6 +3,7 @@ from analogic.multi_setting import MultiSettingManager
 from flask import current_app, request
 from analogic.logged_in_signal import logged_in
 from analogic.multi_authentication_provider_interface import MultiAuthenticationProviderInterface
+from rich.prompt import Prompt
 
 
 class MultiAuthenticationProvider(AuthenticationProvider):
@@ -74,7 +75,34 @@ class MultiAuthenticationProvider(AuthenticationProvider):
             registered_auth_prov.logout()
 
     def install(self, params):
-        for name, registered_auth_prov in self.authentication_providers.items():
-            print('Install {0} authentication provider'.format(name))
-            registered_auth_prov.install(params)
-            print('\n')
+        child_auth_provider_name = params.get('multiappname')
+        if child_auth_provider_name is not None:
+            print('Install {0}'.format(child_auth_provider_name))
+            self.authentication_providers.get(child_auth_provider_name).install(params)
+        else:
+            for name, registered_auth_prov in self.authentication_providers.items():
+                print('Install {0} authentication provider'.format(name))
+                registered_auth_prov.install(params)
+                print('\n')
+
+    def call_child_auth_provider_methods(self, params):
+        child_auth_provider_name = params.get('multiappname')
+        if child_auth_provider_name is None:
+            child_auth_provider_name = Prompt.ask('Please enter child auth provider name',
+                                                  choices=self.authentication_providers.keys())
+        selected_child_auth_provider = self.authentication_providers.get(child_auth_provider_name)
+        method = Prompt.ask('Please enter method of selected auth provider name',
+                            choices=selected_child_auth_provider.get_available_backend_methods())
+        getattr(selected_child_auth_provider, method)(params)
+
+    def get_available_backend_methods(self):
+        methods = super().get_available_backend_methods()
+        methods.append('call_child_auth_provider_methods')
+        return methods
+
+    def add_command_line_parameters(self, ap):
+        try:
+            ap.add_argument("-ma", "--multiappname", required=False,
+                            help="App id under MultiAuthenticationProvider")
+        except Exception:
+            pass
