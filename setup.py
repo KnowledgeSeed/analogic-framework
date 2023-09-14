@@ -34,4 +34,7 @@ setup(
         'orjson==3.8.6',
         'rich==13.3.5'
     ],
+    entry_points={
+        'console_scripts': ['analogic=analogic.__cli__:main'],
+    }
 )
