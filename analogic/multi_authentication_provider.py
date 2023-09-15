@@ -104,5 +104,7 @@ class MultiAuthenticationProvider(AuthenticationProvider):
         try:
             ap.add_argument("-ma", "--multiappname", required=False,
                             help="App id under MultiAuthenticationProvider")
+            for name, registered_auth_prov in self.authentication_providers.items():
+                registered_auth_prov.add_command_line_parameters(ap)
         except Exception:
             pass
