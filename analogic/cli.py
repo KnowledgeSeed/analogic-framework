@@ -48,6 +48,6 @@ def run_cli():
     if args.get('method') is None:
         args['method'] = Prompt.ask('Please enter {0} app backend method'.format(args.get('application')),
                                     choices=selected_analogic_app.get_available_backend_methods())
-
-    getattr(selected_analogic_app, args.get('method'))(args)
+    with app.app_context():
+        getattr(selected_analogic_app, args.get('method'))(args)
 
