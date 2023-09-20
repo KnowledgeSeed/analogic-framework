@@ -383,7 +383,7 @@ class AuthenticationProvider(ABC):
         pass
 
     def get_available_backend_methods(self):
-        return ['install']
+        return ['install', 'uninstall']
 
     @staticmethod
     def get_setting_parameter_descriptions():

@@ -85,6 +85,17 @@ class MultiAuthenticationProvider(AuthenticationProvider):
                 registered_auth_prov.install(params)
                 print('\n')
 
+    def uninstall(self, params):
+        child_auth_provider_name = params.get('multiappname')
+        if child_auth_provider_name is not None:
+            print('Uninstall {0}'.format(child_auth_provider_name))
+            self.authentication_providers.get(child_auth_provider_name).uninstall(params)
+        else:
+            for name, registered_auth_prov in self.authentication_providers.items():
+                print('Install {0} authentication provider'.format(name))
+                registered_auth_prov.uninstall(params)
+                print('\n')
+
     def call_child_auth_provider_methods(self, params):
         child_auth_provider_name = params.get('multiappname')
         if child_auth_provider_name is None:
