@@ -7,6 +7,7 @@ import logging
 import pandas as pd
 from abc import ABC, abstractmethod
 from functools import wraps
+from werkzeug.datastructures import ImmutableMultiDict
 import orjson
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
@@ -137,6 +138,8 @@ class AuthenticationProvider(ABC):
         if request.args.get('server') is not None or force_server_side_query is True:
             if request.method == 'GET':
                 body = request.args
+            elif len(request.form) > 0:
+                body = request.form.to_dict()
             else:
                 body = orjson.loads(request.data)
             key = body.get('key')

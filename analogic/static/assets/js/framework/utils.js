@@ -391,8 +391,9 @@ const Utils = {
         }
         return object[property];
     },
-    getDecimalFromPercentString(value) {
-        return Utils.parseNumber(value.replace('%', '')) / 100;
+    getDecimalFromPercentString(value, replaceDecimal= false) {
+        let result = Utils.parseNumber(value.replace('%', '')) / 100;
+        return replaceDecimal ? Utils.replaceDecimal(result) : result;
     },
     filterUnique(arr) {
         return arr.filter((v, i, a) => a.indexOf(v) === i);
