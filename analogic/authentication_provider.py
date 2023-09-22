@@ -1,4 +1,4 @@
-from flask import session, current_app, send_file, request, jsonify
+from flask import session, current_app, send_file, request, jsonify, Response
 from analogic.loader import ClassLoader
 import analogic.pivot as PivotApi
 from analogic.exceptions import AnalogicProxyException, AnalogicAccessDeniedException
@@ -7,7 +7,6 @@ import logging
 import pandas as pd
 from abc import ABC, abstractmethod
 from functools import wraps
-from werkzeug.datastructures import ImmutableMultiDict
 import orjson
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
@@ -185,17 +184,14 @@ class AuthenticationProvider(ABC):
         else:
             return ''.encode('utf-8')
 
-    @abstractmethod
     def index(self):
         pass
 
-    @abstractmethod
     def check_app_authenticated(self):
-        return True
+        return self.session_handler.is_exist(self.logged_in_user_session_name)
 
-    @abstractmethod
     def get_authentication_required_response(self):
-        pass
+        return Response('', 401)
 
     def get_not_found_response(self):
         return 'Not found', 404, {'Content-Type': 'application/json'}
@@ -351,9 +347,8 @@ class AuthenticationProvider(ABC):
     def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies, decode_content=True):
         pass
 
-    @abstractmethod
     def _extend_login_session(self):
-        pass
+        session.modified = True
 
     @abstractmethod
     def get_tm1_service(self):
@@ -364,7 +359,7 @@ class AuthenticationProvider(ABC):
         return jsonify({'username': self.get_logged_in_user_name()})
 
     def login(self):
-        pass
+        self.session_handler.set(self.logged_in_user_session_name, '')
 
     def logout(self):
         session.clear()
