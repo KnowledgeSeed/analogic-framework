@@ -1,6 +1,6 @@
 import yaml
 import os
-from flask import json, current_app, url_for, request, render_template
+from flask import json, current_app, url_for, request, render_template, has_request_context
 import logging
 import uuid
 import sys
@@ -117,8 +117,9 @@ class SettingManager:
 
     def save_config_js(self, exclude=[]):
         js_url = os.path.join(self.site_root, 'static', 'assets', 'js', self.config_js_name)
-        with open(js_url, 'w', encoding="utf-8") as f:
-            f.write(render_template('config.html', cnf=self.config, exclude=exclude))
+        if has_request_context():
+            with open(js_url, 'w', encoding="utf-8") as f:
+                f.write(render_template('config.html', cnf=self.config, exclude=exclude))
 
     def _get_yaml_setting(self, file_path):
         with open(os.path.join(self.site_root, file_path + '.yml'), encoding="utf-8") as file:

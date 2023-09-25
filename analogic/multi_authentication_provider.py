@@ -37,6 +37,7 @@ class MultiAuthenticationProvider(AuthenticationProvider):
                 try:
                     registered_auth_prov.do_login(user_name, password)
                 except Exception as e:
+                    # Todo handle authentication failed exception
                     self._logger.error(e, exc_info=True)
 
     def get_authentication_provider_by_request(self):
