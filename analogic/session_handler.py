@@ -17,3 +17,6 @@ class SessionHandler:
 
     def is_exist(self, key):
         return (self.base_prefix + key) in session
+
+    def clear(self):
+        session.clear()

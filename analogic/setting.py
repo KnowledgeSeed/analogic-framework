@@ -60,10 +60,13 @@ class SettingManager:
         return self.config[param_name]
 
     def get_base_url(self, route=''):
-        base = url_for('core_endpoints.index')
-        url = request.environ.get('wsgi.url_scheme') + '://' + request.environ.get('HTTP_HOST')
-        sub_path = [base[:-1], self.instance, route]
-        return url + ('/'.join(filter(lambda x: x != 'default' and x is not None, sub_path)))
+        if has_request_context():
+            base = url_for('core_endpoints.index')
+            url = request.environ.get('wsgi.url_scheme') + '://' + request.environ.get('HTTP_HOST')
+            sub_path = [base[:-1], self.instance, route]
+            return url + ('/'.join(filter(lambda x: x != 'default' and x is not None, sub_path)))
+        else:
+            ''
 
     def _create_repository(self):
         return self._get_yaml_setting(os.path.join('server', 'configs', 'repository'))

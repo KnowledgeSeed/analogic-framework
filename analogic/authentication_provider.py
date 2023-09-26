@@ -362,8 +362,11 @@ class AuthenticationProvider(ABC):
         self.session_handler.set(self.logged_in_user_session_name, '')
 
     def logout(self):
-        session.clear()
+        self.session_handler.clear()
         return 'ok'
+
+    def clear_cache(self):
+        return self.get_setting().clear_cache()
 
     def getLogger(self):
         return self._logger

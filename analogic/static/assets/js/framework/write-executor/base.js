@@ -129,8 +129,8 @@ class WriteExecutor {
         }
 
         Loader.start(true);
-
-        return Auth.getAjaxRequest(QB.getUrl(url), body, type, widgetId, ctx.isResent(), ctx.getEventMapId()).then((d) => {
+        //Todo check source
+        return Auth.getAjaxRequest(QB.getUrl(url, ctx.getObject().source), body, type, widgetId, ctx.isResent(), ctx.getEventMapId()).then((d) => {
             Loader.stop(true);
             L('finished after ajax');
             instance.triggerRepositoryFinished(d);

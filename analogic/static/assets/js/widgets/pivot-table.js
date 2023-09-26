@@ -1968,7 +1968,7 @@ class PivotTableWidget extends Widget {
         let i = this.cellInput, p = i.parent(), url = "/api/v1/Cellsets('" + this.cellsetId + "')/Cells";
 
         let body = '{"Ordinal":' + this.getOrdinalOfCell(p) + ',"Value": \"' + Utils.convertValueToPost(i.val()) + '\"}';
-
+        //Todo add source
         Auth.getAjaxRequest(QB.getUrl(url), body, 'PATCH', this.id)
             .then(() => p.addClass('ok'))
             .fail(() => p.addClass('err'))

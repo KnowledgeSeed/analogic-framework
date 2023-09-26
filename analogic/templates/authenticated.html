@@ -20,7 +20,7 @@
     </head>
     <body>
         {% if (cnf.useMinifiedAssets)%}
-            <script src="{{ url_for(cnf.blueprint_static, filename='assets/js/config.js')}}?v={{cnf.version}}"></script>
+            <script src="{{ url_for(cnf.blueprint_static, filename='assets/js/config' + cnf.auth_prov + '.js')}}?v={{cnf.version}}"></script>
             <script src="{{ url_for('static', filename='assets/js/minified.js')}}?v={{ cnf.version }}" charset="UTF-8"></script>
             <script src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/minified.js')}}?v={{ cnf.version }}" charset="UTF-8"></script>
             <script src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/repository.js')}}')}}?v={{cnf.version}}"></script>

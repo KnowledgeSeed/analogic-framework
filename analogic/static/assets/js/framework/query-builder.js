@@ -92,9 +92,28 @@ QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
     return {url: newUrl + subUrl, body: `{${params.join(',')}}`};
 };
 
-QB.getUrl = (url) => {
+QB.getUrl = (url, source= '') => {
     if (url.includes('proxy')) {
         return url;
     }
-    return app.apiHost ? app.apiHost + url : 'proxy' + url;
+
+    if (app.apiHost) {
+        return app.apiHost + url;
+    }
+
+    if (app.auth_prov) {
+        if (app.auth_prov === 'primary') {
+            return source ? source + '/proxy' + url : 'proxy' + url;
+        } else {
+            let path = window.location.pathname.split('/').filter(s => s !== '');
+            path.pop();
+            if (source) {
+                path.push(source)
+            }
+            return [window.location.origin, ...path, 'proxy'].join('/') + url;
+        }
+    }
+
+    return 'proxy' + url;
+    //return app.apiHost ? app.apiHost + url : source ? source + '/proxy' + url : 'proxy' + url;
 };
