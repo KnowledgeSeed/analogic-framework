@@ -60,9 +60,6 @@ class AuthenticationProvider(ABC):
                'Accept-Encoding': 'gzip, deflate, br',
                'TM1-SessionContext': 'Analogic'}
 
-    PERMISSION_QUERIES_KEY = 'analogic_permissions'
-    PERMISSIONS_SESSION_NAME = '_analogic_permission'
-
     def __init__(self, setting):
         self.setting = setting
         self.logged_in_user_session_name = '_logged_in_user_name'
@@ -144,7 +141,7 @@ class AuthenticationProvider(ABC):
             key = body.get('key')
             if body.get('key_suffix') is not None:
                 key = key + '_' + body['key_suffix']
-            key = key + '_analogic_check_access'
+            key = key + self.get_setting().get_check_access_repository_yml_suffix()
             mdx = self.setting.get_mdx(key)
 
             if mdx is None:
@@ -252,12 +249,19 @@ class AuthenticationProvider(ABC):
         return resp.get('Cells')[0].get('Value') == 1
 
     def check_permission(self, required_permissions):
-        available_permissions = self.session_handler.get(self.PERMISSIONS_SESSION_NAME)
-        available_permissions_list = available_permissions.split(',') if available_permissions is not None else []
+        available_permissions_list = self.get_permission_list()
         return any(permission in required_permissions for permission in available_permissions_list)
 
+    def get_permission_list(self):
+        available_permissions = self.session_handler.get(self.setting.get_permission_session_name())
+        available_permissions_list = available_permissions.split(',') if available_permissions is not None else []
+        return available_permissions_list
+
+    def set_permissions(self, permissions_str):
+        self.session_handler.set(self.setting.get_permission_session_name(), permissions_str)
+
     def load_permissions(self):
-        permission_queries = self.setting.get_mdx(self.PERMISSION_QUERIES_KEY)
+        permission_queries = self.setting.get_mdx(self.setting.get_permission_query_repository_yml_key())
         if permission_queries is not None:
             for permission_query_params in permission_queries:
                 self.execute_permission_query(permission_query_params)
@@ -275,19 +279,23 @@ class AuthenticationProvider(ABC):
             response = self.do_proxy_request(url, params['method'], body.encode('utf-8'), headers, cookies, True)
 
             if response.status_code > 300:
+                self._logger.error(
+                    'Unable to load permissions {0} {1}'.format(self.setting.get_instance(), self.setting.get_name()))
                 self._logger.error('MDX error: ' + response.text)
-                self._logger.error('MDX: ' + body.decode('utf-8'))
+                self._logger.error('MDX: ' + body)
             else:
                 r = response.json()
                 permissions = [str(x['Value']) for x in r['Cells']]
 
-                existing_permissions = self.session_handler.get(self.PERMISSIONS_SESSION_NAME)
+                existing_permissions = self.session_handler.get(self.setting.get_permission_session_name())
                 existing_permissions_list = existing_permissions.split(',') if existing_permissions is not None else []
 
                 union = list(set(existing_permissions_list + permissions))
-                self.session_handler.set(self.PERMISSIONS_SESSION_NAME, ','.join(union))
+                self.set_permissions(','.join(union))
 
         except Exception as e:
+            self._logger.error(
+                'Unable to load permissions {0} {1}'.format(self.setting.get_instance(), self.setting.get_name()))
             self.getLogger().error(e, exc_info=True)
 
     @login_required

@@ -32,13 +32,33 @@ class MultiAuthenticationProvider(AuthenticationProvider):
                 self.getLogger().error(message)
 
     def authentication_provider_logged_in(self, auth_prov, user_name, password):
+        merge_permissions = self.get_setting().get_config().get('_mergePermissions', False)
+        permissions = set()
+        logged_in_auth_provs = []
         for name, registered_auth_prov in self.authentication_providers.items():
             if registered_auth_prov is not auth_prov:
                 try:
                     registered_auth_prov.do_login(user_name, password)
+                    logged_in_auth_provs.append(registered_auth_prov)
                 except Exception as e:
-                    # Todo handle authentication failed exception
+                    message = f'Unable to login to {name}'
+
+                    self._logger.error(message)
                     self._logger.error(e, exc_info=True)
+
+                    for a in logged_in_auth_provs:
+                        a.logout()
+
+                    raise e
+
+
+            if merge_permissions is True:
+                permissions.update(registered_auth_prov.get_permission_list())
+
+        if merge_permissions is True:
+            permissions_str = ','.join(permissions)
+            for name, registered_auth_prov in self.authentication_providers.items():
+                registered_auth_prov.set_permissions(permissions_str)
 
     def get_authentication_provider_by_request(self):
         s = request.path.split('/')
@@ -72,6 +92,7 @@ class MultiAuthenticationProvider(AuthenticationProvider):
             registered_auth_prov.on_exit()
 
     def logout(self):
+        # Todo event
         for name, registered_auth_prov in self.authentication_providers.items():
             registered_auth_prov.logout()
 

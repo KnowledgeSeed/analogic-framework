@@ -164,5 +164,14 @@ class SettingManager:
     def get_instance_and_name(self):
         return self.get_instance() + '_' + self.get_name()
 
+    def get_check_access_repository_yml_suffix(self):
+        return '_analogic_check_access'
+
+    def get_permission_query_repository_yml_key(self):
+        return 'analogic_permissions'
+
+    def get_permission_session_name(self):
+        return self.get_instance() + '_analogic_permissions'
+
     def getLogger(self):
         return self._logger
