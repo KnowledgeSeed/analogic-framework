@@ -163,6 +163,8 @@ class AuthenticationProvider(ABC):
         if request.args.get('server') is not None or force_server_side_query is True:
             if request.method == 'GET':
                 body = request.args
+            elif len(request.form) > 0:
+                body = request.form.to_dict()
             else:
                 body = orjson.loads(request.data)
             key = body['key']
