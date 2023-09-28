@@ -21,42 +21,64 @@ class MultiAuthenticationProvider(AuthenticationProvider):
             child_auth_prov = current_app.create_authentication_provider_by_setting(setting, False)
 
             if isinstance(child_auth_prov, MultiAuthenticationProviderInterface):
+
                 if name != MultiSettingManager.PRIMARY_AUTHENTICATION_PROVIDER_NAME:
                     current_app.register_analogic_url_rules('/' + self.setting.get_instance() + '/' + name)
+
                 child_auth_prov.initialize()
+
                 self.authentication_providers[name] = child_auth_prov
+
                 logged_in.connect(self.authentication_provider_logged_in, self.authentication_providers[name])
             else:
                 message = 'Unable to add {0} to multiauthentication provider. It must implement MultiAuthenticationProviderInterface.'.format(
                     name)
+
                 self.getLogger().error(message)
 
     def authentication_provider_logged_in(self, auth_prov, user_name, password):
         merge_permissions = self.get_setting().get_config().get('_mergePermissions', False)
+
         permissions = set()
+
         logged_in_auth_provs = []
+
+        unable_to_login_auth_provider_names = []
+
         for name, registered_auth_prov in self.authentication_providers.items():
+
             if registered_auth_prov is not auth_prov:
+
                 try:
                     registered_auth_prov.do_login(user_name, password)
+
                     logged_in_auth_provs.append(registered_auth_prov)
+
                 except Exception as e:
+
                     message = f'Unable to login to {name}'
 
                     self._logger.error(message)
+
                     self._logger.error(e, exc_info=True)
 
-                    for a in logged_in_auth_provs:
-                        a.logout()
-
-                    raise e
-
+                    unable_to_login_auth_provider_names.append(name)
 
             if merge_permissions is True:
                 permissions.update(registered_auth_prov.get_permission_list())
 
+        if len(unable_to_login_auth_provider_names) > 0:
+
+            message = f'Unable to login {self.get_setting().get_instance()} : {",".join(unable_to_login_auth_provider_names)}'
+
+            self._logger.error(message)
+
+            raise Exception(message)
+
         if merge_permissions is True:
+
             permissions_str = ','.join(permissions)
+
             for name, registered_auth_prov in self.authentication_providers.items():
                 registered_auth_prov.set_permissions(permissions_str)
 

@@ -54,14 +54,6 @@ class MultiSettingManager(SettingManager):
     def get_name(self):
         return self.name
 
-    def get_check_access_repository_yml_suffix(self):
-        suffix = super().get_check_access_repository_yml_suffix()
-        name = self.get_name()
-        if name == MultiSettingManager.PRIMARY_AUTHENTICATION_PROVIDER_NAME:
-            return suffix
-        else:
-            return name + '_' + suffix
-
     def get_permission_query_repository_yml_key(self):
         key = super().get_permission_query_repository_yml_key()
         name = self.get_name()
