@@ -27,6 +27,7 @@ class LoginBasic(AuthenticationProvider, MultiAuthenticationProviderInterface):
 
     def login(self):
         cnf = self.setting.get_config()
+        message = ''
         if request.method == 'POST':
             user_name = request.form.get('username')
             password = request.form.get('password')
@@ -37,7 +38,8 @@ class LoginBasic(AuthenticationProvider, MultiAuthenticationProviderInterface):
                 return self._add_authenticated_cookies(resp)
             except Exception as e:
                 self._logger.error(e, exc_info=True)
-        return render_template('login.html', cnf=cnf)
+                message = str(e)
+        return render_template('login.html', cnf=cnf, message=message)
 
     def do_login(self, user_name, password):
         p = self.get_connection_params(user_name, password)
