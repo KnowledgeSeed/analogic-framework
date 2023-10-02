@@ -54,7 +54,6 @@ class Analogic(Flask):
                               provide_automatic_options=url_rule['provide_automatic_options'],
                               **url_rule['options'])
 
-
     def register_analogic_endpoint(self, endpoint: "AnalogicEndpoint", **options: t.Any):
         if endpoint.name not in self.blueprints:
             self.endpoint_rules.extend(endpoint.endpoint_rules)
@@ -74,9 +73,9 @@ class Analogic(Flask):
 
     def register_application(self, application_dir, blueprint: "Blueprint", **options: t.Any) -> None:
         try:
-            if blueprint.name != 'multitest':
-                return
+
             instance = '/' + blueprint.name
+
             self.register_analogic_url_rules(instance)
 
             self.analogic_applications[blueprint.name] = self.create_authentication_provider(blueprint.name,
@@ -85,6 +84,7 @@ class Analogic(Flask):
             super().register_blueprint(blueprint, **options)
         except Exception as e:
             logging.getLogger(__name__).error('Error registering application ' + blueprint.name + ': ' + str(e))
+            logging.getLogger(__name__).error(e, exc_info=True)
 
     def create_authentication_provider(self, analogic_application, analogic_application_path):
         with self.app_context():
