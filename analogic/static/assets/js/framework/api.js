@@ -693,3 +693,17 @@ Api.logout = function logout() {
 Api.goToStartPage = function goToStartPage() {
    Auth.goToStartPage();
 };
+
+Api.triggerWidgetEvent = function triggerWidgetEvent(widgetId, eventName) {
+    const widget = Widgets[widgetId], triggerHandlerFunctionName = eventName + 'TriggerHandler';
+    if (!widget) {
+        console.error('Unable to find ' + widgetId);
+        return false;
+    }
+    if (!widget[triggerHandlerFunctionName]) {
+        console.error('Unable to find ' + triggerHandlerFunctionName);
+        return false;
+    }
+    widget[triggerHandlerFunctionName]();
+    return true;
+}
