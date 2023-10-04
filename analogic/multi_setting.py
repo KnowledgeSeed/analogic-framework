@@ -57,7 +57,7 @@ class MultiSettingManager(SettingManager):
     def get_permission_query_repository_yml_key(self):
         key = super().get_permission_query_repository_yml_key()
         name = self.get_name()
-        if name == MultiSettingManager.PRIMARY_AUTHENTICATION_PROVIDER_NAME:
+        if name == MultiSettingManager.PRIMARY_AUTHENTICATION_PROVIDER_NAME or name == '':
             return key
         else:
             return name + '_' + key
