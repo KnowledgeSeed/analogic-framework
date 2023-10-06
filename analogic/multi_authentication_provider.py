@@ -123,6 +123,11 @@ class MultiAuthenticationProvider(AuthenticationProvider):
             registered_auth_prov.clear_cache()
         self.get_setting().clear_cache()
 
+    def initialize(self):
+        for name, registered_auth_prov in self.authentication_providers.items():
+            registered_auth_prov.initialize()
+        self.setting.initialize()
+
     def install(self, params):
         child_auth_provider_name = params.get('multiappname')
         if child_auth_provider_name is not None:
