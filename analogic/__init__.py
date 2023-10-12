@@ -5,12 +5,13 @@ from .authentication_provider import get_authentication_provider
 from .authentication_provider import login_required
 from .authentication_provider import endpoint_login_required
 from .authentication_provider import AuthenticationProvider
-from .condition import Condition
+from .multi_authentication_provider import MultiAuthenticationProvider
 from .cam import Cam
 from .endpoint import AnalogicEndpoint
 from .loader import ClassLoader
 from .email import EmailManager
 from .setting import SettingManager
+from .multi_setting import MultiSettingManager
 from .analogic_tm1_service import AnalogicTM1Service
 from . import pivot
 from .loginbasic import LoginBasic
@@ -23,3 +24,6 @@ from .exceptions import AnalogicException
 from .exceptions import AnalogicProxyException
 from .exceptions import AnalogicTM1ServiceException
 from .exceptions import AnalogicAccessDeniedException
+from .logged_in_signal import logged_in
+from .multi_authentication_provider_interface import MultiAuthenticationProviderInterface
+from .session_handler import SessionHandler

@@ -41,7 +41,7 @@ def export():
 
 @core_endpoints.analogic_endpoint_route('/clearcache', methods=['GET'])
 def clear_cache():
-    return get_authentication_provider().setting.clear_cache()
+    return get_authentication_provider().clear_cache()
 
 
 # @core_endpoints.analogic_endpoint_route('/ping', methods=['GET'])

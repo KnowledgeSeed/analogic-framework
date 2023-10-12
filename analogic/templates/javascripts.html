@@ -14,7 +14,7 @@
 <script src="{{ url_for('static', filename='assets/js/lib/nouislider.min.js') }}?v={{ cnf.version }}"></script>
 <script src="{{ url_for('static', filename='assets/js/lib/Sortable.min.js') }}?v={{ cnf.version }}"></script>
 
-<script src="{{ url_for(cnf.blueprint_static, filename='assets/js/config.js') }}?v={{ cnf.version }}"></script>
+<script src="{{ url_for(cnf.blueprint_static, filename='assets/js/config' + cnf.get('auth_prov','') + '.js') }}?v={{ cnf.version }}"></script>
 <!-- end libs -->
 
 <!-- framework -->

@@ -10,7 +10,6 @@ import sys
 from importlib import resources
 from analogic.core_endpoints import core_endpoints
 from analogic.authentication_provider import AuthenticationProvider
-from analogic.condition import Condition
 import inspect
 from analogic.setting import SettingManager
 from datetime import timedelta
@@ -38,12 +37,14 @@ class Analogic(Flask):
             'CamSecure': 'analogic',
             'LoginBasic': 'analogic',
             'LoginCam': 'analogic',
+            'MultiAuthenticationProvider': 'analogic',
             'NoLogin': 'analogic'
         }
         self.conditions = {}
         self.extension_assets = {}
         self.add_url_rule('/extension_asset', methods=['GET'], view_func=self.extension_asset)
         self.analogic_applications = {}
+        self.initialize_auth_providers = True
 
     def register_analogic_url_rules(self, instance):
         for url_rule in self.endpoint_rules:
@@ -72,35 +73,41 @@ class Analogic(Flask):
 
     def register_application(self, application_dir, blueprint: "Blueprint", **options: t.Any) -> None:
         try:
+
             instance = '/' + blueprint.name
+
             self.register_analogic_url_rules(instance)
 
             self.analogic_applications[blueprint.name] = self.create_authentication_provider(blueprint.name,
-                                                                                         application_dir)
+                                                                                             application_dir)
 
             super().register_blueprint(blueprint, **options)
         except Exception as e:
             logging.getLogger(__name__).error('Error registering application ' + blueprint.name + ': ' + str(e))
+            logging.getLogger(__name__).error(e, exc_info=True)
 
     def create_authentication_provider(self, analogic_application, analogic_application_path):
         with self.app_context():
             setting = SettingManager(analogic_application_path, analogic_application)
-            config = setting.config
+            return self.create_authentication_provider_by_setting(setting)
 
-            class_name = config['authenticationMode']
-            module_name = self.get_authentication_provider_module_name(class_name)
+    def create_authentication_provider_by_setting(self, setting, initialize=True):
 
-            if module_name in sys.modules:
-                module = sys.modules[module_name]
-            else:
-                module = importlib.import_module(module_name)  # Todo ModuleNotFoundError
+        class_name = setting.config['authenticationMode']
+        module_name = self.get_authentication_provider_module_name(class_name)
 
-            authentication_provider_class = getattr(module, class_name)
-            authentication_provider = authentication_provider_class(setting)
+        if module_name in sys.modules:
+            module = sys.modules[module_name]
+        else:
+            module = importlib.import_module(module_name)  # Todo ModuleNotFoundError
 
+        authentication_provider_class = getattr(module, class_name)
+        authentication_provider = authentication_provider_class(setting)
+
+        if initialize and self.initialize_auth_providers:
             authentication_provider.initialize()
 
-            return authentication_provider
+        return authentication_provider
 
     def get_analogic_application(self):
         s = request.path.split('/')
@@ -132,25 +139,16 @@ class Analogic(Flask):
 
         session.permanent = True
         config = authentication_provider.get_setting().get_config()
+
         if config['authenticationMode'] != 'Cam':
             self.permanent_session_lifetime = timedelta(minutes=config['sessionExpiresInMinutes'] - 1)
         else:
             self.permanent_session_lifetime = timedelta(days=31)
 
+        if config['authenticationMode'] == 'MultiAuthenticationProvider':
+            return authentication_provider.get_authentication_provider_by_request()
+
         return authentication_provider
-
-    def evaluate_condition(self, config):
-        class_name = config.get('authenticationModeCondition')
-        module_name = self.get_condition_module_name(class_name)
-
-        if module_name in sys.modules:
-            module = sys.modules[module_name]
-        else:
-            module = importlib.import_module(module_name)
-
-        condition_class = getattr(module, class_name)
-        condition = condition_class()
-        return condition.get_authentication_provider_name(config)
 
     def on_exit(self):
         print('on_exit')
@@ -169,8 +167,9 @@ def page_error(e):
     return render_template('500.html', message=message), 500
 
 
-def create_app(instance_path):
+def create_app(instance_path, start_scheduler=True, initialize_auth_providers=True):
     app = Analogic(__name__, instance_path=instance_path)
+    app.initialize_auth_providers = initialize_auth_providers
 
     app.secret_key = b'\x18m\x18\\]\xec\xcf\xbd\xf2\x89\xb9\xa3\x06N\x07\xfd'
 
@@ -211,7 +210,8 @@ def create_app(instance_path):
 
     scheduler.init_app(app)
 
-    scheduler.start()
+    if start_scheduler:
+        scheduler.start()
 
     atexit.register(app.on_exit)
 
@@ -273,15 +273,6 @@ def _register_extension_components(app, extension_name, files):
                 logging.getLogger(__name__).info('Registering authentication provider ' + extension_name + "." + name)
                 app.register_authentication_provider(name, extension_name)
 
-
-            if inspect.isclass(obj) and \
-                    not inspect.isabstract(obj) and \
-                    issubclass(obj, Condition) and \
-                    app.conditions.get(name) is None:
-                logging.getLogger(__name__).info('Registering condition ' + extension_name + "." + name)
-                app.register_condition(name, extension_name)
-
-
             if isinstance(obj, AnalogicEndpoint):
                 logging.getLogger(__name__).info('Registering analogic endpoing ' + name)
                 app.register_analogic_endpoint(obj)
@@ -306,10 +297,11 @@ def _load_module(app, check_prefix, module_dir_name, modules_dir, register_func)
     module_dir = os.path.join(modules_dir, module_dir_name)
     if os.path.isdir(module_dir) and module_dir_name != '.git' and module_dir_name != 'tests' and (
             check_prefix is False or (
-            module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX) and not module_dir_name.endswith('dist-info') and not module_dir_name.endswith('egg-info'))):
+            module_dir_name.startswith(ALLOWED_EXTENSION_PREFIX) and not module_dir_name.endswith(
+        'dist-info') and not module_dir_name.endswith('egg-info'))):
 
         # workaround to handle repeating names in module path
-        if module_dir_name == modules_dir.rsplit('/', 1)[-1] or module_dir_name == modules_dir.rsplit('\\', 1)[-1]:
+        if module_dir_name == modules_dir.rsplit('/', 1)[-1]:  # or module_dir_name == modules_dir.rsplit('\\', 1)[-1]:
             module_dir_name = module_dir_name + '.' + module_dir_name
 
         files = resources.contents(module_dir_name)
@@ -335,7 +327,8 @@ def _register_application(app, application_dir, application_name, files):
         for name, obj in inspect.getmembers(sys.modules[module]):
             if isinstance(obj, Blueprint) and app.analogic_applications.get(obj.name) is None:
                 app.register_application(application_dir=application_dir, blueprint=obj)
-                logging.getLogger(__name__).info('Registering application ' + application_name + " with blueprint " + name)
+                logging.getLogger(__name__).info(
+                    'Registering application ' + application_name + " with blueprint " + name)
 
 
 def _fast_scan_dir(directory, ext):

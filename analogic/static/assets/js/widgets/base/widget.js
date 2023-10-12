@@ -83,7 +83,7 @@ class Widget {
     }
 
     reRenderWidget(withState = false, withLoader = true, previouslyLoadedData = false) {
-        if(this.isRendering) {
+        if (this.isRendering) {
             this.renderError();
         }
         this.isRendering = true;
@@ -157,7 +157,7 @@ class Widget {
     }
 
     renderWidget(withState = false, withLoader = true, previouslyLoadedData = false) {
-        if(this.isRendering) {
+        if (this.isRendering) {
             this.renderError();
         }
         this.isRendering = true;

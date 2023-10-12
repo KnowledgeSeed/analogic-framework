@@ -17,3 +17,4 @@ requests_ntlm
 flask_talisman
 Flask-APScheduler==1.12.4
 orjson==3.8.6
+rich==13.3.5

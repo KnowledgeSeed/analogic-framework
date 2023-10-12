@@ -13,7 +13,7 @@ class NoLogin(AuthenticationProvider):
 
         resp = make_response(render_template('index.html', authenticated=True, cnf=cnf))
 
-        session[self.logged_in_user_session_name] = 'nologin'
+        self.session_handler.set(self.logged_in_user_session_name, 'nologin')
 
         return self._add_authenticated_cookies(resp, 86400)
 
@@ -36,7 +36,7 @@ class NoLogin(AuthenticationProvider):
         return None
 
     def active_user(self):
-        return jsonify({'username': session[self.logged_in_user_session_name]})
+        return jsonify({'username': self.get_logged_in_user_name()})
 
     def getLogger(self):
         return logging.getLogger(__name__)

@@ -115,7 +115,7 @@ class LoadExecutor {
         if (p.url) {
             const url = (typeof p.url === 'function' ? p.url(Widgets) : p.url);
             return {
-                url: QB.getUrl(url),
+                url: QB.getUrl(url, p.source),
                 type: p.type ? p.type : 'POST'
             };
         }

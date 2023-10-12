@@ -1,12 +1,12 @@
-from flask import session, current_app, send_file, request, jsonify
+from flask import session, current_app, send_file, request, jsonify, Response
 from analogic.loader import ClassLoader
 import analogic.pivot as PivotApi
 from analogic.exceptions import AnalogicProxyException, AnalogicAccessDeniedException
+from analogic.session_handler import SessionHandler
 import logging
 import pandas as pd
 from abc import ABC, abstractmethod
 from functools import wraps
-from werkzeug.datastructures import ImmutableMultiDict
 import orjson
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
@@ -60,13 +60,11 @@ class AuthenticationProvider(ABC):
                'Accept-Encoding': 'gzip, deflate, br',
                'TM1-SessionContext': 'Analogic'}
 
-    PERMISSION_QUERIES_KEY = 'analogic_permissions'
-    PERMISSIONS_SESSION_NAME = 'analogic_permission'
-
     def __init__(self, setting):
         self.setting = setting
-        self.logged_in_user_session_name = self.setting.get_instance() + '_logged_in_user_name'
+        self.logged_in_user_session_name = '_logged_in_user_name'
         self._logger = logging.getLogger(self.setting.get_instance())
+        self.session_handler = SessionHandler(self.setting.get_instance_and_name())
 
     def initialize(self):
         self.setting.initialize()
@@ -75,7 +73,7 @@ class AuthenticationProvider(ABC):
         return self.setting
 
     def get_logged_in_user_name(self):
-        return session.get(self.logged_in_user_session_name)
+        return self.session_handler.get(self.logged_in_user_session_name)
 
     @login_required
     def pivot(self):
@@ -143,7 +141,7 @@ class AuthenticationProvider(ABC):
             key = body.get('key')
             if body.get('key_suffix') is not None:
                 key = key + '_' + body['key_suffix']
-            key = key + '_analogic_check_access'
+            key = key + self.get_setting().get_check_access_repository_yml_suffix()
             mdx = self.setting.get_mdx(key)
 
             if mdx is None:
@@ -185,17 +183,14 @@ class AuthenticationProvider(ABC):
         else:
             return ''.encode('utf-8')
 
-    @abstractmethod
     def index(self):
         pass
 
-    @abstractmethod
     def check_app_authenticated(self):
-        return True
+        return self.session_handler.is_exist(self.logged_in_user_session_name)
 
-    @abstractmethod
     def get_authentication_required_response(self):
-        pass
+        return Response('', 401)
 
     def get_not_found_response(self):
         return 'Not found', 404, {'Content-Type': 'application/json'}
@@ -254,12 +249,19 @@ class AuthenticationProvider(ABC):
         return resp.get('Cells')[0].get('Value') == 1
 
     def check_permission(self, required_permissions):
-        available_permissions = session.get(self.PERMISSIONS_SESSION_NAME)
-        available_permissions_list = available_permissions.split(',') if available_permissions is not None else []
+        available_permissions_list = self.get_permission_list()
         return any(permission in required_permissions for permission in available_permissions_list)
 
+    def get_permission_list(self):
+        available_permissions = self.session_handler.get(self.setting.get_permission_session_name())
+        available_permissions_list = available_permissions.split(',') if available_permissions is not None else []
+        return available_permissions_list
+
+    def set_permissions(self, permissions_str):
+        self.session_handler.set(self.setting.get_permission_session_name(), permissions_str)
+
     def load_permissions(self):
-        permission_queries = self.setting.get_mdx(self.PERMISSION_QUERIES_KEY)
+        permission_queries = self.setting.get_mdx(self.setting.get_permission_query_repository_yml_key())
         if permission_queries is not None:
             for permission_query_params in permission_queries:
                 self.execute_permission_query(permission_query_params)
@@ -277,19 +279,23 @@ class AuthenticationProvider(ABC):
             response = self.do_proxy_request(url, params['method'], body.encode('utf-8'), headers, cookies, True)
 
             if response.status_code > 300:
+                self._logger.error(
+                    'Unable to load permissions {0} {1}'.format(self.setting.get_instance(), self.setting.get_name()))
                 self._logger.error('MDX error: ' + response.text)
-                self._logger.error('MDX: ' + body.decode('utf-8'))
+                self._logger.error('MDX: ' + body)
             else:
                 r = response.json()
                 permissions = [str(x['Value']) for x in r['Cells']]
 
-                existing_permissions = session.get(self.PERMISSIONS_SESSION_NAME)
+                existing_permissions = self.session_handler.get(self.setting.get_permission_session_name())
                 existing_permissions_list = existing_permissions.split(',') if existing_permissions is not None else []
 
                 union = list(set(existing_permissions_list + permissions))
-                session[self.PERMISSIONS_SESSION_NAME] = ','.join(union)
+                self.set_permissions(','.join(union))
 
         except Exception as e:
+            self._logger.error(
+                'Unable to load permissions {0} {1}'.format(self.setting.get_instance(), self.setting.get_name()))
             self.getLogger().error(e, exc_info=True)
 
     @login_required
@@ -351,9 +357,8 @@ class AuthenticationProvider(ABC):
     def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies, decode_content=True):
         pass
 
-    @abstractmethod
     def _extend_login_session(self):
-        pass
+        session.modified = True
 
     @abstractmethod
     def get_tm1_service(self):
@@ -364,17 +369,32 @@ class AuthenticationProvider(ABC):
         return jsonify({'username': self.get_logged_in_user_name()})
 
     def login(self):
-        pass
+        self.session_handler.set(self.logged_in_user_session_name, '')
 
     def logout(self):
-        session.clear()
+        self.session_handler.clear()
         return 'ok'
+
+    def clear_cache(self):
+        return self.get_setting().clear_cache()
 
     def getLogger(self):
         return self._logger
 
     def on_exit(self):
         pass
+
+    def install(self, params):
+        pass
+
+    def uninstall(self, params):
+        pass
+
+    def add_command_line_parameters(self, ap):
+        pass
+
+    def get_available_backend_methods(self):
+        return ['install', 'uninstall']
 
     @staticmethod
     def get_setting_parameter_descriptions():

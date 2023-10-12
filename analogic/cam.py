@@ -6,9 +6,11 @@ import analogic.pivot as PivotApi
 from analogic.exceptions import AnalogicTM1ServiceException
 from analogic.loader import ClassLoader
 from analogic.authentication_provider import login_required
+from analogic.logged_in_signal import logged_in
+from analogic.multi_authentication_provider_interface import MultiAuthenticationProviderInterface
 
 
-class Cam(AuthenticationProvider):
+class Cam(AuthenticationProvider, MultiAuthenticationProviderInterface):
 
     def __init__(self, setting):
         super().__init__(setting)
@@ -22,9 +24,13 @@ class Cam(AuthenticationProvider):
         resp.set_cookie('camPassport', request.form.get('c_pp'))
 
         cam_name = self.set_tm1_service(request.form.get('c_pp'))
-        session[self.logged_in_user_session_name] = cam_name
+        self.session_handler.set(self.logged_in_user_session_name, cam_name)
         self.load_permissions()
+        logged_in.send(self, user_name=cam_name, password='')
         return self._add_authenticated_cookies(resp)
+
+    def do_login(self, user_name, password):
+        raise Exception('Cam authentication mode must be the primary and only login endpoint')
 
     def get_base_url(self):
         return self.setting.get_config()['apiHost']
@@ -56,7 +62,7 @@ class Cam(AuthenticationProvider):
         return cam_name
 
     def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies, decode_content=True):
-        tm1_service = self.setting.get_tm1_service(session.get(self.logged_in_user_session_name))
+        tm1_service = self.setting.get_tm1_service(self.get_logged_in_user_name())
         if tm1_service is None:
             return Response('Unauthorized', status=401, mimetype='application/json')
 
@@ -89,8 +95,8 @@ class Cam(AuthenticationProvider):
         return mdx
 
     def check_app_authenticated(self):
-        return session.get(self.logged_in_user_session_name, '') != '' and self.setting.get_tm1_service(
-            session.get(self.logged_in_user_session_name)) is not None
+        return self.session_handler.get(self.logged_in_user_session_name, '') != '' and self.setting.get_tm1_service(
+            self.get_logged_in_user_name()) is not None
 
     @login_required
     def pivot(self):
@@ -150,7 +156,7 @@ class Cam(AuthenticationProvider):
         return 'Authentication required', 401, {'Content-Type': 'application/json'}
 
     def get_tm1_service(self):
-        tm1_service = self.setting.get_tm1_service(session[self.logged_in_user_session_name])
+        tm1_service = self.setting.get_tm1_service(self.get_logged_in_user_name())
         if tm1_service is None:
             raise AnalogicTM1ServiceException('Unauthorized')
 
