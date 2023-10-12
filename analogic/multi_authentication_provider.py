@@ -183,3 +183,17 @@ class MultiAuthenticationProvider(AuthenticationProvider):
                 registered_auth_prov.add_command_line_parameters(ap)
         except Exception:
             pass
+
+    @staticmethod
+    def get_setting_parameter_descriptions():
+        result = super(MultiAuthenticationProvider, MultiAuthenticationProvider).get_setting_parameter_descriptions()
+        result['_authenticationProviders'] = {
+            'required': True,
+            'description': 'Child authentication providers or datasource (Pool, Graphql, SSOPool,...)'
+        }
+        result['_mergePermissions'] = {
+            'required': False,
+            'description': 'Default false. It merges the permission loaded in all children authentication provider'
+        }
+
+        return result
