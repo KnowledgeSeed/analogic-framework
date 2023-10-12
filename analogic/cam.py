@@ -6,9 +6,11 @@ import analogic.pivot as PivotApi
 from analogic.exceptions import AnalogicTM1ServiceException
 from analogic.loader import ClassLoader
 from analogic.authentication_provider import login_required
+from analogic.logged_in_signal import logged_in
+from analogic.multi_authentication_provider_interface import MultiAuthenticationProviderInterface
 
 
-class Cam(AuthenticationProvider):
+class Cam(AuthenticationProvider, MultiAuthenticationProviderInterface):
 
     def __init__(self, setting):
         super().__init__(setting)
@@ -24,7 +26,11 @@ class Cam(AuthenticationProvider):
         cam_name = self.set_tm1_service(request.form.get('c_pp'))
         self.session_handler.set(self.logged_in_user_session_name, cam_name)
         self.load_permissions()
+        logged_in.send(self, user_name=cam_name, password='')
         return self._add_authenticated_cookies(resp)
+
+    def do_login(self, user_name, password):
+        raise Exception('Cam authentication mode must be the primary and only login endpoint')
 
     def get_base_url(self):
         return self.setting.get_config()['apiHost']

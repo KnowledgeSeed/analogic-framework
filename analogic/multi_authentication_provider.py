@@ -73,6 +73,16 @@ class MultiAuthenticationProvider(AuthenticationProvider):
 
             self._logger.error(message)
 
+            for logged_in_auth_prov in logged_in_auth_provs:
+
+                try:
+
+                    logged_in_auth_prov.logout()
+
+                except Exception as e:
+
+                    self._logger.error(e, exc_info=True)
+
             raise Exception(message)
 
         if merge_permissions is True:
