@@ -75,5 +75,6 @@ class MultiSettingManager(SettingManager):
         url = request.environ.get('wsgi.url_scheme') + '://' + request.environ.get('HTTP_HOST')
         name = self.name if self.name != self.PRIMARY_AUTHENTICATION_PROVIDER_NAME else ''
         sub_path = [base[:-1], self.instance, name, route]
-        url += ('/'.join(filter(lambda x: x != 'default' and x is not None, sub_path)))
+        new_sub_path = ('/'.join(filter(lambda x: x != 'default' and x is not None, sub_path)))
+        url += (new_sub_path.replace('//', '/'))
         return url
