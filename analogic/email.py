@@ -3,20 +3,19 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from jinja2 import Environment, FileSystemLoader, select_autoescape, TemplateNotFound
 import logging
-from analogic.analogic import APPLICATIONS_DIR
 
 
 class EmailManager:
 
-    def send_email(self, request, tm1_service, setting):
+    def send_email(self, request, tm1_service, setting, authentication_provider):
         logger = logging.getLogger(setting.get_instance())
 
-        post_data = request.values.to_dict()
+        post_data = request.json if request.method == 'POST' else request.values.to_dict()
 
         if 'email_template' not in post_data:
             return self._error('missing email_template parameter from request', logger)
 
-        customer_email_template_dir = os.path.join(setting.site_root, 'server', 'configs', 'email_templates')
+        customer_email_template_dir = os.path.join(setting.site_root, 'server', 'email_templates')
 
         if not os.path.exists(customer_email_template_dir):
             return self._error(customer_email_template_dir + ' does not exist', logger)
@@ -40,8 +39,12 @@ class EmailManager:
 
         smtp_config = cnf['smtp']
 
-        sender_email = smtp_config['sender_email']
-        receiver_email = post_data['receiver_email']
+        sender_email = self._get_required_config_value(smtp_config, 'sender_email')
+
+        receiver_email = post_data.get('receiver_email')
+
+        if receiver_email is None:
+            raise Exception('receiver_email missing')
 
         message = MIMEMultipart()
         message["Subject"] = post_data.get('subject', '')
@@ -50,21 +53,32 @@ class EmailManager:
 
         message.attach(MIMEText(email_html, "html"))
 
-        smtp_server = smtp_config['server']
-        port = smtp_config['port']
+        smtp_server = self._get_required_config_value(smtp_config, 'server')
+        port = self._get_required_config_value(smtp_config, 'port')
+        is_ssl = smtp_config.get('ssl', False)
+        password = setting.get_smtp_password()
 
-        if 'localhost' == smtp_server:
+        if is_ssl is False:
             server = smtplib.SMTP(smtp_server, port)
-            server.sendmail(sender_email, receiver_email, message.as_string())
         else:
             context = ssl.create_default_context()
-            password = setting.get_smtp_password()
             server = smtplib.SMTP_SSL(smtp_server, port, context=context)
+
+        if password is not None:
             server.login(sender_email, password)
-            server.sendmail(sender_email, receiver_email, message.as_string())
 
-        return 'OK'
+        server.sendmail(sender_email, receiver_email, message.as_string())
 
-    def _error(self, message, logger):
+        return {}, 200, {'Content-type': 'application/json'}
+
+    @staticmethod
+    def _get_required_config_value(cnf, property_name):
+        val = cnf.get(property_name)
+        if val is None:
+            raise Exception('{0} is not configured'.format(property_name))
+        return val
+
+    @staticmethod
+    def _error(message, logger):
         logger.error(message)
-        return message
+        return {'message': message}, 500, {'Content-type': 'application/json'}

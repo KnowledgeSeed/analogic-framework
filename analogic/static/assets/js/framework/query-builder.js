@@ -89,6 +89,11 @@ QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
     }
     !keyAdded && params.push(`"key" : "${repositoryId + "_" + path}"`);
 
+    if(url.includes('middleware')) {
+        newUrl = url;
+        subUrl = '';
+    }
+
     return {url: newUrl + subUrl, body: `{${params.join(',')}}`};
 };
 
@@ -96,6 +101,10 @@ QB.getUrl = (url, source= '') => {
     let proxy_sub_path = 'proxy';
     if (url.includes('proxy')) {
         proxy_sub_path = ''
+    }
+
+    if(url.includes('middleware')) {
+        return url;
     }
 
     if (app.apiHost && !url.includes('proxy')) {
@@ -121,5 +130,4 @@ QB.getUrl = (url, source= '') => {
     }
 
     return proxy_sub_path + url;
-    //return app.apiHost ? app.apiHost + url : source ? source + '/proxy' + url : 'proxy' + url;
 };

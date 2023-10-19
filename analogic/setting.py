@@ -150,7 +150,7 @@ class SettingManager:
         return self.config['camNamespace']
 
     def get_smtp_password(self):
-        return self.config['smtp']['password']
+        return self.config['smtp'].get('password')
 
     def get_ssl_verify(self):
         return self.config['ssl_verify']

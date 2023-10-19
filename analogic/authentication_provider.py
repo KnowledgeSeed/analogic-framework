@@ -121,14 +121,20 @@ class AuthenticationProvider(ABC):
 
     @login_required
     def middleware(self):
-        key = request.args.get('key')
+        key = request.args.get('object_key')
 
         if key is None:
             return self.get_not_found_response()
 
         description = self.setting.get_custom_object_description(key)
 
-        return ClassLoader().call(description, request, self.get_tm1_service(), self.setting, self)
+        if description is None:
+            return self.get_not_found_response()
+        try:
+            return ClassLoader().call(description, request, self.get_tm1_service(), self.setting, self)
+        except Exception as e:  # Todo 500, 401
+            self.getLogger().error(e, exc_info=True)
+            return {'message': str(e)}, 404, {'Content-type': 'application/json'}
 
     def _get_check_access_mdx(self, force_server_side_query=False):
         if request.args.get('server') is not None or force_server_side_query is True:
