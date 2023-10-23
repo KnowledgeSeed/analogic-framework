@@ -17,6 +17,10 @@
 <script src="{{ url_for(cnf.blueprint_static, filename='assets/js/config' + cnf.get('auth_prov','') + '.js') }}?v={{ cnf.version }}"></script>
 <!-- end libs -->
 
+<!-- service worker -->
+{#<script src="service_worker.js?v={{ cnf.version }}"></script>#}
+<!-- end service worker -->
+
 <!-- framework -->
 <script src="{{ url_for('static', filename='assets/js/framework/app.js') }}?v={{ cnf.version }}"></script>
 <script src="{{ url_for('static', filename='assets/js/framework/utils.js') }}?v={{ cnf.version }}"></script>
