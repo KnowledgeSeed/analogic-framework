@@ -6,7 +6,7 @@ import analogic.pivot as PivotApi
 from analogic.exceptions import AnalogicTM1ServiceException
 from analogic.loader import ClassLoader
 from analogic.authentication_provider import login_required
-from analogic.logged_in_signal import logged_in
+from analogic.signals import logged_in
 from analogic.multi_authentication_provider_interface import MultiAuthenticationProviderInterface
 
 

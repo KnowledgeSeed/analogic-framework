@@ -41,9 +41,10 @@
                 }).then(
                     // (B3-1) OK - TEST PUSH NOTIFICATION
                     sub => {
+                        L(Widgets.activeUser);
                         var data = new FormData();
                         data.append("sub", JSON.stringify(sub));
-                        fetch("push", {method: "POST", body: data})
+                        fetch("subscribe", {method: "POST", body: data})
                             .then(res => res.text())
                             .then(txt => console.log(txt))
                             .catch(err => console.error(err));

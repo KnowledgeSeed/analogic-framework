@@ -24,6 +24,8 @@ from .exceptions import AnalogicException
 from .exceptions import AnalogicProxyException
 from .exceptions import AnalogicTM1ServiceException
 from .exceptions import AnalogicAccessDeniedException
-from .logged_in_signal import logged_in
+from .signals import logged_in
+from .signals import before_call_do_proxy
 from .multi_authentication_provider_interface import MultiAuthenticationProviderInterface
 from .session_handler import SessionHandler
+from .signal_receiver import SignalReceiver

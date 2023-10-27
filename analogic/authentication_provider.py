@@ -1,11 +1,12 @@
 from flask import session, current_app, send_file, request, jsonify, Response
 from analogic.loader import ClassLoader
 import analogic.pivot as PivotApi
-from analogic.exceptions import AnalogicProxyException, AnalogicAccessDeniedException
+from analogic.exceptions import AnalogicProxyException, AnalogicAccessDeniedException, AnalogicException
 from analogic.session_handler import SessionHandler
 import logging
 import pandas as pd
 from abc import ABC, abstractmethod
+from analogic.signals import before_call_do_proxy
 from functools import wraps
 import orjson
 
@@ -324,10 +325,15 @@ class AuthenticationProvider(ABC):
 
         try:
             mdx = self._get_server_side_mdx(force_server_side_query)
+            before_call_do_proxy.send(self, url=url, method=meth, data=mdx, headers=headers, cookies=cookies, encode_content=encode_content)
+
             response = self.do_proxy_request(url, meth, mdx, headers, cookies, encode_content)
         except AnalogicProxyException as e:
             self._logger.error(e, exc_info=True)
             return {'message': 'Something went wrong {}'.format(e)}, 500, {'Content-Type': 'application/json'}
+        except AnalogicException as e:
+            self._logger.error(e, exc_info=True)
+            return {'message': str(e)}, 500, {'Content-Type': 'application/json'}
         except AnalogicAccessDeniedException as e:
             self._logger.error(e, exc_info=True)
             return {'message': 'Something went wrong {}'.format(e)}, 403, {'Content-Type': 'application/json'}

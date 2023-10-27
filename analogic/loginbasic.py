@@ -2,7 +2,7 @@ from analogic.authentication_provider import AuthenticationProvider
 from analogic.analogic_tm1_service import AnalogicTM1Service
 from analogic.exceptions import AnalogicTM1ServiceException
 from flask import render_template, request, make_response, redirect, session, Response
-from analogic.logged_in_signal import logged_in
+from analogic.signals import logged_in
 from analogic.multi_authentication_provider_interface import MultiAuthenticationProviderInterface
 
 

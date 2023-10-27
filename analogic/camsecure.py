@@ -1,6 +1,6 @@
 from analogic.cam import Cam
 from flask import request, make_response, redirect
-from analogic.logged_in_signal import logged_in
+from analogic.signals import logged_in
 
 
 class CamSecure(Cam):
