@@ -228,7 +228,7 @@ class SliderWidget extends Widget {
             updateableInput.off('change').on('change', () => {
                 let updateableInputValue = Utils.parseNumber(Utils.replaceDecimal(updateableInput.val()));
 
-                v(id).changedByInput = true;
+                v(id).value.changedByInput = true;
 
                 if (w.calculateSliderValue) {
                     this.slider.set(w.calculateSliderValue(updateableInputValue));
