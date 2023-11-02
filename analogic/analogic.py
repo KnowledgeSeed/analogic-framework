@@ -16,6 +16,7 @@ from datetime import timedelta
 import importlib
 from analogic.task import scheduler
 import atexit
+from analogic.default_signal_receiver import DefaultSignalReceiver
 
 APPLICATIONS_DIR = 'apps'
 APPLICATIONS_DIR_EXTRA = os.environ.get('APPLICATIONS_DIR_EXTRA', '')
@@ -226,6 +227,7 @@ def create_app(instance_path, start_scheduler=True, initialize_auth_providers=Tr
 
     with app.app_context():
         app.evaluate_signal_receivers()
+        DefaultSignalReceiver().initialize()
 
     scheduler.init_app(app)
 

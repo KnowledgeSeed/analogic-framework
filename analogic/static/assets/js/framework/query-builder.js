@@ -82,7 +82,11 @@ QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
     let newUrl = url.includes('proxy') ? url : url.includes(app.apiHost) ? url.replace(app.apiHost, 'proxy') : 'proxy' + url;
 
     for (const [key, value] of Object.entries(body)) {
-        params.push(`"${key}": "${value}"`);
+        if (key === 'longRunningTaskParameters') {
+            params.push(`"${key}": ${JSON.stringify(value)}`);
+        } else {
+            params.push(`"${key}": "${value}"`);
+        }
         if ('key' === key) {
             keyAdded = true;
         }

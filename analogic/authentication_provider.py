@@ -1,7 +1,8 @@
 from flask import session, current_app, send_file, request, jsonify, Response
 from analogic.loader import ClassLoader
 import analogic.pivot as PivotApi
-from analogic.exceptions import AnalogicProxyException, AnalogicAccessDeniedException, AnalogicException
+from analogic.exceptions import AnalogicProxyException, AnalogicAccessDeniedException, AnalogicException, \
+    AnalogicAcceptedException
 from analogic.session_handler import SessionHandler
 import logging
 import pandas as pd
@@ -157,7 +158,8 @@ class AuthenticationProvider(ABC):
                 mdx = self._set_custom_mdx_data(mdx)
 
             for k in body:
-                mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
+                if type(body[k]) is not dict:
+                    mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
 
             return mdx.encode('utf-8')
 
@@ -184,7 +186,8 @@ class AuthenticationProvider(ABC):
 
             mdx = self._set_custom_mdx_data(mdx)
             for k in body:
-                mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
+                if type(body[k]) is not dict:
+                    mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
 
             return mdx.encode('utf-8')
         else:
@@ -325,12 +328,16 @@ class AuthenticationProvider(ABC):
 
         try:
             mdx = self._get_server_side_mdx(force_server_side_query)
-            before_call_do_proxy.send(self, url=url, method=meth, data=mdx, headers=headers, cookies=cookies, encode_content=encode_content)
+
+            before_call_do_proxy.send(self, url=url, method=meth, data=mdx, headers=headers, cookies=cookies,
+                                      encode_content=encode_content)
 
             response = self.do_proxy_request(url, meth, mdx, headers, cookies, encode_content)
         except AnalogicProxyException as e:
             self._logger.error(e, exc_info=True)
             return {'message': 'Something went wrong {}'.format(e)}, 500, {'Content-Type': 'application/json'}
+        except AnalogicAcceptedException as e:
+            return {'message': str(e)}, 202, {'Content-Type': 'application/json'}
         except AnalogicException as e:
             self._logger.error(e, exc_info=True)
             return {'message': str(e)}, 500, {'Content-Type': 'application/json'}

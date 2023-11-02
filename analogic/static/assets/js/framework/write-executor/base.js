@@ -119,8 +119,8 @@ class WriteExecutor {
             let mm = QB.getServerSideUrlAndBody(url, body, widgetId, eventName);
             url = mm.url;
             body = mm.body;
-            if (eventHandler.backgroundJob) {
-                url += '&backgroundJob=1'
+            if (eventHandler.longRunningTask) {
+                url += '&longRunningTask=1'
             }
         }
 
