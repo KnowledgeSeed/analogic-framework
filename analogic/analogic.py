@@ -46,6 +46,7 @@ class Analogic(Flask):
         self.add_url_rule('/extension_asset', methods=['GET'], view_func=self.extension_asset)
         self.analogic_applications = {}
         self.initialize_auth_providers = True
+        self.long_running_tasks = {}
 
     def register_analogic_url_rules(self, instance):
         for url_rule in self.endpoint_rules:
@@ -248,8 +249,12 @@ def _load_logging(app):
         log_config = json.load(file)
         for h in log_config['handlers']:
             if 'filename' in log_config['handlers'][h]:
-                log_config['handlers'][h]['filename'] = os.path.join(app.instance_path,
-                                                                     log_config['handlers'][h]['filename'])
+                if h == 'scheduler_file_handler':
+                    file_name = f"logs/scheduler_{os.getpid()}.log"
+                else:
+                    file_name = log_config['handlers'][h]['filename']
+
+                log_config['handlers'][h]['filename'] = os.path.join(app.instance_path, file_name)
 
         logging.config.dictConfig(log_config)
 
