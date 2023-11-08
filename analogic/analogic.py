@@ -1,4 +1,3 @@
-import glob
 import os
 from flask import Flask, Blueprint, request, send_file, session, render_template
 import typing as t
@@ -10,12 +9,14 @@ import sys
 from importlib import resources
 from analogic.core_endpoints import core_endpoints
 from analogic.authentication_provider import AuthenticationProvider
+from analogic.signal_receiver import SignalReceiver
 import inspect
 from analogic.setting import SettingManager
 from datetime import timedelta
 import importlib
 from analogic.task import scheduler
 import atexit
+from analogic.default_signal_receiver import DefaultSignalReceiver
 
 APPLICATIONS_DIR = 'apps'
 APPLICATIONS_DIR_EXTRA = os.environ.get('APPLICATIONS_DIR_EXTRA', '')
@@ -40,11 +41,12 @@ class Analogic(Flask):
             'MultiAuthenticationProvider': 'analogic',
             'NoLogin': 'analogic'
         }
-        self.conditions = {}
+        self.signal_receivers = {}
         self.extension_assets = {}
         self.add_url_rule('/extension_asset', methods=['GET'], view_func=self.extension_asset)
         self.analogic_applications = {}
         self.initialize_auth_providers = True
+        self.long_running_tasks = {}
 
     def register_analogic_url_rules(self, instance):
         for url_rule in self.endpoint_rules:
@@ -62,11 +64,24 @@ class Analogic(Flask):
     def register_authentication_provider(self, name, module_name):
         self.authentication_providers[name] = module_name
 
-    def register_condition(self, name, module_name):
-        self.conditions[name] = module_name
+    def register_signal_receiver(self, name, module_name):
+        self.signal_receivers[name] = module_name
 
-    def get_condition_module_name(self, name):
-        return self.conditions[name]
+    def evaluate_signal_receivers(self):
+        for k,v in self.signal_receivers.items():
+
+            class_name = k
+            module_name = v
+
+            if module_name in sys.modules:
+                module = sys.modules[module_name]
+            else:
+                module = importlib.import_module(module_name)
+
+            signal_receiver_class = getattr(module, class_name)
+            signal_receiver = signal_receiver_class()
+            signal_receiver.initialize()
+
 
     def get_authentication_provider_module_name(self, name):
         return self.authentication_providers[name]
@@ -208,6 +223,10 @@ def create_app(instance_path, start_scheduler=True, initialize_auth_providers=Tr
     app.register_error_handler(404, page_not_found)
     app.register_error_handler(500, page_error)
 
+    with app.app_context():
+        app.evaluate_signal_receivers()
+        DefaultSignalReceiver().initialize()
+
     scheduler.init_app(app)
 
     if start_scheduler:
@@ -227,8 +246,12 @@ def _load_logging(app):
         log_config = json.load(file)
         for h in log_config['handlers']:
             if 'filename' in log_config['handlers'][h]:
-                log_config['handlers'][h]['filename'] = os.path.join(app.instance_path,
-                                                                     log_config['handlers'][h]['filename'])
+                if h == 'scheduler_file_handler':
+                    file_name = f"logs/scheduler_{os.getpid()}.log"
+                else:
+                    file_name = log_config['handlers'][h]['filename']
+
+                log_config['handlers'][h]['filename'] = os.path.join(app.instance_path, file_name)
 
         logging.config.dictConfig(log_config)
 
@@ -272,6 +295,13 @@ def _register_extension_components(app, extension_name, files):
                     app.authentication_providers.get(name) is None:
                 logging.getLogger(__name__).info('Registering authentication provider ' + extension_name + "." + name)
                 app.register_authentication_provider(name, extension_name)
+
+            if inspect.isclass(obj) and \
+                    not inspect.isabstract(obj) and \
+                    issubclass(obj, SignalReceiver) and \
+                    app.signal_receivers.get(name) is None:
+                logging.getLogger(__name__).info('Registering signal receiver ' + extension_name + "." + name)
+                app.register_signal_receiver(name, extension_name)
 
             if isinstance(obj, AnalogicEndpoint):
                 logging.getLogger(__name__).info('Registering analogic endpoing ' + name)

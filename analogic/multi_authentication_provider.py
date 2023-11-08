@@ -1,7 +1,7 @@
 from analogic.authentication_provider import AuthenticationProvider
 from analogic.multi_setting import MultiSettingManager
 from flask import current_app, request
-from analogic.logged_in_signal import logged_in
+from analogic.signals import logged_in
 from analogic.multi_authentication_provider_interface import MultiAuthenticationProviderInterface
 from rich.prompt import Prompt
 

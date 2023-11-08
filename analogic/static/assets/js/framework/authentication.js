@@ -56,6 +56,11 @@ Auth.getAjaxRequest = (url, data, type, widgetId = '', resent = false, eventMapI
         statusCode: {
             401: function () {
                 Auth.handle401();
+            },
+            202: function(resp) {
+                if (resp.message) {
+                    Api.showPopup(resp.message, 400);
+                }
             }
         }
     });
@@ -92,6 +97,7 @@ Auth.handle401 = () => {
     }
     Extensions.authenticationProviders.forEach(ext => ext.handle401());
 };
+
 
 Auth.getHeader = (contentType = 'application/json; charset=utf-8', accept = 'application/json; charset=utf-8') => {
     let headers = {};

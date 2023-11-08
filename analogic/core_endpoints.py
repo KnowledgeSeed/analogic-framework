@@ -1,6 +1,7 @@
 from analogic.endpoint import AnalogicEndpoint
 from analogic.authentication_provider import get_authentication_provider
 
+
 core_endpoints = AnalogicEndpoint('core_endpoints', __name__)
 
 
@@ -43,12 +44,6 @@ def export():
 def clear_cache():
     return get_authentication_provider().clear_cache()
 
-
-# @core_endpoints.analogic_endpoint_route('/ping', methods=['GET'])
-# def ping():
-#     return get_authentication_provider().ping()
-
-
 @core_endpoints.analogic_endpoint_route('/pivot', methods=['GET', 'POST'])
 def pivot():
     return get_authentication_provider().pivot()
@@ -57,3 +52,4 @@ def pivot():
 @core_endpoints.analogic_endpoint_route('/middleware', methods=['GET', 'POST'])
 def middleware():
     return get_authentication_provider().middleware()
+

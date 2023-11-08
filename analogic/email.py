@@ -8,9 +8,12 @@ import logging
 class EmailManager:
 
     def send_email(self, request, tm1_service, setting, authentication_provider):
+        post_data = request.json if request.method == 'POST' else request.values.to_dict()
+        return self.send_email_by_params(setting, post_data)
+
+    def send_email_by_params(self, setting, post_data):
         logger = logging.getLogger(setting.get_instance())
 
-        post_data = request.json if request.method == 'POST' else request.values.to_dict()
 
         if 'email_template' not in post_data:
             return self._error('missing email_template parameter from request', logger)

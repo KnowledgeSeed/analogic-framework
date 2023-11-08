@@ -6,7 +6,7 @@ import analogic.pivot as PivotApi
 from analogic.exceptions import AnalogicTM1ServiceException
 from analogic.loader import ClassLoader
 from analogic.authentication_provider import login_required
-from analogic.logged_in_signal import logged_in
+from analogic.signals import logged_in
 from analogic.multi_authentication_provider_interface import MultiAuthenticationProviderInterface
 
 
@@ -88,7 +88,8 @@ class Cam(AuthenticationProvider, MultiAuthenticationProviderInterface):
             mdx = self.setting.get_mdx(key)
             mdx = self._set_custom_mdx_data(mdx)
             for k in body:
-                mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
+                if type(body[k]) is not dict:
+                    mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
 
             return mdx.encode('utf-8')
 
