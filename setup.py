@@ -32,9 +32,7 @@ setup(
         'flask_talisman',
         'Flask-APScheduler==1.12.4',
         'orjson==3.8.6',
-        'rich==13.3.5',
-        'ecdsa==0.18.0',
-        'pywebpush==1.14.0'
+        'rich==13.3.5'
     ],
     entry_points={
         'console_scripts': ['analogic=analogic.__cli__:main'],
