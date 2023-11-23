@@ -9,19 +9,19 @@ class EmailManager:
 
     def send_email(self, request, tm1_service, setting, authentication_provider):
         post_data = request.json if request.method == 'POST' else request.values.to_dict()
-        return self.send_email_by_params(setting, post_data)
+        return EmailManager.send_email_by_params(setting, post_data)
 
-    def send_email_by_params(self, setting, post_data):
+    @staticmethod
+    def send_email_by_params(setting, post_data):
         logger = logging.getLogger(setting.get_instance())
 
-
         if 'email_template' not in post_data:
-            return self._error('missing email_template parameter from request', logger)
+            return EmailManager._error('missing email_template parameter from request', logger)
 
         customer_email_template_dir = os.path.join(setting.site_root, 'server', 'email_templates')
 
         if not os.path.exists(customer_email_template_dir):
-            return self._error(customer_email_template_dir + ' does not exist', logger)
+            return EmailManager._error(customer_email_template_dir + ' does not exist', logger)
 
         env = Environment(
             loader=FileSystemLoader(customer_email_template_dir),
@@ -32,17 +32,18 @@ class EmailManager:
         try:
             email_html = env.get_template(email_template_name).render(post_data)
         except TemplateNotFound:
-            return self._error(post_data['email_template'] + ' template not found in: ' + customer_email_template_dir,
-                               logger)
+            return EmailManager._error(
+                post_data['email_template'] + ' template not found in: ' + customer_email_template_dir,
+                logger)
 
         cnf = setting.get_config()
 
         if 'smtp' not in cnf:
-            return self._error('smtp is not configured', logger)
+            return EmailManager._error('smtp is not configured', logger)
 
         smtp_config = cnf['smtp']
 
-        sender_email = self._get_required_config_value(smtp_config, 'sender_email')
+        sender_email = EmailManager._get_required_config_value(smtp_config, 'sender_email')
 
         receiver_email = post_data.get('receiver_email')
 
@@ -56,8 +57,8 @@ class EmailManager:
 
         message.attach(MIMEText(email_html, "html"))
 
-        smtp_server = self._get_required_config_value(smtp_config, 'server')
-        port = self._get_required_config_value(smtp_config, 'port')
+        smtp_server = EmailManager._get_required_config_value(smtp_config, 'server')
+        port = EmailManager._get_required_config_value(smtp_config, 'port')
         is_ssl = smtp_config.get('ssl', False)
         password = setting.get_smtp_password()
 
