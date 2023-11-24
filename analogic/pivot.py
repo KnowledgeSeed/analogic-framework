@@ -4,13 +4,13 @@ import io
 import xlsxwriter
 import orjson
 
-from TM1py.Objects import Subset, Hierarchy
+from TM1py.Objects import Subset
 from TM1py.Services import TM1Service
 from TM1py.Utils import format_url
-from flask import jsonify, send_file, current_app
+from flask send_file
 
 
-def call(tm1:TM1Service, username, cube_name=None, dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, options=None, export_data=None):
+def call(tm1: TM1Service, username, cube_name=None, dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, options=None, export_data=None):
     data = {}
 
     username = ''.join(ch for ch in username if ch.isalnum())
@@ -39,6 +39,9 @@ def call(tm1:TM1Service, username, cube_name=None, dimension_name=None, hierarch
         data['defaultMember'] = hierarchy['DefaultMember']['Name']
         data['aliasAttributeNames'] = get_alias_attribute_names(hierarchy)
         children, data['privateSubsets'] = get_public_and_private_subsets(tm1, dimension_name, hierarchy_name, username, options)
+    elif 'presetData' in options:
+        preset_data = options['presetData']
+        return get_adjusted_slicer_preset_data_according_to_selected_indexes(tm1, preset_data, username)
     elif 'process' in options:
         p = options['processParams']
         p['pUser'] = username
@@ -56,7 +59,7 @@ def call(tm1:TM1Service, username, cube_name=None, dimension_name=None, hierarch
         data['aliasAttributeNames'] = get_alias_attribute_names(hierarchy)
         children, data['privateSubsets'] = get_public_and_private_subsets(tm1, dimension_name, hierarchy_name, username, options)
     else:
-        #current_app.config['JSON_SORT_KEYS'] = False
+        # current_app.config['JSON_SORT_KEYS'] = False
         children = []
         is_private_subset = options['isPrivateSubset']
         if is_private_subset:
@@ -66,12 +69,14 @@ def call(tm1:TM1Service, username, cube_name=None, dimension_name=None, hierarch
         data['children'] = get_elements_with_aliases(tm1, subset, is_private_subset)
     return orjson.dumps({'children': children, 'data': data}, option=orjson.OPT_NON_STR_KEYS), 200, {'Content-Type': 'application/json'}
 
-def get_hierarchy(tm1:TM1Service, dimension_name, hierarchy_name, **kwargs):
+
+def get_hierarchy(tm1: TM1Service, dimension_name, hierarchy_name, **kwargs):
     url = format_url(
         "/api/v1/Dimensions('{}')/Hierarchies('{}')?$expand=ElementAttributes,Subsets,DefaultMember",
         dimension_name,
         hierarchy_name)
     return tm1._tm1_rest.GET(url, **kwargs).json()
+
 
 def get_presets_data(tm1, username, widget_id):
     mdx = """WITH
@@ -113,7 +118,7 @@ FROM [zSYS Analogic Pivot Presets]"""
     return data['Cells']
 
 
-def get_public_and_private_subsets(tm1:TM1Service, dimension_name, hierarchy_name, username, options):
+def get_public_and_private_subsets(tm1: TM1Service, dimension_name, hierarchy_name, username, options):
     public_subsets = get_filtered_subsets(tm1.subsets.get_all_names(dimension_name, hierarchy_name), options)
     private_subsets = get_filtered_subsets(tm1.subsets.get_all_names(dimension_name, hierarchy_name, True), options, username + '_')
     children = sorted(private_subsets + public_subsets)
@@ -138,7 +143,7 @@ def get_filtered_subsets(subsets, options, username_prefix=None):
     return filtered_subsets
 
 
-def get_elements_with_aliases(tm1:TM1Service, subset:Subset, is_private_subset):
+def get_elements_with_aliases(tm1: TM1Service, subset: Subset, is_private_subset):
     hierarchy = get_hierarchy(tm1, subset.dimension_name, subset.hierarchy_name)
     alias_attribute_names = get_alias_attribute_names(hierarchy)
     alias_attributes = 'Attributes/' + ',Attributes/'.join(alias_attribute_names)
@@ -186,7 +191,7 @@ def create_mdx(options, cube_name, selected_cards_data, username):
                 m = '{DRILLDOWNMEMBER(' + m + ', ' + s + rep(e) + ']})}'
             else:
                 m = '{DRILLUPMEMBER(' + m + ', ' + s + rep(e) + ']})}'
-        #props += (', ' if i else '') + s + d['alias_attr_name'] + ']'
+        # props += (', ' if i else '') + s + d['alias_attr_name'] + ']'
         mdx += (' * ' if i else '') + m
         i += 1
     mdx += ((' PROPERTIES ' + props) if props else ' ') + ' ON COLUMNS'
@@ -207,7 +212,7 @@ def create_mdx(options, cube_name, selected_cards_data, username):
                 m = '{DRILLDOWNMEMBER(' + m + ', ' + s + rep(e) + ']})}'
             else:
                 m = '{DRILLUPMEMBER(' + m + ', ' + s + rep(e) + ']})}'
-        #props += (', ' if i else '') + s + d['alias_attr_name'] + ']'
+        # props += (', ' if i else '') + s + d['alias_attr_name'] + ']'
         mdx += (' * ' if i else '') + m
         i += 1
     if i:
@@ -305,6 +310,56 @@ def get_pivot_header_data(tuples, alias_attribute_names_by_member_ids):
         data.append(d)
 
     return data
+
+
+def get_adjusted_slicer_preset_data_according_to_selected_indexes(tm1, preset_data, username):
+    for c in preset_data[0]:
+        index = c['index']
+        v = get_elements_name_and_alias(tm1, c['dimension'], c['hierarchy'], username + '_' + c['subset'], c['private'], c['alias_attr_name'], index + 1)
+        n = len(v) - 1
+
+        if n < 0:
+            continue
+
+        e = v[n] if index == n else v[0]
+
+        c['element'] = e[0]
+        c['title'] = e[1]
+
+    return preset_data
+
+
+def get_elements_name_and_alias(tm1: TM1Service, dimension_name: str, hierarchy_name: str, subset_name: str, is_private_subset: bool, alias: str = 'Name', top: int = 1000, **kwargs):
+    subsets = "PrivateSubsets" if is_private_subset else "Subsets"
+
+    attribute_alias = alias.replace(' ', '')
+    select = 'Name'
+
+    if alias != 'Name':
+        attribute_alias = 'Attributes/' + attribute_alias
+        select += ',' + attribute_alias
+
+    url = format_url(
+        "/api/v1/Dimensions('{}')/Hierarchies('{}')/{}('{}')/Elements?$select={}&$top={}",
+        dimension_name,
+        hierarchy_name,
+        subsets,
+        subset_name,
+        select,
+        top)
+
+    response = tm1._tm1_rest.GET(url, **kwargs).json()['value']
+
+    elements = []
+
+    if alias == 'Name':
+        for e in response:
+            elements.append([e['Name'], e['Name']])
+    else:
+        for e in response:
+            elements.append([e['Name'], e['Attributes'][alias]])
+
+    return elements
 
 
 def export_to_excel(selected_cards_data, pivot_data, export_data):

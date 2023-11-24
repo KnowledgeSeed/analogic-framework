@@ -1,6 +1,7 @@
 /* global app, Auth, Doc, El, Pivot, QB, Repository, Sortable, Utils, Widget, WidgetValue */
 
 'use strict';
+
 class PivotTableWidget extends Widget {
 
     getHtml() {
@@ -497,7 +498,7 @@ class PivotTableWidget extends Widget {
 
         for (let name of children) {
             currentLevelData.children[name] = {children: {}};
-    }
+        }
     }
 
     renderNextSelectorTreeLevel(nextLevelData, cols, callback) {
@@ -1013,28 +1014,34 @@ class PivotTableWidget extends Widget {
         }).on('click', '.icon-trash', e => this.deletePreset($(Utils.stopEvent(e).currentTarget).parent()));
     }
 
-    doLoadPreset(id) {
-        let i, c, h, d = (this.presets[id] || {}).data;
+    doLoadPreset(presetId) {
+        let presetData = (this.presets[presetId] || {}).data;
 
-        if (!d) {
+        if (!presetData) {
             return;
         }
+
+        Pivot.call({data: {options: JSON.stringify({presetData: presetData})}}).then(adjustedPresetDataBySelectedIndexInSlicer => this.doLoadPresetFinished(adjustedPresetDataBySelectedIndexInSlicer, presetId));
+    }
+
+    doLoadPresetFinished(presetData, presetId) {
+        let i, c, h;
 
         this.resetPivotTable();
 
         for (i = 0; i < 3; ++i) {
             h = this.holders.eq(i);
 
-            for (c of d[i]) {
+            for (c of presetData[i]) {
                 h.append('<div class="ks-pivot-table-tag noselect sortable-chosen" ' + Object.entries(c).map(e => 'data-' + e[0] + '="' + e[1] + '"').join(' ') + ' draggable="true"><div class="ks-pivot-table-tag-color" style="background-color: #' + c.hex + ';"></div><h3>' + c.name + '</h3><h4>' + c.title + '</h4><span class="icon-x-circle"></span></div>');
             }
         }
 
-        this.expandedCollapsedMembers = d[3];
+        this.presetId = presetId;
 
-        this.presetId = id;
+        this.expandedCollapsedMembers = presetData[3];
 
-        this.suppressOptions = d[4] ? {...d[4]} : this.suppressOptions;
+        this.suppressOptions = presetData[4] ? {...presetData[4]} : this.suppressOptions;
 
         this.getPivotTable();
 
@@ -1107,7 +1114,7 @@ class PivotTableWidget extends Widget {
             d[j] = this.holders.eq(j).children('.ks-pivot-table-tag').map((i, e) => {
                 e = $(e);
 
-                return {...e.data(), name: e.find('h3').html(), title: e.find('h4').html()};
+                return {...e.data(), index: e.data('index') ?? i, name: e.find('h3').html(), title: e.find('h4').html()};
             }).get();
         }
 
@@ -1206,12 +1213,13 @@ class PivotTableWidget extends Widget {
 
         n = e.children('.ks-pivot-scrollable').on('click', 'a', e => {
             e = $(e.currentTarget);
+            i = e.index();
             s = e.data();
 
             elements.children('span').addClass('off');
             e.children('span').removeClass('off');
 
-            card.attr({'data-element': s.name, 'data-title': s.alias}).data({element: s.name, title: s.alias}).children('h4').html(s.alias).promise().then(() => this.getPivotTable());
+            card.attr({'data-element': s.name, 'data-title': s.alias, 'data-index': i}).data({element: s.name, title: s.alias, index: i}).children('h4').html(s.alias).promise().then(() => this.getPivotTable());
         });
 
         elements = n.children();
@@ -1968,7 +1976,9 @@ class PivotTableWidget extends Widget {
         let i = this.cellInput, p = i.parent(), url = "/api/v1/Cellsets('" + this.cellsetId + "')/Cells";
 
         let body = '{"Ordinal":' + this.getOrdinalOfCell(p) + ',"Value": \"' + Utils.convertValueToPost(i.val()) + '\"}';
+
         //Todo add source
+
         Auth.getAjaxRequest(QB.getUrl(url), body, 'PATCH', this.id)
             .then(() => p.addClass('ok'))
             .fail(() => p.addClass('err'))
