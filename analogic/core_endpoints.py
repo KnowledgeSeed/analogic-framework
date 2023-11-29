@@ -1,13 +1,38 @@
 from analogic.endpoint import AnalogicEndpoint
 from analogic.authentication_provider import get_authentication_provider
-
+from flask import request, redirect
+import base64
 
 core_endpoints = AnalogicEndpoint('core_endpoints', __name__)
 
 
 @core_endpoints.analogic_endpoint_route('/', methods=['GET', 'POST'])
 def index():
-    return get_authentication_provider().index()
+    authentication_provider = get_authentication_provider()
+
+    navigation_parameters = request.args.get('p')
+
+    if navigation_parameters is not None:
+        authentication_provider.set_navigation_parameters(navigation_parameters)
+        return redirect(authentication_provider.setting.get_base_url())
+
+    response = authentication_provider.index()
+
+    return response
+
+
+@core_endpoints.analogic_endpoint_route('/navigation_parameters', methods=['GET'])
+def navigation_parameters():
+    authentication_provider = get_authentication_provider()
+
+    navigation_parameters = authentication_provider.get_navigation_parameters()
+
+    if navigation_parameters is not None:
+
+        authentication_provider.clear_navigation_parameters()
+
+    return {'navigation_parameters': navigation_parameters}, 200, {'Content-type': 'application/json'}
+
 
 
 @core_endpoints.analogic_endpoint_route('/login', methods=['GET', 'POST'])
@@ -44,6 +69,7 @@ def export():
 def clear_cache():
     return get_authentication_provider().clear_cache()
 
+
 @core_endpoints.analogic_endpoint_route('/pivot', methods=['GET', 'POST'])
 def pivot():
     return get_authentication_provider().pivot()
@@ -52,4 +78,3 @@ def pivot():
 @core_endpoints.analogic_endpoint_route('/middleware', methods=['GET', 'POST'])
 def middleware():
     return get_authentication_provider().middleware()
-

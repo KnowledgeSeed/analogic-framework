@@ -9,6 +9,10 @@ import importlib
 
 class SettingManager:
 
+    ENABLE_REQUEST_LOGGER_PARAMETER_NAME = '_enable_request_logger'
+    ENABLE_WRITE_REQUEST_LOGGER_PARAMETER_NAME = '_enable_write_request_logger'
+
+
     def __init__(self, analogic_application_path, instance='default'):
         self.site_root = analogic_application_path
         self.instance = instance
@@ -172,6 +176,12 @@ class SettingManager:
 
     def get_permission_session_name(self):
         return self.get_instance() + '_analogic_permissions'
+
+    def is_request_logger_enabled(self):
+        return self.get_config().get(self.ENABLE_REQUEST_LOGGER_PARAMETER_NAME, False)
+
+    def is_write_request_logger_enabled(self):
+        return self.get_config().get(self.ENABLE_WRITE_REQUEST_LOGGER_PARAMETER_NAME, False)
 
     def getLogger(self):
         return self._logger

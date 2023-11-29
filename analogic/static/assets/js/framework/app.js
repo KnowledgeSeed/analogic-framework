@@ -97,7 +97,22 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
 
         Widgets.systemValueGlobalCompanyProductPlanVersion = 'Budget';
 
-        Widgets[app.mainPage].renderWidget().then(() => Utils.checkScreenResolution());
+        Auth.getAjaxRequest('navigation_parameters', {}, 'GET').then((data) => {
+            let page = app.mainPage;
+            if (data.navigation_parameters) {
+                let navigation_parameters = JSON.parse(atob(data.navigation_parameters));
+
+                if (navigation_parameters.page) {
+                    page = navigation_parameters.page;
+                }
+                for(let key in navigation_parameters) {
+                    if (key !== 'page') {
+                        Widgets[key] = navigation_parameters[key];
+                    }
+                }
+            }
+            Widgets[page].renderWidget().then(() => Utils.checkScreenResolution());
+        });
     }
 
 

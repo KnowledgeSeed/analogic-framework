@@ -102,6 +102,46 @@
       "encoding": "utf8"
     },
 
+    "request_logger_file_handler": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "INFO",
+      "formatter": "simple",
+      "filename": "logs/request.log",
+      "maxBytes": 10485760,
+      "backupCount": 20,
+      "encoding": "utf8"
+    },
+
+    "request_logger_json_file_handler": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "INFO",
+      "formatter": "json",
+      "filename": "logs/request_json.log",
+      "maxBytes": 10485760,
+      "backupCount": 20,
+      "encoding": "utf8"
+    },
+
+    "write_request_logger_file_handler": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "INFO",
+      "formatter": "simple",
+      "filename": "logs/write_request.log",
+      "maxBytes": 10485760,
+      "backupCount": 20,
+      "encoding": "utf8"
+    },
+
+    "write_request_logger_json_file_handler": {
+      "class": "logging.handlers.RotatingFileHandler",
+      "level": "INFO",
+      "formatter": "json",
+      "filename": "logs/write_request_json.log",
+      "maxBytes": 10485760,
+      "backupCount": 20,
+      "encoding": "utf8"
+    },
+
     "console": {
       "class": "logging.StreamHandler",
       "level": "DEBUG",
@@ -113,6 +153,16 @@
     "login": {
       "level": "INFO",
       "handlers": ["login_file_handler", "login_json_file_handler"],
+      "propagate": false
+    },
+    "request_logger": {
+      "level": "INFO",
+      "handlers": ["request_logger_file_handler", "request_logger_json_file_handler"],
+      "propagate": false
+    },
+    "write_request_logger": {
+      "level": "INFO",
+      "handlers": ["write_request_logger_file_handler", "write_request_logger_json_file_handler"],
       "propagate": false
     },
      "werkzeug": {
