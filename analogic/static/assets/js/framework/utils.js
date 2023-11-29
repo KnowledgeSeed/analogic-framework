@@ -570,6 +570,13 @@ const Utils = {
     },
     undefinedOrFalse(val) {
         return typeof val === 'undefined' || val === false;
+    },
+    getNavigationUrl(params) {
+        let url = window.location.href.split('?')[0];
+        if (params) {
+            url += '?p=' + btoa(JSON.stringify(params));
+        }
+        return url;
     }
 };
 

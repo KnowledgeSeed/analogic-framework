@@ -43,7 +43,10 @@ class EmailManager:
 
         smtp_config = cnf['smtp']
 
-        sender_email = EmailManager._get_required_config_value(smtp_config, 'sender_email')
+        if post_data.get('sender_email') is None:
+            sender_email = EmailManager._get_required_config_value(smtp_config, 'sender_email')
+        else:
+            sender_email = post_data.get('sender_email')
 
         receiver_email = post_data.get('receiver_email')
 

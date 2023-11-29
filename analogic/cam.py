@@ -173,6 +173,11 @@ class Cam(AuthenticationProvider, MultiAuthenticationProviderInterface):
     def _extend_login_session(self):
         session.modified = True
 
+    def _set_custom_mdx_data(self, mdx):
+        if mdx is not None and len(mdx) > 0:
+            return mdx.replace('$activeUser', self.get_logged_in_user_name())
+        return mdx
+
     @staticmethod
     def get_setting_parameter_descriptions():
         result = super(Cam, Cam).get_setting_parameter_descriptions()

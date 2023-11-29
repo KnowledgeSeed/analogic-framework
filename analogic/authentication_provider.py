@@ -4,6 +4,8 @@ import analogic.pivot as PivotApi
 from analogic.exceptions import AnalogicProxyException, AnalogicAccessDeniedException, AnalogicException, \
     AnalogicAcceptedException
 from analogic.session_handler import SessionHandler
+from analogic.request_logger import RequestLogger
+from analogic.setting import SettingManager
 import logging
 import pandas as pd
 from abc import ABC, abstractmethod
@@ -67,6 +69,7 @@ class AuthenticationProvider(ABC):
         self.logged_in_user_session_name = '_logged_in_user_name'
         self._logger = logging.getLogger(self.setting.get_instance())
         self.session_handler = SessionHandler(self.setting.get_instance_and_name())
+        self.request_logger = RequestLogger()
         self.user_subscriptions = {}
 
     def initialize(self):
@@ -77,6 +80,15 @@ class AuthenticationProvider(ABC):
 
     def get_logged_in_user_name(self):
         return self.session_handler.get(self.logged_in_user_session_name)
+
+    def set_navigation_parameters(self, value):
+        self.session_handler.set('navigation_parameters', value)
+
+    def get_navigation_parameters(self):
+        return self.session_handler.get('navigation_parameters')
+
+    def clear_navigation_parameters(self):
+        self.session_handler.delete('navigation_parameters')
 
     @login_required
     def pivot(self):
@@ -141,16 +153,21 @@ class AuthenticationProvider(ABC):
 
     def _get_check_access_mdx(self, force_server_side_query=False):
         if request.args.get('server') is not None or force_server_side_query is True:
+
             if request.method == 'GET':
                 body = request.args
             elif len(request.form) > 0:
                 body = request.form.to_dict()
             else:
                 body = orjson.loads(request.data)
+
             key = body.get('key')
+
             if body.get('key_suffix') is not None:
                 key = key + '_' + body['key_suffix']
+
             key = key + self.get_setting().get_check_access_repository_yml_suffix()
+
             mdx = self.setting.get_mdx(key)
 
             if mdx is None:
@@ -162,33 +179,72 @@ class AuthenticationProvider(ABC):
                 if type(body[k]) is not dict:
                     mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
 
+            self.log_request(**body)
+
             return mdx.encode('utf-8')
 
         return None
 
+    def log_request(self, **kwargs):
+        if self.setting.is_request_logger_enabled() is True:
+            params = kwargs.copy()
+
+            params['logged_in_user'] = self.get_logged_in_user_name()
+
+            params.update(self.get_additional_log_request_parameters())
+
+            self.request_logger.log_request(**params)
+
+    def log_write_request(self, **kwargs):
+        if self.setting.is_write_request_logger_enabled() is True and self.is_write_request():
+            params = kwargs.copy()
+
+            params['logged_in_user'] = self.get_logged_in_user_name()
+
+            params.update(self.get_additional_log_request_parameters())
+
+            self.request_logger.log_write_request(**params)
+
+    def get_additional_log_request_parameters(self):
+        return {}
+
+    def is_write_request(self):
+        return 'tm1.ExecuteWithReturn' in request.full_path
+
     def _get_server_side_mdx(self, force_server_side_query=False):
+
         if request.args.get('server') is not None or force_server_side_query is True:
+
             if request.method == 'GET':
                 body = request.args
             elif len(request.form) > 0:
                 body = request.form.to_dict()
             else:
                 body = orjson.loads(request.data)
+
             key = body['key']
+
             if body.get('key_suffix') is not None:
                 key = key + '_' + body['key_suffix']
+
             mdx = self.setting.get_mdx(key)
 
             if isinstance(mdx, dict):
+
                 if 'required_permissions' in mdx and self.check_permission(mdx.get('required_permissions')) is False:
                     raise AnalogicAccessDeniedException('You do not have access to run the query {}'.format(key))
 
                 mdx = mdx['query']
 
             mdx = self._set_custom_mdx_data(mdx)
+
             for k in body:
+
                 if type(body[k]) is not dict:
                     mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
+
+            self.log_request(**body)
+            self.log_write_request(**body)
 
             return mdx.encode('utf-8')
         else:
@@ -442,6 +498,14 @@ class AuthenticationProvider(ABC):
             'sessionExpiresInMinutes': {
                 'required': False,
                 'description': 'Numeric value. Session will expire after the added value. Default 20'
+            },
+            SettingManager.ENABLE_REQUEST_LOGGER_PARAMETER_NAME: {
+                'required': False,
+                'description': 'Boolean value, default false. All of the request parameter will be added to the log'
+            },
+            SettingManager.ENABLE_WRITE_REQUEST_LOGGER_PARAMETER_NAME: {
+                'required': False,
+                'description': 'Boolean value, default false. All of the write request parameter will be added to the log'
             }
         }
 

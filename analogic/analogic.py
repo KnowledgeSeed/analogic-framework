@@ -246,10 +246,10 @@ def _load_logging(app):
         log_config = json.load(file)
         for h in log_config['handlers']:
             if 'filename' in log_config['handlers'][h]:
-                if h == 'scheduler_file_handler':
-                    file_name = f"logs/scheduler_{os.getpid()}.log"
-                else:
-                    file_name = log_config['handlers'][h]['filename']
+                # if h == 'scheduler_file_handler':
+                #     file_name = f"logs/scheduler_{os.getpid()}.log"
+                # else:
+                file_name = log_config['handlers'][h]['filename']
 
                 log_config['handlers'][h]['filename'] = os.path.join(app.instance_path, file_name)
 

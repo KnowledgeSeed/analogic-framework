@@ -7,7 +7,7 @@ import orjson
 from TM1py.Objects import Subset
 from TM1py.Services import TM1Service
 from TM1py.Utils import format_url
-from flask send_file
+from flask import send_file
 
 
 def call(tm1: TM1Service, username, cube_name=None, dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, options=None, export_data=None):
