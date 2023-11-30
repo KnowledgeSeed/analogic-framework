@@ -197,6 +197,8 @@ class AuthenticationProvider(ABC):
 
             params['group_id'] = request.args.get('requestLoggerGroupId', params.get('requestLoggerGroupId', ''))
 
+            params['url'] = request.full_path
+
             params.update(self.get_additional_log_request_parameters())
 
             self.request_logger.log_request(**params)
@@ -206,6 +208,8 @@ class AuthenticationProvider(ABC):
             params = kwargs.copy()
 
             params['logged_in_user'] = self.get_logged_in_user_name()
+
+            params['url'] = request.full_path
 
             params.update(self.get_additional_log_request_parameters())
 

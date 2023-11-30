@@ -579,13 +579,13 @@ const Utils = {
         return url;
     },
     enableRequestLogger() {
-        app.requestLogger = true;
+        app.enableRequestLogger = true;
     },
     disableRequestLogger() {
-        app.requestLogger = false;
+        app.enableRequestLogger = false;
     },
     isRequestLoggerEnabled() {
-        return app.requestLogger;
+        return app.enableRequestLogger;
     },
     setRequestLoggerGroupId(groupId) {
         app.requestLoggerGroupId = groupId;

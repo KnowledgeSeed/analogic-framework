@@ -9,8 +9,8 @@ import importlib
 
 class SettingManager:
 
-    ENABLE_REQUEST_LOGGER_PARAMETER_NAME = '_enable_request_logger'
-    ENABLE_WRITE_REQUEST_LOGGER_PARAMETER_NAME = '_enable_write_request_logger'
+    ENABLE_REQUEST_LOGGER_PARAMETER_NAME = 'enableRequestLogger'
+    ENABLE_WRITE_REQUEST_LOGGER_PARAMETER_NAME = 'enableWriteRequestLogger'
 
 
     def __init__(self, analogic_application_path, instance='default'):
