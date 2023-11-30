@@ -93,6 +93,19 @@ QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
     }
     !keyAdded && params.push(`"key" : "${repositoryId + "_" + path}"`);
 
+    if (Utils.isRequestLoggerEnabled()) {
+        params.push(`"requestLoggerEnabled" : "true"`);
+        subUrl += '&requestLoggerEnabled=true';
+
+        let requestLoggerGroupId = Utils.getRequestLoggerGroupdId();
+
+        if (!requestLoggerGroupId) {
+            requestLoggerGroupId = Utils.generateRequestLoggerGroupId();
+        }
+        params.push(`"requestLoggerGroupId" : "${requestLoggerGroupId}"`);
+        subUrl += '&requestLoggerGroupId=' + requestLoggerGroupId;
+    }
+
     if(url.includes('middleware')) {
         newUrl = url;
         subUrl = '';

@@ -186,10 +186,16 @@ class AuthenticationProvider(ABC):
         return None
 
     def log_request(self, **kwargs):
-        if self.setting.is_request_logger_enabled() is True:
+
+        is_request_logger_enabled_by_client = request.args.get('requestLoggerEnabled') == 'true' or kwargs.get(
+            'requestLoggerEnabled') == 'true'
+
+        if self.setting.is_request_logger_enabled() is True or is_request_logger_enabled_by_client:
             params = kwargs.copy()
 
             params['logged_in_user'] = self.get_logged_in_user_name()
+
+            params['group_id'] = request.args.get('requestLoggerGroupId', params.get('requestLoggerGroupId', ''))
 
             params.update(self.get_additional_log_request_parameters())
 
@@ -244,6 +250,7 @@ class AuthenticationProvider(ABC):
                     mdx = mdx.replace('$' + k, body[k].replace('"', '\\"'))
 
             self.log_request(**body)
+
             self.log_write_request(**body)
 
             return mdx.encode('utf-8')

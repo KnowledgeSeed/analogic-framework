@@ -577,6 +577,25 @@ const Utils = {
             url += '?p=' + btoa(JSON.stringify(params));
         }
         return url;
+    },
+    enableRequestLogger() {
+        app.requestLogger = true;
+    },
+    disableRequestLogger() {
+        app.requestLogger = false;
+    },
+    isRequestLoggerEnabled() {
+        return app.requestLogger;
+    },
+    setRequestLoggerGroupId(groupId) {
+        app.requestLoggerGroupId = groupId;
+    },
+    generateRequestLoggerGroupId() {
+        app.requestLoggerGroupId = Utils.getRandomId();
+        return app.requestLoggerGroupId;
+    },
+    getRequestLoggerGroupdId() {
+        return app.requestLoggerGroupId;
     }
 };
 
