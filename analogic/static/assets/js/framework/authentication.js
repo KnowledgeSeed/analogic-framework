@@ -25,6 +25,9 @@ Auth.goToStartPage = () => {
 
 Auth.getAjaxRequest = (url, data, type, widgetId = '', resent = false, eventMapId = '') => {
     let urlWithWidgetId = url + (url.includes('?') ? '&' : '?') + 'widgetid=' + widgetId;
+    Extensions.urlParameters.forEach(ext => {
+        urlWithWidgetId = ext.getUrl(urlWithWidgetId);
+    });
     return $.ajax({
         cache: true,
         type: type,

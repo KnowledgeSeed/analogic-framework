@@ -7,7 +7,8 @@ const Doc = $(document), El = {body: $('body')}, PageState = {current: '', previ
         authenticationProviders: [],
         writeExecutors: [],
         pageRender: [],
-        appInitialization: []
+        appInitialization: [],
+        urlParameters: []
     },
     Widgets = {infoData: {}},
     Api = {};
@@ -112,6 +113,7 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
                 }
             }
             Widgets[page].renderWidget().then(() => Utils.checkScreenResolution());
+            PageState.current = page;
         });
     }
 
