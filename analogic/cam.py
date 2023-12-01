@@ -80,7 +80,7 @@ class Cam(AuthenticationProvider, MultiAuthenticationProviderInterface):
 
     def _get_server_side_mdx(self, force_server_side_query=False):
         mdx = request.data
-        if request.args.get('server') is not None:
+        if request.args.get('server') is not None or force_server_side_query is True:
             body = orjson.loads(request.data)
             key = body['key']
             if body.get('key_suffix') is not None:
@@ -175,7 +175,7 @@ class Cam(AuthenticationProvider, MultiAuthenticationProviderInterface):
 
     def _set_custom_mdx_data(self, mdx):
         if mdx is not None and len(mdx) > 0:
-            return mdx.replace('$activeUser', self.get_logged_in_user_name())
+            return mdx.replace('$activeUser', self.get_logged_in_user_name().replace('"', '\\"'))
         return mdx
 
     @staticmethod
