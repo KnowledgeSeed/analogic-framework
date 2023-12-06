@@ -12,7 +12,7 @@ class EmailManager:
         return EmailManager.send_email_by_params(setting, post_data)
 
     @staticmethod
-    def send_email_by_params(setting, post_data):
+    def send_email_by_params(setting, post_data, sender_email_address = None):
         logger = logging.getLogger(setting.get_instance())
 
         if 'email_template' not in post_data:
@@ -43,10 +43,10 @@ class EmailManager:
 
         smtp_config = cnf['smtp']
 
-        if post_data.get('sender_email') is None:
+        if sender_email_address is None:
             sender_email = EmailManager._get_required_config_value(smtp_config, 'sender_email')
         else:
-            sender_email = post_data.get('sender_email')
+            sender_email = sender_email_address
 
         receiver_email = post_data.get('receiver_email')
 
