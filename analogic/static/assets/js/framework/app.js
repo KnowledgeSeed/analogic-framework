@@ -46,13 +46,19 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
 
         app.clickEvent = Utils.isMobile() ? 'touchstart' : 'click touchstart';
 
-        let wc, i;
+        let wc, i, j;
 
         for (i in WidgetConfig) {
             wc = WidgetConfig[i];
 
             if (wc.type) {
                 loadWidget(wc);
+            } else {
+                for (j in wc) {
+                    if (wc[j].id !== j) {
+                        console.error('Widget id "' + wc[j].id  + '" mismatch with reusable "' + j + '" in  reusable collection "' + i + '". Widget id should be "' + j + '"');
+                    }
+                }
             }
         }
 
