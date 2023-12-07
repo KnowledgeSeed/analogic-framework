@@ -25,7 +25,8 @@ class MultiAuthenticationProvider(AuthenticationProvider):
                 if name != MultiSettingManager.PRIMARY_AUTHENTICATION_PROVIDER_NAME:
                     current_app.register_analogic_url_rules('/' + self.setting.get_instance() + '/' + name)
 
-                child_auth_prov.initialize()
+                if current_app.initialize_auth_providers is True:
+                    child_auth_prov.initialize()
 
                 self.authentication_providers[name] = child_auth_prov
 
