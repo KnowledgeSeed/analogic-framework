@@ -63,10 +63,13 @@ class EmailManager:
         smtp_server = EmailManager._get_required_config_value(smtp_config, 'server')
         port = EmailManager._get_required_config_value(smtp_config, 'port')
         is_ssl = smtp_config.get('ssl', False)
+        is_tls = smtp_config.get('tls', False)
         password = setting.get_smtp_password()
 
         if is_ssl is False:
             server = smtplib.SMTP(smtp_server, port)
+            if is_tls:
+                server.starttls()
         else:
             context = ssl.create_default_context()
             server = smtplib.SMTP_SSL(smtp_server, port, context=context)
@@ -75,6 +78,8 @@ class EmailManager:
             server.login(sender_email, password)
 
         server.sendmail(sender_email, receiver_email, message.as_string())
+
+        server.quit()
 
         return {}, 200, {'Content-type': 'application/json'}
 
