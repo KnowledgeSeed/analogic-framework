@@ -195,6 +195,7 @@ class AuthenticationProvider(ABC):
 
             params['logged_in_user'] = self.get_logged_in_user_name()
 
+            params['journey_id'] = request.args.get('requestLoggerJourneyId', params.get('requestLoggerJourneyId', ''))
             params['group_id'] = request.args.get('requestLoggerGroupId', params.get('requestLoggerGroupId', ''))
 
             params['url'] = request.full_path

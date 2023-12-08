@@ -587,6 +587,16 @@ const Utils = {
     isRequestLoggerEnabled() {
         return app.enableRequestLogger;
     },
+    setRequestLoggerJourneyId(journeyId) {
+        app.requestLoggerJourneyId = journeyId;
+    },
+    generateRequestLoggerJourneyId() {
+      app.requestLoggerJourneyId = Utils.getRandomId();
+      return app.requestLoggerJourneyId;
+    },
+    getRequestLoggerJourneyId() {
+        return app.requestLoggerJourneyId;
+    },
     setRequestLoggerGroupId(groupId) {
         app.requestLoggerGroupId = groupId;
     },
@@ -594,7 +604,7 @@ const Utils = {
         app.requestLoggerGroupId = Utils.getRandomId();
         return app.requestLoggerGroupId;
     },
-    getRequestLoggerGroupdId() {
+    getRequestLoggerGroupId() {
         return app.requestLoggerGroupId;
     }
 };

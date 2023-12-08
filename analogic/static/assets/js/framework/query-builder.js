@@ -50,6 +50,9 @@ QB.parsingControlFinished = (repositoryId) => {
 
 QB.writeData = (eventMapId, jqueryEvent, jqueryElement, resent = false) => {
     const executor = WriteExecutorFactory.createExecutor(eventMapId, jqueryEvent, jqueryElement);
+    if (Utils.isRequestLoggerEnabled()) {
+        Utils.generateRequestLoggerJourneyId();
+    }
 
     try {
         return executor.execute();
@@ -97,12 +100,19 @@ QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
         params.push(`"requestLoggerEnabled" : "true"`);
         subUrl += '&requestLoggerEnabled=true';
 
-        let requestLoggerGroupId = Utils.getRequestLoggerGroupdId();
+        let requestLoggerJourneyId = Utils.getRequestLoggerJourneyId(), requestLoggerGroupId = Utils.getRequestLoggerGroupId();
+
+        if (!requestLoggerJourneyId) {
+            requestLoggerJourneyId = Utils.generateRequestLoggerJourneyId();
+        }
 
         if (!requestLoggerGroupId) {
             requestLoggerGroupId = Utils.generateRequestLoggerGroupId();
         }
+
+        params.push(`"requestLoggerJourneyId" : "${requestLoggerJourneyId}"`);
         params.push(`"requestLoggerGroupId" : "${requestLoggerGroupId}"`);
+        subUrl += '&requestLoggerJourneyId=' + requestLoggerJourneyId;
         subUrl += '&requestLoggerGroupId=' + requestLoggerGroupId;
     }
 
