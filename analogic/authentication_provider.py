@@ -198,6 +198,15 @@ class AuthenticationProvider(ABC):
             params['journey_id'] = request.args.get('requestLoggerJourneyId', params.get('requestLoggerJourneyId', ''))
             params['group_id'] = request.args.get('requestLoggerGroupId', params.get('requestLoggerGroupId', ''))
 
+            if params.get('requestLoggerJourneyId') is not None:
+                del params['requestLoggerJourneyId']
+
+            if params.get('requestLoggerGroupId') is not None:
+                del params['requestLoggerGroupId']
+
+            if params.get('requestLoggerEnabled') is not None:
+                del params['requestLoggerEnabled']
+
             params['url'] = request.full_path
 
             params.update(self.get_additional_log_request_parameters())
@@ -465,6 +474,9 @@ class AuthenticationProvider(ABC):
 
     def clear_cache(self):
         return self.get_setting().clear_cache()
+
+    def get_request_log(self, journey_id):
+        return self.request_logger.get_request_log(journey_id)
 
     def getLogger(self):
         return self._logger
