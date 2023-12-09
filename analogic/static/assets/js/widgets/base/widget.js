@@ -593,7 +593,11 @@ class Widget {
     }
 
     getGeneralStyles(data = {}, defaults = {}, dataPrefix = '') {
-        return [...this.getWidthAndHeight(data, defaults, dataPrefix), ...this.getPaddings(data, defaults, dataPrefix), ...this.getMargins(data, defaults, dataPrefix)];
+        return [
+            ...this.getWidthAndHeight(data, defaults, dataPrefix),
+            ...this.getPaddings(data, defaults, dataPrefix),
+            ...this.getMargins(data, defaults, dataPrefix)
+        ];
     }
 
     updateHtmlComponent(key, data, element = null, section = null) {
@@ -692,6 +696,13 @@ class Widget {
 
     static getPercentOrPixel(value) {
         return isNaN(value) ? value : value + 'px';
+    }
+
+    getTooltip() {
+        if ('undefined' !== typeof this.options['tooltip']) {
+            return this.options['tooltip'];
+        }
+        return null;
     }
 
     static setSkin(element, skinPrefix, newSkin) {

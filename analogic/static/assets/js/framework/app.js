@@ -118,7 +118,20 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
                     }
                 }
             }
-            Widgets[page].renderWidget().then(() => Utils.checkScreenResolution());
+            Widgets[page].renderWidget().then(() => {
+                Utils.checkScreenResolution();
+                //todo enable tooltip
+                $(document).tooltip({
+                        items: 'section',
+                        content: function() {
+                            let element = $( this ), wid = Widgets[element.attr('id')];
+                            if (wid && wid.getTooltip() ) {
+                                return wid.getTooltip();
+                            }
+                        }
+                    }
+                );
+            });
             PageState.current = page;
         });
     }
