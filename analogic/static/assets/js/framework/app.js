@@ -56,7 +56,7 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
             } else {
                 for (j in wc) {
                     if (wc[j].id !== j) {
-                        console.error('Widget id "' + wc[j].id  + '" mismatch with reusable "' + j + '" in  reusable collection "' + i + '". Widget id should be "' + j + '"');
+                        console.error('Widget id "' + wc[j].id + '" mismatch with reusable "' + j + '" in  reusable collection "' + i + '". Widget id should be "' + j + '"');
                     }
                 }
             }
@@ -112,7 +112,7 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
                 if (navigation_parameters.page) {
                     page = navigation_parameters.page;
                 }
-                for(let key in navigation_parameters) {
+                for (let key in navigation_parameters) {
                     if (key !== 'page') {
                         Widgets[key] = navigation_parameters[key];
                     }
@@ -120,17 +120,48 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
             }
             Widgets[page].renderWidget().then(() => {
                 Utils.checkScreenResolution();
-                //todo enable tooltip
-                $(document).tooltip({
-                        items: 'section',
-                        content: function() {
-                            let element = $( this ), wid = Widgets[element.attr('id')];
-                            if (wid && wid.getTooltip() ) {
-                                return wid.getTooltip();
+                if (app.enableToolTips) {
+                    $(document).tooltip({
+                            // items: 'section',
+                            // content: function () {
+                            //     let element = $(this), children = element.children(), widget,
+                            //         tooltip;
+                            //
+                            //     if (children.length > 0 && $(children[0]).hasClass('ks-segment') && element.data('originalid')) {
+                            //         widget = Widgets[element.data('originalid')];
+                            //     } else {
+                            //         widget = Widgets[element.attr('id')];
+                            //     }
+                            //
+                            //     tooltip = widget ? widget.getTooltip() : null
+                            //
+                            //     if (tooltip) {
+                            //         return tooltip;
+                            //     }
+                            // }
+                            items: 'section, .ks-segment',
+                            content: function () {
+                                let element = $(this), widget,
+                                    tooltip, section;
+
+                                if (element.hasClass('ks-segment')) {
+                                    section = element.closest('section');
+                                    if (section && $(section).data('originalid')) {
+                                        widget = Widgets[$(section).data('originalid')];
+                                    }
+                                } else {
+                                    widget = Widgets[element.attr('id')];
+                                }
+
+                                tooltip = widget ? widget.getTooltip() : null
+
+                                if (tooltip) {
+                                    return tooltip;
+                                }
                             }
                         }
-                    }
-                );
+                    );
+                }
             });
             PageState.current = page;
         });

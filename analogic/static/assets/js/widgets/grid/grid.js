@@ -22,6 +22,8 @@ class GridWidget extends Widget {
             gs.push('display:none;');
         }
 
+        this.dynamicTooltip = (data || {}).tooltip;
+
         return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" style="${gs.join('')}" id="${o.id ? o.id : Utils.getRandomId()}">${this.getHtml(widgetHtmls, this.processData(data), withState)}</section>`;
     }
 

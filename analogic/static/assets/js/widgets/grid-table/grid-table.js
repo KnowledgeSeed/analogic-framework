@@ -165,6 +165,8 @@ class GridTableWidget extends Widget {
 
             processedData = instance.processData(d);
             const vv = instance.getParameters(d);
+            instance.dynamicTooltip = (processedData || {}).tooltip;
+
             if (!Array.isArray(processedData)) {
                 processedData = processedData.content;
             }

@@ -11,6 +11,7 @@ class SettingManager:
 
     ENABLE_REQUEST_LOGGER_PARAMETER_NAME = 'enableRequestLogger'
     ENABLE_WRITE_REQUEST_LOGGER_PARAMETER_NAME = 'enableWriteRequestLogger'
+    ENABLE_TOOL_TIPS_PARAMETER_NAME = 'enableToolTips'
 
 
     def __init__(self, analogic_application_path, instance='default'):

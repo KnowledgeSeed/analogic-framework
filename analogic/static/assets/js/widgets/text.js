@@ -49,7 +49,7 @@ class TextWidget extends Widget {
 <div class="ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}" style="${mainDivStyle.join('')}">
     <div class="ks-text-inner" style="${innerStyles.join('')}" data-id="${o.id}" data-action="text_click" data-ordinal="${v.ordinal}">
         <div class="ks-text-icon" data-id="${o.id}" data-action="${v.iconCustomEventName ? v.iconCustomEventName : 'perform'}" data-ordinal="${v.ordinal}"><span style="${iconStyles.join('')}" class="${v.icon}"></span></div>
-        <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title ? Utils.htmlEncode(Utils.stripHtml(v.title)) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title !== false ? v.title : ''}</div>
+        <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title && !v.tooltip ? Utils.htmlEncode(Utils.stripHtml(v.title)) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title !== false ? v.title : ''}</div>
         <div class="ks-text-body" style="${bodyStyles.join('')}">${v.body !== false ? v.body : ''}</div>
     </div>
 </div>`;
@@ -172,6 +172,7 @@ class TextWidget extends Widget {
             titleFontSize: this.getRealValue('titleFontSize', d, false),
             titleFontWeight: this.getRealValue('titleFontWeight', d, false),
             titleAlignment: this.getRealValue('titleAlignment', d, false),
+            tooltip: this.getRealValue('tooltip', d, false),
             ordinal: typeof d.ordinal !== 'undefined' ? d.ordinal : '',
             height: this.getRealValue('height', d, false),
             width: this.getRealValue('width', d, false),

@@ -79,5 +79,23 @@ class ContainerWidget {
     updateHtml(data) {
         return this.c.updateHtml(data);
     }
+
+    getTooltip() {
+        const widget = this.c;
+
+        if (!widget) {
+            return null;
+        }
+
+        if (widget.dynamicTooltip) {
+            return widget.dynamicTooltip;
+        }
+
+        if ('undefined' !== typeof widget.options['tooltip']) {
+            return widget.options['tooltip'];
+        }
+
+        return null;
+    }
 }
 ;

@@ -237,6 +237,7 @@ class Widget {
         if (data !== false) {
             return $.when.apply($, deferred).then(function () {
                 processedData = instance.processData(data);
+                instance.dynamicTooltip = (processedData || {}).tooltip;
                 instance.updateHtml(processedData);
             });
         }
@@ -244,6 +245,7 @@ class Widget {
         return loadFunction(o.id, instance.name).then(function (d) {
             return $.when.apply($, deferred).then(function () {
                 processedData = instance.processData(d);
+                instance.dynamicTooltip = (processedData || {}).tooltip;
                 instance.updateHtml(processedData);
                 return 'update';
             });
@@ -321,6 +323,8 @@ class Widget {
             write = data.write;
         }
         html = this.getHtml(widgetHtmls, data, withState);
+
+        this.dynamicTooltip = (data || {}).tooltip;
 
         return `<section ${write === 'off' ? `data-write="off"` : ''} ${originalId !== false ? `data-originalId="${o.originalId}"` : ''} ${o.ordinal ? `data-ordinal="${o.ordinal}"` : ''} ${o.margin ? 'class="wrapper"' : ''} style="${gs.join('')}" id="${o.id ? o.id : Utils.getRandomId()}">${html}</section>`;
 
@@ -699,9 +703,20 @@ class Widget {
     }
 
     getTooltip() {
-        if ('undefined' !== typeof this.options['tooltip']) {
-            return this.options['tooltip'];
+        const widget = this.getWidget(this.options);
+
+        if (!widget) {
+            return null;
         }
+
+        if (widget.dynamicTooltip) {
+            return widget.dynamicTooltip;
+        }
+
+        if ('undefined' !== typeof widget.options['tooltip']) {
+            return widget.options['tooltip'];
+        }
+
         return null;
     }
 

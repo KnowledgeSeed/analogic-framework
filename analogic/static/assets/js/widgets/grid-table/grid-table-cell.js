@@ -58,6 +58,7 @@ class GridTableCellWidget extends Widget {
             childrenData['originalId'] = widgetOptions['id'];
             Widgets[childrenData['id']].updateHtml(childrenData);
         }
+        this.dynamicTooltip = (childrenData || {}).tooltip;
         this.updateHtml(childrenData);
     }
 

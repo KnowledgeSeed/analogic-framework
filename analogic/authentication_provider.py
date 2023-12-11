@@ -530,6 +530,10 @@ class AuthenticationProvider(ABC):
             SettingManager.ENABLE_WRITE_REQUEST_LOGGER_PARAMETER_NAME: {
                 'required': False,
                 'description': 'Boolean value, default false. All of the write request parameter will be added to the log'
+            },
+            SettingManager.ENABLE_TOOL_TIPS_PARAMETER_NAME: {
+                'required': False,
+                'description': 'Boolean value, default false. Tooltips will be displayed on the widget if tooltip parameter is set.'
             }
         }
 
