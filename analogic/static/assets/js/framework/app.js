@@ -121,46 +121,7 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
             Widgets[page].renderWidget().then(() => {
                 Utils.checkScreenResolution();
                 if (app.enableToolTips) {
-                    $(document).tooltip({
-                            // items: 'section',
-                            // content: function () {
-                            //     let element = $(this), children = element.children(), widget,
-                            //         tooltip;
-                            //
-                            //     if (children.length > 0 && $(children[0]).hasClass('ks-segment') && element.data('originalid')) {
-                            //         widget = Widgets[element.data('originalid')];
-                            //     } else {
-                            //         widget = Widgets[element.attr('id')];
-                            //     }
-                            //
-                            //     tooltip = widget ? widget.getTooltip() : null
-                            //
-                            //     if (tooltip) {
-                            //         return tooltip;
-                            //     }
-                            // }
-                            items: 'section, .ks-segment',
-                            content: function () {
-                                let element = $(this), widget,
-                                    tooltip, section;
-
-                                if (element.hasClass('ks-segment')) {
-                                    section = element.closest('section');
-                                    if (section && $(section).data('originalid')) {
-                                        widget = Widgets[$(section).data('originalid')];
-                                    }
-                                } else {
-                                    widget = Widgets[element.attr('id')];
-                                }
-
-                                tooltip = widget ? widget.getTooltip() : null
-
-                                if (tooltip) {
-                                    return tooltip;
-                                }
-                            }
-                        }
-                    );
+                    Utils.enableToolTips();
                 }
             });
             PageState.current = page;

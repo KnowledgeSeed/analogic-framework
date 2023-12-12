@@ -391,7 +391,7 @@ const Utils = {
         }
         return object[property];
     },
-    getDecimalFromPercentString(value, replaceDecimal= false) {
+    getDecimalFromPercentString(value, replaceDecimal = false) {
         let result = Utils.parseNumber(value.replace('%', '')) / 100;
         return replaceDecimal ? Utils.replaceDecimal(result) : result;
     },
@@ -591,8 +591,8 @@ const Utils = {
         app.requestLoggerJourneyId = journeyId;
     },
     generateRequestLoggerJourneyId() {
-      app.requestLoggerJourneyId = Utils.getRandomId();
-      return app.requestLoggerJourneyId;
+        app.requestLoggerJourneyId = Utils.getRandomId();
+        return app.requestLoggerJourneyId;
     },
     getRequestLoggerJourneyId() {
         return app.requestLoggerJourneyId;
@@ -606,6 +606,42 @@ const Utils = {
     },
     getRequestLoggerGroupId() {
         return app.requestLoggerGroupId;
+    },
+    enableToolTips() {
+        if (app.tooltipsEnabled === true) {
+            $(document).tooltip( "option", "disabled", false );
+        } else {
+            app.tooltipsEnabled = true;
+            $(document).tooltip({
+                items: 'section, .ks-segment',
+                content: function () {
+                    let element = $(this), widget,
+                        tooltip, section;
+
+                    if (element.hasClass('ks-segment')) {
+                        section = element.closest('section');
+                        if (section && $(section).data('originalid')) {
+                            widget = Widgets[$(section).data('originalid')];
+                        }
+                    } else {
+                        widget = Widgets[element.attr('id')];
+                    }
+
+                    tooltip = widget ? widget.getTooltip() : null
+
+                    if (tooltip) {
+                        return tooltip;
+                    }
+                }
+            });
+        }
+    },
+    disableToolTips() {
+        if (app.tooltipsEnabled === true) {
+            $(document).tooltip( "option", "disabled", true );
+        } else {
+            console.error('ToolTips are not enabled');
+        }
     }
 };
 
