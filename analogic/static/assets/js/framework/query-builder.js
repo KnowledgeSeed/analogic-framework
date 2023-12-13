@@ -51,7 +51,7 @@ QB.parsingControlFinished = (repositoryId) => {
 QB.writeData = (eventMapId, jqueryEvent, jqueryElement, resent = false) => {
     const executor = WriteExecutorFactory.createExecutor(eventMapId, jqueryEvent, jqueryElement);
     if (Utils.isRequestLoggerEnabled()) {
-        Utils.generateRequestLoggerJourneyId();
+        Utils.generateRequestLoggerGroupId();
     }
 
     try {
