@@ -315,7 +315,9 @@ def get_pivot_header_data(tuples, alias_attribute_names_by_member_ids):
 def get_adjusted_slicer_preset_data_according_to_selected_indexes(tm1, preset_data, username):
     for c in preset_data[0]:
         index = c['index']
-        v = get_elements_name_and_alias(tm1, c['dimension'], c['hierarchy'], username + '_' + c['subset'], c['private'], c['alias_attr_name'], index + 1)
+        is_private_subset = c['private']
+        subset_name = (username + '_' if is_private_subset else '') + c['subset']
+        v = get_elements_name_and_alias(tm1, c['dimension'], c['hierarchy'], subset_name, is_private_subset, c['alias_attr_name'], index + 1)
         n = len(v) - 1
 
         if n < 0:

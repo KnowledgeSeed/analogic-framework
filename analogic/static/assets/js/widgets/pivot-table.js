@@ -329,15 +329,20 @@ class PivotTableWidget extends Widget {
     }
 
     doAdjustCardForSlicer(card, elements, defaultMember) {
-        let e, elNames = elements.map(e => e[0]);
+        let e, elNames = elements.map(e => e[0]), i;
 
-        if (defaultMember && elNames.includes(defaultMember)) {
+        if (defaultMember) {
+            i = elNames.indexOf(defaultMember);
+        }
+
+        if (-1 !== i) {
             e = defaultMember;
         } else {
             e = elNames[0];
+            i = 0;
         }
 
-        card.attr('data-element', e).data('element', e).find('h4').html(e);
+        card.attr({'data-element': e, index: i}).data({element: e, index: i}).find('h4').html(e);
 
         this.getPivotTable();
     }
