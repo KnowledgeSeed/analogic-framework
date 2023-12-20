@@ -1119,7 +1119,7 @@ class PivotTableWidget extends Widget {
             d[j] = this.holders.eq(j).children('.ks-pivot-table-tag').map((i, e) => {
                 e = $(e);
 
-                return {...e.data(), index: e.data('index') ?? i, name: e.find('h3').html(), title: e.find('h4').html()};
+                return {...e.data(), index: e.data('index') ?? 0smart, name: e.find('h3').html(), title: e.find('h4').html()};
             }).get();
         }
 
