@@ -642,6 +642,9 @@ const Utils = {
         } else {
             console.error('ToolTips are not enabled');
         }
+    },
+    reloadApp() {
+        window.location.reload();
     }
 };
 

@@ -349,6 +349,7 @@ class AuthenticationProvider(ABC):
         self.session_handler.set(self.setting.get_permission_session_name(), permissions_str)
 
     def load_permissions(self):
+        self.set_permissions('')
         permission_queries = self.setting.get_mdx(self.setting.get_permission_query_repository_yml_key())
         if permission_queries is not None:
             for permission_query_params in permission_queries:

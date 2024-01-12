@@ -96,35 +96,40 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
 
         app.id = Utils.getRandomId();
 
-        Extensions.appInitialization.forEach(ext => ext.execute());
+        let deferred = [];
 
-        app.checkScreenResolutionWarningDisplayed = false;
+        Extensions.appInitialization.forEach(ext => deferred.push(ext.execute()));
 
-        initEvents();
+        $.when.apply($, deferred).then(() => {
 
-        Widgets.systemValueGlobalCompanyProductPlanVersion = 'Budget';
+            app.checkScreenResolutionWarningDisplayed = false;
 
-        Auth.getAjaxRequest('navigation_parameters', {}, 'GET').then((data) => {
-            let page = app.mainPage;
-            if (data.navigation_parameters) {
-                let navigation_parameters = JSON.parse(atob(data.navigation_parameters));
+            initEvents();
 
-                if (navigation_parameters.page) {
-                    page = navigation_parameters.page;
-                }
-                for (let key in navigation_parameters) {
-                    if (key !== 'page') {
-                        Widgets[key] = navigation_parameters[key];
+            Widgets.systemValueGlobalCompanyProductPlanVersion = 'Budget';
+
+            Auth.getAjaxRequest('navigation_parameters', {}, 'GET').then((data) => {
+                let page = app.mainPage;
+                if (data.navigation_parameters) {
+                    let navigation_parameters = JSON.parse(atob(data.navigation_parameters));
+
+                    if (navigation_parameters.page) {
+                        page = navigation_parameters.page;
+                    }
+                    for (let key in navigation_parameters) {
+                        if (key !== 'page') {
+                            Widgets[key] = navigation_parameters[key];
+                        }
                     }
                 }
-            }
-            Widgets[page].renderWidget().then(() => {
-                Utils.checkScreenResolution();
-                if (app.enableToolTips) {
-                    Utils.enableToolTips();
-                }
+                Widgets[page].renderWidget().then(() => {
+                    Utils.checkScreenResolution();
+                    if (app.enableToolTips) {
+                        Utils.enableToolTips();
+                    }
+                });
+                PageState.current = page;
             });
-            PageState.current = page;
         });
     }
 

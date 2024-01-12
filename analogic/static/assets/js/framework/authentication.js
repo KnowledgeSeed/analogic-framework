@@ -24,9 +24,12 @@ Auth.goToStartPage = () => {
 };
 
 Auth.getAjaxRequest = (url, data, type, widgetId = '', resent = false, eventMapId = '') => {
-    let urlWithWidgetId = url + (url.includes('?') ? '&' : '?') + 'widgetid=' + widgetId;
+    let urlWithWidgetId = url + (url.includes('?') ? '&' : '?') + 'widgetid=' + widgetId, modifiedUrlWithWidgetId;
     Extensions.urlParameters.forEach(ext => {
-        urlWithWidgetId = ext.getUrl(urlWithWidgetId);
+        modifiedUrlWithWidgetId = ext.getUrl(urlWithWidgetId);
+        if (modifiedUrlWithWidgetId) {
+            urlWithWidgetId = modifiedUrlWithWidgetId;
+        }
     });
     return $.ajax({
         cache: true,
