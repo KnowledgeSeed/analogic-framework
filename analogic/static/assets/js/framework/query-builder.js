@@ -81,13 +81,14 @@ QB.executeEventMapAction = (eventMapId, context, response) => {
 
 QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
     let params = [], keyAdded = false,
-        subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&server=1' : '' : '?server=1';
-    let newUrl = url.includes('proxy') ? url : url.includes(app.apiHost) ? url.replace(app.apiHost, 'proxy') : 'proxy' + url;
+        subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&server=1' : '' : '?server=1',
+        newUrl = url.includes('proxy') ? url : url.includes(app.apiHost) ? url.replace(app.apiHost, 'proxy') : 'proxy' + url,
+    isMiddleware = url.includes('middleware')
 
     for (const [key, value] of Object.entries(body)) {
-        if (key === 'longRunningTaskParameters') {
+        if (key === 'longRunningTaskParameters' || isMiddleware) {
             params.push(`"${key}": ${JSON.stringify(value)}`);
-        } else {
+        }  else {
             params.push(`"${key}": "${value}"`);
         }
         if ('key' === key) {
@@ -116,7 +117,7 @@ QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
         subUrl += '&requestLoggerGroupId=' + requestLoggerGroupId;
     }
 
-    if(url.includes('middleware')) {
+    if(isMiddleware) {
         newUrl = url;
         subUrl = '';
     }
