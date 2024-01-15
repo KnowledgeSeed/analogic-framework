@@ -53,10 +53,12 @@ class EmailManager:
         if receiver_email is None:
             raise Exception('receiver_email missing')
 
+        multi_receiver = type(receiver_email) is list
+
         message = MIMEMultipart()
         message["Subject"] = post_data.get('subject', '')
         message["From"] = sender_email
-        message["To"] = receiver_email
+        message["To"] = ','.join(receiver_email) if multi_receiver else receiver_email
 
         message.attach(MIMEText(email_html, "html"))
 
@@ -77,7 +79,11 @@ class EmailManager:
         if password is not None:
             server.login(sender_email, password)
 
-        server.sendmail(sender_email, receiver_email, message.as_string())
+        if multi_receiver:
+            for email in receiver_email:
+                server.sendmail(sender_email, email, message.as_string())
+        else:
+            server.sendmail(sender_email, receiver_email, message.as_string())
 
         server.quit()
 
