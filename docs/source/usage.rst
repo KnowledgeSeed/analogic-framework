@@ -34,7 +34,7 @@ The framework consists of two main parts
 Requirements
 ------------
 
-Python >= 3.9
+3.11 > Python >= 3.9
 
 Getting Started
 ---------------

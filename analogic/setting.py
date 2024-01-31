@@ -152,7 +152,7 @@ class SettingManager:
         return self.config['proxy']['target']
 
     def get_app_cam_namespace(self):
-        return self.config['camNamespace']
+        return self.config.get('camNamespace')
 
     def get_smtp_password(self):
         return self.config['smtp'].get('password')

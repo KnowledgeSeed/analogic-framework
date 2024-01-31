@@ -35,6 +35,9 @@ class WriteExecutorFactory {
         }
 
         if (context.isGridTable()) {
+            if (eventHandler.download && (typeof eventHandler.download === 'function')) {
+                return new DownloadWriteExecutor(context);
+            }
             return new GridTableWriteExecutor(context);
         }
 

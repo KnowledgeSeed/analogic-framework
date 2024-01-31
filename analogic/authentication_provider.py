@@ -207,7 +207,9 @@ class AuthenticationProvider(ABC):
             if params.get('requestLoggerEnabled') is not None:
                 del params['requestLoggerEnabled']
 
-            params['url'] = request.full_path
+            params['analogic_api_full_path'] = request.full_path
+            params['analogic_api_host_url'] = request.host_url
+            params['analogic_api_method'] = request.method
 
             params.update(self.get_additional_log_request_parameters())
 
@@ -408,6 +410,8 @@ class AuthenticationProvider(ABC):
         try:
             mdx = self._get_server_side_mdx(force_server_side_query)
 
+            url = url.replace('\n', '')
+
             before_call_do_proxy.send(self, url=url, method=meth, data=mdx, headers=headers, cookies=cookies,
                                       encode_content=encode_content)
 
@@ -428,11 +432,15 @@ class AuthenticationProvider(ABC):
             if encode_content is False:
                 self._logger.error('MDX error: ' + response.get_decompressed_data())
             else:
-                self._logger.error('MDX error: ' + response.json())
+                self._logger.error(f'MDX error: {response.text}')
+            self._logger.error('Status code: ' + response.status_code)
             self._logger.error('MDX: ' + mdx.decode('utf-8'))
 
         if response.status_code == 401:
             return 'Authentication required', 401, {'Content-Type': 'application/json'}
+
+        if response.status_code == 404:
+            return 'Not found', 404, {'Content-Type': 'application/json'}
 
         if encode_content is True:
             return response.json(), 200, {'Content-Type': 'application/json'}

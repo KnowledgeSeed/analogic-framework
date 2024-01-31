@@ -25,7 +25,7 @@ install and hook up with a TM1 server.
 
 ## Requirements
 
-The framework requires Python >= 3.9.
+The framework requires 3.11 > Python >= 3.9.
 
 ## Getting Started
 
