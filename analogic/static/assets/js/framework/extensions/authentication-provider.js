@@ -4,6 +4,9 @@ class AuthenticationProviderExtension {
     handle401() {
     }
 
+    handle302(resp) {
+    }
+
     handleSuccessLogin() {
     }
 

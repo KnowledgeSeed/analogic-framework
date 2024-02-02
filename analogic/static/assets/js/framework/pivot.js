@@ -15,6 +15,9 @@ Pivot.call = p => {
         statusCode: {
             401: function () {
                 Auth.handle401();
+            },
+            302: function (resp) {
+                Auth.handle302(resp);
             }
         }
     }).always(() => {

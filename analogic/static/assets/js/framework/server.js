@@ -32,6 +32,8 @@ Server.download = (p, d = {}) => {
         success: function (response, status, xhr) {
             if (xhr.status === 401) {
                 Auth.handle401();
+            } else if (xhr.status === 302) {
+                Auth.handle302(response);
             } else {
                 let blob = new Blob([response], {type: "application/octetstream"});
                 let a = $('<a />');
@@ -45,6 +47,9 @@ Server.download = (p, d = {}) => {
         statusCode: {
             401: function () {
                 Auth.handle401();
+            },
+            302: function(resp) {
+                Auth.handle302(resp);
             }
         }
     }).always(() => Loader.stop(true));;

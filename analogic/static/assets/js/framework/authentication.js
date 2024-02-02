@@ -63,6 +63,9 @@ Auth.getAjaxRequest = (url, data, type, widgetId = '', resent = false, eventMapI
             401: function () {
                 Auth.handle401();
             },
+            302: function(resp) {
+                Auth.handle302(resp);
+            },
             202: function(resp) {
                 if (resp.message) {
                     Api.showPopup(resp.message, 400);
@@ -86,6 +89,10 @@ Auth.handleSuccessLogin = () => {
     }
 
     Extensions.authenticationProviders.forEach(ext => ext.handleSuccessLogin());
+};
+
+Auth.handle302 = (resp) => {
+    Extensions.authenticationProviders.forEach(ext => ext.handle302(resp));
 };
 
 Auth.handle401 = () => {
