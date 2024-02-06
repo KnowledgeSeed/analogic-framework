@@ -84,7 +84,7 @@ const Utils = {
         }
 
         const decimal = Intl.NumberFormat(locale).format('1.1').charAt(1);
-        const cleanPattern = new RegExp(`[^-+0-9${ decimal }]`, 'g');
+        const cleanPattern = new RegExp(`[^-+0-9${decimal}]`, 'g');
         const cleaned = localValue.replace(cleanPattern, '');
         const normalized = cleaned.replace(decimal, '.');
 
@@ -163,6 +163,19 @@ const Utils = {
         elements.height(maxHeight);
     },
     formatIntForChart: intVal => intVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "),
+    calculateMargin: (margin, total) => {
+        if (!margin) {
+            return 0;
+        }
+
+        if ('string' === typeof margin && '%' === margin.slice(-1)) {
+            margin = total * parseFloat(margin) / 100;
+        } else if (margin <= 1) {
+            margin *= total;
+        }
+
+        return margin;
+    },
     precisionRound(number, precision, toFixed = false) {
         const factor = Math.pow(10, precision), n = Math.round(number * factor) / factor;
 
@@ -609,7 +622,7 @@ const Utils = {
     },
     enableToolTips() {
         if (app.tooltipsEnabled === true) {
-            $(document).tooltip( "option", "disabled", false );
+            $(document).tooltip("option", "disabled", false);
         } else {
             app.tooltipsEnabled = true;
             $(document).tooltip({
@@ -638,7 +651,7 @@ const Utils = {
     },
     disableToolTips() {
         if (app.tooltipsEnabled === true) {
-            $(document).tooltip( "option", "disabled", true );
+            $(document).tooltip("option", "disabled", true);
         } else {
             console.error('ToolTips are not enabled');
         }

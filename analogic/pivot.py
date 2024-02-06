@@ -314,9 +314,9 @@ def get_pivot_header_data(tuples, alias_attribute_names_by_member_ids):
 
 def get_adjusted_slicer_preset_data_according_to_selected_indexes(tm1, preset_data, username):
     for c in preset_data[0]:
-        index = c['index']
+        index = c.get('index', 0)
         is_private_subset = c['private']
-        subset_name = (username + '_' if is_private_subset else '') + c['subset']
+        subset_name = (username + '_' if is_private_subset else '') + str(c['subset'])
         v = get_elements_name_and_alias(tm1, c['dimension'], c['hierarchy'], subset_name, is_private_subset, c['alias_attr_name'], index + 1)
         n = len(v) - 1
 
@@ -331,8 +331,11 @@ def get_adjusted_slicer_preset_data_according_to_selected_indexes(tm1, preset_da
     return preset_data
 
 
-def get_elements_name_and_alias(tm1: TM1Service, dimension_name: str, hierarchy_name: str, subset_name: str, is_private_subset: bool, alias: str = 'Name', top: int = 1000, **kwargs):
+def get_elements_name_and_alias(tm1: TM1Service, dimension_name: str, hierarchy_name: str, subset_name: str, is_private_subset: bool, alias: str, top: int = 1000, **kwargs):
     subsets = "PrivateSubsets" if is_private_subset else "Subsets"
+
+    if not alias:
+        alias = 'Name'
 
     attribute_alias = alias.replace(' ', '')
     select = 'Name'

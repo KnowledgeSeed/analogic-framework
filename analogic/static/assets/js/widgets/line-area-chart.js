@@ -5,13 +5,13 @@
 class LineAreaChartWidget extends Widget {
 
     getHtml(verticalLineBoxWidget, d) {
-        const o = this.options, v = this.getParameters(d);
+        const v = this.getParameters(d);
 
         return `
-<div class="ks-line-area-chart ks-line-area-chart-${v.skin}" style="${this.getGeneralStyles(v.data, {width: 450, height: 450}).join('')}">
+<div class="ks-line-area-chart ks-line-area-chart-${v.skin}" style="${this.getGeneralStyles(d.options, {width: 450, height: 450}).join('')}">
     ${verticalLineBoxWidget.join('')}
     <div class="ks-line-area-chart-widget">
-        <canvas id="${o.id}Canvas"></canvas>
+        <canvas id="${this.options.id}Canvas"></canvas>
     </div>
     <div class="ks-legend ks-legend-${v.legendSkin}"></div>
 </div>`;
@@ -32,29 +32,31 @@ class LineAreaChartWidget extends Widget {
         const o = this.options, f = this.getRealValue('defaultFontFamily', d, 'imago, sans-serif'), c = '#A6A7A7', b = '#000', e = 'bold';
 
         const demoDatasets = [
-            {borderColor: 'black', labelBorderColor: '#000000', labelBackgroundColor: '#FFFFFF', labelColor: 'blue', labelBorderWidth: 2, borderWidth: 3, backgroundColor: 'rgba(255, 10, 13, 0.4)', fill: false, legendLabel: 'Legend1', labelVisible: true, borderDash: [5, 5]},
-            {legendLabel: 'Legend2', borderWidth: 2, borderColor: 'red', backgroundColor: 'red', hoverBackgroundColor: 'darkblue', fill: true, lineTension: 0.5, labelVisible: true},
-            {legendLabel: 'Legend3', borderColor: 'blue', backgroundColor: 'blue', hoverBackgroundColor: 'yellow', fill: true, lineTension: 0.5},
-            {legendLabel: 'Legend4', borderColor: 'brown', backgroundColor: 'brown', fill: true, lineTension: 0.5},
-            {legendLabel: 'Legend5', borderColor: 'orange', backgroundColor: 'orange', fill: true, lineTension: 0.5}
+            {legendLabel: 'Legend1', borderWidth: 2, borderColor: 'red', backgroundColor: 'red', hoverBackgroundColor: 'darkblue', fill: true, lineTension: 0.5, labelVisible: true},
+            {legendLabel: 'Legend2', borderColor: 'blue', backgroundColor: 'blue', hoverBackgroundColor: 'yellow', fill: true, lineTension: 0.5},
+            {legendLabel: 'Legend3', borderColor: 'brown', backgroundColor: 'brown', fill: true, lineTension: 0.5},
+            {legendLabel: 'Legend4', borderColor: 'orange', backgroundColor: 'orange', fill: true, lineTension: 0.5},
+            {yAxisID: 'y1', legendLabel: 'Legend5', borderColor: 'black', labelBorderColor: '#000000', labelBackgroundColor: '#FFFFFF', labelColor: 'blue', labelBorderWidth: 2, borderWidth: 3, backgroundColor: 'rgba(255, 10, 13, 0.4)', fill: false, labelVisible: true, borderDash: [5, 5]},
         ];
 
         const demoData = [
             [{label: '2019'}, {label: '2020'}, {label: '2021'}, {label: '2022'}, {label: '2023'}, {label: '2024'}, {label: '2025'}],
             [
-                [{value: 20, displayValue: 'Display Value'}, {value: 10}, {value: 15}, {value: 18}, {value: 20}],
-                [{value: 30}, {value: 20}, {value: 25}, {value: 28}, {value: 30}],
-                [{value: 40}, {value: 30}, {value: 35}, {value: 38}, {value: 40}],
-                [{value: 50}, {value: 40}, {value: 45}, {value: 48}, {value: 50}],
-                [{value: 60}, {value: 50}, {value: 55}, {value: 58}, {value: 60}],
-                [{value: 50}, {value: 30}, {value: 45}, {value: 30}, {value: 20}],
-                [{value: 70}, {value: 40}, {value: 75}, {value: 78}, {value: 80}]
+                [{value: 10}, {value: 15}, {value: 18}, {value: 20}, {value: 63, displayValue: 'Display Value'}],
+                [{value: 20}, {value: 25}, {value: 28}, {value: 30}, {value: 0}],
+                [{value: 30}, {value: 35}, {value: 38}, {value: 40}, {value: 90}],
+                [{value: 40}, {value: 45}, {value: 48}, {value: 50}, {value: 120}],
+                [{value: 50}, {value: 55}, {value: 58}, {value: 60}, {value: 150}],
+                [{value: 30}, {value: 45}, {value: 30}, {value: 20}, {value: 170}],
+                [{value: 40}, {value: 75}, {value: 78}, {value: 80}, {value: 80}]
             ]
         ];
 
-        const data = $.extend(true, [], o.data || [], d.data.length ? d.data : demoData);
+        const data = $.extend(true, [], o.data || [], (d.data[0].length || d.data[1].length) ? d.data : demoData);
 
-        const datasets = !o.datasets && !d.datasets ? demoDatasets : $.extend(true, [], o.datasets || [], d.datasets || []);
+        const datasets = !(o.datasets || []).length && !(d.datasets || []).length ? demoDatasets : $.extend(true, [], o.datasets || [], d.datasets || []);
+
+        d = d.options;
 
         const v = {
             data: data,
@@ -94,11 +96,16 @@ class LineAreaChartWidget extends Widget {
             xAxesLabelFontStyle: this.getRealValue('xAxesLabelFontStyle', d, e),
             xAxesLabelPadding: this.getRealValue('xAxesLabelPadding', d, 0),
             xAxesLabelRotation: this.getRealValue('xAxesLabelRotation', d, 0),
-            xMin: this.getRealValue('xMin', d, false),
-            xMax: this.getRealValue('xMax', d, false),
+            xMin: this.getRealValue('xMin', d, null),
+            xMax: this.getRealValue('xMax', d, null),
+            yMin: this.getRealValue('yMin', d, null),
+            yMax: this.getRealValue('yMax', d, null),
             xAxesOffset: this.getRealValue('xAxesOffset', d, 0),
             xAxesOffsetRight: this.getRealValue('xAxesOffsetRight', d, 0),
             xAxesOffsetLeft: this.getRealValue('xAxesOffsetLeft', d, 0),
+            yAxesOffset: this.getRealValue('yAxesOffset', d, 0.15),
+            yAxesOffsetTop: this.getRealValue('yAxesOffsetTop', d, null),
+            yAxesOffsetBottom: this.getRealValue('yAxesOffsetBottom', d, null),
             yAxesLabelDisplay: this.getRealValue('yAxesLabelDisplay', d, true),
             yAxesLabelFontSize: this.getRealValue('yAxesLabelFontSize', d, 14),
             yAxesLabelFontFamily: this.getRealValue('yAxesLabelFontFamily', d, f),
@@ -150,20 +157,38 @@ class LineAreaChartWidget extends Widget {
     }
 
     getChartConfig() {
-        let v = this.value, datasets = Utils.clone(v.datasets, true, false), d = v.data[v.data.length - 1], j, i, xValues = v.data[0].map(e => e.label), data, len = d.length, lastHoveredDatasetIndex;
+        let v = this.value, datasets = Utils.clone(v.datasets, true, false), d = v.data[v.data.length - 1], j, i, xValues = v.data[0].map(e => e.label), data, len = d.length, lastHoveredDatasetIndex, isY1Axis, y, yVals = [], m;
 
-        const yAxesUnit = v.yAxesUnit, yAxesDecimalNum = v.yAxesDecimalNum, yAxesSeparatesThousands = v.yAxesSeparatesThousands, yAxesTicksPrecisionFixed = v.yAxesTicksPrecisionFixed;
+        const yAxesUnit = v.yAxesUnit, yAxesDecimalNum = v.yAxesDecimalNum, yAxesSeparatesThousands = v.yAxesSeparatesThousands, yAxesTicksPrecisionFixed = v.yAxesTicksPrecisionFixed, yAxesStacked = v.yAxesStacked;
 
         for (i = 0; i < datasets.length; ++i) {
             data = [];
+            m = 0;
+            isY1Axis = 'y1' === datasets[i].yAxisID;
 
             for (j = 0; j < len; ++j) {
-                data.push({x: parseInt(xValues[j]), y: Utils.parseNumber(d[j][i].value || '0')});
+                y = Utils.parseNumber(d[j][i].value || '0');
+
+                data.push({x: parseInt(xValues[j]), y: y});
+
+                if (isY1Axis || !yAxesStacked) {
+                    yVals.push(y);
+                } else {
+                    m += y;
+                }
+            }
+
+            if (!isY1Axis && yAxesStacked) {
+                yVals.push(m);
             }
 
             datasets[i].data = data;
         }
-        L(d)
+
+        const yMin = v.yMin ?? Math.min(...yVals), yMax = v.yMax ?? Math.max(...yVals), yTotal = yMax - yMin;
+
+        const yAxesOffsetTop = Utils.calculateMargin(v.yAxesOffsetTop ?? v.yAxesOffset, yTotal), yAxesOffsetBottom = Utils.calculateMargin(v.yAxesOffsetBottom ?? v.yAxesOffset, yTotal);
+
         return {
             type: 'line',
             data: {
@@ -173,6 +198,7 @@ class LineAreaChartWidget extends Widget {
             options: {
                 scales: {
                     xAxes: [{
+                        id: 'x',
                         type: 'linear',
                         offset: false,
                         display: v.xAxesDisplay,
@@ -187,8 +213,8 @@ class LineAreaChartWidget extends Widget {
                         },
                         ticks: {
                             display: v.xAxesTicksLabelDisplay,
-                            min: parseFloat($.isNumeric(v.xMin) ? v.xMin : xValues[0]) - (v.xAxesOffsetLeft || v.xAxesOffset),
-                            max: parseFloat($.isNumeric(v.xMax) ? v.xMax : xValues.slice(-1)) + (v.xAxesOffsetRight || v.xAxesOffset),
+                            min: parseFloat(v.xMin ?? xValues[0]) - (v.xAxesOffsetLeft || v.xAxesOffset),
+                            max: parseFloat(v.xMax ?? xValues.slice(-1)) + (v.xAxesOffsetRight || v.xAxesOffset),
                             fontSize: v.xAxesTicksFontSize,
                             fontFamily: v.xAxesTicksFontFamily,
                             fontStyle: v.xAxesTicksFontStyle,
@@ -209,6 +235,7 @@ class LineAreaChartWidget extends Widget {
                             padding: v.xAxesLabelPadding
                         }
                     }, {
+                        id: 'x1',
                         display: v.yAxesGridLinesDrawBorder,
                         position: 'top',
                         ticks: {
@@ -222,7 +249,8 @@ class LineAreaChartWidget extends Widget {
                         }
                     }],
                     yAxes: [{
-                        stacked: v.yAxesStacked,
+                        id: 'y',
+                        stacked: yAxesStacked,
                         display: v.yAxesDisplay,
                         offset: false,
                         gridLines: {
@@ -235,6 +263,8 @@ class LineAreaChartWidget extends Widget {
                             drawTicks: v.yAxesTicksDisplay
                         },
                         ticks: {
+                            min: yMin - yAxesOffsetBottom,
+                            max: yMax + yAxesOffsetTop,
                             display: v.yAxesTicksLabelDisplay,
                             labelOffset: v.yAxesTicksOffset,
                             padding: v.yAxesTicksPadding,
@@ -259,6 +289,20 @@ class LineAreaChartWidget extends Widget {
                             fontColor: v.yAxesLabelFontColor,
                             fontStyle: v.yAxesLabelFontStyle,
                             padding: v.yAxesLabelPadding
+                        }
+                    }, {
+                        id: 'y1',
+                        offset: false,
+                        display: false,
+                        grid: {
+                            display: false,
+                            offset: false
+                        },
+                        ticks: {
+                            min: yMin - yAxesOffsetBottom,
+                            max: yMax + yAxesOffsetTop,
+                            display: false,
+                            padding: 0
                         }
                     }]
                 },
@@ -416,12 +460,10 @@ class LineAreaChartWidget extends Widget {
     }
 
     processData(data) {
-        let d = {data: []}, i, len = data.length;
-
-        for (i = 0; i < len; ++i) {
-            i < 2 ? d.data.push(data[i]) : d.datasets = data[i];
-        }
-
-        return d;
+        return {
+            data: [data[0] || [], data[1] || []],
+            datasets: data[2] || [],
+            options: data[3] || {}
+        };
     }
 }

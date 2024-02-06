@@ -197,32 +197,18 @@ class StackedColumnChartWidget extends Widget {
         this.chart = new Chart4(ctx, this.getChartConfig());
     }
 
-    calculateYMarginValue(margin, yTotal) {
-        if (!margin) {
-            return 0;
-        }
-
-        if ('string' === typeof margin && '%' === margin.slice(-1)) {
-            margin = yTotal * parseFloat(margin) / 100;
-        } else if (margin <= 1) {
-            margin *= yTotal;
-        }
-
-        return margin;
-    }
-
     addArrowDatasets(datasets, arrows, labels, yMax, yTotal) {
         let v = this.value, i, a, b, d, yArrowTotal, yArrowSmall, len = arrows.length, yIncrement = 0, y;
 
-        i = this.calculateYMarginValue(v.arrowMarginBottom, yTotal);
+        i = Utils.calculateMargin(v.arrowMarginBottom, yTotal);
         yIncrement += i;
         yArrowSmall = yMax + i;
 
-        i = this.calculateYMarginValue(v.arrowMarginMiddle, yTotal);
+        i = Utils.calculateMargin(v.arrowMarginMiddle, yTotal);
         yIncrement += i;
         yArrowTotal = yArrowSmall + i;
 
-        i = this.calculateYMarginValue(v.arrowMarginTop, yTotal);
+        i = Utils.calculateMargin(v.arrowMarginTop, yTotal);
         yIncrement += i;
 
         for (i = 0; i < len; ++i) {
@@ -308,8 +294,8 @@ class StackedColumnChartWidget extends Widget {
 
         yTotal = yMax - yMin;
 
-        yMin -= this.calculateYMarginValue(v.yMarginBottom, yTotal);
-        yMax += this.calculateYMarginValue(v.yMarginTop, yTotal);
+        yMin -= Utils.calculateMargin(v.yMarginBottom, yTotal);
+        yMax += Utils.calculateMargin(v.yMarginTop, yTotal);
 
         yTotal = yMax - yMin;
 
