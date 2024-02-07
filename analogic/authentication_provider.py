@@ -360,14 +360,14 @@ class AuthenticationProvider(ABC):
     def execute_permission_query(self, params):
         try:
             target_url = self.setting.get_proxy_target_url()
-            sub_path = params['url']
+            sub_path = params['url'].replace('\n', '')
             url = target_url + ('/' if sub_path[0] != '/' else '') + sub_path
             body = self._set_custom_mdx_data(params['body'])
 
             headers: dict[str, str] = self.HEADERS.copy()
             cookies: dict[str, str] = {}
 
-            response = self.do_proxy_request(url, params['method'], body.encode('utf-8'), headers, cookies, True)
+            response = self.do_proxy_request(url, params['method'].replace('\n', ''), body.encode('utf-8'), headers, cookies, True)
 
             if response.status_code > 300:
                 self._logger.error(
