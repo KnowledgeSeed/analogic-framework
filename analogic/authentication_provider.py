@@ -271,6 +271,8 @@ class AuthenticationProvider(ABC):
 
             return mdx.encode('utf-8')
         else:
+            if self.get_setting().get_config().get('allowClientSideQuery') is True:
+                return request.data
             return ''.encode('utf-8')
 
     def index(self):
