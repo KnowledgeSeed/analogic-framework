@@ -41,6 +41,12 @@ from requests.cookies import extract_cookies_to_jar
 from requests.utils import get_encoding_from_headers
 from requests.utils import (stream_decode_response_unicode, iter_slices)
 import logging
+import warnings
+
+try:
+    from requests_negotiate_sspi import HttpNegotiateAuth
+except ImportError:
+    warnings.warn("requests_negotiate_sspi failed to import. SSO will not work", ImportWarning)
 
 
 class Session(BaseSession):
@@ -489,7 +495,7 @@ class AnalogicRestService(RestService):
 
         self._s = Session()  # mod out Session
 
-        if self._tcp_keepalive or self._connection_pool_size is not None: #mod move from end of method
+        if self._tcp_keepalive or self._connection_pool_size is not None:  # mod move from end of method
             self._manage_http_adapter()
 
         if self._proxies:
@@ -502,6 +508,78 @@ class AnalogicRestService(RestService):
 
         # is retrieved on demand and cached
         self._sandboxing_disabled = None
+
+    def connect(self):
+        if "session_id" in self._kwargs:
+            self._s.cookies.set("TM1SessionId", self._kwargs["session_id"])
+        else:
+            self._start_session(
+                user=self._kwargs.get("user", None),
+                password=self._kwargs.get("password", None),
+                namespace=self._kwargs.get("namespace", None),
+                gateway=self._kwargs.get("gateway", None),
+                cam_passport=self._kwargs.get("cam_passport", None),
+                decode_b64=self.translate_to_boolean(self._kwargs.get("decode_b64", False)),
+                integrated_login=self.translate_to_boolean(self._kwargs.get("integrated_login", False)),
+                integrated_login_domain=self._kwargs.get("integrated_login_domain"),
+                integrated_login_service=self._kwargs.get("integrated_login_service"),
+                integrated_login_host=self._kwargs.get("integrated_login_host"),
+                integrated_login_delegate=self._kwargs.get("integrated_login_delegate"),
+                impersonate=self._kwargs.get("impersonate", None),
+                intergated_username=self._kwargs.get("integrated_username", None),
+                integrated_password=self._kwargs.get("integrated_password", None)
+            )
+
+    def _start_session(self, user: str, password: str, decode_b64: bool = False, namespace: str = None,
+                       gateway: str = None, cam_passport: str = None, integrated_login: bool = None,
+                       integrated_login_domain: str = None, integrated_login_service: str = None,
+                       integrated_login_host: str = None, integrated_login_delegate: bool = None,
+                       impersonate: str = None, intergated_username: str = None, integrated_password: str = None):
+        """ perform a simple GET request (Ask for the TM1 Version) to start a session
+        """
+        # Authorization with integrated_login
+        if integrated_login:
+            self._s.auth = HttpNegotiateAuth(
+                username=intergated_username,
+                password=integrated_password,
+                domain=integrated_login_domain,
+                service=integrated_login_service,
+                host=integrated_login_host,
+                delegate=integrated_login_delegate)
+
+        # Authorization [Basic, CAM] through Headers
+        else:
+            token = self._build_authorization_token(
+                user,
+                self.b64_decode_password(password) if decode_b64 else password,
+                namespace,
+                gateway,
+                cam_passport,
+                self._verify)
+            self.add_http_header('Authorization', token)
+
+        url = '/api/v1/Configuration/ProductVersion/$value'
+        try:
+            additional_headers = dict()
+            if impersonate:
+                additional_headers["TM1-Impersonate"] = impersonate
+
+            # skip re_connect to avoid infinite recursion in case of invalid credentials
+            original_value = self._re_connect_on_session_timeout
+            try:
+                self._re_connect_on_session_timeout = False
+                response = self.GET(url=url, headers=additional_headers)
+            finally:
+                self._re_connect_on_session_timeout = original_value
+
+            if response is None:
+                raise ValueError(f"No response returned from URL: '{self._base_url + url}'. "
+                                 f"Please double check your address and port number in the URL.")
+
+            self._version = response.text
+        finally:
+            # After we have session cookie, drop the Authorization Header
+            self.remove_http_header('Authorization')
 
     def _manage_http_adapter(self):  # mod override for using our base adapter
         if self._tcp_keepalive:
