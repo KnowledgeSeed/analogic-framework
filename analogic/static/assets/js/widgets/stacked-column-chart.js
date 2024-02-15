@@ -42,6 +42,7 @@ class StackedColumnChartWidget extends Widget {
             maintainAspectRatio: this.getRealValue('maintainAspectRatio', d, true),
             tooltipsEnabled: this.getRealValue('tooltipsEnabled', d, true),
             animationEnabled: this.getRealValue('animationEnabled', d, true),
+            hideZeroBars: this.getRealValue('hideZeroBars', d, true),
 
             rightBorderVisible: this.getRealValue('rightBorderVisible', d, true),
             rightBorderWidth: this.getRealValue('rightBorderWidth', d, 1),
@@ -275,7 +276,7 @@ class StackedColumnChartWidget extends Widget {
 
         const yAxisUnit = v.yAxisUnit, yAxisDecimalNum = v.yAxisDecimalNum, yAxisSeparatesThousands = v.yAxisSeparatesThousands, yAxisTicksPrecisionFixed = v.yAxisTicksPrecisionFixed;
 
-        let yMin = v.yMin, yMax = v.yMax, isYMinSet = $.isNumeric(yMin), isYMaxSet = $.isNumeric(yMax), min = Infinity, max = -Infinity, d, labelHalfStep = ((labels[1] || labels[0]) - (labels[0] || 0)) / 2, yTotal;
+        let yMin = v.yMin, yMax = v.yMax, isYMinSet = $.isNumeric(yMin), isYMaxSet = $.isNumeric(yMax), min = Infinity, max = -Infinity, i, d, labelHalfStep = ((labels[1] || labels[0]) - (labels[0] || 0)) / 2, yTotal;
 
         if (!isYMinSet || !isYMaxSet) {
             for (d of datasets) {
@@ -295,6 +296,12 @@ class StackedColumnChartWidget extends Widget {
         for (d of datasets) {
             if ('line' === d.type) {
                 d.yAxisID = 'y1';
+            } else if (v.hideZeroBars) {
+                for (i = 0; i < d.data.length; ++i) {
+                    if (!d.data[i]) {
+                        d.data[i] = null;
+                    }
+                }
             }
         }
 
@@ -645,19 +652,19 @@ class StackedColumnChartWidget extends Widget {
                 },
                 {
                     label: 'Selling, General & Admin',
-                    data: [164000, 164492, 164984, 165476, 165968, 166460, 166952, 167444, 167936, 168428, 168920, 169412, 169904, 170396, 170888],
+                    data: [164000, 164492, 164984, 165476, 165968, 166460, 0, 0, 0, 168428, 168920, 169412, 169904, 170396, 170888],
                     backgroundColor: '#A05EB5',
                     labelBackgroundColor: '#A05EB5',
                 },
                 {
                     label: 'Other op (Income) & Exp',
-                    data: [84000, 84252, 84504, 84756, 85008, 85260, 85512, 85764, 86016, 86268, 86520, 86772, 87024, 87276, 87528],
+                    data: [84000, 84252, 84504, 84756, 85008, 85260, 0, 0, 0, 86268, 86520, 86772, 87024, 87276, 87528],
                     backgroundColor: '#B1B3B3',
                     labelBackgroundColor: '#B1B3B3',
                 },
                 {
                     label: 'Operating Profit',
-                    data: [110000, 110330, 110660, 110990, 111320, 111650, 111980, 112310, 112640, 112970, 113300, 113630, 113960, 114290, 114620],
+                    data: [110000, 110330, 110660, 110990, 111320, 111650, 0, 0, 0, 112970, 113300, 113630, 113960, 114290, 114620],
                     backgroundColor: '#1DCE8C',
                     labelBackgroundColor: '#1DCE8C',
                 },
