@@ -152,7 +152,9 @@ class StackedColumnChartWidget extends Widget {
             labelAnchor: this.getRealValue('labelAnchor', d, 'start'),
             labelClamp: this.getRealValue('labelClamp', d, true),
             labelClip: this.getRealValue('labelClip', d, false),
+            labelBorderColor: this.getRealValue('labelBorderColor', d, null),
             labelBorderRadius: this.getRealValue('labelBorderRadius', d, 5),
+            labelBorderWidth: this.getRealValue('labelBorderWidth', d, 0),
 
             arrowEnabled: this.getRealValue('arrowEnabled', d, true),
             arrowMarginTop: this.getRealValue('arrowMarginTop', d, 0.2), // e.g.: 0.2, '20%' or 250
@@ -183,7 +185,9 @@ class StackedColumnChartWidget extends Widget {
             arrowLabelAnchor: this.getRealValue('arrowLabelAnchor', d, 'end'),
             arrowLabelClamp: this.getRealValue('arrowLabelClamp', d, true),
             arrowLabelClip: this.getRealValue('arrowLabelClip', d, false),
+            arrowLabelBorderColor: this.getRealValue('arrowLabelBorderColor', d, null),
             arrowLabelBorderRadius: this.getRealValue('arrowLabelBorderRadius', d, 5),
+            arrowLabelBorderWidth: this.getRealValue('arrowLabelBorderWidth', d, 0)
         };
 
         this.value = v;
@@ -243,7 +247,9 @@ class StackedColumnChartWidget extends Widget {
                 labelPaddingBottom: v.arrowLabelPaddingBottom,
                 labelClamp: v.arrowLabelClamp,
                 labelClip: v.arrowLabelClip,
+                labelBorderColor: v.arrowLabelBorderColor,
                 labelBorderRadius: v.arrowLabelBorderRadius,
+                labelBorderWidth: v.arrowLabelBorderWidth,
                 xAxisID: 'x1',
                 yAxisID: 'y1',
                 pointStyle: ['circle', false, 'triangle'],
@@ -356,7 +362,6 @@ class StackedColumnChartWidget extends Widget {
                         anchor: c => datasets[c.datasetIndex].labelAnchor || v.labelAnchor,
                         clamp: c => datasets[c.datasetIndex].labelClamp || v.labelClamp,
                         clip: c => datasets[c.datasetIndex].labelClip || v.labelClip,
-                        borderRadius: c => datasets[c.datasetIndex].labelBorderRadius || v.labelBorderRadius,
                         display: c => {
                             let d = datasets[c.datasetIndex], tooltipsEnabled = v.tooltipsEnabled && (false !== d.tooltipsEnabled), isVis = d.labelVisible;
 
@@ -379,8 +384,9 @@ class StackedColumnChartWidget extends Widget {
 
                             return (yAxisSeparatesThousands ? Utils.separatesThousands(v) : v) + yAxisUnit;
                         },
-                        borderWidth: c => datasets[c.datasetIndex].labelBorderWidth || v.labelBorderWidth || 0,
                         borderColor: c => datasets[c.datasetIndex].labelBorderColor || v.labelBorderColor || v.yAxisTicksFontColor,
+                        borderRadius: c => datasets[c.datasetIndex].labelBorderRadius || v.labelBorderRadius,
+                        borderWidth: c => datasets[c.datasetIndex].labelBorderWidth || v.labelBorderWidth || 0,
                         color: c => {
                             c = datasets[c.datasetIndex];
 
