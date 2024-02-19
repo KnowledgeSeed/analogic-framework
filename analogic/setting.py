@@ -12,6 +12,7 @@ class SettingManager:
     ENABLE_REQUEST_LOGGER_PARAMETER_NAME = 'enableRequestLogger'
     ENABLE_WRITE_REQUEST_LOGGER_PARAMETER_NAME = 'enableWriteRequestLogger'
     ENABLE_TOOL_TIPS_PARAMETER_NAME = 'enableToolTips'
+    AUTHENTICATION_FAILED_MESSAGE_PARAMETER_NAME = 'authenticationFailedMessage'
 
 
     def __init__(self, analogic_application_path, instance='default'):
@@ -183,6 +184,9 @@ class SettingManager:
 
     def is_write_request_logger_enabled(self):
         return self.get_config().get(self.ENABLE_WRITE_REQUEST_LOGGER_PARAMETER_NAME, False)
+
+    def get_authentication_failed_message(self):
+        return self.get_config().get(self.AUTHENTICATION_FAILED_MESSAGE_PARAMETER_NAME, 'Authentication failed')
 
     def getLogger(self):
         return self._logger
