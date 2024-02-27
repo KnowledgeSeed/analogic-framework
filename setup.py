@@ -31,7 +31,7 @@ setup(
         'json_logging==1.3.0',
         'flask_talisman',
         'Flask-APScheduler==1.12.4',
-        'orjson==3.8.6',
+        'orjson==3.9.15',
         'rich==13.3.5'
     ],
     entry_points={
