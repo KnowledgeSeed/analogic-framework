@@ -435,7 +435,7 @@ class AuthenticationProvider(ABC):
                 self._logger.error('MDX error: ' + response.get_decompressed_data())
             else:
                 self._logger.error(f'MDX error: {response.text}')
-            self._logger.error('Status code: ' + response.status_code)
+            self._logger.error('Status code: ' + str(response.status_code))
             self._logger.error('MDX: ' + mdx.decode('utf-8'))
 
         if response.status_code == 401:
