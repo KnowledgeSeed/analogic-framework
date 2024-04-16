@@ -1,6 +1,6 @@
 from analogic.endpoint import AnalogicEndpoint
-from analogic.authentication_provider import get_authentication_provider
-from flask import request, redirect
+from analogic.authentication_provider import get_authentication_provider, endpoint_login_required
+from flask import request, redirect, render_template
 import base64
 
 core_endpoints = AnalogicEndpoint('core_endpoints', __name__)
@@ -32,6 +32,26 @@ def navigation_parameters():
         authentication_provider.clear_navigation_parameters()
 
     return {'navigation_parameters': navigation_parameters}, 200, {'Content-type': 'application/json'}
+
+@core_endpoints.analogic_endpoint_route('/start_maintenance', methods=['GET', 'POST'])
+@endpoint_login_required
+def start_maintenance():
+    authentication_provider = get_authentication_provider()
+    if authentication_provider.is_user_framework_admin() is False:
+        return "You are not authorized to start maintenance", 403
+    if request.method == 'POST':
+        authentication_provider.is_maintenance = True
+        authentication_provider.maintenance_message = request.form.get('message', 'Maintenance in progress')
+        return "Maintenance mode started", 200
+    return render_template('start_maintenance.html', cnf=authentication_provider.get_setting().get_config()), 200
+
+@core_endpoints.analogic_endpoint_route('/stop_maintenance', methods=['GET'])
+def stop_maintenance():
+    authentication_provider = get_authentication_provider()
+    if authentication_provider.is_user_framework_admin() is False:
+        return "You are not authorized to stop maintenance", 403
+    authentication_provider.is_maintenance = False
+    return "Maintenance mode stopped", 200
 
 
 

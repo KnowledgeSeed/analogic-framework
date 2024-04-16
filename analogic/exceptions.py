@@ -29,3 +29,8 @@ class AnalogicAcceptedException(Exception):
 
     def __str__(self):
         return self.message
+
+class AnalogicMaintenanceException(Exception):
+    def __init__(self, authentication_provider):
+        self.authentication_provider = authentication_provider
+

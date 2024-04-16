@@ -10,6 +10,7 @@ from importlib import resources
 from analogic.core_endpoints import core_endpoints
 from analogic.authentication_provider import AuthenticationProvider
 from analogic.signal_receiver import SignalReceiver
+from analogic.exceptions import AnalogicMaintenanceException
 import inspect
 from analogic.setting import SettingManager
 from datetime import timedelta
@@ -68,7 +69,7 @@ class Analogic(Flask):
         self.signal_receivers[name] = module_name
 
     def evaluate_signal_receivers(self):
-        for k,v in self.signal_receivers.items():
+        for k, v in self.signal_receivers.items():
 
             class_name = k
             module_name = v
@@ -81,7 +82,6 @@ class Analogic(Flask):
             signal_receiver_class = getattr(module, class_name)
             signal_receiver = signal_receiver_class()
             signal_receiver.initialize()
-
 
     def get_authentication_provider_module_name(self, name):
         return self.authentication_providers[name]
@@ -114,7 +114,7 @@ class Analogic(Flask):
         if module_name in sys.modules:
             module = sys.modules[module_name]
         else:
-            module = importlib.import_module(module_name)  # Todo ModuleNotFoundError
+            module = importlib.import_module(module_name)
 
         authentication_provider_class = getattr(module, class_name)
         authentication_provider = authentication_provider_class(setting)
@@ -129,6 +129,8 @@ class Analogic(Flask):
         if len(s) > 2 and s[1] in self.analogic_applications:
             return self.analogic_applications[s[1]]
         else:
+            if self.analogic_applications.get('default') is None:
+                raise Exception('Default application not found')
             return self.analogic_applications['default']
 
     def register_extension_assets(self, assets):
@@ -151,6 +153,9 @@ class Analogic(Flask):
 
     def get_authentication_provider(self):
         authentication_provider = self.get_analogic_application()
+
+        if authentication_provider.is_in_maintenance_mode() and authentication_provider.check_app_authenticated() and authentication_provider.is_user_framework_admin() is False:
+            raise AnalogicMaintenanceException(authentication_provider)
 
         session.permanent = True
         config = authentication_provider.get_setting().get_config()
@@ -176,6 +181,13 @@ def page_not_found(e):
 
 
 def page_error(e):
+    if isinstance(e.original_exception, AnalogicMaintenanceException):
+        request_xhr_key = request.headers.get('X-Requested-With')
+        if request_xhr_key and request_xhr_key == 'XMLHttpRequest':
+            return e.original_exception.authentication_provider.get_maintenance_message(), 503
+        return render_template('maintenance.html',
+                               message=e.original_exception.authentication_provider.get_maintenance_message()), 503
+
     message = ''
     if e.original_exception:
         message += str(e.original_exception)

@@ -71,12 +71,20 @@ class AuthenticationProvider(ABC):
         self.session_handler = SessionHandler(self.setting.get_instance_and_name())
         self.request_logger = RequestLogger()
         self.user_subscriptions = {}
+        self.is_in_maintenance = False
+        self.maintenance_message = ''
 
     def initialize(self):
         self.setting.initialize()
 
     def get_setting(self):
         return self.setting
+
+    def is_user_framework_admin(self):
+        cnf = self.setting.get_config()
+        if cnf.get('_frameworkAdminUsers') is not None:
+            return self.get_logged_in_user_name() in cnf['_frameworkAdminUsers']
+        return False
 
     def get_logged_in_user_name(self):
         return self.session_handler.get(self.logged_in_user_session_name)
@@ -369,7 +377,8 @@ class AuthenticationProvider(ABC):
             headers: dict[str, str] = self.HEADERS.copy()
             cookies: dict[str, str] = {}
 
-            response = self.do_proxy_request(url, params['method'].replace('\n', ''), body.encode('utf-8'), headers, cookies, True)
+            response = self.do_proxy_request(url, params['method'].replace('\n', ''), body.encode('utf-8'), headers,
+                                             cookies, True)
 
             if response.status_code > 300:
                 self._logger.error(
@@ -485,6 +494,12 @@ class AuthenticationProvider(ABC):
 
     def clear_cache(self):
         return self.get_setting().clear_cache()
+
+    def is_in_maintenance_mode(self):
+        return self.is_in_maintenance
+
+    def get_maintenance_message(self):
+        return self.maintenance_message
 
     def get_request_log(self, journey_id):
         return self.request_logger.get_request_log(journey_id)
