@@ -154,7 +154,7 @@ class Analogic(Flask):
     def get_authentication_provider(self):
         authentication_provider = self.get_analogic_application()
 
-        if authentication_provider.is_in_maintenance_mode() and authentication_provider.check_app_authenticated() and authentication_provider.is_user_framework_admin() is False:
+        if authentication_provider.is_in_maintenance_mode() and authentication_provider.is_user_framework_admin() is False:
             raise AnalogicMaintenanceException(authentication_provider)
 
         session.permanent = True

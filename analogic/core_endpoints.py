@@ -33,6 +33,7 @@ def navigation_parameters():
 
     return {'navigation_parameters': navigation_parameters}, 200, {'Content-type': 'application/json'}
 
+
 @core_endpoints.analogic_endpoint_route('/start_maintenance', methods=['GET', 'POST'])
 @endpoint_login_required
 def start_maintenance():
@@ -40,7 +41,7 @@ def start_maintenance():
     if authentication_provider.is_user_framework_admin() is False:
         return "You are not authorized to start maintenance", 403
     if request.method == 'POST':
-        authentication_provider.is_maintenance = True
+        authentication_provider.is_in_maintenance = True
         authentication_provider.maintenance_message = request.form.get('message', 'Maintenance in progress')
         return "Maintenance mode started", 200
     return render_template('start_maintenance.html', cnf=authentication_provider.get_setting().get_config()), 200
@@ -50,7 +51,7 @@ def stop_maintenance():
     authentication_provider = get_authentication_provider()
     if authentication_provider.is_user_framework_admin() is False:
         return "You are not authorized to stop maintenance", 403
-    authentication_provider.is_maintenance = False
+    authentication_provider.is_in_maintenance = False
     return "Maintenance mode stopped", 200
 
 
