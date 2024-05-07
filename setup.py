@@ -27,7 +27,6 @@ setup(
         'PyYaml==6.0',
         'xlrd==2.0.1',
         'openpyxl==3.0.10',
-        'Flask-Cors==3.0.10',
         'json_logging==1.3.0',
         'flask_talisman',
         'Flask-APScheduler==1.12.4',
