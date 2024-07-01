@@ -22,5 +22,9 @@ if __name__ == "__main__":
     if os.environ.get('ANALOGIC_WSGI_SERVER') == 'bjoern':
         bjoern = importlib.import_module('bjoern')
         getattr(bjoern, 'run')(app, "0.0.0.0", 5000)
+    elif os.environ.get('ANALOGIC_WSGI_SERVER') == 'gevent':
+        from gevent.pywsgi import WSGIServer
+        http_server = WSGIServer(('0.0.0.0', 5000), app)
+        http_server.serve_forever()
     else:
         app.run(host='0.0.0.0', port='5000')
