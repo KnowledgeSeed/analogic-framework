@@ -17,8 +17,10 @@ csp_policy = {
 if eval(os.getenv('ANALOGIC_TALISMAN_ENABLED', 'True')):
     Talisman(app, force_https=False, content_security_policy=csp_policy, x_content_type_options=False)
 
-
 if __name__ == "__main__":
+    workers = int(os.getenv('ANALOGIC_WORKERS', '1'))
+    threads = int(os.getenv('ANALOGIC_THREADS', '100'))
+
     if os.environ.get('ANALOGIC_WSGI_SERVER') == 'bjoern':
         bjoern = importlib.import_module('bjoern')
         getattr(bjoern, 'run')(app, "0.0.0.0", 5000)
@@ -28,6 +30,9 @@ if __name__ == "__main__":
         http_server.serve_forever()
     elif os.environ.get('ANALOGIC_WSGI_SERVER') == 'waitress':
         from waitress import serve
-        serve(app, host='0.0.0.0', port=5000)
+        serve(app, host='0.0.0.0', port=5000, threads=threads)
+    elif os.environ.get('ANALOGIC_WSGI_SERVER') == 'gunicorn':
+        import subprocess
+        subprocess.run(['gunicorn', '-w', str(workers), '--threads', str(threads), '-b', '0.0.0.0:5000', 'run:app'])
     else:
         app.run(host='0.0.0.0', port='5000')
