@@ -13,7 +13,7 @@ from flask import send_file
 def call(tm1: TM1Service, username, cube_name=None, dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, options=None, export_data=None):
     data = {}
 
-    username = ''.join(ch for ch in username if ch.isalnum())
+    #username = ''.join(ch for ch in username if ch.isalnum())
 
     if selected_cards:
         cell_limit = options.get('cellLimit', 1000000)
