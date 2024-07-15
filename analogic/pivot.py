@@ -146,6 +146,10 @@ def get_filtered_subsets(subsets, options, username_prefix=None):
 def get_elements_with_aliases(tm1: TM1Service, subset: Subset, is_private_subset):
     hierarchy = get_hierarchy(tm1, subset.dimension_name, subset.hierarchy_name)
     alias_attribute_names = get_alias_attribute_names(hierarchy)
+
+    if not alias_attribute_names:
+        alias_attribute_names = ['Caption']
+
     alias_attributes = 'Attributes/' + ',Attributes/'.join(alias_attribute_names)
 
     if subset.is_static:
@@ -252,6 +256,9 @@ def get_pivot_data(tm1, mdx, selected_cards_data, for_excel_export):
             if alias_attr_name:
                 alias_attribute_names_by_axis_and_member_ids[i].append(alias_attr_name)
                 alias_attribute_names[alias_attr_name.replace(' ', '')] = 1
+
+    if not alias_attribute_names:
+        alias_attribute_names = {'Caption': True}
 
     alias_attribute_names = "Attributes/" + ",Attributes/".join(alias_attribute_names.keys())
 
