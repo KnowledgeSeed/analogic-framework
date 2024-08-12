@@ -153,9 +153,14 @@ def get_elements_with_aliases(tm1: TM1Service, subset: Subset, is_private_subset
     alias_attributes = 'Attributes/' + ',Attributes/'.join(alias_attribute_names)
 
     if subset.is_static:
+        elements = subset.elements
+
+        if not elements:
+            return []
+
         epx_prefix = '[' + subset.dimension_name + '].[' + subset.hierarchy_name + '].['
         expression = '{'
-        for e in subset.elements:
+        for e in elements:
             expression += epx_prefix + e + '],'
         expression = expression[:-1] + '}'
     else:
