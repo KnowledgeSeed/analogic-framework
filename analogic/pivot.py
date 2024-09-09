@@ -6,7 +6,7 @@ import orjson
 
 from TM1py.Objects import Subset
 from TM1py.Services import TM1Service
-from TM1py.Utils import format_url
+from TM1py.Utils import format_url, cell_is_updateable
 from flask import send_file
 
 
@@ -283,15 +283,18 @@ Axes(
   )
 ), 
 Cells(
-    $select={select_type}
+    $select={select_type},Updateable,Consolidated
 )""".replace('\n', '')
 
     raw_data = tm1._tm1_rest.GET(url).json()
+    raw_cells = raw_data['Cells']
+
     cols = get_pivot_header_data(raw_data['Axes'][0]['Tuples'], alias_attribute_names_by_axis_and_member_ids[0])
     rows = get_pivot_header_data(raw_data['Axes'][1]['Tuples'], alias_attribute_names_by_axis_and_member_ids[1])
-    cells = list(map(lambda c: c[select_type], raw_data['Cells']))
+    cells = list(map(lambda c: c[select_type], raw_cells))
+    cells_is_updateable = list(map(lambda c: cell_is_updateable(c) and not c['Consolidated'], raw_cells))
 
-    return {'rows': rows, 'cols': cols, 'cells': cells, 'cellsetId': cellset_id}
+    return {'rows': rows, 'cols': cols, 'cells': cells, 'cellsIsUpdateable': cells_is_updateable, 'cellsetId': cellset_id}
 
 
 def get_pivot_header_data(tuples, alias_attribute_names_by_member_ids):

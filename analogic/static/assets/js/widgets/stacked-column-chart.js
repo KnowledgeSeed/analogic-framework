@@ -137,6 +137,8 @@ class StackedColumnChartWidget extends Widget {
             yAxisSeparatesThousands: this.getRealValue('yAxisSeparatesThousands', d, true),
             yAxisTicksPrecisionFixed: this.getRealValue('yAxisTicksPrecisionFixed', d, false),
 
+            labelDataPointVisible: this.getRealValue('labelDataPointVisible', d, true),
+            labelDataLabelVisible: this.getRealValue('labelDataLabelVisible', d, true),
             labelColor: this.getRealValue('labelColor', d, '#FFFFFF'),
             labelBackgroundColor: this.getRealValue('labelBackgroundColor', d, null),
             labelFontFamily: this.getRealValue('labelFontFamily', d, fontFamily),
@@ -149,6 +151,7 @@ class StackedColumnChartWidget extends Widget {
             labelPaddingRight: this.getRealValue('labelPaddingRight', d, 7),
             labelPaddingBottom: this.getRealValue('labelPaddingBottom', d, 3),
             labelAlign: this.getRealValue('labelAlign', d, 'bottom'),
+            labelTextAlign: this.getRealValue('labelTextAlign', d, 'start'),
             labelOffset: this.getRealValue('labelOffset', d, 0),
             labelAnchor: this.getRealValue('labelAnchor', d, 'start'),
             labelClamp: this.getRealValue('labelClamp', d, true),
@@ -380,16 +383,26 @@ class StackedColumnChartWidget extends Widget {
 
                             return (isVis ? 'auto' : false);
                         },
-                        formatter: (v, c) => {
-                            c = datasets[c.datasetIndex];
+                        textAlign: c => datasets[c.datasetIndex].labelTextAlign || v.labelTextAlign,
+                        formatter: (n, c) => {
+                            let e = '', d = datasets[c.datasetIndex];
 
-                            if (c.isArrow) {
-                                return c.label;
+                            if (d.isArrow) {
+                                return d.label;
                             }
 
-                            v = Utils.precisionRound('number' === typeof v ? v : v.y, yAxisDecimalNum, yAxisTicksPrecisionFixed);
+                            if (v.labelDataPointVisible && (false !== d.labelDataPointVisible)) {
+                                e = Utils.precisionRound(null === n ? 0 : 'number' === typeof n ? n : n.y, yAxisDecimalNum, yAxisTicksPrecisionFixed);
 
-                            return (yAxisSeparatesThousands ? Utils.separatesThousands(v) : v) + yAxisUnit;
+                                e = (yAxisSeparatesThousands ? Utils.separatesThousands(e) : e) + yAxisUnit;
+                            }
+
+                            if (v.labelDataLabelVisible && (false !== d.labelDataLabelVisible)) {
+                                e += (d.dataLabels || [])[c.dataIndex] ?? '';
+                            }
+
+                            return e;
+
                         },
                         borderColor: c => datasets[c.datasetIndex].labelBorderColor || v.labelBorderColor || v.yAxisTicksFontColor,
                         borderRadius: c => datasets[c.datasetIndex].labelBorderRadius || v.labelBorderRadius,
@@ -604,7 +617,6 @@ class StackedColumnChartWidget extends Widget {
             ],
             datasets: [
                 {
-
                     label: 'Sales',
                     type: 'line',
                     data: [890000, 80570, 89140, 89171, 892800, 89850, 89320, 893090, 89560, 89530, 89700, 892700, 89840, 89710, 97980],
@@ -623,14 +635,16 @@ class StackedColumnChartWidget extends Widget {
                 },
                 {
                     label: 'Other revenue',
+                    labelDataPointVisible: false,
+                    dataLabels: ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12', 'A13', 'A14', 'A15'],
                     data: [164000, 164492, 164984, 165476, 165968, 166460, 166952, 167444, 167936, 168428, 168920, 169412, 169904, 170396, 170888],
                     backgroundColor: '#80B3E6',
-
                     labelBackgroundColor: '#80B3E6',
                     tooltipsEnabled: false
                 },
                 {
                     label: 'Cost of Sales',
+                    dataLabels: ['\nA1', '\nA2', '\nA3', '\nA4', '\nA5', '\nA6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12', 'A13', 'A14', 'A15'],
                     data: [84000, 84252, 84504, 84756, 85008, 85260, 85512, 85764, 86016, 86268, 86520, 86772, 87024, 87276, 87528],
                     backgroundColor: '#0066CC',
                     labelBackgroundColor: '#0066CC',

@@ -14,7 +14,7 @@ class PivotTableWidget extends Widget {
         this.tree = {children: {}};
 
         return `
-<div class="ks-pivot"><div class="ks-pivot-table-controls-holder">
+<div class="ks-pivot"><div class="ks-pivot-table-controls-holder" ${o.hideCards ? 'style="display: none;"' : ''}>
     <div class="ks-pivot-table-control-row presets-row">
         <div class="ks-pivot-table-presets-btn">
             <span class="icon-ellipsis"></span>
@@ -86,8 +86,8 @@ class PivotTableWidget extends Widget {
             .on('click', '.ks-pivot-table-group-sign-start,.ks-pivot-table-group-sign-closed', e => this.expandCollapseButtonClicked(e))
             .on('click', '.icon-chevron-close-horizontal', e => this.squeezeRowColumns(e))
             .on('click', '.icon-chevron-open-horizontal', e => this.pullApartRowColumns(e))
-            .on('click', '.ks-pivot-table-content-cell', e => this.selectContentCell($(e.currentTarget)))
-            .on('dblclick', '.ks-pivot-table-content-cell', e => this.editContentCell($(e.currentTarget)));
+            .on('click', '.ks-pivot-table-content-cell.u', e => this.selectContentCell($(e.currentTarget)))
+            .on('dblclick', '.ks-pivot-table-content-cell.u', e => this.editContentCell($(e.currentTarget)));
 
 
         this.initControls();
@@ -1478,7 +1478,7 @@ class PivotTableWidget extends Widget {
 
         this.cellsetId = d.data.cellsetId;
 
-        const t0 = performance.now(), cols = d.data.cols, colLen = cols.length, cells = d.data.cells, rows = d.data.rows, rowLen = rows.length, rowElementLen = (rows[0] || []).length;
+        const t0 = performance.now(), cols = d.data.cols, colLen = cols.length, cells = d.data.cells, cellsIsUpdateable = d.data.cellsIsUpdateable, rows = d.data.rows, rowLen = rows.length, rowElementLen = (rows[0] || []).length;
         const colElementLen = (cols[0] || []).length, levelMtx = [], colLevelMtx = [], colHeaderMtx = [], maxColspansByLevels = [], colColors = colors[2], rowColors = colors[1], defaultColor = '3AA745';
         let h = '', v = '', i, j, k, e, m, row, r, p, lastExpanded, expandClass, isExpanded, isLastParents = [], level, nextLevel, maxColspan, midLine, c, totalColspan = 0, name, names, color, colspan, levels, prevLevel, children, isLastRow;
 
@@ -1778,7 +1778,14 @@ class PivotTableWidget extends Widget {
                 }
             }
 
-            h += '<td class="ks-pivot-table-content-cell h2">' + cells.slice(k, k += colLen).join('</td><td class="ks-pivot-table-content-cell">') + '</td></tr>';
+            c = k;
+            k += colLen;
+
+            for (; c < k; ++c) {
+                h += '<td class="ks-pivot-table-content-cell h2 ' + (cellsIsUpdateable[c] ? 'u' : 'hd') + '">' + cells[c] + '</td>';
+            }
+
+            h += '</tr>';
         }
 
         this.table.html(h);

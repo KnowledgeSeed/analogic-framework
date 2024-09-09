@@ -1000,6 +1000,10 @@
     padding: 0 10px;
 }
 
+.hd {
+    background-color: #f2f2f7;
+}
+
 .ks-pivot-table-col-group-sign-cell, .ks-pivot-table-header-cell, .ks-pivot-table-content-cell, h5 {
     width: 90px;
     min-width: 90px;
