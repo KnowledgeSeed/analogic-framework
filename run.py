@@ -34,5 +34,7 @@ if __name__ == "__main__":
     elif os.environ.get('ANALOGIC_WSGI_SERVER') == 'gunicorn':
         import subprocess
         subprocess.run(['gunicorn', '-w', str(workers), '--threads', str(threads), '-b', '0.0.0.0:5000', 'run:app'])
+    elif os.environ.get('ANALOGIC_WSGI_SERVER') == 'gunicorn2':
+        pass
     else:
         app.run(host='0.0.0.0', port='5000')
