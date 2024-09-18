@@ -1,0 +1,8 @@
+.richText .richText-toolbar ul li a {
+    padding: 0;
+    font-size: 40px;
+}
+
+.richText .richText-help {
+    display: none;
+}
