@@ -5,6 +5,7 @@ import logging
 import uuid
 import sys
 import importlib
+from jproperties import Properties
 
 
 class SettingManager:
@@ -13,6 +14,7 @@ class SettingManager:
     ENABLE_WRITE_REQUEST_LOGGER_PARAMETER_NAME = 'enableWriteRequestLogger'
     ENABLE_TOOL_TIPS_PARAMETER_NAME = 'enableToolTips'
     AUTHENTICATION_FAILED_MESSAGE_PARAMETER_NAME = 'authenticationFailedMessage'
+    SECRET_PROPERTIES_PATH = '_secretPropertiesPath'
 
 
     def __init__(self, analogic_application_path, instance='default'):
@@ -190,3 +192,22 @@ class SettingManager:
 
     def getLogger(self):
         return self._logger
+
+    def _get_secret_properties_path(self):
+        return self.get_config().get(self.SECRET_PROPERTIES_PATH)
+    def get_property_value(self, key):
+
+        configs = Properties()
+
+        path = self._get_secret_properties_path()
+
+        if path is not None and os.path.exists(path):
+
+            with open(path, 'rb') as config_file:
+
+                configs.load(config_file)
+
+                return configs.get(key).data
+        else:
+
+            raise Exception('Secret property file not found')
