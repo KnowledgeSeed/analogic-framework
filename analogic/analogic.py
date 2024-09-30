@@ -18,6 +18,7 @@ import importlib
 from analogic.task import scheduler
 import atexit
 from analogic.default_signal_receiver import DefaultSignalReceiver
+import shutil
 
 APPLICATIONS_DIR = 'apps'
 APPLICATIONS_DIR_EXTRA = os.environ.get('APPLICATIONS_DIR_EXTRA', '')
@@ -48,6 +49,46 @@ class Analogic(Flask):
         self.analogic_applications = {}
         self.initialize_auth_providers = True
         self.long_running_tasks = {}
+
+    def create_new_app(self, name):
+        if name in self.analogic_applications:
+            raise Exception('Application already exists')
+
+        target = os.path.join(self.instance_path, APPLICATIONS_DIR, name)
+
+        source = os.path.join(self.root_path, 'new_app_structure')
+
+        shutil.copytree(source, target)
+
+        self.replace_str_in_file(os.path.join(target, 'app.py'), 'default', name)
+        self.replace_str_in_file(os.path.join(target, 'app.json'), 'analogic', name)
+        self.replace_str_in_file(os.path.join(target, 'static', 'assets', 'js', 'configs', 'widget-config.js'),
+                                 'analogic', name)
+        #self.reload_app(os.path.join(self.instance_path, APPLICATIONS_DIR), name)
+        #https://gist.github.com/nguyenkims/ff0c0c52b6a15ddd16832c562f2cae1d
+        #https://github.com/KnowledgeSeed/analogic-stuffs/blob/main/monitor.py
+        #https://modwsgi.readthedocs.io/en/master/user-guides/reloading-source-code.html
+
+    def reload_app(self, directory, name):
+        if name not in self.analogic_applications:
+            application_path = os.path.join(directory, name)
+            application_abs_path = os.path.abspath(os.path.normpath(application_path))
+            application_folder = os.path.dirname(application_abs_path)
+            application_name = os.path.basename(application_abs_path)
+            _append_extension_dir_to_path(self, application_folder)
+            _load_module(self, False, application_name, application_folder, _register_application)
+        else:
+            pass #Todo implement
+
+
+    def replace_str_in_file(self, path, old_str, new_str):
+        with open(path, 'r') as file:
+            filedata = file.read()
+
+        new_content = filedata.replace(old_str, new_str)
+
+        with open(path, 'w') as file:
+            file.write(new_content)
 
     def register_analogic_url_rules(self, instance):
         for url_rule in self.endpoint_rules:
@@ -90,6 +131,9 @@ class Analogic(Flask):
         try:
 
             instance = '/' + blueprint.name
+
+            if blueprint.name != 'default' and blueprint.name != 'vidanetcpm' and blueprint.name!='otetest1000':
+                return
 
             self.register_analogic_url_rules(instance)
 
@@ -258,9 +302,6 @@ def _load_logging(app):
         log_config = json.load(file)
         for h in log_config['handlers']:
             if 'filename' in log_config['handlers'][h]:
-                # if h == 'scheduler_file_handler':
-                #     file_name = f"logs/scheduler_{os.getpid()}.log"
-                # else:
                 file_name = log_config['handlers'][h]['filename']
 
                 log_config['handlers'][h]['filename'] = os.path.join(app.instance_path, file_name)
@@ -316,7 +357,7 @@ def _register_extension_components(app, extension_name, files):
                 app.register_signal_receiver(name, extension_name)
 
             if isinstance(obj, AnalogicEndpoint):
-                logging.getLogger(__name__).info('Registering analogic endpoing ' + name)
+                logging.getLogger(__name__).info('Registering analogic endpoint ' + name)
                 app.register_analogic_endpoint(obj)
 
 
