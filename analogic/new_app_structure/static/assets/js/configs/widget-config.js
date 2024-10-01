@@ -1,13 +1,13 @@
 /* global app */
 'use strict';
 WidgetConfig = {
-        analogicMain:
+        $projectIdMain:
             {
-                id: 'analogicMain',
+                id: '$projectIdMain',
                 type: PageWidget,
                 widgets: [
                     {
-                        id: 'analogicMainHelloAnalogic',
+                        id: '$projectIdMainHelloAnalogic',
                         type: TextWidget,
                         title: 'Hello world'
                     }

@@ -1,6 +1,7 @@
 {
-  "projectName": "Analogic",
-  "projectId": "analogic",
+  "projectName": "$projectId",
+  "projectId": "$projectId",
   "authenticationMode": "NoLogin",
-  "mainPage": "analogicMain"
+  "mainPage": "$projectIdMain",
+  "analogicApiAuthenticationMode": "unsecured"
 }

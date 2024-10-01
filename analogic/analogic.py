@@ -19,6 +19,8 @@ from analogic.task import scheduler
 import atexit
 from analogic.default_signal_receiver import DefaultSignalReceiver
 import shutil
+from time import time
+from os import utime, stat
 
 APPLICATIONS_DIR = 'apps'
 APPLICATIONS_DIR_EXTRA = os.environ.get('APPLICATIONS_DIR_EXTRA', '')
@@ -61,25 +63,17 @@ class Analogic(Flask):
         shutil.copytree(source, target)
 
         self.replace_str_in_file(os.path.join(target, 'app.py'), 'default', name)
-        self.replace_str_in_file(os.path.join(target, 'app.json'), 'analogic', name)
+        self.replace_str_in_file(os.path.join(target, 'app.json'), '$projectId', name)
         self.replace_str_in_file(os.path.join(target, 'static', 'assets', 'js', 'configs', 'widget-config.js'),
-                                 'analogic', name)
-        #self.reload_app(os.path.join(self.instance_path, APPLICATIONS_DIR), name)
-        #https://gist.github.com/nguyenkims/ff0c0c52b6a15ddd16832c562f2cae1d
-        #https://github.com/KnowledgeSeed/analogic-stuffs/blob/main/monitor.py
-        #https://modwsgi.readthedocs.io/en/master/user-guides/reloading-source-code.html
+                                 '$projectId', name)
 
-    def reload_app(self, directory, name):
-        if name not in self.analogic_applications:
-            application_path = os.path.join(directory, name)
-            application_abs_path = os.path.abspath(os.path.normpath(application_path))
-            application_folder = os.path.dirname(application_abs_path)
-            application_name = os.path.basename(application_abs_path)
-            _append_extension_dir_to_path(self, application_folder)
-            _load_module(self, False, application_name, application_folder, _register_application)
-        else:
-            pass #Todo implement
+        self.trigger_change_monitor_for_restart()
 
+    def trigger_change_monitor_for_restart(self):
+        name = os.path.join(self.root_path, 'change_monitor.py')
+        st_info = stat(name)
+
+        utime(name, (st_info.st_atime, time()))
 
     def replace_str_in_file(self, path, old_str, new_str):
         with open(path, 'r') as file:
@@ -132,7 +126,7 @@ class Analogic(Flask):
 
             instance = '/' + blueprint.name
 
-            if blueprint.name != 'default' and blueprint.name != 'vidanetcpm' and blueprint.name!='otetest1000':
+            if blueprint.name != 'default' and blueprint.name != 'vidanetcpm' and blueprint.name != 'otetest1000':
                 return
 
             self.register_analogic_url_rules(instance)
