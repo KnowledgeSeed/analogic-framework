@@ -31,7 +31,8 @@ setup(
         'flask_talisman',
         'Flask-APScheduler==1.12.4',
         'orjson==3.9.15',
-        'rich==13.3.5'
+        'rich==13.3.5',
+        'jproperties==2.1.1'
     ],
     entry_points={
         'console_scripts': ['analogic=analogic.__cli__:main'],
