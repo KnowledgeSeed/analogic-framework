@@ -1,0 +1,17 @@
+.richText .richText-toolbar ul li a {
+    padding: 0;
+    font-size: 40px;
+}
+
+.richText .richText-help {
+    display: none;
+}
+
+.richText .richText-undo, .richText .richText-redo {
+    float: left;
+    display: block;
+    padding: 0;
+    border-right: #efefef solid 1px;
+    cursor: pointer;
+    font-size: 40px;
+}
