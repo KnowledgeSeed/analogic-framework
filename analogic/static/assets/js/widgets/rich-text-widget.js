@@ -8,7 +8,7 @@ class RichTextWidget extends Widget {
 
         this.getParameters(d);
 
-        return `<div class="ks-rich-text"></div>`;
+        return ``;
     }
 
     getParameters(d) {
