@@ -119,7 +119,7 @@ class Analogic(Flask):
         authentication_provider_class = getattr(module, class_name)
         authentication_provider = authentication_provider_class(setting)
 
-        if initialize and self.initialize_auth_providers:
+        if initialize and self.initialize_auth_providers and class_name != 'MultiAuthenticationProvider':
             authentication_provider.initialize()
 
         return authentication_provider
@@ -316,7 +316,7 @@ def _register_extension_components(app, extension_name, files):
                 app.register_signal_receiver(name, extension_name)
 
             if isinstance(obj, AnalogicEndpoint):
-                logging.getLogger(__name__).info('Registering analogic endpoing ' + name)
+                logging.getLogger(__name__).info('Registering analogic endpoint ' + name)
                 app.register_analogic_endpoint(obj)
 
 
