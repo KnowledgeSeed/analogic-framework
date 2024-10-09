@@ -5,17 +5,17 @@ import logging
 import uuid
 import sys
 import importlib
+import hashlib
 from jproperties import Properties
+from cryptography.fernet import Fernet
 
 
 class SettingManager:
-
     ENABLE_REQUEST_LOGGER_PARAMETER_NAME = 'enableRequestLogger'
     ENABLE_WRITE_REQUEST_LOGGER_PARAMETER_NAME = 'enableWriteRequestLogger'
     ENABLE_TOOL_TIPS_PARAMETER_NAME = 'enableToolTips'
     AUTHENTICATION_FAILED_MESSAGE_PARAMETER_NAME = 'authenticationFailedMessage'
     SECRET_PROPERTIES_PATH = '_secretPropertiesPath'
-
 
     def __init__(self, analogic_application_path, instance='default'):
         self.site_root = analogic_application_path
@@ -193,8 +193,52 @@ class SettingManager:
     def getLogger(self):
         return self._logger
 
+    def encrypt_secret(self, secret, fernet_key):
+        f = Fernet(fernet_key.encode('utf-8'))
+        return f.encrypt(secret.encode('utf-8')).decode('latin-1')
+
+    def decrypt_password(self, secret, fernet_key):
+        f = Fernet(fernet_key.encode('utf-8'))
+        return f.decrypt(secret.encode('latin-1')).decode('utf-8')
+
+    def hash_password(self, password, salt):
+        password_hash = hashlib.sha512((password + salt).encode()).hexdigest()
+        return password_hash
+
+    def get_plain_text_secret(self, key, **kwargs):
+
+        fernet_key_prop_key = kwargs.get('fernet_key_prop_key')
+        fernet_key_env_prop_key = kwargs.get('fernet_key_env_prop_key')
+        env_key = kwargs.get('env_key')
+
+        secret = self.get_extended_property_value(key, env_key=env_key)
+
+        if secret is None:
+            return None
+
+        fernet_key = self.get_extended_property_value(fernet_key_prop_key, env_key=fernet_key_env_prop_key)
+
+        if fernet_key is not None:
+
+            return self.decrypt_password(secret, fernet_key)
+
+        return secret
+
     def _get_secret_properties_path(self):
         return self.get_config().get(self.SECRET_PROPERTIES_PATH)
+
+    def get_extended_property_value(self, key, **kwargs):
+        env_key = kwargs.get('env_key')
+        default_value = kwargs.get('default_value')
+
+        try:
+            return self.get_config().get(key, self.get_property_value(key))
+        except:
+            value = os.getenv(env_key if env_key is not None else key)
+            if value is None:
+                return default_value
+            return value
+
     def get_property_value(self, key):
 
         configs = Properties()

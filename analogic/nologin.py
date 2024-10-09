@@ -20,7 +20,7 @@ class NoLogin(AuthenticationProvider):
     def login(self):
         return redirect(self.setting.get_base_url())
 
-    def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies):
+    def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies, decode_content=True):
         return {}
 
     def check_app_authenticated(self):

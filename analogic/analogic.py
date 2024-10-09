@@ -157,7 +157,7 @@ class Analogic(Flask):
         authentication_provider_class = getattr(module, class_name)
         authentication_provider = authentication_provider_class(setting)
 
-        if initialize and self.initialize_auth_providers:
+        if initialize and self.initialize_auth_providers and class_name != 'MultiAuthenticationProvider':
             authentication_provider.initialize()
 
         return authentication_provider

@@ -4,6 +4,7 @@
 <link href="{{url_for('static', filename='assets/css/lib/Chart-2.9.3.min.css')}}?v={{cnf.version}}" rel="stylesheet" type="text/css">
 <link href="{{url_for('static', filename='assets/css/lib/nouislider.min.css')}}?v={{cnf.version}}" rel="stylesheet" type="text/css">
 <link href="{{url_for('static', filename='assets/css/lib/jquery-ui.min.css')}}?v={{cnf.version}}" rel="stylesheet" type="text/css">
+<link href="{{url_for('static', filename='assets/css/lib/richtext.min.css')}}?v={{cnf.version}}" rel="stylesheet" type="text/css">
 
 <!-- widget skins -->
 <link href="{{url_for('static', filename='assets/skin/css/ks-general.css')}}?v={{cnf.version}}" rel="stylesheet" type="text/css">
@@ -116,6 +117,9 @@
 
 <link href="{{url_for('static', filename='assets/skin/css/ks-password-text.css')}}?v={{cnf.version}}" rel="stylesheet" type="text/css">
 <link href="{{url_for(cnf.blueprint_static, filename='assets/skin/css/ks-password-text-style.css')}}?v={{cnf.version}}" rel="stylesheet" type="text/css">
+
+<link href="{{url_for('static', filename='assets/skin/css/ks-rich-text.css')}}?v={{cnf.version}}" rel="stylesheet" type="text/css">
+<link href="{{url_for(cnf.blueprint_static, filename='assets/skin/css/ks-rich-text-style.css')}}?v={{cnf.version}}" rel="stylesheet" type="text/css">
 
 {% for asset_name in cnf.extension_css_asset_names %}
     <link href="{{url_for('extension_asset', asset_name=asset_name)}}&v={{cnf.version}}" rel="stylesheet" type="text/css">
