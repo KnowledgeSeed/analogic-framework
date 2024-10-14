@@ -10,6 +10,26 @@ from jproperties import Properties
 from cryptography.fernet import Fernet
 
 
+def get_properties_file_value(path, key):
+    configs = Properties()
+
+    if path is not None and os.path.exists(path):
+
+        with open(path, 'rb') as config_file:
+
+            configs.load(config_file)
+
+            return configs.get(key).data
+    else:
+
+        raise Exception('Secret property file not found')
+
+
+def hash_password(password, salt):
+    password_hash = hashlib.sha512((password + salt).encode()).hexdigest()
+    return password_hash
+
+
 class SettingManager:
     ENABLE_REQUEST_LOGGER_PARAMETER_NAME = 'enableRequestLogger'
     ENABLE_WRITE_REQUEST_LOGGER_PARAMETER_NAME = 'enableWriteRequestLogger'
@@ -201,10 +221,6 @@ class SettingManager:
         f = Fernet(fernet_key.encode('utf-8'))
         return f.decrypt(secret.encode('latin-1')).decode('utf-8')
 
-    def hash_password(self, password, salt):
-        password_hash = hashlib.sha512((password + salt).encode()).hexdigest()
-        return password_hash
-
     def get_plain_text_secret(self, key, **kwargs):
 
         fernet_key_prop_key = kwargs.get('fernet_key_prop_key')
@@ -219,7 +235,6 @@ class SettingManager:
         fernet_key = self.get_extended_property_value(fernet_key_prop_key, env_key=fernet_key_env_prop_key)
 
         if fernet_key is not None:
-
             return self.decrypt_password(secret, fernet_key)
 
         return secret
@@ -241,17 +256,6 @@ class SettingManager:
 
     def get_property_value(self, key):
 
-        configs = Properties()
-
         path = self._get_secret_properties_path()
 
-        if path is not None and os.path.exists(path):
-
-            with open(path, 'rb') as config_file:
-
-                configs.load(config_file)
-
-                return configs.get(key).data
-        else:
-
-            raise Exception('Secret property file not found')
+        return get_properties_file_value(path, key)

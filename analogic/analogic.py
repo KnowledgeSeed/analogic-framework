@@ -8,6 +8,7 @@ import json
 import sys
 from importlib import resources
 from analogic.core_endpoints import core_endpoints
+from analogic.system_endpoints import system_endpoints
 from analogic.authentication_provider import AuthenticationProvider
 from analogic.signal_receiver import SignalReceiver
 from analogic.exceptions import AnalogicMaintenanceException
@@ -126,7 +127,7 @@ class Analogic(Flask):
 
             instance = '/' + blueprint.name
 
-            if blueprint.name != 'default' and blueprint.name != 'vidanetcpm' and blueprint.name != 'otetest1000':
+            if blueprint.name not in ['default', 'saw']:
                 return
 
             self.register_analogic_url_rules(instance)
@@ -283,6 +284,8 @@ def create_app(instance_path, start_scheduler=True, initialize_auth_providers=Tr
         scheduler.start()
 
     atexit.register(app.on_exit)
+
+    app.register_blueprint(system_endpoints, url_prefix='/system_endpoints')
 
     return app
 
