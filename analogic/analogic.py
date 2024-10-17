@@ -53,7 +53,7 @@ class Analogic(Flask):
         self.initialize_auth_providers = True
         self.long_running_tasks = {}
 
-    def create_new_app(self, name):
+    def create_new_app(self, name, main_page):
         if name in self.analogic_applications:
             raise Exception('Application already exists')
 
@@ -65,8 +65,7 @@ class Analogic(Flask):
 
         self.replace_str_in_file(os.path.join(target, 'app.py'), 'default', name)
         self.replace_str_in_file(os.path.join(target, 'app.json'), '$projectId', name)
-        self.replace_str_in_file(os.path.join(target, 'static', 'assets', 'js', 'configs', 'widget-config.js'),
-                                 '$projectId', name)
+        self.replace_str_in_file(os.path.join(target, 'app.json'), '$mainPage', main_page)
 
         self.trigger_change_monitor_for_restart()
 
@@ -127,7 +126,7 @@ class Analogic(Flask):
 
             instance = '/' + blueprint.name
 
-            if blueprint.name not in ['default', 'saw']:
+            if blueprint.name not in ['default', 'saw', 'otetest']:
                 return
 
             self.register_analogic_url_rules(instance)

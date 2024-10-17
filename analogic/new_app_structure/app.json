@@ -2,6 +2,6 @@
   "projectName": "$projectId",
   "projectId": "$projectId",
   "authenticationMode": "NoLogin",
-  "mainPage": "$projectIdMain",
+  "mainPage": "$mainPage",
   "analogicApiAuthenticationMode": "unsecured"
 }
