@@ -8,6 +8,7 @@ import json
 import sys
 from importlib import resources
 from analogic.core_endpoints import core_endpoints
+from analogic.system_endpoints import system_endpoints
 from analogic.authentication_provider import AuthenticationProvider
 from analogic.signal_receiver import SignalReceiver
 from analogic.exceptions import AnalogicMaintenanceException
@@ -18,6 +19,9 @@ import importlib
 from analogic.task import scheduler
 import atexit
 from analogic.default_signal_receiver import DefaultSignalReceiver
+import shutil
+from time import time
+from os import utime, stat
 
 APPLICATIONS_DIR = 'apps'
 APPLICATIONS_DIR_EXTRA = os.environ.get('APPLICATIONS_DIR_EXTRA', '')
@@ -48,6 +52,37 @@ class Analogic(Flask):
         self.analogic_applications = {}
         self.initialize_auth_providers = True
         self.long_running_tasks = {}
+
+    def create_new_app(self, name, main_page):
+        if name in self.analogic_applications:
+            raise Exception('Application already exists')
+
+        target = os.path.join(self.instance_path, APPLICATIONS_DIR, name)
+
+        source = os.path.join(self.root_path, 'new_app_structure')
+
+        shutil.copytree(source, target)
+
+        self.replace_str_in_file(os.path.join(target, 'app.py'), 'default', name)
+        self.replace_str_in_file(os.path.join(target, 'app.json'), '$projectId', name)
+        self.replace_str_in_file(os.path.join(target, 'app.json'), '$mainPage', main_page)
+
+        self.trigger_change_monitor_for_restart()
+
+    def trigger_change_monitor_for_restart(self):
+        name = os.path.join(self.root_path, 'change_monitor.py')
+        st_info = stat(name)
+
+        utime(name, (st_info.st_atime, time()))
+
+    def replace_str_in_file(self, path, old_str, new_str):
+        with open(path, 'r') as file:
+            filedata = file.read()
+
+        new_content = filedata.replace(old_str, new_str)
+
+        with open(path, 'w') as file:
+            file.write(new_content)
 
     def register_analogic_url_rules(self, instance):
         for url_rule in self.endpoint_rules:
@@ -246,6 +281,8 @@ def create_app(instance_path, start_scheduler=True, initialize_auth_providers=Tr
 
     atexit.register(app.on_exit)
 
+    app.register_blueprint(system_endpoints, url_prefix='/system_endpoints')
+
     return app
 
 
@@ -258,9 +295,6 @@ def _load_logging(app):
         log_config = json.load(file)
         for h in log_config['handlers']:
             if 'filename' in log_config['handlers'][h]:
-                # if h == 'scheduler_file_handler':
-                #     file_name = f"logs/scheduler_{os.getpid()}.log"
-                # else:
                 file_name = log_config['handlers'][h]['filename']
 
                 log_config['handlers'][h]['filename'] = os.path.join(app.instance_path, file_name)

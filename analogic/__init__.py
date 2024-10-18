@@ -11,6 +11,8 @@ from .endpoint import AnalogicEndpoint
 from .loader import ClassLoader
 from .email import EmailManager
 from .setting import SettingManager
+from .setting import get_properties_file_value
+from .setting import hash_password
 from .multi_setting import MultiSettingManager
 from .analogic_tm1_service import AnalogicTM1Service
 from . import pivot
@@ -19,6 +21,7 @@ from .logincam import LoginCam
 from .nologin import NoLogin
 from .camsecure import CamSecure
 from . import core_endpoints
+from . import system_endpoints
 from .task import scheduler
 from .exceptions import AnalogicException
 from .exceptions import AnalogicProxyException
