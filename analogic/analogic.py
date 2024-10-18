@@ -126,9 +126,6 @@ class Analogic(Flask):
 
             instance = '/' + blueprint.name
 
-            if blueprint.name not in ['default', 'saw', 'otetest']:
-                return
-
             self.register_analogic_url_rules(instance)
 
             self.analogic_applications[blueprint.name] = self.create_authentication_provider(blueprint.name,
