@@ -72,7 +72,7 @@ def _monitor():
             pass
 
 
-_thread = threading.Thread(target=_monitor, deamon=True)
+_thread = threading.Thread(target=_monitor, daemon=True)
 
 
 def _exiting():
