@@ -53,7 +53,7 @@ class Analogic(Flask):
         self.initialize_auth_providers = True
         self.long_running_tasks = {}
 
-    def create_new_app(self, name, main_page):
+    def create_new_app(self, name, main_page, model_api_url='', cam_namespace=''):
         if name in self.analogic_applications:
             raise Exception('Application already exists')
 
@@ -66,6 +66,12 @@ class Analogic(Flask):
         self.replace_str_in_file(os.path.join(target, 'app.py'), 'default', name)
         self.replace_str_in_file(os.path.join(target, 'app.json'), '$projectId', name)
         self.replace_str_in_file(os.path.join(target, 'app.json'), '$mainPage', main_page)
+        self.replace_str_in_file(os.path.join(target, 'app.json'), '$modelApiUrl', model_api_url)
+        self.replace_str_in_file(os.path.join(target, 'app.json'), '$camNamespace', cam_namespace)
+        authentication_mode = 'NoLogin' if model_api_url == '' else 'LoginBasic' if cam_namespace == '' else 'LoginCam'
+        self.replace_str_in_file(os.path.join(target, 'app.json'), '$authenticationMode', authentication_mode)
+        self.replace_str_in_file(os.path.join(target, 'static', 'assets', 'js', 'configs', 'widget-config.js'),
+                                 '$projectId', name)
 
         self.trigger_change_monitor_for_restart()
 

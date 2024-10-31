@@ -1,7 +1,11 @@
 {
   "projectName": "$projectId",
   "projectId": "$projectId",
-  "authenticationMode": "NoLogin",
+  "authenticationMode": "$authenticationMode",
   "mainPage": "$mainPage",
-  "analogicApiAuthenticationMode": "unsecured"
+  "analogicApiAuthenticationMode": "unsecured",
+  "camNamespace": "$camNamespace",
+  "proxy": {
+    "target": "$modelApiUrl"
+  }
 }
