@@ -13,16 +13,26 @@ from cryptography.fernet import Fernet
 def get_properties_file_value(path, key):
     configs = Properties()
 
-    if path is not None and os.path.exists(path):
+    logger = logging.getLogger(__name__)
 
-        with open(path, 'rb') as config_file:
-
-            configs.load(config_file)
-
-            return configs.get(key).data
-    else:
-
+    if path is None:
+        logger.info('Secret property path is none')
         raise Exception('Secret property file not found')
+
+    if os.path.exists(path) is False:
+        logger.info(f'Secret property file not found in {path} in {os.getcwd()}')
+        checked_path = os.path.join(current_app.instance_path, path)
+        if os.path.exists(checked_path) is False:
+            logger.info(f'Secret property file not found in {checked_path} in {current_app.instance_path}')
+            raise Exception('Secret property file not found')
+    else:
+        checked_path = path
+
+    with open(checked_path, 'rb') as config_file:
+
+        configs.load(config_file)
+
+        return configs.get(key).data
 
 
 def hash_password(password, salt):
@@ -248,7 +258,8 @@ class SettingManager:
 
         try:
             return self.get_config().get(key, self.get_property_value(key))
-        except:
+        except Exception as e:
+            self._logger.info(e, exc_info=True)
             value = os.getenv(env_key if env_key is not None else key)
             if value is None:
                 return default_value
