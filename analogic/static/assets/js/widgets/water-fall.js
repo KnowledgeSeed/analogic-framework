@@ -23,6 +23,8 @@ class WaterFallWidget extends Widget {
             dataset1: $.extend(true, {}, dataset1Config, d.dataset1),
             dataset2: $.extend(true, {}, dataset2Config, d.dataset2),
             xAxisLabels: this.getRealValue('xAxisLabels', d, []),
+            xAxisFontSize: this.getRealValue('xAxisFontSize', d),
+            labelFontSize: this.getRealValue('labelFontSize', d),
             labelVisible: this.getRealValue('labelVisible', d, true),
             legendVisible: this.getRealValue('legendVisible', d, true),
             minYAxis: parseFloat(this.getRealValue('minYAxis', d, -10)),
@@ -32,6 +34,7 @@ class WaterFallWidget extends Widget {
             yAxisDecimalNum: parseInt(this.getRealValue('yAxisDecimalNum', d, 2)),
             yAxisTicksPrecisionFixed: this.getRealValue('yAxisTicksPrecisionFixed', d, false),
             yAxisSeparatesThousands: this.getRealValue('yAxisSeparatesThousands', d, false),
+            yAxisFontSize: this.getRealValue('yAxisFontSize', d),
             height: parseFloat(Utils.getSize(this.getRealValue('height', d, 300), false, 'height')),
             defaultColor: this.getRealValue('defaultColor', d, '#F3F4F6'),
             skin: this.getRealValue('skin', d, 'attila-1'),
@@ -80,14 +83,14 @@ class WaterFallWidget extends Widget {
         for (i = 0; i < v.yAxisGridLineNum; ++i) {
             val = Utils.precisionRound(j, v.yAxisDecimalNum, v.yAxisTicksPrecisionFixed);
 
-            yAxisHtml.push('<div class="ks-waterfall-y-line ks-primary"><div class="ks-waterfall-y-line-tick ks-left"></div><div class="ks-waterfall-y-line-label ks-left">', v.yAxisSeparatesThousands ? Utils.separatesThousands(val) : val, v.yAxisUnit, '</div><div class="ks-waterfall-y-line-tick ks-right"></div><div class="ks-waterfall-y-line-label ks-right"></div></div>');
+            yAxisHtml.push('<div class="ks-waterfall-y-line ks-primary"><div class="ks-waterfall-y-line-tick ks-left"></div><div', v.yAxisFontSize ? (' style="font-size:' + v.yAxisFontSize + 'px;"') : '', ' class="ks-waterfall-y-line-label ks-left">', v.yAxisSeparatesThousands ? Utils.separatesThousands(val) : val, v.yAxisUnit, '</div><div class="ks-waterfall-y-line-tick ks-right"></div><div class="ks-waterfall-y-line-label ks-right"></div></div>');
 
             j -= yAxisStep;
         }
 
         val = Utils.precisionRound(min, v.yAxisDecimalNum, v.yAxisTicksPrecisionFixed);
 
-        yAxisHtml.push('<div class="ks-waterfall-y-line ks-axis"><div class="ks-waterfall-y-line-tick ks-left"></div><div class="ks-waterfall-y-line-label ks-left ks-waterfall-label-origo">' + (v.yAxisSeparatesThousands ? Utils.separatesThousands(val) : val) + v.yAxisUnit + '</div><div class="ks-waterfall-y-line-tick ks-right"></div><div class="ks-waterfall-y-line-label ks-right"></div><div class="ks-waterfall-reset"' + resetBtnVisibility + '><span class="">i</span> Reset</div></div>');
+        yAxisHtml.push('<div class="ks-waterfall-y-line ks-axis"><div class="ks-waterfall-y-line-tick ks-left"></div><div', v.yAxisFontSize ? (' style="font-size:' + v.yAxisFontSize + 'px;"') : '', ' class="ks-waterfall-y-line-label ks-left ks-waterfall-label-origo">' + (v.yAxisSeparatesThousands ? Utils.separatesThousands(val) : val) + v.yAxisUnit + '</div><div class="ks-waterfall-y-line-tick ks-right"></div><div class="ks-waterfall-y-line-label ks-right"></div><div class="ks-waterfall-reset"' + resetBtnVisibility + '><span class="">i</span> Reset</div></div>');
 
         for (i = 0; i < len; ++i) {
             d = datapoints1[i];
@@ -109,7 +112,7 @@ class WaterFallWidget extends Widget {
 
             this.addBarHtml(h, d, val, hb[0], hb[1], labelVisible, v.hiddenDatasets[0], isLastCol, dataset1.showConnectionLines);
 
-            h.push('<div class="ks-waterfall-x-line ks-primary"><div class="ks-waterfall-x-line-tick"></div><div class="ks-waterfall-x-line-label">', label.value, '<div class="ks-waterfall-x-line-icon', (label.comment ? '' : ' off'), '"></div></div></div>');
+            h.push('<div class="ks-waterfall-x-line ks-primary"><div class="ks-waterfall-x-line-tick"></div><div', v.xAxisFontSize ? (' style="font-size:' + v.xAxisFontSize + 'px;"') : '', ' class="ks-waterfall-x-line-label">', label.value, '<div class="ks-waterfall-x-line-icon', (label.comment ? '' : ' off'), '"></div></div></div>');
 
             d = datapoints2[i];
 
@@ -184,7 +187,7 @@ class WaterFallWidget extends Widget {
                 val = d.displayValue;
             }
 
-            l = '<div class="ks-waterfall-bar-label">' + val + '</div>';
+            l = '<div' + (v.labelFontSize ? (' style="font-size:' + v.labelFontSize + 'px;"') : '') +' class="ks-waterfall-bar-label">' + val + '</div>';
         }
 
         h.push('<div class="ks-waterfall-bar" style="', s, ' height: ', height, 'px; bottom: ', bottom, 'px;">', l, c, '</div>');
