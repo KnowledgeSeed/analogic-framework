@@ -7,5 +7,7 @@
   "camNamespace": "$camNamespace",
   "proxy": {
     "target": "$modelApiUrl"
-  }
+  },
+  "connectedSeederUrl": "$connectedSeederUrl",
+  "connectedSeederApplicationVersion": "$connectedSeederApplicationVersion"
 }
