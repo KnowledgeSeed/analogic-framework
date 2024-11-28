@@ -51,7 +51,13 @@ class PivotTableWidget extends Widget {
         this.expandedCollapsedMembers = [{}, {}];
         this.suppressOptions = {nonEmptyRows: true, nonEmptyColumns: true};
 
-        Pivot.call({data: {cube_name: o.cubeName, options: JSON.stringify({widgetId: this.id})}}).then(d => {
+        let presetParams = [], fn = (Repository[this.id] || {}).getPivotPresetParams;
+
+        if (fn) {
+            presetParams = fn(LoadExecutorFactory.createContext(this.id, 'PivotTableWidget'));
+        }
+
+        Pivot.call({data: {cube_name: o.cubeName, options: JSON.stringify({widgetId: this.id, presetParams: presetParams})}}).then(d => {
             this.presets = this.parsePresetsData(d.data);
 
             this.doLoadPreset(this.presetId);
