@@ -57,13 +57,13 @@ jobs:
          python -m pip install --upgrade pip
          pip install build twine
         
-      - name: Build
+      - name: Python Build
         run: python -m build
       
       - name: Publish to PyPI
         run: python -m twine upload dist/* -u__token__ -p${{ secrets.PYPI_TOKEN }} --verbose
 
-      - name: Build and push
+      - name: Docker Build and push to Dockerhub
         uses: docker/build-push-action@v6
         
         with:
