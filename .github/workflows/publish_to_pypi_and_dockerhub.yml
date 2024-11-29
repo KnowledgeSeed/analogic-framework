@@ -70,4 +70,4 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: knowledgeseed/analogic-framework:${{ steps.set_version.outputs.version }}"
+          tags: knowledgeseed/analogic-framework:${{ steps.set_version.outputs.version }}
