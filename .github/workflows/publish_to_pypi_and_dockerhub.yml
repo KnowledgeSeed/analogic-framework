@@ -1,0 +1,73 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Publish To PyPI and Dockerhub
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get version
+        id: set_version
+        run: |
+          VERSION_FILE='analogic/version.config'
+          VERSION=$(cat "$VERSION_FILE" | tr -d '\n')
+          echo "Version: $VERSION"
+          echo "::set-output name=version::$VERSION" # Sets an output variable
+
+      - name: Set up Docker
+        uses: crazy-max/ghaction-setup-docker@v3
+        with:
+          daemon-config: |
+            {
+              "debug": true,
+              "features": {
+                "containerd-snapshotter": true
+              }
+            }   
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+
+      - name: Install build dependencies
+        run: |
+         python -m pip install --upgrade pip
+         pip install build twine
+        
+      - name: Python Build
+        run: python -m build
+      
+      - name: Publish to PyPI
+        run: python -m twine upload dist/* -u__token__ -p${{ secrets.PYPI_TOKEN }} --verbose
+
+      - name: Docker Build and push to Dockerhub
+        uses: docker/build-push-action@v6
+        
+        with:
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: knowledgeseed/analogic-framework:${{ steps.set_version.outputs.version }}
