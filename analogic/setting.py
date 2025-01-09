@@ -46,6 +46,7 @@ class SettingManager:
     ENABLE_TOOL_TIPS_PARAMETER_NAME = 'enableToolTips'
     AUTHENTICATION_FAILED_MESSAGE_PARAMETER_NAME = 'authenticationFailedMessage'
     SECRET_PROPERTIES_PATH = '_secretPropertiesPath'
+    CUSTOM_LOGIN_HTML_PARAMETER_NAME = '_customLoginHtml'
 
     def __init__(self, analogic_application_path, instance='default'):
         self.site_root = analogic_application_path
@@ -249,6 +250,9 @@ class SettingManager:
 
         return secret
 
+    def get_login_html(self):
+        return self.get_extended_property_value(self.CUSTOM_LOGIN_HTML_PARAMETER_NAME, default_value="login.html")
+
     def _get_secret_properties_path(self):
         return self.get_config().get(self.SECRET_PROPERTIES_PATH)
 
@@ -257,13 +261,14 @@ class SettingManager:
         default_value = kwargs.get('default_value')
 
         try:
-            return self.get_config().get(key, self.get_property_value(key))
+            config = self.get_config()
+            if key in config:
+                return config[key]
+            return self.get_property_value(key)
         except Exception as e:
-            self._logger.info(e, exc_info=True)
-            value = os.getenv(env_key if env_key is not None else key)
-            if value is None:
-                return default_value
-            return value
+            self._logger.info(f'Property value not found for {key}: {e}')
+            value = os.getenv(env_key if env_key else key)
+            return value if value is not None else default_value
 
     def get_property_value(self, key):
 

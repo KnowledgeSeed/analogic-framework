@@ -390,7 +390,7 @@ class AuthenticationProvider(ABC):
                 permissions = [str(x['Value']) for x in r['Cells']]
 
                 existing_permissions = self.session_handler.get(self.setting.get_permission_session_name())
-                existing_permissions_list = existing_permissions.split(',') if existing_permissions is not None else []
+                existing_permissions_list = existing_permissions.split(',') if existing_permissions is not None and existing_permissions != '' else []
 
                 union = list(set(existing_permissions_list + permissions))
                 self.set_permissions(','.join(union))
