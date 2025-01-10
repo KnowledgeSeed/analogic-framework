@@ -12,6 +12,8 @@ from abc import ABC, abstractmethod
 from analogic.signals import before_call_do_proxy
 from functools import wraps
 import orjson
+import os
+from werkzeug.utils import secure_filename
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
@@ -158,6 +160,84 @@ class AuthenticationProvider(ABC):
         except Exception as e:  # Todo 500, 401
             self.getLogger().error(e, exc_info=True)
             return {'message': str(e)}, 404, {'Content-type': 'application/json'}
+
+    @login_required
+    def upload_image(self):
+        try:
+            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'images', 'upload')
+
+            file_name = request.form.get('fileName', '').rsplit('.', 1)[0]
+            folder_name = request.form.get('folderName', '').strip()
+
+            files = request.files.getlist('file')
+            if not files or len(files) == 0:
+                return jsonify({'message': 'No files provided'}), 400
+
+            target_folder = images_upload_folder
+            if folder_name:
+                target_folder = os.path.join(images_upload_folder, secure_filename(folder_name))
+
+            if not os.path.exists(target_folder):
+                os.makedirs(target_folder)
+
+            for idx, file in enumerate(files):
+                if idx == 0:
+                    if len(files) == 1 and file_name:
+                        filename = secure_filename(file_name) + '.' + file.filename.rsplit('.', 1)[-1]
+                    else:
+                        filename = secure_filename(file.filename)
+
+                    file.save(os.path.join(target_folder, filename))
+                    first_file_name = filename
+
+            return jsonify({'message': 'Upload successful', 'fileName': first_file_name}), 200
+
+        except Exception as e:
+            return jsonify({'message': str(e)}), 400
+
+    @login_required
+    def list_images(self, folder_name):
+        try:
+            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'images', 'upload')
+
+            target_folder = images_upload_folder
+            if folder_name:
+                target_folder = os.path.join(images_upload_folder, secure_filename(folder_name))
+
+            if not os.path.exists(target_folder):
+                return jsonify({'message': 'Folder does not exist'}), 400
+
+            files = os.listdir(target_folder)
+            files = [f for f in files if os.path.isfile(os.path.join(target_folder, f))]
+
+            return jsonify({'message': 'Success', 'files': files}), 200
+
+        except Exception as e:
+            return jsonify({'message': str(e)}), 400
+
+    @login_required
+    def delete_image(self, folder_name, file_name):
+        try:
+            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'images', 'upload')
+
+            target_folder = images_upload_folder
+            if folder_name:
+                target_folder = os.path.join(images_upload_folder, secure_filename(folder_name))
+
+            if not os.path.exists(target_folder):
+                return jsonify({'message': 'Folder does not exist'}), 400
+
+            target_file = os.path.join(target_folder, secure_filename(file_name))
+
+            if not os.path.exists(target_file):
+                return jsonify({'message': 'File does not exist'}), 400
+
+            os.remove(target_file)
+
+            return jsonify({'message': 'File deleted successfully'}), 200
+
+        except Exception as e:
+            return jsonify({'message': str(e)}), 400
 
     def _get_check_access_mdx(self, force_server_side_query=False):
         if request.args.get('server') is not None or force_server_side_query is True:

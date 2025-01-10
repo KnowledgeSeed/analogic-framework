@@ -48,9 +48,83 @@ Server.download = (p, d = {}) => {
             401: function () {
                 Auth.handle401();
             },
-            302: function(resp) {
+            302: function (resp) {
                 Auth.handle302(resp);
             }
         }
-    }).always(() => Loader.stop(true));;
+    }).always(() => Loader.stop(true));
+    ;
+};
+
+Server.uploadImage = (context) => {
+    const e = 'uploadImage', widgetId = context.getWidgetId(), eventMapId = context.getEventMapId(),
+        r = context.getObject(), ww = Widgets[widgetId];
+    let uploadParams = {}, uploadRepoExist = r && r[e];
+
+    if (uploadRepoExist) {
+        uploadParams = r[e](context);
+        for (const [key, value] of Object.entries(uploadParams)) {
+            if (key !== 'callback') {
+                ww.form.append(key, value);
+            }
+        }
+    }
+
+
+    Loader.start();
+
+    return Server.uploadImageToServer(widgetId).done(d => {L(d);
+        if (d.message === 'ok') {
+            if (uploadParams.callback) {
+                uploadParams.callback({
+                    getResponse() {
+                        return d;
+                    },
+                    ...context
+                });
+            }
+            QB.executeEventMapAction(eventMapId + '.finished', context, d);
+            ww.form = new FormData();
+            if (ww.showUploadSuccessMessage === true) {
+                Api.showPopup(ww.uploadSuccessMessage);
+            }
+        } else {
+            Api.showPopup(d, 600);
+            QB.executeEventMapAction(eventMapId + '.error', context, d);
+            Loader.stop();
+        }
+        if (!ww.skipStoppingTheLoaderAfterSuccessUpload) {
+            Loader.stop();
+        }
+    }).fail(() => {
+        Api.showPopup('Upload failed');
+        Loader.stop();
+    }).always(() => {
+        ww.form = new FormData();
+        Api.forceRefreshWithoutLoader(widgetId);
+    });
+};
+
+Server.uploadImageToServer = widgetId => {
+    return $.ajax({
+        xhr: function () {
+            let xhr = new window.XMLHttpRequest();
+
+            xhr.upload.addEventListener('progress', function (evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = Math.round(((evt.loaded / evt.total) * 100));
+                    $('#' + widgetId).find('.progress-bar').html(percentComplete + '%');
+                }
+            }, false);
+
+            return xhr;
+        },
+        url: 'upload_image',
+        method: 'POST',
+        dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: Widgets[widgetId].form
+    });
 };

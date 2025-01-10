@@ -97,3 +97,16 @@ def pivot():
 @core_endpoints.analogic_endpoint_route('/middleware', methods=['GET', 'POST'])
 def middleware():
     return get_authentication_provider().middleware()
+
+
+@core_endpoints.analogic_endpoint_route('/upload_image', methods=['POST'])
+def upload_image():
+    return get_authentication_provider().upload_image()
+
+@core_endpoints.analogic_endpoint_route('/list_images/<folder_name>', methods=['GET'])
+def list_images(folder_name):
+    return get_authentication_provider().list_images(folder_name)
+
+@core_endpoints.analogic_endpoint_route('/delete_image/<folder_name>/<file_name>', methods=['DELETE'])
+def delete_image(folder_name, file_name):
+    return get_authentication_provider().delete_image(folder_name, file_name)
