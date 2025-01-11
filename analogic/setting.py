@@ -47,6 +47,8 @@ class SettingManager:
     AUTHENTICATION_FAILED_MESSAGE_PARAMETER_NAME = 'authenticationFailedMessage'
     SECRET_PROPERTIES_PATH = '_secretPropertiesPath'
     CUSTOM_LOGIN_HTML_PARAMETER_NAME = '_customLoginHtml'
+    UPLOAD_ADMIN_PERMISSIONS = '_uploadAdminPermissions'
+    UPLOAD_ADMIN_USERS = '_uploadAdminUsers'
 
     def __init__(self, analogic_application_path, instance='default'):
         self.site_root = analogic_application_path
@@ -275,3 +277,9 @@ class SettingManager:
         path = self._get_secret_properties_path()
 
         return get_properties_file_value(path, key)
+
+    def get_upload_admin_permissions(self):
+        return self.get_extended_property_value(self.UPLOAD_ADMIN_PERMISSIONS, default_value=['ADMIN'])
+
+    def get_upload_admin_users(self):
+        return self.get_extended_property_value(self.UPLOAD_ADMIN_USERS, default_value=[])

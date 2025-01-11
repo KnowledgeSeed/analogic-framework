@@ -1,8 +1,34 @@
 from analogic.endpoint import AnalogicEndpoint
 from analogic.authentication_provider import get_authentication_provider, endpoint_login_required
-from flask import request, redirect, render_template
+from flask import request, redirect, render_template, jsonify
+from functools import wraps
 
 core_endpoints = AnalogicEndpoint('core_endpoints', __name__)
+
+def upload_admin_permission_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        auth_provider = get_authentication_provider()
+        setting = auth_provider.get_setting()
+
+        if not _has_upload_admin_permission(auth_provider, setting):
+            return jsonify({'message': 'Access denied'}), 403
+
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+def _has_upload_admin_permission(auth_provider, setting):
+    user_admin_permissions = setting.get_upload_admin_permissions()
+    logged_in_user_name = auth_provider.get_logged_in_user_name()
+    user_admin_users = setting.get_upload_admin_users()
+
+    has_permission = (
+        len(user_admin_permissions) > 0
+        and (auth_provider.check_permission(user_admin_permissions)
+             or logged_in_user_name in user_admin_users)
+    )
+    return has_permission
 
 
 @core_endpoints.analogic_endpoint_route('/', methods=['GET', 'POST'])
@@ -98,15 +124,17 @@ def pivot():
 def middleware():
     return get_authentication_provider().middleware()
 
-
 @core_endpoints.analogic_endpoint_route('/upload_image', methods=['POST'])
+@upload_admin_permission_required
 def upload_image():
     return get_authentication_provider().upload_image()
 
 @core_endpoints.analogic_endpoint_route('/list_images/<folder_name>', methods=['GET'])
+@upload_admin_permission_required
 def list_images(folder_name):
     return get_authentication_provider().list_images(folder_name)
 
 @core_endpoints.analogic_endpoint_route('/delete_image/<folder_name>/<file_name>', methods=['DELETE'])
+@upload_admin_permission_required
 def delete_image(folder_name, file_name):
     return get_authentication_provider().delete_image(folder_name, file_name)

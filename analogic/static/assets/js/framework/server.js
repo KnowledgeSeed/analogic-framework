@@ -73,7 +73,7 @@ Server.uploadImage = (context) => {
 
     Loader.start();
 
-    return Server.uploadImageToServer(widgetId).done(d => {L(d);
+    return Server.uploadImageToServer(widgetId).done(d => {
         if (d.message === 'ok') {
             if (uploadParams.callback) {
                 uploadParams.callback({
@@ -96,8 +96,17 @@ Server.uploadImage = (context) => {
         if (!ww.skipStoppingTheLoaderAfterSuccessUpload) {
             Loader.stop();
         }
-    }).fail(() => {
-        Api.showPopup('Upload failed');
+    }).fail(xhr => {
+        const statusCode = xhr.status;
+        if (statusCode === 403) {
+            Api.showPopup('Access Denied');
+        } else if (statusCode === 401) {
+            Auth.handle401();
+        } else if (statusCode === 500) {
+            Api.showPopup('Server error: Please try again later.');
+        } else {
+            Api.showPopup('Upload failed with status code: ' + statusCode);
+        }
         Loader.stop();
     }).always(() => {
         ww.form = new FormData();

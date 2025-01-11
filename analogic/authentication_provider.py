@@ -162,15 +162,15 @@ class AuthenticationProvider(ABC):
             return {'message': str(e)}, 404, {'Content-type': 'application/json'}
 
     @login_required
-    def upload_image(self):
+    def upload_image(self): #todo check file already exist
         try:
-            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'images', 'upload')
+            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'skin', 'images', 'upload')
 
+            file_num = int(request.form.get('fileNum', 0))
             file_name = request.form.get('fileName', '').rsplit('.', 1)[0]
             folder_name = request.form.get('folderName', '').strip()
 
-            files = request.files.getlist('file')
-            if not files or len(files) == 0:
+            if file_num == 0:
                 return jsonify({'message': 'No files provided'}), 400
 
             target_folder = images_upload_folder
@@ -180,17 +180,27 @@ class AuthenticationProvider(ABC):
             if not os.path.exists(target_folder):
                 os.makedirs(target_folder)
 
-            for idx, file in enumerate(files):
-                if idx == 0:
-                    if len(files) == 1 and file_name:
+            first_file_name = None
+            for i in range(file_num):
+                file_key = f'file{i}'
+                if file_key not in request.files:
+                    continue
+
+                file = request.files[file_key]
+
+                if i == 0:
+                    if file_num == 1 and file_name:
                         filename = secure_filename(file_name) + '.' + file.filename.rsplit('.', 1)[-1]
                     else:
                         filename = secure_filename(file.filename)
 
-                    file.save(os.path.join(target_folder, filename))
                     first_file_name = filename
+                else:
+                    filename = secure_filename(file.filename)
 
-            return jsonify({'message': 'Upload successful', 'fileName': first_file_name}), 200
+                file.save(os.path.join(target_folder, filename))
+
+            return jsonify({'message': 'ok', 'fileName': first_file_name, 'folderName': 'upload/' + folder_name}), 200
 
         except Exception as e:
             return jsonify({'message': str(e)}), 400
@@ -198,14 +208,14 @@ class AuthenticationProvider(ABC):
     @login_required
     def list_images(self, folder_name):
         try:
-            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'images', 'upload')
+            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'skin', 'images', 'upload')
 
             target_folder = images_upload_folder
             if folder_name:
                 target_folder = os.path.join(images_upload_folder, secure_filename(folder_name))
 
             if not os.path.exists(target_folder):
-                return jsonify({'message': 'Folder does not exist'}), 400
+                return jsonify({'message': 'Success', 'files': []}), 200
 
             files = os.listdir(target_folder)
             files = [f for f in files if os.path.isfile(os.path.join(target_folder, f))]
@@ -218,7 +228,7 @@ class AuthenticationProvider(ABC):
     @login_required
     def delete_image(self, folder_name, file_name):
         try:
-            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'images', 'upload')
+            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'skin', 'images', 'upload')
 
             target_folder = images_upload_folder
             if folder_name:

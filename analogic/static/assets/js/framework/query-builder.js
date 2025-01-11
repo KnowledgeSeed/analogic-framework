@@ -83,12 +83,12 @@ QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
     let params = [], keyAdded = false,
         subUrl = url.includes('?') ? url.indexOf('?') !== (url.length - 1) ? '&server=1' : '' : '?server=1',
         newUrl = url.includes('proxy') ? url : url.includes(app.apiHost) ? url.replace(app.apiHost, 'proxy') : 'proxy' + url,
-    isMiddleware = url.includes('middleware')
+        isMiddleware = url.includes('middleware')
 
     for (const [key, value] of Object.entries(body)) {
         if (key === 'longRunningTaskParameters' || isMiddleware) {
             params.push(`"${key}": ${JSON.stringify(value)}`);
-        }  else {
+        } else {
             params.push(`"${key}": "${value}"`);
         }
         if ('key' === key) {
@@ -101,7 +101,8 @@ QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
         params.push(`"requestLoggerEnabled" : "true"`);
         subUrl += '&requestLoggerEnabled=true';
 
-        let requestLoggerJourneyId = Utils.getRequestLoggerJourneyId(), requestLoggerGroupId = Utils.getRequestLoggerGroupId();
+        let requestLoggerJourneyId = Utils.getRequestLoggerJourneyId(),
+            requestLoggerGroupId = Utils.getRequestLoggerGroupId();
 
         if (!requestLoggerJourneyId) {
             requestLoggerJourneyId = Utils.generateRequestLoggerJourneyId();
@@ -117,7 +118,7 @@ QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
         subUrl += '&requestLoggerGroupId=' + requestLoggerGroupId;
     }
 
-    if(isMiddleware) {
+    if (isMiddleware) {
         newUrl = url;
         subUrl = '';
     }
@@ -125,13 +126,14 @@ QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
     return {url: newUrl + subUrl, body: `{${params.join(',')}}`};
 };
 
-QB.getUrl = (url, source= '') => {
+QB.getUrl = (url, source = '') => {
     let proxy_sub_path = 'proxy';
-    if (url.includes('proxy')) {
-        proxy_sub_path = ''
+    const proxyPaths = ['proxy', 'list_images', 'delete_image'];
+    if (proxyPaths.some(path => url.includes(path))) {
+        proxy_sub_path = '';
     }
 
-    if(url.includes('middleware')) {
+    if (url.includes('middleware')) {
         return url;
     }
 
@@ -148,7 +150,7 @@ QB.getUrl = (url, source= '') => {
             if (source) {
                 path.push(source)
             }
-            if (proxy_sub_path !== ''){
+            if (proxy_sub_path !== '') {
                 path.push(proxy_sub_path)
             } else {
                 url = '/' + url;
