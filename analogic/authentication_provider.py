@@ -162,7 +162,7 @@ class AuthenticationProvider(ABC):
             return {'message': str(e)}, 404, {'Content-type': 'application/json'}
 
     @login_required
-    def upload_image(self): #todo check file already exist
+    def upload_image(self):
         try:
             images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'skin', 'images', 'upload')
 

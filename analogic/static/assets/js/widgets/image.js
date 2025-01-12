@@ -24,11 +24,25 @@ class ImageWidget extends Widget {
         return html.join('');
     }
 
-    updateHtml(data) {
-        const o = this.options, p = this.getParameters(data), section = $('#' + o.id), icon = section.find('.ks-image span');
+    generateRandomString(length) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
 
-        if(icon) {
+    updateHtml(data) {
+        const o = this.options, p = this.getParameters(data), section = $('#' + o.id),
+            icon = section.find('.ks-image span');
+
+        if (icon) {
             icon.attr('class', p.icon ? 'icon-' + p.icon : '');
+        } else {
+            const file = section.find('img');
+            file.attr('src', app.applicationAssetsUrl + '/skin/images/' + p.fileName + 'v=' + this.generateRandomString(10));
         }
     }
 
@@ -39,7 +53,7 @@ class ImageWidget extends Widget {
         });
     }
 
-    getParameters(d){
+    getParameters(d) {
         return {
             icon: this.getRealValue('icon', d, false),
             fileName: this.getRealValue('fileName', d, ''),
