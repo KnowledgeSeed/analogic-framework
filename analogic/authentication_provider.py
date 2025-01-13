@@ -161,7 +161,6 @@ class AuthenticationProvider(ABC):
             self.getLogger().error(e, exc_info=True)
             return {'message': str(e)}, 404, {'Content-type': 'application/json'}
 
-    @login_required
     def upload_image(self):
         try:
             images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'skin', 'images', 'upload')
@@ -205,7 +204,6 @@ class AuthenticationProvider(ABC):
         except Exception as e:
             return jsonify({'message': str(e)}), 400
 
-    @login_required
     def list_images(self, folder_name):
         try:
             images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'skin', 'images', 'upload')
@@ -225,7 +223,6 @@ class AuthenticationProvider(ABC):
         except Exception as e:
             return jsonify({'message': str(e)}), 400
 
-    @login_required
     def delete_image(self, folder_name, file_name):
         try:
             images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'skin', 'images', 'upload')

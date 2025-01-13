@@ -2,6 +2,7 @@ from analogic.endpoint import AnalogicEndpoint
 from analogic.authentication_provider import get_authentication_provider, endpoint_login_required
 from flask import request, redirect, render_template, jsonify
 from functools import wraps
+from analogic.exceptions import AnalogicTM1ServiceException
 
 core_endpoints = AnalogicEndpoint('core_endpoints', __name__)
 
@@ -10,6 +11,14 @@ def upload_admin_permission_required(f):
     def decorated_function(*args, **kwargs):
         auth_provider = get_authentication_provider()
         setting = auth_provider.get_setting()
+
+        if not auth_provider.check_app_authenticated():
+            return auth_provider.get_authentication_required_response()
+
+        try:
+            auth_provider.get_tm1_service()
+        except AnalogicTM1ServiceException:
+            return auth_provider.get_authentication_required_response()
 
         if not _has_upload_admin_permission(auth_provider, setting):
             return jsonify({'message': 'Access denied'}), 403

@@ -38,11 +38,11 @@ class ImageWidget extends Widget {
         const o = this.options, p = this.getParameters(data), section = $('#' + o.id),
             icon = section.find('.ks-image span');
 
-        if (icon) {
+        if (icon.length) {
             icon.attr('class', p.icon ? 'icon-' + p.icon : '');
         } else {
             const file = section.find('img');
-            file.attr('src', app.applicationAssetsUrl + '/skin/images/' + p.fileName + 'v=' + this.generateRandomString(10));
+            file.attr('src', app.applicationAssetsUrl + '/skin/images/' + p.fileName + '?v=' + this.generateRandomString(10));
         }
     }
 
