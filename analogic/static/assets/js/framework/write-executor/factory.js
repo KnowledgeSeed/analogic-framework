@@ -30,6 +30,10 @@ class WriteExecutorFactory {
             }
         }
 
+        if (!context.isGridTable() && context.getEventName()  === 'uploadImage') {
+            return new ImageUploadWriteExecutor(context);
+        }
+
         if (typeof eventHandler === 'function') {
             return new FunctionWriteExecutor(context);
         }

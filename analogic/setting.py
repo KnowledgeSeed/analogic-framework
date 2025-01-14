@@ -5,17 +5,50 @@ import logging
 import uuid
 import sys
 import importlib
+import hashlib
 from jproperties import Properties
+from cryptography.fernet import Fernet
+
+
+def get_properties_file_value(path, key):
+    configs = Properties()
+
+    logger = logging.getLogger(__name__)
+
+    if path is None:
+        logger.info('Secret property path is none')
+        raise Exception('Secret property file not found')
+
+    if os.path.exists(path) is False:
+        logger.info(f'Secret property file not found in {path} in {os.getcwd()}')
+        checked_path = os.path.join(current_app.instance_path, path)
+        if os.path.exists(checked_path) is False:
+            logger.info(f'Secret property file not found in {checked_path} in {current_app.instance_path}')
+            raise Exception('Secret property file not found')
+    else:
+        checked_path = path
+
+    with open(checked_path, 'rb') as config_file:
+
+        configs.load(config_file)
+
+        return configs.get(key).data
+
+
+def hash_password(password, salt):
+    password_hash = hashlib.sha512((password + salt).encode()).hexdigest()
+    return password_hash
 
 
 class SettingManager:
-
     ENABLE_REQUEST_LOGGER_PARAMETER_NAME = 'enableRequestLogger'
     ENABLE_WRITE_REQUEST_LOGGER_PARAMETER_NAME = 'enableWriteRequestLogger'
     ENABLE_TOOL_TIPS_PARAMETER_NAME = 'enableToolTips'
     AUTHENTICATION_FAILED_MESSAGE_PARAMETER_NAME = 'authenticationFailedMessage'
     SECRET_PROPERTIES_PATH = '_secretPropertiesPath'
-
+    CUSTOM_LOGIN_HTML_PARAMETER_NAME = '_customLoginHtml'
+    UPLOAD_ADMIN_PERMISSIONS = '_uploadAdminPermissions'
+    UPLOAD_ADMIN_USERS = '_uploadAdminUsers'
 
     def __init__(self, analogic_application_path, instance='default'):
         self.site_root = analogic_application_path
@@ -193,21 +226,60 @@ class SettingManager:
     def getLogger(self):
         return self._logger
 
+    def encrypt_secret(self, secret, fernet_key):
+        f = Fernet(fernet_key.encode('utf-8'))
+        return f.encrypt(secret.encode('utf-8')).decode('latin-1')
+
+    def decrypt_password(self, secret, fernet_key):
+        f = Fernet(fernet_key.encode('utf-8'))
+        return f.decrypt(secret.encode('latin-1')).decode('utf-8')
+
+    def get_plain_text_secret(self, key, **kwargs):
+
+        fernet_key_prop_key = kwargs.get('fernet_key_prop_key')
+        fernet_key_env_prop_key = kwargs.get('fernet_key_env_prop_key')
+        env_key = kwargs.get('env_key')
+
+        secret = self.get_extended_property_value(key, env_key=env_key)
+
+        if secret is None:
+            return None
+
+        fernet_key = self.get_extended_property_value(fernet_key_prop_key, env_key=fernet_key_env_prop_key)
+
+        if fernet_key is not None:
+            return self.decrypt_password(secret, fernet_key)
+
+        return secret
+
+    def get_login_html(self):
+        return self.get_extended_property_value(self.CUSTOM_LOGIN_HTML_PARAMETER_NAME, default_value="login.html")
+
     def _get_secret_properties_path(self):
         return self.get_config().get(self.SECRET_PROPERTIES_PATH)
-    def get_property_value(self, key):
 
-        configs = Properties()
+    def get_extended_property_value(self, key, **kwargs):
+        env_key = kwargs.get('env_key')
+        default_value = kwargs.get('default_value')
+
+        try:
+            config = self.get_config()
+            if key in config:
+                return config[key]
+            return self.get_property_value(key)
+        except Exception as e:
+            self._logger.info(f'Property value not found for {key}: {e}')
+            value = os.getenv(env_key if env_key else key)
+            return value if value is not None else default_value
+
+    def get_property_value(self, key):
 
         path = self._get_secret_properties_path()
 
-        if path is not None and os.path.exists(path):
+        return get_properties_file_value(path, key)
 
-            with open(path, 'rb') as config_file:
+    def get_upload_admin_permissions(self):
+        return self.get_extended_property_value(self.UPLOAD_ADMIN_PERMISSIONS, default_value=['ADMIN'])
 
-                configs.load(config_file)
-
-                return configs.get(key).data
-        else:
-
-            raise Exception('Secret property file not found')
+    def get_upload_admin_users(self):
+        return self.get_extended_property_value(self.UPLOAD_ADMIN_USERS, default_value=[])

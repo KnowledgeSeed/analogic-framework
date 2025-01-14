@@ -39,7 +39,7 @@ class LoginBasic(AuthenticationProvider, MultiAuthenticationProviderInterface):
             except Exception as e:
                 self._logger.error(e, exc_info=True)
                 message = str(e)
-        return render_template('login.html', cnf=cnf, message=message)
+        return render_template(self.get_setting().get_login_html(), cnf=cnf, message=message)
 
     def do_login(self, user_name, password):
         p = self.get_connection_params(user_name, password)

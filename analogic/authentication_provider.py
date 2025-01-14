@@ -12,6 +12,8 @@ from abc import ABC, abstractmethod
 from analogic.signals import before_call_do_proxy
 from functools import wraps
 import orjson
+import os
+from werkzeug.utils import secure_filename
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
@@ -158,6 +160,91 @@ class AuthenticationProvider(ABC):
         except Exception as e:  # Todo 500, 401
             self.getLogger().error(e, exc_info=True)
             return {'message': str(e)}, 404, {'Content-type': 'application/json'}
+
+    def upload_image(self):
+        try:
+            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'skin', 'images', 'upload')
+
+            file_num = int(request.form.get('fileNum', 0))
+            file_name = request.form.get('fileName', '').rsplit('.', 1)[0]
+            folder_name = request.form.get('folderName', '').strip()
+
+            if file_num == 0:
+                return jsonify({'message': 'No files provided'}), 400
+
+            target_folder = images_upload_folder
+            if folder_name:
+                target_folder = os.path.join(images_upload_folder, secure_filename(folder_name))
+
+            if not os.path.exists(target_folder):
+                os.makedirs(target_folder)
+
+            first_file_name = None
+            for i in range(file_num):
+                file_key = f'file{i}'
+                if file_key not in request.files:
+                    continue
+
+                file = request.files[file_key]
+
+                if i == 0:
+                    if file_num == 1 and file_name:
+                        filename = secure_filename(file_name) + '.' + file.filename.rsplit('.', 1)[-1]
+                    else:
+                        filename = secure_filename(file.filename)
+
+                    first_file_name = filename
+                else:
+                    filename = secure_filename(file.filename)
+
+                file.save(os.path.join(target_folder, filename))
+
+            return jsonify({'message': 'ok', 'fileName': first_file_name, 'folderName': 'upload/' + folder_name}), 200
+
+        except Exception as e:
+            return jsonify({'message': str(e)}), 400
+
+    def list_images(self, folder_name):
+        try:
+            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'skin', 'images', 'upload')
+
+            target_folder = images_upload_folder
+            if folder_name:
+                target_folder = os.path.join(images_upload_folder, secure_filename(folder_name))
+
+            if not os.path.exists(target_folder):
+                return jsonify({'message': 'Success', 'files': []}), 200
+
+            files = os.listdir(target_folder)
+            files = [f for f in files if os.path.isfile(os.path.join(target_folder, f))]
+
+            return jsonify({'message': 'Success', 'files': files}), 200
+
+        except Exception as e:
+            return jsonify({'message': str(e)}), 400
+
+    def delete_image(self, folder_name, file_name):
+        try:
+            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'skin', 'images', 'upload')
+
+            target_folder = images_upload_folder
+            if folder_name:
+                target_folder = os.path.join(images_upload_folder, secure_filename(folder_name))
+
+            if not os.path.exists(target_folder):
+                return jsonify({'message': 'Folder does not exist'}), 400
+
+            target_file = os.path.join(target_folder, secure_filename(file_name))
+
+            if not os.path.exists(target_file):
+                return jsonify({'message': 'File does not exist'}), 400
+
+            os.remove(target_file)
+
+            return jsonify({'message': 'File deleted successfully'}), 200
+
+        except Exception as e:
+            return jsonify({'message': str(e)}), 400
 
     def _get_check_access_mdx(self, force_server_side_query=False):
         if request.args.get('server') is not None or force_server_side_query is True:
@@ -390,7 +477,7 @@ class AuthenticationProvider(ABC):
                 permissions = [str(x['Value']) for x in r['Cells']]
 
                 existing_permissions = self.session_handler.get(self.setting.get_permission_session_name())
-                existing_permissions_list = existing_permissions.split(',') if existing_permissions is not None else []
+                existing_permissions_list = existing_permissions.split(',') if existing_permissions is not None and existing_permissions != '' else []
 
                 union = list(set(existing_permissions_list + permissions))
                 self.set_permissions(','.join(union))

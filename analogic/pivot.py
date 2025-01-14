@@ -8,12 +8,13 @@ from TM1py.Objects import Subset
 from TM1py.Services import TM1Service
 from TM1py.Utils import format_url, cell_is_updateable
 from flask import send_file
+from analogic import authentication_provider
 
 
 def call(tm1: TM1Service, username, cube_name=None, dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, options=None, export_data=None):
     data = {}
 
-    #username = ''.join(ch for ch in username if ch.isalnum())
+    # username = ''.join(ch for ch in username if ch.isalnum())
 
     if selected_cards:
         cell_limit = options.get('cellLimit', 1000000)
@@ -50,7 +51,7 @@ def call(tm1: TM1Service, username, cube_name=None, dimension_name=None, hierarc
         return orjson.dumps(r), 200, {'Content-Type': 'application/json'}
     elif dimension_name is None:
         children = tm1.cubes.get_dimension_names(cube_name)
-        data = get_presets_data(tm1, username, options['widgetId'])
+        data = get_presets_data(tm1, username, options['widgetId'], options['presetParams'])
     elif hierarchy_name is None:
         children = tm1.hierarchies.get_all_names(dimension_name)
     elif subset_name is None:
@@ -78,7 +79,25 @@ def get_hierarchy(tm1: TM1Service, dimension_name, hierarchy_name, **kwargs):
     return tm1._tm1_rest.GET(url, **kwargs).json()
 
 
-def get_presets_data(tm1, username, widget_id):
+def get_presets_data(tm1, username, widget_id, presetParams):
+    setting = authentication_provider.get_authentication_provider().setting
+
+    mdx = setting.get_mdx(widget_id + 'PresetMDX')
+
+    if (not mdx):
+        mdx = get_default_presets_data_mdx(username, widget_id)
+    else:
+        for p in presetParams:
+            mdx = mdx.replace('$' + p, presetParams[p].replace('"', '\\"'))
+
+    cellset_id = tm1.cells.create_cellset(mdx)
+    url = "/api/v1/Cellsets('" + cellset_id + "')?$expand=Cells($select=FormattedValue)"
+    data = tm1._tm1_rest.GET(url).json()
+
+    return data['Cells']
+
+
+def get_default_presets_data_mdx(username, widget_id):
     mdx = """WITH
 MEMBER [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sType]
 AS [zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].CurrentMember.Properties('Type')
@@ -111,11 +130,7 @@ SELECT
   ON ROWS
 FROM [zSYS Analogic Pivot Presets]"""
 
-    cellset_id = tm1.cells.create_cellset(mdx)
-    url = "/api/v1/Cellsets('" + cellset_id + "')?$expand=Cells($select=FormattedValue)"
-    data = tm1._tm1_rest.GET(url).json()
-
-    return data['Cells']
+    return mdx
 
 
 def get_public_and_private_subsets(tm1: TM1Service, dimension_name, hierarchy_name, username, options):

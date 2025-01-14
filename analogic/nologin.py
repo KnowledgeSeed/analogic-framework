@@ -1,9 +1,10 @@
 from analogic.authentication_provider import AuthenticationProvider
+from analogic.multi_authentication_provider_interface import MultiAuthenticationProviderInterface
 from flask import render_template, make_response, redirect, session, jsonify
 import logging
 
 
-class NoLogin(AuthenticationProvider):
+class NoLogin(AuthenticationProvider, MultiAuthenticationProviderInterface):
 
     def __init__(self, setting):
         super().__init__(setting)
@@ -20,7 +21,10 @@ class NoLogin(AuthenticationProvider):
     def login(self):
         return redirect(self.setting.get_base_url())
 
-    def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies):
+    def do_login(self, user_name, password):
+        pass
+
+    def _create_request_with_authenticated_user(self, url, method, mdx, headers, cookies, decode_content=True):
         return {}
 
     def check_app_authenticated(self):

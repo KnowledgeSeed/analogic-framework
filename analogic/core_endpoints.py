@@ -1,9 +1,43 @@
 from analogic.endpoint import AnalogicEndpoint
 from analogic.authentication_provider import get_authentication_provider, endpoint_login_required
-from flask import request, redirect, render_template
-import base64
+from flask import request, redirect, render_template, jsonify
+from functools import wraps
+from analogic.exceptions import AnalogicTM1ServiceException
 
 core_endpoints = AnalogicEndpoint('core_endpoints', __name__)
+
+def upload_admin_permission_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        auth_provider = get_authentication_provider()
+        setting = auth_provider.get_setting()
+
+        if not auth_provider.check_app_authenticated():
+            return auth_provider.get_authentication_required_response()
+
+        try:
+            auth_provider.get_tm1_service()
+        except AnalogicTM1ServiceException:
+            return auth_provider.get_authentication_required_response()
+
+        if not _has_upload_admin_permission(auth_provider, setting):
+            return jsonify({'message': 'Access denied'}), 403
+
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+def _has_upload_admin_permission(auth_provider, setting):
+    user_admin_permissions = setting.get_upload_admin_permissions()
+    logged_in_user_name = auth_provider.get_logged_in_user_name()
+    user_admin_users = setting.get_upload_admin_users()
+
+    has_permission = (
+        len(user_admin_permissions) > 0
+        and (auth_provider.check_permission(user_admin_permissions)
+             or logged_in_user_name in user_admin_users)
+    )
+    return has_permission
 
 
 @core_endpoints.analogic_endpoint_route('/', methods=['GET', 'POST'])
@@ -28,7 +62,6 @@ def navigation_parameters():
     navigation_parameters = authentication_provider.get_navigation_parameters()
 
     if navigation_parameters is not None:
-
         authentication_provider.clear_navigation_parameters()
 
     return {'navigation_parameters': navigation_parameters}, 200, {'Content-type': 'application/json'}
@@ -46,6 +79,7 @@ def start_maintenance():
         return "Maintenance mode started", 200
     return render_template('start_maintenance.html', cnf=authentication_provider.get_setting().get_config()), 200
 
+
 @core_endpoints.analogic_endpoint_route('/stop_maintenance', methods=['GET'])
 def stop_maintenance():
     authentication_provider = get_authentication_provider()
@@ -53,7 +87,6 @@ def stop_maintenance():
         return "You are not authorized to stop maintenance", 403
     authentication_provider.is_in_maintenance = False
     return "Maintenance mode stopped", 200
-
 
 
 @core_endpoints.analogic_endpoint_route('/login', methods=['GET', 'POST'])
@@ -99,3 +132,18 @@ def pivot():
 @core_endpoints.analogic_endpoint_route('/middleware', methods=['GET', 'POST'])
 def middleware():
     return get_authentication_provider().middleware()
+
+@core_endpoints.analogic_endpoint_route('/upload_image', methods=['POST'])
+@upload_admin_permission_required
+def upload_image():
+    return get_authentication_provider().upload_image()
+
+@core_endpoints.analogic_endpoint_route('/list_images/<folder_name>', methods=['GET'])
+@upload_admin_permission_required
+def list_images(folder_name):
+    return get_authentication_provider().list_images(folder_name)
+
+@core_endpoints.analogic_endpoint_route('/delete_image/<folder_name>/<file_name>', methods=['DELETE'])
+@upload_admin_permission_required
+def delete_image(folder_name, file_name):
+    return get_authentication_provider().delete_image(folder_name, file_name)

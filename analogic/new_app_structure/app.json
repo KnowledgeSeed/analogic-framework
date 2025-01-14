@@ -1,0 +1,13 @@
+{
+  "projectName": "$projectId",
+  "projectId": "$projectId",
+  "authenticationMode": "$authenticationMode",
+  "mainPage": "$mainPage",
+  "analogicApiAuthenticationMode": "unsecured",
+  "camNamespace": "$camNamespace",
+  "proxy": {
+    "target": "$modelApiUrl"
+  },
+  "connectedSeederUrl": "$connectedSeederUrl",
+  "connectedSeederApplicationVersion": "$connectedSeederApplicationVersion"
+}

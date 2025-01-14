@@ -60,6 +60,9 @@ class StackedColumnChartWidget extends Widget {
             lineWidth: this.getRealValue('lineWidth', d, 1.5),
             lineTension: this.getRealValue('lineTension', d, 0.3),
 
+            percentageLineOffsetTop: this.getRealValue('percentageLineOffsetTop', d, 0),
+            percentageLineOffsetBottom: this.getRealValue('percentageLineOffsetBottom', d, 0),
+
             barBorderColor: this.getRealValue('barBorderColor', d, '#FFFFFF'),
             barBorderRadius: this.getRealValue('barBorderRadius', d, 0),
             barBorderWidth: this.getRealValue('barBorderWidth', d, 3),
@@ -298,7 +301,7 @@ class StackedColumnChartWidget extends Widget {
 
         for (d of datasets) {
             if ('line' === d.type) {
-                d.yAxisID = 'y1';
+                d.yAxisID = d.percentage ? 'y2' : 'y1';
             } else if (v.hideZeroBars) {
                 for (i = 0; i < d.data.length; ++i) {
                     if (!d.data[i]) {
@@ -563,6 +566,22 @@ class StackedColumnChartWidget extends Widget {
                             display: false,
                             padding: 0
                         }
+                    },
+                    y2: {
+                        type: 'linear',
+                        min: 0 - (isNaN(v.percentageLineOffsetBottom) ? parseFloat(v.percentageLineOffsetBottom) : (100 * v.percentageLineOffsetBottom / yTotal)),
+                        max: 100 + (isNaN(v.percentageLineOffsetTop) ? parseFloat(v.percentageLineOffsetTop) : (100 * v.percentageLineOffsetTop / yTotal)),
+                        offset: false,
+                        display: false,
+                        position: 'right',
+                        grid: {
+                            display: false,
+                            offset: false
+                        },
+                        ticks: {
+                            display: false,
+                            padding: 0
+                        }
                     }
                 },
                 layout: {
@@ -632,6 +651,17 @@ class StackedColumnChartWidget extends Widget {
                     //stack: 'stackId',
                     //clip: {left: 105, top: false, right: -200, bottom: -20},
                     //hidden: false,
+                },
+                {
+                    label: 'Percentage Line',
+                    type: 'line',
+                    data: [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 50, 20, 10, 1],
+                    backgroundColor: '#E40046',
+                    labelBackgroundColor: '#E40046',
+                    borderColor: '#E40046',
+                    labelVisible: false,
+                    tooltipsEnabled: false,
+                    percentage: true
                 },
                 {
                     label: 'Other revenue',
