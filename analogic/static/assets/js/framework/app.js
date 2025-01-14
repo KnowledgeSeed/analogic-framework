@@ -111,7 +111,15 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
             Auth.getAjaxRequest('navigation_parameters', {}, 'GET').then((data) => {
                 let page = app.mainPage;
                 if (data.navigation_parameters) {
-                    let navigation_parameters = JSON.parse(atob(data.navigation_parameters));
+                    let navigation_parameters;
+
+                    try {
+                        const decoded = atob(data.navigation_parameters);
+                        navigation_parameters = JSON.parse(decoded);
+                    } catch (error) {
+                        console.error("Failed to process navigation_parameters:", error.message);
+                        navigation_parameters = {};
+                    }
 
                     if (navigation_parameters.page) {
                         page = navigation_parameters.page;

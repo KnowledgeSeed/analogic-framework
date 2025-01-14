@@ -49,6 +49,7 @@ class SettingManager:
     CUSTOM_LOGIN_HTML_PARAMETER_NAME = '_customLoginHtml'
     UPLOAD_ADMIN_PERMISSIONS = '_uploadAdminPermissions'
     UPLOAD_ADMIN_USERS = '_uploadAdminUsers'
+    NAMED_ROUTES = '_namedRoutes'
 
     def __init__(self, analogic_application_path, instance='default'):
         self.site_root = analogic_application_path
@@ -283,3 +284,6 @@ class SettingManager:
 
     def get_upload_admin_users(self):
         return self.get_extended_property_value(self.UPLOAD_ADMIN_USERS, default_value=[])
+
+    def get_named_routes(self):
+        return self.get_extended_property_value(self.NAMED_ROUTES, default_value=[])
