@@ -13,7 +13,7 @@ Auth.loadDefault = arg => {
 
 Auth.logout = () => {
     return $.ajax({
-        url: 'logout',
+        url: Utils.getFullUrlForAjax('logout'),
         method: 'GET'
     });
 };
@@ -24,6 +24,7 @@ Auth.goToStartPage = () => {
 };
 
 Auth.getAjaxRequest = (url, data, type, widgetId = '', resent = false, eventMapId = '') => {
+    L(url);
     let urlWithWidgetId = url + (url.includes('?') ? '&' : '?') + 'widgetid=' + widgetId, modifiedUrlWithWidgetId;
     Extensions.urlParameters.forEach(ext => {
         modifiedUrlWithWidgetId = ext.getUrl(urlWithWidgetId);
@@ -31,10 +32,11 @@ Auth.getAjaxRequest = (url, data, type, widgetId = '', resent = false, eventMapI
             urlWithWidgetId = modifiedUrlWithWidgetId;
         }
     });
+
     return $.ajax({
         cache: true,
         type: type,
-        url: urlWithWidgetId,
+        url: Utils.getFullUrlForAjax(urlWithWidgetId),
         headers: Auth.getHeader(),
         xhrFields: {withCredentials: true},
         data: type === 'GET' ? {} : data,
@@ -107,6 +109,10 @@ Auth.handle401 = () => {
             // $.cookie("authenticated", 0);
             window.location.href = 'login';
         }
+    }
+    if ('NoLogin' === app.authenticationMode && app.authenticationBridge && app.handled401 === false) {
+        app.handled401 = true;
+        window.location.href = app.authenticationBridge;
     }
     Extensions.authenticationProviders.forEach(ext => ext.handle401());
 };

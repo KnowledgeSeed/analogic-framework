@@ -110,9 +110,10 @@ class AuthenticationProvider(ABC):
 
     @login_required_redirect_index
     def handle_named_route(self, named_route, **kwargs):
+
         parts = kwargs.get('sub_path').split("/")
 
-        result = {f"navigation_param{i + 1}": part for i, part in enumerate(parts)}
+        result = {f"navigationParameter{i + 1}": part for i, part in enumerate(parts)}
         result['page'] = named_route.replace('/', '')
 
         self.session_handler.set('navigation_parameters', base64.b64encode(orjson.dumps(result)).decode('utf-8'))

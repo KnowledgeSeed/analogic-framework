@@ -8,7 +8,7 @@ Pivot.call = p => {
     ++Pivot.callNum;
 
     return $.ajax({
-        url: 'pivot',
+        url: Utils.getFullUrlForAjax('pivot'),
         method: p.method || 'POST',
         data: p.data || {},
         dataType: p.dataType || 'json',
@@ -27,4 +27,4 @@ Pivot.call = p => {
     });
 };
 
-Pivot.export = d => Server.download({url: 'pivot'}, {method: 'POST', data: d, fileName: 'pivotExport.xlsx'});
+Pivot.export = d => Server.download({url: Utils.getFullUrlForAjax('pivot')}, {method: 'POST', data: d, fileName: 'pivotExport.xlsx'});

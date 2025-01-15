@@ -13,7 +13,7 @@ Server.download = (p, d = {}) => {
     }
 
     return $.ajax({
-        url: url,
+        url: Utils.getFullUrlForAjax(url),
         method: d.method || 'GET',
         data: d.data || {},
         xhr: function () {
@@ -115,6 +115,7 @@ Server.uploadImage = (context) => {
 };
 
 Server.uploadImageToServer = widgetId => {
+
     return $.ajax({
         xhr: function () {
             let xhr = new window.XMLHttpRequest();
@@ -128,7 +129,7 @@ Server.uploadImageToServer = widgetId => {
 
             return xhr;
         },
-        url: 'upload_image',
+        url: Utils.getFullUrlForAjax('upload_image'),
         method: 'POST',
         dataType: 'json',
         cache: false,

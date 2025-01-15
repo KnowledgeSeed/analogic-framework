@@ -658,6 +658,41 @@ const Utils = {
     },
     reloadApp() {
         window.location.reload();
+    },
+    getAppSubPathArray() {
+        let path = window.location.pathname.split('/').filter(s => s !== '');
+
+        while (path.length > 0 && path[path.length - 1] !== app.instance) {
+            path.pop();
+        }
+
+        return path;
+    },
+    getAppSubPath() {
+        let path = Utils.getAppSubPathArray();
+        return path.join('/');
+    },
+    getFullUrlForAjax(sub_url) {
+        if (Utils.isUrlNavigation()) {
+            return Utils.getInstanceUrl(sub_url);
+        }
+        return sub_url;
+    },
+    getInstanceUrl(sub_url) {
+
+        let path = Utils.getAppSubPathArray();
+
+        return [window.location.origin, ...path].join('/') + '/' + sub_url;
+    },
+    isUrlNavigation() {
+        let path = window.location.pathname.split('/').filter(s => s !== '');
+        return path[path.length - 1] !== (app.auth_prov && app.auth_prov !== 'primary' ? app.auth_prov : app.instance);
+    },
+    getAppProviderBasedUrl(url) {
+        if (!Utils.isUrlNavigation()) {
+            return url;
+        }
+        return (app.auth_prov && app.auth_prov != 'primary' ? app.auth_prov + '/' : '') + url;
     }
 };
 

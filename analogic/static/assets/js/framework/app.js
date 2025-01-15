@@ -108,8 +108,10 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
 
             Widgets.systemValueGlobalCompanyProductPlanVersion = 'Budget';
 
-            Auth.getAjaxRequest('navigation_parameters', {}, 'GET').then((data) => {
-                let page = app.mainPage;
+
+
+            Auth.getAjaxRequest(Utils.getAppProviderBasedUrl('navigation_parameters'), {}, 'GET').then((data) => {
+                let page = app.mainPage, navigationParametersAdded = false;
                 if (data.navigation_parameters) {
                     let navigation_parameters;
 
@@ -123,6 +125,7 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
 
                     if (navigation_parameters.page) {
                         page = navigation_parameters.page;
+                        navigationParametersAdded = true;
                     }
                     for (let key in navigation_parameters) {
                         if (key !== 'page') {
@@ -135,6 +138,9 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
                     if (app.enableToolTips) {
                         Utils.enableToolTips();
                     }
+                    if (navigationParametersAdded) {
+                        Auth.getAjaxRequest(Utils.getAppProviderBasedUrl('clear_navigation_parameters'), {}, 'GET');
+                    }
                 });
                 PageState.current = page;
             });
@@ -143,7 +149,11 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
 
 
     function initEvents() {
+        if (app.disableBeforeUnload) {
+            return;
+        }
         window.onbeforeunload = () => 'Logout';
+
     }
 
     function requestClipboarReadPermissionForFireFox() {

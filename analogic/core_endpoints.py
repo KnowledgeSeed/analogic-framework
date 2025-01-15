@@ -66,6 +66,17 @@ def navigation_parameters():
 
     return {'navigation_parameters': navigation_parameters}, 200, {'Content-type': 'application/json'}
 
+@core_endpoints.analogic_endpoint_route('/clear_navigation_parameters', methods=['GET'])
+def clear_navigation_parameters():
+    authentication_provider = get_authentication_provider()
+
+    navigation_parameters = authentication_provider.get_navigation_parameters()
+
+    if navigation_parameters is not None:
+        authentication_provider.clear_navigation_parameters()
+
+    return {}, 200, {'Content-type': 'application/json'}
+
 
 @core_endpoints.analogic_endpoint_route('/start_maintenance', methods=['GET', 'POST'])
 @endpoint_login_required
