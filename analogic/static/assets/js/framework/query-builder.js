@@ -127,11 +127,8 @@ QB.getServerSideUrlAndBody = (url, body, repositoryId, path) => {
 };
 
 QB.getUrl = (url, source = '') => {
-    let proxy_sub_path = 'proxy';
     const proxyPaths = ['proxy', 'list_images', 'delete_image'];
-    if (proxyPaths.some(path => url.includes(path))) {
-        proxy_sub_path = '';
-    }
+    const proxy_sub_path = proxyPaths.some(path => url.includes(path)) ? '' : 'proxy';
 
     if (url.includes('middleware')) {
         return url;
@@ -143,23 +140,22 @@ QB.getUrl = (url, source = '') => {
 
     if (app.auth_prov) {
         if (app.auth_prov === 'primary') {
-            return source ? (app.instance === 'default' ? 'default/' : '') + source + '/' + proxy_sub_path + url : proxy_sub_path + url;
+            const instancePrefix = app.instance === 'default' && source ? 'default/' : '';
+            const sourcePrefix = source ? `${source}/` : '';
+            return `${instancePrefix}${sourcePrefix}${proxy_sub_path}${url}`;
         } else {
-            let isUrlNavigation = Utils.isUrlNavigation(), path = isUrlNavigation ? Utils.getAppSubPathArray() : window.location.pathname.split('/').filter(s => s !== '');
+            const isUrlNavigation = Utils.isUrlNavigation();
+            let path = isUrlNavigation
+                ? Utils.getAppSubPathArray()
+                : window.location.pathname.split('/').filter(s => s !== '');
+
             path.pop();
-            if (source) {
-                path.push(source)
-            }
-            if (proxy_sub_path !== '') {
-                path.push(proxy_sub_path)
-            } else {
-                url = '/' + url;
-            }
-            if (isUrlNavigation){
-                return path.join('/') + url;
-            }else {
-                return [window.location.origin, ...path].join('/') + url;
-            }
+            if (source) path.push(source);
+            if (proxy_sub_path) path.push(proxy_sub_path);
+            else url = '/' + url;
+
+            const basePath = isUrlNavigation ? path.join('/') : [window.location.origin, ...path].join('/');
+            return basePath + url;
         }
     }
 

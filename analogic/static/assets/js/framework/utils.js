@@ -695,26 +695,22 @@ const Utils = {
         return (app.auth_prov && app.auth_prov != 'primary' ? app.auth_prov + '/' : '') + url;
     },
     changeUrlState(subPath) {
-        let cleanedSubPath = subPath.startsWith('/') ? subPath.slice(1) : subPath, finalUrl, appSubPath = Utils.getAppSubPath();
-
-        const parts = cleanedSubPath.split('/').filter(part => part !== ''),
-            page = parts[0],
-            datasource = (app.auth_prov && app.auth_prov != 'primary' ? app.auth_prov + '/' : '');
+        const cleanedSubPath = subPath.startsWith('/') ? subPath.slice(1) : subPath;
+        const appSubPath = Utils.getAppSubPath();
+        const parts = cleanedSubPath.split('/').filter(part => part !== '');
+        const page = parts[0];
+        const datasource = app.auth_prov && app.auth_prov !== 'primary' ? `${app.auth_prov}/` : '';
 
         parts.slice(1).forEach((part, index) => {
             Widgets[`navigationParameter${index + 1}`] = part;
         });
 
-        if (cleanedSubPath.startsWith(app.mainPage)) {
-            cleanedSubPath = cleanedSubPath.slice(app.mainPage.length);
-        }
+        const adjustedSubPath = cleanedSubPath.startsWith(app.mainPage) ? cleanedSubPath.slice(app.mainPage.length) : cleanedSubPath;
 
-        finalUrl = appSubPath !== '' ? '/' + appSubPath : '';
+        const basePath = appSubPath ? `/${appSubPath}` : '';
+        const finalUrl = `${basePath}/${datasource}${adjustedSubPath}`;
 
-
-
-        finalUrl += '/' + datasource + cleanedSubPath;L(finalUrl);
-        history.pushState({page: page}, "", finalUrl);
+        history.pushState({page}, "", finalUrl);
 
         return page;
     }

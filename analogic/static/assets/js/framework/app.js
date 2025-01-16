@@ -96,63 +96,60 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
 
         app.id = Utils.getRandomId();
 
-        let deferred = [];
+        const deferred = Extensions.appInitialization.map(ext => ext.execute());
 
-        Extensions.appInitialization.forEach(ext => deferred.push(ext.execute()));
-
-        $.when.apply($, deferred).then(() => {
-
+        $.when(...deferred).then(() => {
             app.checkScreenResolutionWarningDisplayed = false;
-
             initEvents();
-
             Widgets.systemValueGlobalCompanyProductPlanVersion = 'Budget';
 
+            Auth.getAjaxRequest(Utils.getAppProviderBasedUrl('navigation_parameters'), {}, 'GET')
+                .then(data => {
+                    let page = app.mainPage;
+                    let navigationParametersAdded = false;
 
-            Auth.getAjaxRequest(Utils.getAppProviderBasedUrl('navigation_parameters'), {}, 'GET').then((data) => {
-                let page = app.mainPage, navigationParametersAdded = false;
-                if (data.navigation_parameters) {
-                    let navigation_parameters;
+                    if (data.navigation_parameters) {
+                        try {
+                            const decoded = atob(data.navigation_parameters);
+                            const navigationParameters = JSON.parse(decoded);
 
-                    try {
-                        const decoded = atob(data.navigation_parameters);
-                        navigation_parameters = JSON.parse(decoded);
-
-                        if (navigation_parameters.page) {
-                            page = navigation_parameters.page;
-                            navigationParametersAdded = true;
-                        }
-                        for (let key in navigation_parameters) {
-                            if (key !== 'page') {
-                                Widgets[key] = navigation_parameters[key];
+                            if (navigationParameters.page) {
+                                page = navigationParameters.page;
+                                navigationParametersAdded = true;
                             }
-                        }
-                        if (navigation_parameters.sub_path) {
-                            Utils.changeUrlState(navigation_parameters.sub_path);
-                        } else if(navigation_parameters.page){
-                            Utils.changeUrlState(navigation_parameters.page);
-                        } else {
-                            Utils.changeUrlState(page);
-                        }
-                    } catch (error) {
-                        console.error("Failed to process navigation_parameters:", error.message);
-                        navigation_parameters = {};
-                    }
-                } else {
-                    Utils.changeUrlState(page);
-                }
 
-                Widgets[page].renderWidget().then(() => {
-                    Utils.checkScreenResolution();
-                    if (app.enableToolTips) {
-                        Utils.enableToolTips();
+                            Object.entries(navigationParameters).forEach(([key, value]) => {
+                                if (key !== 'page') {
+                                    Widgets[key] = value;
+                                }
+                            });
+
+                            if (navigationParameters.sub_path) {
+                                Utils.changeUrlState(navigationParameters.sub_path);
+                            } else {
+                                Utils.changeUrlState(page);
+                            }
+                        } catch (error) {
+                            console.error("Failed to process navigation_parameters:", error.message);
+                        }
+                    } else {
+                        Utils.changeUrlState(page);
                     }
-                    if (navigationParametersAdded) {
-                        Auth.getAjaxRequest(Utils.getAppProviderBasedUrl('clear_navigation_parameters'), {}, 'GET');
-                    }
+
+                    Widgets[page].renderWidget().then(() => {
+                        Utils.checkScreenResolution();
+
+                        if (app.enableToolTips) {
+                            Utils.enableToolTips();
+                        }
+
+                        if (navigationParametersAdded) {
+                            Auth.getAjaxRequest(Utils.getAppProviderBasedUrl('clear_navigation_parameters'), {}, 'GET');
+                        }
+                    });
+
+                    PageState.current = page;
                 });
-                PageState.current = page;
-            });
         });
     }
 
