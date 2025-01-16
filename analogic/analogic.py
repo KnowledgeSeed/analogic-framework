@@ -100,7 +100,7 @@ class Analogic(Flask):
 
     def register_named_routes(self, instance, auth_provider, named_routes):
         for named_route in named_routes:
-            self.add_url_rule( f"{instance}/{named_route}/<path:sub_path>",
+            self.add_url_rule( f"{instance if instance != '/default' else ''}/{named_route}/<path:sub_path>",
                               f"{instance}_{named_route}",
                               view_func=create_view_func(auth_provider.handle_named_route, named_route),
                               provide_automatic_options=None,

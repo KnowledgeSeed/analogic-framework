@@ -24,7 +24,6 @@ Auth.goToStartPage = () => {
 };
 
 Auth.getAjaxRequest = (url, data, type, widgetId = '', resent = false, eventMapId = '') => {
-    L(url);
     let urlWithWidgetId = url + (url.includes('?') ? '&' : '?') + 'widgetid=' + widgetId, modifiedUrlWithWidgetId;
     Extensions.urlParameters.forEach(ext => {
         modifiedUrlWithWidgetId = ext.getUrl(urlWithWidgetId);

@@ -109,7 +109,6 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
             Widgets.systemValueGlobalCompanyProductPlanVersion = 'Budget';
 
 
-
             Auth.getAjaxRequest(Utils.getAppProviderBasedUrl('navigation_parameters'), {}, 'GET').then((data) => {
                 let page = app.mainPage, navigationParametersAdded = false;
                 if (data.navigation_parameters) {
@@ -118,21 +117,31 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
                     try {
                         const decoded = atob(data.navigation_parameters);
                         navigation_parameters = JSON.parse(decoded);
+
+                        if (navigation_parameters.page) {
+                            page = navigation_parameters.page;
+                            navigationParametersAdded = true;
+                        }
+                        for (let key in navigation_parameters) {
+                            if (key !== 'page') {
+                                Widgets[key] = navigation_parameters[key];
+                            }
+                        }
+                        if (navigation_parameters.sub_path) {
+                            Utils.changeUrlState(navigation_parameters.sub_path);
+                        } else if(navigation_parameters.page){
+                            Utils.changeUrlState(navigation_parameters.page);
+                        } else {
+                            Utils.changeUrlState(page);
+                        }
                     } catch (error) {
                         console.error("Failed to process navigation_parameters:", error.message);
                         navigation_parameters = {};
                     }
-
-                    if (navigation_parameters.page) {
-                        page = navigation_parameters.page;
-                        navigationParametersAdded = true;
-                    }
-                    for (let key in navigation_parameters) {
-                        if (key !== 'page') {
-                            Widgets[key] = navigation_parameters[key];
-                        }
-                    }
+                } else {
+                    Utils.changeUrlState(page);
                 }
+
                 Widgets[page].renderWidget().then(() => {
                     Utils.checkScreenResolution();
                     if (app.enableToolTips) {
@@ -149,6 +158,13 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
 
 
     function initEvents() {
+
+        window.addEventListener("popstate", (event) => {
+            if (event.state && event.state.page) {
+                Api.openPage(event.state.page);
+            }
+        });
+
         if (app.disableBeforeUnload) {
             return;
         }

@@ -693,6 +693,30 @@ const Utils = {
             return url;
         }
         return (app.auth_prov && app.auth_prov != 'primary' ? app.auth_prov + '/' : '') + url;
+    },
+    changeUrlState(subPath) {
+        let cleanedSubPath = subPath.startsWith('/') ? subPath.slice(1) : subPath, finalUrl, appSubPath = Utils.getAppSubPath();
+
+        const parts = cleanedSubPath.split('/').filter(part => part !== ''),
+            page = parts[0],
+            datasource = (app.auth_prov && app.auth_prov != 'primary' ? app.auth_prov + '/' : '');
+
+        parts.slice(1).forEach((part, index) => {
+            Widgets[`navigationParameter${index + 1}`] = part;
+        });
+
+        if (cleanedSubPath.startsWith(app.mainPage)) {
+            cleanedSubPath = cleanedSubPath.slice(app.mainPage.length);
+        }
+
+        finalUrl = appSubPath !== '' ? '/' + appSubPath : '';
+
+
+
+        finalUrl += '/' + datasource + cleanedSubPath;L(finalUrl);
+        history.pushState({page: page}, "", finalUrl);
+
+        return page;
     }
 };
 

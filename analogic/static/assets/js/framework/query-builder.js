@@ -143,7 +143,7 @@ QB.getUrl = (url, source = '') => {
 
     if (app.auth_prov) {
         if (app.auth_prov === 'primary') {
-            return source ? source + '/' + proxy_sub_path + url : proxy_sub_path + url;
+            return source ? (app.instance === 'default' ? 'default/' : '') + source + '/' + proxy_sub_path + url : proxy_sub_path + url;
         } else {
             let isUrlNavigation = Utils.isUrlNavigation(), path = isUrlNavigation ? Utils.getAppSubPathArray() : window.location.pathname.split('/').filter(s => s !== '');
             path.pop();
