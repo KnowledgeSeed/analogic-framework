@@ -114,11 +114,11 @@ class AuthenticationProvider(ABC):
         if named_route not in self.get_setting().get_named_routes():
             return "Not found", 404
 
-        parts = kwargs.get('sub_path').split("/")
+        parts = kwargs.get('sub_path', '').split("/")
 
         result = {f"navigationParameter{i + 1}": part for i, part in enumerate(parts)}
         result['page'] = named_route.replace('/', '')
-        result['sub_path'] = named_route + '/' + kwargs.get('sub_path')
+        result['sub_path'] = named_route + '/' + kwargs.get('sub_path', '')
 
         self.session_handler.set('navigation_parameters', base64.b64encode(orjson.dumps(result)).decode('utf-8'))
 

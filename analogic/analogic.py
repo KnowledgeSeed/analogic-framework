@@ -106,6 +106,18 @@ class Analogic(Flask):
                               provide_automatic_options=None,
                               **{'methods': ['GET']}
                               )
+            self.add_url_rule(f"{instance if instance != '/default' else ''}/{named_route}/",
+                              f"{instance}_{named_route}_1",
+                              view_func=create_view_func(auth_provider.handle_named_route, named_route),
+                              provide_automatic_options=None,
+                              **{'methods': ['GET']}
+                              )
+            self.add_url_rule(f"{instance if instance != '/default' else ''}/{named_route}",
+                              f"{instance}_{named_route}_2",
+                              view_func=create_view_func(auth_provider.handle_named_route, named_route),
+                              provide_automatic_options=None,
+                              **{'methods': ['GET']}
+                              )
 
     def register_analogic_url_rules(self, instance):
         for url_rule in self.endpoint_rules:
