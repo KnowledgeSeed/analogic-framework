@@ -108,6 +108,12 @@ class AuthenticationProvider(ABC):
     def get_navigation_parameters(self):
         return self.session_handler.get('navigation_parameters')
 
+    def pop_navigation_parameters(self):
+        navigation_parameters = self.get_navigation_parameters()
+        self.clear_navigation_parameters()
+        return navigation_parameters
+
+
     @login_required_redirect_index
     def handle_named_route(self, named_route, **kwargs):
 

@@ -103,53 +103,46 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
             initEvents();
             Widgets.systemValueGlobalCompanyProductPlanVersion = 'Budget';
 
-            Auth.getAjaxRequest(Utils.getAppProviderBasedUrl('navigation_parameters'), {}, 'GET')
-                .then(data => {
-                    let page = app.mainPage;
-                    let navigationParametersAdded = false;
+            let page = app.mainPage;
+            let data = {navigation_parameters: $('#navigation_parameters').val()};
 
-                    if (data.navigation_parameters) {
-                        try {
-                            const decoded = atob(data.navigation_parameters);
-                            const navigationParameters = JSON.parse(decoded);
+            if (data.navigation_parameters) {
+                try {
+                    const decoded = atob(data.navigation_parameters);
+                    const navigationParameters = JSON.parse(decoded);
 
-                            if (navigationParameters.page) {
-                                page = navigationParameters.page;
-                                navigationParametersAdded = true;
-                            }
-
-                            Object.entries(navigationParameters).forEach(([key, value]) => {
-                                if (key !== 'page') {
-                                    Widgets[key] = value;
-                                }
-                            });
-
-                            if (navigationParameters.sub_path) {
-                                Utils.changeUrlState(navigationParameters.sub_path);
-                            } else {
-                                Utils.changeUrlState(page);
-                            }
-                        } catch (error) {
-                            console.error("Failed to process navigation_parameters:", error.message);
-                        }
-                    } else {
-                        Utils.changeUrlState(page);
+                    if (navigationParameters.page) {
+                        page = navigationParameters.page;
                     }
 
-                    Widgets[page].renderWidget().then(() => {
-                        Utils.checkScreenResolution();
-
-                        if (app.enableToolTips) {
-                            Utils.enableToolTips();
-                        }
-
-                        if (navigationParametersAdded) {
-                            Auth.getAjaxRequest(Utils.getAppProviderBasedUrl('clear_navigation_parameters'), {}, 'GET');
+                    Object.entries(navigationParameters).forEach(([key, value]) => {
+                        if (key !== 'page') {
+                            Widgets[key] = value;
                         }
                     });
 
-                    PageState.current = page;
-                });
+                    if (navigationParameters.sub_path) {
+                        Utils.changeUrlState(navigationParameters.sub_path);
+                    } else {
+                        Utils.changeUrlState(navigationParameters.p_param ? app.mainPage : page);
+                    }
+                } catch (error) {
+                    console.error("Failed to process navigation_parameters:", error.message);
+                }
+            } else {
+                Utils.changeUrlState(page);
+            }
+
+            Widgets[page].renderWidget().then(() => {
+                Utils.checkScreenResolution();
+
+                if (app.enableToolTips) {
+                    Utils.enableToolTips();
+                }
+
+            });
+
+            PageState.current = page;
         });
     }
 

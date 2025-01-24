@@ -1,5 +1,5 @@
 import os
-from flask import Flask, Blueprint, request, send_file, session, render_template
+from flask import Flask, Blueprint, request, send_file, session, render_template, current_app
 import typing as t
 
 from analogic.endpoint import AnalogicEndpoint
@@ -309,6 +309,11 @@ def create_app(instance_path, start_scheduler=True, initialize_auth_providers=Tr
 
     app.register_error_handler(404, page_not_found)
     app.register_error_handler(500, page_error)
+
+    def inject_current_app():
+        return {'current_app': current_app}
+
+    app.context_processor(inject_current_app)
 
     with app.app_context():
         app.evaluate_signal_receivers()

@@ -576,7 +576,8 @@ const Utils = {
         return value.includes('CAMID') ? value : value.replace(/\\/g, '/');
     },
     checkScreenResolution() {
-        if (!app.checkScreenResolutionWarningDisplayed && $('body').width() - 100 > window.innerWidth) {
+        let disabled = app.disableCheckResolutionWarning === true;
+        if (!app.checkScreenResolutionWarningDisplayed && disabled===false && $('body').width() - 100 > window.innerWidth) {
             Api.showPopup('Your current screen resolution is below the recommended 1920*1080. For optimal user experience please lower your browser zoom to 90% or 80%.');
             app.checkScreenResolutionWarningDisplayed = true;
         }
@@ -587,6 +588,7 @@ const Utils = {
     getNavigationUrl(params) {
         let url = window.location.href.split('?')[0];
         if (params) {
+            params['p_param'] = true;
             url += '?p=' + btoa(JSON.stringify(params));
         }
         return url;
