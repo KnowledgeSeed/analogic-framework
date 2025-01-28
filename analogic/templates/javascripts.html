@@ -109,7 +109,9 @@
 <script src="{{ url_for('static', filename='assets/js/widgets/horizontal-bar-chart.js') }}?v={{ cnf.version }}"></script>
 
 {% for asset_name in cnf.extension_js_asset_names %}
-    <script src="{{ url_for('extension_asset', asset_name=asset_name) }}&v={{ cnf.version }}"></script>
+    {% if 'excluding' not in asset_name %}
+        <script src="{{ url_for('extension_asset', asset_name=asset_name) }}&v={{ cnf.version }}"></script>
+    {% endif %}
 {% endfor %}
 
 <!-- end widgets -->

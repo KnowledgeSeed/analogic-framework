@@ -417,6 +417,9 @@ class AuthenticationProvider(ABC):
     def get_authentication_required_response(self):
         return Response('', 401)
 
+    def healthy(self):
+        return {'message': 'ok'}, 200, {'Content-Type': 'application/json'}
+
     def get_not_found_response(self):
         return 'Not found', 404, {'Content-Type': 'application/json'}
 

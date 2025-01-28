@@ -56,6 +56,11 @@ def index():
 
     return response
 
+@core_endpoints.analogic_endpoint_route('/healthy', methods=['GET'])
+def healthy():
+    authentication_provider = get_authentication_provider()
+    return authentication_provider.healthy()
+
 
 @core_endpoints.analogic_endpoint_route('/start_maintenance', methods=['GET', 'POST'])
 @endpoint_login_required
