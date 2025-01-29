@@ -226,6 +226,21 @@ class Analogic(Flask):
     def _get_asset_by_ext(self, ext):
         return list(filter(lambda x: x.endswith(ext), list(self.extension_assets.keys())))
 
+    def is_multi_authentication_provider(self):
+        authentication_provider = self.get_analogic_application()
+
+        config = authentication_provider.get_setting().get_config()
+
+        return config['authenticationMode'] == 'MultiAuthenticationProvider'
+
+    def get_multi_authentication_provider(self):
+        authentication_provider = self.get_analogic_application()
+
+        if authentication_provider.is_in_maintenance_mode() and authentication_provider.is_user_framework_admin() is False:
+            raise AnalogicMaintenanceException(authentication_provider)
+
+        return authentication_provider
+
     def get_authentication_provider(self):
         authentication_provider = self.get_analogic_application()
 

@@ -1,10 +1,15 @@
 from analogic.authentication_provider import AuthenticationProvider
 from analogic.multi_setting import MultiSettingManager
-from flask import current_app, request
+from flask import current_app, request, jsonify
 from analogic.signals import logged_in
 from analogic.multi_authentication_provider_interface import MultiAuthenticationProviderInterface
 from rich.prompt import Prompt
 
+def is_multi_authentication_provider():
+    return current_app.is_multi_authentication_provider()
+
+def get_multi_authentication_provider():
+    return current_app.get_multi_authentication_provider()
 
 class MultiAuthenticationProvider(AuthenticationProvider):
 
@@ -122,6 +127,16 @@ class MultiAuthenticationProvider(AuthenticationProvider):
 
     def _extend_login_session(self):
         self.get_authentication_provider_by_request()._extend_login_session()
+
+    def healthy(self):
+        responses = {}
+        status_code = 200
+        for name, registered_auth_prov in self.authentication_providers.items():
+            response = registered_auth_prov.healthy()
+            if response[1] == 200:
+                status_code = 500
+            responses[name] = response[0] if  isinstance(response[0], dict) else response[0].json
+        return jsonify(responses), status_code
 
     def get_tm1_service(self):
         return self.get_authentication_provider_by_request().get_tm1_service()

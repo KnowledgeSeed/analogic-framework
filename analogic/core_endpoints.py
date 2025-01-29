@@ -1,5 +1,6 @@
 from analogic.endpoint import AnalogicEndpoint
 from analogic.authentication_provider import get_authentication_provider, endpoint_login_required
+from analogic.multi_authentication_provider import get_multi_authentication_provider, is_multi_authentication_provider
 from flask import request, redirect, render_template, jsonify
 from functools import wraps
 from analogic.exceptions import AnalogicTM1ServiceException
@@ -56,9 +57,10 @@ def index():
 
     return response
 
+
 @core_endpoints.analogic_endpoint_route('/healthy', methods=['GET'])
 def healthy():
-    authentication_provider = get_authentication_provider()
+    authentication_provider = get_multi_authentication_provider() if is_multi_authentication_provider() else get_authentication_provider()
     return authentication_provider.healthy()
 
 
