@@ -133,7 +133,7 @@ class MultiAuthenticationProvider(AuthenticationProvider):
         status_code = 200
         for name, registered_auth_prov in self.authentication_providers.items():
             response = registered_auth_prov.healthy()
-            if response[1] == 200:
+            if response[1] != 200:
                 status_code = 500
             responses[name] = response[0] if  isinstance(response[0], dict) else response[0].json
         return jsonify(responses), status_code
