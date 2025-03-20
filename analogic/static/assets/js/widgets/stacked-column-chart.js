@@ -322,8 +322,6 @@ class StackedColumnChartWidget extends Widget {
             yMax += this.addArrowDatasets(datasets, data.arrows, labels, yMax, yTotal)
         }
 
-        let c = this.chart;
-
         return {
             type: 'bar',
             data: data,
