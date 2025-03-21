@@ -351,6 +351,9 @@ class StackedColumnChartWidget extends Widget {
                                 weight: v.legendFontWeight,
                                 lineHeight: v.legendFontLineHeight
                             },
+                            sort: (a, b) => {
+                                return Math.min(a.datasetIndex, b.datasetIndex);
+                            },
                             filter: c => !datasets[c.datasetIndex].isArrow
                         }
                     },
@@ -370,9 +373,19 @@ class StackedColumnChartWidget extends Widget {
                         }
                     },
                     datalabels: {
-                        align: c => datasets[c.datasetIndex].labelAlign || v.labelAlign,
+                        align: c => {
+                            //const value = c.dataset.data[c.dataIndex];
+                            //return value < 5 ? 'right' : 'center'; // Adjust alignment for visibility
+
+                            return datasets[c.datasetIndex].labelAlign || v.labelAlign;
+                        },
                         offset: c => datasets[c.datasetIndex].labelOffset || v.labelOffset,
-                        anchor: c => datasets[c.datasetIndex].labelAnchor || v.labelAnchor,
+                        anchor: c => {
+                            //const value = c.dataset.data[c.dataIndex];
+                            //return value < 5 ? 'end' : 'center'; // Push small values outside
+
+                            return datasets[c.datasetIndex].labelAnchor || v.labelAnchor;
+                        },
                         clamp: c => datasets[c.datasetIndex].labelClamp || v.labelClamp,
                         clip: c => datasets[c.datasetIndex].labelClip || v.labelClip,
                         display: c => {
