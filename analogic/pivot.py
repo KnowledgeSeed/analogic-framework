@@ -13,6 +13,7 @@ from analogic import authentication_provider
 
 def call(tm1: TM1Service, username, cube_name=None, dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, options=None, export_data=None):
     data = {}
+    username = username.replace('\\', '')
 
     # username = ''.join(ch for ch in username if ch.isalnum())
 

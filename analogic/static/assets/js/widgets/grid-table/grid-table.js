@@ -69,6 +69,7 @@ class GridTableWidget extends Widget {
             allowChangedDataUpdate: this.getRealValue('allowChangedDataUpdate', data, true),
             borderBottom: this.getRealValue('borderBottom', data, true),
             borderTop: this.getRealValue('borderTop', data, true),
+            disableRefreshGridCell: this.getRealValue('disableRefreshGridCell', data, false),
             hideIfNoData: this.getRealValue('hideIfNoData', data, false),
             maxRows: this.getRealValue('maxRows', data, false),
             minWidth: this.getRealValue('minWidth', data, false),
