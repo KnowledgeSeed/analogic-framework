@@ -448,7 +448,10 @@ def export_to_excel(selected_cards_data, pivot_data, export_data):
         if c is None:
             worksheet.write(row_num, col_header_offset + i, c)
         else:
-            worksheet.write_number(row_num, col_header_offset + i, c)
+            try:
+                worksheet.write_number(row_num, col_header_offset + i, float(c))
+            except (ValueError, TypeError):
+                worksheet.write(row_num, col_header_offset + i, str(c))
         i += 1
 
     workbook.close()
