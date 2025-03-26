@@ -13,7 +13,7 @@ const Doc = $(document), El = {body: $('body')}, PageState = {current: '', previ
     Widgets = {infoData: {}},
     Api = {};
 
-let EventMap, Repository, WidgetConfig;
+let EventMap, Repository, WidgetConfig, FaviconUrl;
 
 app.handleAjaxError = (response, widgetId) => {
     const m = (response.responseJSON ? response.responseJSON.message : response.responseText);
@@ -61,6 +61,8 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
                 }
             }
         }
+
+        FaviconUrl = Utils.parseJSONScript('favicon-url-data');
 
         QB.getUserData().then(start);
     }).on('touchstart', () => app.isTouched = true);

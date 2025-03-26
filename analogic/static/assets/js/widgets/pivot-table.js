@@ -1997,7 +1997,7 @@ class PivotTableWidget extends Widget {
 
         //Todo add source
 
-        Auth.getAjaxRequest(QB.getUrl(url), body, 'PATCH', this.id)
+        Auth.getAjaxRequest(QB.getUrl(url) + '&server=true', body, 'PATCH', this.id)
             .then(() => p.addClass('ok'))
             .fail(() => p.addClass('err'))
             .always(() => this.finishEditingContentCell());

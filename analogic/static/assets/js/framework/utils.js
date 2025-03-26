@@ -715,6 +715,30 @@ const Utils = {
         history.pushState({page}, "", finalUrl);
 
         return page;
+    },
+    changePageTitleAndFavicon(title, favicon) {
+        Utils.changePageTitle(title);
+        Utils.changePageFavicon(favicon);
+    },
+    changePageFavicon(imageName) {
+        let $link = $("link[rel~='icon']");
+        if ($link.length === 0) {
+            $link = $("<link>", {rel: "icon"}).appendTo("head");
+        }
+        $link.attr("href", FaviconUrl.faviconsFolder + imageName);
+    },
+    changePageTitle(text) {
+        $('title').text(text);
+    },
+    parseJSONScript(id) {
+        const $el = $('#' + id);
+        if (!$el.length) return {};
+        try {
+            return JSON.parse($el.text());
+        } catch (err) {
+            console.error(`Json error "${id}" in:`, err);
+            return {};
+        }
     }
 };
 
