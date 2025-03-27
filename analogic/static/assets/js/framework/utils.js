@@ -675,6 +675,9 @@ const Utils = {
         return path.join('/');
     },
     getFullUrlForAjax(sub_url) {
+        if (sub_url.startsWith('http')) {
+            return sub_url;
+        }
         if (Utils.isUrlNavigation()) {
             return Utils.getInstanceUrl(sub_url);
         }
@@ -739,6 +742,42 @@ const Utils = {
             console.error(`Json error "${id}" in:`, err);
             return {};
         }
+    },
+    setAutoPosition(floatingElement, anchor, forcedPosition = null, leftOffset = null) {
+        const w = $(window), winHeight = w.height(), winWidth = w.width(), height = floatingElement.outerHeight(),
+            width = floatingElement.outerWidth();
+        const rect = anchor[0].getBoundingClientRect(), anchorHeight = anchor.height(), anchorWidth = anchor.width(),
+            x = rect.x, y = rect.y, pos = {};
+
+        const spaces = [['left', x - width], ['right', winWidth - rect.right - width], ['top', y - height], ['bottom', winHeight - rect.bottom - height]].sort((a, b) => a[1] < b[1] ? 1 : -1);
+
+        let bestSpace = forcedPosition || spaces[0][0];
+
+        if ('bottom' === bestSpace) {
+            pos.left = x - (width - anchorWidth) / 2;
+            pos.top = rect.bottom;
+        } else if ('top' === bestSpace) {
+            pos.left = x - (width - anchorWidth) / 2;
+            pos.top = y - height;
+        } else if ('right' === bestSpace) {
+            pos.left = rect.right;
+            pos.top = y - Math.max(0, y + height + 10 - winHeight);
+        } else {
+            pos.left = x - width;
+            pos.top = y - Math.max(0, y + height + 10 - winHeight);
+        }
+
+        if (null !== leftOffset) {
+            pos.left = x - leftOffset;
+        }
+
+        let rightOffset = pos.left + width - winWidth;
+
+        if (rightOffset > 0) {
+            pos.left -= rightOffset;
+        }
+
+        return floatingElement.css(pos).prependTo($('body'));
     }
 };
 

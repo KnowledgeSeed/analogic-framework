@@ -13,7 +13,7 @@ const Doc = $(document), El = {body: $('body')}, PageState = {current: '', previ
     Widgets = {infoData: {}},
     Api = {};
 
-let EventMap, Repository, WidgetConfig, FaviconUrl;
+let EventMap, Repository, WidgetConfig, FaviconUrl, contextMenu;
 
 app.handleAjaxError = (response, widgetId) => {
     const m = (response.responseJSON ? response.responseJSON.message : response.responseText);
@@ -45,6 +45,7 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
     Doc.ready(() => {
 
         app.clickEvent = Utils.isMobile() ? 'touchstart' : 'click touchstart';
+        contextMenu = new ContextMenu();
 
         let wc, i, j;
 
