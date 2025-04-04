@@ -52,7 +52,7 @@ def call(tm1: TM1Service, username, cube_name=None, dimension_name=None, hierarc
         return orjson.dumps(r), 200, {'Content-Type': 'application/json'}
     elif dimension_name is None:
         children = tm1.cubes.get_dimension_names(cube_name)
-        data = get_presets_data(tm1, username, options['widgetId'], options['presetParams'])
+        data = get_presets_data(tm1, username, options['widgetId'], options.get('presetParams', {}))
     elif hierarchy_name is None:
         children = tm1.hierarchies.get_all_names(dimension_name)
     elif subset_name is None:

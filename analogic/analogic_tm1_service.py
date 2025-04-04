@@ -1,21 +1,22 @@
 from TM1py import TM1Service
 from TM1py.Services import HierarchyService, SecurityService, ApplicationService, SubsetService, ServerService, \
     MonitoringService, ProcessService, PowerBiService, AnnotationService, ViewService, RestService, CellService, \
-    ChoreService, DimensionService, CubeService, ElementService, SandboxService, GitService
+    ChoreService, DimensionService, CubeService, ElementService, SandboxService, GitService, LoggerService, \
+    JobService, UserService, ThreadService, SessionService, TransactionLogService, MessageLogService, ConfigurationService, \
+    AuditLogService
 from TM1py.Services.FileService import FileService
 from TM1py.Utils import case_and_space_insensitive_equals
-import json
-from json import JSONDecodeError
+from TM1py.Exceptions.Exceptions import TM1pyVersionDeprecationException
+from TM1py.Exceptions import TM1pyRestException
+from TM1py.Services.RestService import AuthenticationMode
+from requests.auth import HTTPBasicAuth
 from requests import Session as BaseSession
 from requests.adapters import HTTPAdapter as BaseHTTPAdapter
 from requests.adapters import (DEFAULT_POOLBLOCK, DEFAULT_POOLSIZE, DEFAULT_RETRIES)
 from requests import Request
 from requests import Response as BaseResponse
-import http.client as http_client
-import socket
 import requests
 
-import urllib3
 from urllib3.util import Timeout as TimeoutSauce
 from urllib3.exceptions import ClosedPoolError
 from urllib3.exceptions import ConnectTimeoutError
@@ -42,6 +43,12 @@ from requests.utils import get_encoding_from_headers
 from requests.utils import (stream_decode_response_unicode, iter_slices)
 import logging
 import warnings
+import time
+from typing import Optional
+from requests import Timeout
+from TM1py.Exceptions.Exceptions import TM1pyTimeout
+import re
+
 
 try:
     from requests_negotiate_sspi import HttpNegotiateAuth
@@ -380,7 +387,7 @@ class HTTPAdapterWithSocketOptions(HTTPAdapter):  # mod added for our adapter
         super(HTTPAdapterWithSocketOptions, self).__init__(*args, **kwargs)
 
     def init_poolmanager(self, *args, **kwargs):
-        if self.socket_options is not None:
+        if hasattr(self, "socket_options"):
             kwargs["socket_options"] = self.socket_options
         super(HTTPAdapterWithSocketOptions, self).init_poolmanager(*args, **kwargs)
 
@@ -391,14 +398,24 @@ class AnalogicRestService(RestService):
         """ Create an instance of RESTService
         :param address: String - address of the TM1 instance
         :param port: Int - HTTPPortNumber as specified in the tm1s.cfg
-        :param base_url - base url e.g. https://localhost:12354/api/v1
+        :param ssl: boolean -  as specified in the tm1s.cfg
+        :param instance: string -  planing analytics engine (v12) instance name
+        :param database: string -  planing analytics engine (v12) database name
+        :param base_url - base url
+        :param auth_url - auth url for planning analytics engine (v12)
         :param user: String - name of the user
         :param password String - password of the user
         :param decode_b64 - whether password argument is b64 encoded
         :param namespace String - optional CAM namespace
-        :param ssl: boolean -  as specified in the tm1s.cfg
         :param cam_passport: String - the cam passport
         :param session_id: String - TM1SessionId e.g. q7O6e1w49AixeuLVxJ1GZg
+        :param application_client_id - planning analytics engine (v12) named application client ID created via manage service
+        :param application_client_secret - planning analytics engine (v12) named application secret created via manage service
+        :param api_key: String - planing analytics engine (v12) API Key from https://cloud.ibm.com/iam/apikeys
+        :param iam_url: String - planing analytics engine (v12) IBM Cloud IAM URL. Default: "https://iam.cloud.ibm.com"
+        :param pa_url: String - planing analytics engine (v12) PA URL e.g., "https://us-east-2.aws.planninganalytics.ibm.com"
+        :param cpd_url: String - cloud pack for data url (aka ZEN) CPD URL e.g., "https://cpd-zen.apps.cp4dpa-test11.cp.fyre.ibm.com"
+        :param tenant: String - planing analytics engine (v12) Tenant e.g., YC4B2M1AG2Y6
         :param session_context: String - Name of the Application. Controls "Context" column in Arc / TM1top.
                 If None, use default: TM1py
         :param verify: path to .cer file or 'True' / True / 'False' / False (if no ssl verification is required)
@@ -406,8 +423,6 @@ class AnalogicRestService(RestService):
         :param timeout: Float - Number of seconds that the client will wait to receive the first byte.
         :param cancel_at_timeout: Abort operation in TM1 when timeout is reached
         :param async_requests_mode: changes internal REST execution mode to avoid 60s timeout on IBM cloud
-        :param tcp_keepalive: maintain the TCP connection all the time, users should choose either async_requests_mode or tcp_keepalive to run a long-run request
-                If both are True, use async_requests_mode by default
         :param connection_pool_size - In a multi threaded environment, you should set this value to a
                 higher number, such as the number of threads
         :param integrated_login: True for IntegratedSecurityMode3
@@ -427,64 +442,49 @@ class AnalogicRestService(RestService):
         # store kwargs for future use e.g. re_connect on 401 session timeout
         self._kwargs = kwargs
 
+        # core arguments for connection
         self._ssl = self.translate_to_boolean(kwargs.get('ssl', True))
         self._address = kwargs.get('address', None)
         self._port = kwargs.get('port', None)
-        self._verify = False
+        self._base_url = kwargs.get('base_url', None)
+        self._auth_url = kwargs.get('auth_url', None)
+        self._instance = kwargs.get('instance', None)
+        self._database = kwargs.get('database', None)
+        self._api_key = kwargs.get('api_key', None)
+        self._iam_url = kwargs.get('iam_url', None)
+        self._pa_url = kwargs.get('pa_url', None)
+        self._cpd_url = kwargs.get('cpd_url', None)
+        self._tenant = kwargs.get('tenant', None)
+        self._user = kwargs.get('user', None)
+
+        # other arguments
+        self._auth_mode = self._determine_auth_mode()
         self._timeout = None if kwargs.get('timeout', None) is None else float(kwargs.get('timeout'))
         self._cancel_at_timeout = kwargs.get('cancel_at_timeout', False)
         self._async_requests_mode = self.translate_to_boolean(kwargs.get('async_requests_mode', False))
-        # Set tcp_keepalive to False explicitly to turn it off when async_requests_mode is enabled
-        self._tcp_keepalive = self.translate_to_boolean(
-            kwargs.get('tcp_keepalive', False)) \
-            if self._async_requests_mode is not True \
-            else False
-        self._connection_pool_size = kwargs.get('connection_pool_size', None)
+        self._connection_pool_size = kwargs.get('connection_pool_size', self.DEFAULT_CONNECTION_POOL_SIZE)
         self._re_connect_on_session_timeout = kwargs.get('re_connect_on_session_timeout', True)
+        # is retrieved on demand and then cached
+        self._sandboxing_disabled = None
+        # optional verbose logging to stdout
+        self.handle_logging(kwargs.get('logging', False))
 
-        # Logging
-        if 'logging' in kwargs:
-            if self.translate_to_boolean(value=kwargs['logging']):
-                http_client.HTTPConnection.debuglevel = 1
+        self._proxies = self._handle_proxies(kwargs.get('proxies', None))
+        self._is_admin = None
+        self._is_data_admin = None
+        self._is_security_admin = None
+        self._is_ops_admin = None
 
-        self._proxies = kwargs.get('proxies', None)
-        # handle invalid types and potential string argument
-        if not isinstance(self._proxies, (dict, str, type(None))):
-            raise ValueError("Argument of 'proxies' must be None, dictionary or JSON string")
-        elif isinstance(self._proxies, str):
-            try:
-                self._proxies = json.loads(self._proxies)
-            except JSONDecodeError:
-                raise ValueError("Invalid JSON passed for argument 'proxies': %s", self._proxies)
+        # populated later on the fly for users with the name different from 'Admin'
+        if self._user and case_and_space_insensitive_equals(self._user, 'ADMIN'):
+            self._is_admin = True
+            self._is_data_admin = True
+            self._is_security_admin = True
+            self._is_ops_admin = True
 
-        # populated on the fly
-        if kwargs.get('user'):
-            self._is_admin = True if case_and_space_insensitive_equals(kwargs.get('user'), 'ADMIN') else None
-        else:
-            self._is_admin = None
+        self._verify = self._determine_verify(kwargs.get('verify', None))
 
-        if 'verify' in kwargs:
-            if isinstance(kwargs['verify'], str):
-                if kwargs['verify'].upper() == 'FALSE':
-                    self._verify = False
-                elif kwargs['verify'].upper() == 'TRUE':
-                    self._verify = True
-                # path to .cer file
-                else:
-                    self._verify = kwargs.get('verify')
-            elif isinstance(kwargs['verify'], bool):
-                self._verify = kwargs['verify']
-            else:
-                raise ValueError("verify argument must be of type str or bool")
-
-        if 'base_url' in kwargs:
-            self._base_url = kwargs['base_url']
-            self._ssl = self._determine_ssl_based_on_base_url()
-        else:
-            self._base_url = "http{}://{}:{}".format(
-                's' if self._ssl else '',
-                'localhost' if len(self._address) == 0 else self._address,
-                self._port)
+        self._base_url, self._auth_url = self._construct_service_and_auth_root()
 
         self._version = None
         self._headers = self.HEADERS.copy()
@@ -495,19 +495,22 @@ class AnalogicRestService(RestService):
 
         self._s = Session()  # mod out Session
 
-        if self._tcp_keepalive or self._connection_pool_size is not None:  # mod move from end of method
-            self._manage_http_adapter()
+        self._manage_http_adapter()  # mod move from end of method
 
         if self._proxies:
             self._s.proxies = self._proxies
 
+        # First contact with TM1
         self.connect()
-
         if not self._version:
             self.set_version()
 
-        # is retrieved on demand and cached
-        self._sandboxing_disabled = None
+    def _manage_http_adapter(self):  # mod override for using our base adapter
+        adapter = HTTPAdapterWithSocketOptions(
+            pool_connections=int(self._connection_pool_size or self.DEFAULT_CONNECTION_POOL_SIZE),
+            pool_maxsize=int(self._connection_pool_size))
+
+        self._s.mount(self._base_url, adapter)
 
     def connect(self):
         if "session_id" in self._kwargs:
@@ -526,28 +529,160 @@ class AnalogicRestService(RestService):
                 integrated_login_host=self._kwargs.get("integrated_login_host"),
                 integrated_login_delegate=self._kwargs.get("integrated_login_delegate"),
                 impersonate=self._kwargs.get("impersonate", None),
+                application_client_id=self._kwargs.get("application_client_id", None),
+                application_client_secret=self._kwargs.get("application_client_secret", None),
                 intergated_username=self._kwargs.get("integrated_username", None),
                 integrated_password=self._kwargs.get("integrated_password", None)
             )
+
+    def verify_compressed_response(self, response: Response):
+        """ check if Status Code is OK
+        :Parameters:
+            `response`: String
+                the response that is returned from a method call
+        :Exceptions:
+            TM1pyException, raises TM1pyException when Code is not 200, 204 etc.
+        """
+        if not response.ok:
+            raise TM1pyRestException(response.get_decompressed_data(),
+                                     status_code=response.status_code,
+                                     reason=response.reason,
+                                     headers=response.headers)
+
+    def request(
+            self,
+            method: str,
+            url: str,
+            data: str = '',
+            encoding='utf-8',
+            async_requests_mode: Optional[bool] = None,
+            return_async_id=False,
+            timeout: float = None,
+            cancel_at_timeout: bool = False,
+            decode_content: bool = True,#Mod
+            **kwargs):
+
+        original_url = url #Mod
+        url, data = self._url_and_body(
+            url=url,
+            data=data,
+            encoding=encoding)
+
+        timeout = timeout if timeout else self._timeout
+
+        try:
+            if return_async_id:
+                async_requests_mode = True
+            # determine async_requests_mode
+            elif async_requests_mode is None:
+                async_requests_mode = self._async_requests_mode
+
+            if not async_requests_mode:
+                response = self._s.request(method=method, url=url, data=data, verify=self._verify, timeout=timeout, decode_content=decode_content,#Mod
+                                           **kwargs)
+                if self._re_connect_on_session_timeout and response.status_code == 401:
+                    self.connect()
+                    response = self._s.request(method=method, url=url, data=data, verify=self._verify, timeout=timeout, decode_content=decode_content,#Mod
+                                               **kwargs)
+
+            else:
+                additional_header = {'Prefer': 'respond-async'}
+                http_headers = kwargs.get('headers', dict())
+                http_headers.update(additional_header)
+                kwargs['headers'] = http_headers
+                response = self._s.request(method=method, url=url, data=data, verify=self._verify, timeout=timeout, decode_content=decode_content,#Mod
+                                           **kwargs)
+                # reconnect in case of session timeout
+                if self._re_connect_on_session_timeout and response.status_code == 401:
+                    self.connect()
+                    response = self._s.request(method=method, url=url, data=data, verify=self._verify, timeout=timeout, decode_content=decode_content,#Mod
+                                               **kwargs)
+                self.verify_response(response=response)
+
+                if 'Location' not in response.headers or "'" not in response.headers['Location']:
+                    raise ValueError(f"Failed to retrieve async_id from request {method} '{url}'")
+                async_id = response.headers.get('Location').split("'")[1]
+                if return_async_id:
+                    return async_id
+
+                for wait in RestService.wait_time_generator(timeout):
+                    response = self.retrieve_async_response(async_id)
+                    if response.status_code in [200, 201]:
+                        break
+                    time.sleep(wait)
+
+                # all wait times consumed and still no 200
+                if response.status_code not in [200, 201]:
+                    if cancel_at_timeout or (cancel_at_timeout is None and self._cancel_at_timeout):
+                        self.cancel_async_operation(async_id)
+                    raise TM1pyTimeout(method=method, url=url, timeout=timeout)
+
+                # response transformation necessary in TM1 < v11. Not required for v12
+                if response.content.startswith(b"HTTP/"):
+                    response = self.build_response_from_binary_response(response.content)
+                else:
+                    # In v12 status_code must be set explicitly, as it is 200 by default
+                    response.status_code = int(response.headers['asyncresult'])
+
+            # verify
+            if decode_content is False:
+                self.verify_compressed_response(response=response)#Mod
+            else:
+                self.verify_response(response=response)
+
+            # response encoding
+            response.encoding = encoding
+
+            return response
+
+        except Timeout:
+            if cancel_at_timeout or (cancel_at_timeout is None and self._cancel_at_timeout):
+                self.cancel_running_operation()
+            raise TM1pyTimeout(method=method, url=url, timeout=timeout)
+
+        except ConnectionError as e:
+            # cater for issue in requests library: https://github.com/psf/requests/issues/5430
+            if re.search('Read timed out', str(e), re.IGNORECASE):
+                if cancel_at_timeout or (cancel_at_timeout is None and self._cancel_at_timeout):
+                    self.cancel_running_operation()
+                raise TM1pyTimeout(method=method, url=url, timeout=timeout)
+
+            # A connection error that requires attention (e.g. SSL)
+            raise e
 
     def _start_session(self, user: str, password: str, decode_b64: bool = False, namespace: str = None,
                        gateway: str = None, cam_passport: str = None, integrated_login: bool = None,
                        integrated_login_domain: str = None, integrated_login_service: str = None,
                        integrated_login_host: str = None, integrated_login_delegate: bool = None,
-                       impersonate: str = None, intergated_username: str = None, integrated_password: str = None):
+                       impersonate: str = None,
+                       application_client_id: str = None, application_client_secret: str = None,
+                       intergated_username: str = None, integrated_password: str = None):#Mod integrated_username,integrated_password
         """ perform a simple GET request (Ask for the TM1 Version) to start a session
         """
         # Authorization with integrated_login
         if integrated_login:
             self._s.auth = HttpNegotiateAuth(
-                username=intergated_username,
-                password=integrated_password,
+                username=intergated_username,#Mod integrated_username
+                password=integrated_password,#Mod integrated_password
                 domain=integrated_login_domain,
                 service=integrated_login_service,
                 host=integrated_login_host,
                 delegate=integrated_login_delegate)
 
-        # Authorization [Basic, CAM] through Headers
+        elif self._auth_mode == AuthenticationMode.SERVICE_TO_SERVICE:
+            application_auth = HTTPBasicAuth(application_client_id, application_client_secret)
+            self._s.auth = application_auth
+
+        # Get the JWT token from the CPD URL
+        elif self._auth_mode == AuthenticationMode.PA_PROXY:
+            credentials = {"username": user, "password": password}
+            jwt = self._generate_cpd_access_token(credentials)
+
+        elif self._auth_mode == AuthenticationMode.IBM_CLOUD_API_KEY:
+            access_token = self._generate_ibm_iam_cloud_access_token()
+            self.add_http_header('Authorization', "Bearer " + access_token)
+
+        # v11 authorization (Basic, CAM) through Headers
         else:
             token = self._build_authorization_token(
                 user,
@@ -558,63 +693,71 @@ class AnalogicRestService(RestService):
                 self._verify)
             self.add_http_header('Authorization', token)
 
-        url = '/api/v1/Configuration/ProductVersion/$value'
-        try:
-            additional_headers = dict()
-            if impersonate:
-                additional_headers["TM1-Impersonate"] = impersonate
+        # process additional headers
+        if impersonate:
+            if self._auth_mode.use_v12_auth:
+                raise TM1pyVersionDeprecationException('User Impersonation', '12')
+            else:
+                self.add_http_header('TM1-Impersonate', impersonate)
 
+        try:
             # skip re_connect to avoid infinite recursion in case of invalid credentials
             original_value = self._re_connect_on_session_timeout
             try:
                 self._re_connect_on_session_timeout = False
-                response = self.GET(url=url, headers=additional_headers)
+                if self._auth_mode == AuthenticationMode.SERVICE_TO_SERVICE:
+                    payload = {"User": user}
+                    response = self._s.post(
+                        url=self._auth_url,
+                        headers=self._headers,
+                        verify=self._verify,
+                        timeout=self._timeout,
+                        json=payload)
+                    self.verify_response(response)
+                    if 'TM1SessionId' not in self._s.cookies:
+                        # if session had incorrect domain due to CP4D extract it and add it to cookie jar
+                        self._s.cookies.set(
+                            "TM1SessionId",
+                            self._extract_tm1_session_id_from_set_cookie_header(auth_response_headers=response.headers))
+                        warnings.warn(
+                            f"TM1SessionId has failed to be automatically added to the session cookies, future requests "
+                            "using this TM1Service will use the session id extracted from the first response "
+                            "Check the tm1-gateway domain settings are correct"
+                            "in the container orchestrator ")
+                elif self._auth_mode == AuthenticationMode.PA_PROXY:
+                    header = {'Content-Type': 'application/x-www-form-urlencoded'}
+                    payload = f"jwt={jwt}"
+                    response = self._s.post(
+                        url=self._auth_url,
+                        headers=header,
+                        verify=self._verify,
+                        timeout=self._timeout,
+                        data=payload)
+                    self.verify_response(response)
+                    csrf_cookie = response.cookies.get_dict(self._address, '/')['ba-sso-csrf']
+                    self.add_http_header('ba-sso-authenticity', csrf_cookie)
+                else:
+                    response = self._s.get(
+                        url=self._auth_url,
+                        headers=self._headers,
+                        verify=self._verify,
+                        timeout=self._timeout)
+                    self.verify_response(response)
+                    self._version = response.text
+
             finally:
                 self._re_connect_on_session_timeout = original_value
 
             if response is None:
-                raise ValueError(f"No response returned from URL: '{self._base_url + url}'. "
+                raise ValueError(f"No response returned from URL: '{self._auth_url}'. "
                                  f"Please double check your address and port number in the URL.")
 
-            self._version = response.text
+
         finally:
             # After we have session cookie, drop the Authorization Header
             self.remove_http_header('Authorization')
 
-    def _manage_http_adapter(self):  # mod override for using our base adapter
-        if self._tcp_keepalive:
-            # SO_KEEPALIVE: set 1 to enable TCP keepalive
-            socket_options = urllib3.connection.HTTPConnection.default_socket_options + [
-                (socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1),
-                (socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, self.TCP_SOCKET_OPTIONS['TCP_KEEPIDLE']),
-                (socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, self.TCP_SOCKET_OPTIONS['TCP_KEEPINTVL']),
-                (socket.IPPROTO_TCP, socket.TCP_KEEPCNT, self.TCP_SOCKET_OPTIONS['TCP_KEEPCNT'])]
 
-            if self._connection_pool_size is not None:
-                adapter = HTTPAdapterWithSocketOptions(
-                    pool_connections=int(self._connection_pool_size),
-                    pool_maxsize=int(self._connection_pool_size),
-                    socket_options=socket_options)
-            else:
-                adapter = HTTPAdapterWithSocketOptions(socket_options=socket_options)
-
-        else:
-            adapter = HTTPAdapterWithSocketOptions(
-                pool_connections=int(self._connection_pool_size),
-                pool_maxsize=int(self._connection_pool_size))
-
-        self._s.mount(self._base_url, adapter)
-
-    # @staticmethod
-    # def build_response_from_raw_bytes(data: bytes) -> Response:
-    #     urllib_response = RestService.urllib3_response_from_bytes(data)
-    #
-    #     adapter = HTTPAdapter()
-    #     requests_response = adapter.build_response(requests.PreparedRequest(), urllib_response)
-    #     # actual content of response needs to be set explicitly
-    #     requests_response._content = urllib_response.data
-    #
-    #     return requests_response
 
 
 class AnalogicTM1Service(TM1Service):
@@ -622,42 +765,40 @@ class AnalogicTM1Service(TM1Service):
     def __init__(self, **kwargs):
         """ Initiate the TM1Service
 
-            :param address: String - address of the TM1 instance
-            :param port: Int - HTTPPortNumber as specified in the tm1s.cfg
-            :param base_url - base url e.g. https://localhost:12354/api/v1
-            :param user: String - name of the user
-            :param password String - password of the user
-            :param decode_b64 - whether password argument is b64 encoded
-            :param namespace String - optional CAM namespace
-            :param ssl: boolean -  as specified in the tm1s.cfg
-            :param cam_passport: String - the cam passport
-            :param session_id: String - TM1SessionId e.g. q7O6e1w49AixeuLVxJ1GZg
-            :param session_context: String - Name of the Application. Controls "Context" column in Arc / TM1top.
+        :param address: String - address of the TM1 instance
+        :param port: Int - HTTPPortNumber as specified in the tm1s.cfg
+        :param base_url - base url e.g. https://localhost:12354/api/v1
+        :param user: String - name of the user
+        :param password String - password of the user
+        :param decode_b64 - whether password argument is b64 encoded
+        :param namespace String - optional CAM namespace
+        :param ssl: boolean -  as specified in the tm1s.cfg
+        :param cam_passport: String - the cam passport
+        :param session_id: String - TM1SessionId e.g. q7O6e1w49AixeuLVxJ1GZg
+        :param session_context: String - Name of the Application. Controls "Context" column in Arc / TM1top.
                 If None, use default: TM1py
-            :param verify: path to .cer file or 'True' / True / 'False' / False (if no ssl verification is required)
-            :param logging: boolean - switch on/off verbose http logging into sys.stdout
-            :param timeout: Float - Number of seconds that the client will wait to receive the first byte.
-            :param cancel_at_timeout: Abort operation in TM1 when timeout is reached
-            :param async_requests_mode: changes internal REST execution mode to avoid 60s timeout on IBM cloud
-            :param tcp_keepalive: maintain the TCP connection all the time, users should choose either async_requests_mode or tcp_keepalive to run a long-run request
-                    If both are True, use async_requests_mode by default
-            :param connection_pool_size - In a multi threaded environment, you should set this value to a
-                    higher number, such as the number of threads
-            :param integrated_login: True for IntegratedSecurityMode3
-            :param integrated_login_domain: NT Domain name.
-                    Default: '.' for local account.
-            :param integrated_login_service: Kerberos Service type for remote Service Principal Name.
-                    Default: 'HTTP'
-            :param integrated_login_host: Host name for Service Principal Name.
-                    Default: Extracted from request URI
-            :param integrated_login_delegate: Indicates that the user's credentials are to be delegated to the server.
-                    Default: False
-            :param impersonate: Name of user to impersonate
-            :param re_connect_on_session_timeout: attempt to reconnect once if session is timed out
-            :param proxies: pass a dictionary with proxies e.g.
-                    {'http': 'http://proxy.example.com:8080', 'https': 'http://secureproxy.example.com:8090'}
-            """
-        self._tm1_rest = AnalogicRestService(**kwargs)
+        :param verify: path to .cer file or 'True' / True / 'False' / False (if no ssl verification is required)
+        :param logging: boolean - switch on/off verbose http logging into sys.stdout
+        :param timeout: Float - Number of seconds that the client will wait to receive the first byte.
+        :param cancel_at_timeout: Abort operation in TM1 when timeout is reached
+        :param async_requests_mode: changes internal REST execution mode to avoid 60s timeout on IBM cloud
+        :param connection_pool_size - In a multi threaded environment, you should set this value to a
+                higher number, such as the number of threads
+        :param integrated_login: True for IntegratedSecurityMode3
+        :param integrated_login_domain: NT Domain name.
+                Default: '.' for local account.
+        :param integrated_login_service: Kerberos Service type for remote Service Principal Name.
+                Default: 'HTTP'
+        :param integrated_login_host: Host name for Service Principal Name.
+                Default: Extracted from request URI
+        :param integrated_login_delegate: Indicates that the user's credentials are to be delegated to the server.
+                Default: False
+        :param impersonate: Name of user to impersonate
+        :param re_connect_on_session_timeout: attempt to reconnect once if session is timed out
+        :param proxies: pass a dictionary with proxies e.g.
+                {'http': 'http://proxy.example.com:8080', 'https': 'http://secureproxy.example.com:8090'}
+        """
+        self._tm1_rest = AnalogicRestService(**kwargs)#Mod
         self.annotations = AnnotationService(self._tm1_rest)
         self.cells = CellService(self._tm1_rest)
         self.chores = ChoreService(self._tm1_rest)
@@ -666,21 +807,28 @@ class AnalogicTM1Service(TM1Service):
         self.elements = ElementService(self._tm1_rest)
         self.git = GitService(self._tm1_rest)
         self.hierarchies = HierarchyService(self._tm1_rest)
-        self.monitoring = MonitoringService(self._tm1_rest)
-        self.power_bi = PowerBiService(self._tm1_rest)
         self.processes = ProcessService(self._tm1_rest)
         self.security = SecurityService(self._tm1_rest)
-        self.server = ServerService(self._tm1_rest)
         self.subsets = SubsetService(self._tm1_rest)
         self.applications = ApplicationService(self._tm1_rest)
         self.views = ViewService(self._tm1_rest)
         self.sandboxes = SandboxService(self._tm1_rest)
         self.files = FileService(self._tm1_rest)
+        self.jobs = JobService(self._tm1_rest)
+        self.users = UserService(self._tm1_rest)
+        self.threads = ThreadService(self._tm1_rest)
+        self.sessions = SessionService(self._tm1_rest)
+        self.transaction_logs = TransactionLogService(self._tm1_rest)
+        self.message_logs = MessageLogService(self._tm1_rest)
+        self.configuration = ConfigurationService(self._tm1_rest)
+        self.audit_logs = AuditLogService(self._tm1_rest)
 
-    # def re_authenticate(self):
-    #     # self._tm1_rest = AnalogicRestService(**self.connection._kwargs)
-    #     # self._instantiate_services()
-    #     self._tm1_rest.connect()
+        # higher level modules
+        self.server = ServerService(self._tm1_rest)
+        self.monitoring = MonitoringService(self._tm1_rest)
+        self.power_bi = PowerBiService(self._tm1_rest)
+        self.loggers = LoggerService(self._tm1_rest)
+
 
     def get_session(self):
         return self._tm1_rest._s
