@@ -78,6 +78,8 @@ class StackedColumnChartWidget extends Widget {
             canvasPaddingBottom: this.getRealValue('canvasPaddingBottom', d, 0),
             canvasPaddingLeft: this.getRealValue('canvasPaddingLeft', d, 0),
 
+            customLabels: this.getRealValue('customLabels', d, false),
+
             legendVisible: this.getRealValue('legendVisible', d, true),
             legendPosition: this.getRealValue('legendPosition', d, 'bottom'),
             legendAlign: this.getRealValue('legendAlign', d, 'center'),
@@ -322,12 +324,62 @@ class StackedColumnChartWidget extends Widget {
             yMax += this.addArrowDatasets(datasets, data.arrows, labels, yMax, yTotal)
         }
 
+        this.onCompleteFinished = false;
+
         return {
             type: 'bar',
             data: data,
             plugins: [ChartDataLabels4],
             options: {
-                animation: v.animationEnabled,
+                animation: {
+                    onComplete: (animation) => {
+                        if (this.onCompleteFinished || !v.customLabels) {
+                            return;
+                        }
+
+                        this.onCompleteFinished = true;
+
+                        const chart = animation.chart;
+
+                        const rect = chart.canvas.getBoundingClientRect();
+
+                        const spacing = 18;
+
+                        chart.data.datasets.forEach((dataset, datasetIndex) => {
+                            const meta = chart.getDatasetMeta(datasetIndex);
+
+                            let yCoords = [];
+
+                            if (meta.type === 'bar') {
+                                for (let q = 0; q < meta.data.length; ++q) {
+                                    const bar = meta.data[q];
+                                    yCoords.push(rect.top + bar.y);
+                                }
+
+                                for (let i = yCoords.length - 1; i > 0; --i) {
+                                    if ((yCoords[i] - yCoords[i-1]) < 30) {
+                                        yCoords[i-1] -= 30;
+                                    }
+                                }
+
+                                for (let q = 0; q < meta.data.length; ++q) {
+                                    const bar = meta.data[q];
+                                    const value = dataset.data[q];
+
+                                    let barX = rect.left + bar.x;
+                                    let barY = rect.top + bar.y;
+
+                                    const div = $('<div class="chart-bar-label" style="z-index:100000; white-space:nowrap; display:block; position:absolute; background:' + dataset.backgroundColor + '; color:white; padding:5px; border-radius:5px; font-size:12px;"></div>');
+
+                                    div.css({left: barX + 20, top: yCoords[q]});
+                                    div.text(`${value}`);
+
+                                    $('body').prepend(div);
+                                }
+                            }
+                        });
+                    }
+                },
                 normalized: true,
                 parsing: true,
                 plugins: {
@@ -680,7 +732,7 @@ class StackedColumnChartWidget extends Widget {
                     label: 'Other revenue',
                     labelDataPointVisible: false,
                     dataLabels: ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12', 'A13', 'A14', 'A15'],
-                    data: [164000, 164492, 164984, 165476, 165968, 166460, 166952, 167444, 167936, 168428, 168920, 169412, 169904, 170396, 170888],
+                    data: [2, 164492, 164984, 165476, 165968, 166460, 166952, 167444, 167936, 168428, 168920, 169412, 169904, 170396, 170888],
                     backgroundColor: '#80B3E6',
                     labelBackgroundColor: '#80B3E6',
                     tooltipsEnabled: false
@@ -688,13 +740,13 @@ class StackedColumnChartWidget extends Widget {
                 {
                     label: 'Cost of Sales',
                     dataLabels: ['\nA1', '\nA2', '\nA3', '\nA4', '\nA5', '\nA6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12', 'A13', 'A14', 'A15'],
-                    data: [84000, 84252, 84504, 84756, 85008, 85260, 85512, 85764, 86016, 86268, 86520, 86772, 87024, 87276, 87528],
+                    data: [2, 84252, 84504, 84756, 85008, 85260, 85512, 85764, 86016, 86268, 86520, 86772, 87024, 87276, 87528],
                     backgroundColor: '#0066CC',
                     labelBackgroundColor: '#0066CC',
                 },
                 {
                     label: 'Gross Profit',
-                    data: [110000, 110330, 110660, 110990, 111320, 111650, 111980, 112310, 112640, 112970, 113300, 113630, 113960, 114290, 114620],
+                    data: [2, 110330, 110660, 110990, 111320, 111650, 111980, 112310, 112640, 112970, 113300, 113630, 113960, 114290, 114620],
                     backgroundColor: '#E40046',
                     labelBackgroundColor: '#E40046',
                 },
