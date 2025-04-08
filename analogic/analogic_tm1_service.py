@@ -384,11 +384,14 @@ class HTTPAdapter(BaseHTTPAdapter):
 class HTTPAdapterWithSocketOptions(HTTPAdapter):  # mod added for our adapter
     def __init__(self, *args, **kwargs):
         self.socket_options = kwargs.pop("socket_options", None)
+        self.ssl_context = kwargs.pop("ssl_context", None)
         super(HTTPAdapterWithSocketOptions, self).__init__(*args, **kwargs)
 
     def init_poolmanager(self, *args, **kwargs):
         if hasattr(self, "socket_options"):
             kwargs["socket_options"] = self.socket_options
+        if hasattr(self, "ssl_context"):
+            kwargs['ssl_context'] = self.ssl_context
         super(HTTPAdapterWithSocketOptions, self).init_poolmanager(*args, **kwargs)
 
 
@@ -438,6 +441,10 @@ class AnalogicRestService(RestService):
         :param re_connect_on_session_timeout: attempt to reconnect once if session is timed out
         :param proxies: pass a dictionary with proxies e.g.
                 {'http': 'http://proxy.example.com:8080', 'https': 'http://secureproxy.example.com:8090'}
+        :param ssl_context: Pass a user defined ssl context
+        :param cert: (optional) If String, path to SSL client cert file (.pem).
+                If Tuple, ('cert', 'key') pair
+
         """
         # store kwargs for future use e.g. re_connect on 401 session timeout
         self._kwargs = kwargs
@@ -474,6 +481,7 @@ class AnalogicRestService(RestService):
         self._is_data_admin = None
         self._is_security_admin = None
         self._is_ops_admin = None
+        self._ssl_context = kwargs.get('ssl_context', None)
 
         # populated later on the fly for users with the name different from 'Admin'
         if self._user and case_and_space_insensitive_equals(self._user, 'ADMIN'):
@@ -493,9 +501,11 @@ class AnalogicRestService(RestService):
 
         self.disable_http_warnings()
 
-        self._s = Session()  # mod out Session
+        self._s = Session()  # mod own Session
+        self._manage_http_adapter()
 
-        self._manage_http_adapter()  # mod move from end of method
+        self._cert = kwargs.get("cert")
+        self._s.cert = self._cert
 
         if self._proxies:
             self._s.proxies = self._proxies
@@ -508,13 +518,14 @@ class AnalogicRestService(RestService):
     def _manage_http_adapter(self):  # mod override for using our base adapter
         adapter = HTTPAdapterWithSocketOptions(
             pool_connections=int(self._connection_pool_size or self.DEFAULT_CONNECTION_POOL_SIZE),
-            pool_maxsize=int(self._connection_pool_size))
+            pool_maxsize=int(self._connection_pool_size),
+            ssl_context=self._ssl_context)
 
         self._s.mount(self._base_url, adapter)
 
     def connect(self):
         if "session_id" in self._kwargs:
-            self._s.cookies.set("TM1SessionId", self._kwargs["session_id"])
+            self._set_session_id_cookie()
         else:
             self._start_session(
                 user=self._kwargs.get("user", None),
@@ -562,7 +573,6 @@ class AnalogicRestService(RestService):
             decode_content: bool = True,#Mod
             **kwargs):
 
-        original_url = url #Mod
         url, data = self._url_and_body(
             url=url,
             data=data,
@@ -681,6 +691,8 @@ class AnalogicRestService(RestService):
         elif self._auth_mode == AuthenticationMode.IBM_CLOUD_API_KEY:
             access_token = self._generate_ibm_iam_cloud_access_token()
             self.add_http_header('Authorization', "Bearer " + access_token)
+        elif self._auth_mode == AuthenticationMode.ACCESS_TOKEN:
+            self.add_http_header('Authorization', "Bearer " + self._kwargs.get('access_token'))
 
         # v11 authorization (Basic, CAM) through Headers
         else:
@@ -690,7 +702,8 @@ class AnalogicRestService(RestService):
                 namespace,
                 gateway,
                 cam_passport,
-                self._verify)
+                self._verify,
+                self._cert)
             self.add_http_header('Authorization', token)
 
         # process additional headers
@@ -754,6 +767,12 @@ class AnalogicRestService(RestService):
 
 
         finally:
+            # If the TM1 REST API is routed through a reverse proxy that alters the expected URL,
+            # we explicitly re-set the 'TM1SessionId' cookie to maintain session continuity.
+            session_id = self._s.cookies.pop('TM1SessionId', None)
+            if session_id is not None:
+                self._s.cookies.set('TM1SessionId', session_id)
+
             # After we have session cookie, drop the Authorization Header
             self.remove_http_header('Authorization')
 
@@ -797,6 +816,10 @@ class AnalogicTM1Service(TM1Service):
         :param re_connect_on_session_timeout: attempt to reconnect once if session is timed out
         :param proxies: pass a dictionary with proxies e.g.
                 {'http': 'http://proxy.example.com:8080', 'https': 'http://secureproxy.example.com:8090'}
+        :param ssl_context: pass a user defined ssl context
+        :param cert: (optional) If String, path to SSL client cert file (.pem).
+                If Tuple, ('cert', 'key') pair
+
         """
         self._tm1_rest = AnalogicRestService(**kwargs)#Mod
         self.annotations = AnnotationService(self._tm1_rest)
@@ -824,10 +847,11 @@ class AnalogicTM1Service(TM1Service):
         self.audit_logs = AuditLogService(self._tm1_rest)
 
         # higher level modules
-        self.server = ServerService(self._tm1_rest)
-        self.monitoring = MonitoringService(self._tm1_rest)
         self.power_bi = PowerBiService(self._tm1_rest)
         self.loggers = LoggerService(self._tm1_rest)
+
+        self._server = None
+        self._monitoring = None
 
 
     def get_session(self):

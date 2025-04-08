@@ -17,7 +17,7 @@ setup(
     package_data={'': ['version.config']},
     install_requires=[
         'Flask==2.3.2',
-        'TM1py==2.0.4',
+        'TM1py==2.1',
         'PyJWT==2.4.0',
         'requests==2.32.3',
         'numpy==2.2.3',
