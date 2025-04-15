@@ -26,7 +26,7 @@ setup(
         'matplotlib==3.10.1',
         'PyYaml==6.0',
         'xlrd==2.0.1',
-        'openpyxl==3.0.10',
+        'openpyxl==3.1.5',
         'json_logging==1.3.0',
         'flask_talisman==1.1.0',
         'Flask-APScheduler==1.12.4',
