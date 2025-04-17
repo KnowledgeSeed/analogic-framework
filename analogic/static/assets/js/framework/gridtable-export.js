@@ -130,7 +130,7 @@ const GridTableExport = {
                 let cell = worksheet.getCell(excelRow, excelCol);
 
                 const valueToParse = cellObj?.title ?? "";
-                const isEditable = cellObj?.editable ?? true;
+                const isEditable = cellObj?.editable ?? false;
 
                 const parsedObject = GridTableExport.parseValue(valueToParse);
                 const finalCellValue = parsedObject.value;
