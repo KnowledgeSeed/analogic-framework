@@ -1,7 +1,3 @@
-/* global app, Auth, Doc, El, Pivot, QB, Repository, Sortable, Utils, Widget, WidgetValue */
-
-'use strict';
-
 class PivotTableWidget extends Widget {
 
     getHtml() {
@@ -353,16 +349,14 @@ class PivotTableWidget extends Widget {
         this.getPivotTable();
     }
 
-    selectorTreeItemClicked(e, callback) {
+   selectorTreeItemClicked(e, callback) {
         this.removeDuplicatedSelectorTreeCols = !e.isTrigger;
 
         let clickedPart = $(e.target), item = $(e.currentTarget), col = item.parent().parent(), colType = col.data('type'), isSelectedBySubsetCheckbox = null, value = item.data('name'), p;
 
         if ('element' === colType) {
             this.elementClicked(item, col);
-
             this.adjustSelectorTreeSaveBtnVisibility();
-
             return;
         } else if (clickedPart.hasClass('icon-check-on') || clickedPart.hasClass('icon-check-off') || clickedPart.hasClass('icon-check-intermediate')) {
             isSelectedBySubsetCheckbox = this.subsetCheckboxClicked(clickedPart, item);
@@ -370,7 +364,6 @@ class PivotTableWidget extends Widget {
             this.resetSelectorTreeSelections();
         } else if (clickedPart.hasClass('icon-trash')) {
             this.removeSubset(value);
-
             return;
         }
 
@@ -395,7 +388,6 @@ class PivotTableWidget extends Widget {
 
         this.adjustSelectorTreeSaveBtnVisibility();
     }
-
     elementClicked(item, col) {
         const span = item.children().eq(0).toggleClass('icon-check-off icon-check-on');
         const cols = this.getSelectorTreeColumns(), subsetItemCheckInfo = col.prev().children('.ks-pivot-tag-add-col-content').children('.ks-on').children().eq(0).removeClass();
@@ -512,9 +504,9 @@ class PivotTableWidget extends Widget {
         }
     }
 
-    renderNextSelectorTreeLevel(nextLevelData, cols, callback) {
+     renderNextSelectorTreeLevel(nextLevelData, cols, callback) {
         const types = ['dimension', 'hierarchy', 'subset', 'element'], i = cols ? cols.length : 0, children = nextLevelData.children;
-        const isCheckableCol = (i > 1), isElementCol = (3 === i), privateSubsets = nextLevelData.privateSubsets;
+        const isCheckableCol = (i > 1), isElementCol = (3 === i), privateSubsets = nextLevelData.privateSubsets || [];
         const aliasAttrName = isElementCol ? this.getSelectedAliasAttributeName(cols.eq(0).data('value'), cols.eq(1).data('value'), cols.eq(2).data('value')) : false;
 
         let el, name, displayName, isSubsetSelected, defaultSubsetItem = '', h = '', g = '<div data-type="' + types[i] + '" class="ks-pivot-tag-add-col ' + (isCheckableCol ? 'checkable-col' : '') + '"><div class="ks-pivot-add-tag-search-holder"><div class="ks-pivot-add-tag-search"><span class="icon-search"></span><input type="text" placeholder="Search..."></div></div><div class="ks-pivot-tag-add-col-content"><div class="ks-pivot-tag-add-item title-item">' + (isElementCol ? ('<span id="pivotElementsCheckbox"></span>') : '') + this.selectorTreeColNames[i] + (isElementCol ? '<span class="icon-aa"><div class="ks-pivot-table-presets-dropdown"></div></span>' : '') + '</div>';
@@ -534,16 +526,13 @@ class PivotTableWidget extends Widget {
 
                 if (isElementCol) {
                     name = el[0];
-
-                    displayName = (aliasAttrName ? (name + ' (' + el[aliasAttrName] + ')') : name);
-
-                    check = '<span class="icon-check-' + (el.on || isSubsetSelected ? 'on' : 'off') + '"></span>';
+                    let aliasValue = el[aliasAttrName] || '';
+                    displayName = aliasAttrName && aliasValue ? (name + ' (' + aliasValue + ')') : name;
+                    check = '<span class="icon-check-' + (el.on || (isSubsetSelected === true) ? 'on' : 'off') + '"></span>';
                 } else {
                     displayName = name;
-
                     if (name === this.lastSelectionSubset) {
                         defaultSubsetItem = '<div class="ks-pivot-tag-add-item" data-name="' + name + '"><span class="' + (el.checkboxClass || 'icon-check-off') + '"></span><span class="icon-cursor"></span>' + this.lastSelectionDisplayName + chevron + '<span style="display: none;" class="icon-trash"></span></div>';
-
                         continue;
                     } else if (privateSubsets.includes(name)) {
                         c = 'person-outline';
@@ -551,10 +540,8 @@ class PivotTableWidget extends Widget {
                     } else {
                         c = 'globe-lines';
                     }
-
                     check = '<span class="' + (el.checkboxClass || 'icon-check-off') + '"></span><span class="icon-' + c + '"></span>';
                 }
-
                 h += '<div class="ks-pivot-tag-add-item" data-name="' + Utils.htmlEncode(name) + '">' + check + displayName + del + chevron + '</div>';
             }
         } else {
@@ -578,13 +565,15 @@ class PivotTableWidget extends Widget {
                 for (j = cols.length - 1; j > i; --j) {
                     cols.eq(j).remove();
                 }
+            } else {
+                j = cols.length - 1;
             }
 
             if (isElementCol) {
-                this.adjustElementColumnCheckInfo(col.next());
+                this.adjustElementColumnCheckInfo(cols.eq(j));
             }
 
-            if ('undefined' !== typeof isSubsetSelected) {
+            if (typeof isSubsetSelected !== 'undefined') {
                 this.adjustElementsSelectivityMetaData(cols, isSubsetSelected);
             }
 
@@ -594,22 +583,30 @@ class PivotTableWidget extends Widget {
                 callback();
             } else if (1 === this.subsetMergeSaveStatus) {
                 this.subsetMergeSaveStatus = 2;
-                this.getSelectorTreeColumns().eq(2).children('.ks-pivot-tag-add-col-content').children('[data-name="' + this.newSubsetName + '"]').children().eq(0).trigger('click');
+                let newItem = this.getSelectorTreeColumns().eq(2).children('.ks-pivot-tag-add-col-content').children('[data-name="' + this.newSubsetName + '"]');
+                if (newItem.length) {
+                    newItem.children('span').eq(0).trigger('click');
+                } else {
+                    this.subsetMergeSaveStatus = 0;
+                    this.closePopup();
+                    app.popup.show('Error displaying temporary subset for view.', 400);
+                }
             } else if (2 === this.subsetMergeSaveStatus) {
                 this.subsetMergeSaveStatus = 0;
                 this.doSaveCard();
             } else if (this.lastClickedSelectorTreeItem) {
-                el = cols.filter('[data-type="' + this.lastClickedSelectorTreeItem.type + '"]').children('.ks-pivot-tag-add-col-content').children('[data-name="' + this.lastClickedSelectorTreeItem.name + '"]');
-
-                if (!el.hasClass('ks-on')) {
-                    el.trigger('click');
+                el = cols.filter('[data-type="' + this.lastClickedSelectorTreeItem.col + '"]').children('.ks-pivot-tag-add-col-content').children('[data-name="' + this.lastClickedSelectorTreeItem.name + '"]');
+                 if (!el.hasClass('ks-on')) {
+                     el.trigger('click');
+                 } else if (cols.length < 4 && 'subset' === this.lastClickedSelectorTreeItem.col) {
+                    this.showNextSelectorTreeLevel();
                 }
             }
-
-            cols.eq(j).children().eq(0).find('input').focus();
+             if (cols.length > i) {
+                cols.eq(j).children().eq(0).find('input').focus();
+            }
         });
     }
-
     selectorTreeColorClicked(e, doNotOpen) {
         if (e.hasClass('ks-pivot-tag-color-dropdown-chooser-item')) {
             const hex = e.data('hex');
@@ -626,12 +623,13 @@ class PivotTableWidget extends Widget {
         }
     }
 
-    selectorTreeViewBtnClicked() {
+     selectorTreeViewBtnClicked() {
         if (this.selectorTreeViewBtn.hasClass('disabled')) {
             return;
         }
 
         let c = this.getSelectorTreeColumns().eq(2).children('.ks-pivot-tag-add-col-content').children(), f = c.eq(1);
+
 
         if ((this.lastSelectionSubset !== f.data('name') || !f.has('.icon-check-on').length) && (1 === c.has('.icon-check-on').length)) {
             this.saveCard();
@@ -641,9 +639,8 @@ class PivotTableWidget extends Widget {
 
         this.subsetMergeSaveStatus = 1;
 
-        this.doSaveAsNewSubset(this.lastSelectionSubset);
+        this.doSaveAsNewSubset(this.lastSelectionSubset, false);
     }
-
     saveCard() {
         if (this.selectorTreeSaveBtn.hasClass('disabled')) {
             return;
@@ -821,43 +818,76 @@ class PivotTableWidget extends Widget {
         }
     }
 
-    saveAsNewSubset() {
+saveAsNewSubset() {
         this.subsetMergeSaveStatus = 1;
 
-        this.popup = $('<div class="ks-pivot ks-pivot-tag-add-popup"><h3>Save as New Subset</h3><label>Subset Title</label><input type="text"><div class="ks-pivot-tag-add-popup-button-holder"><a class="ks-pivot-btn btn-blue-light">Cancel</a><a data-action="save" class="ks-pivot-btn btn-blue">Save</a></div></div>');
+        this.popup = $(`
+            <div class="ks-pivot ks-pivot-tag-add-popup">
+                <h3>Save as New Subset</h3>
+                <label>Subset Title</label>
+                <input type="text">
+                <div class="ks-pivot-popup-check-holder">
+                    <span class="icon-check off" style="color: #1d7bff;"></span>This Subset is Public
+                </div>
+                <div class="ks-pivot-tag-add-popup-button-holder">
+                    <a class="ks-pivot-btn btn-blue-light">Cancel</a>
+                    <a data-action="save" class="ks-pivot-btn btn-blue">Save</a>
+                </div>
+            </div>
+        `);
 
         this.popup.on('click', 'a', e => {
             e = $(e.currentTarget);
 
             if ('save' === e.data('action')) {
-                const input = e.parent().parent().children('input'), newSubsetName = input.val().trim();
+                const input = this.popup.find('input');
+                const newSubsetName = input.val().trim();
+                const isPublicCheckbox = this.popup.find('.ks-pivot-popup-check-holder .icon-check');
+                const isPublic = !isPublicCheckbox.hasClass('off');
 
                 input.toggleClass('error', !newSubsetName);
 
                 if (newSubsetName) {
-                    const cols = this.getSelectorTreeColumns(), dim = cols.eq(0).data('value'), hier = cols.eq(1).data('value'), d = this.tree.children[dim].children[hier], m = newSubsetName.toLowerCase();
+                    const cols = this.getSelectorTreeColumns();
+                    const dim = cols.eq(0).data('value');
+                    const hier = cols.eq(1).data('value');
+                    const hierData = this.tree.children[dim].children[hier];
+                    const lowerNewName = newSubsetName.toLowerCase();
+                    let existingName = null;
+                    let isOverwrite = false;
 
-                    let i = d.privateSubsets.map(e => e.toLowerCase()).indexOf(m), n = d.privateSubsets[i], j = Object.keys(d.children).map(e => e.toLowerCase()).indexOf(m);
-
-                    if (n) {
-                        input.remove();
-
-                        this.popup.children('label').html('There is an existing private subset with the name "' + n + '".<br>Would you like to owerwrite it with the new selection?');
-
-                        this.popup.find('a').eq(1).on('click', e => this.doSaveAsNewSubset(n, Utils.stopEvent(e)));
-
-                        return;
-                    } else if (-1 !== j) {
-                        input.remove();
-
-                        this.popup.find('a').eq(1).remove();
-
-                        this.popup.children('label').html('There is an existing public subset with the same name!<br>You can not overwrite public subsets!').css('color', 'red');
-
-                        return;
+                    if (isPublic) {
+                        const publicSubsets = Object.keys(hierData.children).filter(name => !hierData.privateSubsets.includes(name) && name !== this.lastSelectionSubset);
+                        const existingPublicIndex = publicSubsets.map(s => s.toLowerCase()).indexOf(lowerNewName);
+                        if (existingPublicIndex > -1) {
+                            input.remove();
+                            this.popup.find('label').html('A Public Subset with this name already exists.<br>Public subsets cannot be overwritten here.').css('color', 'red');
+                            this.popup.find('a[data-action="save"]').remove();
+                             this.popup.find('.ks-pivot-popup-check-holder').remove();
+                            return;
+                        }
+                    } else {
+                        const existingPrivateIndex = hierData.privateSubsets.map(s => s.toLowerCase()).indexOf(lowerNewName);
+                        if (existingPrivateIndex > -1) {
+                            existingName = hierData.privateSubsets[existingPrivateIndex];
+                            isOverwrite = true;
+                        }
                     }
 
-                    this.doSaveAsNewSubset(newSubsetName);
+
+                    if (isOverwrite) {
+                        input.remove();
+                        this.popup.find('.ks-pivot-popup-check-holder').remove();
+                        this.popup.children('label').html(`There is an existing private subset named "${existingName}".<br>Would you like to overwrite it with the new selection?`);
+                        this.popup.find('a').eq(1).text('Overwrite').off('click').on('click', ev => {
+                            Utils.stopEvent(ev);
+                            this.doSaveAsNewSubset(existingName, isPublic);
+                        });
+                        return;
+                    } else {
+                        this.doSaveAsNewSubset(newSubsetName, isPublic);
+                    }
+
                 } else {
                     return;
                 }
@@ -868,27 +898,42 @@ class PivotTableWidget extends Widget {
             this.closePopup();
         });
 
+        this.popup.on('click', '.ks-pivot-popup-check-holder', e => {
+            $(e.currentTarget).find('span').toggleClass('off');
+        });
+
+
         this.showPopup(() => this.popup.find('input').focus());
     }
 
-    doSaveAsNewSubset(newSubsetName) {
+    doSaveAsNewSubset(newSubsetName, isPublic) {
         const o = this.options;
+        const cols = this.getSelectorTreeColumns();
+        const dimName = cols.eq(0).data('value');
+        const hierName = cols.eq(1).data('value');
 
-        newSubsetName = (o.subsetPrefix || '') + newSubsetName + (o.subsetSuffix || '');
+        const requestOptions = { ...o, isPublic: isPublic };
 
-        const cols = this.getSelectorTreeColumns(), d = {cube_name: this.cubeName, dimension_name: cols.eq(0).data('value'), hierarchy_name: cols.eq(1).data('value'), subset_name: newSubsetName, options: JSON.stringify(o)};
+        const d = {
+            cube_name: this.cubeName,
+            dimension_name: dimName,
+            hierarchy_name: hierName,
+            subset_name: newSubsetName,
+            options: JSON.stringify(requestOptions)
+        };
 
-        this.newSubsetName = newSubsetName;
+        this.newSubsetName = (this.subsetMergeSaveStatus === 1 && newSubsetName === this.lastSelectionSubset) ? this.lastSelectionSubset : newSubsetName;
+        this.newSubsetIsPublic = isPublic;
 
-        let i, c, el, elements, subset, subsets = this.tree.children[d.dimension_name].children[d.hierarchy_name].children, elementNames = [];
+        let i, c, el, elements, subset, subsets = this.tree.children[dimName].children[hierName].children, elementNames = [];
 
         for (subset in subsets) {
-            c = subsets[subset].checkboxClass;
-            if ('icon-check-on' === c || 'icon-check-intermediate' === c) {
+            if (!subsets[subset].checkboxClass) continue;
+
+            if (subsets[subset].checkboxClass.includes('icon-check-on') || subsets[subset].checkboxClass.includes('icon-check-intermediate')) {
                 elements = subsets[subset].children;
                 for (i in elements) {
                     el = elements[i];
-
                     if (el.on) {
                         elementNames.push(el[0]);
                     }
@@ -896,9 +941,17 @@ class PivotTableWidget extends Widget {
             }
         }
 
-        d.element_names = $.unique(elementNames);
+        d.element_names = $.uniqueSort(elementNames);
 
-        Pivot.call({data: d}).then(subsetData => this.reloadSubsetsInSelectorTree(cols, d, subsetData));
+
+        Pivot.call({ data: d })
+            .then(subsetData => this.reloadSubsetsInSelectorTree(cols, d, subsetData))
+            .catch(err => {
+                 app.popup.show('Error saving subset.', 400);
+                 console.error("Error in doSaveAsNewSubset:", err);
+                 this.subsetMergeSaveStatus = 0;
+                 this.closePopup();
+            });
     }
 
     removeSubset(subset) {
@@ -934,15 +987,34 @@ class PivotTableWidget extends Widget {
     }
 
     reloadSubsetsInSelectorTree(cols, selectedData, subsetData) {
+        const dimName = selectedData.dimension_name;
+        const hierName = selectedData.hierarchy_name;
+
+        this.tree.children[dimName].children[hierName] = { children: {} };
+
+        this.addToNextLevelChildren(this.tree.children[dimName].children[hierName], subsetData.children, subsetData.data);
+
         cols.slice(2).remove();
 
-        this.tree.children[selectedData.dimension_name].children[selectedData.hierarchy_name] = {children: {}};
-
-        this.addToNextLevelChildren(this.tree.children[selectedData.dimension_name].children[selectedData.hierarchy_name], subsetData.children, subsetData.data);
-
-        this.renderNextSelectorTreeLevel(this.tree.children[selectedData.dimension_name].children[selectedData.hierarchy_name], cols.slice(0, 2));
+        this.renderNextSelectorTreeLevel(this.tree.children[dimName].children[hierName], cols.slice(0, 2));
 
         this.closePopup();
+
+         if (this.subsetMergeSaveStatus === 1 && this.newSubsetName === this.lastSelectionSubset) {
+         } else if (this.subsetMergeSaveStatus === 1) {
+              let newSubsetCol = this.getSelectorTreeColumns().eq(2);
+              let newItem = newSubsetCol.children('.ks-pivot-tag-add-col-content').children('[data-name="' + this.newSubsetName + '"]');
+
+              if (newItem.length) {
+                   if (!this.newSubsetIsPublic) {
+                       newSubsetCol.attr('data-private', true).data('private', true);
+                   } else {
+                        newSubsetCol.attr('data-private', false).data('private', false);
+                   }
+                  newItem.children('span').eq(0).trigger('click');
+              }
+             this.subsetMergeSaveStatus = 0;
+         }
     }
 
     showPopup(callback) {
@@ -1073,7 +1145,7 @@ class PivotTableWidget extends Widget {
         });
     }
 
-    savePreset() {
+savePreset() {
         let id = this.presetId, d = this.presets[id] || {}, isPublic = 'Public' === d.type;
 
         this.popup = $('<div class="ks-pivot ks-pivot-tag-add-popup"><h3>Please set the Preset name a visibility</h3><div class="ks-pivot-add-tag-search"><input value="' + (d.name || '') + '" type="text" placeholder="The Preset name..."></div><div class="ks-pivot-popup-check-holder"><span class="icon-check' + (isPublic ? '' : ' off') + '" style="color: #1d7bff;"></span>The Preset is Public</div><div class="ks-pivot-tag-add-popup-button-holder"><a class="ks-pivot-btn btn-blue-light">Cancel</a><a class="ks-pivot-btn btn-blue">Save</a></div></div>');
@@ -1088,7 +1160,9 @@ class PivotTableWidget extends Widget {
             } else {
                 this.closePopup();
             }
-        }).on('click', '.ks-pivot-popup-check-holder', e => $(e.currentTarget).find('span').toggleClass('off'));
+        }).on('click', '.ks-pivot-popup-check-holder', e => {
+            $(e.currentTarget).find('span').toggleClass('off');
+        });
     }
 
     doSavePreset(presetName, isPublic) {
@@ -1096,41 +1170,38 @@ class PivotTableWidget extends Widget {
 
         if (!presetName) {
             app.popup.show('Please give a Preset name to save.', 300);
-
             return;
         }
 
         for (i = 0; i < p.length; ++i) {
             j = p[i];
-
             if (j.name === presetName && j.type === t) {
                 if (j.isOwner) {
                     k = i;
                 } else {
-                    f = true;
+                    if (isPublic) {
+                        f = true;
+                    }
                 }
             }
         }
 
         if (isPublic && f) {
             app.popup.show('A Public Preset with the same name "' + presetName + '" already exists.<br>Please change the name or set the visibility to Private.', 550);
-
             return;
         } else if (null === k) {
-            k = i;
+            k = p.length;
             p[k] = {id: ''};
         }
 
         for (j = 0; j < 3; ++j) {
-            d[j] = this.holders.eq(j).children('.ks-pivot-table-tag').map((i, e) => {
-                e = $(e);
-
-                return {...e.data(), index: e.data('index') ?? 0, name: e.find('h3').html(), title: e.find('h4').html()};
+            d[j] = this.holders.eq(j).children('.ks-pivot-table-tag').map((idx, el) => {
+                let card = $(el);
+                return {...card.data(), index: card.data('index') ?? 0, name: card.find('h3').html(), title: card.find('h4').html()};
             }).get();
         }
 
         d[j] = this.expandedCollapsedMembers;
-
         d[++j] = this.suppressOptions;
 
         p[k].data = d;
@@ -1140,9 +1211,14 @@ class PivotTableWidget extends Widget {
 
         this.presetId = k;
 
-        f = {pValue: d, pID: p[k].id, pName: presetName, pType: p[k].type, pWidgetID: this.id};
+        let processParams = {pValue: d, pID: p[k].id, pName: presetName, pType: p[k].type, pWidgetID: this.id};
 
-        Pivot.call({data: {options: JSON.stringify({process: 'zSYS Analogic Save Pivot Preset', processParams: f, widgetId: this.id})}}).then(r => this.saveOrDeletePresetFinished(r));
+        Pivot.call({data: {options: JSON.stringify({process: 'zSYS Analogic Save Pivot Preset', processParams: processParams, widgetId: this.id})}})
+            .then(r => this.saveOrDeletePresetFinished(r))
+            .catch(err => {
+                 app.popup.show('Error communicating with server to save preset.', 400);
+                 console.error("Error saving preset:", err);
+            });
     }
 
     saveOrDeletePresetFinished(r) {
@@ -1490,8 +1566,6 @@ class PivotTableWidget extends Widget {
 
         L('CELLS COUNT: ' + cc);
 
-        // ROW HEADER
-
         for (i = 0; i < rowLen; ++i) {
             row = rows[i];
 
@@ -1581,8 +1655,6 @@ class PivotTableWidget extends Widget {
             totalColspan += r;
         }
 
-
-        // COL HEADER
 
         for (i = 0; i < colLen; ++i) {
             row = cols[i];
@@ -1710,8 +1782,6 @@ class PivotTableWidget extends Widget {
                 h += '</tr>';
             }
         }
-
-        // TABLE
 
         k = 0;
         v = [];
@@ -1995,7 +2065,6 @@ class PivotTableWidget extends Widget {
 
         let body = '{"Ordinal":' + this.getOrdinalOfCell(p) + ',"Value": \"' + Utils.convertValueToPost(i.val()) + '\"}';
 
-        //Todo add source
 
         Auth.getAjaxRequest(QB.getUrl(url) + '&server=true', body, 'PATCH', this.id)
             .then(() => p.addClass('ok'))
@@ -2106,4 +2175,3 @@ class PivotTableWidget extends Widget {
         L(title + ' IN: ' + ((performance.now() - t0) / 1000) + ' seconds');
     }
 }
-;

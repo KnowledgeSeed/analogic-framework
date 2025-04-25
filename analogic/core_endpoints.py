@@ -1,9 +1,11 @@
 from analogic.endpoint import AnalogicEndpoint
 from analogic.authentication_provider import get_authentication_provider, endpoint_login_required
 from analogic.multi_authentication_provider import get_multi_authentication_provider, is_multi_authentication_provider
-from flask import request, redirect, render_template, jsonify
+from flask import request, redirect, render_template, jsonify, Response, current_app
 from functools import wraps
 from analogic.exceptions import AnalogicTM1ServiceException
+
+import traceback
 
 core_endpoints = AnalogicEndpoint('core_endpoints', __name__)
 
@@ -123,7 +125,21 @@ def clear_cache():
 
 @core_endpoints.analogic_endpoint_route('/pivot', methods=['GET', 'POST'])
 def pivot():
-    return get_authentication_provider().pivot()
+    try:
+        response = get_authentication_provider().pivot()
+        return response
+    except IndexError as ie:
+        current_app.logger.error(f"IndexError during pivot export: {ie}\n{traceback.format_exc()}")
+        error_message = "Error generating report: Invalid data or configuration resulted in an index error. Please check your selections."
+        return jsonify({"error": error_message}), 400
+    except ValueError as ve:
+        current_app.logger.error(f"ValueError during pivot export: {ve}\n{traceback.format_exc()}")
+        error_message = f"Error generating report: Invalid value encountered ({ve}). Please check your data."
+        return jsonify({"error": error_message}), 400
+    except Exception as e:
+        current_app.logger.error(f"Unexpected error during pivot export: {e}\n{traceback.format_exc()}")
+        error_message = "An unexpected server error occurred while generating the report. Please try again later or contact support."
+        return jsonify({"error": error_message}), 500
 
 
 @core_endpoints.analogic_endpoint_route('/middleware', methods=['GET', 'POST'])

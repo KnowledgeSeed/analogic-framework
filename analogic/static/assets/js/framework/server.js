@@ -1,4 +1,4 @@
-/* global app, Auth, El, Loader, QB, Repository, Utils, Widgets */
+/* global app, Auth, El, Loader, QB, Repository, Utils, Widgets, Api */
 
 Server = {};
 Server.download = (p, d = {}) => {
@@ -44,6 +44,49 @@ Server.download = (p, d = {}) => {
                 $('body').remove(a);
             }
         },
+        error: function (jqXHR, textStatus, errorThrown) {
+            const status = jqXHR.status;
+
+            if (status === 401 || status === 302) {
+                return;
+            }
+
+            let responseText = jqXHR.responseText || '';
+            let message = `An unexpected error occurred (${textStatus || 'Network Error'}). Please check your connection or try again.`;
+
+            if (status >= 400 && status < 600) {
+                try {
+                    const errorData = JSON.parse(responseText);
+                    if (errorData && (errorData.error || errorData.message)) {
+                        message = `Error (${status}): ${errorData.error || errorData.message}`;
+                    } else {
+                        message = `Error (${status}): ${responseText.substring(0, 200)}${responseText.length > 200 ? '...' : ''}`;
+                    }
+                } catch (e) {
+                    if (status >= 500) {
+                        message = `Server Error (${status}). Please try again later or contact support.`;
+                    } else {
+                        message = `Client Error (${status}). Please check your request or contact support.`;
+                    }
+                    if (responseText && responseText.length < 200 && !responseText.trim().startsWith('<')) {
+                        message += ` Server response: ${responseText}`;
+                    }
+                }
+                 if (typeof Api !== 'undefined' && Api.showPopup) {
+                    Api.showPopup(message, (status >= 500 ? 600 : 400));
+                 } else {
+                    console.error(message);
+                    alert(message);
+                 }
+            } else {
+                 if (typeof Api !== 'undefined' && Api.showPopup) {
+                    Api.showPopup(message, 400);
+                 } else {
+                    console.error(message);
+                    alert(message);
+                 }
+            }
+        },
         statusCode: {
             401: function () {
                 Auth.handle401();
@@ -69,7 +112,6 @@ Server.uploadImage = (context) => {
             }
         }
     }
-
 
     Loader.start();
 

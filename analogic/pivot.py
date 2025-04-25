@@ -1,3 +1,5 @@
+# In pivot.py
+
 import json
 import re
 import io
@@ -14,61 +16,103 @@ from analogic import authentication_provider
 def call(tm1: TM1Service, username, cube_name=None, dimension_name=None, hierarchy_name=None, subset_name=None, element_names=None, subset_name_to_remove=None, selected_cards=None, options=None, export_data=None):
     data = {}
     username = username.replace('\\', '')
+    children = []
 
-    # username = ''.join(ch for ch in username if ch.isalnum())
+    parsed_options = {}
+    if options and isinstance(options, str):
+        try:
+            parsed_options = orjson.loads(options)
+        except orjson.JSONDecodeError:
+            print(f"Warning: Could not parse options JSON: {options}")
+            pass
+    elif options and isinstance(options, dict):
+         parsed_options = options # Assume it's already a dict if not a string
 
     if selected_cards:
-        cell_limit = options.get('cellLimit', 1000000)
+        cell_limit = parsed_options.get('cellLimit', 1000000)
         selected_cards_data = json.loads(selected_cards)
-        mdx = create_mdx(options, cube_name, selected_cards_data, username)
+        mdx = create_mdx(parsed_options, cube_name, selected_cards_data, username)
         cell_count = tm1.cells.execute_mdx_cellcount(mdx)
         if cell_count < cell_limit:
             data = get_pivot_data(tm1, mdx, selected_cards_data, bool(export_data))
         if export_data:
             return export_to_excel(selected_cards_data, data, json.loads(export_data))
         return orjson.dumps({'mdx': mdx, 'cell_count': cell_count, 'data': data}), 200, {'Content-Type': 'application/json'}
+
     elif element_names:
-        subset_name = username + '_' + subset_name
-        new_subset = Subset(subset_name, dimension_name, hierarchy_name, None, None, element_names)
-        tm1.subsets.update_or_create(new_subset, True)
+        is_public_subset = parsed_options.get('isPublic', False)
+
+        if is_public_subset:
+            effective_subset_name = subset_name
+            is_private_for_api = False
+        else:
+            effective_subset_name = username + '_' + subset_name
+            is_private_for_api = True
+
+        new_subset = Subset(subset_name=effective_subset_name,
+                              dimension_name=dimension_name,
+                              hierarchy_name=hierarchy_name,
+                              elements=element_names)
+
+        tm1.subsets.update_or_create(subset=new_subset, private=is_private_for_api)
+
         hierarchy = get_hierarchy(tm1, dimension_name, hierarchy_name)
         data['defaultMember'] = hierarchy['DefaultMember']['Name']
         data['aliasAttributeNames'] = get_alias_attribute_names(hierarchy)
-        children, data['privateSubsets'] = get_public_and_private_subsets(tm1, dimension_name, hierarchy_name, username, options)
+        children, data['privateSubsets'] = get_public_and_private_subsets(tm1, dimension_name, hierarchy_name, username, parsed_options)
+
     elif subset_name_to_remove:
-        tm1.subsets.delete(username + '_' + subset_name_to_remove, dimension_name, hierarchy_name, True)
+        tm1.subsets.delete(username + '_' + subset_name_to_remove, dimension_name, hierarchy_name, private=True)
         hierarchy = get_hierarchy(tm1, dimension_name, hierarchy_name)
         data['defaultMember'] = hierarchy['DefaultMember']['Name']
         data['aliasAttributeNames'] = get_alias_attribute_names(hierarchy)
-        children, data['privateSubsets'] = get_public_and_private_subsets(tm1, dimension_name, hierarchy_name, username, options)
-    elif 'presetData' in options:
-        preset_data = options['presetData']
+        children, data['privateSubsets'] = get_public_and_private_subsets(tm1, dimension_name, hierarchy_name, username, parsed_options)
+
+    elif parsed_options and 'presetData' in parsed_options:
+        preset_data = parsed_options['presetData']
         return get_adjusted_slicer_preset_data_according_to_selected_indexes(tm1, preset_data, username)
-    elif 'process' in options:
-        p = options['processParams']
+
+    elif parsed_options and 'process' in parsed_options:
+        p = parsed_options['processParams']
         p['pUser'] = username
-        p['pValue'] = json.dumps(p['pValue'])
-        r = tm1.processes.execute_with_return(options['process'], **p)
+        if not isinstance(p.get('pValue'), str):
+             p['pValue'] = json.dumps(p.get('pValue', {}))
+        r = tm1.processes.execute_with_return(parsed_options['process'], **p)
         return orjson.dumps(r), 200, {'Content-Type': 'application/json'}
+
     elif dimension_name is None:
         children = tm1.cubes.get_dimension_names(cube_name)
-        data = get_presets_data(tm1, username, options['widgetId'], options.get('presetParams', {}))
+        data = get_presets_data(tm1, username, parsed_options.get('widgetId', ''), parsed_options.get('presetParams', {}))
+
     elif hierarchy_name is None:
         children = tm1.hierarchies.get_all_names(dimension_name)
+        data = {}
+
     elif subset_name is None:
         hierarchy = get_hierarchy(tm1, dimension_name, hierarchy_name)
         data['defaultMember'] = hierarchy['DefaultMember']['Name']
         data['aliasAttributeNames'] = get_alias_attribute_names(hierarchy)
-        children, data['privateSubsets'] = get_public_and_private_subsets(tm1, dimension_name, hierarchy_name, username, options)
+        children, data['privateSubsets'] = get_public_and_private_subsets(tm1, dimension_name, hierarchy_name, username, parsed_options)
+
     else:
-        # current_app.config['JSON_SORT_KEYS'] = False
-        children = []
-        is_private_subset = options['isPrivateSubset']
+        is_private_subset = parsed_options.get('isPrivateSubset', False)
+        effective_subset_name = subset_name
         if is_private_subset:
-            subset_name = username + '_' + subset_name
-        subset = tm1.subsets.get(subset_name, dimension_name, hierarchy_name, is_private_subset)
-        data['defaultAliasAttributeName'] = subset.alias
-        data['children'] = get_elements_with_aliases(tm1, subset, is_private_subset)
+            effective_subset_name = username + '_' + subset_name
+
+        try:
+            subset = tm1.subsets.get(subset_name=effective_subset_name,
+                                     dimension_name=dimension_name,
+                                     hierarchy_name=hierarchy_name,
+                                     private=is_private_subset)
+            data['defaultAliasAttributeName'] = subset.alias
+            data['children'] = get_elements_with_aliases(tm1, subset, is_private_subset)
+        except Exception as e:
+             print(f"Error getting subset elements for {effective_subset_name}: {e}")
+             data['defaultAliasAttributeName'] = ''
+             data['children'] = []
+
+
     return orjson.dumps({'children': children, 'data': data}, option=orjson.OPT_NON_STR_KEYS), 200, {'Content-Type': 'application/json'}
 
 
@@ -216,7 +260,6 @@ def create_mdx(options, cube_name, selected_cards_data, username):
                 m = '{DRILLDOWNMEMBER(' + m + ', ' + s + rep(e) + ']})}'
             else:
                 m = '{DRILLUPMEMBER(' + m + ', ' + s + rep(e) + ']})}'
-        # props += (', ' if i else '') + s + d['alias_attr_name'] + ']'
         mdx += (' * ' if i else '') + m
         i += 1
     mdx += ((' PROPERTIES ' + props) if props else ' ') + ' ON COLUMNS'
@@ -237,7 +280,6 @@ def create_mdx(options, cube_name, selected_cards_data, username):
                 m = '{DRILLDOWNMEMBER(' + m + ', ' + s + rep(e) + ']})}'
             else:
                 m = '{DRILLUPMEMBER(' + m + ', ' + s + rep(e) + ']})}'
-        # props += (', ' if i else '') + s + d['alias_attr_name'] + ']'
         mdx += (' * ' if i else '') + m
         i += 1
     if i:
@@ -297,7 +339,7 @@ Axes(
       )
     )
   )
-), 
+),
 Cells(
     $select={select_type},Updateable,Consolidated
 )""".replace('\n', '')
