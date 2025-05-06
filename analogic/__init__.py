@@ -6,6 +6,8 @@ from .authentication_provider import login_required
 from .authentication_provider import endpoint_login_required
 from .authentication_provider import AuthenticationProvider
 from .multi_authentication_provider import MultiAuthenticationProvider
+from .multi_authentication_provider import is_multi_authentication_provider
+from .multi_authentication_provider import get_multi_authentication_provider
 from .cam import Cam
 from .endpoint import AnalogicEndpoint
 from .loader import ClassLoader

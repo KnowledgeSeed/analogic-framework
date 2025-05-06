@@ -1,4 +1,4 @@
-from flask import session, current_app, send_file, request, jsonify, Response
+from flask import session, current_app, send_file, request, jsonify, Response, redirect, make_response
 from analogic.loader import ClassLoader
 import analogic.pivot as PivotApi
 from analogic.exceptions import AnalogicProxyException, AnalogicAccessDeniedException, AnalogicException, \
@@ -14,6 +14,7 @@ from functools import wraps
 import orjson
 import os
 from werkzeug.utils import secure_filename
+import base64
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
@@ -39,6 +40,16 @@ def login_required(f):
         auth_provider = args[0]
         if auth_provider.check_app_authenticated() is False:
             return auth_provider.get_authentication_required_response()
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+def login_required_redirect_index(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        auth_provider = args[0]
+        if auth_provider.check_app_authenticated() is False:
+            return redirect(auth_provider.get_setting().get_base_url())
         return f(*args, **kwargs)
 
     return decorated_function
@@ -96,6 +107,30 @@ class AuthenticationProvider(ABC):
 
     def get_navigation_parameters(self):
         return self.session_handler.get('navigation_parameters')
+
+    def pop_navigation_parameters(self):
+        navigation_parameters = self.get_navigation_parameters()
+        self.clear_navigation_parameters()
+        return navigation_parameters
+
+
+    @login_required_redirect_index
+    def handle_named_route(self, named_route, **kwargs):
+
+        if named_route not in self.get_setting().get_named_routes():
+            return "Not found", 404
+
+        parts = kwargs.get('sub_path', '').split("/")
+
+        result = {f"navigationParameter{i + 1}": part for i, part in enumerate(parts)}
+        result['page'] = named_route.replace('/', '')
+        result['sub_path'] = named_route + '/' + kwargs.get('sub_path', '')
+
+        self.session_handler.set('navigation_parameters', base64.b64encode(orjson.dumps(result)).decode('utf-8'))
+
+        response = self.index()
+
+        return make_response(response)
 
     def clear_navigation_parameters(self):
         self.session_handler.delete('navigation_parameters')
@@ -163,7 +198,8 @@ class AuthenticationProvider(ABC):
 
     def upload_image(self):
         try:
-            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'skin', 'images', 'upload')
+            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'skin', 'images',
+                                                'upload')
 
             file_num = int(request.form.get('fileNum', 0))
             file_name = request.form.get('fileName', '').rsplit('.', 1)[0]
@@ -206,7 +242,8 @@ class AuthenticationProvider(ABC):
 
     def list_images(self, folder_name):
         try:
-            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'skin', 'images', 'upload')
+            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'skin', 'images',
+                                                'upload')
 
             target_folder = images_upload_folder
             if folder_name:
@@ -225,7 +262,8 @@ class AuthenticationProvider(ABC):
 
     def delete_image(self, folder_name, file_name):
         try:
-            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'skin', 'images', 'upload')
+            images_upload_folder = os.path.join(self.get_setting().site_root, 'static', 'assets', 'skin', 'images',
+                                                'upload')
 
             target_folder = images_upload_folder
             if folder_name:
@@ -379,6 +417,9 @@ class AuthenticationProvider(ABC):
     def get_authentication_required_response(self):
         return Response('', 401)
 
+    def healthy(self):
+        return {'message': 'ok'}, 200, {'Content-Type': 'application/json'}
+
     def get_not_found_response(self):
         return 'Not found', 404, {'Content-Type': 'application/json'}
 
@@ -477,7 +518,8 @@ class AuthenticationProvider(ABC):
                 permissions = [str(x['Value']) for x in r['Cells']]
 
                 existing_permissions = self.session_handler.get(self.setting.get_permission_session_name())
-                existing_permissions_list = existing_permissions.split(',') if existing_permissions is not None and existing_permissions != '' else []
+                existing_permissions_list = existing_permissions.split(
+                    ',') if existing_permissions is not None and existing_permissions != '' else []
 
                 union = list(set(existing_permissions_list + permissions))
                 self.set_permissions(','.join(union))

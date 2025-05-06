@@ -15,6 +15,7 @@
 <script src="{{ url_for('static', filename='assets/js/lib/nouislider.min.js') }}?v={{ cnf.version }}"></script>
 <script src="{{ url_for('static', filename='assets/js/lib/Sortable.min.js') }}?v={{ cnf.version }}"></script>
 <script src="{{ url_for('static', filename='assets/js/lib/jquery.richtext.min.js') }}?v={{ cnf.version }}"></script>
+<script src="{{ url_for('static', filename='assets/js/lib/exceljs.min.js') }}?v={{ cnf.version }}"></script>
 
 <script src="{{ url_for(cnf.blueprint_static, filename='assets/js/config' + cnf.get('auth_prov','') + '.js') }}?v={{ cnf.version }}"></script>
 <!-- end libs -->
@@ -51,11 +52,13 @@
 <script src="{{ url_for('static', filename='assets/js/framework/query-builder.js') }}?v={{ cnf.version }}"></script>
 <script src="{{ url_for('static', filename='assets/js/framework/server.js') }}?v={{ cnf.version }}"></script>
 <script src="{{ url_for('static', filename='assets/js/framework/pivot.js') }}?v={{ cnf.version }}"></script>
+<script src="{{ url_for('static', filename='assets/js/framework/context-menu.js') }}?v={{ cnf.version }}"></script>
 <script src="{{ url_for('static', filename='assets/js/framework/extensions/authentication-provider.js') }}?v={{ cnf.version }}"></script>
 <script src="{{ url_for('static', filename='assets/js/framework/extensions/write-executor.js') }}?v={{ cnf.version }}"></script>
 <script src="{{ url_for('static', filename='assets/js/framework/extensions/page-render.js') }}?v={{ cnf.version }}"></script>
 <script src="{{ url_for('static', filename='assets/js/framework/extensions/app-initialization.js') }}?v={{ cnf.version }}"></script>
 <script src="{{ url_for('static', filename='assets/js/framework/extensions/url-parameters.js') }}?v={{ cnf.version }}"></script>
+<script src="{{ url_for('static', filename='assets/js/framework/gridtable-export.js') }}?v={{ cnf.version }}"></script>
 <!-- end framework -->
 
 <!-- widgets -->
@@ -108,8 +111,16 @@
 
 <script src="{{ url_for('static', filename='assets/js/widgets/horizontal-bar-chart.js') }}?v={{ cnf.version }}"></script>
 
+<script id="favicon-url-data" type="application/json">
+  {{ {
+    "faviconsFolder": url_for(cnf.blueprint_static, filename='assets/skin/images/favicons/')
+  } | tojson | safe }}
+</script>
+
 {% for asset_name in cnf.extension_js_asset_names %}
-    <script src="{{ url_for('extension_asset', asset_name=asset_name) }}&v={{ cnf.version }}"></script>
+    {% if 'excluding' not in asset_name %}
+        <script src="{{ url_for('extension_asset', asset_name=asset_name) }}&v={{ cnf.version }}"></script>
+    {% endif %}
 {% endfor %}
 
 <!-- end widgets -->

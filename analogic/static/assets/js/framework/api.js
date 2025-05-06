@@ -706,4 +706,8 @@ Api.triggerWidgetEvent = function triggerWidgetEvent(widgetId, eventName) {
     }
     widget[triggerHandlerFunctionName]();
     return true;
-}
+};
+
+Api.navigateAppTo = function navigateAppTo(browser_url) {
+    return Api.openPage(Utils.changeUrlState(browser_url));
+};

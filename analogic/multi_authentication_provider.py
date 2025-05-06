@@ -1,10 +1,15 @@
 from analogic.authentication_provider import AuthenticationProvider
 from analogic.multi_setting import MultiSettingManager
-from flask import current_app, request
+from flask import current_app, request, jsonify
 from analogic.signals import logged_in
 from analogic.multi_authentication_provider_interface import MultiAuthenticationProviderInterface
 from rich.prompt import Prompt
 
+def is_multi_authentication_provider():
+    return current_app.is_multi_authentication_provider()
+
+def get_multi_authentication_provider():
+    return current_app.get_multi_authentication_provider()
 
 class MultiAuthenticationProvider(AuthenticationProvider):
 
@@ -22,11 +27,18 @@ class MultiAuthenticationProvider(AuthenticationProvider):
 
             if isinstance(child_auth_prov, MultiAuthenticationProviderInterface):
 
+                child_auth_provider_instance_name = '/' + self.setting.get_instance() + '/' + name
+
                 if name != MultiSettingManager.PRIMARY_AUTHENTICATION_PROVIDER_NAME:
-                    current_app.register_analogic_url_rules('/' + self.setting.get_instance() + '/' + name)
+                    current_app.register_analogic_url_rules(child_auth_provider_instance_name)
 
                 if current_app.initialize_auth_providers is True:
                     child_auth_prov.initialize()
+
+                    if name != MultiSettingManager.PRIMARY_AUTHENTICATION_PROVIDER_NAME:
+                        named_routes = child_auth_prov.get_setting().get_named_routes()
+
+                        current_app.register_named_routes(child_auth_provider_instance_name, child_auth_prov, named_routes)
 
                 self.authentication_providers[name] = child_auth_prov
 
@@ -110,9 +122,21 @@ class MultiAuthenticationProvider(AuthenticationProvider):
         return self.get_authentication_provider_by_request()._create_request_with_authenticated_user(url, method, mdx,
                                                                                                      headers, cookies,
                                                                                                      decode_content)
+    def handle_named_route(self, named_route, **kwargs):
+        return self.get_authentication_provider_by_request().handle_named_route(named_route, **kwargs)
 
     def _extend_login_session(self):
         self.get_authentication_provider_by_request()._extend_login_session()
+
+    def healthy(self):
+        responses = {}
+        status_code = 200
+        for name, registered_auth_prov in self.authentication_providers.items():
+            response = registered_auth_prov.healthy()
+            if response[1] != 200:
+                status_code = 500
+            responses[name] = response[0] if  isinstance(response[0], dict) else response[0].json
+        return jsonify(responses), status_code
 
     def get_tm1_service(self):
         return self.get_authentication_provider_by_request().get_tm1_service()

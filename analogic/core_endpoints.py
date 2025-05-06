@@ -1,10 +1,14 @@
 from analogic.endpoint import AnalogicEndpoint
 from analogic.authentication_provider import get_authentication_provider, endpoint_login_required
-from flask import request, redirect, render_template, jsonify
+from analogic.multi_authentication_provider import get_multi_authentication_provider, is_multi_authentication_provider
+from flask import request, redirect, render_template, jsonify, Response, current_app
 from functools import wraps
 from analogic.exceptions import AnalogicTM1ServiceException
 
+import traceback
+
 core_endpoints = AnalogicEndpoint('core_endpoints', __name__)
+
 
 def upload_admin_permission_required(f):
     @wraps(f)
@@ -27,15 +31,16 @@ def upload_admin_permission_required(f):
 
     return decorated_function
 
+
 def _has_upload_admin_permission(auth_provider, setting):
     user_admin_permissions = setting.get_upload_admin_permissions()
     logged_in_user_name = auth_provider.get_logged_in_user_name()
     user_admin_users = setting.get_upload_admin_users()
 
     has_permission = (
-        len(user_admin_permissions) > 0
-        and (auth_provider.check_permission(user_admin_permissions)
-             or logged_in_user_name in user_admin_users)
+            len(user_admin_permissions) > 0
+            and (auth_provider.check_permission(user_admin_permissions)
+                 or logged_in_user_name in user_admin_users)
     )
     return has_permission
 
@@ -55,16 +60,10 @@ def index():
     return response
 
 
-@core_endpoints.analogic_endpoint_route('/navigation_parameters', methods=['GET'])
-def navigation_parameters():
-    authentication_provider = get_authentication_provider()
-
-    navigation_parameters = authentication_provider.get_navigation_parameters()
-
-    if navigation_parameters is not None:
-        authentication_provider.clear_navigation_parameters()
-
-    return {'navigation_parameters': navigation_parameters}, 200, {'Content-type': 'application/json'}
+@core_endpoints.analogic_endpoint_route('/healthy', methods=['GET'])
+def healthy():
+    authentication_provider = get_multi_authentication_provider() if is_multi_authentication_provider() else get_authentication_provider()
+    return authentication_provider.healthy()
 
 
 @core_endpoints.analogic_endpoint_route('/start_maintenance', methods=['GET', 'POST'])
@@ -126,22 +125,39 @@ def clear_cache():
 
 @core_endpoints.analogic_endpoint_route('/pivot', methods=['GET', 'POST'])
 def pivot():
-    return get_authentication_provider().pivot()
+    try:
+        response = get_authentication_provider().pivot()
+        return response
+    except IndexError as ie:
+        current_app.logger.error(f"IndexError during pivot export: {ie}\n{traceback.format_exc()}")
+        error_message = "Error generating report: Invalid data or configuration resulted in an index error. Please check your selections."
+        return jsonify({"error": error_message}), 400
+    except ValueError as ve:
+        current_app.logger.error(f"ValueError during pivot export: {ve}\n{traceback.format_exc()}")
+        error_message = f"Error generating report: Invalid value encountered ({ve}). Please check your data."
+        return jsonify({"error": error_message}), 400
+    except Exception as e:
+        current_app.logger.error(f"Unexpected error during pivot export: {e}\n{traceback.format_exc()}")
+        error_message = "An unexpected server error occurred while generating the report. Please try again later or contact support."
+        return jsonify({"error": error_message}), 500
 
 
 @core_endpoints.analogic_endpoint_route('/middleware', methods=['GET', 'POST'])
 def middleware():
     return get_authentication_provider().middleware()
 
+
 @core_endpoints.analogic_endpoint_route('/upload_image', methods=['POST'])
 @upload_admin_permission_required
 def upload_image():
     return get_authentication_provider().upload_image()
 
+
 @core_endpoints.analogic_endpoint_route('/list_images/<folder_name>', methods=['GET'])
 @upload_admin_permission_required
 def list_images(folder_name):
     return get_authentication_provider().list_images(folder_name)
+
 
 @core_endpoints.analogic_endpoint_route('/delete_image/<folder_name>/<file_name>', methods=['DELETE'])
 @upload_admin_permission_required

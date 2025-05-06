@@ -90,6 +90,7 @@ class ButtonWidget extends Widget {
         this.enabled = v.enabled;
         this.label = v.label;
         this.loadedData = data;
+        this.contextMenuEnabled = v.contextMenuEnabled;
     }
 
     reset() {
@@ -98,6 +99,7 @@ class ButtonWidget extends Widget {
         delete this.enabled;
         delete this.label;
         delete this.loadedData;
+        delete this.contextMenuEnabled;
     }
 
     getCssPrefix() {
@@ -189,6 +191,7 @@ class ButtonWidget extends Widget {
             iconWidth: this.getRealValue('iconWidth', d, false),
             isInfo: this.getRealValue('isInfo', d, false),//-
             label: this.getRealValue('label', d, ''),
+            contextMenuEnabled: this.getRealValue('contextMenuEnabled', d, false),
             paste: this.getRealValue('paste', d, false),//-
             skin: this.getRealValue('skin', d, 'standard'),
             url: this.getRealValue('url', d, false),//-
@@ -201,6 +204,27 @@ class ButtonWidget extends Widget {
         let v = this;
         if (v.enabled === false) {
             return;
+        }
+        if (this.contextMenuEnabled) {
+            section.off('contextmenu').on('contextmenu', (e) => {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                contextMenu.show($(e.currentTarget).find('.ks-button-inner'), [{
+                    key: 'openInNewTab', label: 'Open in new tab', action: () => {
+                        const element = $('<div>');
+                        element.data({
+                            action: 'contextMenuAction',
+                            id: v.options.id,
+                            actionName: 'openInNewTab'
+                        });
+                        Widget.doHandleSystemEvent(element, e);
+
+                        if (this.amIOnAGridTable()) {
+                            Widget.doHandleGridTableSystemEvent(element, e);
+                        }
+                    }
+                }], true);
+            });
         }
         if (!section.find('a').data('confirmmessage') && !section.find('a').data('confirmmessage2')) {
             return section.find('a').off('click').on('click', (e) => {

@@ -13,7 +13,7 @@ const Doc = $(document), El = {body: $('body')}, PageState = {current: '', previ
     Widgets = {infoData: {}},
     Api = {};
 
-let EventMap, Repository, WidgetConfig;
+let EventMap, Repository, WidgetConfig, FaviconUrl, contextMenu;
 
 app.handleAjaxError = (response, widgetId) => {
     const m = (response.responseJSON ? response.responseJSON.message : response.responseText);
@@ -45,6 +45,7 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
     Doc.ready(() => {
 
         app.clickEvent = Utils.isMobile() ? 'touchstart' : 'click touchstart';
+        contextMenu = new ContextMenu();
 
         let wc, i, j;
 
@@ -61,6 +62,8 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
                 }
             }
         }
+
+        FaviconUrl = Utils.parseJSONScript('favicon-url-data');
 
         QB.getUserData().then(start);
     }).on('touchstart', () => app.isTouched = true);
@@ -96,46 +99,70 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
 
         app.id = Utils.getRandomId();
 
-        let deferred = [];
+        const deferred = Extensions.appInitialization.map(ext => ext.execute());
 
-        Extensions.appInitialization.forEach(ext => deferred.push(ext.execute()));
-
-        $.when.apply($, deferred).then(() => {
-
+        $.when(...deferred).then(() => {
             app.checkScreenResolutionWarningDisplayed = false;
-
             initEvents();
-
             Widgets.systemValueGlobalCompanyProductPlanVersion = 'Budget';
 
-            Auth.getAjaxRequest('navigation_parameters', {}, 'GET').then((data) => {
-                let page = app.mainPage;
-                if (data.navigation_parameters) {
-                    let navigation_parameters = JSON.parse(atob(data.navigation_parameters));
+            let page = app.mainPage;
+            let data = {navigation_parameters: $('#navigation_parameters').val()};
 
-                    if (navigation_parameters.page) {
-                        page = navigation_parameters.page;
+            if (data.navigation_parameters) {
+                try {
+                    const decoded = atob(data.navigation_parameters);
+                    const navigationParameters = JSON.parse(decoded);
+
+                    if (navigationParameters.page) {
+                        page = navigationParameters.page;
                     }
-                    for (let key in navigation_parameters) {
+
+                    Object.entries(navigationParameters).forEach(([key, value]) => {
                         if (key !== 'page') {
-                            Widgets[key] = navigation_parameters[key];
+                            Widgets[key] = value;
                         }
+                    });
+
+                    if (navigationParameters.sub_path) {
+                        Utils.changeUrlState(navigationParameters.sub_path);
+                    } else {
+                        Utils.changeUrlState(navigationParameters.p_param ? app.mainPage : page);
                     }
+                } catch (error) {
+                    console.error("Failed to process navigation_parameters:", error.message);
                 }
-                Widgets[page].renderWidget().then(() => {
-                    Utils.checkScreenResolution();
-                    if (app.enableToolTips) {
-                        Utils.enableToolTips();
-                    }
-                });
-                PageState.current = page;
+            } else {
+                Utils.changeUrlState(page);
+            }
+
+            Widgets[page].renderWidget().then(() => {
+                Utils.checkScreenResolution();
+
+                if (app.enableToolTips) {
+                    Utils.enableToolTips();
+                }
+
             });
+
+            PageState.current = page;
         });
     }
 
 
     function initEvents() {
+
+        window.addEventListener("popstate", (event) => {
+            if (event.state && event.state.page) {
+                Api.openPage(event.state.page);
+            }
+        });
+
+        if (app.disableBeforeUnload) {
+            return;
+        }
         window.onbeforeunload = () => 'Logout';
+
     }
 
     function requestClipboarReadPermissionForFireFox() {

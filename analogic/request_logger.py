@@ -19,7 +19,7 @@ class RequestLogger:
     def get_request_log(self, journey_id=''):
         path = os.path.join(current_app.instance_path, 'logs', 'request_json.log')
         if os.path.exists(path):
-            with open(path, 'r') as f:
+            with open(path, 'r', encoding='utf-8') as f:
                 data = f.read()
                 data = data.split("}\n")
                 data = [d.strip() + "}" for d in data]

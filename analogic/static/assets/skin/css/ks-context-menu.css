@@ -1,0 +1,30 @@
+.ks-context-menu {
+    position: absolute;
+    width: 200px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 8px 0;
+    z-index: 1000;
+    min-width: 160px;
+}
+
+.ks-context-menu .ks-context-menu-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ks-context-menu .ks-context-menu-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+    margin: 2px 8px;
+    user-select: none;
+}
+
+.ks-context-menu .ks-context-menu-item:hover {
+    background-color: #f0f0f0;
+}

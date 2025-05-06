@@ -576,7 +576,8 @@ const Utils = {
         return value.includes('CAMID') ? value : value.replace(/\\/g, '/');
     },
     checkScreenResolution() {
-        if (!app.checkScreenResolutionWarningDisplayed && $('body').width() - 100 > window.innerWidth) {
+        let disabled = app.disableCheckResolutionWarning === true;
+        if (!app.checkScreenResolutionWarningDisplayed && disabled===false && $('body').width() - 100 > window.innerWidth) {
             Api.showPopup('Your current screen resolution is below the recommended 1920*1080. For optimal user experience please lower your browser zoom to 90% or 80%.');
             app.checkScreenResolutionWarningDisplayed = true;
         }
@@ -587,6 +588,7 @@ const Utils = {
     getNavigationUrl(params) {
         let url = window.location.href.split('?')[0];
         if (params) {
+            params['p_param'] = true;
             url += '?p=' + btoa(JSON.stringify(params));
         }
         return url;
@@ -658,6 +660,124 @@ const Utils = {
     },
     reloadApp() {
         window.location.reload();
+    },
+    getAppSubPathArray() {
+        let path = window.location.pathname.split('/').filter(s => s !== '');
+
+        while (path.length > 0 && path[path.length - 1] !== app.instance) {
+            path.pop();
+        }
+
+        return path;
+    },
+    getAppSubPath() {
+        let path = Utils.getAppSubPathArray();
+        return path.join('/');
+    },
+    getFullUrlForAjax(sub_url) {
+        if (sub_url.startsWith('http')) {
+            return sub_url;
+        }
+        if (Utils.isUrlNavigation()) {
+            return Utils.getInstanceUrl(sub_url);
+        }
+        return sub_url;
+    },
+    getInstanceUrl(sub_url) {
+
+        let path = Utils.getAppSubPathArray();
+
+        return [window.location.origin, ...path].join('/') + '/' + sub_url;
+    },
+    isUrlNavigation() {
+        let path = window.location.pathname.split('/').filter(s => s !== '');
+        return path[path.length - 1] !== (app.auth_prov && app.auth_prov !== 'primary' ? app.auth_prov : app.instance);
+    },
+    getAppProviderBasedUrl(url) {
+        if (!Utils.isUrlNavigation()) {
+            return url;
+        }
+        return (app.auth_prov && app.auth_prov != 'primary' ? app.auth_prov + '/' : '') + url;
+    },
+    changeUrlState(subPath) {
+        const cleanedSubPath = subPath.startsWith('/') ? subPath.slice(1) : subPath;
+        const appSubPath = Utils.getAppSubPath();
+        const parts = cleanedSubPath.split('/').filter(part => part !== '');
+        const page = parts[0];
+        const datasource = app.auth_prov && app.auth_prov !== 'primary' ? `${app.auth_prov}/` : '';
+
+        parts.slice(1).forEach((part, index) => {
+            Widgets[`navigationParameter${index + 1}`] = part;
+        });
+
+        const adjustedSubPath = cleanedSubPath.startsWith(app.mainPage) ? cleanedSubPath.slice(app.mainPage.length) : cleanedSubPath;
+
+        const basePath = appSubPath ? `/${appSubPath}` : '';
+        const finalUrl = `${basePath}/${datasource}${adjustedSubPath}`;
+
+        history.pushState({page}, "", finalUrl);
+
+        return page;
+    },
+    changePageTitleAndFavicon(title, favicon) {
+        Utils.changePageTitle(title);
+        Utils.changePageFavicon(favicon);
+    },
+    changePageFavicon(imageName) {
+        let $link = $("link[rel~='icon']");
+        if ($link.length === 0) {
+            $link = $("<link>", {rel: "icon"}).appendTo("head");
+        }
+        $link.attr("href", FaviconUrl.faviconsFolder + imageName);
+    },
+    changePageTitle(text) {
+        $('title').text(text);
+    },
+    parseJSONScript(id) {
+        const $el = $('#' + id);
+        if (!$el.length) return {};
+        try {
+            return JSON.parse($el.text());
+        } catch (err) {
+            console.error(`Json error "${id}" in:`, err);
+            return {};
+        }
+    },
+    setAutoPosition(floatingElement, anchor, forcedPosition = null, leftOffset = null) {
+        const w = $(window), winHeight = w.height(), winWidth = w.width(), height = floatingElement.outerHeight(),
+            width = floatingElement.outerWidth();
+        const rect = anchor[0].getBoundingClientRect(), anchorHeight = anchor.height(), anchorWidth = anchor.width(),
+            x = rect.x, y = rect.y, pos = {};
+
+        const spaces = [['left', x - width], ['right', winWidth - rect.right - width], ['top', y - height], ['bottom', winHeight - rect.bottom - height]].sort((a, b) => a[1] < b[1] ? 1 : -1);
+
+        let bestSpace = forcedPosition || spaces[0][0];
+
+        if ('bottom' === bestSpace) {
+            pos.left = x - (width - anchorWidth) / 2;
+            pos.top = rect.bottom;
+        } else if ('top' === bestSpace) {
+            pos.left = x - (width - anchorWidth) / 2;
+            pos.top = y - height;
+        } else if ('right' === bestSpace) {
+            pos.left = rect.right;
+            pos.top = y - Math.max(0, y + height + 10 - winHeight);
+        } else {
+            pos.left = x - width;
+            pos.top = y - Math.max(0, y + height + 10 - winHeight);
+        }
+
+        if (null !== leftOffset) {
+            pos.left = x - leftOffset;
+        }
+
+        let rightOffset = pos.left + width - winWidth;
+
+        if (rightOffset > 0) {
+            pos.left -= rightOffset;
+        }
+
+        return floatingElement.css(pos).prependTo($('body'));
     }
 };
 

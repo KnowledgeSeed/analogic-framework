@@ -1,5 +1,5 @@
 import os
-from flask import Flask, Blueprint, request, send_file, session, render_template
+from flask import Flask, Blueprint, request, send_file, session, render_template, current_app
 import typing as t
 
 from analogic.endpoint import AnalogicEndpoint
@@ -30,6 +30,11 @@ EXTENSIONS_DIR = 'extensions'
 EXTENSIONS_DIR_EXTRA = os.environ.get('EXTENSIONS_DIR_EXTRA', '')
 EXTENSIONS_EXTRA = [] if not os.environ.get('EXTENSIONS_EXTRA') else os.environ.get('EXTENSIONS_EXTRA').split(',')
 ALLOWED_EXTENSION_PREFIX = 'analogic_'
+
+def create_view_func(original_func, named_route):
+    def my_wrapped_function(**kwargs):
+        return original_func(named_route, **kwargs)
+    return my_wrapped_function
 
 
 class Analogic(Flask):
@@ -93,6 +98,27 @@ class Analogic(Flask):
         with open(path, 'w') as file:
             file.write(new_content)
 
+    def register_named_routes(self, instance, auth_provider, named_routes):
+        for named_route in named_routes:
+            self.add_url_rule( f"{instance if instance != '/default' else ''}/{named_route}/<path:sub_path>",
+                              f"{instance}_{named_route}",
+                              view_func=create_view_func(auth_provider.handle_named_route, named_route),
+                              provide_automatic_options=None,
+                              **{'methods': ['GET']}
+                              )
+            self.add_url_rule(f"{instance if instance != '/default' else ''}/{named_route}/",
+                              f"{instance}_{named_route}_1",
+                              view_func=create_view_func(auth_provider.handle_named_route, named_route),
+                              provide_automatic_options=None,
+                              **{'methods': ['GET']}
+                              )
+            self.add_url_rule(f"{instance if instance != '/default' else ''}/{named_route}",
+                              f"{instance}_{named_route}_2",
+                              view_func=create_view_func(auth_provider.handle_named_route, named_route),
+                              provide_automatic_options=None,
+                              **{'methods': ['GET']}
+                              )
+
     def register_analogic_url_rules(self, instance):
         for url_rule in self.endpoint_rules:
             self.add_url_rule(instance + url_rule['rule'],
@@ -137,8 +163,13 @@ class Analogic(Flask):
 
             self.register_analogic_url_rules(instance)
 
-            self.analogic_applications[blueprint.name] = self.create_authentication_provider(blueprint.name,
-                                                                                             application_dir)
+            auth_provider = self.create_authentication_provider(blueprint.name, application_dir)
+
+            self.analogic_applications[blueprint.name] = auth_provider
+
+            named_routes = auth_provider.get_setting().get_named_routes()
+
+            self.register_named_routes(instance, auth_provider, named_routes)
 
             super().register_blueprint(blueprint, **options)
         except Exception as e:
@@ -194,6 +225,21 @@ class Analogic(Flask):
 
     def _get_asset_by_ext(self, ext):
         return list(filter(lambda x: x.endswith(ext), list(self.extension_assets.keys())))
+
+    def is_multi_authentication_provider(self):
+        authentication_provider = self.get_analogic_application()
+
+        config = authentication_provider.get_setting().get_config()
+
+        return config['authenticationMode'] == 'MultiAuthenticationProvider'
+
+    def get_multi_authentication_provider(self):
+        authentication_provider = self.get_analogic_application()
+
+        if authentication_provider.is_in_maintenance_mode() and authentication_provider.is_user_framework_admin() is False:
+            raise AnalogicMaintenanceException(authentication_provider)
+
+        return authentication_provider
 
     def get_authentication_provider(self):
         authentication_provider = self.get_analogic_application()
@@ -278,6 +324,11 @@ def create_app(instance_path, start_scheduler=True, initialize_auth_providers=Tr
 
     app.register_error_handler(404, page_not_found)
     app.register_error_handler(500, page_error)
+
+    def inject_current_app():
+        return {'current_app': current_app}
+
+    app.context_processor(inject_current_app)
 
     with app.app_context():
         app.evaluate_signal_receivers()
