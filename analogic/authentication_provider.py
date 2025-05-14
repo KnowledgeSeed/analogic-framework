@@ -1,4 +1,4 @@
-from flask import session, current_app, send_file, request, jsonify, Response, redirect, make_response
+from flask import session, current_app, send_file, request, jsonify, Response, redirect, make_response, g
 from analogic.loader import ClassLoader
 import analogic.pivot as PivotApi
 from analogic.exceptions import AnalogicProxyException, AnalogicAccessDeniedException, AnalogicException, \
@@ -77,6 +77,8 @@ class AuthenticationProvider(ABC):
                'Accept-Encoding': 'gzip, deflate, br',
                'TM1-SessionContext': 'Analogic'}
 
+    CUSTOM_OBJECT_ADD_PAGE_META_DATA_INFO = 'analogic_add_page_meta_data_info'
+
     def __init__(self, setting):
         self.setting = setting
         self.logged_in_user_session_name = '_logged_in_user_name'
@@ -86,6 +88,7 @@ class AuthenticationProvider(ABC):
         self.user_subscriptions = {}
         self.is_in_maintenance = False
         self.maintenance_message = ''
+        self.reserved_custom_object_keys = [self.CUSTOM_OBJECT_ADD_PAGE_META_DATA_INFO]
 
     def initialize(self):
         self.setting.initialize()
@@ -128,12 +131,25 @@ class AuthenticationProvider(ABC):
 
         self.session_handler.set('navigation_parameters', base64.b64encode(orjson.dumps(result)).decode('utf-8'))
 
+        self.add_page_meta_data_info(result)
+
         response = self.index()
 
         return make_response(response)
 
     def clear_navigation_parameters(self):
         self.session_handler.delete('navigation_parameters')
+
+    def add_page_meta_data_info(self, navigation_parameters = None):
+        page_meta_data_info_description = self.setting.get_custom_object_description(self.CUSTOM_OBJECT_ADD_PAGE_META_DATA_INFO)
+        if page_meta_data_info_description is not None:
+            try:
+                result = ClassLoader().call(page_meta_data_info_description, request, self.get_tm1_service(), self.setting,
+                                              self, navigation_parameters=navigation_parameters)
+                if isinstance(result, list):
+                    g.page_meta_data_info = result
+            except Exception as e:
+                self.getLogger().error(e, exc_info=True)
 
     @login_required
     def pivot(self):
@@ -159,7 +175,7 @@ class AuthenticationProvider(ABC):
         file_name = request.args.get('file_name', default='export.xlsx')
         export_key = request.args.get('export_key')
 
-        if export_key is None:
+        if export_key is None or export_key in self.reserved_custom_object_keys:
             return self.get_not_found_response()
 
         export_description = self.setting.get_custom_object_description(export_key)
@@ -183,7 +199,7 @@ class AuthenticationProvider(ABC):
     def middleware(self):
         key = request.args.get('object_key')
 
-        if key is None:
+        if key is None or key in self.reserved_custom_object_keys:
             return self.get_not_found_response()
 
         description = self.setting.get_custom_object_description(key)

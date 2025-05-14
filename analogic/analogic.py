@@ -1,5 +1,5 @@
 import os
-from flask import Flask, Blueprint, request, send_file, session, render_template, current_app
+from flask import Flask, Blueprint, request, send_file, session, render_template, current_app, g
 import typing as t
 
 from analogic.endpoint import AnalogicEndpoint
@@ -328,7 +328,12 @@ def create_app(instance_path, start_scheduler=True, initialize_auth_providers=Tr
     def inject_current_app():
         return {'current_app': current_app}
 
+    def inject_page_meta_data_info():
+        return dict(page_meta_data_info=getattr(g, 'page_meta_data_info', []))
+
     app.context_processor(inject_current_app)
+
+    app.context_processor(inject_page_meta_data_info)
 
     with app.app_context():
         app.evaluate_signal_receivers()

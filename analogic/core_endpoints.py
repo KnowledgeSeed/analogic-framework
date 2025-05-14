@@ -55,6 +55,8 @@ def index():
         authentication_provider.set_navigation_parameters(navigation_parameters)
         return redirect(authentication_provider.setting.get_base_url())
 
+    authentication_provider.add_page_meta_data_info()
+
     response = authentication_provider.index()
 
     return response
