@@ -78,11 +78,10 @@ class StackedColumnChartWidget extends Widget {
             canvasPaddingBottom: this.getRealValue('canvasPaddingBottom', d, 0),
             canvasPaddingLeft: this.getRealValue('canvasPaddingLeft', d, 0),
 
-            customLabels: this.getRealValue('customLabels', d, false),
-
             legendVisible: this.getRealValue('legendVisible', d, true),
             legendPosition: this.getRealValue('legendPosition', d, 'bottom'),
             legendAlign: this.getRealValue('legendAlign', d, 'center'),
+            legendReversed: this.getRealValue('legendReversed', d, false),
             legendFontFamily: this.getRealValue('legendFontFamily', d, fontFamily),
             legendFontSize: this.getRealValue('legendFontSize', d, fontSize),
             legendFontStyle: this.getRealValue('legendFontStyle', d, fontStyle),
@@ -144,6 +143,7 @@ class StackedColumnChartWidget extends Widget {
 
             labelDataPointVisible: this.getRealValue('labelDataPointVisible', d, true),
             labelDataLabelVisible: this.getRealValue('labelDataLabelVisible', d, true),
+            labelAlignments: this.getRealValue('labelAlignments', d, false),
             labelColor: this.getRealValue('labelColor', d, '#FFFFFF'),
             labelBackgroundColor: this.getRealValue('labelBackgroundColor', d, null),
             labelFontFamily: this.getRealValue('labelFontFamily', d, fontFamily),
@@ -164,6 +164,9 @@ class StackedColumnChartWidget extends Widget {
             labelBorderColor: this.getRealValue('labelBorderColor', d, null),
             labelBorderRadius: this.getRealValue('labelBorderRadius', d, 5),
             labelBorderWidth: this.getRealValue('labelBorderWidth', d, 0),
+            lalelsForceDisplay: this.getRealValue('lalelsForceDisplay', d, false),
+            showZeroValueLabels: this.getRealValue('showZeroValueLabels', d, false),
+            manualLabelAlignmentSetting: this.getRealValue('manualLabelAlignmentSetting', d, false),
 
             arrowEnabled: this.getRealValue('arrowEnabled', d, true),
             arrowMarginTop: this.getRealValue('arrowMarginTop', d, 0.2), // e.g.: 0.2, '20%' or 250
@@ -196,7 +199,12 @@ class StackedColumnChartWidget extends Widget {
             arrowLabelClip: this.getRealValue('arrowLabelClip', d, false),
             arrowLabelBorderColor: this.getRealValue('arrowLabelBorderColor', d, null),
             arrowLabelBorderRadius: this.getRealValue('arrowLabelBorderRadius', d, 5),
-            arrowLabelBorderWidth: this.getRealValue('arrowLabelBorderWidth', d, 0)
+            arrowLabelBorderWidth: this.getRealValue('arrowLabelBorderWidth', d, 0),
+
+            labelClickPopup: this.getRealValue('labelClickPopup', d, null),
+            openPopupOnLabelClick: this.getRealValue('openPopupOnLabelClick', d, false),
+            openendPopupOffsetLeft: this.getRealValue('openendPopupOffsetLeft', d, 0),
+            openendPopupOffsetTop: this.getRealValue('openendPopupOffsetTop', d, 0),
         };
 
         this.value = v;
@@ -324,62 +332,14 @@ class StackedColumnChartWidget extends Widget {
             yMax += this.addArrowDatasets(datasets, data.arrows, labels, yMax, yTotal)
         }
 
-        this.onCompleteFinished = false;
+        const threshold = yMax * 0.05;
 
         return {
             type: 'bar',
             data: data,
             plugins: [ChartDataLabels4],
             options: {
-                animation: {
-                    onComplete: (animation) => {
-                        if (this.onCompleteFinished || !v.customLabels) {
-                            return;
-                        }
-
-                        this.onCompleteFinished = true;
-
-                        const chart = animation.chart;
-
-                        const rect = chart.canvas.getBoundingClientRect();
-
-                        const spacing = 18;
-
-                        chart.data.datasets.forEach((dataset, datasetIndex) => {
-                            const meta = chart.getDatasetMeta(datasetIndex);
-
-                            let yCoords = [];
-
-                            if (meta.type === 'bar') {
-                                for (let q = 0; q < meta.data.length; ++q) {
-                                    const bar = meta.data[q];
-                                    yCoords.push(rect.top + bar.y);
-                                }
-
-                                for (let i = yCoords.length - 1; i > 0; --i) {
-                                    if ((yCoords[i] - yCoords[i-1]) < 30) {
-                                        yCoords[i-1] -= 30;
-                                    }
-                                }
-
-                                for (let q = 0; q < meta.data.length; ++q) {
-                                    const bar = meta.data[q];
-                                    const value = dataset.data[q];
-
-                                    let barX = rect.left + bar.x;
-                                    let barY = rect.top + bar.y;
-
-                                    const div = $('<div class="chart-bar-label" style="z-index:100000; white-space:nowrap; display:block; position:absolute; background:' + dataset.backgroundColor + '; color:white; padding:5px; border-radius:5px; font-size:12px;"></div>');
-
-                                    div.css({left: barX + 20, top: yCoords[q]});
-                                    div.text(`${value}`);
-
-                                    $('body').prepend(div);
-                                }
-                            }
-                        });
-                    }
-                },
+                animation: v.animationEnabled,
                 normalized: true,
                 parsing: true,
                 plugins: {
@@ -395,6 +355,7 @@ class StackedColumnChartWidget extends Widget {
                         display: v.legendVisible,
                         position: v.legendPosition,
                         align: v.legendAlign,
+                        reverse: c => v.legendReversed,
                         labels: {
                             font: {
                                 family: v.legendFontFamily,
@@ -425,31 +386,31 @@ class StackedColumnChartWidget extends Widget {
                         }
                     },
                     datalabels: {
-                        align: c => {
-                            //const value = c.dataset.data[c.dataIndex];
-                            //return value < 5 ? 'right' : 'center'; // Adjust alignment for visibility
-
-                            return datasets[c.datasetIndex].labelAlign || v.labelAlign;
-                        },
-                        offset: c => datasets[c.datasetIndex].labelOffset || v.labelOffset,
-                        anchor: c => {
-                            //const value = c.dataset.data[c.dataIndex];
-                            //return value < 5 ? 'end' : 'center'; // Push small values outside
-
-                            return datasets[c.datasetIndex].labelAnchor || v.labelAnchor;
-                        },
-                        clamp: c => datasets[c.datasetIndex].labelClamp || v.labelClamp,
                         clip: c => datasets[c.datasetIndex].labelClip || v.labelClip,
+                        clamp: c => datasets[c.datasetIndex].labelClamp || v.labelClamp,
+                        anchor: c => {
+                            const d = datasets[c.datasetIndex];
+                            return d.isArrow || d.percentage ? v.arrowLabelAnchor : v.manualLabelAlignmentSetting ? datasets[c.datasetIndex].labelAlignments[c.dataIndex].split('-')[0] : datasets[c.datasetIndex].labelAnchor || v.labelAnchor;
+                        },
+                        align: c => {
+                            const d = datasets[c.datasetIndex];
+                            const val = d.data[c.dataIndex];
+                            return d.isArrow || d.percentage ? v.arrowLabelAlign : v.manualLabelAlignmentSetting ? d.labelAlignments[c.dataIndex].split('-')[1] : datasets[c.datasetIndex].labelAnchor || v.labelAnchor;
+                        },
+                        offset: c => {
+                            const d = datasets[c.datasetIndex];
+                            return d.isArrow || d.percentage ? v.arrowLabelOffset : datasets[c.datasetIndex].labelOffset || v.labelOffset;
+                        },
                         display: c => {
                             let d = datasets[c.datasetIndex], tooltipsEnabled = v.tooltipsEnabled && (false !== d.tooltipsEnabled), isVis = d.labelVisible;
 
                             if (d.isArrow) {
                                 return isVis && 1 === c.dataIndex;
                             } else if (c.active) {
-                                return isVis ? 'auto' : !tooltipsEnabled;
+                                return isVis ? true : !tooltipsEnabled;
                             }
 
-                            return (isVis ? 'auto' : false);
+                            return (isVis ? v.lalelsForceDisplay ? v.showZeroValueLabels ? true : Utils.parseNumber(c.dataset.data[c.dataIndex]) !== 0 : 'auto' : false);
                         },
                         textAlign: c => datasets[c.datasetIndex].labelTextAlign || v.labelTextAlign,
                         formatter: (n, c) => {
@@ -468,7 +429,6 @@ class StackedColumnChartWidget extends Widget {
                             if (v.labelDataLabelVisible && (false !== d.labelDataLabelVisible)) {
                                 e += (d.dataLabels || [])[c.dataIndex] ?? '';
                             }
-
                             return e;
 
                         },
@@ -493,7 +453,8 @@ class StackedColumnChartWidget extends Widget {
                                 weight: c.labelFontWeight || v.labelFontWeight || v.yAxisTicksFontWeight,
                                 style: c.labelFontStyle || v.labelFontStyle || v.yAxisTicksFontStyle,
                                 family: c.labelFontFamily || v.labelFontFamily || v.yAxisTicksFontFamily,
-                                lineHeight: c.labelFontLineHeight || v.labelFontLineHeight || v.yAxisTicksFontLineHeight
+                                lineHeight: c.labelFontLineHeight || v.labelFontLineHeight || v.yAxisTicksFontLineHeight,
+                                color: 'black'
                             }
                         },
                         padding: c => {
@@ -506,6 +467,26 @@ class StackedColumnChartWidget extends Widget {
                                 bottom: c.labelPaddingBottom || v.labelPaddingBottom
                             }
                         },
+                        listeners: {
+                            click: function (context, event) {
+                              if (!v.openPopupOnLabelClick || datasets[context.datasetIndex].isArrow || datasets[context.datasetIndex].percentage) return;
+
+                              const popup = $('#' + v.labelClickPopup);
+                              const popupEl = document.getElementById(v.labelClickPopup);
+
+                              popup
+                                .data('datasetIndex', context.datasetIndex)
+                                .data('dataIndex', context.dataIndex)
+                                .data('datasetLabel', datasets[context.datasetIndex].label);
+
+                              Object.assign(popupEl.style, {
+                                left: (event.x + Utils.parseNumber(v.openendPopupOffsetLeft)) + 'px',
+                                top: (event.y + Utils.parseNumber(v.openendPopupOffsetTop)) + 'px',
+                                display: 'block',
+                                position: 'absolute'
+                              });
+                            }
+                          }
                     }
                 },
                 responsive: true,
@@ -528,6 +509,7 @@ class StackedColumnChartWidget extends Widget {
                             padding: v.xAxisTicksLabelPadding,
                             minRotation: 0,
                             maxRotation: 0,
+                           // autoSkip: true,
                             font: {
                                 family: v.xAxisTicksFontFamily,
                                 size: v.xAxisTicksFontSize,
@@ -645,7 +627,8 @@ class StackedColumnChartWidget extends Widget {
                         },
                         ticks: {
                             display: false,
-                            padding: 0
+                            padding: 0,
+                            //autoSkip: true,
                         }
                     }
                 },
@@ -732,7 +715,7 @@ class StackedColumnChartWidget extends Widget {
                     label: 'Other revenue',
                     labelDataPointVisible: false,
                     dataLabels: ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12', 'A13', 'A14', 'A15'],
-                    data: [2, 164492, 164984, 165476, 165968, 166460, 166952, 167444, 167936, 168428, 168920, 169412, 169904, 170396, 170888],
+                    data: [164000, 164492, 164984, 165476, 165968, 166460, 166952, 167444, 167936, 168428, 168920, 169412, 169904, 170396, 170888],
                     backgroundColor: '#80B3E6',
                     labelBackgroundColor: '#80B3E6',
                     tooltipsEnabled: false
@@ -740,13 +723,13 @@ class StackedColumnChartWidget extends Widget {
                 {
                     label: 'Cost of Sales',
                     dataLabels: ['\nA1', '\nA2', '\nA3', '\nA4', '\nA5', '\nA6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12', 'A13', 'A14', 'A15'],
-                    data: [2, 84252, 84504, 84756, 85008, 85260, 85512, 85764, 86016, 86268, 86520, 86772, 87024, 87276, 87528],
+                    data: [84000, 84252, 84504, 84756, 85008, 85260, 85512, 85764, 86016, 86268, 86520, 86772, 87024, 87276, 87528],
                     backgroundColor: '#0066CC',
                     labelBackgroundColor: '#0066CC',
                 },
                 {
                     label: 'Gross Profit',
-                    data: [2, 110330, 110660, 110990, 111320, 111650, 111980, 112310, 112640, 112970, 113300, 113630, 113960, 114290, 114620],
+                    data: [110000, 110330, 110660, 110990, 111320, 111650, 111980, 112310, 112640, 112970, 113300, 113630, 113960, 114290, 114620],
                     backgroundColor: '#E40046',
                     labelBackgroundColor: '#E40046',
                 },

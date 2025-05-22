@@ -124,7 +124,12 @@ class LineAreaChartWidget extends Widget {
             tooltipsIntersect: this.getRealValue('tooltipsIntersect', d, false),
             aspectRatio: this.getRealValue('aspectRatio', d, null),
             maintainAspectRatio: this.getRealValue('maintainAspectRatio', d, true),
-            defaultBezierCurveTension: this.getRealValue('defaultBezierCurveTension', d, 0)
+            defaultBezierCurveTension: this.getRealValue('defaultBezierCurveTension', d, 0),
+            manualLabelAlignment: this.getRealValue('manualLabelAlignment', d, false),
+            labelClickPopup: this.getRealValue('labelClickPopup', d, null),
+            openPopupOnLabelClick: this.getRealValue('openPopupOnLabelClick', d, false),
+            openendPopupOffsetLeft: this.getRealValue('openendPopupOffsetLeft', d, 0),
+            openendPopupOffsetTop: this.getRealValue('openendPopupOffsetTop', d, 0),
         };
 
         this.value = v;
@@ -184,6 +189,7 @@ class LineAreaChartWidget extends Widget {
 
             datasets[i].data = data;
         }
+
 
         const yMin = v.yMin ?? Math.min(...yVals), yMax = v.yMax ?? Math.max(...yVals), yTotal = yMax - yMin;
 
@@ -308,12 +314,12 @@ class LineAreaChartWidget extends Widget {
                 },
                 plugins: {
                     datalabels: {
-                        align: 'top',
+                        align: c => v.manualLabelAlignment ? datasets[c.datasetIndex].labelPosition[c.dataIndex].split('-')[1] : 'top',
                         offset: 0,
-                        anchor: 'end',
+                        anchor: c => v.manualLabelAlignment ? datasets[c.datasetIndex].labelPosition[c.dataIndex].split('-')[0] : 'end',
                         clamp: true,
                         clip: false,
-                        display: c => v.tooltipsEnabled ? false : (c.active ? true : (datasets[c.datasetIndex].labelVisible ? 'auto' : false)),
+                        display: c => v.tooltipsEnabled ? false : (c.active ? true : (datasets[c.datasetIndex].labelVisible ? true : false)),
                         borderRadius: 5,
                         borderWidth: c => datasets[c.datasetIndex].labelBorderWidth || 0,
                         borderColor: c => datasets[c.datasetIndex].labelBorderColor,

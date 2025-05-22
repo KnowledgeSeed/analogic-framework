@@ -39,7 +39,10 @@ class WaterFallWidget extends Widget {
             defaultColor: this.getRealValue('defaultColor', d, '#F3F4F6'),
             skin: this.getRealValue('skin', d, 'attila-1'),
             hiddenDatasets: [false, false],
-            allowLastColumnToZero: this.getRealValue('allowLastColumnToZero', d, true)
+            allowLastColumnToZero: this.getRealValue('allowLastColumnToZero', d, true),
+            labelHasAction: this.getRealValue('labelHasAction', d, false),
+            openPopupOnLabel: this.getRealValue('openPopupOnLabel', d, false),
+            popupToOpenId: this.getRealValue('popupToOpenId', d, null),
         };
 
         this.value = v;
@@ -70,7 +73,29 @@ class WaterFallWidget extends Widget {
 
         section
             .on('click', '.ks-waterfall-y-line-label', e => this.renderWaterFall(section, parseFloat(e.currentTarget.innerHTML)))
-            .on('click', '.ks-waterfall-reset', () => this.renderWaterFall(section));
+            .on('click', '.ks-waterfall-reset', () => this.renderWaterFall(section))
+            .on('click', '.ks-waterfall-bar-label', (e) => this.barLabelClicked(e.currentTarget));
+    }
+
+    barLabelClicked(e) {
+        if (this.value.labelHasAction) {
+            if (this.value.openPopupOnLabel) {
+                let rect = e.getBoundingClientRect();
+                const popup = $('#' + this.value.popupToOpenId);
+                const popupEl = document.getElementById(this.value.popupToOpenId);
+
+                popup
+                    .data('tableRow', $(e).data('tablerow'))
+                    .data('tableColumn', $(e).data('tablecolumn'));
+
+                Object.assign(popupEl.style, {
+                    left: rect.x + 150 + window.scrollX + 'px',
+                    top: rect.y - 100 + window.scrollY + 'px',
+                    display: 'block',
+                    position: 'absolute'
+                });
+            }
+        }
     }
 
     renderWaterFall(section, minYAxis) {
@@ -187,10 +212,20 @@ class WaterFallWidget extends Widget {
                 val = d.displayValue;
             }
 
-            l = '<div' + (v.labelFontSize ? (' style="font-size:' + v.labelFontSize + 'px;"') : '') +' class="ks-waterfall-bar-label">' + val + '</div>';
+            l = '<div' + ' style="' + (v.labelFontSize ? ('font-size:' + v.labelFontSize + 'px;') : '') + (d.position ? ('top:' + this.getPosition(d.position, height) + ';') : '') + '"' + (d.tableRow ? 'data-tableRow ="' + d.tableRow + '"' : '') + (d.tableColumn ? 'data-tableColumn ="' + d.tableColumn + '"' : '') + ' class="ks-waterfall-bar-label">' + val + '</div>';
         }
 
         h.push('<div class="ks-waterfall-bar" style="', s, ' height: ', height, 'px; bottom: ', bottom, 'px;">', l, c, '</div>');
+    }
+
+    getPosition(pos, h) {
+        let alignments = {
+            'bottom': '100%',
+            'top': '25px',
+            'above': '0%',
+            'center': h < 100 ? 'calc(50% + 12px)' : '50%'
+        };
+        return alignments[pos];
     }
 
     addSecondaryHtml(h) {
