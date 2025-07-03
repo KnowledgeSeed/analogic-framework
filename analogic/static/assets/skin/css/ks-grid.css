@@ -70,3 +70,8 @@
 .ks-row-pos-center.ks-grid-row {
 	justify-content: center;
 }
+
+.ks-grid-data_spread.ks-grid .ks-grid-content {
+    display: flex;
+    border-bottom: 1px solid #E5E5EA;
+}

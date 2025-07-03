@@ -61,3 +61,85 @@
 .ks-button.has-box-shadow {
     box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.2), 0px 8px 12px rgba(0, 0, 0, 0.2);
 }
+
+.ks-button-data_spread_list.ks-button {
+    height: 30px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+.ks-button-data_spread_list .ks-button-inner {
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.ks-button-data_spread_list.ks-button:hover {
+    background-color: #bfd9f2;
+}
+
+.ks-button-data_spread_list .ks-button-inner:hover {
+    background-color: #bfd9f2;
+}
+
+.ks-button-data_spread_list .ks-button-icon,
+.ks-button-data_spread_list .ks-button-icon img {
+    float: left;
+    font-size: 40px;
+    margin-top: -13px;
+    color: #007AFF;
+}
+
+.ks-button-data_spread_list .ks-button-divider {
+    width: 0;
+}
+
+.ks-button-data_spread_list .ks-button-label {
+    color: #000;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.ks-button-data_spread_list .ks-button-content {
+    justify-content: unset!important;
+}
+
+/* light blue button with dark blue text */
+.ks-button-data_spread_material_light.ks-button {
+    background-color: #E3F1FF;
+    height: 40px;
+    border-radius: 8px;
+    border-width: 0px;
+    width: 130px;
+}
+
+.ks-button-data_spread_material_light .ks-button-label {
+    color: #0066CC;
+    font-size: 14px;
+    margin-right: 2px;
+    margin-left: 6px;
+    white-space: nowrap;
+}
+
+.ks-button-data_spread_material_light .ks-button-icon {
+    font-size: 40px;
+    margin-top: -2px;
+    color: #007AFF;
+}
+
+/* dark blue button with white text */
+.ks-button-data_spread_material.ks-button {
+    background-color: #007AFF;
+    height: 40px;
+    border-radius: 9px;
+    border-width: 0px;
+    width: 200px;
+}
+
+.ks-button-data_spread_material .ks-button-label {
+    color: #FFFFFF;
+    font-size: 14px;
+    margin-right: 2px;
+    margin-left: 6px;
+    white-space: nowrap;
+}

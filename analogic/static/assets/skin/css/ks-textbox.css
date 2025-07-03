@@ -49,3 +49,52 @@
 .ks-textbox-field-inner.readonly {
     background-color: lightgrey;
 }
+
+.ks-textbox-data_spread_custom_group .ks-textbox-title {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 16px;
+    margin-bottom: 5px;
+    display: block;
+    text-align: left;
+}
+
+.ks-textbox-data_spread_custom_group .ks-textbox-field {
+    background-color: #fff;
+    border: 1px solid #A9A9A9;
+    border-radius: 8px;
+    height: 40px;
+}
+
+.ks-textbox-data_spread_custom_group .ks-textbox-field-inner.readonly {
+    background-color: #f2f2f2;
+    border: 1px #ACADAE;
+    border-radius: 8px;
+    height: 40px;
+}
+.ks-textbox-data_spread_custom_group .ks-textbox-input {
+    font-size: 14px;
+    padding: 0 10px;
+}
+
+.ks-textbox-data_spread_custom_group .ks-textbox-input::-webkit-input-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-data_spread_custom_group .ks-textbox-input::-moz-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-data_spread_custom_group .ks-textbox-input:-ms-input-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-data_spread_custom_group .ks-textbox-input:-moz-placeholder {
+    color: #ACADAE;
+}
+
+.ks-textbox-data_spread_custom_group.ks-textbox-icon {
+    display: flex;
+    margin-left: 10px;
+
+}

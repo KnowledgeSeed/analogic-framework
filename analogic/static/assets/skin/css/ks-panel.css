@@ -1,1 +1,6 @@
-
+/*panel-style.css*/
+.ks-panel-data_spread.ks-panel {
+    border-left: 1px solid #AEAEB2;
+    position: absolute;
+    height: 100%;
+}

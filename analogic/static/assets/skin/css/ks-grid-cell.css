@@ -1,1 +1,10 @@
+.ks-grid-table-cell.selected {
+    background-color: #dbeaf6 !important; /* Egy kellemes kék háttérszín */
+    outline: 1px solid #9ac5e9; /* Egy vékony kék keret */
+    outline-offset: -1px;
+}
 
+.ks-grid-table-cell.active-cell {
+    outline: 2px solid #1c62b0 !important; /* Egy sötétebb, vastagabb keret */
+    z-index: 1; /* Biztosítja, hogy a keret a szomszédos cellák fölött legyen */
+}

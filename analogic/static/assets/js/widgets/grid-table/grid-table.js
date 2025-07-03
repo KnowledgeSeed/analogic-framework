@@ -4,10 +4,15 @@
 
 class GridTableWidget extends Widget {
 
+    static activeInstance = null;
+
+    static areGlobalListenersAttached = false;
+
     getHtml(widgets, headerRowWidgetHtml, data) {
         const o = this.options;
         let d = Array.isArray(data) ? data : data.content;
         const v = this.getParameters(data);
+        this.allowCopyToClipBoard = v.allowCopyToClipBoard;
 
 
         let mainDivStyle = this.getGeneralStyles(data);
@@ -67,6 +72,7 @@ class GridTableWidget extends Widget {
         return {
             allowFullContentUpdated: this.getRealValue('allowFullContentUpdated', data, false),
             allowChangedDataUpdate: this.getRealValue('allowChangedDataUpdate', data, true),
+            allowCopyToClipBoard: this.getRealValue('allowCopyToClipBoard', data, false),
             borderBottom: this.getRealValue('borderBottom', data, true),
             borderTop: this.getRealValue('borderTop', data, true),
             disableRefreshGridCell: this.getRealValue('disableRefreshGridCell', data, false),
@@ -100,11 +106,14 @@ class GridTableWidget extends Widget {
     }
 
     buildTableBodyHtml(innerHtml) {
+        this.currentRowIndex = 0;
         return `<div class="ks-grid-table-content">${innerHtml}</div>`;
     }
 
     buildTableRowHtml(innerHtml, height, borderBottom = true) {
-        return `<div class="ks-grid-table-row ${borderBottom ? 'border-bottom' : ''}"  ${height ? `style="height:${height}px;"` : ''}>${innerHtml}</div>`;
+        const rowIndex = this.currentRowIndex || 0;
+        this.currentRowIndex = rowIndex + 1;
+        return `<div class="ks-grid-table-row ${borderBottom ? 'border-bottom' : ''}" data-row="${rowIndex}" ${height ? `style="height:${height}px;"` : ''}>${innerHtml}</div>`;
     }
 
     renderPage() {
@@ -201,7 +210,7 @@ class GridTableWidget extends Widget {
                     } else {
                         if (false === vv.allowChangedDataUpdate || processedData[i][j].manipulated ||
                             !GridTableWidget.deepEqual(instance.cellData[i][j], processedData[i][j])) {
-                            if(processedData[i][j].manipulated) {
+                            if (processedData[i][j].manipulated) {
                                 delete processedData[i][j].manipulated;
                             }
                             Widgets[processedData[i][j].cellId].updateContent(processedData[i][j]);
@@ -341,6 +350,10 @@ class GridTableWidget extends Widget {
 
         for (i = 0; i < this.state.rows; ++i) {
             for (j = 0; j < colNum; ++j) {
+                const cellElement = $('#' + o.id + 'Cell' + i + '-' + j);
+                cellElement.attr('data-row', i);
+                cellElement.attr('data-col', j);
+
                 Widgets[o.id + 'Cell' + i + '-' + j].initEvents(withState, o.id + '_' + i + '_' + j);
             }
         }
@@ -355,14 +368,263 @@ class GridTableWidget extends Widget {
         this.isRendering = false;
     }
 
-    initEventHandlers() {
+    initEventHandlers() {L(this);
 
+        if (!this.allowCopyToClipBoard) {
+            return;
+        }
+
+        this.selectedCells = new Set();
+        this.isMouseDown = false;
+        this.activeCell = null;
+        this.selectionAnchor = null;
+
+        const gridContainer = $('#' + this.id);
+        const contentArea = gridContainer.find('.ks-grid-table-content');
+
+        contentArea.on('mousedown', '.ks-grid-table-cell', this.handleMouseDown.bind(this));
+        contentArea.on('mouseover', '.ks-grid-table-cell', this.handleMouseOver.bind(this));
+        $(document).on('mouseup', this.handleMouseUp.bind(this));
+
+
+        gridContainer.on('click', (e) => {
+            if (GridTableWidget.activeInstance !== this) {
+                if (GridTableWidget.activeInstance) {
+                    $('#' + GridTableWidget.activeInstance.id).removeClass('grid-focused');
+                }
+
+                GridTableWidget.activeInstance = this;
+                gridContainer.addClass('grid-focused');
+            }
+        });
+
+        if (!GridTableWidget.areGlobalListenersAttached) {
+
+            $(document).on('keydown', (e) => {
+                if (GridTableWidget.activeInstance) {
+                    GridTableWidget.activeInstance.handleKeyDown(e);
+                }
+            });
+
+            $(document).on('click', (e) => {
+                if (GridTableWidget.activeInstance) {
+                    if ($(e.target).closest('#' + GridTableWidget.activeInstance.id).length === 0) {
+                        $('#' + GridTableWidget.activeInstance.id).removeClass('grid-focused');
+                        GridTableWidget.activeInstance = null;
+                    }
+                }
+            });
+
+            GridTableWidget.areGlobalListenersAttached = true;
+        }
     }
 
     reset() {
+        if (GridTableWidget.activeInstance === this) {
+            GridTableWidget.activeInstance = null;
+        }
         delete this.cellData;
         delete this.row;
         delete this.column;
+
+        delete this.selectedCells;
+        delete this.isMouseDown;
+        delete this.activeCell;
+        delete this.selectionAnchor;
+    }
+
+
+    handleMouseDown(e) {
+        if ($(e.target).is('input, textarea')) {
+            return;
+        }
+        e.preventDefault();
+
+        this.isMouseDown = true;
+        const cell = $(e.currentTarget);
+
+        if (!e.ctrlKey && !e.shiftKey) {
+            this.clearSelection();
+            this.selectedCells.add(cell.attr('id'));
+            this.activeCell = cell;
+            this.selectionAnchor = cell;
+            this.updateSelectionUI();
+        } else if (e.shiftKey && this.selectionAnchor) {
+            this.activeCell = cell;
+            this.selectRange(this.selectionAnchor, this.activeCell);
+            this.updateSelectionUI();
+        } else if (e.ctrlKey) {
+            const cellId = cell.attr('id');
+            if (this.selectedCells.has(cellId)) {
+                this.selectedCells.delete(cellId);
+            } else {
+                this.selectedCells.add(cellId);
+            }
+            this.activeCell = cell;
+            this.selectionAnchor = cell;
+            this.updateSelectionUI();
+        }
+    }
+
+    handleMouseOver(e) {
+        if (!this.isMouseDown) return;
+
+        const cell = $(e.currentTarget);
+        const cellId = cell.attr('id');
+        if (!this.selectedCells.has(cellId)) {
+            this.selectedCells.add(cellId);
+            this.updateSelectionUI();
+        }
+    }
+
+    handleMouseUp(e) {
+        this.isMouseDown = false;
+    }
+
+    handleKeyDown(e) {
+        if (e.ctrlKey && e.key.toLowerCase() === 'c') {
+            e.preventDefault();
+            this.copySelectedCellsToClipboard();
+            return;
+        }
+
+        if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+            return;
+        }
+
+        e.preventDefault();
+
+        if (!this.activeCell) {
+            this.activeCell = $('#' + this.id).find('.ks-grid-table-cell[data-row="0"][data-col="0"]');
+            if (!this.activeCell.length) return;
+
+            this.clearSelection();
+            this.selectedCells.add(this.activeCell.attr('id'));
+            this.selectionAnchor = this.activeCell;
+            this.updateSelectionUI();
+            return;
+        }
+
+        const isCtrlPressed = e.ctrlKey;
+        const isShiftPressed = e.shiftKey;
+
+        let currentRow = parseInt(this.activeCell.data('row'));
+        let currentCol = parseInt(this.activeCell.data('col'));
+
+        switch (e.key) {
+            case 'ArrowUp':
+                currentRow--;
+                break;
+            case 'ArrowDown':
+                currentRow++;
+                break;
+            case 'ArrowLeft':
+                currentCol--;
+                break;
+            case 'ArrowRight':
+                currentCol++;
+                break;
+        }
+
+        const nextCell = $(`#${this.id} .ks-grid-table-cell[data-row="${currentRow}"][data-col="${currentCol}"]`);
+
+        if (nextCell.length) {
+            this.activeCell = nextCell;
+
+            if (isShiftPressed) {
+                this.clearSelection();
+                this.selectRange(this.selectionAnchor, this.activeCell);
+
+            } else if (isCtrlPressed) {
+                this.selectionAnchor = this.activeCell;
+
+            } else {
+                this.clearSelection();
+                this.selectedCells.add(this.activeCell.attr('id'));
+                this.selectionAnchor = this.activeCell;
+            }
+
+            this.updateSelectionUI();
+            this.activeCell[0].scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'nearest'});
+        }
+    }
+
+    selectRange(startCell, endCell) {
+        const startRow = parseInt(startCell.data('row'));
+        const startCol = parseInt(startCell.data('col'));
+        const endRow = parseInt(endCell.data('row'));
+        const endCol = parseInt(endCell.data('col'));
+
+        const minRow = Math.min(startRow, endRow);
+        const maxRow = Math.max(startRow, endRow);
+        const minCol = Math.min(startCol, endCol);
+        const maxCol = Math.max(startCol, endCol);
+
+        this.clearSelection();
+
+        for (let r = minRow; r <= maxRow; r++) {
+            for (let c = minCol; c <= maxCol; c++) {
+                const cellId = `${this.options.id}Cell${r}-${c}`;
+                this.selectedCells.add(cellId);
+            }
+        }
+    }
+
+    updateSelectionUI() {
+        $(`#${this.id} .ks-grid-table-cell.selected`).removeClass('selected');
+        $(`#${this.id} .ks-grid-table-cell.active-cell`).removeClass('active-cell');
+
+        this.selectedCells.forEach(cellId => {
+            $('#' + cellId).addClass('selected');
+        });
+
+        if (this.activeCell) {
+            this.activeCell.addClass('active-cell');
+        }
+    }
+
+    clearSelection() {
+        this.selectedCells.clear();
+        this.updateSelectionUI();
+    }
+
+    copySelectedCellsToClipboard() {
+        if (this.selectedCells.size === 0) return;
+
+        const rows = new Map();
+        let minCol = Infinity, maxCol = -Infinity;
+
+        this.selectedCells.forEach(cellId => {
+            const cell = $('#' + cellId);
+            const row = parseInt(cell.data('row'));
+            const col = parseInt(cell.data('col'));
+            const text = cell.find('.ks-text-title').text().trim();
+
+            if (!rows.has(row)) {
+                rows.set(row, new Map());
+            }
+            rows.get(row).set(col, text);
+
+            if (col < minCol) minCol = col;
+            if (col > maxCol) maxCol = col;
+        });
+
+        const sortedRows = new Map([...rows.entries()].sort((a, b) => a[0] - b[0]));
+
+        let clipboardText = '';
+        sortedRows.forEach((cols, row) => {
+            let rowText = [];
+            for (let c = minCol; c <= maxCol; c++) {
+                rowText.push(cols.get(c) || '');
+            }
+            clipboardText += rowText.join('\t') + '\n';
+        });
+
+        navigator.clipboard.writeText(clipboardText).then(() => {
+            console.log('Selected cells copied to clipboard successfully!');
+        }).catch(err => {
+            console.error('Copy error: ', err);
+        });
     }
 
     triggerFillRight(params) {

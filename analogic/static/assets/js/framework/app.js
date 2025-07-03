@@ -13,7 +13,7 @@ const Doc = $(document), El = {body: $('body')}, PageState = {current: '', previ
     Widgets = {infoData: {}},
     Api = {};
 
-let EventMap, Repository, WidgetConfig, FaviconUrl, contextMenu;
+let EventMap, Repository, WidgetConfig, FaviconUrl, contextMenu, analogicSystemWidgets = {};
 
 app.handleAjaxError = (response, widgetId) => {
     const m = (response.responseJSON ? response.responseJSON.message : response.responseText);
@@ -60,6 +60,15 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
                         console.error('Widget id "' + wc[j].id + '" mismatch with reusable "' + j + '" in  reusable collection "' + i + '". Widget id should be "' + j + '"');
                     }
                 }
+            }
+        }
+
+        for (i in analogicSystemWidgets) {
+            wc = analogicSystemWidgets[i];
+            if (wc.type) {
+                loadWidget(wc, Widgets, i);
+            } else {
+                console.error('WidgetConfig "' + i + '" is not a WidgetConfig type');
             }
         }
 

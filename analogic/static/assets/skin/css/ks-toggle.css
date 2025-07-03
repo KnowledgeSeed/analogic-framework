@@ -52,3 +52,89 @@
 .ks-toggle-inner.readonly{
     background-color: lightgrey;
 }
+
+/*toggle-style.css*/
+/* data_spread_mark_as_favorite */
+.ks-toggle-data_spread_mark_as_favorite.ks-toggle .ks-toggle-icon-on {
+    color: #000000;
+    display: none;
+    justify-content: flex-end;
+}
+
+.ks-toggle-data_spread_mark_as_favorite.ks-toggle .ks-toggle-icon-off {
+    color: #000000;
+    display: block;
+    justify-content: flex-end;
+}
+
+.ks-toggle-data_spread_mark_as_favorite.ks-toggle {
+    border-radius: 3px;
+    font-size: 40px;
+}
+
+.ks-toggle-data_spread_mark_as_favorite .ks-toggle-inner {
+    margin-left: 10px;
+    gap: 15px;
+}
+
+.ks-toggle-data_spread_mark_as_favorite.ks-toggle.ks-on .ks-toggle-icon-on {
+    display: block;
+}
+
+.ks-toggle-data_spread_mark_as_favorite.ks-toggle.ks-on .ks-toggle-icon-off {
+    display: none;
+}
+
+.ks-toggle-data_spread_mark_as_favorite.ks-toggle.ks-on .ks-toggle-inner {
+    justify-content: center;
+}
+
+/* select_spread_options */
+.ks-toggle-select_spread_options.ks-toggle .ks-toggle-icon-on {
+    color: #ffffff;
+    display: none;
+}
+
+.ks-toggle-select_spread_options.ks-toggle .ks-toggle-icon-off {
+    color: #000000;
+    display: block;
+    background-color: #F2F2F7;
+    border-radius: 8px;
+    height: 40px;
+    width: 40px;
+}
+
+.ks-toggle-select_spread_options.ks-toggle {
+    font-size: 40px;
+}
+
+.ks-toggle-select_spread_options.ks-toggle.ks-on .ks-toggle-icon-on {
+    display: block;
+    background-color: #007AFF;
+    color: #FFFFFF;
+    border-radius: 8px;
+    height: 40px;
+    width: 40px;
+}
+
+.ks-toggle-select_spread_options.ks-toggle.ks-on .ks-toggle-icon-off {
+    display: none;
+}
+
+.ks-toggle-select_spread_options.ks-toggle.ks-on .ks-toggle-inner {
+    justify-content: center;
+}
+
+.ks-toggle-select_spread_options.ks-toggle .ks-toggle-inner {
+    margin: 2px 0 0 2px;
+}
+
+.ks-toggle-select_spread_options.ks-toggle .ks-toggle-inner.readonly {
+    background-color: #FFFFFF;
+}
+
+
+.ks-toggle-select_spread_options.ks-toggle .ks-toggle-inner.readonly .ks-toggle-icon.ks-toggle-icon-off {
+    background-color: #FFFFFF;
+    color: #FFFFFF;
+}

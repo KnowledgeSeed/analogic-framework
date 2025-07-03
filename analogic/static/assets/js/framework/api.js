@@ -96,7 +96,8 @@ Api.openPageWithWaitingForEvent = function openPageWithWaitingForEvent(arg) {
     if (!Array.isArray(arg) || arg.length < 2) {
         alert('openPageWithWaitingForEvent has 2 mandatory argument: ["eventName", "pageId"] !');
 
-        return $.Deferred().resolve('');;
+        return $.Deferred().resolve('');
+        ;
     }
 
     Loader.start();
@@ -132,7 +133,7 @@ Api.openPageWithWaitingForEventAndScrollToSection = function openPageWithWaiting
     });
 };
 
-Api.openPageWithState = function openPageWithState(page, alsoForceRefreshWidgetsWithState=false) {
+Api.openPageWithState = function openPageWithState(page, alsoForceRefreshWidgetsWithState = false) {
     if (Array.isArray(page)) {
         if (PageState[page[0]]) {
             let r = Render.showPage(page[0], true);
@@ -226,7 +227,7 @@ Api.openPageWithStateAndWaitingForEventAndScrollToSection = function openPageWit
 
 Api.removeWidgetValues = function removeWidgetValues(widgetIds) { //Todo rename resetWidgets
     widgetIds.forEach(id => {
-        if(Widgets[id] instanceof Widget) {
+        if (Widgets[id] instanceof Widget) {
             Widgets[id].reset()
         } else {
             delete Widgets[id];
@@ -264,7 +265,7 @@ Api.refresh = function refresh(widgetId) {
 };
 
 Api.forceRefresh = function forceRefresh(widgetId) {
-    if(Array.isArray(widgetId) ) {
+    if (Array.isArray(widgetId)) {
         return Api.forceRefreshWidgets(widgetId);
     }
     return Widgets[widgetId].reRenderWidget();
@@ -426,8 +427,15 @@ Api.removePageState = function removePageState(ids) {
     }
 };
 
-Api.openPopup = function openPopup(argument, ev, element) {
-    const c = PopupWidget.popupsByIds[argument];
+Api.openPopup = async function openPopup(argument, ev, element) {
+    let c = PopupWidget.popupsByIds[argument];
+
+    if (!c && Widgets[argument]) {
+        const h = await Widgets[argument].render();
+        await El.body.prepend(h);
+        Widgets[argument].initEvents();
+        c = PopupWidget.popupsByIds[argument];
+    }
 
     if (c.isAnchorOnClick()) {
         c.setAnchor($('#' + element.data('id')));
@@ -611,7 +619,7 @@ Api.updateWidgetsContent = function updateWidgetsContent(widgetIds) {
     let deferred = [];
 
     widgetIds.forEach(widgetId => {
-        if(Widgets[widgetId]) {
+        if (Widgets[widgetId]) {
             deferred.push(Widgets[widgetId].updateWidgetContent());
         }
     });
@@ -623,7 +631,7 @@ Api.updateWidgetsContentWithoutLoader = function updateWidgetsContentWithoutLoad
     let deferred = [];
 
     widgetIds.forEach(widgetId => {
-        if(Widgets[widgetId]) {
+        if (Widgets[widgetId]) {
             deferred.push(Widgets[widgetId].updateWidgetContent(false));
         }
     });
@@ -691,7 +699,7 @@ Api.logout = function logout() {
 };
 
 Api.goToStartPage = function goToStartPage() {
-   Auth.goToStartPage();
+    Auth.goToStartPage();
 };
 
 Api.triggerWidgetEvent = function triggerWidgetEvent(widgetId, eventName) {
