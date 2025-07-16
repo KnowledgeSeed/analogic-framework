@@ -1,11 +1,8 @@
-/* global app, Listeners, QB, Widget */
-
 'use strict';
 
 class GridTableWidget extends Widget {
 
     static activeInstance = null;
-
     static areGlobalListenersAttached = false;
 
     getHtml(widgets, headerRowWidgetHtml, data) {
@@ -13,7 +10,6 @@ class GridTableWidget extends Widget {
         let d = Array.isArray(data) ? data : data.content;
         const v = this.getParameters(data);
         this.allowCopyToClipBoard = v.allowCopyToClipBoard;
-
 
         let mainDivStyle = this.getGeneralStyles(data);
         if (v.hideIfNoData === true && (!d || d.length === 0)) {
@@ -47,9 +43,7 @@ class GridTableWidget extends Widget {
             }
         }
 
-
         tb = this.buildTableBodyHtml(r.join(''));
-
         r = [];
 
         if (headerRowWidgetHtml) {
@@ -62,7 +56,6 @@ class GridTableWidget extends Widget {
                 }
                 c.push(this.buildTableHeaderCellHtml(hw, w.width, w.borderLeft, w.borderRight, w.headerAlignment ? w.headerAlignment : w.alignment));
             }
-
             th = this.buildTableHeadHtml(this.buildTableHeaderRowHtml(c.join(''), v.rowHeight, v.borderTop, v.borderBottom));
         }
         return this.getWidgetHtml(this.buildTableHtml([th, tb].join(''), v.skin), o.title || '', mainDivStyle);
@@ -127,7 +120,6 @@ class GridTableWidget extends Widget {
     }
 
     renderRowForUpdateContent(widgets, v) {
-        L('render row for update content!!!!!!!!!');
         let j = 0, col = this.state['col'], r = [];
         while (j < widgets.length) {
             r.push(this.buildTableRowHtml(widgets.slice(j, j + col).join(''), v.rowHeight, v.borderBottom));
@@ -161,18 +153,11 @@ class GridTableWidget extends Widget {
     }
 
     updateContent(data = false, loadFunction = QB.loadData) {
-
         const o = this.options, instance = this;
-
-        L('start update content', o.id, new Date());
-
         let widgetOptions, processedData, widgets = [],
             rowNum, colNum, i, j, rendered = [], w, previousLength = v(o.id + '.cellData.length'), dd;
 
         return loadFunction(o.id, instance.name).then(function (d) {
-
-            L('update content data loaded', o.id, new Date());
-
             processedData = instance.processData(d);
             const vv = instance.getParameters(d);
             instance.dynamicTooltip = (processedData || {}).tooltip;
@@ -193,8 +178,6 @@ class GridTableWidget extends Widget {
             rowNum = processedData.length;
             colNum = processedData[0] ? processedData[0].length : 0;
             instance.state['rows'] = rowNum;
-
-            L('update cell', o.id, new Date());
 
             instance.updateHtml(d);
             for (i = 0; i < rowNum; ++i) {
@@ -221,15 +204,11 @@ class GridTableWidget extends Widget {
                 }
             }
 
-            L('end update cell', o.id, new Date());
-
-
             return new Promise(function (resolve) {
                 if (vv.allowFullContentUpdated && rowNum > previousLength) {
                     let rowsToAppend = instance.renderRowForUpdateContent(rendered, vv);
                     $('#' + o.id).find('.ks-grid-table-content').append(rowsToAppend);
                 }
-                L('apply done', o.id, new Date());
                 return resolve('update');
             });
         });
@@ -251,7 +230,6 @@ class GridTableWidget extends Widget {
         delete this.row;
         delete this.column;
         const o = this.options, instance = this;
-
         let widgetOptions, widgets = [], headerRowWidget = false;
 
         for (widgetOptions of o.widgets || []) {
@@ -265,7 +243,6 @@ class GridTableWidget extends Widget {
         this.addListeners(false);
 
         let afterLoad = (data) => {
-
             let deferred = [], w, cw, processedData = instance.processData(data), i, j = 0, rows, colNum,
                 widgetHtmls = [];
 
@@ -307,7 +284,6 @@ class GridTableWidget extends Widget {
             }
 
             return $.when.apply($, deferred).then(function (...results) {
-
                 let r, first = true, headerRowWidgetHtml = false;
 
                 for (r of results) {
@@ -341,7 +317,6 @@ class GridTableWidget extends Widget {
 
     initEvents(withState) {
         const o = this.options;
-
         if (o.errorMessage) {
             return;
         }
@@ -353,7 +328,6 @@ class GridTableWidget extends Widget {
                 const cellElement = $('#' + o.id + 'Cell' + i + '-' + j);
                 cellElement.attr('data-row', i);
                 cellElement.attr('data-col', j);
-
                 Widgets[o.id + 'Cell' + i + '-' + j].initEvents(withState, o.id + '_' + i + '_' + j);
             }
         }
@@ -368,8 +342,7 @@ class GridTableWidget extends Widget {
         this.isRendering = false;
     }
 
-    initEventHandlers() {L(this);
-
+    initEventHandlers() {
         if (!this.allowCopyToClipBoard) {
             return;
         }
@@ -378,6 +351,7 @@ class GridTableWidget extends Widget {
         this.isMouseDown = false;
         this.activeCell = null;
         this.selectionAnchor = null;
+        this.lastHoveredCell = null;
 
         const gridContainer = $('#' + this.id);
         const contentArea = gridContainer.find('.ks-grid-table-content');
@@ -386,20 +360,17 @@ class GridTableWidget extends Widget {
         contentArea.on('mouseover', '.ks-grid-table-cell', this.handleMouseOver.bind(this));
         $(document).on('mouseup', this.handleMouseUp.bind(this));
 
-
         gridContainer.on('click', (e) => {
             if (GridTableWidget.activeInstance !== this) {
                 if (GridTableWidget.activeInstance) {
                     $('#' + GridTableWidget.activeInstance.id).removeClass('grid-focused');
                 }
-
                 GridTableWidget.activeInstance = this;
                 gridContainer.addClass('grid-focused');
             }
         });
 
         if (!GridTableWidget.areGlobalListenersAttached) {
-
             $(document).on('keydown', (e) => {
                 if (GridTableWidget.activeInstance) {
                     GridTableWidget.activeInstance.handleKeyDown(e);
@@ -426,13 +397,12 @@ class GridTableWidget extends Widget {
         delete this.cellData;
         delete this.row;
         delete this.column;
-
         delete this.selectedCells;
         delete this.isMouseDown;
         delete this.activeCell;
         delete this.selectionAnchor;
+        delete this.lastHoveredCell;
     }
-
 
     handleMouseDown(e) {
         if ($(e.target).is('input, textarea')) {
@@ -445,9 +415,10 @@ class GridTableWidget extends Widget {
 
         if (!e.ctrlKey && !e.shiftKey) {
             this.clearSelection();
-            this.selectedCells.add(cell.attr('id'));
             this.activeCell = cell;
             this.selectionAnchor = cell;
+            this.lastHoveredCell = cell;
+            this.selectRange(this.selectionAnchor, this.activeCell);
             this.updateSelectionUI();
         } else if (e.shiftKey && this.selectionAnchor) {
             this.activeCell = cell;
@@ -470,15 +441,19 @@ class GridTableWidget extends Widget {
         if (!this.isMouseDown) return;
 
         const cell = $(e.currentTarget);
-        const cellId = cell.attr('id');
-        if (!this.selectedCells.has(cellId)) {
-            this.selectedCells.add(cellId);
-            this.updateSelectionUI();
+        if (this.lastHoveredCell && this.lastHoveredCell.attr('id') === cell.attr('id')) {
+            return;
         }
+
+        this.lastHoveredCell = cell;
+        this.activeCell = cell;
+        this.selectRange(this.selectionAnchor, this.activeCell);
+        this.updateSelectionUI();
     }
 
     handleMouseUp(e) {
         this.isMouseDown = false;
+        this.lastHoveredCell = null;
     }
 
     handleKeyDown(e) {
@@ -491,7 +466,6 @@ class GridTableWidget extends Widget {
         if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
             return;
         }
-
         e.preventDefault();
 
         if (!this.activeCell) {
@@ -507,7 +481,6 @@ class GridTableWidget extends Widget {
 
         const isCtrlPressed = e.ctrlKey;
         const isShiftPressed = e.shiftKey;
-
         let currentRow = parseInt(this.activeCell.data('row'));
         let currentCol = parseInt(this.activeCell.data('col'));
 
@@ -534,10 +507,8 @@ class GridTableWidget extends Widget {
             if (isShiftPressed) {
                 this.clearSelection();
                 this.selectRange(this.selectionAnchor, this.activeCell);
-
             } else if (isCtrlPressed) {
                 this.selectionAnchor = this.activeCell;
-
             } else {
                 this.clearSelection();
                 this.selectedCells.add(this.activeCell.attr('id'));
@@ -610,7 +581,6 @@ class GridTableWidget extends Widget {
         });
 
         const sortedRows = new Map([...rows.entries()].sort((a, b) => a[0] - b[0]));
-
         let clipboardText = '';
         sortedRows.forEach((cols, row) => {
             let rowText = [];
@@ -643,9 +613,7 @@ class GridTableWidget extends Widget {
         if (!params.iterationNumber) {
             params.iterationNumber = -1;
         }
-
         let requests = this.getFillPatchRequest(params);
-
         Repository[this.id]['fillLeft'] = {
             url: (db) => `/api/v1/Cellsets('${db.cellsetId}')/Cells`,
             type: 'PATCH',
@@ -657,49 +625,38 @@ class GridTableWidget extends Widget {
     }
 
     getFillPatchRequest(params) {
-        //value, propertyName
-        //valueTransformation
-        //until, iterationNumber, cellCondition
         if (this.cellData && this.row && this.column) {
-
             if (typeof params.value == 'undefined' && !params.propertyName) {
                 alert(this.id + ' getFillPatchRequest must have value or propertyName parameters!');
                 return;
             }
-
             if (params.iterationNumber && params.iterationNumber === 0) {
                 alert(this.id + ' getFillPatchRequest params.iterationNumber can not be 0!');
                 return;
             }
-
             if (params.until && params.until < 0) {
                 alert(this.id + ' getFillPatchRequest params.until must be greater than or equal to 0!');
                 return;
             }
-
             let val = params.value !== false && typeof params.value !== 'undefined' ? params.value : this.cellData[this.row][this.column][params.propertyName],
                 requests = [], start = parseInt(this.column),
                 iterationNumber = params.iterationNumber ? params.iterationNumber : 1,
                 end = params.until ? params.until : iterationNumber > 0 ? this.cellData[this.row].length : 0,
                 cell, cellCondition = params.cellCondition ? params.cellCondition : () => true,
                 template = (ordinal, value) => `{"Ordinal": \"${ordinal}\","Value": \"${value}\"}`;
-
             if (iterationNumber < 0) {
                 const t = start;
                 start = end;
                 end = t;
                 iterationNumber *= -1;
             }
-
             if (end > this.cellData.length) {
                 alert(this.id + ' getFillPatchRequest wrong range params (params.until, params.iterationNumber)');
                 return;
             }
-
             if (params.valueTransformation) {
                 val = params.valueTransformation(val);
             }
-
             while (start < end) {
                 cell = this.cellData[this.row][start];
                 if (cellCondition(cell)) {
@@ -707,10 +664,7 @@ class GridTableWidget extends Widget {
                 }
                 start += iterationNumber;
             }
-
-            return `[
-                       ${requests.join(',')}
-                   ]`;
+            return `[${requests.join(',')}]`;
         }
     }
 
@@ -718,18 +672,15 @@ class GridTableWidget extends Widget {
         const cellData = v(this.options.id + '.cellData'), h = Listeners.handle;
         if (cellData && cellData.length > 0) {
             let widgetOptions, cells = [], rowNum = cellData.length, i, j, cw;
-
             for (widgetOptions of this.options.widgets || []) {
                 if ('GridTableHeaderRowWidget' !== widgetOptions.type.name) {
                     cells.push(widgetOptions);
                 }
             }
-
             for (i = 0; i < rowNum; ++i) {
                 for (j = 0; j < cells.length; ++j) {
                     cw = cells[j].widgets[0];
                     const o = {...cw, ...{id: this.options.id + '_' + i + '_' + j}};
-
                     if (o.listen) {
                         for (let l of o.listen) {
                             Listeners.push({
@@ -741,10 +692,8 @@ class GridTableWidget extends Widget {
                             });
                         }
                     }
-
                     if (o.depends) {
                         const f = o.id.split('_'), a = f[0], b = f[1];
-
                         for (let l of o.depends) {
                             Listeners.push({
                                 options: o,
@@ -759,6 +708,4 @@ class GridTableWidget extends Widget {
             }
         }
     }
-
 }
-;
