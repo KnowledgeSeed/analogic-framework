@@ -78,6 +78,7 @@ class AuthenticationProvider(ABC):
                'TM1-SessionContext': 'Analogic'}
 
     CUSTOM_OBJECT_ADD_PAGE_META_DATA_INFO = 'analogic_add_page_meta_data_info'
+    CUSTOM_OBJECT_GENERATE_SITEMAP = 'analogic_generate_sitemap'
 
     def __init__(self, setting):
         self.setting = setting
@@ -150,6 +151,28 @@ class AuthenticationProvider(ABC):
                     g.page_meta_data_info = result
             except Exception as e:
                 self.getLogger().error(e, exc_info=True)
+
+    def generate_sitemap(self):
+        generate_sitemap_description = self.setting.get_custom_object_description(
+            self.CUSTOM_OBJECT_GENERATE_SITEMAP)
+        if generate_sitemap_description is not None:
+            try:
+                urls = ClassLoader().call(generate_sitemap_description, request, self.get_tm1_service(),
+                                            self.setting, self)
+                if isinstance(urls, list):
+                    return self._generate_sitemap(urls)
+            except Exception as e:
+                self.getLogger().error(e, exc_info=True)
+        return self._generate_sitemap([])
+
+    def _generate_sitemap(self, urls):
+        sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n'
+        sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        for url in urls:
+            sitemap += f'  <url>\n    <loc>{url}</loc>\n'
+            sitemap += f'    <lastmod>{pd.Timestamp.now().strftime("%Y-%m-%dT%H:%M:%S")}</lastmod>\n</url>\n'
+        sitemap += '</urlset>'
+        return sitemap
 
     @login_required
     def pivot(self):

@@ -61,6 +61,13 @@ def index():
 
     return response
 
+@core_endpoints.analogic_endpoint_route('/sitemap.xml', methods=['GET'])
+def sitemap():
+    authentication_provider = get_authentication_provider()
+    sitemap_data = authentication_provider.generate_sitemap()
+    response = Response(sitemap_data, mimetype='application/xml')
+    response.headers['Cache-Control'] = 'public, max-age=3600'
+    return response
 
 @core_endpoints.analogic_endpoint_route('/healthy', methods=['GET'])
 def healthy():
