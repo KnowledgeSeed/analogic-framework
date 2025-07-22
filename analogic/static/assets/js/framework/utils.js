@@ -489,6 +489,14 @@ const Utils = {
     openPopup(id, ctx) {
         Api.openPopup(id, ctx.getEvent(), ctx.getElement());
     },
+    openGridTableCtxMenu(ctx, id = 'analogicSystemGridTableCtxMenu') {
+        const splitIds = ctx.getGridTableSplitIds();
+        if (splitIds.length > 0) {
+            Repository[id].setGridTableId(splitIds[0]);
+            Api.openPopup(id, ctx.getEvent(), ctx.getElement());
+        }
+
+    },
     togglePopup(id, ctx) {
         Api.togglePopup(id, ctx.getEvent(), ctx.getElement());
     },

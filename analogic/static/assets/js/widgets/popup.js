@@ -77,6 +77,7 @@ ${v.backdrop ? `<div style="${backdropStyle.join('')}" class="ks-container-backd
             fixed: this.getRealValue('fixed', d, true),
             heightFixed: this.getRealValue('heightFixed', d, true),
             heightStr: Utils.getSize(this.getRealValue('height', d, 200)),
+            newPositionCalculation: this.getRealValue('newPositionCalculation', d, false),
             offset: this.getRealValue('offset', d, 0),
             position: this.getRealValue('position', d, 'center'),
             positionAndCalculateBestSpace: this.getRealValue('positionAndCalculateBestSpace', d, false),
@@ -151,7 +152,7 @@ ${v.backdrop ? `<div style="${backdropStyle.join('')}" class="ks-container-backd
     }
 
     open() {
-        this.container.css(this.getPositionByAnchor());
+        this.container.css(this.value.newPositionCalculation ? this.getPositionByAnchor2() : this.getPositionByAnchor());
         this.section.fadeIn(this.value.fadingSpeed);
 
         this.isOpened = true;
@@ -213,6 +214,101 @@ ${v.backdrop ? `<div style="${backdropStyle.join('')}" class="ks-container-backd
         if (!v.fixed) {
             pos.left += w.scrollLeft();
             pos.top += w.scrollTop();
+        }
+
+        return pos;
+    }
+
+        // JAVÍTOTT FÜGGVÉNY
+    getPositionByAnchor2() {
+        const v = this.value, a = v.anchor;
+
+        if (!a || !a.length) {
+            return {};
+        }
+
+        const win = $(window);
+        const winHeight = win.height();
+        const winWidth = win.width();
+        const scrollTop = win.scrollTop();
+        const scrollLeft = win.scrollLeft();
+
+        const popupHeight = v.heightRatio ? v.heightRatio * winHeight : v.heightNum;
+        const popupWidth = v.widthRatio ? v.widthRatio * winWidth : v.widthNum;
+
+        const rect = a[0].getBoundingClientRect();
+        const anchorHeight = rect.height;
+        const anchorWidth = rect.width;
+
+        const arrowOffset = v.anchorVisible ? 15 : 0;
+        const configOffset = v.offset;
+
+        const potentialPositions = {
+            'bottom': {
+                top: rect.bottom + arrowOffset,
+                left: rect.left + (anchorWidth / 2) - (popupWidth / 2) + configOffset
+            },
+            'top': {
+                top: rect.top - popupHeight - arrowOffset,
+                left: rect.left + (anchorWidth / 2) - (popupWidth / 2) + configOffset
+            },
+            'right': {
+                top: rect.top + (anchorHeight / 2) - (popupHeight / 2) + configOffset,
+                left: rect.right + arrowOffset
+            },
+            'left': {
+                top: rect.top + (anchorHeight / 2) - (popupHeight / 2) + configOffset,
+                left: rect.left - popupWidth - arrowOffset
+            }
+        };
+
+        let searchOrder = ['bottom', 'top', 'right', 'left'];
+        if (v.position && potentialPositions[v.position]) {
+            searchOrder.splice(searchOrder.indexOf(v.position), 1);
+            searchOrder.unshift(v.position);
+        }
+
+        let bestPositionName = null;
+
+        for (const posName of searchOrder) {
+            const currentPos = potentialPositions[posName];
+            if (currentPos.top >= 0 &&
+                currentPos.left >= 0 &&
+                (currentPos.top + popupHeight) <= winHeight &&
+                (currentPos.left + popupWidth) <= winWidth)
+            {
+                bestPositionName = posName;
+                break;
+            }
+        }
+
+        if (!bestPositionName) {
+            bestPositionName = searchOrder[0];
+        }
+
+        const pos = potentialPositions[bestPositionName];
+
+
+        if (pos.left + popupWidth > winWidth) {
+            pos.left = winWidth - popupWidth - 5;
+        }
+        if (pos.top + popupHeight > winHeight) {
+            pos.top = winHeight - popupHeight - 5;
+        }
+        if (pos.left < 0) {
+            pos.left = 5;
+        }
+        if (pos.top < 0) {
+            pos.top = 5;
+        }
+
+        if (v.anchorVisible) {
+            this.container.removeClass('anchor-top anchor-right anchor-bottom anchor-left').addClass('anchor-' + bestPositionName);
+        }
+
+        if (!v.fixed) {
+            pos.left += scrollLeft;
+            pos.top += scrollTop;
         }
 
         return pos;

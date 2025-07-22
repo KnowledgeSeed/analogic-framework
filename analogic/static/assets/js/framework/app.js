@@ -66,7 +66,11 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
         for (i in analogicSystemWidgets) {
             wc = analogicSystemWidgets[i];
             if (wc.type) {
-                loadWidget(wc, Widgets, i);
+                if (!searchInPropertiesInReusables(i)) {
+                    loadWidget(wc, Widgets, i);
+                } else {
+                    L('Widget "' + i + '" already exists in Widgets, skipping loading');
+                }
             } else {
                 console.error('WidgetConfig "' + i + '" is not a WidgetConfig type');
             }
@@ -99,6 +103,12 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
             parent[wc.id] = wcc;
             (wc.widgets || []).forEach(w => loadWidget(w, parent, parentId));
         }
+    }
+
+    function searchInPropertiesInReusables(searchTerm) {
+        return Object.values(WidgetConfig)
+            .filter(propertyObject => !('type' in propertyObject))
+            .some(propertyObject => Object.keys(propertyObject).includes(searchTerm));
     }
 
     function start() {

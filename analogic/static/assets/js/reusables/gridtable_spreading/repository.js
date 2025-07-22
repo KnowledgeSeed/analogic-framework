@@ -1,8 +1,53 @@
-if (!Repository['analogicSystemDataSpreadPopupButton']) {
-    Repository['analogicSystemDataSpreadPopupButton'] = {
+if (!Repository['analogicSystemGridTableCtxMenu']) {
+    Repository['analogicSystemGridTableCtxMenu'] = {
+        setGridTableId(id) {
+           this.gridTableId = id;
+           this.closeAllPopups();
+        },
+        getGridTableId() {
+            return this.gridTableId;
+        },
+        getGridTable() {
+          return v(this.getGridTableId());
+        },
+        closeAllPopups() {
+            Api.closePopup(['analogicSystemGridTableCtxMenu', 'analogicSystemDataSpreadOptionsPopup']);
+        }
+    };
+}
+
+if (!Repository['analogicSystemGeneralGridTableCtxMenu']) {
+    Repository['analogicSystemGeneralGridTableCtxMenu'] = {
+        getContextMenuItems() {
+            return [{
+                label: 'Data Spread',
+                icon: 'icon-arrow-split-down',
+                skin: 'data_spread_list',
+                action: (ctx) => {
+                    Utils.openPopup('analogicSystemDataSpreadOptionsPopup', ctx);
+                    Utils.closePopup('analogicSystemGridTableCtxMenu', ctx);
+                }
+            }];
+        }
+    };
+}
+
+if (!Repository['analogicSystemGridTableCtxMenuGridTable']) {
+    Repository['analogicSystemGridTableCtxMenuGridTable'] = {
+        init() {
+            const sourceGridTable = Repository.analogicSystemGridTableCtxMenu.getGridTable();
+            let contextMenuItems = [];
+
+            if (sourceGridTable && typeof sourceGridTable.getContextMenuItems === 'function') {
+                contextMenuItems = sourceGridTable.getContextMenuItems();
+            } else if (Repository.analogicSystemGeneralGridTableCtxMenu && typeof Repository.analogicSystemGeneralGridTableCtxMenu.getContextMenuItems === 'function') {
+                contextMenuItems = Repository.analogicSystemGeneralGridTableCtxMenu.getContextMenuItems();
+            }
+
+            return [contextMenuItems];
+        },
         launch(ctx) {
-            Utils.openPopup('analogicSystemDataSpreadOptionsPopup', ctx);
-            Utils.closePopup('analogicSystemDataSpreadPopup', ctx);
+            ctx.getCell().action(ctx);
         }
     };
 }
@@ -375,6 +420,22 @@ if (!Repository['analogicSystemDataSpreadOptionsPopupPanel3GridTable']) {
             });
 
             return result;
+        }
+    };
+}
+
+if (!Repository['analogicSystemDataSpreadOptionsPopupCloseBtn']) {
+    Repository['analogicSystemDataSpreadOptionsPopupCloseBtn'] = {
+        launch(ctx) {
+            Utils.closePopup('analogicSystemDataSpreadOptionsPopup', ctx);
+        }
+    };
+}
+
+if (!Repository['analogicSystemDataSpreadOptionsPopupApplyBtn']) {
+    Repository['analogicSystemDataSpreadOptionsPopupApplyBtn'] = {
+        launch(ctx) {
+            Utils.closePopup('analogicSystemDataSpreadOptionsPopup', ctx);
         }
     };
 }
