@@ -219,7 +219,6 @@ ${v.backdrop ? `<div style="${backdropStyle.join('')}" class="ks-container-backd
         return pos;
     }
 
-        // JAVÍTOTT FÜGGVÉNY
     getPositionByAnchor2() {
         const v = this.value, a = v.anchor;
 

@@ -11,7 +11,7 @@ analogicSystemWidgets['analogicSystemGridTableCtxMenu'] = {
     width: '300',
     bgScrollable: true,
     fixed: false,
-    height: '50',
+    heightFixed: false,
     behaviour: 'popup',
     pinned: false,
     position: false,

@@ -1,14 +1,14 @@
 if (!Repository['analogicSystemGridTableCtxMenu']) {
     Repository['analogicSystemGridTableCtxMenu'] = {
         setGridTableId(id) {
-           this.gridTableId = id;
-           this.closeAllPopups();
+            this.gridTableId = id;
+            this.closeAllPopups();
         },
         getGridTableId() {
             return this.gridTableId;
         },
         getGridTable() {
-          return v(this.getGridTableId());
+            return Repository[this.getGridTableId()];
         },
         closeAllPopups() {
             Api.closePopup(['analogicSystemGridTableCtxMenu', 'analogicSystemDataSpreadOptionsPopup']);
@@ -23,9 +23,9 @@ if (!Repository['analogicSystemGeneralGridTableCtxMenu']) {
                 label: 'Data Spread',
                 icon: 'icon-arrow-split-down',
                 skin: 'data_spread_list',
-                action: (ctx) => {
+                menuOrder: 10,
+                menuAction: (ctx) => {
                     Utils.openPopup('analogicSystemDataSpreadOptionsPopup', ctx);
-                    Utils.closePopup('analogicSystemGridTableCtxMenu', ctx);
                 }
             }];
         }
@@ -44,10 +44,22 @@ if (!Repository['analogicSystemGridTableCtxMenuGridTable']) {
                 contextMenuItems = Repository.analogicSystemGeneralGridTableCtxMenu.getContextMenuItems();
             }
 
-            return [contextMenuItems];
+            contextMenuItems.sort((a, b) => {
+                if (a.menuOrder && b.menuOrder) {
+                    return a.menuOrder - b.menuOrder;
+                } else if (a.menuOrder) {
+                    return -1;
+                } else if (b.menuOrder) {
+                    return 1;
+                }
+                return 0;
+            });
+
+            return contextMenuItems.map(item => [item]);
         },
         launch(ctx) {
-            ctx.getCell().action(ctx);
+            Utils.closePopup('analogicSystemGridTableCtxMenu', ctx);
+            ctx.getCell().menuAction(ctx);
         }
     };
 }

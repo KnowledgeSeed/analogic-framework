@@ -493,7 +493,9 @@ const Utils = {
         const splitIds = ctx.getGridTableSplitIds();
         if (splitIds.length > 0) {
             Repository[id].setGridTableId(splitIds[0]);
-            Api.openPopup(id, ctx.getEvent(), ctx.getElement());
+            Api.forceRefresh(id + 'GridTable').then(() => {
+                Api.openPopup(id, ctx.getEvent(), ctx.getElement());
+            });
         }
 
     },
