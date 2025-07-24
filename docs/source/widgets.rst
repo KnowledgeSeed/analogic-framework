@@ -95,6 +95,7 @@ labelled with both texts and icons.
 -  borderColor: Border color of the button
 -  borderWidth: Border width of the button
 -  cornerRadius: Corner radius of the button
+-  contextMenuEnabled:
 -  dividerWidth: Divider width of the button
 -  effect: What effect does the button have
 -  enabled: true or false, if the button clickable
@@ -528,17 +529,23 @@ DatePickerWidget
 
 **Config Parameters:** 
 
--  title\ **:** title of the datepicker
--  ordinal:
--  titleVisible:  toggle widget title visibility (flag)
--  editable\ **:** datepicker is editable or not (flag)
--  monthPicker\ **:** if only months can be selected (flag)
--  datePicked:
--  minDate: minimal date value which can be picked by the datepicker
--  maxDate: maximal date value which can be picked by the datepicker
--  skin\ **:** Selected skin of widget
--  local:
--  panelFixed: boolean default false, datepicker will be not closed after selecting value
+-  allowEmptyDate: Allows selecting no date (empty value)
+-  closeAfterSelectingTheDate: Closes the calendar popup after a date is selected
+-  datePicked: Initially selected date in the widget (format: yyyy.mm.dd or yyyy.mm)
+-  editable: Determines if the input field is editable manually
+-  fullYearButtonText: Label of the full year selection button
+-  fullYearButtonVisible: Whether the full year button is visible
+-  local: Locale used for formatting the displayed date
+-  maxDate: Maximum selectable date
+-  minDate: Minimum selectable date
+-  monthLocale: Locale used for displaying month names (e.g. 'en-US')
+-  monthPicker: Enables month-only selection mode (year + month, no days)
+-  ordinal: Unique string to distinguish pick actions (used internally)
+-  panelFixed: Prevents the calendar popup from closing automatically
+-  skin: Selected skin of the widget (affects visual appearance)
+-  title: Title text displayed above the date field
+-  titleVisible: Determines if the title should be shown
+
 
 **Data connection to TM1:**\ OPTIONAL
 
@@ -641,6 +648,7 @@ items at a time from a given list of items.
 -  editable: boolean, default true
 -  itemIconOff: string, icon
 -  itemIconOn: string, icon
+-  disableSearch: disable search function
 -  panelWidth:\ **:** Width of the panel
 -  placeHolder:
 -  selectFirst: boolean, default false, if there is no selected item the first displayed as selected
@@ -736,7 +744,7 @@ reports to show KPI-s.
 -  colors: color of the widget
 -  skin\ **:** Selected skin of widget
 -  values: The values on the chart
--  valuesLabels:
+-  valueLabels:
 -  labels: the labels on the chart
 -  minRange: the minimum value on the chart
 -  maxRange: the maximum value on the chart
@@ -915,6 +923,8 @@ followingtypes text, textbox, dropBox, slider, toggle, datepicker  
 -  cellWidth:
 -  cellPaddingRight:
 -  cellPaddingLeft:
+-  paddingRight
+-  paddingLeft
 -  skin\ **:** skin of the widget
 -  alignment\ **:** string, default center-center alignment of the contained widget (dropbox)
      - top-left
@@ -931,6 +941,7 @@ followingtypes text, textbox, dropBox, slider, toggle, datepicker  
      - bottom-space-between
 -  borderLeft\ **:** if widget has a left border (flag)
 -  borderRight\ **:** if widget has a right border (flag)
+-  width
 
 **Data connection to TM1:**\ NO
 
@@ -1062,6 +1073,11 @@ widget (except for the header row).
 -  skin: Selected skin of widget
 -  maxRows:
 -  minWidth:
+-  allowFullContentUpdated:
+-  allowChangedDataUpdate:
+-  allowCopyToClipBoard:
+-  disableRefreshGridCell:
+-  width:
 -  borderTop\ **:** true or false, toggle the top border visibility of
    the table
 -  borderBottom\ **:** true or false, toggle the bottom border
@@ -1121,6 +1137,11 @@ histogram and a line chart.
 -  paddingRight:
 -  paddingBottom:
 -  paddingLeft:
+-  datasets:
+-  xAxesGridLinesDrawOnChartArea:
+-  yAxesGridLinesDrawOnChartArea:
+-  xAxesLabelRotation:
+-  yAxesLabelRotation:
 -  xAxesDisplay: Display of the x Axes
 -  yAxesGridLinesDrawBorder: display the lines on y axes
 -  xAxesGridLinesDrawBorder: display the lines on x axes
@@ -1266,7 +1287,99 @@ ImageWidget
           height: 90
    }
 
+ImageUploadWidget
+------------
 
+**Description:** This widget is used for uploading images and photos.
+
+
+**Config Parameters:** 
+
+-  allowedMimeTypes: Allowed MIME types for file upload
+-  allowedWidthInPixel: Maximum allowed width of uploaded image in pixels
+-  allowedHeightInPixel: Maximum allowed height of uploaded image in pixels
+-  backgroundColor: Background color of the widget
+-  borderColor: Color of the border around the widget
+-  borderWidth: Width of the border in pixels
+-  cornerRadius: Radius of the widget's corners in pixels
+-  dividerWidth: Width of the divider line between elements
+-  effect: Visual effect applied to the widget
+-  fontBold: Whether the text should be bold
+-  fontColor: Color of the text
+-  fontSize: Size of the font used for text
+-  gradient: Background gradient style
+-  icon: Icon of the widget
+-  iconHeight: Height of the icon in pixels
+-  iconPosition: Position of the icon (e.g., left, right)
+-  iconWidth: Width of the icon in pixels
+-  label: Text label shown on the widget
+-  maxFileSize: Maximum total upload size in megabytes
+-  maxFileSizePerFile: Maximum file size per individual file in megabytes
+-  progressVisible: Show progress bar during upload
+-  skin: Selected skin of the widget
+-  uploadSuccessMessage: Message shown after successful upload
+-  showUploadSuccessMessage: Whether to show success message after upload
+-  skipStoppingTheLoaderAfterSuccessUpload: Skip hiding the loader after successful upload
+
+
+**Data connection to TM1:** NO
+
+PasswordTextWidget
+------------
+
+**Description:** This widget is used for Passwords
+
+**Config Parameters:** 
+
+-  id: Unique identifier of the widget, used for binding value and events
+-  skin: Selected skin style for the widget (affects styling via class name)
+-  value: Initial value of the password field (optional, not explicitly used here but can be set programmatically)
+
+
+
+**Data connection to TM1:** NO
+
+
+RichTextWidget
+------------
+
+**Description:** This widget is used for text editing
+
+**Config Parameters:** 
+
+-  bold: Enables bold text formatting in the editor
+-  italic: Enables italic text formatting in the editor
+-  underline: Enables underline formatting
+-  leftAlign: Enables left text alignment
+-  centerAlign: Enables center text alignment
+-  rightAlign: Enables right text alignment
+-  justify: Enables justified text alignment
+-  ol: Enables ordered (numbered) list formatting
+-  ul: Enables unordered (bullet) list formatting
+-  heading: Enables heading/title formatting
+-  fonts: Allows changing fonts in the editor
+-  fontList: List of available font families
+-  fontColor: Enables font color selection
+-  backgroundColor: Enables background color selection
+-  fontSize: Enables font size selection
+-  imageUpload: Allows inserting uploaded images
+-  fileUpload: Allows uploading and inserting files
+-  videoEmbed: Allows embedding videos
+-  urls: Enables hyperlink insertion
+-  table: Enables inserting tables into the editor
+-  removeStyles: Allows removing inline styles
+-  code: Enables HTML source code editing
+-  colors: Custom color palette for text and background
+-  youtubeCookies: Whether to allow YouTube cookies in embedded videos
+-  preview: Enables live preview mode
+-  undoRedo: Enables undo and redo functionality
+-  placeholder: Placeholder text shown when editor is empty
+-  skin: Selected skin style for the editor appearance
+
+
+
+
+**Data connection to TM1:** NO
 
 LineAreaChartWidget
 ----------------------
@@ -1284,7 +1397,7 @@ LineAreaChartWidget
 -  title: Widget title text
 -  listen: {event, method} events for the widget listen to and method to
    do
-- skin: Selected skin of widget
+-  skin: Selected skin of widget
 -  datasets: [{legendLabel: string, borderColor: string, borderWidth:
    int, backgroundColor: string, fill: boolean, lineTension: float,
    pointRadius: int},…]
@@ -1350,13 +1463,25 @@ LineAreaChartWidget
 -  yAxesTicksFontColor\ **:** font color of the left y axes ticks
 -  yAxesTicksPadding\ **:** padding between Y axes ticks
 -  yAxesTicksDisplay\ **:** true or false, display the left y axes ticks
--  yAxesTicksOffs\ **et:** offset (distance) between ticks of left Y
+-  yAxesTicksOffset\ **et:** offset (distance) between ticks of left Y
    axes
+-  data
+-  defaultBezierCurveTension
+-  labelClickPopup
+-  manualLabelAlignment
+-  openPopupOnLabelClick
+-  openendPopupOffsetLeft
+-  openendPopupOffsetTop
+-  yAxesOffset
+-  yAxesOffsetBottom
+-  yAxesOffsetTop
+-  yMax
 -  tooltipsEnabled: Boolean , it's enable the mouse over info
 -  tooltipsMode:
 -  tooltipsIntersect: Boolean
 -  aspectRatio:
 -  maintainAspectRatio: Boolean
+
 
 
 
@@ -1535,6 +1660,10 @@ scatter plot diagram and a line chart.
 -  xAxisOffsetRight: It's set the visibility of the x axes off set right
 -  xAxisOffsetLeft: It's set the visibility of the x axes off set left
 -  yAxisSeparatesThousand: It's seperate the y axis
+-  yAxisTicksPrecision:
+-  yAxisTicksPrecisionFixed:
+-  yAxisSeparatesThousands:
+-  yAxisGridLinesNum:
 -  yAxisUnit:
 -  bezierCurveBorderWidth:
 -  bezierCurveTension:
@@ -2717,6 +2846,10 @@ exclusive options. (for example: on-off choice)
 -  titleOn:
 -  titleOff:
 -  value:
+-  backgroundColor:
+-  editable:
+-  iconFontSize:
+-  iconFontColor:
 
 **Data connection to TM1:**\ OPTIONAL 
 
@@ -3051,6 +3184,20 @@ at, by breaking down the aggregate effect of negative and positive contributions
 -  arrowLabelClamp: true or false, clamp of the arrow label
 -  arrowLabelClip: true or false, clip of the arrow label
 -  arrowLabelBorderRadius: border radius of the arrow label
+-  data: Data series to be displayed in the widget
+-  hideZeroBars: true or false, hide bars with zero value
+-  yAxisTicksLimit: Maximum number of tick lines on Y axis
+-  labelDataPointVisible: true or false, show label directly at data point
+-  labelDataLabelVisible: true or false, show label text for data
+-  labelAlignments: Label alignment direction (e.g. 'start', 'center', 'end')
+-  lalelsForceDisplay: true or false, force label visibility even in tight spaces
+-  showZeroValueLabels: true or false, show labels for zero values
+-  manualLabelAlignmentSetting: true or false, allow manual alignment of labels
+-  labelClickPopup: ID of the popup to open when label is clicked
+-  openPopupOnLabelClick: true or false, enable label click to open popup
+-  openendPopupOffsetLeft: Horizontal offset in pixels for popup opening
+-  openendPopupOffsetTop: Vertical offset in pixels for popup opening
+
 
 
 
@@ -3091,8 +3238,15 @@ contributions.
 -  yAxisTicksPrecisionFixed: true or false,
 -  yAxisSeparatesThousands: true or false,
 -  height: height of the chart
--  hiddenDatasets:
 -  allowLastColumnToZero: true or false
+-  allowLastColumnToZero: true or false, allow the last column to show zero value
+-  labelFontSize: Font size of the labels
+-  labelHasAction: true or false, indicates if label has a click action
+-  openPopupOnLabel: true or false, open a popup when clicking the label
+-  popupToOpenId: ID of the popup to be opened when label is clicked
+-  xAxisFontSize: Font size of the X axis labels
+-  yAxisFontSize: Font size of the Y axis labels
+
 
 **Data connection to TM1:** 
 
