@@ -8,8 +8,7 @@ build:
 python:
   install:
     - requirements: requirements.txt
-      method: pip
-      path: .
+    - path: .
 
 sphinx:
   builder: dirhtml
