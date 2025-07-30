@@ -189,7 +189,7 @@ class LineAreaChartWidget extends Widget {
 
             datasets[i].data = data;
         }
-
+        
 
         const yMin = v.yMin ?? Math.min(...yVals), yMax = v.yMax ?? Math.max(...yVals), yTotal = yMax - yMin;
 
@@ -225,7 +225,8 @@ class LineAreaChartWidget extends Widget {
                             fontFamily: v.xAxesTicksFontFamily,
                             fontStyle: v.xAxesTicksFontStyle,
                             fontColor: v.xAxesTicksFontColor,
-                            autoSkip: true,
+                            autoSkip: false,
+                            stepSize: 1,
                             minRotation: v.xAxesLabelRotation,
                             maxRotation: v.xAxesLabelRotation,
                             labelOffset: v.xAxesTicksOffset,
