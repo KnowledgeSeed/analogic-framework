@@ -170,7 +170,7 @@ class AuthenticationProvider(ABC):
         sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         for url in urls:
             sitemap += f'  <url>\n    <loc>{url}</loc>\n'
-            sitemap += f'    <lastmod>{pd.Timestamp.now().strftime("%Y-%m-%dT%H:%M:%S")}</lastmod>\n</url>\n'
+            sitemap += f'    <lastmod>{pd.Timestamp.now().strftime("%Y-%m-%d")}</lastmod>\n</url>\n'
         sitemap += '</urlset>'
         return sitemap
 
