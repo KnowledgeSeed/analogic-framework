@@ -260,6 +260,7 @@ analogicSystemWidgets['analogicSystemDataSpreadOptionsPopup'] = {
                                             type: ToggleWidget,
                                             icon: 'icon-plus',
                                             iconOff: 'icon-plus',
+                                            groupId: 1,
                                             skin: 'select_spread_options'
                                         },
                                         {
@@ -267,6 +268,7 @@ analogicSystemWidgets['analogicSystemDataSpreadOptionsPopup'] = {
                                             type: ToggleWidget,
                                             icon: 'icon-minus',
                                             iconOff: 'icon-minus',
+                                            groupId: 1,
                                             skin: 'select_spread_options'
                                         },
                                         {
@@ -274,6 +276,7 @@ analogicSystemWidgets['analogicSystemDataSpreadOptionsPopup'] = {
                                             type: ToggleWidget,
                                             icon: 'icon-arrows-square-reload',
                                             iconOff: 'icon-arrows-square-reload',
+                                            groupId: 1,
                                             skin: 'select_spread_options'
                                         }
                                     ]

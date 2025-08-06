@@ -64,6 +64,16 @@ if (!Repository['analogicSystemGridTableCtxMenuGridTable']) {
     };
 }
 
+function getSpreadManager() {
+    return Repository['analogicSystemDataSpreadOptionsPopup'].spreadManager;
+}
+
+if (!Repository['analogicSystemDataSpreadOptionsPopup']) {
+    Repository['analogicSystemDataSpreadOptionsPopup'] = {
+        spreadManager: new TM1SpreadManager()
+    };
+}
+
 if (!Repository['analogicSystemDataSpreadOptionsPopupPanel1GridTable']) {
     Repository['analogicSystemDataSpreadOptionsPopupPanel1GridTable'] = {
         init() {
@@ -248,7 +258,12 @@ if (!Repository['analogicSystemDataSpreadOptionsPopupPanel1GridTable']) {
             return result;
         },
         text_click() {
-            Utils.setWidgetValue('systemValueSelectedSpreadTypeData', Utils.getGridTableCurrentCell('analogicSystemDataSpreadOptionsPopupPanel1GridTable'));
+            const currentCell = Utils.getGridTableCurrentCell('analogicSystemDataSpreadOptionsPopupPanel1GridTable');
+            const selectedMethodName = currentCell.title;
+
+            getSpreadManager().selectMethod(selectedMethodName);
+
+            Utils.setWidgetValue('systemValueSelectedSpreadTypeData', currentCell);
             Api.updateContent('analogicSystemDataSpreadOptionsPopupPanel1GridTable');
             Api.forceRefreshWidgets(['analogicSystemDataSpreadOptionsPopupPanel2', 'analogicSystemDataSpreadOptionsPopupPanel3']);
             $('#analogicSystemDataSpreadOptionsPopup').find('.ks-container').css('width', v('systemValueSelectedSpreadTypeData')['cubePanelVisible'] ? 965 : 444)
@@ -316,6 +331,9 @@ if (!Repository['analogicSystemDataSpreadOptionsPopupPanel2DirectionPanelToggle2
     Repository['analogicSystemDataSpreadOptionsPopupPanel2DirectionPanelToggle2'] = {
         init() {
             return Repository.analogicSystemDataSpreadOptionsPopupPanel2DirectionPanel.setToggleInactive('directionOptions', 'top');
+        },
+        switch() {
+            getSpreadManager().toggleDirection('up');
         }
     };
 }
@@ -332,6 +350,9 @@ if (!Repository['analogicSystemDataSpreadOptionsPopupPanel2DirectionPanelToggle4
     Repository['analogicSystemDataSpreadOptionsPopupPanel2DirectionPanelToggle4'] = {
         init() {
             return Repository.analogicSystemDataSpreadOptionsPopupPanel2DirectionPanel.setToggleInactive('directionOptions', 'left');
+        },
+        switch() {
+            getSpreadManager().toggleDirection('left');
         }
     };
 }
@@ -348,6 +369,9 @@ if (!Repository['analogicSystemDataSpreadOptionsPopupPanel2DirectionPanelToggle6
     Repository['analogicSystemDataSpreadOptionsPopupPanel2DirectionPanelToggle6'] = {
         init() {
             return Repository.analogicSystemDataSpreadOptionsPopupPanel2DirectionPanel.setToggleInactive('directionOptions', 'right');
+        },
+        switch() {
+            getSpreadManager().toggleDirection('right');
         }
     };
 }
@@ -364,6 +388,9 @@ if (!Repository['analogicSystemDataSpreadOptionsPopupPanel2DirectionPanelToggle8
     Repository['analogicSystemDataSpreadOptionsPopupPanel2DirectionPanelToggle8'] = {
         init() {
             return Repository.analogicSystemDataSpreadOptionsPopupPanel2DirectionPanel.setToggleInactive('directionOptions', 'bottom');
+        },
+        switch() {
+            getSpreadManager().toggleDirection('down');
         }
     };
 }
@@ -447,7 +474,43 @@ if (!Repository['analogicSystemDataSpreadOptionsPopupCloseBtn']) {
 if (!Repository['analogicSystemDataSpreadOptionsPopupApplyBtn']) {
     Repository['analogicSystemDataSpreadOptionsPopupApplyBtn'] = {
         launch(ctx) {
-            Utils.closePopup('analogicSystemDataSpreadOptionsPopup', ctx);
+            const apiPayload = getSpreadManager().generateApiPayload();
+
+            if (apiPayload) {
+                console.log('Sending payload to TM1 API:', apiPayload);
+
+                // Your API call to TM1 would go here.
+
+                alert("Command generated successfully! \nPayload: " + JSON.stringify(apiPayload));
+
+                Utils.closePopup('analogicSystemDataSpreadOptionsPopup', ctx);
+            } else {
+                console.log('API Payload generation failed. Check user inputs.');
+            }
+        }
+    };
+}
+
+if (!Repository['analogicSystemDataSpreadOptionsPopupPanel2ActionPanelToggle1']) {
+    Repository['analogicSystemDataSpreadOptionsPopupPanel2ActionPanelToggle1'] = {
+        switch() {
+            getSpreadManager().setAction('add');
+        }
+    };
+}
+
+if (!Repository['analogicSystemDataSpreadOptionsPopupPanel2ActionPanelToggle2']) {
+    Repository['analogicSystemDataSpreadOptionsPopupPanel2ActionPanelToggle2'] = {
+        switch() {
+            getSpreadManager().setAction('subtract');
+        }
+    };
+}
+
+if (!Repository['analogicSystemDataSpreadOptionsPopupPanel2ActionPanelToggle3']) {
+    Repository['analogicSystemDataSpreadOptionsPopupPanel2ActionPanelToggle3'] = {
+        switch() {
+            getSpreadManager().setAction(null);
         }
     };
 }
