@@ -1,9 +1,10 @@
 from analogic.endpoint import AnalogicEndpoint
 from analogic.authentication_provider import get_authentication_provider, endpoint_login_required
 from analogic.multi_authentication_provider import get_multi_authentication_provider, is_multi_authentication_provider
-from flask import request, redirect, render_template, jsonify, Response, current_app
+from flask import request, redirect, render_template, jsonify, Response, current_app, send_file
 from functools import wraps
 from analogic.exceptions import AnalogicTM1ServiceException
+import os
 
 import traceback
 
@@ -110,6 +111,25 @@ def proxy(sub_path):
 @core_endpoints.analogic_endpoint_route('/activeUser', methods=['GET'])
 def active_user():
     return get_authentication_provider().active_user()
+
+
+@core_endpoints.analogic_endpoint_route('/translations/<locale>', methods=['GET'])
+def translations(locale):
+    auth_provider = get_authentication_provider()
+    setting = auth_provider.get_setting()
+    base = os.path.join(setting.site_root, 'static', 'assets', 'translations')
+
+    loc = locale.replace('-', '_')
+    candidates = [loc]
+    if '_' in loc:
+        candidates.append(loc.split('_')[0])
+
+    for cand in candidates:
+        file_path = os.path.join(base, cand, 'translations.json')
+        if os.path.exists(file_path):
+            return send_file(file_path, mimetype='application/json')
+
+    return jsonify({}), 404
 
 
 @core_endpoints.analogic_endpoint_route('/auth', methods=['POST'])

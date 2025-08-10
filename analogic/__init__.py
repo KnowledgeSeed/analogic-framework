@@ -40,3 +40,4 @@ from .default_signal_receiver import DefaultSignalReceiver
 from .long_running_task_executor import LongRunningTaskExecutor
 from .request_logger import RequestLogger
 from .json_log_formatter import JSONLogFormatter
+from .translation_provider import TranslationProvider, JsonTranslationProvider

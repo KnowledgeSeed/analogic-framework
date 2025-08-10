@@ -14,6 +14,7 @@ const Doc = $(document), El = {body: $('body')}, PageState = {current: '', previ
     Api = {};
 
 let EventMap, Repository, WidgetConfig, FaviconUrl, contextMenu;
+let translations = {};
 
 app.handleAjaxError = (response, widgetId) => {
     const m = (response.responseJSON ? response.responseJSON.message : response.responseText);
@@ -65,7 +66,9 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
 
         FaviconUrl = Utils.parseJSONScript('favicon-url-data');
 
-        QB.getUserData().then(start);
+        loadTranslations().then(() => {
+            QB.getUserData().then(start);
+        });
     }).on('touchstart', () => app.isTouched = true);
 
     function loadWidget(wc, parent = Widgets, parentId = null) {
@@ -90,6 +93,14 @@ window.onerror = (msg, url, lineNum, colNum, error) => {
             parent[wc.id] = wcc;
             (wc.widgets || []).forEach(w => loadWidget(w, parent, parentId));
         }
+    }
+
+    function loadTranslations() {
+        const lang = (navigator.language || navigator.userLanguage || 'en').replace('-', '_');
+        return fetch(`translations/${lang}`)
+            .then(response => response.ok ? response.json() : {})
+            .then(data => translations = data)
+            .catch(() => translations = {});
     }
 
     function start() {

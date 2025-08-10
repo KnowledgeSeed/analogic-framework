@@ -9,5 +9,6 @@
     "target": "$modelApiUrl"
   },
   "connectedSeederUrl": "$connectedSeederUrl",
-  "connectedSeederApplicationVersion": "$connectedSeederApplicationVersion"
+  "connectedSeederApplicationVersion": "$connectedSeederApplicationVersion",
+  "_translationProvider": "JsonTranslationProvider"
 }
