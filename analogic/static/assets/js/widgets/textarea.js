@@ -40,14 +40,14 @@ class TextAreaWidget extends Widget {
 <div class="ks-textarea ${mainDivClass.join(' ')} ks-textarea-${v.skin}"  style="${mainDivStyle.join('')}">
     <div class="ks-textarea-inner">
         <div class="ks-textarea-title" style="${titleStyles.join('')}">
-            <span class="ks-textarea-title-primary">${v.title ? v.title : ''}</span>
+            <span class="ks-textarea-title-primary">${v.title ? Utils.translate(v.title) : ''}</span>
             <span class="ks-textarea-title-secondary"></span>
         </div>
         <div class="ks-textarea-field">
             <div class="ks-textarea-field-inner">
                 <div class="ks-textarea-icon">${v.icon !== false ? `<img style="${iconStyles.join('')}" src="${app.applicationAssetsUrl}/skin/images/${v.icon}">` : ''}</div>
                 <div class="ks-textarea-divider"></div>
-                <textarea ${v.editable ? '' : 'disabled'} ${v.placeholder !== false ? `placeholder="${v.placeholder}"` : ''} style="${textStyles.join('')}" data-action="save" data-ordinal="${d.ordinal}" data-id="${o.id}" class="ks-textarea-input" >${d.value || ''}</textarea>
+                <textarea ${v.editable ? '' : 'disabled'} ${v.placeholder !== false ? `placeholder="${Utils.translate(v.placeholder)}"` : ''} style="${textStyles.join('')}" data-action="save" data-ordinal="${d.ordinal}" data-id="${o.id}" class="ks-textarea-input" >${d.value || ''}</textarea>
             </div>
         </div>
     </div>
@@ -101,6 +101,7 @@ class TextAreaWidget extends Widget {
         this.value = Utils.escapeText(d.value);
 
         textarea.val(d.value);
+        textarea.attr('placeholder', p.placeholder === false ? '' : Utils.translate(p.placeholder));
     }
 
     reset() {

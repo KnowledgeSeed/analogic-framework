@@ -1,4 +1,4 @@
-/* global Api, app, El, Doc, Intl, Widgets, WidgetState */
+/* global Api, app, El, Doc, Intl, Widgets, WidgetState, translations */
 
 'use strict';
 const L = console.log,
@@ -35,6 +35,7 @@ const Utils = {
         'í': 'i'
     }),
     clone: (object, deep, isObject = true) => deep ? $.extend(true, isObject ? {} : [], object) : $.extend(isObject ? {} : [], object),
+    translate: s => (typeof translations !== 'undefined' && translations[s]) ? translations[s] : s,
     replaceAll: (s, m) => s.replace(RegExp(Object.keys(m).join('|'), 'gi'), r => m[r.toLowerCase()]),
     scrollTop: duration => $('html, body').animate({scrollTop: 0}, duration || 500),
     scrollTo(idOrObj, duration, topOffset = 0) {

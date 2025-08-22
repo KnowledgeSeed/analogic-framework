@@ -1,4 +1,4 @@
-/* global app, El, Widget */
+/* global app, El, Widget, Utils */
 
 'use strict';
 
@@ -63,12 +63,12 @@ class ButtonWidget extends Widget {
         this.setValues(d, v);
 
         return `
-<a style="${aStyle.join('')}" ${o.confirmMessage2 ? `data-confirmmessage2="${o.confirmMessage2}" ` : ''} ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''} ${v.url ? `target="_blank" href="${v.url}" data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}" ` : `data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}"`} class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
+<a style="${aStyle.join('')}" ${o.confirmMessage2 ? `data-confirmmessage2="${Utils.translate(o.confirmMessage2)}" ` : ''} ${o.confirmMessage ? `data-confirmmessage="${Utils.translate(o.confirmMessage)}" ` : ''} ${v.url ? `target="_blank" href="${v.url}" data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}" ` : `data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}"`} class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
     <div class="ks-button-inner" style="${innerStyle.join('')}">
         <div class="ks-button-content" style="${contentStyle.join('')}">
             <div class="ks-button-icon" style="${iconStyle.join('')}">${v.icon !== false ? iconInfo.html : ''}</div>
             <div class="ks-button-divider" style="${dividerStyle.join('')}"></div>
-            <div class="ks-button-label" title="${Utils.htmlEncode(v.label)}" style="${labelStyle.join('')}">${v.label}</div>
+            <div class="ks-button-label" title="${Utils.htmlEncode(Utils.translate(v.label))}" style="${labelStyle.join('')}">${Utils.translate(v.label)}</div>
         </div>
     </div>
 </a>`;
@@ -160,7 +160,7 @@ class ButtonWidget extends Widget {
         //label
 
         if (v.label !== '') {
-            labelDiv.html(v.label);
+            labelDiv.html(Utils.translate(v.label));
             !main.hasClass('has-label') && main.addClass('has-label');
         } else {
             labelDiv.html('');

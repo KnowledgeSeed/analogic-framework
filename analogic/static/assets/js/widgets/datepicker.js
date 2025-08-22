@@ -1,4 +1,4 @@
-/* global app, Doc, Widget, Widgets */
+/* global app, Doc, Widget, Widgets, Utils */
 
 'use strict';
 
@@ -65,12 +65,12 @@ class DatePickerWidget extends Widget {
 <div class="ks-datepicker dropdown-type ks-datepicker-${v.skin}" style="${mainDivStyle.join('')}" data-ordinal="${v.ordinal}" data-monthpicker="${v.monthPicker || false}" data-min-date="${v.minDate || ''}" data-max-date="${v.maxDate || ''}">
     <div class="ks-datepicker-inner" style="${innerStyle.join('')}">
         <div class="ks-datepicker-title"  style="${titleStyles.join('')}">
-            ${v.titleVisible ? v.title : ''}
+            ${v.titleVisible ? Utils.translate(v.title) : ''}
         </div>
         <div class="ks-datepicker-field">
             <div class="ks-datepicker-field-inner">
                 <div class="ks-datepicker-icon icon-date"></div>
-                <input type="text" class="ks-datepicker-input" placeholder="Choose..." value="${dateText}" ${v.editable ? '' : `disabled`}>
+                <input type="text" class="ks-datepicker-input" placeholder="${Utils.translate('Choose...')}" value="${dateText}" ${v.editable ? '' : `disabled`}>
             </div>
         </div>
     </div>
@@ -83,7 +83,7 @@ class DatePickerWidget extends Widget {
                 <div class="ks-datepicker-panel-pager ks-right"></div>
             </div>
         </div>
-        <div class="ks-datepicker-full-year-button" ${v.fullYearButtonVisible ? '' : 'style="display:none;"'}>${v.fullYearButtonText}</div>
+        <div class="ks-datepicker-full-year-button" ${v.fullYearButtonVisible ? '' : 'style="display:none;"'}>${Utils.translate(v.fullYearButtonText)}</div>
         <div class="ks-datepicker-panel-months" >${monthsHtml.join('')}</div>
         <div class="ks-datepicker-panel-days" ${v.monthPicker ? 'style="display:none;"' : ''}>${v.monthPicker ? '' : DatePickerWidget.getPickerHolderDaysHtml(date, minDate, maxDate)}</div>
     </div>` : ''}

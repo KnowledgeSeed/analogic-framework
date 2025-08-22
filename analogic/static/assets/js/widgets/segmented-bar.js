@@ -1,4 +1,4 @@
-/* global app, Widget */
+/* global app, Widget, Utils */
 
 'use strict';
 class SegmentedBarWidget extends Widget {
@@ -30,7 +30,7 @@ class SegmentedBarWidget extends Widget {
 
             this.addSeparatorHtml(h, e);
 
-            h.push('<div class="ks-segmentedbar-block color-', i % 2 + 1, '" style="background: ', e.bgColor || 'inherit', '; width: ', w, '%;"><div style="color: ', e.color || 'inherit', ';" class="ks-segmentedbar-block-label">', e.label, '<\/div><\/div>');
+            h.push('<div class="ks-segmentedbar-block color-', i % 2 + 1, '" style="background: ', e.bgColor || 'inherit', '; width: ', w, '%;"><div style="color: ', e.color || 'inherit', ';" class="ks-segmentedbar-block-label">', e.label ? Utils.translate(e.label) : '', '<\/div><\/div>');
         }
 
         this.addSeparatorHtml(h, f);

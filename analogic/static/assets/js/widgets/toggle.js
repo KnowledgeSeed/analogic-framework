@@ -1,4 +1,4 @@
-/* global app, Widget, Widgets */
+/* global app, Widget, Widgets, Utils */
 
 'use strict';
 
@@ -31,7 +31,7 @@ class ToggleWidget extends Widget {
         iconStyles = iconStyles.join('');
 
         if (v.groupId && b) {
-            Widgets[v.groupId] = {ordinal: d.ordinal, value: v.titleOn};
+            Widgets[v.groupId] = {ordinal: d.ordinal, value: Utils.translate(v.titleOn)};
         }
 
         return `
@@ -39,8 +39,8 @@ class ToggleWidget extends Widget {
     <div class="ks-toggle-inner ${v.editable === false ? 'readonly' : ''}">
         <div style="${iconStyles}" class="ks-toggle-icon ks-toggle-icon-on">${v.icon ? `<span class="${v.icon}"></span>` : ''}</div>
         <div style="${iconStyles}" class="ks-toggle-icon ks-toggle-icon-off">${v.iconOff ? `<span class="${v.iconOff}"></span>` : ''}</div>
-        <div style="${titleStyles}" class="ks-toggle-label ks-toggle-label-on">${v.titleOn}</div>
-        <div style="${titleStyles}" class="ks-toggle-label ks-toggle-label-off">${v.titleOff}</div>
+        <div style="${titleStyles}" class="ks-toggle-label ks-toggle-label-on">${Utils.translate(v.titleOn)}</div>
+        <div style="${titleStyles}" class="ks-toggle-label ks-toggle-label-off">${Utils.translate(v.titleOff)}</div>
     </div>
 </div>`;
     }
@@ -60,12 +60,12 @@ class ToggleWidget extends Widget {
             main.removeClass('ks-on');
         }
 
-        titleOn.html(p.titleOn);
+        titleOn.html(Utils.translate(p.titleOn));
         Widget.setOrRemoveStyle(titleOn, 'color', p.titleFontColor);
 
         Widget.setOrRemoveStyle(iconOn, 'color', p.iconFontColor);
 
-        titleOff.html(p.titleOff);
+        titleOff.html(Utils.translate(p.titleOff));
         Widget.setOrRemoveStyle(titleOff, 'color', p.titleFontColor);
 
         Widget.setOrRemoveStyle(iconOff, 'color', p.iconFontColor);

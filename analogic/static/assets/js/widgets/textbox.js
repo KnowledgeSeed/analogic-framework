@@ -44,14 +44,14 @@ class TextBoxWidget extends Widget {
 <div class="ks-textbox ${mainDivClass.join(' ')} ks-textbox-${v.skin}"  style="${mainDivStyle.join('')}">
     <div class="ks-textbox-inner">
         <div class="ks-textbox-title" style="${titleStyles.join('')}">
-            <span class="ks-textbox-title-primary">${v.title ? v.title : ''}</span>
+            <span class="ks-textbox-title-primary">${v.title ? Utils.translate(v.title) : ''}</span>
             <span class="ks-textbox-title-secondary"></span>
         </div>
         <div class="ks-textbox-field">
             <div class="ks-textbox-field-inner ${v.editable === false ? 'readonly' : ''}">
                 <div class="ks-textbox-icon" style="${iconStyles.join('')}">${v.icon !== false ? `<img src="${app.applicationAssetsUrl}/skin/images/${v.icon}">` : ''}</div>
                 <div class="ks-textbox-divider"></div>
-                <input ${v.editable === false ? 'readonly' : ''} style="${textStyles.join('')}" data-action="writeEnd" data-id="${o.id}"  type="${v.textBoxType}" value="${Utils.htmlEncode(d.value)}" class="ks-textbox-input" placeholder="${v.defaultText ? v.defaultText : ''}">
+                <input ${v.editable === false ? 'readonly' : ''} style="${textStyles.join('')}" data-action="writeEnd" data-id="${o.id}"  type="${v.textBoxType}" value="${Utils.htmlEncode(d.value)}" class="ks-textbox-input" placeholder="${v.defaultText ? Utils.translate(v.defaultText) : ''}">
             </div>
         </div>
     </div>
@@ -72,7 +72,7 @@ class TextBoxWidget extends Widget {
 
         this.addDynamicData(data, p);
 
-        input.attr('placeholder', p.defaultText === false ? '' : p.defaultText);
+        input.attr('placeholder', p.defaultText === false ? '' : Utils.translate(p.defaultText));
         input.attr('value', Utils.htmlEncode(data.value));
         input.val(data.value);
 

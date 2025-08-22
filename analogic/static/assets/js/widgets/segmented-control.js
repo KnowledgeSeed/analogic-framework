@@ -1,4 +1,4 @@
-/* global app, Listeners, QB, Widget */
+/* global app, Listeners, QB, Widget, Utils */
 
 'use strict';
 
@@ -91,7 +91,7 @@ class SegmentedControlWidget extends Widget {
                 }
 
                 let visible = data && typeof data.visible !== 'undefined' ? data.visible : o.visible;
-                return `<section title="${o.title || ''}" ${visible === false ? 'style="display:none"' : 'style="display:contents;"'} id="${o.id}">${instance.getHtml(widgetHtmls, instance.processData(data), withState)}</section>`;
+                return `<section title="${o.title ? Utils.translate(o.title) : ''}" ${visible === false ? 'style="display:none"' : 'style="display:contents;"'} id="${o.id}">${instance.getHtml(widgetHtmls, instance.processData(data), withState)}</section>`;
             });
         });
     }
