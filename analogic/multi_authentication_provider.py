@@ -34,6 +34,7 @@ class MultiAuthenticationProvider(AuthenticationProvider):
 
                 if current_app.initialize_auth_providers is True:
                     child_auth_prov.initialize()
+                    child_auth_prov.create_translation_provider()
 
                     if name != MultiSettingManager.PRIMARY_AUTHENTICATION_PROVIDER_NAME:
                         named_routes = child_auth_prov.get_setting().get_named_routes()
@@ -161,7 +162,9 @@ class MultiAuthenticationProvider(AuthenticationProvider):
     def initialize(self):
         for name, registered_auth_prov in self.authentication_providers.items():
             registered_auth_prov.initialize()
+            registered_auth_prov.create_translation_provider()
         self.setting.initialize()
+        self.create_translation_provider()
 
     def install(self, params):
         child_auth_provider_name = params.get('multiappname')

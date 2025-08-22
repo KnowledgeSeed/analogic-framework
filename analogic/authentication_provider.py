@@ -15,6 +15,7 @@ import orjson
 import os
 from werkzeug.utils import secure_filename
 import base64
+import importlib
 
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
@@ -90,12 +91,33 @@ class AuthenticationProvider(ABC):
         self.is_in_maintenance = False
         self.maintenance_message = ''
         self.reserved_custom_object_keys = [self.CUSTOM_OBJECT_ADD_PAGE_META_DATA_INFO]
+        self.translation_provider = None
 
     def initialize(self):
         self.setting.initialize()
 
     def get_setting(self):
         return self.setting
+
+    def _create_translation_provider(self):
+        provider_name = self.setting.get_config().get('_translationProvider', 'JsonTranslationProvider')
+        if '.' in provider_name:
+            module_name, class_name = provider_name.rsplit('.', 1)
+        else:
+            module_name = 'analogic.translation_provider'
+            class_name = provider_name
+        module = importlib.import_module(module_name)
+        provider_class = getattr(module, class_name)
+        return provider_class(self)
+
+    def create_translation_provider(self):
+        self.translation_provider = self._create_translation_provider()
+        if not self.translation_provider.has_translations():
+            try:
+                self.translation_provider.generate_translations()
+            except Exception as e:
+                self.getLogger().error(f"Error generating translations: {e}", exc_info=True)
+        return self.translation_provider
 
     def is_user_framework_admin(self):
         cnf = self.setting.get_config()
@@ -684,11 +706,36 @@ class AuthenticationProvider(ABC):
     def uninstall(self, params):
         pass
 
+    def create_tm1_translation_cube(self, params):
+        from analogic.translation_provider import create_tm1_translation_cube
+        cfg = {
+            'base_url': params.get('tm1_base_url'),
+            'user': params.get('tm1_user'),
+            'password': params.get('tm1_password'),
+            'namespace': params.get('tm1_namespace')
+        }
+        if cfg['base_url'] and cfg['user'] and cfg['password']:
+            create_tm1_translation_cube(**cfg)
+
+    def delete_tm1_translation_cube(self, params):
+        from analogic.translation_provider import delete_tm1_translation_cube
+        cfg = {
+            'base_url': params.get('tm1_base_url'),
+            'user': params.get('tm1_user'),
+            'password': params.get('tm1_password'),
+            'namespace': params.get('tm1_namespace')
+        }
+        if cfg['base_url'] and cfg['user'] and cfg['password']:
+            delete_tm1_translation_cube(**cfg)
+
     def add_command_line_parameters(self, ap):
-        pass
+        ap.add_argument('--tm1-base-url', required=False, help='TM1 base url')
+        ap.add_argument('--tm1-user', required=False, help='TM1 user')
+        ap.add_argument('--tm1-password', required=False, help='TM1 password')
+        ap.add_argument('--tm1-namespace', required=False, help='TM1 namespace')
 
     def get_available_backend_methods(self):
-        return ['install', 'uninstall']
+        return ['install', 'uninstall', 'create_tm1_translation_cube', 'delete_tm1_translation_cube']
 
     @staticmethod
     def get_setting_parameter_descriptions():

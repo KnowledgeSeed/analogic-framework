@@ -60,9 +60,6 @@ class SettingManager:
         self.custom_objects = self._create_custom_objects()
         self._logger = logging.getLogger(self.get_instance())
         self.tm1_services = {}
-        self.translation_provider = self._create_translation_provider()
-        if not self.translation_provider.has_translations():
-            self.translation_provider.generate_translations()
 
     def initialize(self):
         pass
@@ -120,17 +117,6 @@ class SettingManager:
         if self.repository is not None:
             return self.repository
         return self._get_yaml_setting(os.path.join('server', 'configs', 'repository'))
-
-    def _create_translation_provider(self):
-        provider_name = self.config.get('_translationProvider', 'JsonTranslationProvider')
-        if '.' in provider_name:
-            module_name, class_name = provider_name.rsplit('.', 1)
-        else:
-            module_name = 'analogic.translation_provider'
-            class_name = provider_name
-        module = importlib.import_module(module_name)
-        provider_class = getattr(module, class_name)
-        return provider_class(self.site_root)
 
     def get_mdx(self, key):
         repository = self._get_repository()

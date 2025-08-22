@@ -199,6 +199,7 @@ class Analogic(Flask):
 
         if initialize and self.initialize_auth_providers and class_name != 'MultiAuthenticationProvider':
             authentication_provider.initialize()
+            authentication_provider.create_translation_provider()
 
         return authentication_provider
 
