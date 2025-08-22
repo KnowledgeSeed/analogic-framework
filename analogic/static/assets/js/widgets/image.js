@@ -1,4 +1,4 @@
-/* global app, Widget */
+/* global app, Widget, Utils */
 
 'use strict';
 
@@ -17,7 +17,7 @@ class ImageWidget extends Widget {
         if (o.icon) {
             html.push(`<span class="icon-${v.icon}" style="display: inline-block;${s.join('')}"><\/span>`);
         } else {
-            html.push('<img src="' + app.applicationAssetsUrl + '/skin/images/' + v.fileName + '" alt="' + v.title + '" style="' + s.join('') + '">');
+            html.push('<img src="' + app.applicationAssetsUrl + '/skin/images/' + v.fileName + '" alt="' + Utils.translate(v.title) + '" style="' + s.join('') + '">');
         }
         html.push('</div>');
 

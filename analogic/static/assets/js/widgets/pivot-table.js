@@ -1,3 +1,4 @@
+/* global Utils, Widget, Widgets, Repository, Pivot, LoadExecutorFactory */
 class PivotTableWidget extends Widget {
 
 
@@ -27,8 +28,8 @@ class PivotTableWidget extends Widget {
         const o = this.options;
 
         this.lastSelectionSubset = 'user_Default';
-        this.lastSelectionDisplayName = 'Last selection';
-        this.selectorTreeColNames = ['Dimensions', 'Hierarchies', 'Subsets', 'Elements'];
+        this.lastSelectionDisplayName = Utils.translate('Last selection');
+        this.selectorTreeColNames = [Utils.translate('Dimensions'), Utils.translate('Hierarchies'), Utils.translate('Subsets'), Utils.translate('Elements')];
         this.colors = [{name: 'Light Blue 100', hex: '009FDA'}, {
             name: 'Light Blue 60',
             hex: '66C5E9'
@@ -74,38 +75,38 @@ class PivotTableWidget extends Widget {
             <div class="ks-pivot-table-presets-btn">
                 <span class="icon-ellipsis"></span>
                 <div id="pivotPresetsDropdown" class="ks-pivot-table-presets-dropdown">
-                    <a id="closePanelBtn"><span class="icon-arrow-to-top" style="color: #007BFF;"></span>Close Panel</a>
-                    <a id="resetPivotBtn"><span class="icon-clear" style="color: #dc3545;"></span>Reset</a>
-                    <a id="savePresetBtn"><span class="icon-tray-arrow-down" style="color: #3AA745;"></span>Save as Preset</a>
-                    <a id="loadPresetBtn"><span class="icon-tray-files" style="color: #1d7bff;"></span>Load Preset</a>
+                    <a id="closePanelBtn"><span class="icon-arrow-to-top" style="color: #007BFF;"></span>${Utils.translate('Close Panel')}</a>
+                    <a id="resetPivotBtn"><span class="icon-clear" style="color: #dc3545;"></span>${Utils.translate('Reset')}</a>
+                    <a id="savePresetBtn"><span class="icon-tray-arrow-down" style="color: #3AA745;"></span>${Utils.translate('Save as Preset')}</a>
+                    <a id="loadPresetBtn"><span class="icon-tray-files" style="color: #1d7bff;"></span>${Utils.translate('Load Preset')}</a>
                     <hr>
-                    <a><span class="icon-zero-square-outline" style="color: #80379b;"></span>Suppress Zero</a>
-                    <a class="suppressZeroBtn" data-id="${this.options.id}" data-type="nonEmptyColumns"><span class="icon-check" style="color: #1d7bff;"></span>From columns</a>
-                    <a class="suppressZeroBtn" data-id="${this.options.id}" data-type="nonEmptyRows"><span class="icon-check" style="color: #1d7bff;"></span>From rows</a>
+                    <a><span class="icon-zero-square-outline" style="color: #80379b;"></span>${Utils.translate('Suppress Zero')}</a>
+                    <a class="suppressZeroBtn" data-id="${this.options.id}" data-type="nonEmptyColumns"><span class="icon-check" style="color: #1d7bff;"></span>${Utils.translate('From columns')}</a>
+                    <a class="suppressZeroBtn" data-id="${this.options.id}" data-type="nonEmptyRows"><span class="icon-check" style="color: #1d7bff;"></span>${Utils.translate('From rows')}</a>
                     <hr>
-                    <a id="exportBtnInline" data-id="${this.options.id}" data-action="exportPivotTable"><span class="icon-doc-arrow-down" style="color: #3AA745;"></span>Export to Excel</a>
+                    <a id="exportBtnInline" data-id="${this.options.id}" data-action="exportPivotTable"><span class="icon-doc-arrow-down" style="color: #3AA745;"></span>${Utils.translate('Export to Excel')}</a>
                 </div>
             </div>
         </div>`;
         } else {
             const suppressLabels = {
-                all: 'All',
-                columns: 'Columns',
-                rows: 'Rows',
-                off: 'OFF'
+                all: Utils.translate('All'),
+                columns: Utils.translate('Columns'),
+                rows: Utils.translate('Rows'),
+                off: Utils.translate('OFF')
             };
             const currSuppress = suppressLabels[this.suppressZeroMode || 'off'];
             return `
 <div class="ks-pivot-table-control-row presets-row pivot-btn-row left-align">
-    <button id="resetPivotBtn" class="pivot-btn-outline"><span class="icon-arrow-undo"></span> Reset</button>
-    <button id="savePresetBtn" class="pivot-btn-outline"><span class="icon-tray-arrow-down"></span> Save as Preset</button>
-    <button id="loadPresetBtn" class="pivot-btn-outline"><span class="icon-tray-files"></span> Load Preset</button>
+    <button id="resetPivotBtn" class="pivot-btn-outline"><span class="icon-arrow-undo"></span> ${Utils.translate('Reset')}</button>
+    <button id="savePresetBtn" class="pivot-btn-outline"><span class="icon-tray-arrow-down"></span> ${Utils.translate('Save as Preset')}</button>
+    <button id="loadPresetBtn" class="pivot-btn-outline"><span class="icon-tray-files"></span> ${Utils.translate('Load Preset')}</button>
     <span class="pivot-btn-outline-group" style="position:relative;">
-      <span class="pivot-btn-outline-label">Supress Zero:</span>
+      <span class="pivot-btn-outline-label">${Utils.translate('Supress Zero:')}</span>
       <button id="suppressZeroDropdownBtn" class="pivot-btn-outline suppressZeroDropdownBtn" type="button">${currSuppress}</button>
       <div id="suppressZeroPopup" class="suppress-zero-popup" style="display:none;position:absolute;z-index:999;left:0;top:40px;"></div>
     </span>
-    <span class="pivot-btn-outline-label" style="margin-left:24px;">Excel:</span>
+    <span class="pivot-btn-outline-label" style="margin-left:24px;">${Utils.translate('Excel:')}</span>
     <button id="exportBtn" class="pivot-btn-outline"><span class="icon-doc-arrow-down"></span></button>
 </div>`;
         }
@@ -266,7 +267,7 @@ class PivotTableWidget extends Widget {
             h += '<div data-name="' + color.name + '" data-hex="' + color.hex + '" class="ks-pivot-tag-color-dropdown-chooser-item" style="background-color: #' + color.hex + ';"></div>';
         }
 
-        h += '</div></div></div><div class="ks-pivot-tag-button-holder"><a id="selectorTreeCancelBtn" class="ks-pivot-btn btn-blue-light"><span class="icon-x-circle"></span>Cancel</a><a id="selectorTreeSaveBtn" class="ks-pivot-btn btn-blue"><span style="color: #fff;" class="icon-check-on"></span>Save</a><a id="selectorTreeViewBtn" class="ks-pivot-btn btn-blue"><span style="color: #fff;" class="icon-glasses"></span>View</a></div></div><div class="ks-pivot-tag-add-holder">';
+        h += '</div></div></div><div class="ks-pivot-tag-button-holder"><a id="selectorTreeCancelBtn" class="ks-pivot-btn btn-blue-light"><span class="icon-x-circle"></span>' + Utils.translate('Cancel') + '</a><a id="selectorTreeSaveBtn" class="ks-pivot-btn btn-blue"><span style="color: #fff;" class="icon-check-on"></span>' + Utils.translate('Save') + '</a><a id="selectorTreeViewBtn" class="ks-pivot-btn btn-blue"><span style="color: #fff;" class="icon-glasses"></span>' + Utils.translate('View') + '</a></div></div><div class="ks-pivot-tag-add-holder">';
 
         h += this.renderNextSelectorTreeLevel(this.tree) + '</div></div>';
 
@@ -626,7 +627,7 @@ class PivotTableWidget extends Widget {
         const aliasAttrName = isElementCol ? this.getSelectedAliasAttributeName(cols.eq(0).data('value'), cols.eq(1).data('value'), cols.eq(2).data('value')) : false;
 
         let el, name, displayName, isSubsetSelected, defaultSubsetItem = '', h = '',
-            g = '<div data-type="' + types[i] + '" class="ks-pivot-tag-add-col ' + (isCheckableCol ? 'checkable-col' : '') + '"><div class="ks-pivot-add-tag-search-holder"><div class="ks-pivot-add-tag-search"><span class="icon-search"></span><input type="text" placeholder="Search..."></div></div><div class="ks-pivot-tag-add-col-content"><div class="ks-pivot-tag-add-item title-item">' + (isElementCol ? ('<span id="pivotElementsCheckbox"></span>') : '') + this.selectorTreeColNames[i] + (isElementCol ? '<span class="icon-aa"><div class="ks-pivot-table-presets-dropdown"></div></span>' : '') + '</div>';
+            g = '<div data-type="' + types[i] + '" class="ks-pivot-tag-add-col ' + (isCheckableCol ? 'checkable-col' : '') + '"><div class="ks-pivot-add-tag-search-holder"><div class="ks-pivot-add-tag-search"><span class="icon-search"></span><input type="text" placeholder="' + Utils.translate('Search...') + '"></div></div><div class="ks-pivot-tag-add-col-content"><div class="ks-pivot-tag-add-item title-item">' + (isElementCol ? ('<span id="pivotElementsCheckbox"></span>') : '') + this.selectorTreeColNames[i] + (isElementCol ? '<span class="icon-aa"><div class="ks-pivot-table-presets-dropdown"></div></span>' : '') + '</div>';
 
         if (isCheckableCol) {
             let check, del, c, chevron = isElementCol ? '' : '<span class="icon-chevron-right"></span>',
@@ -966,15 +967,15 @@ class PivotTableWidget extends Widget {
 
         this.popup = $(`
             <div class="ks-pivot ks-pivot-tag-add-popup">
-                <h3>Save as New Subset</h3>
-                <label>Subset Title</label>
+                <h3>${Utils.translate('Save as New Subset')}</h3>
+                <label>${Utils.translate('Subset Title')}</label>
                 <input type="text">
                 <div class="ks-pivot-popup-check-holder">
-                    <span class="icon-check off" style="color: #1d7bff;"></span>This Subset is Public
+                    <span class="icon-check off" style="color: #1d7bff;"></span>${Utils.translate('This Subset is Public')}
                 </div>
                 <div class="ks-pivot-tag-add-popup-button-holder">
-                    <a class="ks-pivot-btn btn-blue-light">Cancel</a>
-                    <a data-action="save" class="ks-pivot-btn btn-blue">Save</a>
+                    <a class="ks-pivot-btn btn-blue-light">${Utils.translate('Cancel')}</a>
+                    <a data-action="save" class="ks-pivot-btn btn-blue">${Utils.translate('Save')}</a>
                 </div>
             </div>
         `);
@@ -1099,7 +1100,7 @@ class PivotTableWidget extends Widget {
     }
 
     removeSubset(subset) {
-        this.popup = $('<div class="ks-pivot ks-pivot-tag-add-popup"><div style="text-align: center;margin: 15px;"><span class="icon-trash-fill" style="color: #DC3545;font-size: 30px;"></span></div><h2 style="text-align: center;">Delete Subset</h2><h3>Are you sure?<br>This action cannot be undone!</h3><div class="ks-pivot-tag-add-popup-button-holder"><a class="ks-pivot-btn btn-blue-light">Cancel</a><a data-action="yes" class="ks-pivot-btn btn-red-bg">Delete</a></div></div>');
+        this.popup = $('<div class="ks-pivot ks-pivot-tag-add-popup"><div style="text-align: center;margin: 15px;"><span class="icon-trash-fill" style="color: #DC3545;font-size: 30px;"></span></div><h2 style="text-align: center;">' + Utils.translate('Delete Subset') + '</h2><h3>' + Utils.translate('Are you sure?<br>This action cannot be undone!') + '</h3><div class="ks-pivot-tag-add-popup-button-holder"><a class="ks-pivot-btn btn-blue-light">' + Utils.translate('Cancel') + '</a><a data-action="yes" class="ks-pivot-btn btn-red-bg">' + Utils.translate('Delete') + '</a></div></div>');
 
         this.popup.on('click', 'a', e => {
             if ('yes' === $(e.currentTarget).data('action')) {
@@ -1216,7 +1217,7 @@ class PivotTableWidget extends Widget {
             list += '<a title="' + n.name + '" data-id="' + i + '" class="ellipsis"><span class="icon-check' + (i === id ? '' : ' off') + '"></span><span class="icon-' + ('Public' === n.type ? 'globe-lines' : 'person-outline') + '"></span>' + n.name + (n.isOwner ? '<span class="icon-trash"></span>' : '') + '</a>';
         }
 
-        this.popup = $('<div class="ks-pivot ks-pivot-tag-add-popup"><h3>Please select the Preset to load</h3><div class="ks-pivot-filterbox ks-pivot-table-presets-dropdown"><div class="ks-pivot-add-tag-search"><span class="icon-search"></span><input type="text" placeholder="Search..."></div><div class="ks-pivot-scrollable">' + list + '</div><hr><a data-load="1" class="ks-pivot-btn btn-blue-light">Load</a><a class="ks-pivot-btn btn-red">Cancel</a></div></div>');
+        this.popup = $('<div class="ks-pivot ks-pivot-tag-add-popup"><h3>' + Utils.translate('Please select the Preset to load') + '</h3><div class="ks-pivot-filterbox ks-pivot-table-presets-dropdown"><div class="ks-pivot-add-tag-search"><span class="icon-search"></span><input type="text" placeholder="' + Utils.translate('Search...') + '"></div><div class="ks-pivot-scrollable">' + list + '</div><hr><a data-load="1" class="ks-pivot-btn btn-blue-light">' + Utils.translate('Load') + '</a><a class="ks-pivot-btn btn-red">' + Utils.translate('Cancel') + '</a></div></div>');
 
         this.showPopup();
 
@@ -1290,7 +1291,7 @@ class PivotTableWidget extends Widget {
 
     deletePreset(a) {
         let v = this.presets[a.data('id')], d = {pID: v.id, pValue: '', pName: '', pType: ''},
-            p = $('<div style="width: 600px;" class="ks-pivot ks-pivot-tag-add-popup"><div style="text-align: center;margin: 15px;"><span class="icon-trash-fill" style="color: #DC3545;font-size: 30px;"></span></div><h2 style="text-align: center;">Delete Preset</h2><h3>Are you sure you want to delete the "' + a.attr('title') + '" ' + v.type + ' Preset?<br><br>This action cannot be undone!</h3><div class="ks-pivot-tag-add-popup-button-holder"><a class="ks-pivot-btn btn-blue-light">Cancel</a><a data-action="yes" class="ks-pivot-btn btn-red-bg">Delete</a></div></div>');
+            p = $('<div style="width: 600px;" class="ks-pivot ks-pivot-tag-add-popup"><div style="text-align: center;margin: 15px;"><span class="icon-trash-fill" style="color: #DC3545;font-size: 30px;"></span></div><h2 style="text-align: center;">' + Utils.translate('Delete Preset') + '</h2><h3>' + Utils.translate('Are you sure you want to delete the "') + a.attr('title') + '" ' + v.type + ' ' + Utils.translate('Preset?<br><br>This action cannot be undone!') + '</h3><div class="ks-pivot-tag-add-popup-button-holder"><a class="ks-pivot-btn btn-blue-light">' + Utils.translate('Cancel') + '</a><a data-action="yes" class="ks-pivot-btn btn-red-bg">' + Utils.translate('Delete') + '</a></div></div>');
 
         El.body.append(p);
 
@@ -1313,7 +1314,7 @@ class PivotTableWidget extends Widget {
     savePreset() {
         let id = this.presetId, d = this.presets[id] || {}, isPublic = 'Public' === d.type;
 
-        this.popup = $('<div class="ks-pivot ks-pivot-tag-add-popup"><h3>Please set the Preset name a visibility</h3><div class="ks-pivot-add-tag-search"><input value="' + (d.name || '') + '" type="text" placeholder="The Preset name..."></div><div class="ks-pivot-popup-check-holder"><span class="icon-check' + (isPublic ? '' : ' off') + '" style="color: #1d7bff;"></span>The Preset is Public</div><div class="ks-pivot-tag-add-popup-button-holder"><a class="ks-pivot-btn btn-blue-light">Cancel</a><a class="ks-pivot-btn btn-blue">Save</a></div></div>');
+        this.popup = $('<div class="ks-pivot ks-pivot-tag-add-popup"><h3>' + Utils.translate('Please set the Preset name a visibility') + '</h3><div class="ks-pivot-add-tag-search"><input value="' + (d.name || '') + '" type="text" placeholder="' + Utils.translate('The Preset name...') + '"></div><div class="ks-pivot-popup-check-holder"><span class="icon-check' + (isPublic ? '' : ' off') + '" style="color: #1d7bff;"></span>' + Utils.translate('The Preset is Public') + '</div><div class="ks-pivot-tag-add-popup-button-holder"><a class="ks-pivot-btn btn-blue-light">' + Utils.translate('Cancel') + '</a><a class="ks-pivot-btn btn-blue">' + Utils.translate('Save') + '</a></div></div>');
 
         let n = this.popup.find('input'), c = this.popup.find('.icon-check');
 
@@ -1335,7 +1336,7 @@ class PivotTableWidget extends Widget {
         let p = this.presets, i, j, k = null, f, d = [], t = isPublic ? 'Public' : 'Private';
 
         if (!presetName) {
-            app.popup.show('Please give a Preset name to save.', 300);
+            app.popup.show(Utils.translate('Please give a Preset name to save.'), 300);
             return;
         }
 
@@ -1353,7 +1354,7 @@ class PivotTableWidget extends Widget {
         }
 
         if (isPublic && f) {
-            app.popup.show('A Public Preset with the same name "' + presetName + '" already exists.<br>Please change the name or set the visibility to Private.', 550);
+            app.popup.show(Utils.translate('A Public Preset with the same name "') + presetName + Utils.translate('" already exists.<br>Please change the name or set the visibility to Private.'), 550);
             return;
         } else if (null === k) {
             k = p.length;
@@ -1426,10 +1427,10 @@ class PivotTableWidget extends Widget {
 
     showSuppressZeroPopup(btn) {
         const options = [
-            {mode: 'all', label: 'All'},
-            {mode: 'columns', label: 'Columns'},
-            {mode: 'rows', label: 'Rows'},
-            {mode: 'off', label: 'OFF'}
+            {mode: 'all', label: Utils.translate('All')},
+            {mode: 'columns', label: Utils.translate('Columns')},
+            {mode: 'rows', label: Utils.translate('Rows')},
+            {mode: 'off', label: Utils.translate('OFF')}
         ];
         const currMode = this.suppressZeroMode || 'off';
         let html = options.map(opt =>
@@ -1522,7 +1523,7 @@ class PivotTableWidget extends Widget {
             h += '<a data-name="' + n + '" data-alias="' + e + '" title="' + t + '" class="ellipsis"><span class="icon-check' + s + '"></span>' + t + '</a>';
         }
 
-        e = $('<div class="ks-pivot-filterbox ks-pivot-table-presets-dropdown"><div class="ks-pivot-add-tag-search"><span class="icon-search"></span><input type="text" placeholder="Search..."></div><div class="ks-pivot-scrollable">' + h + '</div><hr><a class="ks-pivot-btn btn-blue-light">Edit List</a><a class="ks-pivot-btn btn-red">Delete Filter</a></div>');
+        e = $('<div class="ks-pivot-filterbox ks-pivot-table-presets-dropdown"><div class="ks-pivot-add-tag-search"><span class="icon-search"></span><input type="text" placeholder="' + Utils.translate('Search...') + '"></div><div class="ks-pivot-scrollable">' + h + '</div><hr><a class="ks-pivot-btn btn-blue-light">' + Utils.translate('Edit List') + '</a><a class="ks-pivot-btn btn-red">' + Utils.translate('Delete Filter') + '</a></div>');
 
         e.on('click', false).on('click', '.btn-blue-light', () => this.openSelectorTreeFromCard(card)).on('click', '.btn-red', () => card.children('.icon-x-circle').click());
 

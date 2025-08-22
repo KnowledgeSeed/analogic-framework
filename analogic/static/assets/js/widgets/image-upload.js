@@ -1,4 +1,4 @@
-/* global app, Widget, Widgets */
+/* global app, Widget, Widgets, Api, Utils */
 
 'use strict';
 
@@ -36,7 +36,7 @@ class ImageUploadWidget extends Widget {
 
         this.maxFileSize = params.maxFileSize;
         this.maxFileSizePerFile = params.maxFileSizePerFile;
-        this.uploadSuccessMessage = params.uploadSuccessMessage;
+        this.uploadSuccessMessage = Utils.translate(params.uploadSuccessMessage);
         this.showUploadSuccessMessage = params.showUploadSuccessMessage;
         this.skipStoppingTheLoaderAfterSuccessUpload = params.skipStoppingTheLoaderAfterSuccessUpload;
         this.allowedMimeTypes = params.allowedMimeTypes;
@@ -103,7 +103,7 @@ class ImageUploadWidget extends Widget {
                 <input style="opacity: 0;width: 0.1px;height: 0.1px;" data-id="${o.id}" data-action="uploadImage" type="file" multiple>
                 <div class="ks-button-icon" style="${imgStyle.join('')}">${params.icon !== false ? `<span style="${imgStyle.join('')}" class="${params.icon}"></span>` : ''}</div>
                 <div class="ks-button-divider" style="${dividerStyle.join('')}"></div>
-                <div class="ks-button-label" style="${labelStyle.join('')}">${params.label}</div>
+                <div class="ks-button-label" style="${labelStyle.join('')}">${Utils.translate(params.label)}</div>
             </div>
         </div>
     </label>
@@ -122,7 +122,7 @@ class ImageUploadWidget extends Widget {
                 file = files[i];
 
                 if (file.size / 1048576 > mf) {
-                    Api.showPopup('Maximum file size per file: ' + mf + ' mb!');
+                    Api.showPopup(Utils.translate('Maximum file size per file:') + ' ' + mf + ' mb!');
                     s.val('');
                     return;
                 }
@@ -130,7 +130,7 @@ class ImageUploadWidget extends Widget {
                 size += file.size;
 
                 if (amt && !amt.includes(file.type)) {
-                    Api.showPopup('Only ' + amt.join(',') + ' files are allowed!');
+                    Api.showPopup(Utils.translate('Only') + ' ' + amt.join(',') + ' ' + Utils.translate('files are allowed!'));
                     s.val('');
                     return;
                 }
@@ -138,7 +138,7 @@ class ImageUploadWidget extends Widget {
                 if (aw && ah) {
                     let valid = await ww.validateImageDimensions(file, 640, 360);
                     if (!valid) {
-                        Api.showPopup('Image dimensions must be ' + aw + 'x' + ah + ' pixels!');
+                        Api.showPopup(Utils.translate('Image dimensions must be') + ' ' + aw + 'x' + ah + ' ' + Utils.translate('pixels!'));
                         s.val('');
                         return;
                     }
@@ -164,7 +164,7 @@ class ImageUploadWidget extends Widget {
 
                 Widget.doHandleSystemEvent(s, e);
             } else {
-                Api.showPopup('The maximum size of all files: ' + m + ' mb!');
+                Api.showPopup(Utils.translate('The maximum size of all files:') + ' ' + m + ' mb!');
 
                 s.val('');
             }

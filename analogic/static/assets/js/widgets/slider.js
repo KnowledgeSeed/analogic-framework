@@ -78,8 +78,8 @@ class SliderWidget extends Widget {
                 </div>
             </div>
             <div class="ks-slider-touch-options-buttons">
-                <div class="ks-slider-touch-options-button ks-button-cancel">Cancel</div>
-                <div class="ks-slider-touch-options-button ks-button-update">OK</div>
+                <div class="ks-slider-touch-options-button ks-button-cancel">${Utils.translate('Cancel')}</div>
+                <div class="ks-slider-touch-options-button ks-button-update">${Utils.translate('OK')}</div>
             </div>
         </div>
     </div>
@@ -110,22 +110,22 @@ class SliderWidget extends Widget {
 
     <div class="ks-slider-options">
         <div class="ks-slider-options-controls">
-            <div class="ks-slider-options-label">Current Value</div>
+            <div class="ks-slider-options-label">${Utils.translate('Current Value')}</div>
             <div class="ks-slider-options-input">
                 <input type="text" value="">
                 <div class="ks-slider-options-input-label ks-label-min">
-                    <div class="ks-slider-options-input-label-name">Min</div>
+                    <div class="ks-slider-options-input-label-name">${Utils.translate('Min')}</div>
                     <div class="ks-slider-options-input-label-value">${v.minRange}</div>
                 </div>
                 <div class="ks-slider-options-input-label ks-label-max">
-                    <div class="ks-slider-options-input-label-name">Max</div>
+                    <div class="ks-slider-options-input-label-name">${Utils.translate('Max')}</div>
                     <div class="ks-slider-options-input-label-value">${v.maxRange}</div>
                 </div>
             </div>
         </div>
         <div class="ks-slider-options-buttons">
-            <div class="ks-slider-options-button ks-button-cancel">Cancel</div>
-            <div class="ks-slider-options-button ks-button-update">Update</div>
+            <div class="ks-slider-options-button ks-button-cancel">${Utils.translate('Cancel')}</div>
+            <div class="ks-slider-options-button ks-button-update">${Utils.translate('Update')}</div>
         </div>
     </div>
     ${this.createLegendHmtml()}
@@ -403,7 +403,7 @@ class SliderWidget extends Widget {
         }
 
         for (d of v.legend) {
-            h += '<div data-id="' + (++i) + '" style="background-color:' + d.color + ';" class="ks-legend-item"><div class="ks-legend-item-inner"><div style="color: #000;" class="ks-legend-icon"></div><div style="color: #000;" class="ks-legend-label">' + d.name + '</div></div></div>';
+            h += '<div data-id="' + (++i) + '" style="background-color:' + d.color + ';" class="ks-legend-item"><div class="ks-legend-item-inner"><div style="color: #000;" class="ks-legend-icon"></div><div style="color: #000;" class="ks-legend-label">' + (d.name ? Utils.translate(d.name) : '') + '</div></div></div>';
         }
 
         h += '</div></div>';

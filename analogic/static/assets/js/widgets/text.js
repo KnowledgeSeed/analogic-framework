@@ -49,8 +49,8 @@ class TextWidget extends Widget {
 <div class="ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}" style="${mainDivStyle.join('')}">
     <div class="ks-text-inner" style="${innerStyles.join('')}" data-id="${o.id}" data-action="text_click" data-ordinal="${v.ordinal}">
         <div class="ks-text-icon" data-id="${o.id}" data-action="${v.iconCustomEventName ? v.iconCustomEventName : 'perform'}" data-ordinal="${v.ordinal}"><span style="${iconStyles.join('')}" class="${v.icon}"></span></div>
-        <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title && !v.tooltip ? Utils.htmlEncode(Utils.stripHtml(v.title)) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title !== false ? v.title : ''}</div>
-        <div class="ks-text-body" style="${bodyStyles.join('')}">${v.body !== false ? v.body : ''}</div>
+        <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title && !v.tooltip ? Utils.htmlEncode(Utils.stripHtml(Utils.translate(v.title))) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title !== false ? Utils.translate(v.title) : ''}</div>
+        <div class="ks-text-body" style="${bodyStyles.join('')}">${v.body !== false ? Utils.translate(v.body) : ''}</div>
     </div>
 </div>`;
     }
@@ -118,8 +118,8 @@ class TextWidget extends Widget {
         Widget.setOrRemoveStyle(inner, 'height', v.innerHeight ? Widget.getPercentOrPixel(v.innerHeight) : false);
 
         //title
-        title.html(v.title !== false ? v.title : '');
-        title.attr('title', v.title ? Utils.htmlEncode(Utils.stripHtml(v.title)) : '');
+        title.html(v.title !== false ? Utils.translate(v.title) : '');
+        title.attr('title', v.title ? Utils.htmlEncode(Utils.stripHtml(Utils.translate(v.title))) : '');
         if (v.title !== false) {
             mainDiv.addClass('has-title');
         }
@@ -127,7 +127,7 @@ class TextWidget extends Widget {
         Widget.setOrRemoveStyle(title, 'cursor', v.titleCursor);
 
         //body
-        body.html(v.body !== false ? v.body : '');
+        body.html(v.body !== false ? Utils.translate(v.body) : '');
         if (v.body !== false) {
             mainDiv.addClass('has-body');
         }

@@ -1,10 +1,11 @@
+/* global Utils */
 'use strict';
 
 class PageWidget extends Widget {
 
     getHtml(widgets, d) {
         const params = this.getParameters(d);
-        this.title = params.title;
+        this.title = Utils.translate(params.title);
         this.favicon = params.favicon;
 
         return widgets.join('');

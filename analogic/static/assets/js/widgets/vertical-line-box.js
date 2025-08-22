@@ -1,4 +1,4 @@
-/* global app, Widget */
+/* global app, Widget, Utils */
 
 'use strict';
 class VerticalLineBoxWidget extends Widget {
@@ -29,7 +29,7 @@ class VerticalLineBoxWidget extends Widget {
 
             titleClass = '';
 
-            h.push('<div class="ks-vertical-label', (e.labelVisible ? '' : ' hidden'), '" style="left: ', left, '%; color: ', (e.labelColor || 'inherit'), ';">', e.label || '', '<\/div>');
+            h.push('<div class="ks-vertical-label', (e.labelVisible ? '' : ' hidden'), '" style="left: ', left, '%; color: ', (e.labelColor || 'inherit'), ';">', e.label ? Utils.translate(e.label) : '', '<\/div>');
 
             if (e.labelVisible) {
                 if (!heightClasses.includes('ks-vertical-line-has-label')) {
@@ -38,7 +38,7 @@ class VerticalLineBoxWidget extends Widget {
             }
 
             if (e.titleVisible) {
-                h.push('<div class="ks-vertical-title" style="color: ', (e.titleColor || 'inherit'), '; background: ', (e.titleBgColor || 'inherit'), '; left: ', left, '%;">', e.title || '', '<\/div>');
+                h.push('<div class="ks-vertical-title" style="color: ', (e.titleColor || 'inherit'), '; background: ', (e.titleBgColor || 'inherit'), '; left: ', left, '%;">', e.title ? Utils.translate(e.title) : '', '<\/div>');
 
                 titleClass = 'ks-vertical-line-has-title';
 

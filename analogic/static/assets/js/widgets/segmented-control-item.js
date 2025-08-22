@@ -1,4 +1,4 @@
-/* global Widget */
+/* global Widget, Utils */
 
 'use strict';
 
@@ -14,7 +14,7 @@ class SegmentedControlItemWidget extends Widget {
             value: this.getRealValue('value', d, '')
         };
 
-        return `<a id="${o.id + '_' + d.id}" data-id="${d.id}" data-value="${v.value}" data-action="${v.action}" class="ks-segment ${v.selected ? ' ks-on' : ''} ks-segmented-${v.skin}"  style="${this.getGeneralStyles(d).join('')}"><div class="ks-segment-inner"><div class="ks-segment-icon"></div><div class="ks-segment-label">${v.label}</div></div></a>`;
+        return `<a id="${o.id + '_' + d.id}" data-id="${d.id}" data-value="${v.value}" data-action="${v.action}" class="ks-segment ${v.selected ? ' ks-on' : ''} ks-segmented-${v.skin}"  style="${this.getGeneralStyles(d).join('')}"><div class="ks-segment-inner"><div class="ks-segment-icon"></div><div class="ks-segment-label">${Utils.translate(v.label)}</div></div></a>`;
     }
 }
 ;

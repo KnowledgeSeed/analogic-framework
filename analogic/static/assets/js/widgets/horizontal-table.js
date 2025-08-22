@@ -29,7 +29,7 @@ class HorizontalTableWidget extends Widget {
         }
 
         if (v.searchField) {
-            s.push(`<div class="ks-horizontal-table-search"><div class="ks-horizontal-table-search-icon"><span class="icon-search"></span></div><input type="text" value=" ${withState && this.state.searchInput ? this.state.searchInput : ''}" class="ks-horizontal-table-search-input" placeholder="Search..."></div>`);
+            s.push(`<div class="ks-horizontal-table-search"><div class="ks-horizontal-table-search-icon"><span class="icon-search"></span></div><input type="text" value=" ${withState && this.state.searchInput ? this.state.searchInput : ''}" class="ks-horizontal-table-search-input" placeholder="${Utils.translate('Search...')}"></div>`);
         }
 
         if (o.checkbox) {
@@ -38,7 +38,7 @@ class HorizontalTableWidget extends Widget {
     <div class="ks-horizontal-table-search-toggle ${withState && this.state.checkbox === true ? 'ks-on' : ''}" data-value="${o.checkbox.value}">
         <div class="ks-horizontal-table-toggle-icon ks-horizontal-table-toggle-icon-off"><span class="icon-checkbox-off"></span></div>
         <div class="ks-horizontal-table-toggle-icon ks-horizontal-table-toggle-icon-on"><span class="icon-checkbox-on"></span></div>
-        <div class="ks-horizontal-table-toggle-label ks-horizontal-table-toggle-label-on">${o.checkbox.value} Only</div>
+        <div class="ks-horizontal-table-toggle-label ks-horizontal-table-toggle-label-on">${Utils.translate(o.checkbox.value)} ${Utils.translate('Only')}</div>
     </div>
 </div>`
             );
@@ -72,7 +72,7 @@ class HorizontalTableWidget extends Widget {
             <div class="ks-horizontal-table-body-scroll" style="max-height:${fadeOutHeight}px;${data.cells.length <= v.fadeOutNum ? 'overflow:hidden;' : ''}">${d}</div>
             ${data.cells.length > v.fadeOutNum ? '<div class="ks-horizontal-table-fade"></div>' : ''}
         </div>
-        ${data.cells.length > v.fadeOutNum ? `<div class="ks-horizontal-table-footer"><div class="ks-horizontal-table-info">${data.cells.length}  ${data.cells.length > 1 ? 'results' : 'result'}</div></div>` : ''}
+        ${data.cells.length > v.fadeOutNum ? `<div class="ks-horizontal-table-footer"><div class="ks-horizontal-table-info">${data.cells.length}  ${Utils.translate(data.cells.length > 1 ? 'results' : 'result')}</div></div>` : ''}
     </div>
 </div>`;
     }
@@ -82,20 +82,20 @@ class HorizontalTableWidget extends Widget {
 
         if (data.leftActionCells.length > 0) {
             for (l of data.leftActionCells[0]) {
-                s.push(`<div class="ks-horizontal-table-cell ks-${leftRowWidgets[i].name === 'RadioButtonRowWidget' ? 'checkbox' : 'action'}-cell" ${actionWidth !== false ? `style="flex: 0 0 ${actionWidth}%;"` : ''}>${leftRowWidgets[i].options.columnName ? leftRowWidgets[i].options.columnName : ''}</div>`);
+                s.push(`<div class="ks-horizontal-table-cell ks-${leftRowWidgets[i].name === 'RadioButtonRowWidget' ? 'checkbox' : 'action'}-cell" ${actionWidth !== false ? `style="flex: 0 0 ${actionWidth}%;"` : ''}>${leftRowWidgets[i].options.columnName ? Utils.translate(leftRowWidgets[i].options.columnName) : ''}</div>`);
                 ++i;
             }
         }
 
         for (const [ind, vi] of o.columnNames.entries()) {
-            s.push(`<div class="ks-horizontal-table-cell sortable" style="${o.columnWidths && o.columnWidths[ind] && parseInt(o.columnWidths[ind].replace('%', '')) === 0 ? 'display:none;' : ''}${o.columnWidths && o.columnWidths[ind] ? 'flex: 0 0 ' + o.columnWidths[ind] + (o.columnWidths[ind].indexOf('%') === -1 ? 'px;' : ';') : ''}"><div class="ks-horizontal-table-cell-inner">${vi}<div class="ks-order"></div></div></div>`);
+            s.push(`<div class="ks-horizontal-table-cell sortable" style="${o.columnWidths && o.columnWidths[ind] && parseInt(o.columnWidths[ind].replace('%', '')) === 0 ? 'display:none;' : ''}${o.columnWidths && o.columnWidths[ind] ? 'flex: 0 0 ' + o.columnWidths[ind] + (o.columnWidths[ind].indexOf('%') === -1 ? 'px;' : ';') : ''}"><div class="ks-horizontal-table-cell-inner">${Utils.translate(vi)}<div class="ks-order"></div></div></div>`);
             dataColumnNames.push(vi.toLowerCase().replace(/[&\/\\#, +()$~%.'":*?<>{}]/g, ''));
         }
 
         if (data.rightActionCells.length > 0) {
             i = 0;
             for (l of data.rightActionCells[0]) {
-                s.push(`<div class="ks-horizontal-table-cell ks-${rightRowWidgets[i].name === 'RadioButtonRowWidget' ? 'checkbox' : 'action'}-cell"  ${actionWidth !== false ? `style="flex: 0 0 ${actionWidth}%;"` : ''}>${rightRowWidgets[i].options.columnName ? rightRowWidgets[i].options.columnName : ''}</div>`);
+                s.push(`<div class="ks-horizontal-table-cell ks-${rightRowWidgets[i].name === 'RadioButtonRowWidget' ? 'checkbox' : 'action'}-cell"  ${actionWidth !== false ? `style="flex: 0 0 ${actionWidth}%;"` : ''}>${rightRowWidgets[i].options.columnName ? Utils.translate(rightRowWidgets[i].options.columnName) : ''}</div>`);
                 ++i;
             }
         }

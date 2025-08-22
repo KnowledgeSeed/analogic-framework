@@ -1,4 +1,4 @@
-/* global app, Doc, Widget, Widgets */
+/* global app, Doc, Widget, Widgets, Utils */
 
 'use strict';
 
@@ -31,12 +31,12 @@ class DropBoxWidget extends Widget {
 <div class="ks-dropbox ks-dropbox-${v.skin}" style="${mainDivStyle.join('')}">
     <div class="ks-dropbox-inner">
         <div class="ks-dropbox-title" style="${titleStyles.join('')}">
-            <span class="ks-dropbox-title-primary">${v.titleVisible ? v.title : ''}</span>
+            <span class="ks-dropbox-title-primary">${v.titleVisible ? Utils.translate(v.title) : ''}</span>
             <span class="ks-dropbox-title-secondary"></span>
         </div>
         <div class="ks-dropbox-field ${v.editable === false ? 'readonly' : ''}">
             <div class="ks-dropbox-field-inner">
-                <input ${v.editable === false || v.disableSearch === true  ? 'readonly' : ''} style="${textStyles.join('')}" type="text" class="ks-dropbox-input search-text" placeholder="${pi.selectedItems !== '' ? pi.selectedItems : v.placeHolder}">
+                <input ${v.editable === false || v.disableSearch === true  ? 'readonly' : ''} style="${textStyles.join('')}" type="text" class="ks-dropbox-input search-text" placeholder="${Utils.translate(pi.selectedItems !== '' ? pi.selectedItems : v.placeHolder)}">
                 <div class="ks-dropbox-icon"></div>
             </div>
         </div>
@@ -74,7 +74,7 @@ class DropBoxWidget extends Widget {
         this.value = data.value;
         this.items = data.items;
 
-        let selectedItems = selectedItemsArray.map(item => item.name).join(', ');
+        let selectedItems = selectedItemsArray.map(item => Utils.translate(item.name)).join(', ');
 
         return {
           selectedItems: selectedItems,
@@ -89,10 +89,10 @@ class DropBoxWidget extends Widget {
     <div class="ks-dropbox-panel-item-inner">
         <div class="ks-dropbox-panel-item-icon">
            <span></span>
-            <input class="ks-dropbox-panel-item-checkbox" ${v.multiSelect ? '' : 'style="display:none;"'} ${item.on ? 'checked=checked' : ''} type="checkbox">
+            <input class="ks-dropbox-panel-item-checkbox" ${v.multiSelect ? '' : 'style=\"display:none;\"'} ${item.on ? 'checked=checked' : ''} type="checkbox">
         </div>
         <div class="ks-dropbox-panel-item-separator"></div>
-        <div class="ks-dropbox-panel-item-text" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="${item.name}">${item.name}</div>
+        <div class="ks-dropbox-panel-item-text" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="${Utils.htmlEncode(Utils.translate(item.name))}">${Utils.translate(item.name)}</div>
     </div>
 </div>`;
         }).join('');
@@ -134,7 +134,7 @@ class DropBoxWidget extends Widget {
         } else {
             const pi = this.processItems(data, this.options, p);
             inner.html(this.getItems(pi.data, p));
-            input.attr('placeholder', pi.selectedItems !== '' ? pi.selectedItems : p.placeHolder);
+            input.attr('placeholder', pi.selectedItems !== '' ? pi.selectedItems : Utils.translate(p.placeHolder));
         }
     }
 
@@ -235,7 +235,7 @@ class DropBoxWidget extends Widget {
             itemHolder.slideUp(50);
         }
 
-        let v = $.grep(w.items, (item, i) => item.on).map(item => item.name).join(', '),
+        let v = $.grep(w.items, (item, i) => item.on).map(item => Utils.translate(item.name)).join(', '),
             searchText = $('#' + id + ' .search-text');
 
         (!state.serverSideFilter || !state.multiSelect) && searchText.attr('placeholder', v).val('');
