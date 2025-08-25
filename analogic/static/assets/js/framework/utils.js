@@ -744,34 +744,42 @@ const Utils = {
         }
     },
     setAutoPosition(floatingElement, anchor, forcedPosition = null, leftOffset = null) {
-        const w = $(window), winHeight = w.height(), winWidth = w.width(), height = floatingElement.outerHeight(),
-            width = floatingElement.outerWidth();
-        const rect = anchor[0].getBoundingClientRect(), anchorHeight = anchor.height(), anchorWidth = anchor.width(),
-            x = rect.x, y = rect.y, pos = {};
+        const w = $(window),
+            winHeight = w.height(),
+            winWidth = w.width(),
+            height = floatingElement.outerHeight(),
+            width = floatingElement.outerWidth(),
+            scrollLeft = w.scrollLeft(),
+            scrollTop = w.scrollTop();
+        const rect = anchor[0].getBoundingClientRect(),
+            anchorWidth = anchor.width(),
+            x = rect.left,
+            y = rect.top,
+            pos = {};
 
-        const spaces = [['left', x - width], ['right', winWidth - rect.right - width], ['top', y - height], ['bottom', winHeight - rect.bottom - height]].sort((a, b) => a[1] < b[1] ? 1 : -1);
+        const spaces = [['left', rect.left - width], ['right', winWidth - rect.right - width], ['top', rect.top - height], ['bottom', winHeight - rect.bottom - height]].sort((a, b) => a[1] < b[1] ? 1 : -1);
 
         let bestSpace = forcedPosition || spaces[0][0];
 
         if ('bottom' === bestSpace) {
-            pos.left = x - (width - anchorWidth) / 2;
-            pos.top = rect.bottom;
+            pos.left = x + scrollLeft - (width - anchorWidth) / 2;
+            pos.top = rect.bottom + scrollTop;
         } else if ('top' === bestSpace) {
-            pos.left = x - (width - anchorWidth) / 2;
-            pos.top = y - height;
+            pos.left = x + scrollLeft - (width - anchorWidth) / 2;
+            pos.top = y + scrollTop - height;
         } else if ('right' === bestSpace) {
-            pos.left = rect.right;
-            pos.top = y - Math.max(0, y + height + 10 - winHeight);
+            pos.left = rect.right + scrollLeft;
+            pos.top = y + scrollTop - Math.max(0, rect.top + height + 10 - winHeight);
         } else {
-            pos.left = x - width;
-            pos.top = y - Math.max(0, y + height + 10 - winHeight);
+            pos.left = x + scrollLeft - width;
+            pos.top = y + scrollTop - Math.max(0, rect.top + height + 10 - winHeight);
         }
 
         if (null !== leftOffset) {
-            pos.left = x - leftOffset;
+            pos.left = x + scrollLeft - leftOffset;
         }
 
-        let rightOffset = pos.left + width - winWidth;
+        let rightOffset = pos.left + width - (scrollLeft + winWidth);
 
         if (rightOffset > 0) {
             pos.left -= rightOffset;
