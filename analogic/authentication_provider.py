@@ -683,7 +683,14 @@ class AuthenticationProvider(ABC):
         return 'ok'
 
     def clear_cache(self):
-        return self.get_setting().clear_cache()
+        result = self.get_setting().clear_cache()
+        try:
+            provider = self.create_translation_provider()
+            if provider is not None:
+                provider.generate_translations()
+        except Exception as e:
+            self.getLogger().error(f"Error generating translations: {e}", exc_info=True)
+        return result
 
     def is_in_maintenance_mode(self):
         return self.is_in_maintenance
