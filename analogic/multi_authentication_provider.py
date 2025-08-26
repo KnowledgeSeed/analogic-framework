@@ -157,7 +157,7 @@ class MultiAuthenticationProvider(AuthenticationProvider):
     def clear_cache(self):
         for name, registered_auth_prov in self.authentication_providers.items():
             registered_auth_prov.clear_cache()
-        self.get_setting().clear_cache()
+        return super().clear_cache()
 
     def initialize(self):
         for name, registered_auth_prov in self.authentication_providers.items():
