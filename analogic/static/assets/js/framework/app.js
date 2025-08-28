@@ -10,6 +10,7 @@ const Doc = $(document), El = {body: $('body')}, PageState = {current: '', previ
         appInitialization: [],
         urlParameters: []
     },
+    ExtensionFunctions = {},
     Widgets = {infoData: {}},
     Api = {};
 
@@ -23,6 +24,20 @@ app.handleAjaxError = (response, widgetId) => {
     }
 
     Api.showPopup(response.statusText + ' in ' + widgetId + ':<br/><br/>' + m, 850);
+};
+
+ExtensionFunctions.call = function (fnName, ...args) {
+    if (typeof ExtensionFunctions[fnName] === 'function') {
+        try {
+            return ExtensionFunctions[fnName](...args);
+        } catch (e) {
+            console.error(`Error occurred while running "${fnName}":`, e);
+            Api.showPopup(`Error while executing "${fnName}" function!`);
+        }
+    } else {
+        console.warn(`Function "${fnName}" does not exist on app object.`);
+        Api.showPopup(`Function "${fnName}" not found!`);
+    }
 };
 
 app.handleJsError = (error, widgetId, functionName, message) => {

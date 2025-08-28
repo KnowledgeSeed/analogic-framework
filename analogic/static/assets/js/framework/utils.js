@@ -786,6 +786,9 @@ const Utils = {
         }
 
         return floatingElement.css(pos).prependTo($('body'));
+    },
+    extCall(fnName, ...args) {
+        return ExtensionFunctions.call(fnName, ...args);
     }
 };
 
