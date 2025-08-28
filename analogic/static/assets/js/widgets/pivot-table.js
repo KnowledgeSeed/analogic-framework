@@ -2344,176 +2344,214 @@ class PivotTableWidget extends Widget {
     }
 
     _formatNumberForDisplay(value) {
-        if (value === null || value === undefined || String(value).trim() === '') {
-            return value;
-        }
+        if (value === null || value === undefined) return value;
 
-        const cleanString = String(value).replace(/,/g, '');
+        const raw = String(value).trim();
+        if (raw === '') return raw;
 
-        const num = parseFloat(cleanString);
+        if (raw.includes('%')) return raw;
 
-        if (!isNaN(num)) {
-            return Math.round(num).toLocaleString('en-US').replace(/,/g, ' ');
-        }
-        return value;
+        if (/[,\u00A0\u202F ]/.test(raw)) return raw;
+        const m = raw.match(/^(-?)(\d+)(\.\d+)?$/);
+        if (!m) return raw;
+
+        const sign = m[1] || '';
+        const intPart = m[2];
+        const frac = m[3] || '';
+
+        const intWithSpaces = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
+        return sign + intWithSpaces + frac;
     }
 
-    getTableCompatibleObject() {
-        const table = this.table;
-        if (!table?.length || !table.find('tr').length) {
-            return null;
+getTableCompatibleObject() {
+    const table = this.table;
+    if (!table?.length || !table.find('tr').length) {
+        return null;
+    }
+
+    const allRows = table.find('tr').get();
+    const headerRowElements = allRows.filter(tr => $(tr).find('td.ks-pivot-table-content-cell').length === 0 && $(tr).text().trim() !== '');
+    const dataRowElements = allRows.filter(tr => $(tr).find('td.ks-pivot-table-content-cell').length > 0);
+
+    if (headerRowElements.length === 0 || dataRowElements.length === 0) {
+        console.warn("Pivot export failed: Could not distinguish header and data rows.");
+        return null;
+    }
+
+    const numRowDimensions = $('#pivotRowSelector .ks-pivot-table-tag').length;
+    const numColDimensions = $('#pivotColSelector .ks-pivot-table-tag').length;
+
+    let htmlRowHeaderColspan = 0;
+    const firstDataRowCells = $(dataRowElements[0]).find('td');
+    for (let i = 0; i < firstDataRowCells.length; i++) {
+        const cell = $(firstDataRowCells[i]);
+        if (cell.hasClass('ks-pivot-table-content-cell')) {
+            break;
         }
+        htmlRowHeaderColspan += cell.prop('colspan') || 1;
+    }
 
-        const allRows = table.find('tr').get();
-        const headerRowElements = allRows.filter(tr => $(tr).find('td.ks-pivot-table-content-cell').length === 0 && $(tr).text().trim() !== '');
-        const dataRowElements = allRows.filter(tr => $(tr).find('td.ks-pivot-table-content-cell').length > 0);
+    const consolidateHeaders = (headerTRs, rowHeaderSpan) => {
+        if (!headerTRs || headerTRs.length === 0) return [];
 
-        if (dataRowElements.length === 0) {
-            return null;
-        }
-
-        let maxDataI = -1;
-        $(dataRowElements[0]).find('td:not(.ks-pivot-table-content-cell)').each(function () {
-            const dataI = parseInt($(this).attr('data-i'), 10);
-            if (!isNaN(dataI) && dataI > maxDataI) {
-                maxDataI = dataI;
+        const rowsByCard = {};
+        headerTRs.forEach(tr => {
+            const cardIndex = $(tr).attr('data-i') || '0';
+            if (!rowsByCard[cardIndex]) {
+                rowsByCard[cardIndex] = [];
             }
+            rowsByCard[cardIndex].push(tr);
         });
-        const numRowHeaderCols = maxDataI + 1;
 
-        let maxHeaderCols = 0;
-        headerRowElements.forEach(tr => {
-            let currentColCount = 0;
-            $(tr).find('td').each(function () {
-                currentColCount += $(this).prop('colspan') || 1;
-            });
-            if (currentColCount > maxHeaderCols) {
-                maxHeaderCols = currentColCount;
-            }
-        });
-        const numDataCols = maxHeaderCols - numRowHeaderCols;
+        const finalHeaders = [];
+        Object.keys(rowsByCard).sort().forEach(cardIndex => {
+            const cardRows = rowsByCard[cardIndex];
+            const grid = [];
+            const virtualGrid = [];
 
-        const parsePivotHeaders = (headerRows, numRowLabelCols, totalDataCols) => {
-            return headerRows.map(tr => {
-                const rowLevel = Array(totalDataCols).fill('');
-                let htmlColCounter = 0;
-                let dataColPointer = 0;
-
-                $(tr).find('td').each(function () {
-                    if (dataColPointer >= totalDataCols) return false;
-
+            cardRows.forEach((tr, r) => {
+                grid[r] = [];
+                virtualGrid[r] = virtualGrid[r] || [];
+                let c = 0;
+                $(tr).find('td').each(function() {
+                    while (virtualGrid[r][c]) { c++; }
                     const $td = $(this);
                     const text = $td.text().trim();
                     const colspan = $td.prop('colspan') || 1;
-                    const isPlaceholder = (colspan > 1 && text === '');
-                    const isControlCell = $td.hasClass('ks-pivot-table-close-category-cell');
-
-                    if (!isPlaceholder && !isControlCell) {
-                        let dataColsSpanned = 0;
-                        for (let k = 0; k < colspan; k++) {
-                            if (htmlColCounter + k >= numRowLabelCols) {
-                                dataColsSpanned++;
-                            }
-                        }
-                        if (dataColsSpanned > 0) {
-                            rowLevel[dataColPointer] = text;
-                            dataColPointer += dataColsSpanned;
+                    const rowspan = $td.prop('rowspan') || 1;
+                    for (let i = 0; i < rowspan; i++) {
+                        grid[r + i] = grid[r + i] || [];
+                        virtualGrid[r + i] = virtualGrid[r + i] || [];
+                        for (let j = 0; j < colspan; j++) {
+                            virtualGrid[r + i][c + j] = true;
+                            grid[r + i][c + j] = text;
                         }
                     }
-                    htmlColCounter += colspan;
+                    c += colspan;
                 });
-                return rowLevel;
             });
-        };
 
-        const parsePivotDataRows = (dataRows, numRowLabelCols) => {
-            return dataRows.map(tr => {
-                const $tr = $(tr);
-                const rowLabelObjects = Array(numRowLabelCols).fill({title: '', editable: false});
-                const labelContentTds = $tr.find('td:not(.ks-pivot-table-content-cell, .ks-pivot-table-group-sign-cell)');
+            let maxCols = 0;
+            grid.forEach(row => { if (row && row.length > maxCols) maxCols = row.length; });
+            grid.forEach(row => { if(row) { while (row.length < maxCols) row.push(''); }});
 
-                labelContentTds.each(function () {
-                    const $td = $(this);
-                    const colIndex = parseInt($td.attr('data-i'), 10);
-                    if (!isNaN(colIndex) && colIndex < numRowLabelCols) {
-                        rowLabelObjects[colIndex] = {
-                            title: $td.text().trim(),
-                            editable: false
-                        };
+            const slicedGrid = grid.map(row => (row || []).slice(rowHeaderSpan));
+            if (!slicedGrid || slicedGrid.length === 0) return;
+
+            const numCols = slicedGrid[0].length;
+            const flattenedRow = Array(numCols).fill('');
+            const fullTextRow = Array(numCols).fill('');
+
+            for (let c = 0; c < numCols; c++) {
+                const parts = new Set();
+                for (let r = 0; r < slicedGrid.length; r++) {
+                    if (slicedGrid[r][c]) {
+                        parts.add(slicedGrid[r][c]);
                     }
-                });
+                }
+                const currentHeaderText = Array.from(parts).join(' ').trim();
+                fullTextRow[c] = currentHeaderText;
+                const leftHeaderText = c > 0 ? fullTextRow[c-1] : null;
 
-                const dataCells = $tr.find('td.ks-pivot-table-content-cell').map((_, td) => ({
-                    title: $(td).text().trim(),
-                    editable: $(td).hasClass('u')
-                })).get();
-
-                return [...rowLabelObjects, ...dataCells];
-            });
-        };
-
-        const dataHeaderMatrix = parsePivotHeaders(headerRowElements, numRowHeaderCols, numDataCols);
-        if (dataHeaderMatrix.length > 1) {
-            const firstHeaderRow = dataHeaderMatrix[dataHeaderMatrix.length - 1];
-            const secondHeaderRow = dataHeaderMatrix[dataHeaderMatrix.length - 2];
-
-            if (secondHeaderRow[0] === '' && firstHeaderRow[0] !== '' && firstHeaderRow[0] !== undefined) {
-                firstHeaderRow.unshift('');
-                firstHeaderRow.pop();
-            }
-        }
-
-        const finalCellData = parsePivotDataRows(dataRowElements, numRowHeaderCols);
-        const lastKnownRowLabels = Array(numRowHeaderCols).fill('');
-        finalCellData.forEach(row => {
-            for (let i = 0; i < numRowHeaderCols; i++) {
-                const cell = row[i];
-                if (cell && cell.title && cell.title.trim() !== '') {
-                    lastKnownRowLabels[i] = cell.title.trim();
-                } else if (cell) {
-                    cell.title = lastKnownRowLabels[i];
+                if(currentHeaderText && currentHeaderText !== leftHeaderText){
+                    flattenedRow[c] = currentHeaderText;
+                } else {
+                    flattenedRow[c] = '';
                 }
             }
+            finalHeaders.push(flattenedRow);
         });
 
-        const rowLabelHeaders = Array.from({length: numRowHeaderCols}, (_, i) => ``);
+        return finalHeaders;
+    };
+const parseAndNestDataRows = (dataRows, numRowDims) => {
+    const allRowData = [];
+    let lastFullContext = Array(numRowDims).fill(null);
 
-        dataHeaderMatrix.reverse().forEach((dataHeaderRow, levelIndex) => {
-            const rowLabelPart = (levelIndex === 0)
-                ? rowLabelHeaders
-                : Array(numRowHeaderCols).fill('');
+    dataRows.forEach(tr => {
+        const $tr = $(tr);
 
-            const fullHeaderRow = [
-                ...rowLabelPart.map(text => ({title: text, editable: false})),
-                ...dataHeaderRow.map(text => ({title: text, editable: false}))
-            ];
-
-            finalCellData.unshift(fullHeaderRow);
+        const newLabelsInRow = {};
+        $tr.find('td.ks-pivot-table-group-title-cell, td.ks-pivot-table-title-cell, td.ks-pivot-table-category-cell').each(function () {
+            const $td = $(this);
+            const text = $td.text().trim();
+            const cardIndex = parseInt($td.attr('data-i'), 10);
+            if (!isNaN(cardIndex) && cardIndex < numRowDims && text) {
+                newLabelsInRow[cardIndex] = text;
+            }
         });
+        const currentContext = [...lastFullContext];
+        for (let i = 0; i < numRowDims; i++) {
+            if (Object.prototype.hasOwnProperty.call(newLabelsInRow, i)) {
+                currentContext[i] = newLabelsInRow[i];
+            }
+        }
+        const finalRowLabels = currentContext.map(label => ({
+            title: label || '',
+            editable: false,
+        }));
 
-        return {
-            options: {
-                widgets: [],
-                columnHeaders: []
-            },
-            cellData: finalCellData,
-            isEditable: true,
-            headerRowCount: dataHeaderMatrix.length
-        };
+        const signCells = $tr.find('td.ks-pivot-table-group-sign-cell');
+        if (signCells.length > 0) {
+            const indentTargetIndex = parseInt($(signCells[0]).attr('data-i'), 10);
+            if (!isNaN(indentTargetIndex) && finalRowLabels[indentTargetIndex]) {
+                finalRowLabels[indentTargetIndex].indent = Math.max(0, signCells.length);
+            }
+        }
+
+        const dataCells = $tr.find('td.ks-pivot-table-content-cell').map((_, td) => ({
+            title: $(td).text().trim(),
+            editable: $(td).hasClass('u')
+        })).get();
+
+        allRowData.push([...finalRowLabels, ...dataCells]);
+
+        lastFullContext = currentContext;
+    });
+
+    return allRowData;
+};
+
+    const columnHeaderMatrix = consolidateHeaders(headerRowElements, htmlRowHeaderColspan);
+    const finalCellData = parseAndNestDataRows(dataRowElements, numRowDimensions);
+    columnHeaderMatrix.reverse().forEach(headerRow => {
+        const rowLabelPadding = Array(numRowDimensions).fill({ title: '', editable: false });
+        const headerObjects = headerRow.map(text => ({ title: text, editable: false }));
+        finalCellData.unshift([...rowLabelPadding, ...headerObjects]);
+    });
+
+    return {
+        options: { widgets: [], columnHeaders: [] },
+        cellData: finalCellData,
+        isEditable: true,
+        headerRowCount: columnHeaderMatrix.length,
+        rowHeaderColCount: numRowDimensions
+    };
+}
+   _parseValueForExport(cellValue) {
+    if (cellValue == null) return {type: 'string', value: ""};
+    if (typeof cellValue !== 'string') {
+        return {type: 'number', value: Number(cellValue)};
     }
 
-    _parseValueForExport(cellValue) {
-        if (cellValue == null || typeof cellValue !== 'string' || cellValue.trim() === '') {
-            return {type: 'string', value: ""};
-        }
-        let modifiedString = cellValue.trim().replace(/[\s,]/g, '');
+    let raw = cellValue.trim();
+    if (raw === '') return {type: 'string', value: ""};
 
-        if (!isNaN(modifiedString) && modifiedString !== '') {
-            return {type: 'number', value: parseFloat(modifiedString)};
-        } else {
-            return {type: 'string', value: cellValue};
-        }
+    if (/%$/.test(raw)) {
+        const n = parseFloat(raw.replace(/[%\s,]/g, ''));
+        if (!isNaN(n)) return {type: 'percent', value: n / 100};
+        return {type: 'string', value: cellValue};
     }
+
+    const modifiedString = raw.replace(/[\s,]/g, '');
+    if (!isNaN(modifiedString) && modifiedString !== '') {
+        return {type: 'number', value: parseFloat(modifiedString)};
+    }
+
+    return {type: 'string', value: cellValue};
+}
+
 
     _downloadExportBuffer(buffer, filename) {
         const blob = new Blob([buffer], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
@@ -2580,92 +2618,107 @@ class PivotTableWidget extends Widget {
     }
 
 
-    async _generateAndDownloadExcel(gridTableObj, slicerData, config) {
-        const {cellData, headerRowCount} = gridTableObj;
-        const sheetName = config.sheetName || 'Pivot Export';
-        const fileName = config.fileName || 'pivot_export.xlsx';
-        const styles = this.exportStyles;
-        const boldFont = {bold: true};
 
-        const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet(sheetName);
+async _generateAndDownloadExcel(gridTableObj, slicerData, config) {
+    const {cellData, headerRowCount, rowHeaderColCount} = gridTableObj;
+    const sheetName = config.sheetName || 'Pivot Export';
+    const fileName = config.fileName || 'pivot_export.xlsx';
+    const styles = this.exportStyles;
+    const boldFont = {bold: true};
 
-        let currentRow = 1;
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet(sheetName);
 
-        if (slicerData && slicerData.length > 0) {
-            let titleCell = worksheet.getCell(currentRow, 1);
-            titleCell.value = 'Filters';
-            titleCell.font = boldFont;
-            currentRow++;
-            let dimHeaderCell = worksheet.getCell(currentRow, 1);
-            dimHeaderCell.value = 'Dimension';
-            dimHeaderCell.font = boldFont;
-            slicerData.forEach((filter, index) => {
-                worksheet.getCell(currentRow, 2 + index).value = filter.dimension;
-            });
-            currentRow++;
-            let valueHeaderCell = worksheet.getCell(currentRow, 1);
-            valueHeaderCell.value = 'Selected Element';
-            valueHeaderCell.font = boldFont;
-            slicerData.forEach((filter, index) => {
-                worksheet.getCell(currentRow, 2 + index).value = filter.value;
-            });
-            currentRow++;
-            currentRow++;
-        }
+    let currentRow = 1;
 
-        cellData.forEach((rowData, r) => {
-            const excelRow = r + currentRow;
-            const isHeaderRow = r < headerRowCount;
-            rowData.forEach((cellObj, c) => {
-                const excelCol = c + 1;
-                const cell = worksheet.getCell(excelRow, excelCol);
+    if (slicerData && slicerData.length > 0) {
+        let titleCell = worksheet.getCell(currentRow, 1);
+        titleCell.value = 'Filters';
+        titleCell.font = boldFont;
+        currentRow++;
+        let dimHeaderCell = worksheet.getCell(currentRow, 1);
+        dimHeaderCell.value = 'Dimension';
+        dimHeaderCell.font = boldFont;
+        slicerData.forEach((filter, index) => {
+            worksheet.getCell(currentRow, 2 + index).value = filter.dimension;
+        });
+        currentRow++;
+        let valueHeaderCell = worksheet.getCell(currentRow, 1);
+        valueHeaderCell.value = 'Selected Element';
+        valueHeaderCell.font = boldFont;
+        slicerData.forEach((filter, index) => {
+            worksheet.getCell(currentRow, 2 + index).value = filter.value;
+        });
+        currentRow++;
+        currentRow++;
+    }
 
-                const valueToParse = cellObj?.title ?? "";
-                const isCellEditable = cellObj?.editable ?? false;
+    cellData.forEach((rowData, r) => {
+        const excelRow = r + currentRow;
+        const isHeaderRow = r < headerRowCount;
+        rowData.forEach((cellObj, c) => {
+            const excelCol = c + 1;
+            const cell = worksheet.getCell(excelRow, excelCol);
 
-                const parsedResult = this._parseValueForExport(valueToParse);
-                cell.value = parsedResult.value;
-                cell.border = styles.borderStyle;
+            const valueToParse = cellObj?.title ?? "";
+            const isCellEditable = cellObj?.editable ?? false;
+            let indentLevel = cellObj?.indent ?? 0;
+            if (indentLevel === 1) indentLevel = 0;
 
-                if (isHeaderRow) {
-                    cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: styles.headerFillColor}};
-                    cell.font = boldFont;
-                    cell.protection = {locked: true};
-                } else {
-                    if (config.disableSheetProtection === true) {
-                        cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: styles.editableColor}};
-                    } else {
-                        if (isCellEditable) {
-                            cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: styles.editableColor}};
-                            cell.protection = {locked: false};
-                        } else {
-                            cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: styles.readonlyColor}};
-                            cell.protection = {locked: true};
-                        }
+            const parsedResult = this._parseValueForExport(valueToParse);
+            cell.value = parsedResult.value;
+            cell.border = styles.borderStyle;
+
+            if (isHeaderRow) {
+                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: styles.headerFillColor}};
+                cell.font = boldFont;
+                cell.protection = {locked: true};
+                cell.alignment = { horizontal: 'left' };
+            } else {
+                if (c < rowHeaderColCount) {
+                    cell.alignment = { horizontal: 'left', vertical: 'middle' };
+                    if (indentLevel > 0) {
+                        cell.alignment.indent = indentLevel;
                     }
+                } else {
+                    cell.alignment = { horizontal: 'right', vertical: 'middle' };
+                }
 
-                    if (parsedResult.type === 'number') {
-                        cell.numFmt = '#,##0';
+                if (config.disableSheetProtection === true) {
+                    cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: styles.editableColor}};
+                } else {
+                    if (isCellEditable) {
+                        cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: styles.editableColor}};
+                        cell.protection = {locked: false};
+                    } else {
+                        cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: styles.readonlyColor}};
+                        cell.protection = {locked: true};
                     }
                 }
-            });
+
+                if (parsedResult.type === 'number') {
+                    cell.numFmt = '#,##0';
+                } else if (parsedResult.type === 'percent') {
+                    cell.numFmt = '0.00%';
+                }
+            }
         });
+    });
 
-        this._autoResizeExportColumns(worksheet);
+    this._autoResizeExportColumns(worksheet);
 
-        if (!config.disableSheetProtection) {
-            await worksheet.protect('', {
-                selectLockedCells: true,
-                selectUnlockedCells: true,
-                sort: true,
-                autoFilter: false
-            });
-        }
-
-        const buffer = await workbook.xlsx.writeBuffer();
-        this._downloadExportBuffer(buffer, fileName);
+    if (!config.disableSheetProtection) {
+        await worksheet.protect('', {
+            selectLockedCells: true,
+            selectUnlockedCells: true,
+            sort: true,
+            autoFilter: false
+        });
     }
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    this._downloadExportBuffer(buffer, fileName);
+}
 
     perf(title, t0) {
         L(title + ' IN: ' + ((performance.now() - t0) / 1000) + ' seconds');
