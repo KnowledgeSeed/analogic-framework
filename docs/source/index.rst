@@ -19,6 +19,7 @@ Contents
 
    usage
    widgets
+   gridtablelight_widget
    repository
    eventmap
    createapp
