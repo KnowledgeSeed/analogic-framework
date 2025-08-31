@@ -1,0 +1,29 @@
+{
+  "name": "GridTableLightWidget",
+  "visible": true,
+  "title": "",
+  "skin": "standard",
+  "pageSize": 25,
+  "enableExport": false,
+  "freezeHeaders": false,
+  "hideIfNoData": false,
+  "columnCount": 0,
+  "rowHeight": 0,
+  "borderTop": true,
+  "borderBottom": true,
+  "width": 0,
+  "headers": [
+    {
+      "title": "Column 1",
+      "width": 150
+    },
+    {
+      "title": "Column 2",
+      "width": 150
+    },
+    {
+      "title": "Column 3",
+      "width": 150
+    }
+  ]
+}

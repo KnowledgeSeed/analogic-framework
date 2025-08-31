@@ -1,0 +1,355 @@
+/* GridTableLight Widget Styles */
+.grid-table-light-wrapper {
+    position: relative;
+    font-family: inherit;
+}
+
+.grid-table-light-title {
+    margin: 0 0 10px 0;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+
+.grid-table-light {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Header Styles */
+.grid-table-light-header {
+    display: flex;
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.grid-table-light.freeze-headers .grid-table-light-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.grid-table-light-header-cell {
+    flex: 1;
+    padding: 12px 8px;
+    border-right: 1px solid #dee2e6;
+    text-align: center;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.grid-table-light-header-cell:last-child {
+    border-right: none;
+}
+
+.grid-table-light-header-content {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Body Styles */
+.grid-table-light-body {
+    max-height: 500px;
+    overflow: auto;
+}
+
+.grid-table-light-row {
+    display: flex;
+    border-bottom: 1px solid #dee2e6;
+    transition: background-color 0.15s ease;
+}
+
+.grid-table-light-row:hover {
+    background-color: #f8f9fa;
+}
+
+.grid-table-light-row:last-child {
+    border-bottom: none;
+}
+
+.grid-table-light-cell {
+    flex: 1;
+    padding: 8px;
+    border-right: 1px solid #dee2e6;
+    min-height: 35px;
+    display: flex;
+    align-items: center;
+}
+
+.grid-table-light-cell:last-child {
+    border-right: none;
+}
+
+.grid-table-light-cell-content {
+    width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Cell Interactive Elements */
+.grid-light-button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875em;
+    transition: background-color 0.15s ease;
+}
+
+.grid-light-button:hover {
+    background: #0056b3;
+}
+
+.grid-light-button:active {
+    background: #004085;
+}
+
+.grid-light-select {
+    width: 100%;
+    padding: 4px 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background: white;
+    font-size: 0.875em;
+}
+
+.grid-light-select:focus {
+    outline: none;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+/* Export Button */
+.grid-table-light-export {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 20;
+    padding: 8px;
+}
+
+.grid-light-export-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: background-color 0.15s ease;
+    font-size: 0.875em;
+}
+
+.grid-light-export-btn:hover {
+    background: #218838;
+}
+
+.grid-light-export-btn:active {
+    background: #1e7e34;
+}
+
+.grid-light-export-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Pagination Styles */
+.grid-table-light-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    border-radius: 0 0 4px 4px;
+    position: relative;
+    bottom: 0;
+    margin-top: 0;
+}
+
+.grid-light-page-btn {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875em;
+    color: #495057;
+    transition: all 0.15s ease;
+    min-width: 36px;
+    text-align: center;
+}
+
+.grid-light-page-btn:hover:not([disabled]) {
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.grid-light-page-btn:active:not([disabled]) {
+    background: #dee2e6;
+    border-color: #6c757d;
+}
+
+.grid-light-page-btn[disabled] {
+    background: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.grid-light-page-info {
+    font-size: 0.875em;
+    color: #495057;
+    font-weight: 500;
+    margin: 0 8px;
+}
+
+/* Empty State */
+.grid-table-light-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .grid-table-light-header,
+    .grid-table-light-row {
+        min-width: 600px;
+    }
+    
+    .grid-table-light-body {
+        overflow-x: auto;
+    }
+    
+    .grid-table-light-pagination {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    .grid-light-page-info {
+        order: -1;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 8px;
+    }
+}
+
+/* Alternative Skins */
+.grid-table-light-dark {
+    background: #343a40;
+    border-color: #495057;
+}
+
+.grid-table-light-dark .grid-table-light-header {
+    background: #495057;
+    border-bottom-color: #6c757d;
+    color: #fff;
+}
+
+.grid-table-light-dark .grid-table-light-row {
+    border-bottom-color: #495057;
+    color: #fff;
+}
+
+.grid-table-light-dark .grid-table-light-row:hover {
+    background-color: #495057;
+}
+
+.grid-table-light-dark .grid-table-light-cell {
+    border-right-color: #495057;
+}
+
+.grid-table-light-dark .grid-table-light-pagination {
+    background: #495057;
+    border-top-color: #6c757d;
+    color: #fff;
+}
+
+.grid-table-light-striped .grid-table-light-row:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.grid-table-light-striped .grid-table-light-row:nth-child(even):hover {
+    background-color: #e9ecef;
+}
+
+/* Compact skin */
+.grid-table-light-compact .grid-table-light-header-cell {
+    padding: 8px 6px;
+    min-height: 32px;
+}
+
+.grid-table-light-compact .grid-table-light-cell {
+    padding: 6px;
+    min-height: 28px;
+}
+
+.grid-table-light-compact .grid-table-light-pagination {
+    padding: 8px;
+}
+
+/* Bordered skin */
+.grid-table-light-bordered {
+    border: 2px solid #dee2e6;
+}
+
+.grid-table-light-bordered .grid-table-light-header-cell,
+.grid-table-light-bordered .grid-table-light-cell {
+    border-right: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Performance optimizations for large datasets */
+.grid-table-light-body.large-dataset {
+    contain: layout style paint;
+    will-change: scroll-position;
+}
+
+.grid-table-light-body.large-dataset .grid-table-light-row {
+    contain: layout style paint;
+}
+
+/* Loading state */
+.grid-table-light-loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.grid-table-light-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 1000;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
