@@ -769,8 +769,11 @@ class AnalogicRestService(RestService):
         finally:
             # If the TM1 REST API is routed through a reverse proxy that alters the expected URL,
             # we explicitly re-set the 'TM1SessionId' cookie to maintain session continuity.
-            session_id = self._s.cookies.pop('TM1SessionId', None)
-            if session_id is not None:
+            tm1_session_cookies = [c for c in self._s.cookies if c.name == 'TM1SessionId']
+            if tm1_session_cookies:
+                session_id = tm1_session_cookies[-1].value
+                for c in tm1_session_cookies:
+                    self._s.cookies.clear(domain=c.domain, path=c.path, name=c.name)
                 self._s.cookies.set('TM1SessionId', session_id)
 
             # After we have session cookie, drop the Authorization Header
