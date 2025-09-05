@@ -10,6 +10,7 @@ Parameters
 - ``freezeHeader``: boolean, default ``true``. Keeps the table header visible during vertical scrolling.
 - ``freezeFirstColumns``: number, default ``0``. Count of leftmost columns that remain fixed during horizontal scrolling.
 - ``enableExport``: boolean, default ``false``. Shows an export icon that creates an Excel file of the full data set.
+- ``bandiTest``: boolean, default ``false``. When ``true``, displays an alert message "bandi teszt".
 
 Example
 -------
@@ -22,6 +23,7 @@ Example
         pageSize: 50,
         freezeHeader: true,
         freezeFirstColumns: 1,
-        enableExport: true
+        enableExport: true,
+        bandiTest: true
     }
 
