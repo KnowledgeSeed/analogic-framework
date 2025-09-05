@@ -9,12 +9,17 @@ class GridTableLightWidget extends Widget {
             pageSize: this.getRealValue('pageSize', data, 25),
             freezeHeader: this.getRealValue('freezeHeader', data, true),
             freezeFirstColumns: this.getRealValue('freezeFirstColumns', data, 0),
-            enableExport: this.getRealValue('enableExport', data, false)
+            enableExport: this.getRealValue('enableExport', data, false),
+            bandiTest: this.getRealValue('bandiTest', data, false)
         };
     }
 
     getHtml(widgets, d) {
         const params = this.getParameters(d || {});
+        if (params.bandiTest && !this.state.bandiTestAlertShown) {
+            alert('bandi teszt');
+            this.state.bandiTestAlertShown = true;
+        }
         const rows = Array.isArray(d) ? d : (d && d.content ? d.content : []);
         this.cellData = rows;
 
