@@ -291,44 +291,103 @@ class TextWidget extends Widget {
     }
 
     static createEditableRows(editables, currentIndex) {
-        let result = [], rowIndex = -1, sgi, row = [], a, j = currentIndex, i = j, colIndex = currentIndex, l = true,
-            cl = 0;
-        let ce = $(editables[j]).closest('section').attr('id').split('_'), cri = parseInt(ce[1]), cci = parseInt(ce[2]);
-        while (i >= 0 && l === true) {
-            sgi = $(editables[i]).closest('section').attr('id').split('_');
-            a = parseInt(sgi[1]);
-            if (a !== cri || i === 0) {
-                colIndex = currentIndex - (i === 0 ? i : cl);
-                l = false;
-            }
-            cl = i;
-            --i;
+        if (!editables || !editables.length) {
+            return [];
         }
-        while (j < editables.length) {
-            sgi = $(editables[j]).closest('section').attr('id').split('_');
-            a = parseInt(sgi[1]);
-            if ((rowIndex !== a || j === editables.length - 1) && rowIndex !== -1) {
-                if (rowIndex !== a) {
-                    j = j + colIndex;
-                }
-                if (j === editables.length - 1) {
-                    if (rowIndex !== a) {
-                        result.push(row);
-                        row = [];
-                        row.push(editables[j]);
-                        result.push(row);
-                        break;
-                    } else {
-                        row.push(editables[j]);
-                    }
-                }
+
+        let j = currentIndex;
+        if (j < 0) {
+            j = editables.length - 1;
+        }
+        if (j >= editables.length) {
+            return [];
+        }
+
+        const currentElement = editables.get(j);
+        if (!currentElement) {
+            return [];
+        }
+
+        const currentSectionId = $(currentElement).closest('section').attr('id');
+        if (!currentSectionId) {
+            return [];
+        }
+
+        const currentSectionParts = currentSectionId.split('_');
+        if (currentSectionParts.length < 3) {
+            return [];
+        }
+
+        const currentRowIndex = parseInt(currentSectionParts[1], 10);
+        const currentColumnIndex = parseInt(currentSectionParts[2], 10);
+
+        if (Number.isNaN(currentRowIndex) || Number.isNaN(currentColumnIndex)) {
+            return [];
+        }
+
+        const rows = {};
+        const orderedRowIndexes = [];
+
+        editables.each((index, element) => {
+            const sectionId = $(element).closest('section').attr('id');
+            if (!sectionId) {
+                return;
+            }
+            const parts = sectionId.split('_');
+            if (parts.length < 3) {
+                return;
+            }
+
+            const rowIndex = parseInt(parts[1], 10);
+            const columnIndex = parseInt(parts[2], 10);
+
+            if (Number.isNaN(rowIndex) || Number.isNaN(columnIndex)) {
+                return;
+            }
+
+            if (!rows[rowIndex]) {
+                rows[rowIndex] = [];
+                orderedRowIndexes.push(rowIndex);
+            }
+
+            rows[rowIndex].push({
+                element,
+                columnIndex
+            });
+        });
+
+        orderedRowIndexes.sort((a, b) => a - b);
+
+        const result = [];
+
+        orderedRowIndexes.forEach(rowIndex => {
+            if (rowIndex < currentRowIndex) {
+                return;
+            }
+
+            const rowCells = rows[rowIndex].slice().sort((a, b) => a.columnIndex - b.columnIndex);
+
+            let startIndex;
+            if (rowIndex === currentRowIndex) {
+                startIndex = rowCells.findIndex(cell => cell.element === currentElement);
+            } else {
+                startIndex = rowCells.findIndex(cell => cell.columnIndex >= currentColumnIndex);
+            }
+
+            if (startIndex === -1) {
+                return;
+            }
+
+            const row = [];
+            for (let idx = startIndex; idx < rowCells.length; ++idx) {
+                row.push(rowCells[idx].element);
+            }
+
+            if (row.length) {
                 result.push(row);
-                row = [];
             }
-            row.push(editables[j]);
-            rowIndex = a;
-            ++j;
-        }
+        });
+
         return result;
     }
 
