@@ -375,13 +375,29 @@ class TextWidget extends Widget {
             return [];
         }
 
-        const targetColumns = Array.from(currentRowCells.keys())
+        let targetColumns = Array.from(currentRowCells.keys())
             .filter(columnIndex => columnIndex >= currentColumnIndex)
             .sort((a, b) => a - b);
 
         if (!targetColumns.length) {
             return [];
         }
+
+        const expandedColumns = [];
+        let lastColumn = null;
+
+        targetColumns.forEach(columnIndex => {
+            if (lastColumn !== null) {
+                for (let gap = lastColumn + 1; gap < columnIndex; ++gap) {
+                    expandedColumns.push(gap);
+                }
+            }
+
+            expandedColumns.push(columnIndex);
+            lastColumn = columnIndex;
+        });
+
+        targetColumns = expandedColumns;
 
         const result = [];
 
