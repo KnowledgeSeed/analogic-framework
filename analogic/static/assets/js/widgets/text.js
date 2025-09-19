@@ -235,11 +235,12 @@ class TextWidget extends Widget {
                 break;
             }
             cells = rows[i].split('\t');
-            for (k = 0; k < editableRows[i].length; ++k) {
-                if (k >= cells.length) {
-                    break;
+            let editableRow = editableRows[i], limit = Math.min(editableRow.length, cells.length);
+            for (k = 0; k < limit; ++k) {
+                if (!editableRow[k]) {
+                    continue;
                 }
-                e = $(editableRows[i][k]);
+                e = $(editableRow[k]);
                 s = e.closest('section').attr('id');
                 Widgets[s].value = Utils.escapeText(cells[k]);
                 r = $('<div>').data('id', s).data('action', 'write').data('ordinal', e.data('ordinal'));
@@ -262,14 +263,23 @@ class TextWidget extends Widget {
                 break;
             }
             cells = rows[i].split('\t');
-            for (k = 0; k < editableRows[i].length; ++k) {
+            lastCell = false;
+            let editableRow = editableRows[i], limit = Math.min(editableRow.length, cells.length), lastEditableIndex = -1;
+            if (lastRow) {
+                for (let idx = limit - 1; idx >= 0 && lastEditableIndex === -1; --idx) {
+                    if (editableRow[idx]) {
+                        lastEditableIndex = idx;
+                    }
+                }
+            }
+            for (k = 0; k < limit; ++k) {
+                if (!editableRow[k]) {
+                    continue;
+                }
                 if (lastRow) {
-                    lastCell = k === (cells.length - 1);
+                    lastCell = k === lastEditableIndex;
                 }
-                if (k >= cells.length) {
-                    break;
-                }
-                e = $(editableRows[i][k]);
+                e = $(editableRow[k]);
                 sc = e.closest('section');
                 s = sc.attr('id');
                 v = Utils.escapeText(cells[k]).replace('\\r', '');
@@ -325,14 +335,19 @@ class TextWidget extends Widget {
             return [];
         }
 
-        const rows = {};
+        const rows = new Map();
         const orderedRowIndexes = [];
 
         editables.each((index, element) => {
-            const sectionId = $(element).closest('section').attr('id');
+            const section = $(element).closest('section');
+            if (!section.length) {
+                return;
+            }
+            const sectionId = section.attr('id');
             if (!sectionId) {
                 return;
             }
+
             const parts = sectionId.split('_');
             if (parts.length < 3) {
                 return;
@@ -345,18 +360,28 @@ class TextWidget extends Widget {
                 return;
             }
 
-            if (!rows[rowIndex]) {
-                rows[rowIndex] = [];
+            if (!rows.has(rowIndex)) {
+                rows.set(rowIndex, new Map());
                 orderedRowIndexes.push(rowIndex);
             }
 
-            rows[rowIndex].push({
-                element,
-                columnIndex
-            });
+            rows.get(rowIndex).set(columnIndex, element);
         });
 
         orderedRowIndexes.sort((a, b) => a - b);
+
+        const currentRowCells = rows.get(currentRowIndex);
+        if (!currentRowCells) {
+            return [];
+        }
+
+        const targetColumns = Array.from(currentRowCells.keys())
+            .filter(columnIndex => columnIndex >= currentColumnIndex)
+            .sort((a, b) => a - b);
+
+        if (!targetColumns.length) {
+            return [];
+        }
 
         const result = [];
 
@@ -365,27 +390,14 @@ class TextWidget extends Widget {
                 return;
             }
 
-            const rowCells = rows[rowIndex].slice().sort((a, b) => a.columnIndex - b.columnIndex);
-
-            let startIndex;
-            if (rowIndex === currentRowIndex) {
-                startIndex = rowCells.findIndex(cell => cell.element === currentElement);
-            } else {
-                startIndex = rowCells.findIndex(cell => cell.columnIndex >= currentColumnIndex);
-            }
-
-            if (startIndex === -1) {
+            const rowCells = rows.get(rowIndex);
+            if (!rowCells) {
                 return;
             }
 
-            const row = [];
-            for (let idx = startIndex; idx < rowCells.length; ++idx) {
-                row.push(rowCells[idx].element);
-            }
-
-            if (row.length) {
-                result.push(row);
-            }
+            // Preserve column alignment: include null placeholders when the target column isn't editable in this row.
+            const row = targetColumns.map(columnIndex => rowCells.has(columnIndex) ? rowCells.get(columnIndex) : null);
+            result.push(row);
         });
 
         return result;
