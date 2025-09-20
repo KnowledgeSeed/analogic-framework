@@ -824,7 +824,6 @@ class PivotTableWidget extends Widget {
             this.holders.eq(0).children(cardSelector).remove();
         } else {
             displayName = this.lastSelectionSubset === subset ? this.lastSelectionDisplayName : subset;
-            f
             this.holders.slice(1).children(cardSelector).remove();
         }
 
