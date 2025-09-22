@@ -6373,6 +6373,54 @@ WidgetConfig = {
                     ]
                 }
             ]
+        },
+    gridTableLightDemo:
+        {
+            id: 'gridTableLightDemo',
+            type: PageWidget,
+            widgets: [
+                {
+                    id: 'gridTableLightDemoGrid',
+                    type: GridWidget,
+                    marginLeft: '10',
+                    marginRight: '10',
+                    width: '100%',
+                    widgets: [
+                        {
+                            id: 'gridTableLightDemoRow',
+                            type: GridRowWidget,
+                            marginTop: '2%',
+                            width: '100%',
+                            widgets: [
+                                {
+                                    id: 'gridTableLightDemoCell',
+                                    type: GridCellWidget,
+                                    alignment: 'top-left',
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'gridTableLightDemoTable',
+                                            type: GridTableLightWidget,
+                                            title: 'GridTableLight Demo',
+                                            pageSize: 8,
+                                            freezeHeader: true,
+                                            freezeFirstColumns: 1,
+                                            enableExport: true,
+                                            allowCopyToClipBoard: true,
+                                            columns: [
+                                                {key: 'name', title: 'Opportunity', width: 240, alignment: 'center-left'},
+                                                {key: 'status', title: 'Status', width: 140, alignment: 'center-center'},
+                                                {key: 'owner', title: 'Owner', alignment: 'center-left'},
+                                                {key: 'action', title: 'Action', width: 120, alignment: 'center-center'}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
 }
 ;

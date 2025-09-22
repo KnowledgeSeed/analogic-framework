@@ -1099,6 +1099,88 @@ widget (except for the header row).
 
 
 
+GridTableLightWidget
+--------------------
+
+**Description:** A lightweight alternative to the GridTableWidget that
+renders table cells directly from repository responses without creating
+per-cell widgets. It preserves clipboard selection, event-map
+integration, paging controls, sticky headers or frozen columns, and
+built-in Excel export while significantly reducing configuration
+complexity.
+
+**Config Parameters:**
+
+-  columns\ **:** array describing the visible columns (key, title,
+   width, alignment, optional headerTemplate).
+-  columnDefaults\ **:** default values merged into every column.
+-  pageSize\ **:** number of rows per page (0 disables paging, default
+   25).
+-  freezeHeader\ **:** stick the header row to the top (default true).
+-  freezeFirstColumns\ **:** number of leading columns kept sticky.
+-  enableExport\ **:** expose the Excel export icon.
+-  exportConfig\ **:** optional overrides for export (fileName,
+   sheetName, attributes).
+-  toolbar\ **:** optional HTML fragment rendered in the table chrome.
+-  allowCopyToClipBoard\ **:** enables selection/copy gestures.
+-  rowHeight\ **:** fixed row height.
+-  hideIfNoData, skin, width, minWidth, title, visible.
+-  events.afterPageChange\ **:** callback fired after successful paging.
+
+**Data connection to TM1:**\ YES
+
+**Data repository specifics:**
+
+-  ``init`` responses should return ``{ columns, content, totalCount,
+   page, pageSize }``.
+-  ``content`` is a two-dimensional matrix of lightweight cells with
+   ``displayValue``/``rawValue``/``type`` metadata and optional action
+   descriptors.
+-  Paging requests can read ``ctx.getExtraParams()`` (``page``,
+   ``pageSize``) to append ``$top``/``$skip`` to MDX queries.
+-  Excel export reuses the same repository endpoint with ``pageSize: 0``
+   to fetch all rows client side.
+
+.. code-block:: javascript
+
+   // Widget-config snippet
+   {
+       id: 'sampleLightTable',
+       type: GridTableLightWidget,
+       pageSize: 20,
+       freezeHeader: true,
+       freezeFirstColumns: 1,
+       enableExport: true,
+       allowCopyToClipBoard: true,
+       columns: [
+           { key: 'name', title: 'Name', width: 220 },
+           { key: 'status', title: 'Status', alignment: 'center-center' },
+           { key: 'actions', title: 'Actions', width: 120 }
+       ]
+   }
+
+   // Repository snippet
+   sampleLightTable: {
+       init(ctx) {
+           const { page = 1, pageSize = 20 } = ctx.getExtraParams();
+           return new RestRequest({
+               url: () => `/api/data?$top=${pageSize}&$skip=${(page - 1) * pageSize}`,
+               type: 'GET',
+               parsingControl: {
+                   type: 'script',
+                   script: (data) => ({
+                       totalCount: data.total,
+                       page,
+                       pageSize,
+                       columns: data.columns,
+                       content: data.rows
+                   })
+               }
+           });
+       }
+   }
+
+
 GridWidget
 ----------
 

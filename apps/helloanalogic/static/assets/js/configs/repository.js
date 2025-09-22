@@ -3,6 +3,73 @@
 'use strict';
 
 Repository = {
+    gridTableLightDemoTable: {
+        init(ctx) {
+            const extra = ctx && ctx.getExtraParams ? ctx.getExtraParams() : {};
+            const defaultPageSize = 8;
+            const requestedPageSize = typeof extra.pageSize === 'number' ? extra.pageSize : defaultPageSize;
+            const pageSize = requestedPageSize === 0 ? 0 : requestedPageSize || defaultPageSize;
+            const page = extra.page ? parseInt(extra.page, 10) || 1 : 1;
+            const totalCount = 42;
+            const startIndex = pageSize ? Math.max(0, (page - 1) * pageSize) : 0;
+            const endIndex = pageSize ? Math.min(totalCount, startIndex + pageSize) : totalCount;
+            const statuses = ['Planned', 'In Progress', 'At Risk', 'Completed'];
+            const owners = [
+                {value: 'anna', label: 'Anna Howard'},
+                {value: 'david', label: 'David Yu'},
+                {value: 'marta', label: 'Marta López'},
+                {value: 'sven', label: 'Sven Karlsson'}
+            ];
+            const content = [];
+
+            for (let index = startIndex; index < endIndex; index++) {
+                const status = statuses[index % statuses.length];
+                const owner = owners[index % owners.length];
+                const row = [
+                    {
+                        type: 'text',
+                        displayValue: `Opportunity ${index + 1}`,
+                        rawValue: `Opportunity ${index + 1}`,
+                        alignment: 'center-left'
+                    },
+                    {
+                        type: 'text',
+                        displayValue: status,
+                        rawValue: status,
+                        alignment: 'center-center',
+                        classes: `status-${status.toLowerCase().replace(/\s+/g, '-')}`
+                    },
+                    {
+                        type: 'combo',
+                        rawValue: owner.value,
+                        options: owners,
+                        actions: {change: {action: 'change'}},
+                        alignment: 'center-left'
+                    },
+                    {
+                        type: 'button',
+                        displayValue: 'Open',
+                        actions: {click: {action: 'launch'}},
+                        alignment: 'center-center'
+                    }
+                ];
+                content.push(row);
+            }
+
+            return {
+                columns: [
+                    {key: 'name', title: 'Opportunity', width: 240, alignment: 'center-left'},
+                    {key: 'status', title: 'Status', width: 140, alignment: 'center-center'},
+                    {key: 'owner', title: 'Owner', alignment: 'center-left'},
+                    {key: 'action', title: 'Action', width: 120, alignment: 'center-center'}
+                ],
+                content: content,
+                totalCount: totalCount,
+                page: page,
+                pageSize: pageSize
+            };
+        }
+    },
     // Add Clone Contracts
     analogicDemoAddCloneContractContractsTable: {
         init: {
