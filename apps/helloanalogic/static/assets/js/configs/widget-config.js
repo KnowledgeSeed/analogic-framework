@@ -6402,6 +6402,7 @@ WidgetConfig = {
                                             id: 'gridTableLightDemoTable',
                                             type: GridTableLightWidget,
                                             title: 'GridTableLight Demo',
+                                            skin: 'gridTableLightDemo',
                                             pageSize: 8,
                                             freezeHeader: true,
                                             freezeFirstColumns: 1,
