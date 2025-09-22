@@ -464,11 +464,23 @@ class AuthenticationProvider(ABC):
 
     def _add_authenticated_cookies(self, response, max_age=None):
         m = max_age
+        cnf = self.setting.get_config()
         if max_age is None:
-            cnf = self.setting.get_config()
             m = cnf['sessionExpiresInMinutes'] * 60
-        # TODO secure, httpOnly!!!
-        response.set_cookie('authenticated', 'authenticated', max_age=m)
+
+        secure_cookie = bool(cnf.get('secureCookies', False))
+        same_site = cnf.get('cookieSameSite', 'Lax')
+        if same_site not in ('Lax', 'Strict'):
+            same_site = 'Lax'
+
+        response.set_cookie(
+            'authenticated',
+            'authenticated',
+            max_age=m,
+            httponly=True,
+            secure=secure_cookie,
+            samesite=same_site,
+        )
         return response
 
     def _set_custom_mdx_data(self, mdx):
