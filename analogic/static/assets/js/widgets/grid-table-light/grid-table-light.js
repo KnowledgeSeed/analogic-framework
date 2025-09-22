@@ -1,4 +1,4 @@
-/* global $, Widget, Widgets, QB, Utils, Api, GridTableExport */
+/* global $, Widget, Widgets, QB, Utils, GridTableExport */
 
 'use strict';
 
@@ -73,7 +73,8 @@ class GridTableLightWidget extends Widget {
             totalCount,
             page,
             pageSize,
-            meta: payload.meta || {}
+            meta: payload.meta || {},
+            visible: parameters.visible
         };
     }
 
@@ -97,13 +98,13 @@ class GridTableLightWidget extends Widget {
         return normalized;
     }
 
-    renderTable(processed) {
+    renderTable(processed, childWidgets = []) {
         const {parameters, columns, content, totalCount, pageSize} = processed;
         const headerHtml = this.buildHeaderHtml(columns, parameters);
         const bodyHtml = this.buildBodyHtml(content, parameters);
         const pagerHtml = this.buildPagerHtml(processed);
         const exportHtml = parameters.enableExport ? this.buildExportButton(parameters) : '';
-        let style = this.getGeneralStyles(processed.parameters);
+        let style = this.getGeneralStyles(parameters);
         if (parameters.width) {
             style.push(`width:${Widget.getPercentOrPixel(parameters.width)};`);
         }
@@ -119,7 +120,9 @@ class GridTableLightWidget extends Widget {
             bodyHtml,
             '</div>',
             '</div>'];
-        const toolbarHtml = parameters.toolbar ? `<div class="ks-grid-table-toolbar">${parameters.toolbar}</div>` : '';
+        const childHtml = Array.isArray(childWidgets) ? childWidgets.join('') : (childWidgets || '');
+        const toolbarContent = [parameters.toolbar, childHtml].filter(Boolean).join('');
+        const toolbarHtml = toolbarContent ? `<div class="ks-grid-table-toolbar">${toolbarContent}</div>` : '';
         return `<div class="ks-grid-table-light" style="${style.join('')}">` +
             (parameters.title ? `<h3>${parameters.title}</h3>` : '') +
             toolbarHtml +
@@ -263,27 +266,9 @@ class GridTableLightWidget extends Widget {
     }
 
     render(withState, refresh, useDefaultData = false, loadFunction = QB.loadData, previouslyLoadedData = false) {
-        this.isRendering = true;
         delete this.row;
         delete this.column;
-        const o = this.options;
-        this.addListeners(false);
-        const loader = previouslyLoadedData !== false ? $.Deferred().resolve(previouslyLoadedData).promise() : loadFunction(o.id, this.name);
-        return loader.then((data) => {
-            const processed = this.processData(data);
-            this.afterProcess(processed);
-            const tableHtml = this.renderTable(processed);
-            const sectionStyles = [];
-            if (o.applyMeasuresToSection === true) {
-                sectionStyles.push(...this.getWidthAndHeight(data));
-            }
-            const visible = typeof processed.parameters.visible === 'boolean' ? processed.parameters.visible : true;
-            if (!visible) {
-                sectionStyles.push('display:none;');
-            }
-            const sectionAttributes = [`id="${o.id}"`, `data-originalid="${o.id}"`];
-            return `<section ${sectionStyles.length ? `style="${sectionStyles.join('')}"` : ''} ${sectionAttributes.join(' ')}>${tableHtml}</section>`;
-        });
+        return super.render(withState, refresh, useDefaultData, loadFunction, previouslyLoadedData);
     }
 
     afterProcess(processed) {
@@ -293,24 +278,30 @@ class GridTableLightWidget extends Widget {
         this.state.totalCount = processed.totalCount;
         this.cellData = processed.content;
         this.parameters = processed.parameters;
-        Widgets[this.options.id] = Widgets[this.options.id] || this;
+        Widgets[this.options.id] = this;
         Widgets[this.options.id].cellData = this.cellData;
     }
 
-    updateContent(data = false, loadFunction = QB.loadData) {
-        const o = this.options;
-        const loader = data !== false ? $.Deferred().resolve(data).promise() : loadFunction(o.id, this.name);
-        return loader.then((payload) => {
-            const processed = this.processData(payload);
-            this.afterProcess(processed);
-            const section = this.getSection();
-            if (!section.length) {
-                return 'update';
-            }
-            section.html(this.renderTable(processed));
-            this.initEvents(false);
-            return 'update';
-        });
+    getHtml(widgetHtmls, data) {
+        const processed = data && data.parameters ? data : this.processData(data || {});
+        this.afterProcess(processed);
+        return this.renderTable(processed, widgetHtmls);
+    }
+
+    updateHtml(processed) {
+        this.afterProcess(processed);
+        const section = this.getSection();
+        if (!section.length) {
+            return;
+        }
+        const main = section.find('.ks-grid-table-light');
+        const tableHtml = this.renderTable(processed);
+        if (main.length) {
+            main.replaceWith(tableHtml);
+        } else {
+            section.html(tableHtml);
+        }
+        this.initEvents(false);
     }
 
     initEvents(withState) {
@@ -489,7 +480,7 @@ class GridTableLightWidget extends Widget {
             take: this.state.pageSize
         };
         QB.loadData(this.options.id, this.name, false, 'init', extraParams).then((payload) => {
-            this.updateContent(payload, () => $.Deferred().resolve(payload).promise());
+            this.updateContent(payload);
             if (this.options.events && typeof this.options.events.afterPageChange === 'function') {
                 this.options.events.afterPageChange({page: newPage, pageSize: this.state.pageSize, totalPages});
             }
@@ -512,7 +503,8 @@ class GridTableLightWidget extends Widget {
             columns: this.state.columns,
             page: this.state.page,
             pageSize: this.state.pageSize,
-            totalCount: this.state.totalCount
+            totalCount: this.state.totalCount,
+            parameters: this.parameters
         };
         QB.loadData(this.options.id, this.name, false, 'init', extraParams).then((payload) => {
             const processed = this.processData(payload);
@@ -524,6 +516,7 @@ class GridTableLightWidget extends Widget {
             this.state.page = previousState.page;
             this.state.pageSize = previousState.pageSize;
             this.state.totalCount = previousState.totalCount;
+            this.parameters = previousState.parameters;
         });
     }
 }
