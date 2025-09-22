@@ -3,6 +3,7 @@ import unittest
 from pathlib import Path
 import os
 import analogic.cam
+import analogic.loginbasic
 from analogic.analogic import create_app
 from unittest.mock import patch
 import requests
@@ -67,6 +68,31 @@ class TestLoginBasicAuthenticationProvider(unittest.TestCase):
         response = self.client.post('/login', data=login_form, follow_redirects=True)
         self.assertTrue(response.status_code == 200)
         self.assertTrue('Password' not in response.text)
+
+    def test_authenticated_cookie_flags(self):
+        with self.client:
+            self.client.get('/logout')
+            cnf = self.auth_provider.get_setting().get_config()
+            cnf['secureCookies'] = True
+            cnf['cookieSameSite'] = 'Lax'
+
+            with patch.object(analogic.loginbasic.LoginBasic, 'do_login', return_value=None):
+                response = self.client.post('/login', data=self.get_login_info(), follow_redirects=False)
+
+            self.assertEqual(response.status_code, 302)
+
+            set_cookie_headers = response.headers.getlist('Set-Cookie')
+            authenticated_cookie = next(
+                (cookie for cookie in set_cookie_headers if cookie.startswith('authenticated=')),
+                None
+            )
+
+            self.assertIsNotNone(authenticated_cookie)
+            self.assertIn('HttpOnly', authenticated_cookie)
+            self.assertIn('SameSite=Lax', authenticated_cookie)
+            self.assertIn('Secure', authenticated_cookie)
+
+            cnf['secureCookies'] = False
 
     def test_logout(self):
         with self.client:
