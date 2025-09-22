@@ -6,30 +6,49 @@ Repository = {
     gridTableLightDemoTable: {
         init(ctx) {
             const extra = ctx && ctx.getExtraParams ? ctx.getExtraParams() : {};
-            const defaultPageSize = 8;
-            const requestedPageSize = typeof extra.pageSize === 'number' ? extra.pageSize : defaultPageSize;
-            const pageSize = requestedPageSize === 0 ? 0 : requestedPageSize || defaultPageSize;
-            const page = extra.page ? parseInt(extra.page, 10) || 1 : 1;
-            const totalCount = 42;
+            const DEFAULT_PAGE_SIZE = 1000;
+            const requestedPageSize = typeof extra.pageSize === 'number' ? extra.pageSize : DEFAULT_PAGE_SIZE;
+            const pageSize = requestedPageSize === 0 ? 0 : (requestedPageSize || DEFAULT_PAGE_SIZE);
+            const totalCount = 20000;
+            const page = extra.page ? Math.max(1, parseInt(extra.page, 10) || 1) : 1;
             const startIndex = pageSize ? Math.max(0, (page - 1) * pageSize) : 0;
             const endIndex = pageSize ? Math.min(totalCount, startIndex + pageSize) : totalCount;
-            const statuses = ['Planned', 'In Progress', 'At Risk', 'Completed'];
+
+            const statuses = ['Planned', 'In Progress', 'At Risk', 'Completed', 'Closed'];
             const owners = [
                 {value: 'anna', label: 'Anna Howard'},
                 {value: 'david', label: 'David Yu'},
                 {value: 'marta', label: 'Marta López'},
-                {value: 'sven', label: 'Sven Karlsson'}
+                {value: 'sven', label: 'Sven Karlsson'},
+                {value: 'leila', label: 'Leila Wong'}
             ];
-            const content = [];
 
+            const columnCount = 20;
+            const columns = [];
+            for (let idx = 0; idx < columnCount; idx++) {
+                if (idx === 0) {
+                    columns.push({key: 'record', title: 'Record', width: 220, alignment: 'center-left'});
+                } else if (idx === 1) {
+                    columns.push({key: 'status', title: 'Status', width: 160, alignment: 'center-center'});
+                } else if (idx === 2) {
+                    columns.push({key: 'owner', title: 'Owner', width: 180, alignment: 'center-left'});
+                } else if (idx === 3) {
+                    columns.push({key: 'action', title: 'Action', width: 120, alignment: 'center-center'});
+                } else {
+                    columns.push({key: `metric${idx - 3}`, title: `Metric ${idx - 3}`, alignment: 'center-right'});
+                }
+            }
+
+            const content = [];
             for (let index = startIndex; index < endIndex; index++) {
                 const status = statuses[index % statuses.length];
                 const owner = owners[index % owners.length];
+                const baseValue = index + 1;
                 const row = [
                     {
                         type: 'text',
-                        displayValue: `Opportunity ${index + 1}`,
-                        rawValue: `Opportunity ${index + 1}`,
+                        displayValue: `Record ${baseValue}`,
+                        rawValue: `Record ${baseValue}`,
                         alignment: 'center-left'
                     },
                     {
@@ -48,25 +67,37 @@ Repository = {
                     },
                     {
                         type: 'button',
-                        displayValue: 'Open',
+                        displayValue: 'Details',
                         actions: {click: {action: 'launch'}},
                         alignment: 'center-center'
                     }
                 ];
+
+                for (let colIndex = 4; colIndex < columnCount; colIndex++) {
+                    const metricIndex = colIndex - 3;
+                    const value = (baseValue * metricIndex).toString();
+                    row.push({
+                        type: 'text',
+                        displayValue: value,
+                        rawValue: value,
+                        alignment: 'center-right'
+                    });
+                }
+
                 content.push(row);
             }
 
             return {
-                columns: [
-                    {key: 'name', title: 'Opportunity', width: 240, alignment: 'center-left'},
-                    {key: 'status', title: 'Status', width: 140, alignment: 'center-center'},
-                    {key: 'owner', title: 'Owner', alignment: 'center-left'},
-                    {key: 'action', title: 'Action', width: 120, alignment: 'center-center'}
-                ],
+                columns: columns,
                 content: content,
                 totalCount: totalCount,
                 page: page,
-                pageSize: pageSize
+                pageSize: pageSize,
+                allowCopyToClipBoard: true,
+                freezeHeader: true,
+                freezeFirstColumns: 2,
+                enableExport: true,
+                exportConfig: {fileName: 'grid-table-light-demo.xlsx'}
             };
         }
     },

@@ -6401,19 +6401,7 @@ WidgetConfig = {
                                         {
                                             id: 'gridTableLightDemoTable',
                                             type: GridTableLightWidget,
-                                            title: 'GridTableLight Demo',
-                                            skin: 'gridTableLightDemo',
-                                            pageSize: 8,
-                                            freezeHeader: true,
-                                            freezeFirstColumns: 1,
-                                            enableExport: true,
-                                            allowCopyToClipBoard: true,
-                                            columns: [
-                                                {key: 'name', title: 'Opportunity', width: 240, alignment: 'center-left'},
-                                                {key: 'status', title: 'Status', width: 140, alignment: 'center-center'},
-                                                {key: 'owner', title: 'Owner', alignment: 'center-left'},
-                                                {key: 'action', title: 'Action', width: 120, alignment: 'center-center'}
-                                            ]
+                                            skin: 'gridTableLightDemo'
                                         }
                                     ]
                                 }

@@ -1111,31 +1111,26 @@ complexity.
 
 **Config Parameters:**
 
--  columns\ **:** array describing the visible columns (key, title,
-   width, alignment, optional headerTemplate).
--  columnDefaults\ **:** default values merged into every column.
--  pageSize\ **:** number of rows per page (0 disables paging, default
-   25).
--  freezeHeader\ **:** stick the header row to the top (default true).
--  freezeFirstColumns\ **:** number of leading columns kept sticky.
--  enableExport\ **:** expose the Excel export icon.
--  exportConfig\ **:** optional overrides for export (fileName,
-   sheetName, attributes).
--  toolbar\ **:** optional HTML fragment rendered in the table chrome.
--  allowCopyToClipBoard\ **:** enables selection/copy gestures.
--  rowHeight\ **:** fixed row height.
--  hideIfNoData, skin, width, minWidth, title, visible.
--  events.afterPageChange\ **:** callback fired after successful paging.
+-  ``id``\ **:** unique widget identifier.
+-  ``type``\ **:** always ``GridTableLightWidget``.
+-  ``skin``\ **:** optional skin class applied to the table container.
+
+All behaviour (columns, paging, freezing, export, clipboard) is
+described by the repository payload so dashboard authors do not need to
+maintain complex widget-config structures.
 
 **Data connection to TM1:**\ YES
 
 **Data repository specifics:**
 
 -  ``init`` responses should return ``{ columns, content, totalCount,
-   page, pageSize }``.
+   page, pageSize }`` plus optional flags such as
+   ``allowCopyToClipBoard``, ``freezeHeader``, ``freezeFirstColumns`` or
+   ``enableExport``.
 -  ``content`` is a two-dimensional matrix of lightweight cells with
    ``displayValue``/``rawValue``/``type`` metadata and optional action
-   descriptors.
+   descriptors (``{click: {action: 'launch'}}`` for buttons or
+   ``{change: {action: 'change'}}`` for selects).
 -  Paging requests can read ``ctx.getExtraParams()`` (``page``,
    ``pageSize``) to append ``$top``/``$skip`` to MDX queries.
 -  Excel export reuses the same repository endpoint with ``pageSize: 0``
@@ -1147,36 +1142,71 @@ complexity.
    {
        id: 'sampleLightTable',
        type: GridTableLightWidget,
-       pageSize: 20,
-       freezeHeader: true,
-       freezeFirstColumns: 1,
-       enableExport: true,
-       allowCopyToClipBoard: true,
-       columns: [
-           { key: 'name', title: 'Name', width: 220 },
-           { key: 'status', title: 'Status', alignment: 'center-center' },
-           { key: 'actions', title: 'Actions', width: 120 }
-       ]
+       skin: 'gridTableLightDemo'
    }
 
    // Repository snippet
    sampleLightTable: {
        init(ctx) {
-           const { page = 1, pageSize = 20 } = ctx.getExtraParams();
-           return new RestRequest({
-               url: () => `/api/data?$top=${pageSize}&$skip=${(page - 1) * pageSize}`,
-               type: 'GET',
-               parsingControl: {
-                   type: 'script',
-                   script: (data) => ({
-                       totalCount: data.total,
-                       page,
-                       pageSize,
-                       columns: data.columns,
-                       content: data.rows
-                   })
+           const extra = ctx && ctx.getExtraParams ? ctx.getExtraParams() : {};
+           const DEFAULT_PAGE_SIZE = 1000;
+           const pageSize = extra.pageSize === 0 ? 0 : (extra.pageSize || DEFAULT_PAGE_SIZE);
+           const page = extra.page ? Math.max(1, parseInt(extra.page, 10) || 1) : 1;
+           const totalCount = 20000;
+           const start = pageSize ? (page - 1) * pageSize : 0;
+           const end = pageSize ? Math.min(totalCount, start + pageSize) : totalCount;
+
+           const columns = [
+               { key: 'record', title: 'Record', width: 220, alignment: 'center-left' },
+               { key: 'status', title: 'Status', width: 160, alignment: 'center-center' },
+               { key: 'owner', title: 'Owner', width: 180, alignment: 'center-left' },
+               { key: 'action', title: 'Action', width: 120, alignment: 'center-center' }
+           ];
+           while (columns.length < 20) {
+               const idx = columns.length - 3;
+               columns.push({ key: `metric${idx}`, title: `Metric ${idx}`, alignment: 'center-right' });
+           }
+
+           const owners = [
+               { value: 'anna', label: 'Anna Howard' },
+               { value: 'david', label: 'David Yu' },
+               { value: 'marta', label: 'Marta López' },
+               { value: 'sven', label: 'Sven Karlsson' }
+           ];
+
+           const content = [];
+           for (let i = start; i < end; i++) {
+               const owner = owners[i % owners.length];
+               const row = [
+                   { type: 'text', displayValue: `Record ${i + 1}`, rawValue: `Record ${i + 1}`, alignment: 'center-left' },
+                   { type: 'text', displayValue: 'Planned', rawValue: 'Planned', alignment: 'center-center' },
+                   {
+                       type: 'combo',
+                       rawValue: owner.value,
+                       options: owners,
+                       actions: { change: { action: 'change' } },
+                       alignment: 'center-left'
+                   },
+                   { type: 'button', displayValue: 'Details', actions: { click: { action: 'launch' } }, alignment: 'center-center' }
+               ];
+               for (let col = 4; col < 20; col++) {
+                   const value = ((i + 1) * (col - 3)).toString();
+                   row.push({ type: 'text', displayValue: value, rawValue: value, alignment: 'center-right' });
                }
-           });
+               content.push(row);
+           }
+
+           return {
+               columns,
+               content,
+               totalCount,
+               page,
+               pageSize,
+               allowCopyToClipBoard: true,
+               freezeHeader: true,
+               freezeFirstColumns: 2,
+               enableExport: true
+           };
        }
    }
 

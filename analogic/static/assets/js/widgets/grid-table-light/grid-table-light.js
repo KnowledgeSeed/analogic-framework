@@ -29,22 +29,20 @@ class GridTableLightWidget extends Widget {
         return {
             allowCopyToClipBoard: this.getRealValue('allowCopyToClipBoard', data, false),
             allowFullContentUpdated: this.getRealValue('allowFullContentUpdated', data, true),
-            columnDefaults: this.getRealValue('columnDefaults', data, this.options.columnDefaults || {}),
-            columns: this.getRealValue('columns', data, this.options.columns || []),
-            enableExport: this.getRealValue('enableExport', data, this.options.enableExport || false),
-            exportConfig: this.getRealValue('exportConfig', data, this.options.exportConfig || {}),
-            freezeFirstColumns: parseInt(this.getRealValue('freezeFirstColumns', data, this.options.freezeFirstColumns || 0), 10) || 0,
-            freezeHeader: this.getRealValue('freezeHeader', data, typeof this.options.freezeHeader === 'undefined' ? true : this.options.freezeHeader),
-            hideIfNoData: this.getRealValue('hideIfNoData', data, this.options.hideIfNoData || false),
-            minWidth: this.getRealValue('minWidth', data, this.options.minWidth || false),
+            columnDefaults: this.getRealValue('columnDefaults', data, {}),
+            columns: this.getRealValue('columns', data, []),
+            enableExport: this.getRealValue('enableExport', data, false),
+            exportConfig: this.getRealValue('exportConfig', data, {}),
+            freezeFirstColumns: parseInt(this.getRealValue('freezeFirstColumns', data, 0), 10) || 0,
+            freezeHeader: this.getRealValue('freezeHeader', data, true),
+            hideIfNoData: this.getRealValue('hideIfNoData', data, false),
+            minWidth: this.getRealValue('minWidth', data, false),
             page: this.getRealValue('page', data, this.state.page || 1),
-            pageSize: this.getRealValue('pageSize', data, this.state.pageSize || (this.options.pageSize || 25)),
-            rowHeight: this.getRealValue('rowHeight', data, this.options.rowHeight || false),
+            pageSize: this.getRealValue('pageSize', data, this.state.pageSize || 25),
+            rowHeight: this.getRealValue('rowHeight', data, false),
             skin: this.getRealValue('skin', data, this.options.skin || 'standard'),
-            title: this.getRealValue('title', data, this.options.title || ''),
-            toolbar: this.getRealValue('toolbar', data, this.options.toolbar || false),
             visible: this.getRealValue('visible', data, typeof this.options.visible === 'undefined' ? true : this.options.visible),
-            width: this.getRealValue('width', data, this.options.width || false)
+            width: this.getRealValue('width', data, false)
         };
     }
 
@@ -111,15 +109,12 @@ class GridTableLightWidget extends Widget {
         return normalized;
     }
 
-    buildRenderParts(processed, childWidgets = []) {
+    buildRenderParts(processed) {
         const {parameters, columns, content} = processed;
         const headerHtml = this.buildHeaderHtml(columns, parameters);
         const bodyHtml = this.buildBodyHtml(content, parameters);
         const pagerHtml = this.buildPagerHtml(processed);
         const exportHtml = parameters.enableExport ? this.buildExportButton() : '';
-        const childHtml = Array.isArray(childWidgets) ? childWidgets.join('') : (childWidgets || '');
-        const toolbarHtml = [parameters.toolbar, childHtml].filter(Boolean).join('');
-        const titleHtml = parameters.title ? parameters.title : '';
         const styleParts = this.getGeneralStyles(parameters);
         if (parameters.width) {
             styleParts.push(`width:${Widget.getPercentOrPixel(parameters.width)};`);
@@ -135,8 +130,6 @@ class GridTableLightWidget extends Widget {
             bodyHtml,
             pagerHtml,
             exportHtml,
-            toolbarHtml,
-            titleHtml,
             styleAttr: styleParts.join('')
         };
     }
@@ -163,7 +156,6 @@ class GridTableLightWidget extends Widget {
                 });
             }
             return `<div class="${classes.join(' ')}" data-col="${index}" data-column-key="${column.key}" data-frozen="${column.frozen ? 'true' : 'false'}" style="${styles.join('')}">
-                <div class="ks-grid-table-cell-border-left"></div>
                 <div class="ks-grid-table-cell-content ks-pos-${column.alignment || 'center-left'}">${column.headerTemplate || column.title || ''}</div>
             </div>`;
         });
@@ -212,7 +204,6 @@ class GridTableLightWidget extends Widget {
         }
 
         return `<div id="${cell.cellId}" class="${classes.join(' ')}" data-row="${cell.rowIndex}" data-col="${cell.columnIndex}" data-frozen="${cell.frozen ? 'true' : 'false'}"${styleAttr}>
-            <div class="ks-grid-table-cell-border-left"></div>
             <div class="ks-grid-table-cell-content ks-pos-${cell.alignment}">${contentHtml}</div>
         </div>`;
     }
@@ -265,21 +256,19 @@ class GridTableLightWidget extends Widget {
 
     composeOuterHtml(parts, parameters) {
         return `<div class="ks-grid-table-light" data-widget-id="${this.options.id}" style="${parts.styleAttr}">
-            ${parts.titleHtml ? `<div class="ks-grid-table-title" data-role="title">${parts.titleHtml}</div>` : ''}
-            ${parts.toolbarHtml ? `<div class="ks-grid-table-toolbar" data-role="toolbar">${parts.toolbarHtml}</div>` : ''}
-            ${parts.exportHtml ? `<div class="ks-grid-table-actions" data-role="actions">${parts.exportHtml}</div>` : ''}
+            ${parts.exportHtml ? `<div class="ks-grid-table-light-actions" data-role="actions">${parts.exportHtml}</div>` : ''}
             <div class="ks-grid-table ks-grid-table-${parameters.skin}">
                 <div class="ks-grid-table-head" data-role="head">${parts.headerHtml}</div>
                 <div class="ks-grid-table-content" data-role="body">${parts.bodyHtml}</div>
             </div>
-            ${parts.pagerHtml ? `<div class="ks-grid-table-pager" data-role="pager">${parts.pagerHtml}</div>` : ''}
+            ${parts.pagerHtml ? `<div class="ks-grid-table-light-pager" data-role="pager">${parts.pagerHtml}</div>` : ''}
         </div>`;
     }
 
     getHtml(widgetHtmls, data) {
         const processed = data && data.parameters ? data : this.processData(data || {});
         this.afterProcess(processed);
-        const parts = this.buildRenderParts(processed, widgetHtmls);
+        const parts = this.buildRenderParts(processed);
         return this.composeOuterHtml(parts, processed.parameters);
     }
 
@@ -290,60 +279,11 @@ class GridTableLightWidget extends Widget {
             return;
         }
         const container = section[0];
-        let root = container.querySelector('.ks-grid-table-light');
         const parts = this.buildRenderParts(processed);
-        if (!root) {
-            container.innerHTML = this.composeOuterHtml(parts, processed.parameters);
-            root = container.querySelector('.ks-grid-table-light');
-        } else {
-            this.patchDom(root, processed.parameters, parts);
-        }
+        container.innerHTML = this.composeOuterHtml(parts, processed.parameters);
         this.bindDom(container);
         this.attachEvents();
         this.scheduleStickyUpdate();
-    }
-
-    patchDom(root, parameters, parts) {
-        root.setAttribute('style', parts.styleAttr);
-        root.setAttribute('data-widget-id', this.options.id);
-
-        const ensureRegion = (selector, className, role, html, beforeElement) => {
-            let element = root.querySelector(selector);
-            if (html) {
-                if (!element) {
-                    element = document.createElement('div');
-                    element.className = className;
-                    element.setAttribute('data-role', role);
-                    if (beforeElement) {
-                        root.insertBefore(element, beforeElement);
-                    } else {
-                        root.appendChild(element);
-                    }
-                }
-                element.innerHTML = html;
-            } else if (element) {
-                element.remove();
-            }
-            return element || null;
-        };
-
-        const table = root.querySelector('.ks-grid-table');
-        ensureRegion('[data-role="title"]', 'ks-grid-table-title', 'title', parts.titleHtml, root.firstChild);
-        ensureRegion('[data-role="toolbar"]', 'ks-grid-table-toolbar', 'toolbar', parts.toolbarHtml, table);
-        ensureRegion('[data-role="actions"]', 'ks-grid-table-actions', 'actions', parts.exportHtml, table);
-
-        if (table) {
-            table.className = `ks-grid-table ks-grid-table-${parameters.skin}`;
-            const head = table.querySelector('[data-role="head"]');
-            const body = table.querySelector('[data-role="body"]');
-            if (head) {
-                head.innerHTML = parts.headerHtml;
-            }
-            if (body) {
-                body.innerHTML = parts.bodyHtml;
-            }
-        }
-        ensureRegion('[data-role="pager"]', 'ks-grid-table-pager', 'pager', parts.pagerHtml, null);
     }
 
     afterProcess(processed) {
@@ -500,6 +440,22 @@ class GridTableLightWidget extends Widget {
         }
         const element = $(target);
         element.data('value', target.value);
+        const widgetId = target.getAttribute('data-id');
+        if (widgetId && Widgets[widgetId]) {
+            Widgets[widgetId].value = target.value;
+        }
+        if (cellElement) {
+            const rowIndex = parseInt(cellElement.getAttribute('data-row'), 10);
+            const columnIndex = parseInt(cellElement.getAttribute('data-col'), 10);
+            if (this.cellData[rowIndex] && this.cellData[rowIndex][columnIndex]) {
+                const selectedOption = target.options[target.selectedIndex];
+                this.cellData[rowIndex][columnIndex].rawValue = target.value;
+                if (selectedOption) {
+                    this.cellData[rowIndex][columnIndex].displayValue = selectedOption.text;
+                }
+            }
+            Widgets[this.options.id].cellData = this.cellData;
+        }
         const updateValue = target.getAttribute('data-update') !== 'false';
         Widget.doHandleGridTableSystemEvent(element, event, updateValue);
     }
@@ -591,6 +547,7 @@ class GridTableLightWidget extends Widget {
             const processed = this.processData(payload);
             this.cellData = processed.content;
             this.state.columns = processed.columns;
+            this.parameters = processed.parameters;
             Widgets[this.options.id].cellData = this.cellData;
             GridTableExport.triggerExcelExport(this.options.id, this.parameters && this.parameters.exportConfig ? this.parameters.exportConfig : {});
             this.cellData = previousState.cellData;
@@ -605,6 +562,9 @@ class GridTableLightWidget extends Widget {
 
     handleMouseDown(event) {
         if (!this.selection || event.button !== 0) {
+            return;
+        }
+        if (event.target && ['SELECT', 'INPUT', 'TEXTAREA'].includes(event.target.tagName)) {
             return;
         }
         const cell = event.target.closest('.ks-grid-table-cell');

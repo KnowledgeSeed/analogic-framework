@@ -1,0 +1,95 @@
+.ks-grid-table-light {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ks-grid-table-light .ks-grid-table {
+    width: 100%;
+}
+
+.ks-grid-table-light-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.ks-grid-table-light-actions .ks-grid-table-export {
+    border: none;
+    background: #007aff;
+    color: #fff;
+    border-radius: 4px;
+    padding: 6px 10px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ks-grid-table-light-actions .ks-grid-table-export .icon-download:before {
+    color: currentColor;
+}
+
+.ks-grid-table-light-pager {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ks-grid-table-pager-inner {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.ks-grid-table-pager-button {
+    border: 1px solid #c7d2e3;
+    background: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.ks-grid-table-pager-button[disabled] {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.ks-grid-table-pager-info {
+    font-size: 12px;
+    color: #4b5563;
+}
+
+.ks-grid-table-light .ks-grid-table-cell.selected {
+    background: rgba(0, 122, 255, 0.12);
+}
+
+.ks-grid-table-light .ks-grid-table-cell.active-cell {
+    outline: 2px solid #007aff;
+    outline-offset: -2px;
+}
+
+.ks-grid-table-light .ks-grid-table-cell-frozen {
+    position: sticky;
+    z-index: 5;
+    background-color: inherit;
+}
+
+.ks-grid-table-value {
+    display: flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ks-grid-table-select {
+    width: 100%;
+    min-height: 32px;
+    padding: 4px 8px;
+    border: 1px solid #cfd6e4;
+    border-radius: 4px;
+    background: #fff;
+}
