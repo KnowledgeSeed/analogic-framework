@@ -30,6 +30,7 @@ EXTENSIONS_DIR = 'extensions'
 EXTENSIONS_DIR_EXTRA = os.environ.get('EXTENSIONS_DIR_EXTRA', '')
 EXTENSIONS_EXTRA = [] if not os.environ.get('EXTENSIONS_EXTRA') else os.environ.get('EXTENSIONS_EXTRA').split(',')
 ALLOWED_EXTENSION_PREFIX = 'analogic_'
+ALLOWED_EXTENSION_DIR_PREFIX = os.environ.get('ALLOWED_EXTENSION_DIR_PREFIX', 'analogic-ext-')
 
 def create_view_func(original_func, named_route):
     def my_wrapped_function(**kwargs):
@@ -378,7 +379,13 @@ def _load_analogic_extensions(app, extensions_dir):
 def _append_extension_dir_to_path(app, modules_dir_name):
     modules_dir = os.path.join(app.instance_path, modules_dir_name)
     if modules_dir not in sys.path and os.path.exists(modules_dir) and len(os.listdir(modules_dir)) != 0:
-        sys.path.append(modules_dir)
+        if modules_dir == EXTENSIONS_DIR_EXTRA:
+            for extension_dir_name in os.listdir(modules_dir):
+                if extension_dir_name.startswith(ALLOWED_EXTENSION_DIR_PREFIX):
+                    extension_dir = os.path.join(modules_dir, extension_dir_name)
+                    sys.path.append(extension_dir)
+        else:
+            sys.path.append(modules_dir)
 
 
 def _register_extension(app, extension_dir, extension_dir_name, modules):
