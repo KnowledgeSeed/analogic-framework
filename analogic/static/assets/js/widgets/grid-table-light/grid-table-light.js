@@ -5,26 +5,26 @@
 const GRID_TABLE_LIGHT_CLASSES = {
     root: 'ks-grid-table-light',
     skinPrefix: 'ks-grid-table-light--skin-',
-    table: 'ks-grid-table-light__table',
-    inner: 'ks-grid-table-light__inner',
-    head: 'ks-grid-table-light__head',
-    body: 'ks-grid-table-light__body',
-    row: 'ks-grid-table-light__row',
-    cell: 'ks-grid-table-light__cell',
-    cellContent: 'ks-grid-table-light__cell-content',
-    cellValue: 'ks-grid-table-light__value',
-    cellFrozen: 'ks-grid-table-light__cell--frozen',
-    cellSelected: 'ks-grid-table-light__cell--selected',
-    cellActive: 'ks-grid-table-light__cell--active',
-    button: 'ks-grid-table-light__button',
-    select: 'ks-grid-table-light__select',
-    input: 'ks-grid-table-light__input',
-    actions: 'ks-grid-table-light__actions',
-    exportButton: 'ks-grid-table-light__export',
-    pager: 'ks-grid-table-light__pager',
-    pagerInner: 'ks-grid-table-light__pager-inner',
-    pagerButton: 'ks-grid-table-light__pager-button',
-    pagerInfo: 'ks-grid-table-light__pager-info'
+    table: 'ks-grid-table-light_table',
+    inner: 'ks-grid-table-light_inner',
+    head: 'ks-grid-table-light_head',
+    body: 'ks-grid-table-light_body',
+    row: 'ks-grid-table-light_row',
+    cell: 'ks-grid-table-light_cell',
+    cellContent: 'ks-grid-table-light_cell-content',
+    cellValue: 'ks-grid-table-light_value',
+    cellFrozen: 'ks-grid-table-light_cell--frozen',
+    cellSelected: 'ks-grid-table-light_cell--selected',
+    cellActive: 'ks-grid-table-light_cell--active',
+    button: 'ks-grid-table-light_button',
+    select: 'ks-grid-table-light_select',
+    input: 'ks-grid-table-light_input',
+    actions: 'ks-grid-table-light_actions',
+    exportButton: 'ks-grid-table-light_export',
+    pager: 'ks-grid-table-light_pager',
+    pagerInner: 'ks-grid-table-light_pager-inner',
+    pagerButton: 'ks-grid-table-light_pager-button',
+    pagerInfo: 'ks-grid-table-light_pager-info'
 };
 
 class GridTableLightWidget extends Widget {
@@ -237,6 +237,9 @@ class GridTableLightWidget extends Widget {
         const styleAttr = styles.length ? ` style="${styles.join('')}"` : '';
 
         Widgets[cell.id] = Widgets[cell.id] || {};
+        Widgets[cell.id].cell = cell;
+        Widgets[cell.cellId] = Widgets[cell.cellId] || {};
+        Widgets[cell.cellId].cell = cell;
         if (cell.type === 'combo') {
             Widgets[cell.id].items = cell.options || [];
             Widgets[cell.id].value = cell.rawValue;
@@ -269,14 +272,15 @@ class GridTableLightWidget extends Widget {
                 return cell.html || '';
             case 'text':
             default: {
+                const changeAction = v('change.action', cell.actions) || 'change';
+                const changeUpdate = v('change.updateValue', cell.actions) === false ? 'false' : 'true';
+                const attrs = [`data-action="${clickAction}"`, `data-update="${clickUpdate}"`, `data-id="${cell.id}"`, `data-cell-id="${cell.cellId}"`];
                 if (cell.editable) {
-                    const changeAction = v('change.action', cell.actions) || 'change';
-                    const changeUpdate = v('change.updateValue', cell.actions) === false ? 'false' : 'true';
-                    const value = typeof cell.rawValue !== 'undefined' ? cell.rawValue : cell.displayValue;
-                    const encodedValue = Utils.htmlEncode(String(value === null || typeof value === 'undefined' ? '' : value));
-                    return `<input type="text" class="${GRID_TABLE_LIGHT_CLASSES.input}" value="${encodedValue}" data-action="${changeAction}" data-update="${changeUpdate}" data-id="${cell.id}" data-cell-id="${cell.cellId}"${tooltip} />`;
+                    attrs.push('data-editable="true"');
+                    attrs.push(`data-change-action="${changeAction}"`);
+                    attrs.push(`data-change-update="${changeUpdate}"`);
                 }
-                return `<div class="${GRID_TABLE_LIGHT_CLASSES.cellValue}" data-action="${clickAction}" data-update="${clickUpdate}" data-id="${cell.id}" data-cell-id="${cell.cellId}"${tooltip}>${cell.displayValue}</div>`;
+                return `<div class="${GRID_TABLE_LIGHT_CLASSES.cellValue}" ${attrs.join(' ')}${tooltip}>${cell.displayValue}</div>`;
             }
         }
     }
@@ -424,17 +428,17 @@ class GridTableLightWidget extends Widget {
             this.boundHandlers.mouseover = this.handleMouseOver.bind(this);
             this.boundHandlers.mouseup = this.handleMouseUp.bind(this);
             this.boundHandlers.mouseleave = this.handleMouseLeave.bind(this);
-            this.boundHandlers.dblclick = this.handleDoubleClick.bind(this);
             this.dom.body.addEventListener('mousedown', this.boundHandlers.mousedown);
             this.dom.body.addEventListener('mouseover', this.boundHandlers.mouseover);
             this.dom.body.addEventListener('mouseup', this.boundHandlers.mouseup);
             this.dom.body.addEventListener('mouseleave', this.boundHandlers.mouseleave);
-            this.dom.body.addEventListener('dblclick', this.boundHandlers.dblclick);
         } else {
             this.destroySelectionState();
         }
 
         if (this.dom.body) {
+            this.boundHandlers.dblclick = this.handleDoubleClick.bind(this);
+            this.dom.body.addEventListener('dblclick', this.boundHandlers.dblclick);
             this.boundHandlers.scroll = this.handleBodyScroll.bind(this);
             this.dom.body.addEventListener('scroll', this.boundHandlers.scroll);
         }
@@ -689,8 +693,23 @@ class GridTableLightWidget extends Widget {
         }
     }
 
-    handleDoubleClick() {
-        this.copySelectedCellsToClipboard();
+    handleDoubleClick(event) {
+        if (!this.dom.body) {
+            return;
+        }
+        const cellElement = event.target.closest(`.${GRID_TABLE_LIGHT_CLASSES.cell}`);
+        if (cellElement && this.dom.body.contains(cellElement)) {
+            this.updateCurrentCellFromElement(cellElement);
+            const cell = this.getCellFromElement(cellElement);
+            if (cell && cell.type === 'text' && cell.editable) {
+                event.preventDefault();
+                this.startTextEdit(cellElement);
+                return;
+            }
+        }
+        if (this.parameters && this.parameters.allowCopyToClipBoard) {
+            this.copySelectedCellsToClipboard();
+        }
     }
 
     handleBodyScroll() {
@@ -785,6 +804,120 @@ class GridTableLightWidget extends Widget {
         }
     }
 
+    getCellFromElement(cellElement) {
+        if (!cellElement) {
+            return null;
+        }
+        const rowIndex = parseInt(cellElement.getAttribute('data-row'), 10);
+        const columnIndex = parseInt(cellElement.getAttribute('data-col'), 10);
+        if (Number.isNaN(rowIndex) || Number.isNaN(columnIndex)) {
+            return null;
+        }
+        return this.cellData[rowIndex] && this.cellData[rowIndex][columnIndex] ? this.cellData[rowIndex][columnIndex] : null;
+    }
+
+    startTextEdit(cellElement) {
+        if (!cellElement || cellElement.dataset.editing === 'true') {
+            return;
+        }
+        const cell = this.getCellFromElement(cellElement);
+        if (!cell || cell.type !== 'text' || !cell.editable) {
+            return;
+        }
+        const valueWrapper = cellElement.querySelector(`.${GRID_TABLE_LIGHT_CLASSES.cellValue}`);
+        if (!valueWrapper) {
+            return;
+        }
+        const changeAction = valueWrapper.getAttribute('data-change-action') || 'change';
+        const changeUpdate = valueWrapper.getAttribute('data-change-update') || 'true';
+        const rawValue = typeof cell.rawValue !== 'undefined' && cell.rawValue !== null ? cell.rawValue : cell.displayValue;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = GRID_TABLE_LIGHT_CLASSES.input;
+        input.value = rawValue === null || typeof rawValue === 'undefined' ? '' : rawValue;
+        input.setAttribute('data-action', changeAction);
+        input.setAttribute('data-update', changeUpdate);
+        input.setAttribute('data-id', cell.id);
+        input.setAttribute('data-cell-id', cell.cellId);
+        if (cell.tooltip) {
+            input.setAttribute('title', Utils.htmlEncode(Utils.stripHtml(cell.tooltip)));
+        }
+
+        const contentContainer = cellElement.querySelector(`.${GRID_TABLE_LIGHT_CLASSES.cellContent}`) || cellElement;
+        valueWrapper.dataset.originalValue = valueWrapper.textContent;
+        valueWrapper.style.display = 'none';
+        contentContainer.appendChild(input);
+        cellElement.dataset.editing = 'true';
+
+        let isFinalized = false;
+        const finalize = (commit) => {
+            if (isFinalized) {
+                return;
+            }
+            isFinalized = true;
+            input.removeEventListener('blur', onBlur);
+            input.removeEventListener('keydown', onKeyDown);
+            this.finishTextEdit(cellElement, input, commit);
+        };
+        const onBlur = () => finalize(true);
+        const onKeyDown = (evt) => {
+            if (evt.key === 'Enter') {
+                evt.preventDefault();
+                finalize(true);
+            } else if (evt.key === 'Escape') {
+                evt.preventDefault();
+                finalize(false);
+            }
+        };
+
+        input.addEventListener('blur', onBlur);
+        input.addEventListener('keydown', onKeyDown);
+
+        requestAnimationFrame(() => {
+            input.focus();
+            input.select();
+        });
+    }
+
+    finishTextEdit(cellElement, input, commit) {
+        const valueWrapper = cellElement.querySelector(`.${GRID_TABLE_LIGHT_CLASSES.cellValue}`);
+        const cell = this.getCellFromElement(cellElement);
+        if (!valueWrapper) {
+            if (input && input.parentNode) {
+                input.parentNode.removeChild(input);
+            }
+            cellElement.removeAttribute('data-editing');
+            return;
+        }
+
+        const originalValue = valueWrapper.dataset.originalValue;
+        delete valueWrapper.dataset.originalValue;
+        valueWrapper.style.display = '';
+
+        if (!commit) {
+            if (typeof originalValue !== 'undefined') {
+                valueWrapper.textContent = originalValue;
+            } else if (cell) {
+                valueWrapper.textContent = cell.displayValue;
+            }
+            if (input && input.parentNode) {
+                input.parentNode.removeChild(input);
+            }
+            cellElement.removeAttribute('data-editing');
+            return;
+        }
+
+        const value = input.value;
+        valueWrapper.textContent = value;
+        const changeEvent = new Event('change', {bubbles: true, cancelable: true});
+        input.value = value;
+        input.dispatchEvent(changeEvent);
+        if (input && input.parentNode) {
+            input.parentNode.removeChild(input);
+        }
+        cellElement.removeAttribute('data-editing');
+    }
+
     scheduleStickyUpdate() {
         if (this.freezeRequest) {
             cancelAnimationFrame(this.freezeRequest);
@@ -796,7 +929,7 @@ class GridTableLightWidget extends Widget {
     }
 
     applyColumnFreezing() {
-        if (!this.dom.table) {
+        if (!this.dom.body) {
             return;
         }
         this.clearFrozenStyles();
@@ -804,44 +937,87 @@ class GridTableLightWidget extends Widget {
         if (!freezeCount) {
             return;
         }
+
         const headerRow = this.dom.head ? this.dom.head.querySelector(`.${GRID_TABLE_LIGHT_CLASSES.row}`) : null;
-        if (!headerRow) {
+        const headerCells = headerRow ? Array.from(headerRow.children) : [];
+        const bodyRows = Array.from(this.dom.body.querySelectorAll(`.${GRID_TABLE_LIGHT_CLASSES.row}`));
+        if (!headerCells.length && !bodyRows.length) {
             return;
         }
-        const headerCells = Array.from(headerRow.children);
+
+        const referenceRow = bodyRows.find(row => row.children && row.children.length);
+        const referenceCells = referenceRow ? Array.from(referenceRow.children) : [];
+        const widths = [];
+        for (let i = 0; i < freezeCount; i++) {
+            if (!headerCells[i] && !referenceCells[i]) {
+                break;
+            }
+            let width = 0;
+            if (headerCells[i]) {
+                width = headerCells[i].getBoundingClientRect().width || headerCells[i].offsetWidth;
+            }
+            if ((!width || width === 0) && referenceCells[i]) {
+                width = referenceCells[i].getBoundingClientRect().width || referenceCells[i].offsetWidth;
+            }
+            widths.push(width);
+        }
+
         const offsets = [];
         let runningLeft = 0;
-        for (let i = 0; i < freezeCount && i < headerCells.length; i++) {
-            const cell = headerCells[i];
-            cell.classList.add(GRID_TABLE_LIGHT_CLASSES.cellFrozen);
-            cell.style.left = `${runningLeft}px`;
-            if (this.parameters && this.parameters.freezeHeader) {
-                cell.style.top = cell.style.top || '0px';
-            }
-            cell.dataset.frozenOriginalBackground = cell.style.backgroundColor || '';
-            const headerBg = typeof window !== 'undefined' ? window.getComputedStyle(cell).backgroundColor : cell.style.backgroundColor;
-            cell.style.backgroundColor = headerBg;
-            cell.style.zIndex = '6';
-            const width = cell.getBoundingClientRect().width;
-            offsets.push(runningLeft);
-            runningLeft += width;
+        for (let i = 0; i < widths.length; i++) {
+            offsets[i] = runningLeft;
+            runningLeft += widths[i] || 0;
         }
         if (!offsets.length) {
             return;
         }
-        const bodyRows = this.dom.body ? this.dom.body.querySelectorAll(`.${GRID_TABLE_LIGHT_CLASSES.row}`) : [];
+
+        const applyFrozenStyles = (cell, index, isHeader) => {
+            if (!cell) {
+                return;
+            }
+            const width = widths[index] || cell.getBoundingClientRect().width || cell.offsetWidth;
+            cell.classList.add(GRID_TABLE_LIGHT_CLASSES.cellFrozen);
+            cell.style.left = `${offsets[index]}px`;
+            if (width) {
+                if (typeof cell.dataset.frozenOriginalMinWidth === 'undefined') {
+                    cell.dataset.frozenOriginalMinWidth = cell.style.minWidth || '';
+                }
+                if (typeof cell.dataset.frozenOriginalMaxWidth === 'undefined') {
+                    cell.dataset.frozenOriginalMaxWidth = cell.style.maxWidth || '';
+                }
+                if (typeof cell.dataset.frozenOriginalFlex === 'undefined') {
+                    cell.dataset.frozenOriginalFlex = cell.style.flex || '';
+                }
+                if (typeof cell.dataset.frozenOriginalWidth === 'undefined') {
+                    cell.dataset.frozenOriginalWidth = cell.style.width || '';
+                }
+                cell.style.minWidth = `${width}px`;
+                cell.style.maxWidth = `${width}px`;
+                cell.style.width = `${width}px`;
+                cell.style.flex = `0 0 ${width}px`;
+            }
+            if (isHeader && this.parameters && this.parameters.freezeHeader) {
+                cell.style.top = '0px';
+            }
+            if (typeof cell.dataset.frozenOriginalBackground === 'undefined') {
+                cell.dataset.frozenOriginalBackground = cell.style.backgroundColor || '';
+            }
+            const computedBg = typeof window !== 'undefined' ? window.getComputedStyle(cell).backgroundColor : cell.style.backgroundColor;
+            cell.style.backgroundColor = computedBg;
+            cell.style.zIndex = isHeader ? '7' : '6';
+        };
+
+        headerCells.forEach((cell, index) => {
+            if (index < offsets.length) {
+                applyFrozenStyles(cell, index, true);
+            }
+        });
+
         bodyRows.forEach(row => {
             const cells = row.children;
-            for (let i = 0; i < cells.length; i++) {
-                const cell = cells[i];
-                if (i < offsets.length) {
-                    cell.classList.add(GRID_TABLE_LIGHT_CLASSES.cellFrozen);
-                    cell.style.left = `${offsets[i]}px`;
-                    cell.dataset.frozenOriginalBackground = cell.style.backgroundColor || '';
-                    const bodyBg = typeof window !== 'undefined' ? window.getComputedStyle(cell).backgroundColor : cell.style.backgroundColor;
-                    cell.style.backgroundColor = bodyBg;
-                    cell.style.zIndex = '5';
-                }
+            for (let i = 0; i < offsets.length && i < cells.length; i++) {
+                applyFrozenStyles(cells[i], i, false);
             }
         });
     }
@@ -857,6 +1033,30 @@ class GridTableLightWidget extends Widget {
             cell.style.backgroundColor = cell.dataset.frozenOriginalBackground || '';
             delete cell.dataset.frozenOriginalBackground;
             cell.style.zIndex = '';
+            if (typeof cell.dataset.frozenOriginalMinWidth !== 'undefined') {
+                cell.style.minWidth = cell.dataset.frozenOriginalMinWidth;
+            } else {
+                cell.style.minWidth = '';
+            }
+            if (typeof cell.dataset.frozenOriginalMaxWidth !== 'undefined') {
+                cell.style.maxWidth = cell.dataset.frozenOriginalMaxWidth;
+            } else {
+                cell.style.maxWidth = '';
+            }
+            if (typeof cell.dataset.frozenOriginalFlex !== 'undefined') {
+                cell.style.flex = cell.dataset.frozenOriginalFlex;
+            } else {
+                cell.style.flex = '';
+            }
+            if (typeof cell.dataset.frozenOriginalWidth !== 'undefined') {
+                cell.style.width = cell.dataset.frozenOriginalWidth;
+            } else {
+                cell.style.width = '';
+            }
+            delete cell.dataset.frozenOriginalMinWidth;
+            delete cell.dataset.frozenOriginalMaxWidth;
+            delete cell.dataset.frozenOriginalFlex;
+            delete cell.dataset.frozenOriginalWidth;
         });
     }
 
