@@ -475,9 +475,12 @@ class GridTableLightWidget extends Widget {
             return;
         }
         this.updateCurrentCellFromElement(cellElement);
+        event.preventDefault();
+        const cellWidgetId = `${this.options.id}_${this.row}_${this.column}`;
+        Widgets['rightclick'] = cellWidgetId;
         const proxyElement = $('<div>').data({
             action: 'rightclick',
-            id: `${this.options.id}_${this.row}_${this.column}`
+            id: cellWidgetId
         });
         Widget.doHandleGridTableSystemEvent(proxyElement, event);
     }
