@@ -29,6 +29,13 @@ Repository = {
                 {value: 'sven', label: 'Sven Karlsson'},
                 {value: 'leila', label: 'Leila Wong'}
             ];
+            const healthStates = [
+                {label: 'On track', color: '#047857'},
+                {label: 'Review', color: '#b45309'},
+                {label: 'Blocked', color: '#b91c1c'},
+                {label: 'At risk', color: '#b45309'},
+                {label: 'Completed', color: '#0f172a'}
+            ];
 
             const columnCount = 20;
             const columns = [];
@@ -41,8 +48,10 @@ Repository = {
                     columns.push({key: 'owner', title: 'Owner', width: 180, alignment: 'center-left'});
                 } else if (idx === 3) {
                     columns.push({key: 'action', title: 'Action', width: 120, alignment: 'center-center'});
+                } else if (idx === 4) {
+                    columns.push({key: 'health', title: 'Health', width: 140, alignment: 'center-center'});
                 } else {
-                    columns.push({key: `metric${idx - 3}`, title: `Metric ${idx - 3}`, alignment: 'center-right'});
+                    columns.push({key: `metric${idx - 4}`, title: `Metric ${idx - 4}`, alignment: 'center-right'});
                 }
             }
 
@@ -50,13 +59,17 @@ Repository = {
             for (let index = startIndex; index < endIndex; index++) {
                 const status = statuses[index % statuses.length];
                 const owner = owners[index % owners.length];
+                const health = healthStates[index % healthStates.length];
                 const baseValue = index + 1;
                 const row = [
                     {
                         type: 'text',
                         displayValue: `Record ${baseValue}`,
                         rawValue: `Record ${baseValue}`,
-                        alignment: 'center-left'
+                        alignment: 'center-left',
+                        editable: true,
+                        actions: {change: {action: 'change'}},
+                        tooltip: 'Rename the record'
                     },
                     {
                         type: 'text',
@@ -77,11 +90,17 @@ Repository = {
                         displayValue: 'Details',
                         actions: {click: {action: 'launch'}},
                         alignment: 'center-center'
+                    },
+                    {
+                        type: 'custom',
+                        rawValue: health.label,
+                        alignment: 'center-center',
+                        html: `<span class="grid-table-light-demo-badge" style="color:${health.color}"><span class="dot"></span>${health.label}</span>`
                     }
                 ];
 
-                for (let colIndex = 4; colIndex < columnCount; colIndex++) {
-                    const metricIndex = colIndex - 3;
+                for (let colIndex = 5; colIndex < columnCount; colIndex++) {
+                    const metricIndex = colIndex - 4;
                     const value = (baseValue * metricIndex).toString();
                     row.push({
                         type: 'text',
@@ -121,19 +140,165 @@ Repository = {
             Api.updateContent('gridTableLightDemoInfoText');
         },
         change(ctx) {
+            const columnIndex = ctx.getColumn();
             const rowIndex = ctx.getRow();
-            const row = Utils.getGridTableCurrentRow(ctx.getWidgetId());
-            const recordCell = row && row[0] ? row[0] : null;
-            const recordLabel = recordCell ? (recordCell.displayValue || recordCell.title || recordCell.rawValue || '') : '';
+            const row = Utils.getGridTableCurrentRow(ctx.getWidgetId()) || [];
+            const recordCell = row[0] || {};
+            const recordLabel = recordCell.displayValue || recordCell.title || recordCell.rawValue || '';
             const cell = ctx.getCell();
-            const ownerLabel = cell ? (cell.displayValue || cell.rawValue || '') : '';
+            const newValue = cell ? (cell.displayValue || cell.rawValue || '') : '';
             const rowNumber = typeof rowIndex === 'number' ? rowIndex + 1 : false;
             const rowText = rowNumber ? `Row ${rowNumber}` : 'Row';
-            Utils.setWidgetValue('gridTableLightDemoLastAction', {
-                title: 'Owner updated',
-                body: recordLabel ? `${recordLabel} assigned to ${ownerLabel}` : `${rowText} assigned to ${ownerLabel}`
-            });
-            Api.updateContent('gridTableLightDemoInfoText');
+
+            if (columnIndex === 0) {
+                console.log('GridTableLight demo: record renamed', {row: rowNumber, value: newValue});
+                Utils.setWidgetValue('gridTableLightDemoLastAction', {
+                    title: 'Record renamed',
+                    body: newValue ? `${rowText} renamed to ${newValue}` : `${rowText} renamed`
+                });
+                Api.updateContent('gridTableLightDemoInfoText');
+                return;
+            }
+
+            if (columnIndex === 2) {
+                Utils.setWidgetValue('gridTableLightDemoLastAction', {
+                    title: 'Owner updated',
+                    body: recordLabel ? `${recordLabel} assigned to ${newValue}` : `${rowText} assigned to ${newValue}`
+                });
+                Api.updateContent('gridTableLightDemoInfoText');
+            }
+        }
+    },
+    gridTableLightCompactTable: {
+        init() {
+            const owners = [
+                {value: 'alex', label: 'Alex Doe'},
+                {value: 'brianna', label: 'Brianna Lee'},
+                {value: 'carlos', label: 'Carlos Mendes'},
+                {value: 'dina', label: 'Dina Patel'}
+            ];
+            const priorities = [
+                {label: 'High', color: '#b91c1c'},
+                {label: 'Medium', color: '#b45309'},
+                {label: 'Low', color: '#047857'}
+            ];
+            const statuses = ['Draft', 'Planned', 'In Review', 'Completed'];
+
+            const columns = [
+                {key: 'task', title: 'Task', width: 200, alignment: 'center-left'},
+                {key: 'category', title: 'Category', width: 140, alignment: 'center-left'},
+                {key: 'owner', title: 'Owner', width: 160, alignment: 'center-left'},
+                {key: 'priority', title: 'Priority', width: 120, alignment: 'center-center'},
+                {key: 'action', title: 'Action', width: 100, alignment: 'center-center'},
+                {key: 'status', title: 'Status', width: 120, alignment: 'center-center'},
+                {key: 'start', title: 'Start', alignment: 'center-left'},
+                {key: 'end', title: 'End', alignment: 'center-left'},
+                {key: 'progress', title: 'Progress', alignment: 'center-right'},
+                {key: 'score', title: 'Score', alignment: 'center-right'}
+            ];
+
+            const baseDate = new Date('2024-01-08');
+            const content = [];
+            for (let idx = 0; idx < 10; idx++) {
+                const owner = owners[idx % owners.length];
+                const priority = priorities[idx % priorities.length];
+                const status = statuses[idx % statuses.length];
+                const start = new Date(baseDate.getTime() + idx * 86400000);
+                const end = new Date(start.getTime() + (idx % 5 + 2) * 86400000);
+                const progressValue = Math.min(100, 15 + idx * 7);
+                const scoreValue = (72 + (idx * 3) % 20).toString();
+
+                content.push([
+                    {
+                        type: 'text',
+                        displayValue: `Task ${idx + 1}`,
+                        rawValue: `Task ${idx + 1}`,
+                        alignment: 'center-left',
+                        editable: true,
+                        actions: {change: {action: 'change'}},
+                        tooltip: 'Rename the task'
+                    },
+                    {
+                        type: 'text',
+                        displayValue: idx % 2 === 0 ? 'Finance' : 'Operations',
+                        rawValue: idx % 2 === 0 ? 'Finance' : 'Operations',
+                        alignment: 'center-left'
+                    },
+                    {
+                        type: 'combo',
+                        rawValue: owner.value,
+                        options: owners,
+                        actions: {change: {action: 'change'}},
+                        alignment: 'center-left'
+                    },
+                    {
+                        type: 'custom',
+                        rawValue: priority.label,
+                        alignment: 'center-center',
+                        html: `<span class="grid-table-light-demo-badge" style="color:${priority.color};background:${priority.color}1A"><span class="dot"></span>${priority.label}</span>`
+                    },
+                    {
+                        type: 'button',
+                        displayValue: 'Open',
+                        actions: {click: {action: 'launch'}},
+                        alignment: 'center-center'
+                    },
+                    {
+                        type: 'text',
+                        displayValue: status,
+                        rawValue: status,
+                        alignment: 'center-center'
+                    },
+                    {
+                        type: 'text',
+                        displayValue: start.toISOString().slice(0, 10),
+                        rawValue: start.toISOString().slice(0, 10),
+                        alignment: 'center-left'
+                    },
+                    {
+                        type: 'text',
+                        displayValue: end.toISOString().slice(0, 10),
+                        rawValue: end.toISOString().slice(0, 10),
+                        alignment: 'center-left'
+                    },
+                    {
+                        type: 'text',
+                        displayValue: `${progressValue}%`,
+                        rawValue: `${progressValue}%`,
+                        alignment: 'center-right'
+                    },
+                    {
+                        type: 'text',
+                        displayValue: scoreValue,
+                        rawValue: scoreValue,
+                        alignment: 'center-right'
+                    }
+                ]);
+            }
+
+            return {
+                columns: columns,
+                content: content,
+                totalCount: content.length,
+                page: 1,
+                pageSize: content.length,
+                freezeHeader: true,
+                freezeFirstColumns: 1,
+                allowCopyToClipBoard: true
+            };
+        },
+        change(ctx) {
+            const columnIndex = ctx.getColumn();
+            const cell = ctx.getCell();
+            const newValue = cell ? (cell.displayValue || cell.rawValue || '') : '';
+            console.log('GridTableLight compact table change', {column: columnIndex, value: newValue});
+        },
+        launch(ctx) {
+            const rowIndex = ctx.getRow();
+            const row = Utils.getGridTableCurrentRow(ctx.getWidgetId()) || [];
+            const taskCell = row[0] || {};
+            const taskLabel = taskCell.displayValue || taskCell.rawValue || `Row ${typeof rowIndex === 'number' ? rowIndex + 1 : ''}`;
+            console.log('GridTableLight compact table launch', {row: rowIndex, task: taskLabel});
         }
     },
     gridTableLightDemoInfoText: {

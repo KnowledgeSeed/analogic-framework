@@ -1,19 +1,128 @@
 .ks-grid-table-light {
     position: relative;
-}
-
-.ks-grid-table-light .ks-grid-table {
     width: 100%;
 }
 
-.ks-grid-table-light-actions {
+.ks-grid-table-light__table {
+    display: block;
+    width: 100%;
+}
+
+.ks-grid-table-light__inner {
+    height: 100%;
+    position: relative;
+}
+
+.ks-grid-table-light__head {
+    display: block;
+    position: relative;
+    z-index: 3;
+}
+
+.ks-grid-table-light__body {
+    display: block;
+    overflow: auto;
+}
+
+.ks-grid-table-light__row {
+    display: flex;
+}
+
+.ks-grid-table-light__cell {
+    flex-grow: 1;
+    height: 100%;
+    position: relative;
+    display: flex;
+    min-width: 0;
+}
+
+.ks-grid-table-light__cell-content {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+}
+
+.ks-pos-top-left.ks-grid-table-light__cell-content,
+.ks-pos-top-left .ks-grid-table-light__cell-content {
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.ks-pos-center-left.ks-grid-table-light__cell-content,
+.ks-pos-center-left .ks-grid-table-light__cell-content {
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.ks-pos-bottom-left.ks-grid-table-light__cell-content,
+.ks-pos-bottom-left .ks-grid-table-light__cell-content {
+    align-items: flex-end;
+    justify-content: flex-start;
+}
+
+.ks-pos-top-center.ks-grid-table-light__cell-content,
+.ks-pos-top-center .ks-grid-table-light__cell-content {
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.ks-pos-center-center.ks-grid-table-light__cell-content,
+.ks-pos-center-center .ks-grid-table-light__cell-content {
+    align-items: center;
+    justify-content: center;
+}
+
+.ks-pos-bottom-center.ks-grid-table-light__cell-content,
+.ks-pos-bottom-center .ks-grid-table-light__cell-content {
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.ks-pos-top-right.ks-grid-table-light__cell-content,
+.ks-pos-top-right .ks-grid-table-light__cell-content {
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.ks-pos-center-right.ks-grid-table-light__cell-content,
+.ks-pos-center-right .ks-grid-table-light__cell-content {
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.ks-pos-bottom-right.ks-grid-table-light__cell-content,
+.ks-pos-bottom-right .ks-grid-table-light__cell-content {
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.ks-pos-top-space-between.ks-grid-table-light__cell-content,
+.ks-pos-top-space-between .ks-grid-table-light__cell-content {
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.ks-pos-center-space-between.ks-grid-table-light__cell-content,
+.ks-pos-center-space-between .ks-grid-table-light__cell-content {
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ks-pos-bottom-space-between.ks-grid-table-light__cell-content,
+.ks-pos-bottom-space-between .ks-grid-table-light__cell-content {
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.ks-grid-table-light__actions {
     display: flex;
     justify-content: flex-end;
     gap: 8px;
     margin-bottom: 4px;
 }
 
-.ks-grid-table-light-actions .ks-grid-table-export {
+.ks-grid-table-light__export {
     border: none;
     background: transparent;
     color: inherit;
@@ -23,25 +132,25 @@
     align-items: center;
 }
 
-.ks-grid-table-light-actions .ks-grid-table-export [class^="icon-"]:before,
-.ks-grid-table-light-actions .ks-grid-table-export [class*=" icon-"]:before {
+.ks-grid-table-light__export [class^="icon-"]:before,
+.ks-grid-table-light__export [class*=" icon-"]:before {
     color: currentColor;
 }
 
-.ks-grid-table-light-pager {
+.ks-grid-table-light__pager {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 4px;
 }
 
-.ks-grid-table-pager-inner {
+.ks-grid-table-light__pager-inner {
     display: inline-flex;
     gap: 8px;
     align-items: center;
 }
 
-.ks-grid-table-pager-button {
+.ks-grid-table-light__pager-button {
     border: 1px solid #c7d2e3;
     background: #fff;
     padding: 4px 8px;
@@ -49,32 +158,32 @@
     cursor: pointer;
 }
 
-.ks-grid-table-pager-button[disabled] {
+.ks-grid-table-light__pager-button[disabled] {
     opacity: 0.4;
     cursor: default;
 }
 
-.ks-grid-table-pager-info {
+.ks-grid-table-light__pager-info {
     font-size: 12px;
     color: #4b5563;
 }
 
-.ks-grid-table-light .ks-grid-table-cell.selected {
+.ks-grid-table-light__cell--selected {
     background: rgba(0, 122, 255, 0.12);
 }
 
-.ks-grid-table-light .ks-grid-table-cell.active-cell {
+.ks-grid-table-light__cell--active {
     outline: 2px solid #007aff;
     outline-offset: -2px;
 }
 
-.ks-grid-table-light .ks-grid-table-cell-frozen {
+.ks-grid-table-light__cell--frozen {
     position: sticky;
     z-index: 5;
     background-color: inherit;
 }
 
-.ks-grid-table-value {
+.ks-grid-table-light__value {
     display: block;
     width: 100%;
     white-space: nowrap;
@@ -82,11 +191,37 @@
     text-overflow: ellipsis;
 }
 
-.ks-grid-table-select {
+.ks-grid-table-light__select,
+.ks-grid-table-light__input {
     width: 100%;
     min-height: 32px;
     padding: 4px 8px;
     border: 1px solid #cfd6e4;
     border-radius: 4px;
     background: #fff;
+    font: inherit;
+    color: inherit;
+}
+
+.ks-grid-table-light__input:focus,
+.ks-grid-table-light__select:focus {
+    outline: 2px solid rgba(0, 122, 255, 0.35);
+    outline-offset: 1px;
+}
+
+.ks-grid-table-light__button {
+    border: 1px solid #cfd6e4;
+    background: #fff;
+    border-radius: 4px;
+    padding: 4px 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+    font: inherit;
+}
+
+.ks-grid-table-light__button:hover {
+    background: #f3f4f6;
 }

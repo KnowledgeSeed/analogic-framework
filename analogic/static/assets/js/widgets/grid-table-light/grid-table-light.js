@@ -2,6 +2,31 @@
 
 'use strict';
 
+const GRID_TABLE_LIGHT_CLASSES = {
+    root: 'ks-grid-table-light',
+    skinPrefix: 'ks-grid-table-light--skin-',
+    table: 'ks-grid-table-light__table',
+    inner: 'ks-grid-table-light__inner',
+    head: 'ks-grid-table-light__head',
+    body: 'ks-grid-table-light__body',
+    row: 'ks-grid-table-light__row',
+    cell: 'ks-grid-table-light__cell',
+    cellContent: 'ks-grid-table-light__cell-content',
+    cellValue: 'ks-grid-table-light__value',
+    cellFrozen: 'ks-grid-table-light__cell--frozen',
+    cellSelected: 'ks-grid-table-light__cell--selected',
+    cellActive: 'ks-grid-table-light__cell--active',
+    button: 'ks-grid-table-light__button',
+    select: 'ks-grid-table-light__select',
+    input: 'ks-grid-table-light__input',
+    actions: 'ks-grid-table-light__actions',
+    exportButton: 'ks-grid-table-light__export',
+    pager: 'ks-grid-table-light__pager',
+    pagerInner: 'ks-grid-table-light__pager-inner',
+    pagerButton: 'ks-grid-table-light__pager-button',
+    pagerInfo: 'ks-grid-table-light__pager-info'
+};
+
 class GridTableLightWidget extends Widget {
 
     constructor(options) {
@@ -107,7 +132,7 @@ class GridTableLightWidget extends Widget {
         normalized.classes = normalized.classes || '';
         normalized.style = normalized.style || {};
         normalized.tooltip = normalized.tooltip || (column && column.tooltip) || '';
-        normalized.editable = normalized.editable || false;
+        normalized.editable = !!normalized.editable;
         normalized.rowIndex = rowIndex;
         normalized.columnIndex = colIndex;
         normalized.id = `${this.options.id}_${rowIndex}_${colIndex}`;
@@ -149,7 +174,7 @@ class GridTableLightWidget extends Widget {
 
     buildHeaderHtml(columns, parameters) {
         const cells = columns.map((column, index) => {
-            const classes = ['ks-grid-table-cell'];
+            const classes = [GRID_TABLE_LIGHT_CLASSES.cell];
             if (column.classes) {
                 classes.push(column.classes);
             }
@@ -171,10 +196,10 @@ class GridTableLightWidget extends Widget {
                 });
             }
             return `<div class="${classes.join(' ')}" data-col="${index}" data-column-key="${column.key}" data-frozen="${column.frozen ? 'true' : 'false'}" style="${styles.join('')}">
-                <div class="ks-grid-table-cell-content ks-pos-${column.alignment || 'center-left'}">${column.headerTemplate || column.title || ''}</div>
+                <div class="${GRID_TABLE_LIGHT_CLASSES.cellContent} ks-pos-${column.alignment || 'center-left'}">${column.headerTemplate || column.title || ''}</div>
             </div>`;
         });
-        return `<div class="ks-grid-table-row">${cells.join('')}</div>`;
+        return `<div class="${GRID_TABLE_LIGHT_CLASSES.row}">${cells.join('')}</div>`;
     }
 
     buildBodyHtml(content, parameters) {
@@ -184,13 +209,13 @@ class GridTableLightWidget extends Widget {
                 rowStyles.push(`height:${Widget.getPercentOrPixel(parameters.rowHeight)};`);
             }
             const cells = row.map((cell) => this.buildCellHtml(cell));
-            return `<div class="ks-grid-table-row" data-row="${rowIndex}" style="${rowStyles.join('')}">${cells.join('')}</div>`;
+            return `<div class="${GRID_TABLE_LIGHT_CLASSES.row}" data-row="${rowIndex}" style="${rowStyles.join('')}">${cells.join('')}</div>`;
         });
         return rows.join('');
     }
 
     buildCellHtml(cell) {
-        const classes = ['ks-grid-table-cell'];
+        const classes = [GRID_TABLE_LIGHT_CLASSES.cell];
         if (cell.classes) {
             classes.push(cell.classes);
         }
@@ -211,17 +236,14 @@ class GridTableLightWidget extends Widget {
         const contentHtml = this.buildCellContentHtml(cell);
         const styleAttr = styles.length ? ` style="${styles.join('')}"` : '';
 
-        Widgets[cell.cellId] = Widgets[cell.cellId] || {};
-        Widgets[cell.cellId].cell = cell;
         Widgets[cell.id] = Widgets[cell.id] || {};
-        Widgets[cell.id].cell = cell;
         if (cell.type === 'combo') {
             Widgets[cell.id].items = cell.options || [];
             Widgets[cell.id].value = cell.rawValue;
         }
 
         return `<div id="${cell.cellId}" class="${classes.join(' ')}" data-row="${cell.rowIndex}" data-col="${cell.columnIndex}" data-frozen="${cell.frozen ? 'true' : 'false'}"${styleAttr}>
-            <div class="ks-grid-table-cell-content ks-pos-${cell.alignment}">${contentHtml}</div>
+            <div class="${GRID_TABLE_LIGHT_CLASSES.cellContent} ks-pos-${cell.alignment}">${contentHtml}</div>
         </div>`;
     }
 
@@ -231,7 +253,7 @@ class GridTableLightWidget extends Widget {
         const tooltip = cell.tooltip ? ` title="${Utils.htmlEncode(Utils.stripHtml(cell.tooltip))}"` : '';
         switch (cell.type) {
             case 'button':
-                return `<button type="button" class="ks-grid-table-button" data-action="${clickAction}" data-update="${clickUpdate}" data-id="${cell.id}" data-cell-id="${cell.cellId}">${cell.displayValue}</button>`;
+                return `<button type="button" class="${GRID_TABLE_LIGHT_CLASSES.button}" data-action="${clickAction}" data-update="${clickUpdate}" data-id="${cell.id}" data-cell-id="${cell.cellId}">${cell.displayValue}</button>`;
             case 'combo': {
                 const changeAction = v('change.action', cell.actions) || 'change';
                 const changeUpdate = v('change.updateValue', cell.actions) === false ? 'false' : 'true';
@@ -241,13 +263,21 @@ class GridTableLightWidget extends Widget {
                     const selected = value === cell.rawValue ? 'selected' : '';
                     return `<option value="${Utils.htmlEncode(String(value))}" ${selected}>${Utils.htmlEncode(String(label))}</option>`;
                 }).join('');
-                return `<select class="ks-grid-table-select" data-action="${changeAction}" data-update="${changeUpdate}" data-id="${cell.id}" data-cell-id="${cell.cellId}">${optionsHtml}</select>`;
+                return `<select class="${GRID_TABLE_LIGHT_CLASSES.select}" data-action="${changeAction}" data-update="${changeUpdate}" data-id="${cell.id}" data-cell-id="${cell.cellId}">${optionsHtml}</select>`;
             }
             case 'custom':
                 return cell.html || '';
             case 'text':
-            default:
-                return `<div class="ks-grid-table-value" data-action="${clickAction}" data-update="${clickUpdate}" data-id="${cell.id}" data-cell-id="${cell.cellId}"${tooltip}>${cell.displayValue}</div>`;
+            default: {
+                if (cell.editable) {
+                    const changeAction = v('change.action', cell.actions) || 'change';
+                    const changeUpdate = v('change.updateValue', cell.actions) === false ? 'false' : 'true';
+                    const value = typeof cell.rawValue !== 'undefined' ? cell.rawValue : cell.displayValue;
+                    const encodedValue = Utils.htmlEncode(String(value === null || typeof value === 'undefined' ? '' : value));
+                    return `<input type="text" class="${GRID_TABLE_LIGHT_CLASSES.input}" value="${encodedValue}" data-action="${changeAction}" data-update="${changeUpdate}" data-id="${cell.id}" data-cell-id="${cell.cellId}"${tooltip} />`;
+                }
+                return `<div class="${GRID_TABLE_LIGHT_CLASSES.cellValue}" data-action="${clickAction}" data-update="${clickUpdate}" data-id="${cell.id}" data-cell-id="${cell.cellId}"${tooltip}>${cell.displayValue}</div>`;
+            }
         }
     }
 
@@ -263,26 +293,31 @@ class GridTableLightWidget extends Widget {
             {action: 'next', label: '&rsaquo;', disabled: page >= totalPages},
             {action: 'last', label: '&raquo;', disabled: page >= totalPages}
         ];
-        const buttonsHtml = buttons.map(btn => `<button type="button" class="ks-grid-table-pager-button" data-pager-action="${btn.action}" ${btn.disabled ? 'disabled' : ''}>${btn.label}</button>`).join('');
-        return `<div class="ks-grid-table-pager-inner" data-page="${page}" data-total-pages="${totalPages}">${buttonsHtml}<span class="ks-grid-table-pager-info">${page} / ${totalPages}</span></div>`;
+        const buttonsHtml = buttons.map(btn => `<button type="button" class="${GRID_TABLE_LIGHT_CLASSES.pagerButton}" data-pager-action="${btn.action}" ${btn.disabled ? 'disabled' : ''}>${btn.label}</button>`).join('');
+        return `<div class="${GRID_TABLE_LIGHT_CLASSES.pagerInner}" data-page="${page}" data-total-pages="${totalPages}">${buttonsHtml}<span class="${GRID_TABLE_LIGHT_CLASSES.pagerInfo}">${page} / ${totalPages}</span></div>`;
     }
 
     buildExportButton(parameters) {
         const iconClass = parameters && parameters.exportIcon ? parameters.exportIcon : 'icon-tray-arrow-down';
-        return `<button type="button" class="ks-grid-table-export" data-action="export" data-id="${this.options.id}"><span class="${iconClass}"></span></button>`;
+        return `<button type="button" class="${GRID_TABLE_LIGHT_CLASSES.exportButton}" data-action="export" data-id="${this.options.id}"><span class="${iconClass}"></span></button>`;
     }
 
     composeOuterHtml(parts, parameters) {
         const headAttr = parts.headStyleAttr ? ` style="${parts.headStyleAttr}"` : '';
-        return `<div class="ks-grid-table-light" data-widget-id="${this.options.id}" style="${parts.styleAttr}">
-            ${parts.exportHtml ? `<div class="ks-grid-table-light-actions" data-role="actions">${parts.exportHtml}</div>` : ''}
-            <div class="ks-grid-table ks-grid-table-${parameters.skin}">
-                <div class="ks-grid-table-inner">
-                    <div class="ks-grid-table-head"${headAttr} data-role="head">${parts.headerHtml}</div>
-                    <div class="ks-grid-table-content" data-role="body">${parts.bodyHtml}</div>
+        const skinClass = parameters.skin ? `${GRID_TABLE_LIGHT_CLASSES.skinPrefix}${parameters.skin}` : '';
+        const rootClasses = [GRID_TABLE_LIGHT_CLASSES.root];
+        if (skinClass) {
+            rootClasses.push(skinClass);
+        }
+        return `<div class="${rootClasses.join(' ')}" data-widget-id="${this.options.id}" style="${parts.styleAttr}">
+            ${parts.exportHtml ? `<div class="${GRID_TABLE_LIGHT_CLASSES.actions}" data-role="actions">${parts.exportHtml}</div>` : ''}
+            <div class="${GRID_TABLE_LIGHT_CLASSES.table}" data-role="table">
+                <div class="${GRID_TABLE_LIGHT_CLASSES.inner}">
+                    <div class="${GRID_TABLE_LIGHT_CLASSES.head}"${headAttr} data-role="head">${parts.headerHtml}</div>
+                    <div class="${GRID_TABLE_LIGHT_CLASSES.body}" data-role="body">${parts.bodyHtml}</div>
                 </div>
             </div>
-            ${parts.pagerHtml ? `<div class="ks-grid-table-light-pager" data-role="pager">${parts.pagerHtml}</div>` : ''}
+            ${parts.pagerHtml ? `<div class="${GRID_TABLE_LIGHT_CLASSES.pager}" data-role="pager">${parts.pagerHtml}</div>` : ''}
         </div>`;
     }
 
@@ -323,16 +358,16 @@ class GridTableLightWidget extends Widget {
         if (!sectionElement) {
             return;
         }
-        const root = sectionElement.querySelector('.ks-grid-table-light');
+        const root = sectionElement.querySelector('.' + GRID_TABLE_LIGHT_CLASSES.root);
         if (!root) {
             return;
         }
         this.dom.root = root;
-        this.dom.table = root.querySelector('.ks-grid-table');
-        this.dom.inner = root.querySelector('.ks-grid-table-inner');
-        this.dom.head = root.querySelector('[data-role="head"]');
-        this.dom.body = root.querySelector('[data-role="body"]');
-        this.dom.pager = root.querySelector('[data-role="pager"]');
+        this.dom.table = root.querySelector('.' + GRID_TABLE_LIGHT_CLASSES.table);
+        this.dom.inner = root.querySelector('.' + GRID_TABLE_LIGHT_CLASSES.inner);
+        this.dom.head = root.querySelector('.' + GRID_TABLE_LIGHT_CLASSES.head);
+        this.dom.body = root.querySelector('.' + GRID_TABLE_LIGHT_CLASSES.body);
+        this.dom.pager = root.querySelector('.' + GRID_TABLE_LIGHT_CLASSES.pager);
     }
 
     detachEvents() {
@@ -357,6 +392,9 @@ class GridTableLightWidget extends Widget {
         }
         if (this.dom.body && this.boundHandlers.dblclick) {
             this.dom.body.removeEventListener('dblclick', this.boundHandlers.dblclick);
+        }
+        if (this.dom.body && this.boundHandlers.scroll) {
+            this.dom.body.removeEventListener('scroll', this.boundHandlers.scroll);
         }
         if (root && this.boundHandlers.change) {
             root.removeEventListener('change', this.boundHandlers.change, true);
@@ -396,6 +434,11 @@ class GridTableLightWidget extends Widget {
             this.destroySelectionState();
         }
 
+        if (this.dom.body) {
+            this.boundHandlers.scroll = this.handleBodyScroll.bind(this);
+            this.dom.body.addEventListener('scroll', this.boundHandlers.scroll);
+        }
+
         this.boundHandlers.resize = this.scheduleStickyUpdate.bind(this);
         window.addEventListener('resize', this.boundHandlers.resize);
     }
@@ -412,8 +455,8 @@ class GridTableLightWidget extends Widget {
     destroySelectionState() {
         if (this.selection) {
             if (this.dom.body) {
-                this.dom.body.querySelectorAll('.ks-grid-table-cell.selected').forEach(el => el.classList.remove('selected'));
-                this.dom.body.querySelectorAll('.ks-grid-table-cell.active-cell').forEach(el => el.classList.remove('active-cell'));
+                this.dom.body.querySelectorAll(`.${GRID_TABLE_LIGHT_CLASSES.cell}.${GRID_TABLE_LIGHT_CLASSES.cellSelected}`).forEach(el => el.classList.remove(GRID_TABLE_LIGHT_CLASSES.cellSelected));
+                this.dom.body.querySelectorAll(`.${GRID_TABLE_LIGHT_CLASSES.cell}.${GRID_TABLE_LIGHT_CLASSES.cellActive}`).forEach(el => el.classList.remove(GRID_TABLE_LIGHT_CLASSES.cellActive));
             }
         }
         this.selection = null;
@@ -439,7 +482,13 @@ class GridTableLightWidget extends Widget {
         if (!this.dom.root.contains(actionable)) {
             return;
         }
-        const cellElement = actionable.closest('.ks-grid-table-cell');
+        const cellElement = actionable.closest(`.${GRID_TABLE_LIGHT_CLASSES.cell}`);
+        if (actionable.tagName === 'INPUT') {
+            if (cellElement) {
+                this.updateCurrentCellFromElement(cellElement);
+            }
+            return;
+        }
         if (cellElement) {
             this.updateCurrentCellFromElement(cellElement);
         }
@@ -450,30 +499,40 @@ class GridTableLightWidget extends Widget {
 
     handleChange(event) {
         const target = event.target;
-        if (!target || target.tagName !== 'SELECT' || !target.hasAttribute('data-action')) {
+        if (!target || !target.hasAttribute('data-action')) {
             return;
         }
         if (!this.dom.root || !this.dom.root.contains(target)) {
             return;
         }
-        const cellElement = target.closest('.ks-grid-table-cell');
+        const cellElement = target.closest(`.${GRID_TABLE_LIGHT_CLASSES.cell}`);
         if (cellElement) {
             this.updateCurrentCellFromElement(cellElement);
         }
         const element = $(target);
-        element.data('value', target.value);
+        let value = target.value;
+        if (target.tagName === 'INPUT') {
+            value = target.value;
+        }
+        element.data('value', value);
         const widgetId = target.getAttribute('data-id');
-        if (widgetId && Widgets[widgetId]) {
-            Widgets[widgetId].value = target.value;
+        if (widgetId) {
+            Widgets[widgetId] = Widgets[widgetId] || {};
+            Widgets[widgetId].value = value;
         }
         if (cellElement) {
             const rowIndex = parseInt(cellElement.getAttribute('data-row'), 10);
             const columnIndex = parseInt(cellElement.getAttribute('data-col'), 10);
             if (this.cellData[rowIndex] && this.cellData[rowIndex][columnIndex]) {
-                const selectedOption = target.options[target.selectedIndex];
-                this.cellData[rowIndex][columnIndex].rawValue = target.value;
-                if (selectedOption) {
-                    this.cellData[rowIndex][columnIndex].displayValue = selectedOption.text;
+                const cell = this.cellData[rowIndex][columnIndex];
+                cell.rawValue = value;
+                if (target.tagName === 'SELECT') {
+                    const selectedOption = target.options[target.selectedIndex];
+                    if (selectedOption) {
+                        cell.displayValue = selectedOption.text;
+                    }
+                } else {
+                    cell.displayValue = value;
                 }
             }
             Widgets[this.options.id].cellData = this.cellData;
@@ -483,7 +542,7 @@ class GridTableLightWidget extends Widget {
     }
 
     handleContextMenu(event) {
-        const cellElement = event.target.closest('.ks-grid-table-cell');
+        const cellElement = event.target.closest(`.${GRID_TABLE_LIGHT_CLASSES.cell}`);
         if (!cellElement || !this.dom.root || !this.dom.root.contains(cellElement)) {
             return;
         }
@@ -592,7 +651,7 @@ class GridTableLightWidget extends Widget {
         if (event.target && ['SELECT', 'INPUT', 'TEXTAREA'].includes(event.target.tagName)) {
             return;
         }
-        const cell = event.target.closest('.ks-grid-table-cell');
+        const cell = event.target.closest(`.${GRID_TABLE_LIGHT_CLASSES.cell}`);
         if (!cell || !this.dom.body.contains(cell)) {
             return;
         }
@@ -609,7 +668,7 @@ class GridTableLightWidget extends Widget {
         if (!this.selection || !this.selection.isMouseDown) {
             return;
         }
-        const cell = event.target.closest('.ks-grid-table-cell');
+        const cell = event.target.closest(`.${GRID_TABLE_LIGHT_CLASSES.cell}`);
         if (!cell || !this.dom.body.contains(cell)) {
             return;
         }
@@ -632,6 +691,13 @@ class GridTableLightWidget extends Widget {
 
     handleDoubleClick() {
         this.copySelectedCellsToClipboard();
+    }
+
+    handleBodyScroll() {
+        if (this.dom.head && this.dom.body) {
+            this.dom.head.scrollLeft = this.dom.body.scrollLeft;
+        }
+        this.scheduleStickyUpdate();
     }
 
     selectRange(startId, endId) {
@@ -661,18 +727,18 @@ class GridTableLightWidget extends Widget {
         if (!this.selection || !this.dom.body) {
             return;
         }
-        this.dom.body.querySelectorAll('.ks-grid-table-cell.selected').forEach(el => el.classList.remove('selected'));
-        this.dom.body.querySelectorAll('.ks-grid-table-cell.active-cell').forEach(el => el.classList.remove('active-cell'));
+        this.dom.body.querySelectorAll(`.${GRID_TABLE_LIGHT_CLASSES.cell}.${GRID_TABLE_LIGHT_CLASSES.cellSelected}`).forEach(el => el.classList.remove(GRID_TABLE_LIGHT_CLASSES.cellSelected));
+        this.dom.body.querySelectorAll(`.${GRID_TABLE_LIGHT_CLASSES.cell}.${GRID_TABLE_LIGHT_CLASSES.cellActive}`).forEach(el => el.classList.remove(GRID_TABLE_LIGHT_CLASSES.cellActive));
         this.selection.selectedIds.forEach(id => {
             const cell = document.getElementById(id);
             if (cell) {
-                cell.classList.add('selected');
+                cell.classList.add(GRID_TABLE_LIGHT_CLASSES.cellSelected);
             }
         });
         if (this.selection.activeCellId) {
             const activeCell = document.getElementById(this.selection.activeCellId);
             if (activeCell) {
-                activeCell.classList.add('active-cell');
+                activeCell.classList.add(GRID_TABLE_LIGHT_CLASSES.cellActive);
             }
         }
     }
@@ -738,7 +804,7 @@ class GridTableLightWidget extends Widget {
         if (!freezeCount) {
             return;
         }
-        const headerRow = this.dom.head ? this.dom.head.querySelector('.ks-grid-table-row') : null;
+        const headerRow = this.dom.head ? this.dom.head.querySelector(`.${GRID_TABLE_LIGHT_CLASSES.row}`) : null;
         if (!headerRow) {
             return;
         }
@@ -747,8 +813,11 @@ class GridTableLightWidget extends Widget {
         let runningLeft = 0;
         for (let i = 0; i < freezeCount && i < headerCells.length; i++) {
             const cell = headerCells[i];
-            cell.classList.add('ks-grid-table-cell-frozen');
+            cell.classList.add(GRID_TABLE_LIGHT_CLASSES.cellFrozen);
             cell.style.left = `${runningLeft}px`;
+            if (this.parameters && this.parameters.freezeHeader) {
+                cell.style.top = cell.style.top || '0px';
+            }
             cell.dataset.frozenOriginalBackground = cell.style.backgroundColor || '';
             const headerBg = typeof window !== 'undefined' ? window.getComputedStyle(cell).backgroundColor : cell.style.backgroundColor;
             cell.style.backgroundColor = headerBg;
@@ -760,13 +829,13 @@ class GridTableLightWidget extends Widget {
         if (!offsets.length) {
             return;
         }
-        const bodyRows = this.dom.body ? this.dom.body.querySelectorAll('.ks-grid-table-row') : [];
+        const bodyRows = this.dom.body ? this.dom.body.querySelectorAll(`.${GRID_TABLE_LIGHT_CLASSES.row}`) : [];
         bodyRows.forEach(row => {
             const cells = row.children;
             for (let i = 0; i < cells.length; i++) {
                 const cell = cells[i];
                 if (i < offsets.length) {
-                    cell.classList.add('ks-grid-table-cell-frozen');
+                    cell.classList.add(GRID_TABLE_LIGHT_CLASSES.cellFrozen);
                     cell.style.left = `${offsets[i]}px`;
                     cell.dataset.frozenOriginalBackground = cell.style.backgroundColor || '';
                     const bodyBg = typeof window !== 'undefined' ? window.getComputedStyle(cell).backgroundColor : cell.style.backgroundColor;
@@ -781,9 +850,10 @@ class GridTableLightWidget extends Widget {
         if (!this.dom.root) {
             return;
         }
-        this.dom.root.querySelectorAll('.ks-grid-table-cell-frozen').forEach(cell => {
-            cell.classList.remove('ks-grid-table-cell-frozen');
+        this.dom.root.querySelectorAll(`.${GRID_TABLE_LIGHT_CLASSES.cellFrozen}`).forEach(cell => {
+            cell.classList.remove(GRID_TABLE_LIGHT_CLASSES.cellFrozen);
             cell.style.left = '';
+            cell.style.top = '';
             cell.style.backgroundColor = cell.dataset.frozenOriginalBackground || '';
             delete cell.dataset.frozenOriginalBackground;
             cell.style.zIndex = '';

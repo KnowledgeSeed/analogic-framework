@@ -6399,11 +6399,6 @@ WidgetConfig = {
                                     width: '100%',
                                     widgets: [
                                         {
-                                            id: 'gridTableLightDemoTable',
-                                            type: GridTableLightWidget,
-                                            skin: 'gridTableLightDemo'
-                                        },
-                                        {
                                             id: 'gridTableLightDemoInfoText',
                                             type: TextWidget,
                                             title: 'GridTableLight demo',
@@ -6411,7 +6406,18 @@ WidgetConfig = {
                                             titleFontSize: 16,
                                             titleFontWeight: 600,
                                             bodyFontColor: '#4B5563',
-                                            marginTop: '16'
+                                            marginBottom: '16'
+                                        },
+                                        {
+                                            id: 'gridTableLightDemoTable',
+                                            type: GridTableLightWidget,
+                                            skin: 'gridTableLightDemo',
+                                            marginBottom: '24'
+                                        },
+                                        {
+                                            id: 'gridTableLightCompactTable',
+                                            type: GridTableLightWidget,
+                                            skin: 'gridTableLightCompact'
                                         }
                                     ]
                                 }
