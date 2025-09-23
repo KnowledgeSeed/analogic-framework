@@ -1125,8 +1125,9 @@ maintain complex widget-config structures.
 
 -  ``init`` responses should return ``{ columns, content, totalCount,
    page, pageSize }`` plus optional flags such as
-   ``allowCopyToClipBoard``, ``freezeHeader``, ``freezeFirstColumns`` or
-   ``enableExport``.
+   ``allowCopyToClipBoard``, ``freezeHeader``, ``freezeFirstColumns``,
+   ``enableExport`` or ``exportIcon`` (defaults to
+   ``icon-tray-arrow-down``).
 -  ``content`` is a two-dimensional matrix of lightweight cells with
    ``displayValue``/``rawValue``/``type`` metadata and optional action
    descriptors (``{click: {action: 'launch'}}`` for buttons or
@@ -1208,7 +1209,8 @@ maintain complex widget-config structures.
                allowCopyToClipBoard: true,
                freezeHeader: true,
                freezeFirstColumns: 2,
-               enableExport: true
+               enableExport: true,
+               exportIcon: 'icon-tray-arrow-down'
            };
        },
        launch(ctx) {

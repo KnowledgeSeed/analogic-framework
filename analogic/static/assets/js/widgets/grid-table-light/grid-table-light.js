@@ -6,6 +6,10 @@ class GridTableLightWidget extends Widget {
 
     constructor(options) {
         super(options);
+        this.options.originalId = this.options.originalId || this.options.id;
+        if (typeof this.options.exportIcon === 'undefined') {
+            this.options.exportIcon = 'icon-tray-arrow-down';
+        }
         this.state = {
             page: 1,
             pageSize: typeof options.pageSize === 'number' ? options.pageSize : 100,
@@ -33,6 +37,7 @@ class GridTableLightWidget extends Widget {
             columnDefaults: this.getRealValue('columnDefaults', data, {}),
             columns: this.getRealValue('columns', data, []),
             enableExport: this.getRealValue('enableExport', data, false),
+            exportIcon: this.getRealValue('exportIcon', data, this.options.exportIcon || 'icon-tray-arrow-down'),
             exportConfig: this.getRealValue('exportConfig', data, {}),
             freezeFirstColumns: parseInt(this.getRealValue('freezeFirstColumns', data, 0), 10) || 0,
             freezeHeader: this.getRealValue('freezeHeader', data, true),
@@ -86,7 +91,8 @@ class GridTableLightWidget extends Widget {
             page,
             pageSize,
             meta: payload.meta || {},
-            visible: parameters.visible
+            visible: parameters.visible,
+            originalId: this.options.originalId
         };
     }
 
@@ -116,7 +122,7 @@ class GridTableLightWidget extends Widget {
         const headerHtml = this.buildHeaderHtml(columns, parameters);
         const bodyHtml = this.buildBodyHtml(content, parameters);
         const pagerHtml = this.buildPagerHtml(processed);
-        const exportHtml = parameters.enableExport ? this.buildExportButton() : '';
+        const exportHtml = parameters.enableExport ? this.buildExportButton(parameters) : '';
         const styleParts = this.getGeneralStyles(parameters);
         if (parameters.width) {
             styleParts.push(`width:${Widget.getPercentOrPixel(parameters.width)};`);
@@ -252,8 +258,9 @@ class GridTableLightWidget extends Widget {
         return `<div class="ks-grid-table-pager-inner" data-page="${page}" data-total-pages="${totalPages}">${buttonsHtml}<span class="ks-grid-table-pager-info">${page} / ${totalPages}</span></div>`;
     }
 
-    buildExportButton() {
-        return `<button type="button" class="ks-grid-table-export" data-action="export" data-id="${this.options.id}"><span class="icon-download"></span></button>`;
+    buildExportButton(parameters) {
+        const iconClass = parameters && parameters.exportIcon ? parameters.exportIcon : 'icon-tray-arrow-down';
+        return `<button type="button" class="ks-grid-table-export" data-action="export" data-id="${this.options.id}"><span class="${iconClass}"></span></button>`;
     }
 
     composeOuterHtml(parts, parameters) {

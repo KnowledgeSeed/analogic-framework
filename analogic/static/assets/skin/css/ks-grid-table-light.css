@@ -26,7 +26,8 @@
     gap: 6px;
 }
 
-.ks-grid-table-light-actions .ks-grid-table-export .icon-download:before {
+.ks-grid-table-light-actions .ks-grid-table-export [class^="icon-"]:before,
+.ks-grid-table-light-actions .ks-grid-table-export [class*=" icon-"]:before {
     color: currentColor;
 }
 
