@@ -1130,11 +1130,13 @@ maintain complex widget-config structures.
    ``icon-tray-arrow-down``).
 -  ``content`` is a two-dimensional matrix of lightweight cells with
    ``displayValue``/``rawValue``/``type`` metadata and optional action
-   descriptors (``{click: {action: 'launch'}}`` for buttons or
-   ``{change: {action: 'change'}}`` for selects).
--  Repository level event handlers such as ``launch`` and ``change``
-   receive the familiar grid-table context, so button clicks or dropdown
-   changes can trigger additional widget updates.
+   descriptors (``{click: {action: 'launch'}}`` for buttons,
+   ``{change: {action: 'change'}}`` for selects, while inline text edits
+   emit the ``text_change`` event by default).
+-  Repository level event handlers such as ``launch`` (buttons),
+   ``change`` (combo boxes) and ``text_change`` (text edits) receive the
+   familiar grid-table context, so user interactions can trigger
+   additional widget updates.
 -  Paging requests can read ``ctx.getExtraParams()`` (``page``,
    ``pageSize``) to append ``$top``/``$skip`` to MDX queries.
 -  Excel export reuses the same repository endpoint with ``pageSize: 0``

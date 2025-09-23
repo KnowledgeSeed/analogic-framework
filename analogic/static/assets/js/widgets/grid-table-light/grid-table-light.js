@@ -272,7 +272,7 @@ class GridTableLightWidget extends Widget {
                 return cell.html || '';
             case 'text':
             default: {
-                const changeAction = v('change.action', cell.actions) || 'change';
+                const changeAction = v('change.action', cell.actions) || 'text_change';
                 const changeUpdate = v('change.updateValue', cell.actions) === false ? 'false' : 'true';
                 const attrs = [`data-action="${clickAction}"`, `data-update="${clickUpdate}"`, `data-id="${cell.id}"`, `data-cell-id="${cell.cellId}"`];
                 if (cell.editable) {
@@ -828,7 +828,7 @@ class GridTableLightWidget extends Widget {
         if (!valueWrapper) {
             return;
         }
-        const changeAction = valueWrapper.getAttribute('data-change-action') || 'change';
+        const changeAction = valueWrapper.getAttribute('data-change-action') || 'text_change';
         const changeUpdate = valueWrapper.getAttribute('data-change-update') || 'true';
         const rawValue = typeof cell.rawValue !== 'undefined' && cell.rawValue !== null ? cell.rawValue : cell.displayValue;
         const input = document.createElement('input');

@@ -68,7 +68,6 @@ Repository = {
                         rawValue: `Record ${baseValue}`,
                         alignment: 'center-left',
                         editable: true,
-                        actions: {change: {action: 'change'}},
                         tooltip: 'Rename the record'
                     },
                     {
@@ -82,13 +81,11 @@ Repository = {
                         type: 'combo',
                         rawValue: owner.value,
                         options: owners,
-                        actions: {change: {action: 'change'}},
                         alignment: 'center-left'
                     },
                     {
                         type: 'button',
                         displayValue: 'Details',
-                        actions: {click: {action: 'launch'}},
                         alignment: 'center-center'
                     },
                     {
@@ -139,12 +136,9 @@ Repository = {
             });
             Api.updateContent('gridTableLightDemoInfoText');
         },
-        change(ctx) {
+        text_change(ctx) {
             const columnIndex = ctx.getColumn();
             const rowIndex = ctx.getRow();
-            const row = Utils.getGridTableCurrentRow(ctx.getWidgetId()) || [];
-            const recordCell = row[0] || {};
-            const recordLabel = recordCell.displayValue || recordCell.title || recordCell.rawValue || '';
             const cell = ctx.getCell();
             const newValue = cell ? (cell.displayValue || cell.rawValue || '') : '';
             const rowNumber = typeof rowIndex === 'number' ? rowIndex + 1 : false;
@@ -159,14 +153,26 @@ Repository = {
                 Api.updateContent('gridTableLightDemoInfoText');
                 return;
             }
-
-            if (columnIndex === 2) {
-                Utils.setWidgetValue('gridTableLightDemoLastAction', {
-                    title: 'Owner updated',
-                    body: recordLabel ? `${recordLabel} assigned to ${newValue}` : `${rowText} assigned to ${newValue}`
-                });
-                Api.updateContent('gridTableLightDemoInfoText');
+        },
+        change(ctx) {
+            const columnIndex = ctx.getColumn();
+            if (columnIndex !== 2) {
+                return;
             }
+            const rowIndex = ctx.getRow();
+            const row = Utils.getGridTableCurrentRow(ctx.getWidgetId()) || [];
+            const recordCell = row[0] || {};
+            const recordLabel = recordCell.displayValue || recordCell.title || recordCell.rawValue || '';
+            const cell = ctx.getCell();
+            const newValue = cell ? (cell.displayValue || cell.rawValue || '') : '';
+            const rowNumber = typeof rowIndex === 'number' ? rowIndex + 1 : false;
+            const rowText = rowNumber ? `Row ${rowNumber}` : 'Row';
+
+            Utils.setWidgetValue('gridTableLightDemoLastAction', {
+                title: 'Owner updated',
+                body: recordLabel ? `${recordLabel} assigned to ${newValue}` : `${rowText} assigned to ${newValue}`
+            });
+            Api.updateContent('gridTableLightDemoInfoText');
         }
     },
     gridTableLightCompactTable: {
@@ -215,7 +221,6 @@ Repository = {
                         rawValue: `Task ${idx + 1}`,
                         alignment: 'center-left',
                         editable: true,
-                        actions: {change: {action: 'change'}},
                         tooltip: 'Rename the task'
                     },
                     {
@@ -228,7 +233,6 @@ Repository = {
                         type: 'combo',
                         rawValue: owner.value,
                         options: owners,
-                        actions: {change: {action: 'change'}},
                         alignment: 'center-left'
                     },
                     {
@@ -240,7 +244,6 @@ Repository = {
                     {
                         type: 'button',
                         displayValue: 'Open',
-                        actions: {click: {action: 'launch'}},
                         alignment: 'center-center'
                     },
                     {
@@ -287,11 +290,22 @@ Repository = {
                 allowCopyToClipBoard: true
             };
         },
-        change(ctx) {
+        text_change(ctx) {
             const columnIndex = ctx.getColumn();
+            const rowIndex = ctx.getRow();
             const cell = ctx.getCell();
             const newValue = cell ? (cell.displayValue || cell.rawValue || '') : '';
-            console.log('GridTableLight compact table change', {column: columnIndex, value: newValue});
+            console.log('GridTableLight compact table text change', {column: columnIndex, row: rowIndex, value: newValue});
+        },
+        change(ctx) {
+            const columnIndex = ctx.getColumn();
+            if (columnIndex !== 2) {
+                return;
+            }
+            const rowIndex = ctx.getRow();
+            const cell = ctx.getCell();
+            const newValue = cell ? (cell.displayValue || cell.rawValue || '') : '';
+            console.log('GridTableLight compact table owner change', {row: rowIndex, value: newValue});
         },
         launch(ctx) {
             const rowIndex = ctx.getRow();
