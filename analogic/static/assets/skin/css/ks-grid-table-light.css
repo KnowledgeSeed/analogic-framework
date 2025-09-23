@@ -1,7 +1,5 @@
 .ks-grid-table-light {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    position: relative;
 }
 
 .ks-grid-table-light .ks-grid-table {
@@ -12,18 +10,17 @@
     display: flex;
     justify-content: flex-end;
     gap: 8px;
+    margin-bottom: 4px;
 }
 
 .ks-grid-table-light-actions .ks-grid-table-export {
     border: none;
-    background: #007aff;
-    color: #fff;
-    border-radius: 4px;
-    padding: 6px 10px;
+    background: transparent;
+    color: inherit;
+    padding: 0;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
 }
 
 .ks-grid-table-light-actions .ks-grid-table-export [class^="icon-"]:before,
@@ -35,6 +32,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 4px;
 }
 
 .ks-grid-table-pager-inner {
@@ -77,10 +75,8 @@
 }
 
 .ks-grid-table-value {
-    display: flex;
-    align-items: center;
-    min-height: 32px;
-    padding: 0 12px;
+    display: block;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

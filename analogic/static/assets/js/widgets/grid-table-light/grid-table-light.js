@@ -124,6 +124,10 @@ class GridTableLightWidget extends Widget {
         const pagerHtml = this.buildPagerHtml(processed);
         const exportHtml = parameters.enableExport ? this.buildExportButton(parameters) : '';
         const styleParts = this.getGeneralStyles(parameters);
+        const headStyles = [];
+        if (parameters.freezeHeader) {
+            headStyles.push('position:sticky;top:0;z-index:5;');
+        }
         if (parameters.width) {
             styleParts.push(`width:${Widget.getPercentOrPixel(parameters.width)};`);
         }
@@ -138,7 +142,8 @@ class GridTableLightWidget extends Widget {
             bodyHtml,
             pagerHtml,
             exportHtml,
-            styleAttr: styleParts.join('')
+            styleAttr: styleParts.join(''),
+            headStyleAttr: headStyles.join('')
         };
     }
 
@@ -150,7 +155,9 @@ class GridTableLightWidget extends Widget {
             }
             const styles = [];
             if (column.width) {
-                styles.push(`width:${Widget.getPercentOrPixel(column.width)};`);
+                const resolvedWidth = Widget.getPercentOrPixel(column.width);
+                styles.push(`width:${resolvedWidth};`);
+                styles.push(`flex:0 0 ${resolvedWidth};`);
             }
             if (parameters.freezeHeader) {
                 styles.push('position:sticky;top:0;z-index:4;');
@@ -189,7 +196,9 @@ class GridTableLightWidget extends Widget {
         }
         const styles = [];
         if (cell.width) {
-            styles.push(`width:${Widget.getPercentOrPixel(cell.width)};`);
+            const resolvedWidth = Widget.getPercentOrPixel(cell.width);
+            styles.push(`width:${resolvedWidth};`);
+            styles.push(`flex:0 0 ${resolvedWidth};`);
         }
         if (cell.style && typeof cell.style === 'object') {
             Object.keys(cell.style).forEach(key => {
@@ -264,11 +273,14 @@ class GridTableLightWidget extends Widget {
     }
 
     composeOuterHtml(parts, parameters) {
+        const headAttr = parts.headStyleAttr ? ` style="${parts.headStyleAttr}"` : '';
         return `<div class="ks-grid-table-light" data-widget-id="${this.options.id}" style="${parts.styleAttr}">
             ${parts.exportHtml ? `<div class="ks-grid-table-light-actions" data-role="actions">${parts.exportHtml}</div>` : ''}
             <div class="ks-grid-table ks-grid-table-${parameters.skin}">
-                <div class="ks-grid-table-head" data-role="head">${parts.headerHtml}</div>
-                <div class="ks-grid-table-content" data-role="body">${parts.bodyHtml}</div>
+                <div class="ks-grid-table-inner">
+                    <div class="ks-grid-table-head"${headAttr} data-role="head">${parts.headerHtml}</div>
+                    <div class="ks-grid-table-content" data-role="body">${parts.bodyHtml}</div>
+                </div>
             </div>
             ${parts.pagerHtml ? `<div class="ks-grid-table-light-pager" data-role="pager">${parts.pagerHtml}</div>` : ''}
         </div>`;
@@ -317,6 +329,7 @@ class GridTableLightWidget extends Widget {
         }
         this.dom.root = root;
         this.dom.table = root.querySelector('.ks-grid-table');
+        this.dom.inner = root.querySelector('.ks-grid-table-inner');
         this.dom.head = root.querySelector('[data-role="head"]');
         this.dom.body = root.querySelector('[data-role="body"]');
         this.dom.pager = root.querySelector('[data-role="pager"]');
@@ -736,6 +749,10 @@ class GridTableLightWidget extends Widget {
             const cell = headerCells[i];
             cell.classList.add('ks-grid-table-cell-frozen');
             cell.style.left = `${runningLeft}px`;
+            cell.dataset.frozenOriginalBackground = cell.style.backgroundColor || '';
+            const headerBg = typeof window !== 'undefined' ? window.getComputedStyle(cell).backgroundColor : cell.style.backgroundColor;
+            cell.style.backgroundColor = headerBg;
+            cell.style.zIndex = '6';
             const width = cell.getBoundingClientRect().width;
             offsets.push(runningLeft);
             runningLeft += width;
@@ -751,6 +768,10 @@ class GridTableLightWidget extends Widget {
                 if (i < offsets.length) {
                     cell.classList.add('ks-grid-table-cell-frozen');
                     cell.style.left = `${offsets[i]}px`;
+                    cell.dataset.frozenOriginalBackground = cell.style.backgroundColor || '';
+                    const bodyBg = typeof window !== 'undefined' ? window.getComputedStyle(cell).backgroundColor : cell.style.backgroundColor;
+                    cell.style.backgroundColor = bodyBg;
+                    cell.style.zIndex = '5';
                 }
             }
         });
@@ -763,6 +784,9 @@ class GridTableLightWidget extends Widget {
         this.dom.root.querySelectorAll('.ks-grid-table-cell-frozen').forEach(cell => {
             cell.classList.remove('ks-grid-table-cell-frozen');
             cell.style.left = '';
+            cell.style.backgroundColor = cell.dataset.frozenOriginalBackground || '';
+            delete cell.dataset.frozenOriginalBackground;
+            cell.style.zIndex = '';
         });
     }
 
