@@ -1,4 +1,4 @@
-/* global app, Utils*/
+/* global app, Utils, Api, v */
 
 'use strict';
 
@@ -6,13 +6,20 @@ Repository = {
     gridTableLightDemoTable: {
         init(ctx) {
             const extra = ctx && ctx.getExtraParams ? ctx.getExtraParams() : {};
-            const DEFAULT_PAGE_SIZE = 1000;
+            const DEFAULT_PAGE_SIZE = 100;
             const requestedPageSize = typeof extra.pageSize === 'number' ? extra.pageSize : DEFAULT_PAGE_SIZE;
             const pageSize = requestedPageSize === 0 ? 0 : (requestedPageSize || DEFAULT_PAGE_SIZE);
             const totalCount = 20000;
             const page = extra.page ? Math.max(1, parseInt(extra.page, 10) || 1) : 1;
             const startIndex = pageSize ? Math.max(0, (page - 1) * pageSize) : 0;
             const endIndex = pageSize ? Math.min(totalCount, startIndex + pageSize) : totalCount;
+
+            if (!v('gridTableLightDemoLastAction')) {
+                Utils.setWidgetValue('gridTableLightDemoLastAction', {
+                    title: 'GridTableLight demo',
+                    body: 'Use the Details buttons or Owner dropdowns to trigger repository events.'
+                });
+            }
 
             const statuses = ['Planned', 'In Progress', 'At Risk', 'Completed', 'Closed'];
             const owners = [
@@ -99,6 +106,43 @@ Repository = {
                 enableExport: true,
                 exportConfig: {fileName: 'grid-table-light-demo.xlsx'}
             };
+        },
+        launch(ctx) {
+            const rowIndex = ctx.getRow();
+            const row = Utils.getGridTableCurrentRow(ctx.getWidgetId());
+            const recordCell = row && row[0] ? row[0] : null;
+            const recordLabel = recordCell ? (recordCell.displayValue || recordCell.title || recordCell.rawValue || '') : '';
+            const rowNumber = typeof rowIndex === 'number' ? rowIndex + 1 : false;
+            const rowLabel = rowNumber ? `row ${rowNumber}` : 'selected row';
+            Utils.setWidgetValue('gridTableLightDemoLastAction', {
+                title: 'Details requested',
+                body: recordLabel ? `${recordLabel} – ${rowLabel}` : `Details requested for ${rowLabel}`
+            });
+            Api.updateContent('gridTableLightDemoInfoText');
+        },
+        change(ctx) {
+            const rowIndex = ctx.getRow();
+            const row = Utils.getGridTableCurrentRow(ctx.getWidgetId());
+            const recordCell = row && row[0] ? row[0] : null;
+            const recordLabel = recordCell ? (recordCell.displayValue || recordCell.title || recordCell.rawValue || '') : '';
+            const cell = ctx.getCell();
+            const ownerLabel = cell ? (cell.displayValue || cell.rawValue || '') : '';
+            const rowNumber = typeof rowIndex === 'number' ? rowIndex + 1 : false;
+            const rowText = rowNumber ? `Row ${rowNumber}` : 'Row';
+            Utils.setWidgetValue('gridTableLightDemoLastAction', {
+                title: 'Owner updated',
+                body: recordLabel ? `${recordLabel} assigned to ${ownerLabel}` : `${rowText} assigned to ${ownerLabel}`
+            });
+            Api.updateContent('gridTableLightDemoInfoText');
+        }
+    },
+    gridTableLightDemoInfoText: {
+        init() {
+            const info = v('gridTableLightDemoLastAction') || {
+                title: 'GridTableLight demo',
+                body: 'Use the Details buttons or Owner dropdowns to trigger repository events.'
+            };
+            return info;
         }
     },
     // Add Clone Contracts

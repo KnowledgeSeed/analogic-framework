@@ -8,7 +8,7 @@ class GridTableLightWidget extends Widget {
         super(options);
         this.state = {
             page: 1,
-            pageSize: typeof options.pageSize === 'number' ? options.pageSize : 25,
+            pageSize: typeof options.pageSize === 'number' ? options.pageSize : 100,
             totalCount: 0,
             columns: []
         };
@@ -26,6 +26,7 @@ class GridTableLightWidget extends Widget {
     }
 
     getParameters(data) {
+        const statePageSize = typeof this.state.pageSize === 'number' ? this.state.pageSize : 100;
         return {
             allowCopyToClipBoard: this.getRealValue('allowCopyToClipBoard', data, false),
             allowFullContentUpdated: this.getRealValue('allowFullContentUpdated', data, true),
@@ -38,7 +39,7 @@ class GridTableLightWidget extends Widget {
             hideIfNoData: this.getRealValue('hideIfNoData', data, false),
             minWidth: this.getRealValue('minWidth', data, false),
             page: this.getRealValue('page', data, this.state.page || 1),
-            pageSize: this.getRealValue('pageSize', data, this.state.pageSize || 25),
+            pageSize: this.getRealValue('pageSize', data, statePageSize),
             rowHeight: this.getRealValue('rowHeight', data, false),
             skin: this.getRealValue('skin', data, this.options.skin || 'standard'),
             visible: this.getRealValue('visible', data, typeof this.options.visible === 'undefined' ? true : this.options.visible),
@@ -74,7 +75,8 @@ class GridTableLightWidget extends Widget {
 
         const totalCount = typeof payload.totalCount === 'number' ? payload.totalCount : content.length;
         const page = payload.page || parameters.page || 1;
-        const pageSize = typeof payload.pageSize === 'number' ? payload.pageSize : parameters.pageSize || 25;
+        const fallbackPageSize = typeof parameters.pageSize === 'number' ? parameters.pageSize : 100;
+        const pageSize = typeof payload.pageSize === 'number' ? payload.pageSize : fallbackPageSize;
 
         return {
             parameters,

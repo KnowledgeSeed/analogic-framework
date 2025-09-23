@@ -6402,6 +6402,16 @@ WidgetConfig = {
                                             id: 'gridTableLightDemoTable',
                                             type: GridTableLightWidget,
                                             skin: 'gridTableLightDemo'
+                                        },
+                                        {
+                                            id: 'gridTableLightDemoInfoText',
+                                            type: TextWidget,
+                                            title: 'GridTableLight demo',
+                                            body: 'Use the Details buttons or Owner dropdowns to trigger repository events.',
+                                            titleFontSize: 16,
+                                            titleFontWeight: 600,
+                                            bodyFontColor: '#4B5563',
+                                            marginTop: '16'
                                         }
                                     ]
                                 }

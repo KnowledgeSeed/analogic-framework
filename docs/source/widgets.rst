@@ -1131,6 +1131,9 @@ maintain complex widget-config structures.
    ``displayValue``/``rawValue``/``type`` metadata and optional action
    descriptors (``{click: {action: 'launch'}}`` for buttons or
    ``{change: {action: 'change'}}`` for selects).
+-  Repository level event handlers such as ``launch`` and ``change``
+   receive the familiar grid-table context, so button clicks or dropdown
+   changes can trigger additional widget updates.
 -  Paging requests can read ``ctx.getExtraParams()`` (``page``,
    ``pageSize``) to append ``$top``/``$skip`` to MDX queries.
 -  Excel export reuses the same repository endpoint with ``pageSize: 0``
@@ -1149,7 +1152,7 @@ maintain complex widget-config structures.
    sampleLightTable: {
        init(ctx) {
            const extra = ctx && ctx.getExtraParams ? ctx.getExtraParams() : {};
-           const DEFAULT_PAGE_SIZE = 1000;
+           const DEFAULT_PAGE_SIZE = 100;
            const pageSize = extra.pageSize === 0 ? 0 : (extra.pageSize || DEFAULT_PAGE_SIZE);
            const page = extra.page ? Math.max(1, parseInt(extra.page, 10) || 1) : 1;
            const totalCount = 20000;
@@ -1207,6 +1210,25 @@ maintain complex widget-config structures.
                freezeFirstColumns: 2,
                enableExport: true
            };
+       },
+       launch(ctx) {
+           const row = Utils.getGridTableCurrentRow(ctx.getWidgetId());
+           const record = row && row[0] ? row[0].displayValue : '';
+           Utils.setWidgetValue('sampleLightTableMessage', {
+               title: 'Details requested',
+               body: `${record} – row ${ctx.getRow() + 1}`
+           });
+           Api.updateContent('sampleLightTableMessage');
+       },
+       change(ctx) {
+           const row = Utils.getGridTableCurrentRow(ctx.getWidgetId());
+           const record = row && row[0] ? row[0].displayValue : '';
+           const owner = ctx.getCell() ? ctx.getCell().displayValue : '';
+           Utils.setWidgetValue('sampleLightTableMessage', {
+               title: 'Owner updated',
+               body: `${record} assigned to ${owner}`
+           });
+           Api.updateContent('sampleLightTableMessage');
        }
    }
 
