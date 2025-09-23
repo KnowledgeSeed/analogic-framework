@@ -1181,8 +1181,10 @@ WidgetConfig = {
                             id: 'analogicDemoAddCloneContractRow2',
                             type: GridRowWidget,
                             marginTop: '2%',
+                            marginBottom: '16',
                             marginBottom: '0%',
                             width: '100%',
+                            marginBottom: '24',
                             height: '10%',
                             widgets: [
                                 {
@@ -6387,13 +6389,14 @@ WidgetConfig = {
                     width: '100%',
                     widgets: [
                         {
-                            id: 'gridTableLightDemoRow',
+                            id: 'gridTableLightDemoInfoRow',
                             type: GridRowWidget,
                             marginTop: '2%',
+                            marginBottom: '16',
                             width: '100%',
                             widgets: [
                                 {
-                                    id: 'gridTableLightDemoCell',
+                                    id: 'gridTableLightDemoInfoCell',
                                     type: GridCellWidget,
                                     alignment: 'top-left',
                                     width: '100%',
@@ -6405,15 +6408,44 @@ WidgetConfig = {
                                             body: 'Use the Details buttons or Owner dropdowns to trigger repository events.',
                                             titleFontSize: 16,
                                             titleFontWeight: 600,
-                                            bodyFontColor: '#4B5563',
-                                            marginBottom: '16'
-                                        },
+                                            bodyFontColor: '#4B5563'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'gridTableLightDemoMainTableRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginBottom: '24',
+                            widgets: [
+                                {
+                                    id: 'gridTableLightDemoMainTableCell',
+                                    type: GridCellWidget,
+                                    alignment: 'top-left',
+                                    width: '100%',
+                                    widgets: [
                                         {
                                             id: 'gridTableLightDemoTable',
                                             type: GridTableLightWidget,
-                                            skin: 'gridTableLightDemo',
-                                            marginBottom: '24'
-                                        },
+                                            skin: 'gridTableLightDemo'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'gridTableLightDemoCompactTableRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            widgets: [
+                                {
+                                    id: 'gridTableLightDemoCompactTableCell',
+                                    type: GridCellWidget,
+                                    alignment: 'top-left',
+                                    width: '100%',
+                                    widgets: [
                                         {
                                             id: 'gridTableLightCompactTable',
                                             type: GridTableLightWidget,
