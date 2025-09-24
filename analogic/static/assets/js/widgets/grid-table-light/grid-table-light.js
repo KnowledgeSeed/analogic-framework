@@ -11,7 +11,6 @@ const GRID_TABLE_LIGHT_CLASSES = {
     body: 'ks-grid-table-light_body',
     row: 'ks-grid-table-light_row',
     cell: 'ks-grid-table-light_cell',
-    cellContent: 'ks-grid-table-light_cell-content',
     cellValue: 'ks-grid-table-light_value',
     cellFrozen: 'ks-grid-table-light_cell--frozen',
     cellSelected: 'ks-grid-table-light_cell--selected',
@@ -178,6 +177,8 @@ class GridTableLightWidget extends Widget {
             if (column.classes) {
                 classes.push(column.classes);
             }
+            const alignmentClass = `ks-pos-${column.alignment || 'center-left'}`;
+            classes.push(alignmentClass);
             const styles = [];
             if (column.width) {
                 const resolvedWidth = Widget.getPercentOrPixel(column.width);
@@ -195,9 +196,7 @@ class GridTableLightWidget extends Widget {
                     }
                 });
             }
-            return `<div class="${classes.join(' ')}" data-col="${index}" data-column-key="${column.key}" data-frozen="${column.frozen ? 'true' : 'false'}" style="${styles.join('')}">
-                <div class="${GRID_TABLE_LIGHT_CLASSES.cellContent} ks-pos-${column.alignment || 'center-left'}">${column.headerTemplate || column.title || ''}</div>
-            </div>`;
+            return `<div class="${classes.join(' ')}" data-col="${index}" data-column-key="${column.key}" data-frozen="${column.frozen ? 'true' : 'false'}" style="${styles.join('')}">${column.headerTemplate || column.title || ''}</div>`;
         });
         return `<div class="${GRID_TABLE_LIGHT_CLASSES.row}">${cells.join('')}</div>`;
     }
@@ -219,6 +218,8 @@ class GridTableLightWidget extends Widget {
         if (cell.classes) {
             classes.push(cell.classes);
         }
+        const alignmentClass = `ks-pos-${cell.alignment}`;
+        classes.push(alignmentClass);
         const styles = [];
         if (cell.width) {
             const resolvedWidth = Widget.getPercentOrPixel(cell.width);
@@ -236,9 +237,7 @@ class GridTableLightWidget extends Widget {
         const contentHtml = this.buildCellContentHtml(cell);
         const styleAttr = styles.length ? ` style="${styles.join('')}"` : '';
 
-        return `<div id="${cell.cellId}" class="${classes.join(' ')}" data-row="${cell.rowIndex}" data-col="${cell.columnIndex}" data-frozen="${cell.frozen ? 'true' : 'false'}"${styleAttr}>
-            <div class="${GRID_TABLE_LIGHT_CLASSES.cellContent} ks-pos-${cell.alignment}">${contentHtml}</div>
-        </div>`;
+        return `<div id="${cell.cellId}" class="${classes.join(' ')}" data-row="${cell.rowIndex}" data-col="${cell.columnIndex}" data-frozen="${cell.frozen ? 'true' : 'false'}"${styleAttr}>${contentHtml}</div>`;
     }
 
     buildCellContentHtml(cell) {
@@ -849,7 +848,7 @@ class GridTableLightWidget extends Widget {
             input.setAttribute('title', Utils.htmlEncode(Utils.stripHtml(cell.tooltip)));
         }
 
-        const contentContainer = cellElement.querySelector(`.${GRID_TABLE_LIGHT_CLASSES.cellContent}`) || cellElement;
+        const contentContainer = cellElement;
         valueWrapper.dataset.originalValue = valueWrapper.textContent;
         valueWrapper.style.display = 'none';
         contentContainer.appendChild(input);
