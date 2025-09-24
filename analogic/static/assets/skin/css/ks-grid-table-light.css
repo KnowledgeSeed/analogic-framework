@@ -34,6 +34,7 @@
 .ks-grid-table-light_head .ks-grid-table-light_row {
     background: #f6f7fb;
     border-bottom: 1px solid #d4d9e2;
+    border-top: 1px solid #d9dee8;
     font-weight: 600;
 }
 
@@ -46,7 +47,7 @@
 }
 
 .ks-grid-table-light_cell {
-    flex-grow: 1;
+    flex: 1 0 0px;
     height: 100%;
     position: relative;
     display: flex;
