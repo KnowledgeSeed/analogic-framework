@@ -948,28 +948,28 @@ class GridTableLightWidget extends Widget {
 
         const referenceRow = bodyRows.find(row => row.children && row.children.length);
         const referenceCells = referenceRow ? Array.from(referenceRow.children) : [];
-        const widths = [];
+        const indexes = [];
         for (let i = 0; i < freezeCount; i++) {
-            if (!headerCells[i] && !referenceCells[i]) {
-                break;
-            }
-            let width = 0;
-            if (headerCells[i]) {
-                width = headerCells[i].getBoundingClientRect().width || headerCells[i].offsetWidth;
-            }
-            if ((!width || width === 0) && referenceCells[i]) {
-                width = referenceCells[i].getBoundingClientRect().width || referenceCells[i].offsetWidth;
-            }
-            widths.push(width);
+            indexes.push(i);
         }
-
+        const widths = [];
         const offsets = [];
-        let runningLeft = 0;
-        for (let i = 0; i < widths.length; i++) {
-            offsets[i] = runningLeft;
-            runningLeft += widths[i] || 0;
-        }
-        if (!offsets.length) {
+        indexes.forEach(index => {
+            const headerCell = headerCells[index];
+            const bodyCell = referenceCells[index];
+            if (!headerCell && !bodyCell) {
+                return;
+            }
+            const measurementCell = bodyCell || headerCell;
+            const widthCell = bodyCell || headerCell;
+            const rect = widthCell ? widthCell.getBoundingClientRect() : null;
+            const width = rect ? rect.width : (widthCell ? widthCell.offsetWidth : 0);
+            const offset = measurementCell ? measurementCell.offsetLeft : 0;
+            widths[index] = width;
+            offsets[index] = offset;
+        });
+        const availableIndexes = indexes.filter(index => typeof offsets[index] === 'number' && !Number.isNaN(offsets[index]));
+        if (!availableIndexes.length) {
             return;
         }
 
@@ -985,7 +985,8 @@ class GridTableLightWidget extends Widget {
             if (typeof cell.dataset.frozenOriginalTop === 'undefined') {
                 cell.dataset.frozenOriginalTop = cell.style.top || '';
             }
-            cell.style.left = `${offsets[index]}px`;
+            const left = offsets[index] || 0;
+            cell.style.left = `${left}px`;
             if (width) {
                 if (typeof cell.dataset.frozenOriginalMinWidth === 'undefined') {
                     cell.dataset.frozenOriginalMinWidth = cell.style.minWidth || '';
@@ -1010,7 +1011,20 @@ class GridTableLightWidget extends Widget {
             if (typeof cell.dataset.frozenOriginalBackground === 'undefined') {
                 cell.dataset.frozenOriginalBackground = cell.style.backgroundColor || '';
             }
-            const computedBg = typeof window !== 'undefined' ? window.getComputedStyle(cell).backgroundColor : cell.style.backgroundColor;
+            let computedBg = '';
+            if (typeof window !== 'undefined') {
+                computedBg = window.getComputedStyle(cell).backgroundColor;
+                if (!computedBg || computedBg === 'rgba(0, 0, 0, 0)') {
+                    const parent = cell.parentElement;
+                    const parentBg = parent && window.getComputedStyle(parent).backgroundColor;
+                    if (parentBg && parentBg !== 'rgba(0, 0, 0, 0)') {
+                        computedBg = parentBg;
+                    }
+                }
+            }
+            if (!computedBg || computedBg === 'rgba(0, 0, 0, 0)') {
+                computedBg = cell.style.backgroundColor || '#fff';
+            }
             cell.style.backgroundColor = computedBg;
             cell.style.position = 'sticky';
             if (!isHeader) {
@@ -1019,17 +1033,20 @@ class GridTableLightWidget extends Widget {
             cell.style.zIndex = isHeader ? '7' : '6';
         };
 
-        headerCells.forEach((cell, index) => {
-            if (index < offsets.length) {
-                applyFrozenStyles(cell, index, true);
+        availableIndexes.forEach(index => {
+            const headerCell = headerCells[index];
+            if (headerCell) {
+                applyFrozenStyles(headerCell, index, true);
             }
         });
 
         bodyRows.forEach(row => {
             const cells = row.children;
-            for (let i = 0; i < offsets.length && i < cells.length; i++) {
-                applyFrozenStyles(cells[i], i, false);
-            }
+            availableIndexes.forEach(index => {
+                if (index < cells.length) {
+                    applyFrozenStyles(cells[index], index, false);
+                }
+            });
         });
     }
 
