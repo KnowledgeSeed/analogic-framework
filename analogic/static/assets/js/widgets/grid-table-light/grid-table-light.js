@@ -236,15 +236,6 @@ class GridTableLightWidget extends Widget {
         const contentHtml = this.buildCellContentHtml(cell);
         const styleAttr = styles.length ? ` style="${styles.join('')}"` : '';
 
-        Widgets[cell.id] = Widgets[cell.id] || {};
-        Widgets[cell.id].cell = cell;
-        Widgets[cell.cellId] = Widgets[cell.cellId] || {};
-        Widgets[cell.cellId].cell = cell;
-        if (cell.type === 'combo') {
-            Widgets[cell.id].items = cell.options || [];
-            Widgets[cell.id].value = cell.rawValue;
-        }
-
         return `<div id="${cell.cellId}" class="${classes.join(' ')}" data-row="${cell.rowIndex}" data-col="${cell.columnIndex}" data-frozen="${cell.frozen ? 'true' : 'false'}"${styleAttr}>
             <div class="${GRID_TABLE_LIGHT_CLASSES.cellContent} ks-pos-${cell.alignment}">${contentHtml}</div>
         </div>`;
@@ -498,6 +489,8 @@ class GridTableLightWidget extends Widget {
         }
         const element = $(actionable);
         const updateValue = actionable.getAttribute('data-update') !== 'false';
+        const actionName = actionable.getAttribute('data-action');
+        this.storeEventValues(actionName, element.data(), updateValue);
         Widget.doHandleGridTableSystemEvent(element, event, updateValue);
     }
 
@@ -519,11 +512,6 @@ class GridTableLightWidget extends Widget {
             value = target.value;
         }
         element.data('value', value);
-        const widgetId = target.getAttribute('data-id');
-        if (widgetId) {
-            Widgets[widgetId] = Widgets[widgetId] || {};
-            Widgets[widgetId].value = value;
-        }
         if (cellElement) {
             const rowIndex = parseInt(cellElement.getAttribute('data-row'), 10);
             const columnIndex = parseInt(cellElement.getAttribute('data-col'), 10);
@@ -542,6 +530,8 @@ class GridTableLightWidget extends Widget {
             Widgets[this.options.id].cellData = this.cellData;
         }
         const updateValue = target.getAttribute('data-update') !== 'false';
+        const actionName = target.getAttribute('data-action');
+        this.storeEventValues(actionName, element.data(), updateValue);
         Widget.doHandleGridTableSystemEvent(element, event, updateValue);
     }
 
@@ -554,6 +544,7 @@ class GridTableLightWidget extends Widget {
         event.preventDefault();
         const cellWidgetId = `${this.options.id}_${this.row}_${this.column}`;
         Widgets['rightclick'] = cellWidgetId;
+        this.storeEventValues('rightclick', {action: 'rightclick', id: cellWidgetId}, true);
         const proxyElement = $('<div>').data({
             action: 'rightclick',
             id: cellWidgetId
@@ -570,6 +561,21 @@ class GridTableLightWidget extends Widget {
         Widgets[this.options.id].column = columnIndex;
         if (this.selection) {
             this.selection.activeCellId = cellElement.id;
+        }
+    }
+
+    storeEventValues(actionName, data, updateValue = true) {
+        if (!updateValue || !actionName || !data) {
+            return;
+        }
+        const widgetStore = Widgets[this.options.id];
+        if (!widgetStore) {
+            return;
+        }
+        const cloned = $.extend(true, {}, data);
+        widgetStore[actionName] = cloned;
+        if (typeof cloned.value !== 'undefined') {
+            widgetStore.value = cloned.value;
         }
     }
 
