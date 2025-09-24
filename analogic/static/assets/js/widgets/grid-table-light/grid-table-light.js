@@ -44,6 +44,8 @@ class GridTableLightWidget extends Widget {
         this.dom = {};
         this.boundHandlers = {};
         this.freezeRequest = null;
+        this.exportHeaderTitles = [];
+        this.options.exportHeaderTitles = [];
         Widgets[options.id] = this;
     }
 
@@ -71,6 +73,80 @@ class GridTableLightWidget extends Widget {
             classes.push(...this.normalizeClassesInput(extraClasses));
         }
         return classes.filter(Boolean).join(' ');
+    }
+
+    sanitizeExportValue(value) {
+        if (value === null || typeof value === 'undefined') {
+            return '';
+        }
+        let text = value;
+        if (typeof text !== 'string') {
+            if (text && typeof text.toString === 'function') {
+                text = text.toString();
+            } else {
+                text = String(text);
+            }
+        }
+        if (text && typeof Utils !== 'undefined' && Utils && typeof Utils.stripHtml === 'function') {
+            return Utils.stripHtml(text);
+        }
+        return text;
+    }
+
+    computeExportHeaderTitles(columns) {
+        if (!Array.isArray(columns)) {
+            return [];
+        }
+        return columns.map((column) => {
+            if (!column) {
+                return '';
+            }
+            const headerSource = Object.prototype.hasOwnProperty.call(column, 'exportTitle')
+                ? column.exportTitle
+                : (column.title || column.label || '');
+            return this.sanitizeExportValue(headerSource);
+        });
+    }
+
+    resolveCellExportValue(cell) {
+        if (Object.prototype.hasOwnProperty.call(cell, 'exportValue')) {
+            return cell.exportValue;
+        }
+        switch (cell.type) {
+            case 'combo': {
+                const selectedValue = typeof cell.rawValue !== 'undefined' ? cell.rawValue : cell.value;
+                const options = Array.isArray(cell.options) ? cell.options : [];
+                const match = options.find((option) => {
+                    if (!option) {
+                        return false;
+                    }
+                    const optionValue = Object.prototype.hasOwnProperty.call(option, 'value')
+                        ? option.value
+                        : (Object.prototype.hasOwnProperty.call(option, 'name') ? option.name : option);
+                    return String(optionValue) === String(selectedValue);
+                });
+                if (match) {
+                    if (Object.prototype.hasOwnProperty.call(match, 'exportValue')) {
+                        return match.exportValue;
+                    }
+                    if (Object.prototype.hasOwnProperty.call(match, 'label')) {
+                        return match.label;
+                    }
+                    if (Object.prototype.hasOwnProperty.call(match, 'name')) {
+                        return match.name;
+                    }
+                    if (Object.prototype.hasOwnProperty.call(match, 'value')) {
+                        return match.value;
+                    }
+                    return match;
+                }
+                return cell.displayValue || cell.rawValue || '';
+            }
+            case 'button':
+                return cell.displayValue || cell.rawValue || '';
+            default:
+                return cell.displayValue;
+        }
     }
 
     toCssProperty(key) {
@@ -289,6 +365,13 @@ class GridTableLightWidget extends Widget {
         normalized.cellId = `${this.options.id}Cell${rowIndex}-${colIndex}`;
         normalized.width = typeof normalized.width === 'undefined' && column ? column.width : normalized.width;
         normalized.frozen = typeof normalized.frozen === 'boolean' ? normalized.frozen : column && column.frozen;
+        const exportValue = this.resolveCellExportValue(normalized);
+        normalized.exportValue = this.sanitizeExportValue(exportValue);
+        if (typeof normalized.title === 'undefined' || normalized.title === null) {
+            normalized.title = normalized.exportValue;
+        } else if (typeof normalized.title === 'string') {
+            normalized.title = this.sanitizeExportValue(normalized.title);
+        }
         return normalized;
     }
 
@@ -489,6 +572,8 @@ class GridTableLightWidget extends Widget {
         this.state.totalCount = processed.totalCount;
         this.cellData = processed.content;
         this.parameters = processed.parameters;
+        this.exportHeaderTitles = this.computeExportHeaderTitles(processed.columns);
+        this.options.exportHeaderTitles = Array.isArray(this.exportHeaderTitles) ? this.exportHeaderTitles.slice() : [];
         Widgets[this.options.id] = this;
         Widgets[this.options.id].cellData = this.cellData;
     }
@@ -780,13 +865,16 @@ class GridTableLightWidget extends Widget {
             page: this.state.page,
             pageSize: this.state.pageSize,
             totalCount: this.state.totalCount,
-            parameters: this.parameters
+            parameters: this.parameters,
+            exportHeaderTitles: Array.isArray(this.exportHeaderTitles) ? this.exportHeaderTitles.slice() : (Array.isArray(this.options.exportHeaderTitles) ? this.options.exportHeaderTitles.slice() : [])
         };
         QB.loadData(this.options.id, this.name, false, 'init', extraParams).then((payload) => {
             const processed = this.processData(payload);
             this.cellData = processed.content;
             this.state.columns = processed.columns;
             this.parameters = processed.parameters;
+            this.exportHeaderTitles = this.computeExportHeaderTitles(processed.columns);
+            this.options.exportHeaderTitles = Array.isArray(this.exportHeaderTitles) ? this.exportHeaderTitles.slice() : [];
             Widgets[this.options.id].cellData = this.cellData;
             GridTableExport.triggerExcelExport(this.options.id, this.parameters && this.parameters.exportConfig ? this.parameters.exportConfig : {});
             this.cellData = previousState.cellData;
@@ -795,6 +883,8 @@ class GridTableLightWidget extends Widget {
             this.state.pageSize = previousState.pageSize;
             this.state.totalCount = previousState.totalCount;
             this.parameters = previousState.parameters;
+            this.exportHeaderTitles = Array.isArray(previousState.exportHeaderTitles) ? previousState.exportHeaderTitles.slice() : [];
+            this.options.exportHeaderTitles = Array.isArray(previousState.exportHeaderTitles) ? previousState.exportHeaderTitles.slice() : [];
             Widgets[this.options.id].cellData = this.cellData;
         });
     }

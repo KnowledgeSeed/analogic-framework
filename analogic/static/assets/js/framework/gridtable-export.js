@@ -97,7 +97,21 @@ const GridTableExport = {
             }
         }
 
-        return headerTitlesArray.slice(0, lastNonEmptyIndex + 1);
+        const trimmedHeaders = headerTitlesArray.slice(0, lastNonEmptyIndex + 1);
+        if (trimmedHeaders.length > 0) {
+            return trimmedHeaders;
+        }
+
+        if (tableOptionsObject && Array.isArray(tableOptionsObject.exportHeaderTitles)) {
+            const fallbackHeaders = tableOptionsObject.exportHeaderTitles.slice();
+            let lastFallbackIndex = fallbackHeaders.length - 1;
+            while (lastFallbackIndex >= 0 && fallbackHeaders[lastFallbackIndex] === "") {
+                lastFallbackIndex--;
+            }
+            return fallbackHeaders.slice(0, lastFallbackIndex + 1);
+        }
+
+        return [];
     },
 
     populateHeaderCells: (worksheet, headerArray, headerRowIndex, startColIndex) => {
@@ -129,7 +143,9 @@ const GridTableExport = {
                 let excelCol = c + startColIndex;
                 let cell = worksheet.getCell(excelRow, excelCol);
 
-                const valueToParse = cellObj?.title ?? "";
+                const hasExportValue = cellObj && Object.prototype.hasOwnProperty.call(cellObj, 'exportValue');
+                const rawExport = hasExportValue ? cellObj.exportValue : (cellObj?.title ?? "");
+                const valueToParse = rawExport !== null && rawExport !== undefined ? String(rawExport) : "";
                 const isEditable = cellObj?.editable ?? false;
 
                 const parsedObject = GridTableExport.parseValue(valueToParse);
