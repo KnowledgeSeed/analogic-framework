@@ -41,11 +41,11 @@ Repository = {
             const columns = [];
             for (let idx = 0; idx < columnCount; idx++) {
                 if (idx === 0) {
-                    columns.push({key: 'record', title: 'Record', width: 220, alignment: 'center-left'});
+                    columns.push({key: 'record', title: 'Record', width: 220});
                 } else if (idx === 1) {
                     columns.push({key: 'status', title: 'Status', width: 160, alignment: 'center-center'});
                 } else if (idx === 2) {
-                    columns.push({key: 'owner', title: 'Owner', width: 180, alignment: 'center-left'});
+                    columns.push({key: 'owner', title: 'Owner', width: 180});
                 } else if (idx === 3) {
                     columns.push({key: 'action', title: 'Action', width: 120, alignment: 'center-center'});
                 } else if (idx === 4) {
@@ -61,49 +61,64 @@ Repository = {
                 const owner = owners[index % owners.length];
                 const health = healthStates[index % healthStates.length];
                 const baseValue = index + 1;
-                const row = [
-                    {
-                        type: 'text',
-                        displayValue: `Record ${baseValue}`,
-                        rawValue: `Record ${baseValue}`,
-                        alignment: 'center-left',
-                        editable: true,
-                        tooltip: 'Rename the record'
-                    },
-                    {
-                        type: 'text',
-                        displayValue: status,
-                        rawValue: status,
-                        alignment: 'center-center',
-                        classes: `status-${status.toLowerCase().replace(/\s+/g, '-')}`
-                    },
-                    {
-                        type: 'combo',
-                        rawValue: owner.value,
-                        options: owners,
-                        alignment: 'center-left'
-                    },
-                    {
-                        type: 'button',
-                        displayValue: 'Details',
-                        alignment: 'center-center'
-                    },
-                    {
-                        type: 'custom',
-                        rawValue: health.label,
-                        alignment: 'center-center',
-                        html: `<span class="grid-table-light-demo-badge" style="color:${health.color}"><span class="dot"></span>${health.label}</span>`
-                    }
-                ];
+                const row = {
+                    rowClasses: `grid-table-light-demo-row ${index % 2 === 0 ? 'grid-table-light-demo-row--even' : 'grid-table-light-demo-row--odd'}`,
+                    rowStyle: index % 2 === 0 ? 'border-bottom:1px solid rgba(148,163,184,0.24)' : {backgroundColor: 'rgba(15,23,42,0.04)'},
+                    cells: [
+                        {
+                            type: 'text',
+                            rawValue: `Record ${baseValue}`,
+                            editable: true,
+                            tooltip: 'Rename the record',
+                            cellClasses: 'grid-table-light-demo-cell grid-table-light-demo-cell--primary',
+                            cellStyle: index % 3 === 0 ? {backgroundColor: 'rgba(37,99,235,0.08)'} : 'background-color:rgba(15,23,42,0.04)',
+                            textClasses: 'grid-table-light-demo-text grid-table-light-demo-text--strong',
+                            textStyle: {letterSpacing: '0.01em'},
+                            inputClasses: 'grid-table-light-demo-input',
+                            inputStyle: 'border-color:#38bdf8'
+                        },
+                        {
+                            type: 'text',
+                            rawValue: status,
+                            alignment: 'center-center',
+                            cellClasses: `status-${status.toLowerCase().replace(/\s+/g, '-')}`,
+                            textClasses: 'grid-table-light-demo-text grid-table-light-demo-text--status'
+                        },
+                        {
+                            type: 'combo',
+                            rawValue: owner.value,
+                            options: owners,
+                            selectClasses: 'grid-table-light-demo-select',
+                            selectStyle: {minWidth: '160px'},
+                            cellStyle: 'justify-content:flex-start'
+                        },
+                        {
+                            type: 'button',
+                            displayValue: 'Details',
+                            alignment: 'center-center',
+                            buttonClasses: 'grid-table-light-demo-button',
+                            buttonStyle: {borderRadius: '9999px', padding: '0 12px'},
+                            cellStyle: 'text-align:center'
+                        },
+                        {
+                            type: 'custom',
+                            rawValue: health.label,
+                            alignment: 'center-center',
+                            cellClasses: 'grid-table-light-demo-badge-cell',
+                            html: `<span class="grid-table-light-demo-badge" style="color:${health.color}"><span class="dot"></span>${health.label}</span>`
+                        }
+                    ]
+                };
 
                 for (let colIndex = 5; colIndex < columnCount; colIndex++) {
                     const metricIndex = colIndex - 4;
                     const value = (baseValue * metricIndex).toString();
-                    row.push({
+                    row.cells.push({
                         type: 'text',
-                        displayValue: value,
                         rawValue: value,
-                        alignment: 'center-right'
+                        alignment: 'center-right',
+                        cellClasses: colIndex % 2 === 0 ? 'grid-table-light-demo-metric' : '',
+                        textStyle: colIndex % 3 === 0 ? {color: '#0369a1'} : ''
                     });
                 }
 
@@ -120,7 +135,27 @@ Repository = {
                 freezeHeader: true,
                 freezeFirstColumns: 2,
                 enableExport: true,
-                exportConfig: {fileName: 'grid-table-light-demo.xlsx'}
+                exportConfig: {fileName: 'grid-table-light-demo.xlsx'},
+                rootClasses: ['grid-table-light-demo-root'],
+                rootStyle: 'box-shadow:0 20px 25px -15px rgba(15,23,42,0.3)',
+                tableClasses: 'grid-table-light-demo-table',
+                tableStyle: {backgroundColor: '#fff'},
+                innerClasses: ['grid-table-light-demo-inner'],
+                innerStyle: 'gap:0',
+                headClasses: 'grid-table-light-demo-head',
+                headStyle: {backgroundColor: 'rgba(15,23,42,0.05)'},
+                bodyClasses: 'grid-table-light-demo-body',
+                bodyStyle: 'max-height:520px',
+                actionsClasses: 'grid-table-light-demo-actions',
+                actionsStyle: {top: '4px'},
+                pagerClasses: 'grid-table-light-demo-pager',
+                pagerStyle: 'justify-content:flex-end',
+                pagerInnerClasses: 'grid-table-light-demo-pager-inner',
+                pagerInnerStyle: {gap: '6px'},
+                pagerButtonClasses: 'grid-table-light-demo-pager-button',
+                pagerButtonStyle: 'min-width:32px',
+                pagerInfoClasses: 'grid-table-light-demo-pager-info',
+                pagerInfoStyle: {fontWeight: '600'}
             };
         },
         launch(ctx) {
@@ -191,14 +226,14 @@ Repository = {
             const statuses = ['Draft', 'Planned', 'In Review', 'Completed'];
 
             const columns = [
-                {key: 'task', title: 'Task', width: 200, alignment: 'center-left'},
-                {key: 'category', title: 'Category', width: 140, alignment: 'center-left'},
-                {key: 'owner', title: 'Owner', width: 160, alignment: 'center-left'},
+                {key: 'task', title: 'Task', width: 200},
+                {key: 'category', title: 'Category', width: 140},
+                {key: 'owner', title: 'Owner', width: 160},
                 {key: 'priority', title: 'Priority', width: 120, alignment: 'center-center'},
                 {key: 'action', title: 'Action', width: 100, alignment: 'center-center'},
                 {key: 'status', title: 'Status', width: 120, alignment: 'center-center'},
-                {key: 'start', title: 'Start', alignment: 'center-left'},
-                {key: 'end', title: 'End', alignment: 'center-left'},
+                {key: 'start', title: 'Start'},
+                {key: 'end', title: 'End'},
                 {key: 'progress', title: 'Progress', alignment: 'center-right'},
                 {key: 'score', title: 'Score', alignment: 'center-right'}
             ];
@@ -219,21 +254,18 @@ Repository = {
                         type: 'text',
                         displayValue: `Task ${idx + 1}`,
                         rawValue: `Task ${idx + 1}`,
-                        alignment: 'center-left',
                         editable: true,
                         tooltip: 'Rename the task'
                     },
                     {
                         type: 'text',
                         displayValue: idx % 2 === 0 ? 'Finance' : 'Operations',
-                        rawValue: idx % 2 === 0 ? 'Finance' : 'Operations',
-                        alignment: 'center-left'
+                        rawValue: idx % 2 === 0 ? 'Finance' : 'Operations'
                     },
                     {
                         type: 'combo',
                         rawValue: owner.value,
-                        options: owners,
-                        alignment: 'center-left'
+                        options: owners
                     },
                     {
                         type: 'custom',
@@ -255,14 +287,12 @@ Repository = {
                     {
                         type: 'text',
                         displayValue: start.toISOString().slice(0, 10),
-                        rawValue: start.toISOString().slice(0, 10),
-                        alignment: 'center-left'
+                        rawValue: start.toISOString().slice(0, 10)
                     },
                     {
                         type: 'text',
                         displayValue: end.toISOString().slice(0, 10),
-                        rawValue: end.toISOString().slice(0, 10),
-                        alignment: 'center-left'
+                        rawValue: end.toISOString().slice(0, 10)
                     },
                     {
                         type: 'text',

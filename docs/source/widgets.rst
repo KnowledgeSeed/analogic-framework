@@ -1133,6 +1133,19 @@ maintain complex widget-config structures.
    descriptors (``{click: {action: 'launch'}}`` for buttons,
    ``{change: {action: 'change'}}`` for selects, while inline text edits
    emit the ``text_change`` event by default).
+-  ``type`` defaults to ``text`` and ``alignment`` falls back to the
+   column's alignment or ``center-left`` so repositories can skip those
+   fields when using the common layout. For text cells the
+   ``displayValue`` automatically mirrors ``rawValue`` when no explicit
+   value is provided.
+-  Styling hooks accept strings (``"min-width:160px"``), plain objects
+   (``{ minWidth: '160px' }``) or arrays across the hierarchy: cell
+   wrappers (``cellClasses``/``cellStyle``), content elements
+   (``textClasses``/``textStyle``, ``buttonClasses``/``buttonStyle``,
+   ``selectClasses``/``selectStyle``, ``inputClasses``/``inputStyle``),
+   rows (``rowClasses``/``rowStyle``) and container level parameters such
+   as ``rootClasses``/``rootStyle``, ``tableClasses``, ``innerClasses``,
+   ``headClasses``, ``bodyClasses`` or the pager/export wrappers.
 -  Repository level event handlers such as ``launch`` (buttons),
    ``change`` (combo boxes) and ``text_change`` (text edits) receive the
    familiar grid-table context, so user interactions can trigger
@@ -1163,9 +1176,9 @@ maintain complex widget-config structures.
            const end = pageSize ? Math.min(totalCount, start + pageSize) : totalCount;
 
            const columns = [
-               { key: 'record', title: 'Record', width: 220, alignment: 'center-left' },
+               { key: 'record', title: 'Record', width: 220 },
                { key: 'status', title: 'Status', width: 160, alignment: 'center-center' },
-               { key: 'owner', title: 'Owner', width: 180, alignment: 'center-left' },
+               { key: 'owner', title: 'Owner', width: 180 },
                { key: 'action', title: 'Action', width: 120, alignment: 'center-center' }
            ];
            while (columns.length < 20) {
@@ -1183,23 +1196,47 @@ maintain complex widget-config structures.
            const content = [];
            for (let i = start; i < end; i++) {
                const owner = owners[i % owners.length];
-               const row = [
-                   { type: 'text', displayValue: `Record ${i + 1}`, rawValue: `Record ${i + 1}`, alignment: 'center-left' },
-                   { type: 'text', displayValue: 'Planned', rawValue: 'Planned', alignment: 'center-center' },
-                   {
-                       type: 'combo',
-                       rawValue: owner.value,
-                       options: owners,
-                       actions: { change: { action: 'change' } },
-                       alignment: 'center-left'
-                   },
-                   { type: 'button', displayValue: 'Details', actions: { click: { action: 'launch' } }, alignment: 'center-center' }
-               ];
+               const metricRow = {
+                   rowClasses: i % 2 === 0 ? 'table-row table-row--even' : 'table-row table-row--odd',
+                   rowStyle: i % 2 === 0 ? 'border-bottom:1px solid rgba(148,163,184,0.24)' : { backgroundColor: 'rgba(15,23,42,0.04)' },
+                   cells: [
+                       {
+                           rawValue: `Record ${i + 1}`,
+                           editable: true,
+                           tooltip: 'Rename the record',
+                           cellClasses: 'table-cell table-cell--primary',
+                           cellStyle: { backgroundColor: 'rgba(37,99,235,0.08)' },
+                           textClasses: 'table-text table-text--strong',
+                           inputClasses: 'table-input',
+                           inputStyle: 'border-color:#38bdf8'
+                       },
+                       {
+                           rawValue: 'Planned',
+                           alignment: 'center-center',
+                           textClasses: 'table-text table-text--status'
+                       },
+                       {
+                           type: 'combo',
+                           rawValue: owner.value,
+                           options: owners,
+                           actions: { change: { action: 'change' } },
+                           selectClasses: 'table-select',
+                           selectStyle: { minWidth: '160px' }
+                       },
+                       {
+                           type: 'button',
+                           displayValue: 'Details',
+                           actions: { click: { action: 'launch' } },
+                           alignment: 'center-center',
+                           buttonClasses: 'table-button'
+                       }
+                   ]
+               };
                for (let col = 4; col < 20; col++) {
                    const value = ((i + 1) * (col - 3)).toString();
-                   row.push({ type: 'text', displayValue: value, rawValue: value, alignment: 'center-right' });
+                   metricRow.cells.push({ type: 'text', rawValue: value, alignment: 'center-right' });
                }
-               content.push(row);
+               content.push(metricRow);
            }
 
            return {
@@ -1212,7 +1249,11 @@ maintain complex widget-config structures.
                freezeHeader: true,
                freezeFirstColumns: 2,
                enableExport: true,
-               exportIcon: 'icon-tray-arrow-down'
+               exportIcon: 'icon-tray-arrow-down',
+               rootClasses: 'table-root',
+               rootStyle: 'box-shadow:0 12px 30px -20px rgba(15,23,42,0.5)',
+               bodyStyle: { maxHeight: '480px' },
+               pagerButtonClasses: 'table-pager-button'
            };
        },
        launch(ctx) {

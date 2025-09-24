@@ -47,6 +47,82 @@ class GridTableLightWidget extends Widget {
         Widgets[options.id] = this;
     }
 
+    normalizeClassesInput(value) {
+        if (!value && value !== 0) {
+            return [];
+        }
+        if (Array.isArray(value)) {
+            return value
+                .map(item => (item || '').toString().trim())
+                .filter(item => item.length > 0);
+        }
+        if (typeof value === 'string') {
+            return value
+                .split(/\s+/)
+                .map(item => item.trim())
+                .filter(item => item.length > 0);
+        }
+        return [(value || '').toString().trim()].filter(item => item.length > 0);
+    }
+
+    getClassName(baseClasses, extraClasses) {
+        const classes = Array.isArray(baseClasses) ? baseClasses.slice() : [baseClasses];
+        if (extraClasses) {
+            classes.push(...this.normalizeClassesInput(extraClasses));
+        }
+        return classes.filter(Boolean).join(' ');
+    }
+
+    toCssProperty(key) {
+        return (key || '')
+            .toString()
+            .replace(/[A-Z]/g, match => '-' + match.toLowerCase())
+            .replace(/_/g, '-')
+            .trim();
+    }
+
+    resolveStyleValue(style) {
+        if (style === null || typeof style === 'undefined') {
+            return '';
+        }
+        if (Array.isArray(style)) {
+            return style.map(item => this.resolveStyleValue(item)).join('');
+        }
+        if (typeof style === 'string') {
+            const trimmed = style.trim();
+            if (!trimmed) {
+                return '';
+            }
+            return trimmed.endsWith(';') ? trimmed : `${trimmed};`;
+        }
+        if (typeof style === 'object') {
+            return Object.keys(style)
+                .map(key => {
+                    const value = style[key];
+                    if (value === null || typeof value === 'undefined') {
+                        return '';
+                    }
+                    return `${this.toCssProperty(key)}:${value};`;
+                })
+                .filter(Boolean)
+                .join('');
+        }
+        const value = style.toString().trim();
+        return value ? (value.endsWith(';') ? value : `${value};`) : '';
+    }
+
+    mergeStyles(...styles) {
+        return styles
+            .map(style => this.resolveStyleValue(style))
+            .filter(Boolean)
+            .join('');
+    }
+
+    getStyleAttribute(...styles) {
+        const merged = this.mergeStyles(...styles);
+        return merged ? ` style="${merged}"` : '';
+    }
+
     render(withState, refresh, useDefaultData = false, loadFunction = QB.loadData, previouslyLoadedData = false) {
         delete this.row;
         delete this.column;
@@ -63,9 +139,31 @@ class GridTableLightWidget extends Widget {
             enableExport: this.getRealValue('enableExport', data, false),
             exportIcon: this.getRealValue('exportIcon', data, this.options.exportIcon || 'icon-tray-arrow-down'),
             exportConfig: this.getRealValue('exportConfig', data, {}),
+            exportButtonClasses: this.getRealValue('exportButtonClasses', data, ''),
+            exportButtonStyle: this.getRealValue('exportButtonStyle', data, ''),
             freezeFirstColumns: parseInt(this.getRealValue('freezeFirstColumns', data, 0), 10) || 0,
             freezeHeader: this.getRealValue('freezeHeader', data, true),
             hideIfNoData: this.getRealValue('hideIfNoData', data, false),
+            rootClasses: this.getRealValue('rootClasses', data, ''),
+            rootStyle: this.getRealValue('rootStyle', data, ''),
+            tableClasses: this.getRealValue('tableClasses', data, ''),
+            tableStyle: this.getRealValue('tableStyle', data, ''),
+            innerClasses: this.getRealValue('innerClasses', data, ''),
+            innerStyle: this.getRealValue('innerStyle', data, ''),
+            headClasses: this.getRealValue('headClasses', data, ''),
+            headStyle: this.getRealValue('headStyle', data, ''),
+            bodyClasses: this.getRealValue('bodyClasses', data, ''),
+            bodyStyle: this.getRealValue('bodyStyle', data, ''),
+            actionsClasses: this.getRealValue('actionsClasses', data, ''),
+            actionsStyle: this.getRealValue('actionsStyle', data, ''),
+            pagerClasses: this.getRealValue('pagerClasses', data, ''),
+            pagerStyle: this.getRealValue('pagerStyle', data, ''),
+            pagerInnerClasses: this.getRealValue('pagerInnerClasses', data, ''),
+            pagerInnerStyle: this.getRealValue('pagerInnerStyle', data, ''),
+            pagerButtonClasses: this.getRealValue('pagerButtonClasses', data, ''),
+            pagerButtonStyle: this.getRealValue('pagerButtonStyle', data, ''),
+            pagerInfoClasses: this.getRealValue('pagerInfoClasses', data, ''),
+            pagerInfoStyle: this.getRealValue('pagerInfoStyle', data, ''),
             minWidth: this.getRealValue('minWidth', data, false),
             page: this.getRealValue('page', data, this.state.page || 1),
             pageSize: this.getRealValue('pageSize', data, statePageSize),
@@ -98,9 +196,8 @@ class GridTableLightWidget extends Widget {
             return normalized;
         });
 
-        const content = (payload.content || []).map((row, rowIndex) => {
-            return (row || []).map((cell, colIndex) => this.normalizeCell(cell, columns[colIndex], rowIndex, colIndex));
-        });
+        const rows = (payload.content || []).map((row, rowIndex) => this.normalizeRow(row, rowIndex, columns));
+        const content = rows.map(row => row.cells);
 
         const totalCount = typeof payload.totalCount === 'number' ? payload.totalCount : content.length;
         const page = payload.page || parameters.page || 1;
@@ -110,6 +207,7 @@ class GridTableLightWidget extends Widget {
         return {
             parameters,
             columns,
+            rows,
             content,
             totalCount,
             page,
@@ -120,16 +218,69 @@ class GridTableLightWidget extends Widget {
         };
     }
 
+    normalizeRow(row, rowIndex, columns) {
+        const rowConfig = Array.isArray(row) ? {cells: row} : ($.extend(true, {}, row || {}));
+        const cellSource = Array.isArray(rowConfig.cells)
+            ? rowConfig.cells
+            : Array.isArray(rowConfig.content)
+                ? rowConfig.content
+                : (Array.isArray(row) ? row : []);
+        const cells = (cellSource || []).map((cell, colIndex) => this.normalizeCell(cell, columns[colIndex], rowIndex, colIndex));
+        return {
+            index: rowIndex,
+            cells,
+            rowClasses: rowConfig.rowClasses || rowConfig.classes || '',
+            rowStyle: rowConfig.rowStyle || rowConfig.style || ''
+        };
+    }
+
     normalizeCell(cell, column, rowIndex, colIndex) {
         const columnDefaults = column && column.cellDefaults ? column.cellDefaults : {};
-        const normalized = $.extend(true, {}, columnDefaults, cell || {});
+        let sourceCell;
+        if (cell === null || typeof cell === 'undefined') {
+            sourceCell = {};
+        } else if (typeof cell === 'object' && !Array.isArray(cell)) {
+            sourceCell = cell;
+        } else {
+            sourceCell = {value: cell};
+        }
+        const normalized = $.extend(true, {}, columnDefaults, sourceCell);
         normalized.type = normalized.type || 'text';
-        normalized.displayValue = typeof normalized.displayValue !== 'undefined' ? normalized.displayValue : (normalized.title || normalized.value || '');
-        normalized.rawValue = typeof normalized.rawValue !== 'undefined' ? normalized.rawValue : normalized.displayValue;
+        const hasDisplayValue = Object.prototype.hasOwnProperty.call(normalized, 'displayValue');
+        const hasRawValue = Object.prototype.hasOwnProperty.call(normalized, 'rawValue');
+        if (!hasRawValue) {
+            if (Object.prototype.hasOwnProperty.call(normalized, 'value')) {
+                normalized.rawValue = normalized.value;
+            } else if (hasDisplayValue) {
+                normalized.rawValue = normalized.displayValue;
+            } else {
+                normalized.rawValue = '';
+            }
+        }
+        if (normalized.type === 'text') {
+            if (!hasDisplayValue) {
+                normalized.displayValue = typeof normalized.rawValue !== 'undefined' && normalized.rawValue !== null ? normalized.rawValue : '';
+            }
+        } else {
+            normalized.displayValue = hasDisplayValue ? normalized.displayValue : (normalized.title || normalized.value || normalized.rawValue || '');
+        }
+        if (typeof normalized.displayValue === 'undefined' || normalized.displayValue === null) {
+            normalized.displayValue = '';
+        }
         normalized.actions = normalized.actions || {};
         normalized.alignment = normalized.alignment || (column ? column.alignment : 'center-left') || 'center-left';
         normalized.classes = normalized.classes || '';
+        normalized.cellClasses = normalized.cellClasses || '';
         normalized.style = normalized.style || {};
+        normalized.cellStyle = normalized.cellStyle || '';
+        normalized.textClasses = normalized.textClasses || '';
+        normalized.textStyle = normalized.textStyle || '';
+        normalized.buttonClasses = normalized.buttonClasses || '';
+        normalized.buttonStyle = normalized.buttonStyle || '';
+        normalized.selectClasses = normalized.selectClasses || '';
+        normalized.selectStyle = normalized.selectStyle || '';
+        normalized.inputClasses = normalized.inputClasses || '';
+        normalized.inputStyle = normalized.inputStyle || '';
         normalized.tooltip = normalized.tooltip || (column && column.tooltip) || '';
         normalized.editable = !!normalized.editable;
         normalized.rowIndex = rowIndex;
@@ -142,9 +293,9 @@ class GridTableLightWidget extends Widget {
     }
 
     buildRenderParts(processed) {
-        const {parameters, columns, content} = processed;
+        const {parameters, columns, rows, content} = processed;
         const headerHtml = this.buildHeaderHtml(columns, parameters);
-        const bodyHtml = this.buildBodyHtml(content, parameters);
+        const bodyHtml = this.buildBodyHtml(rows || [], parameters);
         const pagerHtml = this.buildPagerHtml(processed);
         const exportHtml = parameters.enableExport ? this.buildExportButton(parameters) : '';
         const styleParts = this.getGeneralStyles(parameters);
@@ -173,71 +324,48 @@ class GridTableLightWidget extends Widget {
 
     buildHeaderHtml(columns, parameters) {
         const cells = columns.map((column, index) => {
-            const classes = [GRID_TABLE_LIGHT_CLASSES.cell];
-            if (column.classes) {
-                classes.push(column.classes);
-            }
-            const alignmentClass = `ks-pos-${column.alignment || 'center-left'}`;
-            classes.push(alignmentClass);
-            const styles = [];
+            const baseClasses = [GRID_TABLE_LIGHT_CLASSES.cell, `ks-pos-${column.alignment || 'center-left'}`];
+            const className = this.getClassName(baseClasses, column.headerClasses || column.classes);
+            const widthStyles = [];
             if (column.width) {
                 const resolvedWidth = Widget.getPercentOrPixel(column.width);
-                styles.push(`width:${resolvedWidth};`);
-                styles.push(`flex:0 0 ${resolvedWidth};`);
+                widthStyles.push(`width:${resolvedWidth};`);
+                widthStyles.push(`flex:0 0 ${resolvedWidth};`);
             }
-            if (parameters.freezeHeader) {
-                styles.push('position:sticky;top:0;z-index:4;');
-            }
-            if (column.style && typeof column.style === 'object') {
-                Object.keys(column.style).forEach(key => {
-                    const value = column.style[key];
-                    if (value !== undefined && value !== null) {
-                        styles.push(`${key}:${value};`);
-                    }
-                });
-            }
-            return `<div class="${classes.join(' ')}" data-col="${index}" data-column-key="${column.key}" data-frozen="${column.frozen ? 'true' : 'false'}" style="${styles.join('')}">${column.headerTemplate || column.title || ''}</div>`;
+            const stickyStyles = parameters.freezeHeader ? 'position:sticky;top:0;z-index:4;' : '';
+            const styleAttr = this.getStyleAttribute(widthStyles.join(''), stickyStyles, column.headerStyle || column.style || '');
+            return `<div class="${className}" data-col="${index}" data-column-key="${column.key}" data-frozen="${column.frozen ? 'true' : 'false'}"${styleAttr}>${column.headerTemplate || column.title || ''}</div>`;
         });
         return `<div class="${GRID_TABLE_LIGHT_CLASSES.row}">${cells.join('')}</div>`;
     }
 
-    buildBodyHtml(content, parameters) {
-        const rows = content.map((row, rowIndex) => {
+    buildBodyHtml(rows, parameters) {
+        const renderedRows = rows.map((row) => {
             const rowStyles = [];
             if (parameters.rowHeight) {
                 rowStyles.push(`height:${Widget.getPercentOrPixel(parameters.rowHeight)};`);
             }
-            const cells = row.map((cell) => this.buildCellHtml(cell));
-            return `<div class="${GRID_TABLE_LIGHT_CLASSES.row}" data-row="${rowIndex}" style="${rowStyles.join('')}">${cells.join('')}</div>`;
+            const cells = (row.cells || []).map((cell) => this.buildCellHtml(cell));
+            const className = this.getClassName([GRID_TABLE_LIGHT_CLASSES.row], row.rowClasses);
+            const styleAttr = this.getStyleAttribute(rowStyles.join(''), row.rowStyle);
+            return `<div class="${className}" data-row="${row.index}"${styleAttr}>${cells.join('')}</div>`;
         });
-        return rows.join('');
+        return renderedRows.join('');
     }
 
     buildCellHtml(cell) {
-        const classes = [GRID_TABLE_LIGHT_CLASSES.cell];
-        if (cell.classes) {
-            classes.push(cell.classes);
-        }
-        const alignmentClass = `ks-pos-${cell.alignment}`;
-        classes.push(alignmentClass);
+        const classes = [GRID_TABLE_LIGHT_CLASSES.cell, `ks-pos-${cell.alignment}`];
+        const className = this.getClassName(classes, cell.cellClasses || cell.classes);
         const styles = [];
         if (cell.width) {
             const resolvedWidth = Widget.getPercentOrPixel(cell.width);
             styles.push(`width:${resolvedWidth};`);
             styles.push(`flex:0 0 ${resolvedWidth};`);
         }
-        if (cell.style && typeof cell.style === 'object') {
-            Object.keys(cell.style).forEach(key => {
-                const value = cell.style[key];
-                if (value !== undefined && value !== null) {
-                    styles.push(`${key}:${value};`);
-                }
-            });
-        }
         const contentHtml = this.buildCellContentHtml(cell);
-        const styleAttr = styles.length ? ` style="${styles.join('')}"` : '';
+        const styleAttr = this.getStyleAttribute(styles.join(''), cell.cellStyle || cell.style || '');
 
-        return `<div id="${cell.cellId}" class="${classes.join(' ')}" data-row="${cell.rowIndex}" data-col="${cell.columnIndex}" data-frozen="${cell.frozen ? 'true' : 'false'}"${styleAttr}>${contentHtml}</div>`;
+        return `<div id="${cell.cellId}" class="${className}" data-row="${cell.rowIndex}" data-col="${cell.columnIndex}" data-frozen="${cell.frozen ? 'true' : 'false'}"${styleAttr}>${contentHtml}</div>`;
     }
 
     buildCellContentHtml(cell) {
@@ -246,17 +374,17 @@ class GridTableLightWidget extends Widget {
         const tooltip = cell.tooltip ? ` title="${Utils.htmlEncode(Utils.stripHtml(cell.tooltip))}"` : '';
         switch (cell.type) {
             case 'button':
-                return `<button type="button" class="${GRID_TABLE_LIGHT_CLASSES.button}" data-action="${clickAction}" data-update="${clickUpdate}" data-id="${cell.id}" data-cell-id="${cell.cellId}">${cell.displayValue}</button>`;
+                return `<button type="button" class="${this.getClassName([GRID_TABLE_LIGHT_CLASSES.button], cell.buttonClasses)}" data-action="${clickAction}" data-update="${clickUpdate}" data-id="${cell.id}" data-cell-id="${cell.cellId}"${this.getStyleAttribute(cell.buttonStyle)}${tooltip}>${cell.displayValue}</button>`;
             case 'combo': {
                 const changeAction = v('change.action', cell.actions) || 'change';
                 const changeUpdate = v('change.updateValue', cell.actions) === false ? 'false' : 'true';
                 const optionsHtml = (cell.options || []).map(option => {
                     const value = option && typeof option.value !== 'undefined' ? option.value : '';
                     const label = option && typeof option.label !== 'undefined' ? option.label : value;
-                    const selected = value === cell.rawValue ? 'selected' : '';
+                    const selected = String(value) === String(cell.rawValue) ? 'selected' : '';
                     return `<option value="${Utils.htmlEncode(String(value))}" ${selected}>${Utils.htmlEncode(String(label))}</option>`;
                 }).join('');
-                return `<select class="${GRID_TABLE_LIGHT_CLASSES.select}" data-action="${changeAction}" data-update="${changeUpdate}" data-id="${cell.id}" data-cell-id="${cell.cellId}">${optionsHtml}</select>`;
+                return `<select class="${this.getClassName([GRID_TABLE_LIGHT_CLASSES.select], cell.selectClasses)}" data-action="${changeAction}" data-update="${changeUpdate}" data-id="${cell.id}" data-cell-id="${cell.cellId}"${this.getStyleAttribute(cell.selectStyle)}${tooltip}>${optionsHtml}</select>`;
             }
             case 'custom':
                 return cell.html || '';
@@ -270,7 +398,7 @@ class GridTableLightWidget extends Widget {
                     attrs.push(`data-change-action="${changeAction}"`);
                     attrs.push(`data-change-update="${changeUpdate}"`);
                 }
-                return `<div class="${GRID_TABLE_LIGHT_CLASSES.cellValue}" ${attrs.join(' ')}${tooltip}>${cell.displayValue}</div>`;
+                return `<div class="${this.getClassName([GRID_TABLE_LIGHT_CLASSES.cellValue], cell.textClasses)}" ${attrs.join(' ')}${this.getStyleAttribute(cell.textStyle)}${tooltip}>${cell.displayValue}</div>`;
             }
         }
     }
@@ -287,31 +415,49 @@ class GridTableLightWidget extends Widget {
             {action: 'next', label: '&rsaquo;', disabled: page >= totalPages},
             {action: 'last', label: '&raquo;', disabled: page >= totalPages}
         ];
-        const buttonsHtml = buttons.map(btn => `<button type="button" class="${GRID_TABLE_LIGHT_CLASSES.pagerButton}" data-pager-action="${btn.action}" ${btn.disabled ? 'disabled' : ''}>${btn.label}</button>`).join('');
-        return `<div class="${GRID_TABLE_LIGHT_CLASSES.pagerInner}" data-page="${page}" data-total-pages="${totalPages}">${buttonsHtml}<span class="${GRID_TABLE_LIGHT_CLASSES.pagerInfo}">${page} / ${totalPages}</span></div>`;
+        const buttonClass = this.getClassName([GRID_TABLE_LIGHT_CLASSES.pagerButton], processed.parameters.pagerButtonClasses);
+        const buttonStyleAttr = this.getStyleAttribute(processed.parameters.pagerButtonStyle);
+        const buttonsHtml = buttons.map(btn => `<button type="button" class="${buttonClass}" data-pager-action="${btn.action}" ${btn.disabled ? 'disabled' : ''}${buttonStyleAttr}>${btn.label}</button>`).join('');
+        const innerClass = this.getClassName([GRID_TABLE_LIGHT_CLASSES.pagerInner], processed.parameters.pagerInnerClasses);
+        const innerStyleAttr = this.getStyleAttribute(processed.parameters.pagerInnerStyle);
+        const infoClass = this.getClassName([GRID_TABLE_LIGHT_CLASSES.pagerInfo], processed.parameters.pagerInfoClasses);
+        const infoStyleAttr = this.getStyleAttribute(processed.parameters.pagerInfoStyle);
+        return `<div class="${innerClass}" data-page="${page}" data-total-pages="${totalPages}"${innerStyleAttr}>${buttonsHtml}<span class="${infoClass}"${infoStyleAttr}>${page} / ${totalPages}</span></div>`;
     }
 
     buildExportButton(parameters) {
         const iconClass = parameters && parameters.exportIcon ? parameters.exportIcon : 'icon-tray-arrow-down';
-        return `<button type="button" class="${GRID_TABLE_LIGHT_CLASSES.exportButton}" data-action="export" data-id="${this.options.id}"><span class="${iconClass}"></span></button>`;
+        const buttonClasses = this.getClassName([GRID_TABLE_LIGHT_CLASSES.exportButton], parameters.exportButtonClasses);
+        const styleAttr = this.getStyleAttribute(parameters.exportButtonStyle);
+        return `<button type="button" class="${buttonClasses}" data-action="export" data-id="${this.options.id}"${styleAttr}><span class="${iconClass}"></span></button>`;
     }
 
     composeOuterHtml(parts, parameters) {
-        const headAttr = parts.headStyleAttr ? ` style="${parts.headStyleAttr}"` : '';
         const skinClass = parameters.skin ? `${GRID_TABLE_LIGHT_CLASSES.skinPrefix}${parameters.skin}` : '';
-        const rootClasses = [GRID_TABLE_LIGHT_CLASSES.root];
-        if (skinClass) {
-            rootClasses.push(skinClass);
-        }
-        return `<div class="${rootClasses.join(' ')}" data-widget-id="${this.options.id}" style="${parts.styleAttr}">
-            ${parts.exportHtml ? `<div class="${GRID_TABLE_LIGHT_CLASSES.actions}" data-role="actions">${parts.exportHtml}</div>` : ''}
-            <div class="${GRID_TABLE_LIGHT_CLASSES.table}" data-role="table">
-                <div class="${GRID_TABLE_LIGHT_CLASSES.inner}">
-                    <div class="${GRID_TABLE_LIGHT_CLASSES.head}"${headAttr} data-role="head">${parts.headerHtml}</div>
-                    <div class="${GRID_TABLE_LIGHT_CLASSES.body}" data-role="body">${parts.bodyHtml}</div>
+        const rootClassName = this.getClassName([GRID_TABLE_LIGHT_CLASSES.root, skinClass].filter(Boolean), parameters.rootClasses);
+        const rootStyleAttr = this.getStyleAttribute(parts.styleAttr, parameters.rootStyle);
+        const tableClassName = this.getClassName([GRID_TABLE_LIGHT_CLASSES.table], parameters.tableClasses);
+        const tableStyleAttr = this.getStyleAttribute(parameters.tableStyle);
+        const innerClassName = this.getClassName([GRID_TABLE_LIGHT_CLASSES.inner], parameters.innerClasses);
+        const innerStyleAttr = this.getStyleAttribute(parameters.innerStyle);
+        const headClassName = this.getClassName([GRID_TABLE_LIGHT_CLASSES.head], parameters.headClasses);
+        const headStyleAttr = this.getStyleAttribute(parts.headStyleAttr, parameters.headStyle);
+        const bodyClassName = this.getClassName([GRID_TABLE_LIGHT_CLASSES.body], parameters.bodyClasses);
+        const bodyStyleAttr = this.getStyleAttribute(parameters.bodyStyle);
+        const actionsClassName = this.getClassName([GRID_TABLE_LIGHT_CLASSES.actions], parameters.actionsClasses);
+        const actionsStyleAttr = this.getStyleAttribute(parameters.actionsStyle);
+        const pagerClassName = this.getClassName([GRID_TABLE_LIGHT_CLASSES.pager], parameters.pagerClasses);
+        const pagerStyleAttr = this.getStyleAttribute(parameters.pagerStyle);
+
+        return `<div class="${rootClassName}" data-widget-id="${this.options.id}"${rootStyleAttr}>
+            ${parts.exportHtml ? `<div class="${actionsClassName}" data-role="actions"${actionsStyleAttr}>${parts.exportHtml}</div>` : ''}
+            <div class="${tableClassName}" data-role="table"${tableStyleAttr}>
+                <div class="${innerClassName}"${innerStyleAttr}>
+                    <div class="${headClassName}" data-role="head"${headStyleAttr}>${parts.headerHtml}</div>
+                    <div class="${bodyClassName}" data-role="body"${bodyStyleAttr}>${parts.bodyHtml}</div>
                 </div>
             </div>
-            ${parts.pagerHtml ? `<div class="${GRID_TABLE_LIGHT_CLASSES.pager}" data-role="pager">${parts.pagerHtml}</div>` : ''}
+            ${parts.pagerHtml ? `<div class="${pagerClassName}" data-role="pager"${pagerStyleAttr}>${parts.pagerHtml}</div>` : ''}
         </div>`;
     }
 
@@ -838,7 +984,11 @@ class GridTableLightWidget extends Widget {
         const rawValue = typeof cell.rawValue !== 'undefined' && cell.rawValue !== null ? cell.rawValue : cell.displayValue;
         const input = document.createElement('input');
         input.type = 'text';
-        input.className = GRID_TABLE_LIGHT_CLASSES.input;
+        input.className = this.getClassName([GRID_TABLE_LIGHT_CLASSES.input], cell.inputClasses);
+        const inputStyle = this.resolveStyleValue(cell.inputStyle);
+        if (inputStyle) {
+            input.setAttribute('style', inputStyle);
+        }
         input.value = rawValue === null || typeof rawValue === 'undefined' ? '' : rawValue;
         input.setAttribute('data-action', changeAction);
         input.setAttribute('data-update', changeUpdate);
