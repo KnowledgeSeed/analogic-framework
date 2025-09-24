@@ -6,6 +6,8 @@
 .ks-grid-table-light_table {
     display: block;
     width: 100%;
+    border: 1px solid #d9dee8;
+    background: #fff;
 }
 
 .ks-grid-table-light_inner {
@@ -26,6 +28,21 @@
 
 .ks-grid-table-light_row {
     display: flex;
+    height: 33px;
+}
+
+.ks-grid-table-light_head .ks-grid-table-light_row {
+    background: #f6f7fb;
+    border-bottom: 1px solid #d4d9e2;
+    font-weight: 600;
+}
+
+.ks-grid-table-light_body .ks-grid-table-light_row {
+    border-bottom: 1px solid #e1e5ee;
+}
+
+.ks-grid-table-light_body .ks-grid-table-light_row:last-child {
+    border-bottom: none;
 }
 
 .ks-grid-table-light_cell {
@@ -36,6 +53,17 @@
     min-width: 0;
     align-items: center;
     justify-content: flex-start;
+    padding: 0 12px;
+    border-right: 1px solid #e1e5ee;
+    box-sizing: border-box;
+}
+
+.ks-grid-table-light_head .ks-grid-table-light_cell {
+    border-right-color: #d4d9e2;
+}
+
+.ks-grid-table-light_row .ks-grid-table-light_cell:last-child {
+    border-right: none;
 }
 
 .ks-grid-table-light_cell.ks-pos-top-left,
