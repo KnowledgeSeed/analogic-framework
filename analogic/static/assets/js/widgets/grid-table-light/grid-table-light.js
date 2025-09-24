@@ -932,6 +932,7 @@ class GridTableLightWidget extends Widget {
         if (!this.dom.body) {
             return;
         }
+        this.adjustHeaderForScrollbar();
         this.clearFrozenStyles();
         const freezeCount = this.parameters && this.parameters.freezeFirstColumns ? parseInt(this.parameters.freezeFirstColumns, 10) : 0;
         if (!freezeCount) {
@@ -978,6 +979,12 @@ class GridTableLightWidget extends Widget {
             }
             const width = widths[index] || cell.getBoundingClientRect().width || cell.offsetWidth;
             cell.classList.add(GRID_TABLE_LIGHT_CLASSES.cellFrozen);
+            if (typeof cell.dataset.frozenOriginalPosition === 'undefined') {
+                cell.dataset.frozenOriginalPosition = cell.style.position || '';
+            }
+            if (typeof cell.dataset.frozenOriginalTop === 'undefined') {
+                cell.dataset.frozenOriginalTop = cell.style.top || '';
+            }
             cell.style.left = `${offsets[index]}px`;
             if (width) {
                 if (typeof cell.dataset.frozenOriginalMinWidth === 'undefined') {
@@ -1005,6 +1012,10 @@ class GridTableLightWidget extends Widget {
             }
             const computedBg = typeof window !== 'undefined' ? window.getComputedStyle(cell).backgroundColor : cell.style.backgroundColor;
             cell.style.backgroundColor = computedBg;
+            cell.style.position = 'sticky';
+            if (!isHeader) {
+                cell.style.top = cell.dataset.frozenOriginalTop || '';
+            }
             cell.style.zIndex = isHeader ? '7' : '6';
         };
 
@@ -1033,6 +1044,14 @@ class GridTableLightWidget extends Widget {
             cell.style.backgroundColor = cell.dataset.frozenOriginalBackground || '';
             delete cell.dataset.frozenOriginalBackground;
             cell.style.zIndex = '';
+            if (typeof cell.dataset.frozenOriginalPosition !== 'undefined') {
+                cell.style.position = cell.dataset.frozenOriginalPosition;
+            } else {
+                cell.style.position = '';
+            }
+            if (typeof cell.dataset.frozenOriginalTop !== 'undefined') {
+                cell.style.top = cell.dataset.frozenOriginalTop;
+            }
             if (typeof cell.dataset.frozenOriginalMinWidth !== 'undefined') {
                 cell.style.minWidth = cell.dataset.frozenOriginalMinWidth;
             } else {
@@ -1053,11 +1072,27 @@ class GridTableLightWidget extends Widget {
             } else {
                 cell.style.width = '';
             }
+            delete cell.dataset.frozenOriginalPosition;
+            delete cell.dataset.frozenOriginalTop;
             delete cell.dataset.frozenOriginalMinWidth;
             delete cell.dataset.frozenOriginalMaxWidth;
             delete cell.dataset.frozenOriginalFlex;
             delete cell.dataset.frozenOriginalWidth;
         });
+    }
+
+    adjustHeaderForScrollbar() {
+        if (!this.dom.head || !this.dom.body) {
+            return;
+        }
+        const scrollbarWidth = this.dom.body.offsetWidth - this.dom.body.clientWidth;
+        if (scrollbarWidth > 0) {
+            this.dom.head.style.boxSizing = 'border-box';
+            this.dom.head.style.paddingRight = `${scrollbarWidth}px`;
+        } else {
+            this.dom.head.style.boxSizing = '';
+            this.dom.head.style.paddingRight = '';
+        }
     }
 
     initEvents() {
