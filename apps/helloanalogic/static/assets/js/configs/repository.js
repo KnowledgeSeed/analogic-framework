@@ -345,6 +345,37 @@ Repository = {
             console.log('GridTableLight compact table launch', {row: rowIndex, task: taskLabel});
         }
     },
+    gridTableLightTextTable: {
+        init() {
+            const columnCount = 15;
+            const rowCount = 60;
+            const columns = [];
+            for (let index = 0; index < columnCount; index++) {
+                columns.push({
+                    key: `col${index + 1}`,
+                    title: `Column ${index + 1}`,
+                    width: index < 2 ? 200 : 160
+                });
+            }
+            const content = [];
+            for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+                const row = [];
+                for (let colIndex = 0; colIndex < columnCount; colIndex++) {
+                    row.push(`Row ${rowIndex + 1} · Col ${colIndex + 1}`);
+                }
+                content.push(row);
+            }
+            return {
+                columns: columns,
+                content: content,
+                totalCount: content.length,
+                page: 1,
+                freezeFirstColumns: 2,
+                allowCopyToClipBoard: true,
+                bodyStyle: 'max-height:360px;'
+            };
+        }
+    },
     gridTableLightDemoInfoText: {
         init() {
             const info = v('gridTableLightDemoLastAction') || {

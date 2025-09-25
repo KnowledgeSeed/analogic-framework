@@ -6454,6 +6454,27 @@ WidgetConfig = {
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            id: 'gridTableLightDemoTextTableRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginTop: '24',
+                            widgets: [
+                                {
+                                    id: 'gridTableLightDemoTextTableCell',
+                                    type: GridCellWidget,
+                                    alignment: 'top-left',
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'gridTableLightTextTable',
+                                            type: GridTableLightWidget,
+                                            skin: 'gridTableLightText'
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 }

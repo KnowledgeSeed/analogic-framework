@@ -186,3 +186,16 @@
 .ks-grid-table-light--skin-gridTableLightCompact .ks-grid-table-light_value {
     font-size: 13px;
 }
+
+.ks-grid-table-light--skin-gridTableLightText .ks-grid-table-light_head {
+    background: #f3f4f6;
+    color: #1f2937;
+}
+
+.ks-grid-table-light--skin-gridTableLightText .ks-grid-table-light_body .ks-grid-table-light_row:nth-child(odd) .ks-grid-table-light_cell {
+    background: #fbfdff;
+}
+
+.ks-grid-table-light--skin-gridTableLightText .ks-grid-table-light_cell {
+    font-size: 13px;
+}

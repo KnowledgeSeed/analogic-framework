@@ -588,6 +588,9 @@ class GridTableLightWidget extends Widget {
             return;
         }
         this.dom.root = root;
+        if (!this.dom.root.hasAttribute('tabindex')) {
+            this.dom.root.setAttribute('tabindex', '0');
+        }
         this.dom.table = root.querySelector('.' + GRID_TABLE_LIGHT_CLASSES.table);
         this.dom.inner = root.querySelector('.' + GRID_TABLE_LIGHT_CLASSES.inner);
         this.dom.head = root.querySelector('.' + GRID_TABLE_LIGHT_CLASSES.head);
@@ -602,6 +605,9 @@ class GridTableLightWidget extends Widget {
         }
         if (root && this.boundHandlers.contextmenu) {
             root.removeEventListener('contextmenu', this.boundHandlers.contextmenu);
+        }
+        if (root && this.boundHandlers.keydown) {
+            root.removeEventListener('keydown', this.boundHandlers.keydown);
         }
         if (this.dom.body && this.boundHandlers.mousedown) {
             this.dom.body.removeEventListener('mousedown', this.boundHandlers.mousedown);
@@ -639,9 +645,11 @@ class GridTableLightWidget extends Widget {
         this.boundHandlers.click = this.handleClick.bind(this);
         this.boundHandlers.change = this.handleChange.bind(this);
         this.boundHandlers.contextmenu = this.handleContextMenu.bind(this);
+        this.boundHandlers.keydown = this.handleKeyDown.bind(this);
         root.addEventListener('click', this.boundHandlers.click);
         root.addEventListener('change', this.boundHandlers.change, true);
         root.addEventListener('contextmenu', this.boundHandlers.contextmenu);
+        root.addEventListener('keydown', this.boundHandlers.keydown);
 
         if (this.dom.body && this.parameters && this.parameters.allowCopyToClipBoard) {
             this.initSelectionState();
@@ -666,6 +674,16 @@ class GridTableLightWidget extends Widget {
 
         this.boundHandlers.resize = this.scheduleStickyUpdate.bind(this);
         window.addEventListener('resize', this.boundHandlers.resize);
+    }
+
+    focusRoot() {
+        if (this.dom && this.dom.root && typeof this.dom.root.focus === 'function') {
+            try {
+                this.dom.root.focus({preventScroll: true});
+            } catch (e) {
+                this.dom.root.focus();
+            }
+        }
     }
 
     initSelectionState() {
@@ -770,16 +788,29 @@ class GridTableLightWidget extends Widget {
         if (!cellElement || !this.dom.root || !this.dom.root.contains(cellElement)) {
             return;
         }
-        this.updateCurrentCellFromElement(cellElement);
         event.preventDefault();
+        this.focusRoot();
+        this.updateCurrentCellFromElement(cellElement);
         const cellWidgetId = `${this.options.id}_${this.row}_${this.column}`;
+        const eventData = {action: 'rightclick', id: cellWidgetId};
         Widgets['rightclick'] = cellWidgetId;
-        this.storeEventValues('rightclick', {action: 'rightclick', id: cellWidgetId}, true);
-        const proxyElement = $('<div>').data({
-            action: 'rightclick',
-            id: cellWidgetId
-        });
-        Widget.doHandleGridTableSystemEvent(proxyElement, event);
+        this.storeEventValues('rightclick', eventData, true);
+        const cellJq = $(cellElement);
+        const previousAction = cellJq.data('action');
+        const previousId = cellJq.data('id');
+        cellJq.data('action', 'rightclick');
+        cellJq.data('id', cellWidgetId);
+        Widget.doHandleGridTableSystemEvent(cellJq, event, true);
+        if (typeof previousAction === 'undefined') {
+            cellJq.removeData('action');
+        } else {
+            cellJq.data('action', previousAction);
+        }
+        if (typeof previousId === 'undefined') {
+            cellJq.removeData('id');
+        } else {
+            cellJq.data('id', previousId);
+        }
     }
 
     updateCurrentCellFromElement(cellElement) {
@@ -901,10 +932,29 @@ class GridTableLightWidget extends Widget {
             return;
         }
         event.preventDefault();
-        this.selection.isMouseDown = true;
-        this.selection.anchorCellId = cell.id;
-        this.selection.activeCellId = cell.id;
-        this.selection.selectedIds = new Set([cell.id]);
+        const isShiftPressed = event.shiftKey;
+        const isModifierPressed = event.ctrlKey || event.metaKey;
+
+        if (isModifierPressed) {
+            if (this.selection.selectedIds.has(cell.id)) {
+                this.selection.selectedIds.delete(cell.id);
+            } else {
+                this.selection.selectedIds.add(cell.id);
+            }
+            this.selection.anchorCellId = cell.id;
+            this.selection.activeCellId = cell.id;
+            this.selection.isMouseDown = false;
+        } else if (isShiftPressed && this.selection.anchorCellId) {
+            this.selection.activeCellId = cell.id;
+            this.selectRange(this.selection.anchorCellId, cell.id);
+            this.selection.isMouseDown = false;
+        } else {
+            this.selection.isMouseDown = true;
+            this.selection.anchorCellId = cell.id;
+            this.selection.activeCellId = cell.id;
+            this.selection.selectedIds = new Set([cell.id]);
+        }
+        this.focusRoot();
         this.updateCurrentCellFromElement(cell);
         this.updateSelectionUI();
     }
@@ -1043,6 +1093,116 @@ class GridTableLightWidget extends Widget {
                 console.error('GridTableLightWidget: Unable to copy to clipboard');
             });
         }
+    }
+
+    getCellPositionFromId(cellId) {
+        if (!cellId || cellId.indexOf(`${this.options.id}Cell`) !== 0) {
+            return null;
+        }
+        const parts = cellId.replace(`${this.options.id}Cell`, '').split('-');
+        if (parts.length !== 2) {
+            return null;
+        }
+        const row = parseInt(parts[0], 10);
+        const col = parseInt(parts[1], 10);
+        if (Number.isNaN(row) || Number.isNaN(col)) {
+            return null;
+        }
+        return {row, col};
+    }
+
+    buildCellId(row, col) {
+        return `${this.options.id}Cell${row}-${col}`;
+    }
+
+    scrollCellIntoView(cellElement) {
+        if (!cellElement || !this.dom.body) {
+            return;
+        }
+        const bodyRect = this.dom.body.getBoundingClientRect();
+        const cellRect = cellElement.getBoundingClientRect();
+        if (cellRect.top < bodyRect.top) {
+            this.dom.body.scrollTop -= (bodyRect.top - cellRect.top);
+        } else if (cellRect.bottom > bodyRect.bottom) {
+            this.dom.body.scrollTop += (cellRect.bottom - bodyRect.bottom);
+        }
+        if (cellRect.left < bodyRect.left) {
+            this.dom.body.scrollLeft -= (bodyRect.left - cellRect.left);
+        } else if (cellRect.right > bodyRect.right) {
+            this.dom.body.scrollLeft += (cellRect.right - bodyRect.right);
+        }
+    }
+
+    handleKeyDown(event) {
+        if (!this.selection) {
+            return;
+        }
+        const target = event.target;
+        if (target && ['INPUT', 'SELECT', 'TEXTAREA'].includes(target.tagName)) {
+            return;
+        }
+        const isCopy = (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'c';
+        if (isCopy) {
+            event.preventDefault();
+            this.copySelectedCellsToClipboard();
+            return;
+        }
+        const navigationKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+        if (!navigationKeys.includes(event.key)) {
+            return;
+        }
+        const rowCount = Array.isArray(this.cellData) ? this.cellData.length : 0;
+        const colCount = rowCount > 0 && Array.isArray(this.cellData[0]) ? this.cellData[0].length : 0;
+        if (!rowCount || !colCount) {
+            return;
+        }
+        event.preventDefault();
+        let activeId = this.selection.activeCellId;
+        if (!activeId || !document.getElementById(activeId)) {
+            activeId = this.buildCellId(0, 0);
+            this.selection.selectedIds = new Set([activeId]);
+            this.selection.anchorCellId = activeId;
+        }
+        const currentPosition = this.getCellPositionFromId(activeId);
+        if (!currentPosition) {
+            return;
+        }
+        switch (event.key) {
+            case 'ArrowUp':
+                currentPosition.row = Math.max(0, currentPosition.row - 1);
+                break;
+            case 'ArrowDown':
+                currentPosition.row = Math.min(rowCount - 1, currentPosition.row + 1);
+                break;
+            case 'ArrowLeft':
+                currentPosition.col = Math.max(0, currentPosition.col - 1);
+                break;
+            case 'ArrowRight':
+                currentPosition.col = Math.min(colCount - 1, currentPosition.col + 1);
+                break;
+        }
+        const nextId = this.buildCellId(currentPosition.row, currentPosition.col);
+        const nextCell = document.getElementById(nextId);
+        if (!nextCell) {
+            return;
+        }
+        const isShift = event.shiftKey;
+        const isModifier = event.ctrlKey || event.metaKey;
+        this.selection.activeCellId = nextId;
+        if (isShift) {
+            if (!this.selection.anchorCellId) {
+                this.selection.anchorCellId = activeId;
+            }
+            this.selectRange(this.selection.anchorCellId, nextId);
+        } else if (isModifier) {
+            this.selection.anchorCellId = nextId;
+        } else {
+            this.selection.selectedIds = new Set([nextId]);
+            this.selection.anchorCellId = nextId;
+        }
+        this.updateCurrentCellFromElement(nextCell);
+        this.updateSelectionUI();
+        this.scrollCellIntoView(nextCell);
     }
 
     getCellFromElement(cellElement) {
