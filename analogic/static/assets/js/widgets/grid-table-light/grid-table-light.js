@@ -1352,7 +1352,7 @@ class GridTableLightWidget extends Widget {
         }
 
         const measurementRow = bodyRows.find(row => row.children && row.children.length) || null;
-        const frozenMetrics = new Map();
+        const frozenMetrics = [];
         for (let index = 0; index < freezeCount; index++) {
             const headerCell = headerCells[index] || null;
             const bodyCell = measurementRow && measurementRow.children[index] ? measurementRow.children[index] : null;
@@ -1362,14 +1362,18 @@ class GridTableLightWidget extends Widget {
             const measurementCell = bodyCell || headerCell;
             const rect = measurementCell ? measurementCell.getBoundingClientRect() : null;
             const width = rect && rect.width ? rect.width : measurementCell ? measurementCell.offsetWidth : 0;
-            const offsetSource = bodyCell || headerCell;
-            const left = offsetSource ? offsetSource.offsetLeft : 0;
-            frozenMetrics.set(index, {left, width});
+            frozenMetrics.push({index, width: Math.max(width, 0)});
         }
 
-        if (!frozenMetrics.size) {
+        if (!frozenMetrics.length) {
             return;
         }
+
+        let cumulativeLeft = 0;
+        frozenMetrics.forEach(metric => {
+            metric.left = cumulativeLeft;
+            cumulativeLeft += metric.width;
+        });
 
         const applyFrozenStyles = (cell, metric, isHeader) => {
             if (!cell || !metric) {
@@ -1432,8 +1436,8 @@ class GridTableLightWidget extends Widget {
             cell.style.zIndex = isHeader ? '7' : '6';
         };
 
-        frozenMetrics.forEach((metric, index) => {
-            const headerCell = headerCells[index];
+        frozenMetrics.forEach((metric) => {
+            const headerCell = headerCells[metric.index];
             if (headerCell) {
                 applyFrozenStyles(headerCell, metric, true);
             }
@@ -1446,7 +1450,7 @@ class GridTableLightWidget extends Widget {
                 if (!Number.isFinite(colIndex)) {
                     return;
                 }
-                const metric = frozenMetrics.get(colIndex);
+                const metric = frozenMetrics.find(item => item.index === colIndex);
                 if (metric) {
                     applyFrozenStyles(cell, metric, false);
                 }
