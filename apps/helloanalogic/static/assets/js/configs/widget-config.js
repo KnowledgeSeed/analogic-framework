@@ -6415,6 +6415,29 @@ WidgetConfig = {
                             ]
                         },
                         {
+                            id: 'gridTableLightDemoColumnSelectorRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginBottom: '16',
+                            widgets: [
+                                {
+                                    id: 'gridTableLightDemoColumnSelectorCell',
+                                    type: GridCellWidget,
+                                    alignment: 'center-left',
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'gridTableLightColumnCountSelector',
+                                            type: DropBoxWidget,
+                                            width: 220,
+                                            skin: 'edit',
+                                            title: 'Columns'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
                             id: 'gridTableLightDemoMainTableRow',
                             type: GridRowWidget,
                             width: '100%',

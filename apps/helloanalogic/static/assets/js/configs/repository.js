@@ -37,7 +37,17 @@ Repository = {
                 {label: 'Completed', color: '#0f172a'}
             ];
 
-            const columnCount = 20;
+            let storedColumnCount = v('gridTableLightDemoColumnCount');
+            storedColumnCount = typeof storedColumnCount === 'number' ? storedColumnCount : parseInt(storedColumnCount, 10);
+            if (!Number.isFinite(storedColumnCount)) {
+                storedColumnCount = 20;
+            }
+            storedColumnCount = Math.min(30, Math.max(6, storedColumnCount));
+            if (v('gridTableLightDemoColumnCount') !== storedColumnCount) {
+                Utils.setWidgetValue('gridTableLightDemoColumnCount', storedColumnCount);
+            }
+
+            const columnCount = storedColumnCount;
             const columns = [];
             for (let idx = 0; idx < columnCount; idx++) {
                 if (idx === 0) {
@@ -208,6 +218,43 @@ Repository = {
                 body: recordLabel ? `${recordLabel} assigned to ${newValue}` : `${rowText} assigned to ${newValue}`
             });
             Api.updateContent('gridTableLightDemoInfoText');
+        }
+    },
+    gridTableLightColumnCountSelector: {
+        init: {
+            execute: () => {
+                let selected = v('gridTableLightDemoColumnCount');
+                selected = typeof selected === 'number' ? selected : parseInt(selected, 10);
+                if (!Number.isFinite(selected)) {
+                    selected = 20;
+                }
+                selected = Math.min(30, Math.max(6, selected));
+                if (v('gridTableLightDemoColumnCount') !== selected) {
+                    Utils.setWidgetValue('gridTableLightDemoColumnCount', selected);
+                }
+
+                const items = [];
+                for (let count = 6; count <= 30; count++) {
+                    items.push({name: String(count), on: count === selected});
+                }
+
+                return {
+                    title: 'Columns',
+                    items: items
+                };
+            }
+        },
+        choose: {
+            execute: () => {
+                let selected = v('gridTableLightColumnCountSelector.value');
+                selected = typeof selected === 'number' ? selected : parseInt(selected, 10);
+                if (!Number.isFinite(selected)) {
+                    selected = 20;
+                }
+                selected = Math.min(30, Math.max(6, selected));
+                Utils.setWidgetValue('gridTableLightDemoColumnCount', selected);
+                Api.updateContent('gridTableLightDemoTable');
+            }
         }
     },
     gridTableLightCompactTable: {
