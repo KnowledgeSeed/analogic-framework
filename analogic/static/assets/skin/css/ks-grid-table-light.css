@@ -211,7 +211,11 @@
 }
 
 .ks-grid-table-light_cell--selected {
-    background: rgba(0, 122, 255, 0.12);
+    background: rgba(0, 122, 255, 0.12) !important;
+}
+
+.ks-grid-table-light .ks-grid-table-light_cell.ks-grid-table-light_cell--selected {
+    background: rgba(0, 122, 255, 0.12) !important;
 }
 
 .ks-grid-table-light_cell--active {

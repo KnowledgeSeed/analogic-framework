@@ -1351,38 +1351,30 @@ class GridTableLightWidget extends Widget {
             return;
         }
 
-        const referenceRow = bodyRows.find(row => row.children && row.children.length);
-        const referenceCells = referenceRow ? Array.from(referenceRow.children) : [];
-        const indexes = [];
-        for (let i = 0; i < freezeCount; i++) {
-            indexes.push(i);
-        }
-        const widths = [];
-        const offsets = [];
-        indexes.forEach(index => {
-            const headerCell = headerCells[index];
-            const bodyCell = referenceCells[index];
+        const measurementRow = bodyRows.find(row => row.children && row.children.length) || null;
+        const frozenMetrics = new Map();
+        for (let index = 0; index < freezeCount; index++) {
+            const headerCell = headerCells[index] || null;
+            const bodyCell = measurementRow && measurementRow.children[index] ? measurementRow.children[index] : null;
             if (!headerCell && !bodyCell) {
-                return;
+                continue;
             }
             const measurementCell = bodyCell || headerCell;
-            const widthCell = bodyCell || headerCell;
-            const rect = widthCell ? widthCell.getBoundingClientRect() : null;
-            const width = rect ? rect.width : (widthCell ? widthCell.offsetWidth : 0);
-            const offset = measurementCell ? measurementCell.offsetLeft : 0;
-            widths[index] = width;
-            offsets[index] = offset;
-        });
-        const availableIndexes = indexes.filter(index => typeof offsets[index] === 'number' && !Number.isNaN(offsets[index]));
-        if (!availableIndexes.length) {
+            const rect = measurementCell ? measurementCell.getBoundingClientRect() : null;
+            const width = rect && rect.width ? rect.width : measurementCell ? measurementCell.offsetWidth : 0;
+            const offsetSource = bodyCell || headerCell;
+            const left = offsetSource ? offsetSource.offsetLeft : 0;
+            frozenMetrics.set(index, {left, width});
+        }
+
+        if (!frozenMetrics.size) {
             return;
         }
 
-        const applyFrozenStyles = (cell, index, isHeader) => {
-            if (!cell) {
+        const applyFrozenStyles = (cell, metric, isHeader) => {
+            if (!cell || !metric) {
                 return;
             }
-            const width = widths[index] || cell.getBoundingClientRect().width || cell.offsetWidth;
             cell.classList.add(GRID_TABLE_LIGHT_CLASSES.cellFrozen);
             if (typeof cell.dataset.frozenOriginalPosition === 'undefined') {
                 cell.dataset.frozenOriginalPosition = cell.style.position || '';
@@ -1390,8 +1382,10 @@ class GridTableLightWidget extends Widget {
             if (typeof cell.dataset.frozenOriginalTop === 'undefined') {
                 cell.dataset.frozenOriginalTop = cell.style.top || '';
             }
-            const left = offsets[index] || 0;
-            cell.style.left = `${left}px`;
+            if (typeof cell.dataset.frozenOriginalLeft === 'undefined') {
+                cell.dataset.frozenOriginalLeft = cell.style.left || '';
+            }
+            const width = metric.width || cell.getBoundingClientRect().width || cell.offsetWidth;
             if (width) {
                 if (typeof cell.dataset.frozenOriginalMinWidth === 'undefined') {
                     cell.dataset.frozenOriginalMinWidth = cell.style.minWidth || '';
@@ -1412,6 +1406,8 @@ class GridTableLightWidget extends Widget {
             }
             if (isHeader && this.parameters && this.parameters.freezeHeader) {
                 cell.style.top = '0px';
+            } else if (!isHeader) {
+                cell.style.top = cell.dataset.frozenOriginalTop || '';
             }
             if (typeof cell.dataset.frozenOriginalBackground === 'undefined') {
                 cell.dataset.frozenOriginalBackground = cell.style.backgroundColor || '';
@@ -1431,25 +1427,28 @@ class GridTableLightWidget extends Widget {
                 computedBg = cell.style.backgroundColor || '#fff';
             }
             cell.style.backgroundColor = computedBg;
+            cell.style.left = `${metric.left}px`;
             cell.style.position = 'sticky';
-            if (!isHeader) {
-                cell.style.top = cell.dataset.frozenOriginalTop || '';
-            }
             cell.style.zIndex = isHeader ? '7' : '6';
         };
 
-        availableIndexes.forEach(index => {
+        frozenMetrics.forEach((metric, index) => {
             const headerCell = headerCells[index];
             if (headerCell) {
-                applyFrozenStyles(headerCell, index, true);
+                applyFrozenStyles(headerCell, metric, true);
             }
         });
 
         bodyRows.forEach(row => {
-            const cells = row.children;
-            availableIndexes.forEach(index => {
-                if (index < cells.length) {
-                    applyFrozenStyles(cells[index], index, false);
+            const cells = Array.from(row.children);
+            cells.forEach(cell => {
+                const colIndex = parseInt(cell.getAttribute('data-col'), 10);
+                if (!Number.isFinite(colIndex)) {
+                    return;
+                }
+                const metric = frozenMetrics.get(colIndex);
+                if (metric) {
+                    applyFrozenStyles(cell, metric, false);
                 }
             });
         });
@@ -1461,7 +1460,11 @@ class GridTableLightWidget extends Widget {
         }
         this.dom.root.querySelectorAll(`.${GRID_TABLE_LIGHT_CLASSES.cellFrozen}`).forEach(cell => {
             cell.classList.remove(GRID_TABLE_LIGHT_CLASSES.cellFrozen);
-            cell.style.left = '';
+            if (typeof cell.dataset.frozenOriginalLeft !== 'undefined') {
+                cell.style.left = cell.dataset.frozenOriginalLeft;
+            } else {
+                cell.style.left = '';
+            }
             cell.style.top = '';
             cell.style.backgroundColor = cell.dataset.frozenOriginalBackground || '';
             delete cell.dataset.frozenOriginalBackground;
@@ -1494,6 +1497,7 @@ class GridTableLightWidget extends Widget {
             } else {
                 cell.style.width = '';
             }
+            delete cell.dataset.frozenOriginalLeft;
             delete cell.dataset.frozenOriginalPosition;
             delete cell.dataset.frozenOriginalTop;
             delete cell.dataset.frozenOriginalMinWidth;
