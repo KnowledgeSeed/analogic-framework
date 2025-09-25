@@ -1,6 +1,7 @@
 .ks-grid-table-light {
     position: relative;
     width: 100%;
+    --ks-grid-table-light-frozen-scroll-left: 0px;
 }
 
 .ks-grid-table-light_table {
@@ -227,6 +228,8 @@
     position: sticky;
     z-index: 5;
     background-color: inherit;
+    transform: translateX(var(--ks-grid-table-light-frozen-scroll-left, 0px));
+    will-change: transform;
 }
 
 .ks-grid-table-light_value {

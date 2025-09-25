@@ -1007,6 +1007,7 @@ class GridTableLightWidget extends Widget {
         if (this.dom.head && this.dom.body) {
             this.dom.head.scrollLeft = this.dom.body.scrollLeft;
         }
+        this.updateFrozenScrollOffset();
         this.scheduleStickyUpdate();
     }
 
@@ -1339,6 +1340,7 @@ class GridTableLightWidget extends Widget {
         }
         this.adjustHeaderForScrollbar();
         this.clearFrozenStyles();
+        this.resetFrozenScrollOffset();
         const freezeCount = this.parameters && this.parameters.freezeFirstColumns ? parseInt(this.parameters.freezeFirstColumns, 10) : 0;
         if (!freezeCount) {
             return;
@@ -1366,6 +1368,7 @@ class GridTableLightWidget extends Widget {
         }
 
         if (!frozenMetrics.length) {
+            this.resetFrozenScrollOffset();
             return;
         }
 
@@ -1456,6 +1459,8 @@ class GridTableLightWidget extends Widget {
                 }
             });
         });
+
+        this.updateFrozenScrollOffset();
     }
 
     clearFrozenStyles() {
@@ -1501,6 +1506,7 @@ class GridTableLightWidget extends Widget {
             } else {
                 cell.style.width = '';
             }
+            cell.style.transform = '';
             delete cell.dataset.frozenOriginalLeft;
             delete cell.dataset.frozenOriginalPosition;
             delete cell.dataset.frozenOriginalTop;
@@ -1535,6 +1541,21 @@ class GridTableLightWidget extends Widget {
         this.attachEvents();
         this.scheduleStickyUpdate();
         this.isRendering = false;
+    }
+
+    updateFrozenScrollOffset() {
+        if (!this.dom || !this.dom.root) {
+            return;
+        }
+        const scrollLeft = this.dom.body ? this.dom.body.scrollLeft : 0;
+        this.dom.root.style.setProperty('--ks-grid-table-light-frozen-scroll-left', `${scrollLeft}px`);
+    }
+
+    resetFrozenScrollOffset() {
+        if (!this.dom || !this.dom.root) {
+            return;
+        }
+        this.dom.root.style.removeProperty('--ks-grid-table-light-frozen-scroll-left');
     }
 }
 
