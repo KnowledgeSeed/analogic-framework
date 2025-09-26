@@ -1,4 +1,4 @@
-/* global app, Utils, Api, v */
+/* global app, Utils, Api, v, RestRequest */
 
 'use strict';
 
@@ -218,6 +218,36 @@ Repository = {
                 body: recordLabel ? `${recordLabel} assigned to ${newValue}` : `${rowText} assigned to ${newValue}`
             });
             Api.updateContent('gridTableLightDemoInfoText');
+        }
+    },
+    gridTableLightServerTable: {
+        init() {
+            return new RestRequest(this.request);
+        },
+        request: {
+            url: () => '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))',
+            type: 'POST',
+            server: true,
+            body: () => ({
+                key: 'safariAssetRegister2_mdx'
+            }),
+            parsingControl: {
+                type: 'script',
+                script: (data) => {
+                    const transformed = Utils.transformMdxResponseToGridTableLight(data, {rowTitle: 'Entity'});
+                    if (0 === transformed.columns.length && 0 === transformed.content.length) {
+                        console.error('gridTableLightServerTable: the MDX response could not be transformed into table data.');
+                        return transformed;
+                    }
+
+                    return Object.assign({
+                        freezeHeader: true,
+                        allowCopyToClipBoard: true,
+                        enableExport: true,
+                        exportConfig: {fileName: 'safari-asset-register.xlsx'}
+                    }, transformed);
+                }
+            }
         }
     },
     gridTableLightColumnCountSelector: {
