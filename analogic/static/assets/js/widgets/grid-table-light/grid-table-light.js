@@ -324,6 +324,9 @@ class GridTableLightWidget extends Widget {
         normalized.type = normalized.type || 'text';
         const hasDisplayValue = Object.prototype.hasOwnProperty.call(normalized, 'displayValue');
         const hasRawValue = Object.prototype.hasOwnProperty.call(normalized, 'rawValue');
+        if (!Object.prototype.hasOwnProperty.call(normalized, 'data')) {
+            normalized.data = {};
+        }
         if (!hasRawValue) {
             if (Object.prototype.hasOwnProperty.call(normalized, 'value')) {
                 normalized.rawValue = normalized.value;
