@@ -1181,8 +1181,6 @@ WidgetConfig = {
                             id: 'analogicDemoAddCloneContractRow2',
                             type: GridRowWidget,
                             marginTop: '2%',
-                            marginBottom: '16',
-                            marginBottom: '0%',
                             width: '100%',
                             marginBottom: '24',
                             height: '10%',
@@ -6499,50 +6497,50 @@ WidgetConfig = {
                                 }
                             ]
                         },
-                        {
-                            id: 'gridTableLightDemoServerTableRow',
-                            type: GridRowWidget,
-                            width: '100%',
-                            marginTop: '24',
-                            widgets: [
-                                {
-                                    id: 'gridTableLightDemoServerTableCell',
-                                    type: GridCellWidget,
-                                    alignment: 'top-left',
-                                    width: '100%',
-                                    widgets: [
-                                        {
-                                            id: 'gridTableLightServerTable',
-                                            type: GridTableLightWidget,
-                                            skin: 'gridTableLightDemo'
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            id: 'gridTableLightDemoServerTable2Row',
-                            type: GridRowWidget,
-                            width: '100%',
-                            marginTop: '24',
-                            widgets: [
-                                {
-                                    id: 'gridTableLightDemoServerTable2Cell',
-                                    type: GridCellWidget,
-                                    alignment: 'top-left',
-                                    width: '100%',
-                                    widgets: [
-                                        {
-                                            id: 'gridTableLightServerTable2',
-                                            type: GridTableLightWidget,
-                                            skin: 'gridTableLightDemo',
-                                            pageSize: 20
-                                        }
-                                    ]
-                                }
-                            ]
-
-                        }
+                        // {
+                        //     id: 'gridTableLightDemoServerTableRow',
+                        //     type: GridRowWidget,
+                        //     width: '100%',
+                        //     marginTop: '24',
+                        //     widgets: [
+                        //         {
+                        //             id: 'gridTableLightDemoServerTableCell',
+                        //             type: GridCellWidget,
+                        //             alignment: 'top-left',
+                        //             width: '100%',
+                        //             widgets: [
+                        //                 {
+                        //                     id: 'gridTableLightServerTable',
+                        //                     type: GridTableLightWidget,
+                        //                     skin: 'gridTableLightDemo'
+                        //                 }
+                        //             ]
+                        //         }
+                        //     ]
+                        // },
+                        // {
+                        //     id: 'gridTableLightDemoServerTable2Row',
+                        //     type: GridRowWidget,
+                        //     width: '100%',
+                        //     marginTop: '24',
+                        //     widgets: [
+                        //         {
+                        //             id: 'gridTableLightDemoServerTable2Cell',
+                        //             type: GridCellWidget,
+                        //             alignment: 'top-left',
+                        //             width: '100%',
+                        //             widgets: [
+                        //                 {
+                        //                     id: 'gridTableLightServerTable2',
+                        //                     type: GridTableLightWidget,
+                        //                     skin: 'gridTableLightDemo',
+                        //                     pageSize: 20
+                        //                 }
+                        //             ]
+                        //         }
+                        //     ]
+                        //
+                        // }
                     ]
                 }
             ]

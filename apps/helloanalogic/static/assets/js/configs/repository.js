@@ -224,107 +224,107 @@ Repository = {
             Api.updateContent('gridTableLightDemoInfoText');
         }
     },
-    gridTableLightServerTable: {
-        init() {
-            return new RestRequest(this.request);
-        },
-        request: {
-            url: () => '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))',
-            type: 'POST',
-            server: true,
-            body: () => ({
-                key: 'safariAssetRegister2_mdx'
-            }),
-            parsingControl: {
-                type: 'script',
-                script: (data) => {
-                    const transformed = Utils.transformMdxResponseToGridTableLight(data);
-
-                    if (0 === transformed.columns.length && 0 === transformed.content.length) {
-                        console.error('gridTableLightServerTable: the MDX response could not be transformed into table data.');
-                        return transformed;
-                    }
-
-                    return Object.assign({
-                        freezeHeader: true,
-                        allowCopyToClipBoard: true,
-                        enableExport: true,
-                        exportConfig: {fileName: 'safari-asset-register.xlsx'}
-                    }, transformed);
-                }
-            }
-        }
-    },
-
-    gridTableLightServerTable2: {
-        init(ctx) {
-            return new RestRequest(this.request);
-        },
-        request: {
-            url: (widgets, ctx) => {
-                const baseUrl = '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))';
-                const result = Utils.buildMdxQueryUrl(baseUrl, {
-                    includeCount: true,
-                    columnCount: GRID_TABLE_LIGHT_SERVER_TABLE2_COLUMN_COUNT,
-                    defaultRowCount: GRID_TABLE_LIGHT_SERVER_TABLE2_DEFAULT_ROW_COUNT,
-                    metadataKey: GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY,
-                    returnMetadata: true
-                }, ctx);
-
-                return result && result.url ? result.url : baseUrl;
-            },
-            type: 'POST',
-            server: true,
-            body: () => ({key: 'safariAssetRegister2_mdx'}),
-            parsingControl: {
-                type: 'script',
-                script: (data, ctx) => {
-                    const transformed = Utils.transformMdxResponseToGridTableLight(data);
-                    if (0 === transformed.columns.length && 0 === transformed.content.length) {
-                        console.error('gridTableLightServerTable2: the MDX response could not be transformed into table data.');
-                        return transformed;
-                    }
-
-                    const metadata = ctx && ctx[GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY] ? ctx[GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY] : {};
-                    const exportAll = !!(metadata && metadata.exportAll);
-                    const pageSize = Number.isFinite(metadata && metadata.rowCount) && metadata.rowCount > 0
-                        ? metadata.rowCount
-                        : GRID_TABLE_LIGHT_SERVER_TABLE2_DEFAULT_ROW_COUNT;
-                    const safeSkipRows = Number.isFinite(metadata && metadata.skipRows) && metadata.skipRows >= 0
-                        ? metadata.skipRows
-                        : 0;
-                    const columnCount = Number.isFinite(metadata && metadata.columnCount) && metadata.columnCount > 0
-                        ? metadata.columnCount
-                        : GRID_TABLE_LIGHT_SERVER_TABLE2_COLUMN_COUNT;
-                    const page = Number.isFinite(metadata && metadata.page) && metadata.page > 0
-                        ? metadata.page
-                        : (exportAll ? 1 : (pageSize > 0 ? Math.floor(safeSkipRows / pageSize) + 1 : 1));
-                    const countValue = data ? data['@odata.count'] : undefined;
-                    const parsedCountValue = typeof countValue === 'number' ? countValue : Number.parseInt(countValue, 10);
-                    let totalCount;
-                    if (Number.isFinite(parsedCountValue)) {
-                        totalCount = Math.ceil(parsedCountValue / columnCount);
-                    } else {
-                        const contentRows = Array.isArray(transformed.content) ? transformed.content.length : 0;
-                        totalCount = contentRows + (exportAll ? 0 : safeSkipRows);
-                    }
-                    totalCount = Math.max(0, totalCount);
-
-                    return {
-                        columns: transformed.columns,
-                        content: transformed.content,
-                        pageSize: pageSize,
-                        page: page,
-                        totalCount: totalCount,
-                        freezeHeader: true,
-                        allowCopyToClipBoard: true,
-                        enableExport: true,
-                        exportConfig: {fileName: 'safari-asset-register-paged.xlsx'}
-                    };
-                }
-            }
-        }
-    },
+    // gridTableLightServerTable: {
+    //     init() {
+    //         return new RestRequest(this.request);
+    //     },
+    //     request: {
+    //         url: () => '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))',
+    //         type: 'POST',
+    //         server: true,
+    //         body: () => ({
+    //             key: 'safariAssetRegister2_mdx'
+    //         }),
+    //         parsingControl: {
+    //             type: 'script',
+    //             script: (data) => {
+    //                 const transformed = Utils.transformMdxResponseToGridTableLight(data);
+    //
+    //                 if (0 === transformed.columns.length && 0 === transformed.content.length) {
+    //                     console.error('gridTableLightServerTable: the MDX response could not be transformed into table data.');
+    //                     return transformed;
+    //                 }
+    //
+    //                 return Object.assign({
+    //                     freezeHeader: true,
+    //                     allowCopyToClipBoard: true,
+    //                     enableExport: true,
+    //                     exportConfig: {fileName: 'safari-asset-register.xlsx'}
+    //                 }, transformed);
+    //             }
+    //         }
+    //     }
+    // },
+    //
+    // gridTableLightServerTable2: {
+    //     init(ctx) {
+    //         return new RestRequest(this.request);
+    //     },
+    //     request: {
+    //         url: (widgets, ctx) => {
+    //             const baseUrl = '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))';
+    //             const result = Utils.buildMdxQueryUrl(baseUrl, {
+    //                 includeCount: true,
+    //                 columnCount: GRID_TABLE_LIGHT_SERVER_TABLE2_COLUMN_COUNT,
+    //                 defaultRowCount: GRID_TABLE_LIGHT_SERVER_TABLE2_DEFAULT_ROW_COUNT,
+    //                 metadataKey: GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY,
+    //                 returnMetadata: true
+    //             }, ctx);
+    //
+    //             return result && result.url ? result.url : baseUrl;
+    //         },
+    //         type: 'POST',
+    //         server: true,
+    //         body: () => ({key: 'safariAssetRegister2_mdx'}),
+    //         parsingControl: {
+    //             type: 'script',
+    //             script: (data, ctx) => {
+    //                 const transformed = Utils.transformMdxResponseToGridTableLight(data);
+    //                 if (0 === transformed.columns.length && 0 === transformed.content.length) {
+    //                     console.error('gridTableLightServerTable2: the MDX response could not be transformed into table data.');
+    //                     return transformed;
+    //                 }
+    //
+    //                 const metadata = ctx && ctx[GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY] ? ctx[GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY] : {};
+    //                 const exportAll = !!(metadata && metadata.exportAll);
+    //                 const pageSize = Number.isFinite(metadata && metadata.rowCount) && metadata.rowCount > 0
+    //                     ? metadata.rowCount
+    //                     : GRID_TABLE_LIGHT_SERVER_TABLE2_DEFAULT_ROW_COUNT;
+    //                 const safeSkipRows = Number.isFinite(metadata && metadata.skipRows) && metadata.skipRows >= 0
+    //                     ? metadata.skipRows
+    //                     : 0;
+    //                 const columnCount = Number.isFinite(metadata && metadata.columnCount) && metadata.columnCount > 0
+    //                     ? metadata.columnCount
+    //                     : GRID_TABLE_LIGHT_SERVER_TABLE2_COLUMN_COUNT;
+    //                 const page = Number.isFinite(metadata && metadata.page) && metadata.page > 0
+    //                     ? metadata.page
+    //                     : (exportAll ? 1 : (pageSize > 0 ? Math.floor(safeSkipRows / pageSize) + 1 : 1));
+    //                 const countValue = data ? data['@odata.count'] : undefined;
+    //                 const parsedCountValue = typeof countValue === 'number' ? countValue : Number.parseInt(countValue, 10);
+    //                 let totalCount;
+    //                 if (Number.isFinite(parsedCountValue)) {
+    //                     totalCount = Math.ceil(parsedCountValue / columnCount);
+    //                 } else {
+    //                     const contentRows = Array.isArray(transformed.content) ? transformed.content.length : 0;
+    //                     totalCount = contentRows + (exportAll ? 0 : safeSkipRows);
+    //                 }
+    //                 totalCount = Math.max(0, totalCount);
+    //
+    //                 return {
+    //                     columns: transformed.columns,
+    //                     content: transformed.content,
+    //                     pageSize: pageSize,
+    //                     page: page,
+    //                     totalCount: totalCount,
+    //                     freezeHeader: true,
+    //                     allowCopyToClipBoard: true,
+    //                     enableExport: true,
+    //                     exportConfig: {fileName: 'safari-asset-register-paged.xlsx'}
+    //                 };
+    //             }
+    //         }
+    //     }
+    // },
 
     gridTableLightColumnCountSelector: {
         init: {
