@@ -882,6 +882,7 @@ const Utils = {
 
             console.log('Utils.transformMdxResponseToGridTableLight: detected column count', columnOrder.length);
 
+
             const deriveRowLabelTitle = () => {
                 if (!firstMembers.length) {
                     return 'Row';

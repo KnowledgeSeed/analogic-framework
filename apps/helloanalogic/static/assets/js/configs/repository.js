@@ -235,6 +235,7 @@ Repository = {
                 type: 'script',
                 script: (data) => {
                     const transformed = Utils.transformMdxResponseToGridTableLight(data);
+
                     if (0 === transformed.columns.length && 0 === transformed.content.length) {
                         console.error('gridTableLightServerTable: the MDX response could not be transformed into table data.');
                         return transformed;
@@ -250,6 +251,7 @@ Repository = {
             }
         }
     },
+
     gridTableLightServerTable2: {
         init(ctx) {
             return new RestRequest(this.request);
@@ -336,6 +338,7 @@ Repository = {
             }
         }
     },
+
     gridTableLightColumnCountSelector: {
         init: {
             execute: () => {
