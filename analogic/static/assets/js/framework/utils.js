@@ -882,11 +882,33 @@ const Utils = {
 
             console.log('Utils.transformMdxResponseToGridTableLight: detected column count', columnOrder.length);
 
-            const rowTitle = options.rowTitle || 'Item';
+
+            const deriveRowLabelTitle = () => {
+                if (!firstMembers.length) {
+                    return 'Row';
+                }
+                if (columnIndex > 0) {
+                    const previousMember = firstMembers[columnIndex - 1];
+                    if (previousMember && previousMember.Name) {
+                        return previousMember.Name;
+                    }
+                }
+                for (let idx = firstMembers.length - 2; idx >= 0; idx--) {
+                    if (idx === columnIndex) {
+                        continue;
+                    }
+                    const member = firstMembers[idx];
+                    if (member && member.Name) {
+                        return member.Name;
+                    }
+                }
+                return 'Row';
+            };
+
             const columns = [
                 {
                     key: 'rowLabel',
-                    title: rowTitle,
+                    title: deriveRowLabelTitle(),
                     alignment: 'center-left'
                 }
             ];

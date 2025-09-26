@@ -234,7 +234,8 @@ Repository = {
             parsingControl: {
                 type: 'script',
                 script: (data) => {
-                    const transformed = Utils.transformMdxResponseToGridTableLight(data, {rowTitle: 'Entity'});
+                    const transformed = Utils.transformMdxResponseToGridTableLight(data);
+
                     if (0 === transformed.columns.length && 0 === transformed.content.length) {
                         console.error('gridTableLightServerTable: the MDX response could not be transformed into table data.');
                         return transformed;
@@ -250,6 +251,94 @@ Repository = {
             }
         }
     },
+
+    gridTableLightServerTable2: {
+        init(ctx) {
+            return new RestRequest(this.request);
+        },
+        request: {
+            url: (widgets, ctx) => {
+                const extra = ctx && typeof ctx.getExtraParams === 'function' ? ctx.getExtraParams() : {};
+                const exportAll = !!(extra && extra.exportAll);
+                const parsedPageSize = Number.parseInt(extra && Object.prototype.hasOwnProperty.call(extra, 'pageSize') ? extra.pageSize : 20, 10);
+                const parsedSkip = Number.parseInt(extra && Object.prototype.hasOwnProperty.call(extra, 'skip') ? extra.skip : 0, 10);
+                const parsedTotalCount = Number.parseInt(extra && Object.prototype.hasOwnProperty.call(extra, 'totalCount') ? extra.totalCount : 0, 10);
+                const defaultPageSize = 20;
+                const effectivePageSize = exportAll
+                    ? (Number.isFinite(parsedTotalCount) && parsedTotalCount > 0 ? parsedTotalCount : defaultPageSize)
+                    : (Number.isFinite(parsedPageSize) && parsedPageSize > 0 ? Math.min(defaultPageSize, parsedPageSize) : defaultPageSize);
+                const safeSkip = Number.isFinite(parsedSkip) && parsedSkip >= 0 ? parsedSkip : 0;
+                const queryParts = [
+                    '$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))',
+                    '$count=true'
+                ];
+                queryParts.push(`$top=${effectivePageSize}`);
+                queryParts.push(`$skip=${safeSkip}`);
+                return `/api/v1/ExecuteMDX?${queryParts.join('&')}`;
+            },
+            type: 'POST',
+            server: true,
+            body: () => ({key: 'safariAssetRegister2_mdx'}),
+            parsingControl: {
+                type: 'script',
+                script: (data, ctx) => {
+                    const transformed = Utils.transformMdxResponseToGridTableLight(data);
+                    if (0 === transformed.columns.length && 0 === transformed.content.length) {
+                        console.error('gridTableLightServerTable2: the MDX response could not be transformed into table data.');
+                        return transformed;
+                    }
+
+                    const extra = ctx && typeof ctx.getExtraParams === 'function' ? ctx.getExtraParams() : {};
+                    const parsedPageSize = Number.parseInt(extra && Object.prototype.hasOwnProperty.call(extra, 'pageSize') ? extra.pageSize : 20, 10);
+                    const parsedSkip = Number.parseInt(extra && Object.prototype.hasOwnProperty.call(extra, 'skip') ? extra.skip : 0, 10);
+                    const parsedTotalCount = Number.parseInt(extra && Object.prototype.hasOwnProperty.call(extra, 'totalCount') ? extra.totalCount : 0, 10);
+                    const defaultPageSize = 20;
+                    const exportAll = !!(extra && extra.exportAll);
+                    const effectivePageSize = exportAll
+                        ? (Number.isFinite(parsedTotalCount) && parsedTotalCount > 0 ? parsedTotalCount : defaultPageSize)
+                        : (Number.isFinite(parsedPageSize) && parsedPageSize > 0 ? Math.min(defaultPageSize, parsedPageSize) : defaultPageSize);
+                    const safeSkip = Number.isFinite(parsedSkip) && parsedSkip >= 0 ? parsedSkip : 0;
+
+                    const maxColumns = 18;
+                    const columnSource = Array.isArray(transformed.columns) ? transformed.columns : [];
+                    const limitedColumns = columnSource.slice(0, maxColumns);
+                    const contentSource = Array.isArray(transformed.content) ? transformed.content : [];
+                    const limitedContentSource = exportAll ? contentSource : contentSource.slice(0, defaultPageSize);
+                    const limitedContent = limitedContentSource.map((row) => {
+                        if (!row || !Array.isArray(row.cells)) {
+                            return row;
+                        }
+                        const cloned = Object.assign({}, row);
+                        cloned.cells = row.cells.slice(0, maxColumns);
+                        return cloned;
+                    });
+
+                    const basePageNumber = Number.parseInt(extra && Object.prototype.hasOwnProperty.call(extra, 'page') ? extra.page : 1, 10);
+                    const page = exportAll ? 1 : (Number.isFinite(basePageNumber) && basePageNumber > 0 ? basePageNumber : Math.floor(safeSkip / effectivePageSize) + 1);
+                    const countValue = data ? data['@odata.count'] : undefined;
+                    let totalCount = typeof countValue === 'number' ? countValue : Number.parseInt(countValue, 10);
+                    if (!Number.isFinite(totalCount)) {
+                        const contentLength = Array.isArray(contentSource) ? contentSource.length : 0;
+                        totalCount = contentLength + (exportAll ? 0 : safeSkip);
+                    }
+                    totalCount = Math.max(0, totalCount);
+
+                    return {
+                        columns: limitedColumns,
+                        content: limitedContent,
+                        pageSize: effectivePageSize,
+                        page: page,
+                        totalCount: totalCount,
+                        freezeHeader: true,
+                        allowCopyToClipBoard: true,
+                        enableExport: true,
+                        exportConfig: {fileName: 'safari-asset-register-paged.xlsx'}
+                    };
+                }
+            }
+        }
+    },
+
     gridTableLightColumnCountSelector: {
         init: {
             execute: () => {
