@@ -269,12 +269,12 @@ Repository = {
                     : (Number.isFinite(parsedPageSize) && parsedPageSize > 0 ? Math.min(defaultPageSize, parsedPageSize) : defaultPageSize);
                 const safeSkip = Number.isFinite(parsedSkip) && parsedSkip >= 0 ? parsedSkip : 0;
                 const queryParts = [
-                    '$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))',
-                    '$count=true'
+                    '$expand=Cells($count'
                 ];
                 queryParts.push(`$top=${effectivePageSize}`);
                 queryParts.push(`$skip=${safeSkip}`);
-                return `/api/v1/ExecuteMDX?${queryParts.join('&')}`;
+                queryParts.push('$select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))');
+                return `/api/v1/ExecuteMDX?${queryParts.join(';')}`;
             },
             type: 'POST',
             server: true,

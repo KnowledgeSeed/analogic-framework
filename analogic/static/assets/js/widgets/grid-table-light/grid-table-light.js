@@ -887,11 +887,11 @@ class GridTableLightWidget extends Widget {
             return;
         }
         if (typeof Loader !== 'undefined' && Loader && typeof Loader.start === 'function') {
-            Loader.start(true);
+            Loader.start();
         }
         const stopLoader = () => {
             if (typeof Loader !== 'undefined' && Loader && typeof Loader.stop === 'function') {
-                Loader.stop(true);
+                Loader.stop();
             }
         };
         const totalRows = this.state.totalCount;
