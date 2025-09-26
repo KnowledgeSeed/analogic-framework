@@ -2,6 +2,10 @@
 
 'use strict';
 
+const GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY = '__gridTableLightServerTable2';
+const GRID_TABLE_LIGHT_SERVER_TABLE2_DEFAULT_ROW_COUNT = 20;
+const GRID_TABLE_LIGHT_SERVER_TABLE2_COLUMN_COUNT = 18;
+
 Repository = {
     gridTableLightDemoTable: {
         init(ctx) {
@@ -258,23 +262,16 @@ Repository = {
         },
         request: {
             url: (widgets, ctx) => {
-                const extra = ctx && typeof ctx.getExtraParams === 'function' ? ctx.getExtraParams() : {};
-                const exportAll = !!(extra && extra.exportAll);
-                const parsedPageSize = Number.parseInt(extra && Object.prototype.hasOwnProperty.call(extra, 'pageSize') ? extra.pageSize : 20, 10);
-                const parsedSkip = Number.parseInt(extra && Object.prototype.hasOwnProperty.call(extra, 'skip') ? extra.skip : 0, 10);
-                const parsedTotalCount = Number.parseInt(extra && Object.prototype.hasOwnProperty.call(extra, 'totalCount') ? extra.totalCount : 0, 10);
-                const defaultPageSize = 20;
-                const effectivePageSize = exportAll
-                    ? (Number.isFinite(parsedTotalCount) && parsedTotalCount > 0 ? parsedTotalCount : defaultPageSize)
-                    : (Number.isFinite(parsedPageSize) && parsedPageSize > 0 ? Math.min(defaultPageSize, parsedPageSize) : defaultPageSize);
-                const safeSkip = Number.isFinite(parsedSkip) && parsedSkip >= 0 ? parsedSkip : 0;
-                const queryParts = [
-                    '$expand=Cells($count'
-                ];
-                queryParts.push(`$top=${effectivePageSize}`);
-                queryParts.push(`$skip=${safeSkip}`);
-                queryParts.push('$select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))');
-                return `/api/v1/ExecuteMDX?${queryParts.join(';')}`;
+                const baseUrl = '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))';
+                const result = Utils.buildMdxQueryUrl(baseUrl, {
+                    includeCount: true,
+                    columnCount: GRID_TABLE_LIGHT_SERVER_TABLE2_COLUMN_COUNT,
+                    defaultRowCount: GRID_TABLE_LIGHT_SERVER_TABLE2_DEFAULT_ROW_COUNT,
+                    metadataKey: GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY,
+                    returnMetadata: true
+                }, ctx);
+
+                return result && result.url ? result.url : baseUrl;
             },
             type: 'POST',
             server: true,
@@ -288,45 +285,35 @@ Repository = {
                         return transformed;
                     }
 
-                    const extra = ctx && typeof ctx.getExtraParams === 'function' ? ctx.getExtraParams() : {};
-                    const parsedPageSize = Number.parseInt(extra && Object.prototype.hasOwnProperty.call(extra, 'pageSize') ? extra.pageSize : 20, 10);
-                    const parsedSkip = Number.parseInt(extra && Object.prototype.hasOwnProperty.call(extra, 'skip') ? extra.skip : 0, 10);
-                    const parsedTotalCount = Number.parseInt(extra && Object.prototype.hasOwnProperty.call(extra, 'totalCount') ? extra.totalCount : 0, 10);
-                    const defaultPageSize = 20;
-                    const exportAll = !!(extra && extra.exportAll);
-                    const effectivePageSize = exportAll
-                        ? (Number.isFinite(parsedTotalCount) && parsedTotalCount > 0 ? parsedTotalCount : defaultPageSize)
-                        : (Number.isFinite(parsedPageSize) && parsedPageSize > 0 ? Math.min(defaultPageSize, parsedPageSize) : defaultPageSize);
-                    const safeSkip = Number.isFinite(parsedSkip) && parsedSkip >= 0 ? parsedSkip : 0;
-
-                    const maxColumns = 18;
-                    const columnSource = Array.isArray(transformed.columns) ? transformed.columns : [];
-                    const limitedColumns = columnSource.slice(0, maxColumns);
-                    const contentSource = Array.isArray(transformed.content) ? transformed.content : [];
-                    const limitedContentSource = exportAll ? contentSource : contentSource.slice(0, defaultPageSize);
-                    const limitedContent = limitedContentSource.map((row) => {
-                        if (!row || !Array.isArray(row.cells)) {
-                            return row;
-                        }
-                        const cloned = Object.assign({}, row);
-                        cloned.cells = row.cells.slice(0, maxColumns);
-                        return cloned;
-                    });
-
-                    const basePageNumber = Number.parseInt(extra && Object.prototype.hasOwnProperty.call(extra, 'page') ? extra.page : 1, 10);
-                    const page = exportAll ? 1 : (Number.isFinite(basePageNumber) && basePageNumber > 0 ? basePageNumber : Math.floor(safeSkip / effectivePageSize) + 1);
+                    const metadata = ctx && ctx[GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY] ? ctx[GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY] : {};
+                    const exportAll = !!(metadata && metadata.exportAll);
+                    const pageSize = Number.isFinite(metadata && metadata.rowCount) && metadata.rowCount > 0
+                        ? metadata.rowCount
+                        : GRID_TABLE_LIGHT_SERVER_TABLE2_DEFAULT_ROW_COUNT;
+                    const safeSkipRows = Number.isFinite(metadata && metadata.skipRows) && metadata.skipRows >= 0
+                        ? metadata.skipRows
+                        : 0;
+                    const columnCount = Number.isFinite(metadata && metadata.columnCount) && metadata.columnCount > 0
+                        ? metadata.columnCount
+                        : GRID_TABLE_LIGHT_SERVER_TABLE2_COLUMN_COUNT;
+                    const page = Number.isFinite(metadata && metadata.page) && metadata.page > 0
+                        ? metadata.page
+                        : (exportAll ? 1 : (pageSize > 0 ? Math.floor(safeSkipRows / pageSize) + 1 : 1));
                     const countValue = data ? data['@odata.count'] : undefined;
-                    let totalCount = typeof countValue === 'number' ? countValue : Number.parseInt(countValue, 10);
-                    if (!Number.isFinite(totalCount)) {
-                        const contentLength = Array.isArray(contentSource) ? contentSource.length : 0;
-                        totalCount = contentLength + (exportAll ? 0 : safeSkip);
+                    const parsedCountValue = typeof countValue === 'number' ? countValue : Number.parseInt(countValue, 10);
+                    let totalCount;
+                    if (Number.isFinite(parsedCountValue)) {
+                        totalCount = Math.ceil(parsedCountValue / columnCount);
+                    } else {
+                        const contentRows = Array.isArray(transformed.content) ? transformed.content.length : 0;
+                        totalCount = contentRows + (exportAll ? 0 : safeSkipRows);
                     }
                     totalCount = Math.max(0, totalCount);
 
                     return {
-                        columns: limitedColumns,
-                        content: limitedContent,
-                        pageSize: effectivePageSize,
+                        columns: transformed.columns,
+                        content: transformed.content,
+                        pageSize: pageSize,
                         page: page,
                         totalCount: totalCount,
                         freezeHeader: true,

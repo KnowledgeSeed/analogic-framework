@@ -787,6 +787,195 @@ const Utils = {
 
         return floatingElement.css(pos).prependTo($('body'));
     },
+    buildMdxQueryUrl(baseUrl, options = {}, ctx = null) {
+        if (typeof baseUrl !== 'string' || !baseUrl.length) {
+            console.error('Utils.buildMdxQueryUrl: invalid baseUrl provided.');
+            return baseUrl;
+        }
+
+        const toFiniteInt = (value) => {
+            if (typeof value === 'number' && Number.isFinite(value)) {
+                return Math.floor(value);
+            }
+
+            if ('string' === typeof value) {
+                const trimmed = value.trim();
+                if (!trimmed.length) {
+                    return undefined;
+                }
+                const parsed = Number.parseInt(trimmed, 10);
+                return Number.isNaN(parsed) ? undefined : Math.floor(parsed);
+            }
+
+            return undefined;
+        };
+
+        const toPositiveInt = (value) => {
+            const parsed = toFiniteInt(value);
+            return 'number' === typeof parsed && parsed > 0 ? parsed : undefined;
+        };
+
+        const toNonNegativeInt = (value) => {
+            const parsed = toFiniteInt(value);
+            return 'number' === typeof parsed && parsed >= 0 ? parsed : undefined;
+        };
+
+        const metadataKey = 'string' === typeof options.metadataKey ? options.metadataKey : null;
+        const returnMetadata = options.returnMetadata === true;
+        const onMetadata = 'function' === typeof options.onMetadata ? options.onMetadata : null;
+
+        const extraParams = ctx && typeof ctx.getExtraParams === 'function' ? ctx.getExtraParams() || {} : {};
+        const extraPageSize = Object.prototype.hasOwnProperty.call(extraParams, 'pageSize')
+            ? toPositiveInt(extraParams.pageSize)
+            : undefined;
+        const extraSkip = Object.prototype.hasOwnProperty.call(extraParams, 'skip')
+            ? toNonNegativeInt(extraParams.skip)
+            : undefined;
+        const extraTotalCount = Object.prototype.hasOwnProperty.call(extraParams, 'totalCount')
+            ? toPositiveInt(extraParams.totalCount)
+            : undefined;
+        const extraPage = Object.prototype.hasOwnProperty.call(extraParams, 'page')
+            ? toPositiveInt(extraParams.page)
+            : undefined;
+        const exportAll = options.exportAll === true || !!extraParams.exportAll;
+
+        const defaultRowCount = Object.prototype.hasOwnProperty.call(options, 'defaultRowCount')
+            ? toPositiveInt(options.defaultRowCount)
+            : undefined;
+        const explicitRowCount = Object.prototype.hasOwnProperty.call(options, 'rowCount')
+            ? toNonNegativeInt(options.rowCount)
+            : undefined;
+
+        let rowCount = explicitRowCount;
+        if ('number' !== typeof rowCount) {
+            if (exportAll) {
+                rowCount = extraTotalCount;
+            } else if ('number' === typeof extraPageSize) {
+                rowCount = 'number' === typeof defaultRowCount
+                    ? Math.min(defaultRowCount, extraPageSize)
+                    : extraPageSize;
+            }
+        }
+        if ('number' !== typeof rowCount) {
+            rowCount = defaultRowCount;
+        }
+        if ('number' !== typeof rowCount) {
+            rowCount = 0;
+        }
+
+        const normalizedColumnCount = toPositiveInt(options.columnCount) || 1;
+
+        const explicitSkipRows = Object.prototype.hasOwnProperty.call(options, 'skipRows')
+            ? toNonNegativeInt(options.skipRows)
+            : undefined;
+        let skipRows = exportAll ? 0 : ('number' === typeof explicitSkipRows ? explicitSkipRows : (extraSkip || 0));
+
+        const explicitTopCells = Object.prototype.hasOwnProperty.call(options, 'top')
+            ? toNonNegativeInt(options.top)
+            : undefined;
+        const topCells = 'number' === typeof explicitTopCells
+            ? explicitTopCells
+            : rowCount * normalizedColumnCount;
+
+        const explicitSkipCells = Object.prototype.hasOwnProperty.call(options, 'skip')
+            ? toNonNegativeInt(options.skip)
+            : undefined;
+        let skipCells = 'number' === typeof explicitSkipCells
+            ? explicitSkipCells
+            : skipRows * normalizedColumnCount;
+        if (exportAll) {
+            skipCells = 0;
+            skipRows = 0;
+        }
+
+        const includeCount = options.includeCount !== false;
+
+        const page = exportAll
+            ? 1
+            : ('number' === typeof extraPage
+                ? extraPage
+                : (rowCount > 0 ? Math.floor(skipRows / rowCount) + 1 : 1));
+
+        const metadata = {
+            rowCount: rowCount,
+            skipRows: skipRows,
+            columnCount: normalizedColumnCount,
+            top: topCells,
+            skip: skipCells,
+            includeCount: includeCount,
+            exportAll: exportAll,
+            pageSize: rowCount,
+            page: page,
+            totalCountHint: extraTotalCount,
+            extraParams: extraParams,
+            topExplicit: 'number' === typeof explicitTopCells,
+            skipExplicit: 'number' === typeof explicitSkipCells
+        };
+
+        const assignMetadata = () => {
+            if (metadataKey && ctx && 'object' === typeof ctx) {
+                ctx[metadataKey] = metadata;
+            }
+            if (onMetadata) {
+                try {
+                    onMetadata(metadata, ctx);
+                } catch (error) {
+                    console.error('Utils.buildMdxQueryUrl: error while executing onMetadata callback.', error);
+                }
+            }
+        };
+
+        const parameters = [];
+        if (includeCount) {
+            parameters.push('$count=true');
+        }
+        if (metadata.topExplicit || topCells > 0) {
+            parameters.push(`$top=${Math.max(0, topCells)}`);
+        }
+        if (metadata.skipExplicit || skipCells > 0 || (metadata.topExplicit && skipCells === 0)) {
+            parameters.push(`$skip=${Math.max(0, skipCells)}`);
+        }
+
+        if (!parameters.length) {
+            assignMetadata();
+            return returnMetadata ? {url: baseUrl, metadata: metadata} : baseUrl;
+        }
+
+        const insertParametersIntoSegment = (segment) => {
+            const marker = `${segment}(`;
+            const markerIndex = baseUrl.indexOf(marker);
+            if (-1 === markerIndex) {
+                return null;
+            }
+
+            const prefix = baseUrl.slice(0, markerIndex + marker.length);
+            const remainder = baseUrl.slice(markerIndex + marker.length);
+            const separator = remainder.length && !remainder.startsWith(';') && !remainder.startsWith(')')
+                ? ';'
+                : '';
+            return `${prefix}${parameters.join(';')}${separator}${remainder}`;
+        };
+
+        const insideCells = insertParametersIntoSegment('Cells');
+        if (insideCells) {
+            assignMetadata();
+            return returnMetadata ? {url: insideCells, metadata: metadata} : insideCells;
+        }
+
+        const insideTuples = insertParametersIntoSegment('Tuples');
+        if (insideTuples) {
+            assignMetadata();
+            return returnMetadata ? {url: insideTuples, metadata: metadata} : insideTuples;
+        }
+
+        const hasQuery = baseUrl.includes('?');
+        const separator = hasQuery
+            ? (baseUrl.endsWith('?') || baseUrl.endsWith('&') ? '' : '&')
+            : '?';
+        const finalUrl = `${baseUrl}${separator}${parameters.join('&')}`;
+        assignMetadata();
+        return returnMetadata ? {url: finalUrl, metadata: metadata} : finalUrl;
+    },
     transformMdxResponseToGridTableLight(response, options = {}) {
         const emptyResult = {columns: [], content: []};
 
