@@ -1099,185 +1099,6 @@ widget (except for the header row).
 
 
 
-GridTableLightWidget
---------------------
-
-**Description:** A lightweight alternative to the GridTableWidget that
-renders table cells directly from repository responses without creating
-per-cell widgets. It preserves clipboard selection, event-map
-integration, paging controls, sticky headers or frozen columns, and
-built-in Excel export while significantly reducing configuration
-complexity.
-
-**Config Parameters:**
-
--  ``id``\ **:** unique widget identifier.
--  ``type``\ **:** always ``GridTableLightWidget``.
--  ``skin``\ **:** optional skin class applied to the table container.
-
-All behaviour (columns, paging, freezing, export, clipboard) is
-described by the repository payload so dashboard authors do not need to
-maintain complex widget-config structures.
-
-**Data connection to TM1:**\ YES
-
-**Data repository specifics:**
-
--  ``init`` responses should return ``{ columns, content, totalCount,
-   page, pageSize }`` plus optional flags such as
-   ``allowCopyToClipBoard``, ``freezeHeader``, ``freezeFirstColumns``,
-   ``enableExport`` or ``exportIcon`` (defaults to
-   ``icon-tray-arrow-down``).
--  ``content`` is a two-dimensional matrix of lightweight cells with
-   ``displayValue``/``rawValue``/``type`` metadata and optional action
-   descriptors (``{click: {action: 'launch'}}`` for buttons,
-   ``{change: {action: 'change'}}`` for selects, while inline text edits
-   emit the ``text_change`` event by default).
--  ``type`` defaults to ``text`` and ``alignment`` falls back to the
-   column's alignment or ``center-left`` so repositories can skip those
-   fields when using the common layout. For text cells the
-   ``displayValue`` automatically mirrors ``rawValue`` when no explicit
-   value is provided.
--  Styling hooks accept strings (``"min-width:160px"``), plain objects
-   (``{ minWidth: '160px' }``) or arrays across the hierarchy: cell
-   wrappers (``cellClasses``/``cellStyle``), content elements
-   (``textClasses``/``textStyle``, ``buttonClasses``/``buttonStyle``,
-   ``selectClasses``/``selectStyle``, ``inputClasses``/``inputStyle``),
-   rows (``rowClasses``/``rowStyle``) and container level parameters such
-   as ``rootClasses``/``rootStyle``, ``tableClasses``, ``innerClasses``,
-   ``headClasses``, ``bodyClasses`` or the pager/export wrappers.
--  Repository level event handlers such as ``launch`` (buttons),
-   ``change`` (combo boxes) and ``text_change`` (text edits) receive the
-   familiar grid-table context, so user interactions can trigger
-   additional widget updates.
--  Paging requests can read ``ctx.getExtraParams()`` (``page``,
-   ``pageSize``) to append ``$top``/``$skip`` to MDX queries.
--  Excel export reuses the same repository endpoint with ``pageSize: 0``
-   to fetch all rows client side.
-
-.. code-block:: javascript
-
-   // Widget-config snippet
-   {
-       id: 'sampleLightTable',
-       type: GridTableLightWidget,
-       skin: 'gridTableLightDemo'
-   }
-
-   // Repository snippet
-   sampleLightTable: {
-       init(ctx) {
-           const extra = ctx && ctx.getExtraParams ? ctx.getExtraParams() : {};
-           const DEFAULT_PAGE_SIZE = 100;
-           const pageSize = extra.pageSize === 0 ? 0 : (extra.pageSize || DEFAULT_PAGE_SIZE);
-           const page = extra.page ? Math.max(1, parseInt(extra.page, 10) || 1) : 1;
-           const totalCount = 20000;
-           const start = pageSize ? (page - 1) * pageSize : 0;
-           const end = pageSize ? Math.min(totalCount, start + pageSize) : totalCount;
-
-           const columns = [
-               { key: 'record', title: 'Record', width: 220 },
-               { key: 'status', title: 'Status', width: 160, alignment: 'center-center' },
-               { key: 'owner', title: 'Owner', width: 180 },
-               { key: 'action', title: 'Action', width: 120, alignment: 'center-center' }
-           ];
-           while (columns.length < 20) {
-               const idx = columns.length - 3;
-               columns.push({ key: `metric${idx}`, title: `Metric ${idx}`, alignment: 'center-right' });
-           }
-
-           const owners = [
-               { value: 'anna', label: 'Anna Howard' },
-               { value: 'david', label: 'David Yu' },
-               { value: 'marta', label: 'Marta López' },
-               { value: 'sven', label: 'Sven Karlsson' }
-           ];
-
-           const content = [];
-           for (let i = start; i < end; i++) {
-               const owner = owners[i % owners.length];
-               const metricRow = {
-                   rowClasses: i % 2 === 0 ? 'table-row table-row--even' : 'table-row table-row--odd',
-                   rowStyle: i % 2 === 0 ? 'border-bottom:1px solid rgba(148,163,184,0.24)' : { backgroundColor: 'rgba(15,23,42,0.04)' },
-                   cells: [
-                       {
-                           rawValue: `Record ${i + 1}`,
-                           editable: true,
-                           tooltip: 'Rename the record',
-                           cellClasses: 'table-cell table-cell--primary',
-                           cellStyle: { backgroundColor: 'rgba(37,99,235,0.08)' },
-                           textClasses: 'table-text table-text--strong',
-                           inputClasses: 'table-input',
-                           inputStyle: 'border-color:#38bdf8'
-                       },
-                       {
-                           rawValue: 'Planned',
-                           alignment: 'center-center',
-                           textClasses: 'table-text table-text--status'
-                       },
-                       {
-                           type: 'combo',
-                           rawValue: owner.value,
-                           options: owners,
-                           actions: { change: { action: 'change' } },
-                           selectClasses: 'table-select',
-                           selectStyle: { minWidth: '160px' }
-                       },
-                       {
-                           type: 'button',
-                           displayValue: 'Details',
-                           actions: { click: { action: 'launch' } },
-                           alignment: 'center-center',
-                           buttonClasses: 'table-button'
-                       }
-                   ]
-               };
-               for (let col = 4; col < 20; col++) {
-                   const value = ((i + 1) * (col - 3)).toString();
-                   metricRow.cells.push({ type: 'text', rawValue: value, alignment: 'center-right' });
-               }
-               content.push(metricRow);
-           }
-
-           return {
-               columns,
-               content,
-               totalCount,
-               page,
-               pageSize,
-               allowCopyToClipBoard: true,
-               freezeHeader: true,
-               freezeFirstColumns: 2,
-               enableExport: true,
-               exportIcon: 'icon-tray-arrow-down',
-               rootClasses: 'table-root',
-               rootStyle: 'box-shadow:0 12px 30px -20px rgba(15,23,42,0.5)',
-               bodyStyle: { maxHeight: '480px' },
-               pagerButtonClasses: 'table-pager-button'
-           };
-       },
-       launch(ctx) {
-           const row = Utils.getGridTableCurrentRow(ctx.getWidgetId());
-           const record = row && row[0] ? row[0].displayValue : '';
-           Utils.setWidgetValue('sampleLightTableMessage', {
-               title: 'Details requested',
-               body: `${record} – row ${ctx.getRow() + 1}`
-           });
-           Api.updateContent('sampleLightTableMessage');
-       },
-       change(ctx) {
-           const row = Utils.getGridTableCurrentRow(ctx.getWidgetId());
-           const record = row && row[0] ? row[0].displayValue : '';
-           const owner = ctx.getCell() ? ctx.getCell().displayValue : '';
-           Utils.setWidgetValue('sampleLightTableMessage', {
-               title: 'Owner updated',
-               body: `${record} assigned to ${owner}`
-           });
-           Api.updateContent('sampleLightTableMessage');
-       }
-   }
-
-
 GridWidget
 ----------
 
@@ -3609,4 +3430,271 @@ contributions.
 .. |image65| image:: https://lh3.googleusercontent.com/DPgcnvbo5Qut_aHamNCFazuYMp42w3ZATT1adkAGEg9W07haPd1p9cAxzDIJkQKUiHsKvJBMHy27Nyc0CEHCq8kwfvLE6Liuo3PCLbyTf2HdajbGu9GtzotF1IE7DMU3UEChXox-
 .. |image66| image:: /sliderWidget.png
 .. |image67| image:: /slider_example.png
+
+GridTableLightWidget
+--------------------
+
+Overview
+~~~~~~~~
+
+``GridTableLightWidget`` is the lightweight successor of
+``GridTableWidget``. Instead of creating individual child widgets per
+cell it renders the entire table directly from the data returned by the
+repository. This dramatically simplifies widget configuration while the
+runtime still supports:
+
+- sticky/frozen headers and columns,
+- copy-to-clipboard support that respects the user's current selection,
+- paging with context aware requests,
+- Excel export (full dataset or current page),
+- the familiar event map for ``launch``, ``change`` and ``text_change``
+  events.
+
+The widget is ideal for large datasets, grids generated from TM1 MDX
+responses, or any scenario where the classic grid widgets caused
+configuration bloat. The `helloanalogic` demo application showcases three
+flavours of the widget (interactive, compact card-style and plain text)
+so the examples below reference those assets for consistency.
+
+Typical use cases
+~~~~~~~~~~~~~~~~~
+
+- **Planning dashboards:** render multi-thousand row TM1 cubes without
+  pre-creating child widgets and still offer inline editing for text
+  fields or combo boxes.
+- **Operations consoles:** blend button, select and custom HTML cells to
+  trigger repository logic (launching detail pages, reassigning owners,
+  etc.).
+- **Read-only reports:** emit a simple ``columns`` + matrix ``content``
+  payload to display an existing table with frozen columns.
+
+Widget configuration
+~~~~~~~~~~~~~~~~~~~~
+
+Only a handful of parameters are defined in ``widget-config.js`` because
+almost every behaviour is described by the repository payload:
+
+- ``id`` (**required**): unique identifier used by events and the
+  repository.
+- ``type`` (**required**): always ``GridTableLightWidget``.
+- ``skin`` (optional): CSS skin applied to the widget container.
+- ``pageSize`` (optional): default page size override when the
+  repository honours paging metadata.
+
+Example from ``apps/helloanalogic/static/assets/js/configs/widget-config.js``:
+
+.. code-block:: javascript
+
+   {
+       id: 'gridTableLightDemoTable',
+       type: GridTableLightWidget,
+       skin: 'gridTableLightDemo'
+   }
+
+   {
+       id: 'gridTableLightCompactTable',
+       type: GridTableLightWidget,
+       skin: 'gridTableLightCompact'
+   }
+
+   {
+       id: 'gridTableLightTextTable',
+       type: GridTableLightWidget,
+       skin: 'gridTableLightText'
+   }
+
+   // Commented examples demonstrating server driven paging
+   // {
+   //     id: 'gridTableLightServerTable',
+   //     type: GridTableLightWidget,
+   //     skin: 'gridTableLightDemo'
+   // },
+   // {
+   //     id: 'gridTableLightServerTable2',
+   //     type: GridTableLightWidget,
+   //     skin: 'gridTableLightDemo',
+   //     pageSize: 20
+   // }
+
+Repository contract
+~~~~~~~~~~~~~~~~~~~
+
+The repository (``apps/helloanalogic/static/assets/js/configs/repository.js``)
+drives almost everything:
+
+- ``init`` must return an object with ``columns`` and ``content``. The
+  ``columns`` array describes column keys, titles and optional sizing or
+  alignment. ``content`` is a list of rows; each row can either be a
+  shorthand array of raw values (text only) or an object with ``cells``
+  describing individual cell types.
+- Optional metadata extends behaviour without updating the widget
+  config: ``totalCount``, ``page``, ``pageSize``,
+  ``allowCopyToClipBoard``, ``freezeHeader``, ``freezeFirstColumns``,
+  ``enableExport`` or ``exportConfig``.
+- Styling hooks accept strings, plain objects or arrays at multiple
+  levels (root container, table, rows, cells, rendered element).
+- Event handlers ``launch``, ``change`` and ``text_change`` receive the
+  familiar grid context (``ctx.getRow()``, ``ctx.getColumn()``,
+  ``ctx.getCell()``) so repository logic can coordinate updates across
+  widgets.
+
+The ``gridTableLightDemoTable`` repository entry demonstrates interactive
+cells, paging, export and styling:
+
+.. code-block:: javascript
+
+   gridTableLightDemoTable: {
+       init(ctx) {
+           const extra = ctx && ctx.getExtraParams ? ctx.getExtraParams() : {};
+           const DEFAULT_PAGE_SIZE = 100;
+           const requestedPageSize = typeof extra.pageSize === 'number' ? extra.pageSize : DEFAULT_PAGE_SIZE;
+           const pageSize = requestedPageSize === 0 ? 0 : (requestedPageSize || DEFAULT_PAGE_SIZE);
+           const totalCount = 20000;
+           const page = extra.page ? Math.max(1, parseInt(extra.page, 10) || 1) : 1;
+           const startIndex = pageSize ? Math.max(0, (page - 1) * pageSize) : 0;
+           const endIndex = pageSize ? Math.min(totalCount, startIndex + pageSize) : totalCount;
+
+           const columns = [];
+           for (let idx = 0; idx < Math.min(30, Math.max(6, v('gridTableLightDemoColumnCount') || 20)); idx++) {
+               // ...push column descriptors (record, status, owner, etc.)
+           }
+
+           const content = [];
+           for (let index = startIndex; index < endIndex; index++) {
+               // ...compose cells with text/combo/button/custom types and styling
+           }
+
+           return {
+               columns,
+               content,
+               totalCount,
+               page,
+               pageSize,
+               allowCopyToClipBoard: true,
+               freezeHeader: true,
+               freezeFirstColumns: 2,
+               enableExport: true,
+               exportConfig: {fileName: 'grid-table-light-demo.xlsx'},
+               rootClasses: ['grid-table-light-demo-root'],
+               tableClasses: 'grid-table-light-demo-table',
+               bodyStyle: 'max-height:520px'
+           };
+       },
+       launch(ctx) { /* update info banner */ },
+       change(ctx) { /* owner select change */ },
+       text_change(ctx) { /* inline rename */ }
+   }
+
+Other repository entries show specialised payloads:
+
+- ``gridTableLightCompactTable`` builds rows entirely in memory, returns
+  a ``pageSize`` that matches the total row count, and logs events.
+- ``gridTableLightTextTable`` sends a ``columns`` array and a plain
+  two-dimensional ``content`` array for read-only scenarios.
+- ``gridTableLightDemoInfoText`` reacts to widget events to display the
+  last user action.
+
+Server backed MDX examples
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Two commented repository entries document how to connect a
+``GridTableLightWidget`` directly to TM1 MDX queries. Although disabled
+in the demo, the snippets are production ready:
+
+.. code-block:: javascript
+
+   gridTableLightServerTable: {
+       init() {
+           return new RestRequest(this.request);
+       },
+       request: {
+           url: () => '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))',
+           type: 'POST',
+           server: true,
+           body: () => ({key: 'safariAssetRegister2_mdx'}),
+           parsingControl: {
+               type: 'script',
+               script: (data) => {
+                   const transformed = Utils.transformMdxResponseToGridTableLight(data);
+                   return Object.assign({
+                       freezeHeader: true,
+                       allowCopyToClipBoard: true,
+                       enableExport: true,
+                       exportConfig: {fileName: 'safari-asset-register.xlsx'}
+                   }, transformed);
+               }
+           }
+       }
+   }
+
+   gridTableLightServerTable2: {
+       init() {
+           return new RestRequest(this.request);
+       },
+       request: {
+           url: (widgets, ctx) => {
+               const baseUrl = '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))';
+               const result = Utils.buildMdxQueryUrl(baseUrl, {
+                   includeCount: true,
+                   columnCount: GRID_TABLE_LIGHT_SERVER_TABLE2_COLUMN_COUNT,
+                   defaultRowCount: GRID_TABLE_LIGHT_SERVER_TABLE2_DEFAULT_ROW_COUNT,
+                   metadataKey: GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY,
+                   returnMetadata: true
+               }, ctx);
+               return result && result.url ? result.url : baseUrl;
+           },
+           type: 'POST',
+           server: true,
+           body: () => ({key: 'safariAssetRegister2_mdx'}),
+           parsingControl: {
+               type: 'script',
+               script: (data, widgetId, repoObj, ctx) => {
+                   const transformed = Utils.transformMdxResponseToGridTableLight(data);
+                   const metadata = ctx && ctx[GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY] ? ctx[GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY] : {};
+                   const pageSize = Number.isFinite(metadata.rowCount) && metadata.rowCount > 0 ? metadata.rowCount : GRID_TABLE_LIGHT_SERVER_TABLE2_DEFAULT_ROW_COUNT;
+                   const page = Number.isFinite(metadata.page) && metadata.page > 0
+                       ? metadata.page
+                       : (metadata.exportAll ? 1 : (pageSize > 0 ? Math.floor((metadata.skipRows || 0) / pageSize) + 1 : 1));
+                   const countValue = data ? data['Cells@odata.count'] : undefined;
+                   const parsedCountValue = typeof countValue === 'number' ? countValue : Number.parseInt(countValue, 10);
+                   const totalCount = Number.isFinite(parsedCountValue)
+                       ? Math.ceil(parsedCountValue / (metadata.columnCount || GRID_TABLE_LIGHT_SERVER_TABLE2_COLUMN_COUNT))
+                       : Math.max(0, (transformed.content || []).length + (metadata.exportAll ? 0 : (metadata.skipRows || 0)));
+                   return Object.assign({
+                       pageSize,
+                       page,
+                       totalCount,
+                       freezeHeader: true,
+                       allowCopyToClipBoard: true,
+                       enableExport: true,
+                       exportConfig: {fileName: 'safari-asset-register-paged.xlsx'}
+                   }, transformed);
+               }
+           }
+       }
+   }
+
+The first example performs a one-shot MDX execution and enriches the
+transformed payload with clipboard and export toggles. The second
+example shows how to honour paging metadata stored on the context object
+(``ctx``) so Excel export can temporarily request ``pageSize: 0`` and the
+client can fetch all rows.
+
+Implementation checklist
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Add the widget to ``widget-config.js`` with the desired skin.
+2. Implement a repository ``init`` method that returns ``columns`` and
+   ``content`` (plus optional metadata).
+3. Wire event handlers to update auxiliary widgets (see
+   ``gridTableLightDemoInfoText`` in the demo).
+4. When loading data from TM1 or another REST source, wrap the request
+   with ``RestRequest`` and convert the payload using
+   ``Utils.transformMdxResponseToGridTableLight``.
+5. Optionally store paging/column settings in ``ctx`` or widget values to
+   persist user selections across refreshes.
+
+By following the above steps you can replace verbose ``GridTableWidget``
+setups with a single lightweight configuration while retaining full
+control over styling, behaviour and TM1 integrations.
 
