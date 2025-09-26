@@ -848,7 +848,8 @@ class GridTableLightWidget extends Widget {
             return;
         }
         const totalPages = Math.max(1, Math.ceil(this.state.totalCount / (this.state.pageSize || 1)));
-        let newPage = this.state.page || 1;
+        const previousPage = this.state.page || 1;
+        let newPage = previousPage;
         switch (action) {
             case 'first':
                 newPage = 1;
@@ -863,7 +864,7 @@ class GridTableLightWidget extends Widget {
                 newPage = totalPages;
                 break;
         }
-        if (newPage === this.state.page) {
+        if (newPage === previousPage) {
             return;
         }
         this.state.page = newPage;
@@ -873,13 +874,65 @@ class GridTableLightWidget extends Widget {
             skip: this.state.pageSize * (newPage - 1),
             take: this.state.pageSize
         };
-        QB.loadData(this.options.id, this.name, false, 'init', extraParams).then((payload) => {
-            this.updateContent(payload);
-            if (this.options.events && typeof this.options.events.afterPageChange === 'function') {
-                const totalPagesAfter = Math.max(1, Math.ceil(this.state.totalCount / (this.state.pageSize || 1)));
-                this.options.events.afterPageChange({page: newPage, pageSize: this.state.pageSize, totalPages: totalPagesAfter});
+        let loaderActive = typeof Loader !== 'undefined' && Loader && typeof Loader.start === 'function' && typeof Loader.stop === 'function';
+        if (loaderActive) {
+            Loader.start();
+        }
+        const finalizeLoader = () => {
+            if (loaderActive) {
+                Loader.stop();
+                loaderActive = false;
             }
-        });
+        };
+        const handleSuccess = (payload) => {
+            try {
+                this.updateContent(payload);
+                if (this.options.events && typeof this.options.events.afterPageChange === 'function') {
+                    const totalPagesAfter = Math.max(1, Math.ceil(this.state.totalCount / (this.state.pageSize || 1)));
+                    this.options.events.afterPageChange({page: newPage, pageSize: this.state.pageSize, totalPages: totalPagesAfter});
+                }
+            } finally {
+                finalizeLoader();
+            }
+        };
+        const handleError = (error) => {
+            console.error('GridTableLightWidget.handlePagerAction: unable to load page data.', error);
+            this.state.page = previousPage;
+            finalizeLoader();
+        };
+        let request;
+        try {
+            request = QB.loadData(this.options.id, this.name, false, 'init', extraParams);
+        } catch (error) {
+            handleError(error);
+            return;
+        }
+        if (!request) {
+            finalizeLoader();
+            return;
+        }
+        const isJQueryPromise = typeof request.done === 'function' && typeof request.fail === 'function';
+        if (isJQueryPromise) {
+            request.done(handleSuccess).fail(handleError);
+            if (typeof request.always === 'function') {
+                request.always(finalizeLoader);
+            } else {
+                request.then(finalizeLoader, finalizeLoader);
+            }
+            return;
+        }
+        if (typeof request.then === 'function') {
+            const chained = request.then(handleSuccess, handleError);
+            if (chained && typeof chained.finally === 'function') {
+                chained.finally(finalizeLoader);
+            } else if (typeof request.finally === 'function') {
+                request.finally(finalizeLoader);
+            } else {
+                request.then(finalizeLoader, finalizeLoader);
+            }
+            return;
+        }
+        finalizeLoader();
     }
 
     handleExport() {
