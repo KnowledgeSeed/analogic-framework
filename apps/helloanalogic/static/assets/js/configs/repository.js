@@ -278,7 +278,7 @@ Repository = {
     //         body: () => ({key: 'safariAssetRegister2_mdx'}),
     //         parsingControl: {
     //             type: 'script',
-    //             script: (data, ctx) => {
+    //             script: (data, widgetId, repoObj, ctx) => {
     //                 const transformed = Utils.transformMdxResponseToGridTableLight(data);
     //                 if (0 === transformed.columns.length && 0 === transformed.content.length) {
     //                     console.error('gridTableLightServerTable2: the MDX response could not be transformed into table data.');
@@ -299,7 +299,7 @@ Repository = {
     //                 const page = Number.isFinite(metadata && metadata.page) && metadata.page > 0
     //                     ? metadata.page
     //                     : (exportAll ? 1 : (pageSize > 0 ? Math.floor(safeSkipRows / pageSize) + 1 : 1));
-    //                 const countValue = data ? data['@odata.count'] : undefined;
+    //                 const countValue = data ? data['Cells@odata.count'] : undefined;
     //                 const parsedCountValue = typeof countValue === 'number' ? countValue : Number.parseInt(countValue, 10);
     //                 let totalCount;
     //                 if (Number.isFinite(parsedCountValue)) {
