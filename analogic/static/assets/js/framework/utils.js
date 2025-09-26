@@ -787,6 +787,190 @@ const Utils = {
 
         return floatingElement.css(pos).prependTo($('body'));
     },
+    transformMdxResponseToGridTableLight(response, options = {}) {
+        const emptyResult = {columns: [], content: []};
+
+        try {
+            if (!response || !Array.isArray(response.Cells)) {
+                console.error('Utils.transformMdxResponseToGridTableLight: invalid MDX response format.');
+                return emptyResult;
+            }
+
+            const cells = response.Cells;
+            if (!cells.length) {
+                console.error('Utils.transformMdxResponseToGridTableLight: MDX response does not contain any cells.');
+                return emptyResult;
+            }
+
+            let columnIndex = null;
+            for (let idx = 1; idx < cells.length; idx++) {
+                const previousMembers = Array.isArray(cells[idx - 1].Members) ? cells[idx - 1].Members : [];
+                const currentMembers = Array.isArray(cells[idx].Members) ? cells[idx].Members : [];
+                const length = Math.max(previousMembers.length, currentMembers.length);
+                const differences = [];
+
+                for (let memberIndex = 0; memberIndex < length; memberIndex++) {
+                    const previousName = previousMembers[memberIndex] ? previousMembers[memberIndex].Name : undefined;
+                    const currentName = currentMembers[memberIndex] ? currentMembers[memberIndex].Name : undefined;
+                    if (previousName !== currentName) {
+                        differences.push(memberIndex);
+                    }
+                }
+
+                if (1 === differences.length) {
+                    columnIndex = differences[0];
+                    break;
+                }
+            }
+
+            const firstMembers = Array.isArray(cells[0].Members) ? cells[0].Members : [];
+            if (null === columnIndex) {
+                if (firstMembers.length) {
+                    columnIndex = Math.min(firstMembers.length - 1, Math.max(firstMembers.length - 2, 0));
+                    console.warn('Utils.transformMdxResponseToGridTableLight: falling back to inferred column index', columnIndex);
+                } else {
+                    console.error('Utils.transformMdxResponseToGridTableLight: unable to determine column index.');
+                    return emptyResult;
+                }
+            }
+
+            const getRowKey = members => members
+                .map((member, idx) => idx === columnIndex ? '__COLUMN__' : (member && member.Name) || '')
+                .join('|');
+
+            const rowOrder = [];
+            const rowDataByKey = {};
+            const columnOrder = [];
+
+            for (let cellIndex = 0; cellIndex < cells.length; cellIndex++) {
+                const cell = cells[cellIndex] || {};
+                const members = Array.isArray(cell.Members) ? cell.Members : [];
+                const rowKey = getRowKey(members);
+
+                if (!rowDataByKey[rowKey]) {
+                    rowOrder.push(rowKey);
+                    const labelParts = members
+                        .filter((member, idx) => idx !== columnIndex && idx < members.length - 1 && member && member.Name)
+                        .map(member => member.Name);
+                    const label = labelParts.length ? labelParts[labelParts.length - 1] : `Row ${rowOrder.length}`;
+                    rowDataByKey[rowKey] = {
+                        label: label,
+                        description: labelParts.join(' / '),
+                        values: {},
+                        cellMeta: {},
+                        rowOrdinal: null
+                    };
+                }
+
+                const columnMember = members[columnIndex];
+                const columnName = columnMember && columnMember.Name ? columnMember.Name : `Column ${columnOrder.length + 1}`;
+                if (!columnOrder.includes(columnName)) {
+                    columnOrder.push(columnName);
+                }
+
+                const formattedValue = Object.prototype.hasOwnProperty.call(cell, 'FormattedValue') ? cell.FormattedValue : '';
+                rowDataByKey[rowKey].values[columnName] = formattedValue;
+
+                if (Object.prototype.hasOwnProperty.call(cell, 'Ordinal')) {
+                    const ordinal = cell.Ordinal;
+                    if (null === rowDataByKey[rowKey].rowOrdinal) {
+                        rowDataByKey[rowKey].rowOrdinal = ordinal;
+                    }
+                    rowDataByKey[rowKey].cellMeta[columnName] = {ordinal: ordinal};
+                }
+            }
+
+            console.log('Utils.transformMdxResponseToGridTableLight: detected column count', columnOrder.length);
+
+            const deriveRowLabelTitle = () => {
+                if (!firstMembers.length) {
+                    return 'Row';
+                }
+                if (columnIndex > 0) {
+                    const previousMember = firstMembers[columnIndex - 1];
+                    if (previousMember && previousMember.Name) {
+                        return previousMember.Name;
+                    }
+                }
+                for (let idx = firstMembers.length - 2; idx >= 0; idx--) {
+                    if (idx === columnIndex) {
+                        continue;
+                    }
+                    const member = firstMembers[idx];
+                    if (member && member.Name) {
+                        return member.Name;
+                    }
+                }
+                return 'Row';
+            };
+
+            const columns = [
+                {
+                    key: 'rowLabel',
+                    title: deriveRowLabelTitle(),
+                    alignment: 'center-left'
+                }
+            ];
+
+            for (let columnIdx = 0; columnIdx < columnOrder.length; columnIdx++) {
+                const name = columnOrder[columnIdx] || `Column ${columnIdx + 1}`;
+                columns.push({
+                    key: `col${columnIdx + 1}`,
+                    title: name,
+                    alignment: 'center-right'
+                });
+            }
+
+            const content = rowOrder.map((rowKey, index) => {
+                const rowData = rowDataByKey[rowKey];
+                const cellsForRow = [];
+
+                const rowLabelCell = {
+                    type: 'text',
+                    rawValue: rowData.label,
+                    displayValue: rowData.label,
+                    tooltip: rowData.description || rowData.label,
+                    alignment: 'center-left'
+                };
+                if (rowData.rowOrdinal !== null && typeof rowData.rowOrdinal !== 'undefined') {
+                    rowLabelCell.data = {ordinal: rowData.rowOrdinal};
+                }
+                cellsForRow.push(rowLabelCell);
+
+                for (let columnIdx = 0; columnIdx < columnOrder.length; columnIdx++) {
+                    const name = columnOrder[columnIdx];
+                    const value = Object.prototype.hasOwnProperty.call(rowData.values, name) ? rowData.values[name] : '';
+                    const meta = rowData.cellMeta && Object.prototype.hasOwnProperty.call(rowData.cellMeta, name)
+                        ? rowData.cellMeta[name]
+                        : null;
+                    const cellDefinition = {
+                        type: 'text',
+                        rawValue: value,
+                        displayValue: value,
+                        alignment: 'center-right'
+                    };
+                    if (meta && typeof meta === 'object') {
+                        const keys = Object.keys(meta);
+                        if (keys.length) {
+                            cellDefinition.data = {};
+                            for (let keyIndex = 0; keyIndex < keys.length; keyIndex++) {
+                                const metaKey = keys[keyIndex];
+                                cellDefinition.data[metaKey] = meta[metaKey];
+                            }
+                        }
+                    }
+                    cellsForRow.push(cellDefinition);
+                }
+
+                return {index: index, cells: cellsForRow};
+            });
+
+            return {columns: columns, content: content};
+        } catch (error) {
+            console.error('Utils.transformMdxResponseToGridTableLight: unexpected error while transforming MDX response.', error);
+            return emptyResult;
+        }
+    },
     extCall(fnName, ...args) {
         return ExtensionFunctions.call(fnName, ...args);
     }

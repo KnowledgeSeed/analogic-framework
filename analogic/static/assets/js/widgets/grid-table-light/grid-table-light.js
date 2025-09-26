@@ -1,4 +1,4 @@
-/* global Widget, Widgets, QB, Utils, GridTableExport, $, v */
+/* global Widget, Widgets, QB, Utils, GridTableExport, $, v, Loader */
 
 'use strict';
 
@@ -324,6 +324,9 @@ class GridTableLightWidget extends Widget {
         normalized.type = normalized.type || 'text';
         const hasDisplayValue = Object.prototype.hasOwnProperty.call(normalized, 'displayValue');
         const hasRawValue = Object.prototype.hasOwnProperty.call(normalized, 'rawValue');
+        if (!Object.prototype.hasOwnProperty.call(normalized, 'data')) {
+            normalized.data = {};
+        }
         if (!hasRawValue) {
             if (Object.prototype.hasOwnProperty.call(normalized, 'value')) {
                 normalized.rawValue = normalized.value;
@@ -883,13 +886,25 @@ class GridTableLightWidget extends Widget {
         if (typeof GridTableExport === 'undefined' || !GridTableExport) {
             return;
         }
+        if (typeof Loader !== 'undefined' && Loader && typeof Loader.start === 'function') {
+            Loader.start(true);
+        }
+        const stopLoader = () => {
+            if (typeof Loader !== 'undefined' && Loader && typeof Loader.stop === 'function') {
+                Loader.stop(true);
+            }
+        };
         const totalRows = this.state.totalCount;
         const hasAllData = !this.state.pageSize || totalRows === this.cellData.length;
         if (hasAllData) {
-            GridTableExport.triggerExcelExport(this.options.id, this.parameters && this.parameters.exportConfig ? this.parameters.exportConfig : {});
+            try {
+                GridTableExport.triggerExcelExport(this.options.id, this.parameters && this.parameters.exportConfig ? this.parameters.exportConfig : {});
+            } finally {
+                stopLoader();
+            }
             return;
         }
-        const extraParams = {page: 1, pageSize: 0, exportAll: true};
+        const extraParams = {page: 1, pageSize: 0, exportAll: true, totalCount: this.state.totalCount};
         const previousState = {
             cellData: this.cellData,
             columns: this.state.columns,
@@ -899,15 +914,7 @@ class GridTableLightWidget extends Widget {
             parameters: this.parameters,
             exportHeaderTitles: Array.isArray(this.exportHeaderTitles) ? this.exportHeaderTitles.slice() : (Array.isArray(this.options.exportHeaderTitles) ? this.options.exportHeaderTitles.slice() : [])
         };
-        QB.loadData(this.options.id, this.name, false, 'init', extraParams).then((payload) => {
-            const processed = this.processData(payload);
-            this.cellData = processed.content;
-            this.state.columns = processed.columns;
-            this.parameters = processed.parameters;
-            this.exportHeaderTitles = this.computeExportHeaderTitles(processed.columns);
-            this.options.exportHeaderTitles = Array.isArray(this.exportHeaderTitles) ? this.exportHeaderTitles.slice() : [];
-            Widgets[this.options.id].cellData = this.cellData;
-            GridTableExport.triggerExcelExport(this.options.id, this.parameters && this.parameters.exportConfig ? this.parameters.exportConfig : {});
+        const restoreState = () => {
             this.cellData = previousState.cellData;
             this.state.columns = previousState.columns;
             this.state.page = previousState.page;
@@ -916,8 +923,68 @@ class GridTableLightWidget extends Widget {
             this.parameters = previousState.parameters;
             this.exportHeaderTitles = Array.isArray(previousState.exportHeaderTitles) ? previousState.exportHeaderTitles.slice() : [];
             this.options.exportHeaderTitles = Array.isArray(previousState.exportHeaderTitles) ? previousState.exportHeaderTitles.slice() : [];
-            Widgets[this.options.id].cellData = this.cellData;
-        });
+            if (Widgets && Widgets[this.options.id]) {
+                Widgets[this.options.id].cellData = this.cellData;
+            }
+        };
+        const executeExport = (payload) => {
+            const processed = this.processData(payload);
+            try {
+                this.cellData = processed.content;
+                this.state.columns = processed.columns;
+                this.parameters = processed.parameters;
+                this.exportHeaderTitles = this.computeExportHeaderTitles(processed.columns);
+                this.options.exportHeaderTitles = Array.isArray(this.exportHeaderTitles) ? this.exportHeaderTitles.slice() : [];
+                if (Widgets && Widgets[this.options.id]) {
+                    Widgets[this.options.id].cellData = this.cellData;
+                }
+                GridTableExport.triggerExcelExport(this.options.id, this.parameters && this.parameters.exportConfig ? this.parameters.exportConfig : {});
+            } catch (error) {
+                console.error('GridTableLightWidget.handleExport: export failed.', error);
+            } finally {
+                restoreState();
+            }
+        };
+        const handleFailure = (error) => {
+            console.error('GridTableLightWidget.handleExport: unable to prepare export data.', error);
+            restoreState();
+        };
+        const request = QB.loadData(this.options.id, this.name, false, 'init', extraParams);
+        const handleWithPromise = (promise) => {
+            if (!promise) {
+                stopLoader();
+                return;
+            }
+            if (typeof promise.always === 'function') {
+                promise.done(executeExport).fail(handleFailure).always(stopLoader);
+                return;
+            }
+            if (typeof promise.then === 'function') {
+                let chained = promise.then((payload) => {
+                    executeExport(payload);
+                }, (error) => {
+                    handleFailure(error);
+                });
+                const finalizer = (target) => {
+                    if (target && typeof target.finally === 'function') {
+                        target.finally(stopLoader);
+                    } else if (target && typeof target.then === 'function') {
+                        target.then(stopLoader, stopLoader);
+                    } else {
+                        stopLoader();
+                    }
+                };
+                finalizer(chained);
+                return;
+            }
+            stopLoader();
+        };
+        try {
+            handleWithPromise(request);
+        } catch (error) {
+            handleFailure(error);
+            stopLoader();
+        }
     }
 
     handleMouseDown(event) {

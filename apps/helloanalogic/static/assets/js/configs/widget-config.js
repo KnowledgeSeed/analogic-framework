@@ -6498,6 +6498,49 @@ WidgetConfig = {
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            id: 'gridTableLightDemoServerTableRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginTop: '24',
+                            widgets: [
+                                {
+                                    id: 'gridTableLightDemoServerTableCell',
+                                    type: GridCellWidget,
+                                    alignment: 'top-left',
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'gridTableLightServerTable',
+                                            type: GridTableLightWidget,
+                                            skin: 'gridTableLightDemo'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'gridTableLightDemoServerTable2Row',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginTop: '24',
+                            widgets: [
+                                {
+                                    id: 'gridTableLightDemoServerTable2Cell',
+                                    type: GridCellWidget,
+                                    alignment: 'top-left',
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'gridTableLightServerTable2',
+                                            type: GridTableLightWidget,
+                                            skin: 'gridTableLightDemo',
+                                            pageSize: 20
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 }
