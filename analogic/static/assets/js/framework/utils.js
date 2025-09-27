@@ -542,9 +542,37 @@ const Utils = {
         return numberPart.replace(thousands, separator) + (decimalPart ? "." + decimalPart : "");
     },
     saveGridTableToggles(widgetId, col) {
-        let cellData = v(widgetId + '.cellData'), i, result = [], len = cellData.length;
+        let cellData = v(widgetId + '.cellData'),
+            widgetInstance = Widgets[widgetId],
+            i,
+            result = [];
 
-        for (i = 0; i < len; ++i) {
+        if (!cellData || !Array.isArray(cellData)) {
+            Utils.setWidgetValue('systemValue' + widgetId + 'Toggles', result);
+            return;
+        }
+
+        if (widgetInstance && widgetInstance.isAnalogicTableWidget) {
+            for (i = 0; i < cellData.length; ++i) {
+                const row = cellData[i] || [];
+                const cell = row[col];
+                if (!cell) {
+                    result[i] = undefined;
+                    continue;
+                }
+                if (typeof cell.toggleValue !== 'undefined') {
+                    result[i] = cell.toggleValue;
+                } else if (typeof cell.value !== 'undefined') {
+                    result[i] = cell.value;
+                } else {
+                    result[i] = cell.displayValue;
+                }
+            }
+            Utils.setWidgetValue('systemValue' + widgetId + 'Toggles', result);
+            return;
+        }
+
+        for (i = 0; i < cellData.length; ++i) {
             result[i] = v(widgetId + '_' + i + '_' + col).switch ? v(widgetId + '_' + i + '_' + col).switch.value : cellData[i][col].value;
         }
 

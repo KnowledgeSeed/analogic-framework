@@ -372,7 +372,19 @@ WidgetConfig = {
                                     alignment: 'top-right',
                                     width: '23%',
                                     skin: '',
-                                    widgets: []
+                                    widgets: [
+                                        {
+                                            id: 'analogicDemoMainRow3Cell7Button',
+                                            type: ButtonWidget,
+                                            label: 'Tabulator Demo',
+                                            action: '',
+                                            width: '145',
+                                            icon: 'icon-grid',
+                                            fontColor: 'white',
+                                            skin: 'analogicDemomain_blue',
+                                            height: '145'
+                                        }
+                                    ]
                                 }
                             ]
                         },
@@ -6367,6 +6379,112 @@ WidgetConfig = {
                                     skin: 'table_header_2',
                                     iconColor: '#8FAB33',
                                     iconFontSize: 16
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+
+    analogicTableDemo:
+        {
+            id: 'analogicTableDemo',
+            type: PageWidget,
+            widgets: [
+                {
+                    id: 'analogicTableDemoGrid',
+                    type: GridWidget,
+                    marginLeft: '40',
+                    marginRight: '40',
+                    marginTop: '20',
+                    widgets: [
+                        {
+                            id: 'analogicTableDemoHeaderRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginBottom: '20',
+                            widgets: [
+                                {
+                                    id: 'analogicTableDemoHeaderBackCell',
+                                    type: GridCellWidget,
+                                    width: '18%',
+                                    alignment: 'center-left',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoHeaderBack',
+                                            type: ButtonWidget,
+                                            label: 'Back to Dashboard',
+                                            icon: 'icon-arrow-left',
+                                            width: '220',
+                                            skin: 'material_analogicDemo'
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'analogicTableDemoHeaderTitleCell',
+                                    type: GridCellWidget,
+                                    width: '62%',
+                                    alignment: 'center-left',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoHeaderTitle',
+                                            type: TextWidget,
+                                            title: 'Analogic Tabulator Showcase',
+                                            body: 'Explore selection, grouping, inline edits and custom renderers.',
+                                            skin: 'review_gd_header',
+                                            titleFontSize: 26,
+                                            bodyFontColor: '#6B6C6E'
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'analogicTableDemoHeaderInfoCell',
+                                    type: GridCellWidget,
+                                    width: '20%',
+                                    alignment: 'center-right',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoHeaderInfo',
+                                            type: TextWidget,
+                                            title: 'Tabulator v6 Demo',
+                                            body: 'Live inside AnalogicTableWidget',
+                                            skin: 'menu',
+                                            titleFontSize: 16,
+                                            bodyFontColor: '#4F5B66'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'analogicTableDemoContentRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            widgets: [
+                                {
+                                    id: 'analogicTableDemoContentCell',
+                                    type: GridCellWidget,
+                                    width: '100%',
+                                    alignment: 'top-left',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoTable',
+                                            type: AnalogicTableWidget,
+                                            title: 'Project Portfolio Overview',
+                                            minWidth: 960,
+                                            hideIfNoData: false,
+                                            tabulatorOptions: {
+                                                height: '520px',
+                                                layout: 'fitDataStretch',
+                                                movableColumns: true,
+                                                resizableColumnFit: true,
+                                                selectable: true,
+                                                selectableRangeMode: 'drag',
+                                                tooltipGenerationMode: 'hover'
+                                            }
+                                        }
+                                    ]
                                 }
                             ]
                         }

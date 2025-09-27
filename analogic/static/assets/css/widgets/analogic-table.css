@@ -1,0 +1,64 @@
+.ks-analogic-table {
+    width: 100%;
+    display: block;
+}
+
+.ks-analogic-table .ks-analogic-table-inner {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.ks-analogic-table h3 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.ks-analogic-table .tabulator {
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #111827;
+}
+
+.ks-analogic-table .tabulator .tabulator-header {
+    border-bottom: 1px solid #d1d5db;
+    background-color: transparent;
+}
+
+.ks-analogic-table .tabulator .tabulator-header .tabulator-col {
+    background-color: #f3f4f6;
+    color: #111827;
+    border-right: 1px solid #e5e7eb;
+    font-weight: 600;
+}
+
+.ks-analogic-table .tabulator .tabulator-header .tabulator-col:last-child {
+    border-right: none;
+}
+
+.ks-analogic-table .tabulator .tabulator-tableholder {
+    overflow-x: auto;
+}
+
+.ks-analogic-table .tabulator .tabulator-tableholder .tabulator-table {
+    background-color: #ffffff;
+}
+
+.ks-analogic-table .tabulator .tabulator-row {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.ks-analogic-table .tabulator .tabulator-row:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+.ks-analogic-table .tabulator .tabulator-row .tabulator-cell {
+    border-right: 1px solid #e5e7eb;
+}
+
+.ks-analogic-table .tabulator .tabulator-row .tabulator-cell:last-child {
+    border-right: none;
+}
