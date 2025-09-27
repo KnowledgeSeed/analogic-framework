@@ -1,8 +1,543 @@
-/* global app, Utils*/
+/* global app, Utils, Api, v, RestRequest */
 
 'use strict';
 
+const GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY = '__gridTableLightServerTable2';
+const GRID_TABLE_LIGHT_SERVER_TABLE2_DEFAULT_ROW_COUNT = 20;
+const GRID_TABLE_LIGHT_SERVER_TABLE2_COLUMN_COUNT = 18;
+
 Repository = {
+    gridTableLightDemoTable: {
+        init(ctx) {
+            const extra = ctx && ctx.getExtraParams ? ctx.getExtraParams() : {};
+            const DEFAULT_PAGE_SIZE = 100;
+            const requestedPageSize = typeof extra.pageSize === 'number' ? extra.pageSize : DEFAULT_PAGE_SIZE;
+            const pageSize = requestedPageSize === 0 ? 0 : (requestedPageSize || DEFAULT_PAGE_SIZE);
+            const totalCount = 20000;
+            const page = extra.page ? Math.max(1, parseInt(extra.page, 10) || 1) : 1;
+            const startIndex = pageSize ? Math.max(0, (page - 1) * pageSize) : 0;
+            const endIndex = pageSize ? Math.min(totalCount, startIndex + pageSize) : totalCount;
+
+            if (!v('gridTableLightDemoLastAction')) {
+                Utils.setWidgetValue('gridTableLightDemoLastAction', {
+                    title: 'GridTableLight demo',
+                    body: 'Use the Details buttons or Owner dropdowns to trigger repository events.'
+                });
+            }
+
+            const statuses = ['Planned', 'In Progress', 'At Risk', 'Completed', 'Closed'];
+            const owners = [
+                {value: 'anna', label: 'Anna Howard'},
+                {value: 'david', label: 'David Yu'},
+                {value: 'marta', label: 'Marta López'},
+                {value: 'sven', label: 'Sven Karlsson'},
+                {value: 'leila', label: 'Leila Wong'}
+            ];
+            const healthStates = [
+                {label: 'On track', color: '#047857'},
+                {label: 'Review', color: '#b45309'},
+                {label: 'Blocked', color: '#b91c1c'},
+                {label: 'At risk', color: '#b45309'},
+                {label: 'Completed', color: '#0f172a'}
+            ];
+
+            let storedColumnCount = v('gridTableLightDemoColumnCount');
+            storedColumnCount = typeof storedColumnCount === 'number' ? storedColumnCount : parseInt(storedColumnCount, 10);
+            if (!Number.isFinite(storedColumnCount)) {
+                storedColumnCount = 20;
+            }
+            storedColumnCount = Math.min(30, Math.max(6, storedColumnCount));
+            if (v('gridTableLightDemoColumnCount') !== storedColumnCount) {
+                Utils.setWidgetValue('gridTableLightDemoColumnCount', storedColumnCount);
+            }
+
+            const columnCount = storedColumnCount;
+            const columns = [];
+            for (let idx = 0; idx < columnCount; idx++) {
+                if (idx === 0) {
+                    columns.push({key: 'record', title: 'Record', width: 220});
+                } else if (idx === 1) {
+                    columns.push({key: 'status', title: 'Status', width: 160, alignment: 'center-center'});
+                } else if (idx === 2) {
+                    columns.push({key: 'owner', title: 'Owner', width: 180});
+                } else if (idx === 3) {
+                    columns.push({key: 'action', title: 'Action', width: 120, alignment: 'center-center'});
+                } else if (idx === 4) {
+                    columns.push({key: 'health', title: 'Health', width: 140, alignment: 'center-center'});
+                } else {
+                    columns.push({key: `metric${idx - 4}`, title: `Metric ${idx - 4}`, alignment: 'center-right'});
+                }
+            }
+
+            const content = [];
+            for (let index = startIndex; index < endIndex; index++) {
+                const status = statuses[index % statuses.length];
+                const owner = owners[index % owners.length];
+                const health = healthStates[index % healthStates.length];
+                const baseValue = index + 1;
+                const row = {
+                    rowClasses: `grid-table-light-demo-row ${index % 2 === 0 ? 'grid-table-light-demo-row--even' : 'grid-table-light-demo-row--odd'}`,
+                    rowStyle: index % 2 === 0 ? 'border-bottom:1px solid rgba(148,163,184,0.24)' : {backgroundColor: 'rgba(15,23,42,0.04)'},
+                    cells: [
+                        {
+                            type: 'text',
+                            rawValue: `Record ${baseValue}`,
+                            editable: true,
+                            tooltip: 'Rename the record',
+                            cellClasses: 'grid-table-light-demo-cell grid-table-light-demo-cell--primary',
+                            cellStyle: index % 3 === 0 ? {backgroundColor: 'rgba(37,99,235,0.08)'} : 'background-color:rgba(15,23,42,0.04)',
+                            textClasses: 'grid-table-light-demo-text grid-table-light-demo-text--strong',
+                            textStyle: {letterSpacing: '0.01em'},
+                            inputClasses: 'grid-table-light-demo-input',
+                            inputStyle: 'border-color:#38bdf8'
+                        },
+                        {
+                            type: 'text',
+                            rawValue: status,
+                            alignment: 'center-center',
+                            cellClasses: `status-${status.toLowerCase().replace(/\s+/g, '-')}`,
+                            textClasses: 'grid-table-light-demo-text grid-table-light-demo-text--status'
+                        },
+                        {
+                            type: 'combo',
+                            rawValue: owner.value,
+                            options: owners,
+                            selectClasses: 'grid-table-light-demo-select',
+                            selectStyle: {minWidth: '160px'},
+                            cellStyle: 'justify-content:flex-start'
+                        },
+                        {
+                            type: 'button',
+                            displayValue: 'Details',
+                            alignment: 'center-center',
+                            buttonClasses: 'grid-table-light-demo-button',
+                            buttonStyle: {borderRadius: '9999px', padding: '0 12px'},
+                            cellStyle: 'text-align:center'
+                        },
+                        {
+                            type: 'custom',
+                            rawValue: health.label,
+                            alignment: 'center-center',
+                            cellClasses: 'grid-table-light-demo-badge-cell',
+                            html: `<span class="grid-table-light-demo-badge" style="color:${health.color}"><span class="dot"></span>${health.label}</span>`
+                        }
+                    ]
+                };
+
+                for (let colIndex = 5; colIndex < columnCount; colIndex++) {
+                    const metricIndex = colIndex - 4;
+                    const value = (baseValue * metricIndex).toString();
+                    row.cells.push({
+                        type: 'text',
+                        rawValue: value,
+                        alignment: 'center-right',
+                        cellClasses: colIndex % 2 === 0 ? 'grid-table-light-demo-metric' : '',
+                        textStyle: colIndex % 3 === 0 ? {color: '#0369a1'} : ''
+                    });
+                }
+
+                content.push(row);
+            }
+
+            return {
+                columns: columns,
+                content: content,
+                totalCount: totalCount,
+                page: page,
+                pageSize: pageSize,
+                allowCopyToClipBoard: true,
+                freezeHeader: true,
+                freezeFirstColumns: 2,
+                enableExport: true,
+                exportConfig: {fileName: 'grid-table-light-demo.xlsx'},
+                rootClasses: ['grid-table-light-demo-root'],
+                rootStyle: 'box-shadow:0 20px 25px -15px rgba(15,23,42,0.3)',
+                tableClasses: 'grid-table-light-demo-table',
+                tableStyle: {backgroundColor: '#fff'},
+                innerClasses: ['grid-table-light-demo-inner'],
+                innerStyle: 'gap:0',
+                headClasses: 'grid-table-light-demo-head',
+                headStyle: {backgroundColor: 'rgba(15,23,42,0.05)'},
+                bodyClasses: 'grid-table-light-demo-body',
+                bodyStyle: 'max-height:520px',
+                actionsClasses: 'grid-table-light-demo-actions',
+                actionsStyle: {top: '4px'},
+                pagerClasses: 'grid-table-light-demo-pager',
+                pagerStyle: 'justify-content:flex-end',
+                pagerInnerClasses: 'grid-table-light-demo-pager-inner',
+                pagerInnerStyle: {gap: '6px'},
+                pagerButtonClasses: 'grid-table-light-demo-pager-button',
+                pagerButtonStyle: 'min-width:32px',
+                pagerInfoClasses: 'grid-table-light-demo-pager-info',
+                pagerInfoStyle: {fontWeight: '600'}
+            };
+        },
+        launch(ctx) {
+            const rowIndex = ctx.getRow();
+            const row = Utils.getGridTableCurrentRow(ctx.getWidgetId());
+            const recordCell = row && row[0] ? row[0] : null;
+            const recordLabel = recordCell ? (recordCell.displayValue || recordCell.title || recordCell.rawValue || '') : '';
+            const rowNumber = typeof rowIndex === 'number' ? rowIndex + 1 : false;
+            const rowLabel = rowNumber ? `row ${rowNumber}` : 'selected row';
+            Utils.setWidgetValue('gridTableLightDemoLastAction', {
+                title: 'Details requested',
+                body: recordLabel ? `${recordLabel} – ${rowLabel}` : `Details requested for ${rowLabel}`
+            });
+            Api.updateContent('gridTableLightDemoInfoText');
+        },
+        text_change(ctx) {
+            const columnIndex = ctx.getColumn();
+            const rowIndex = ctx.getRow();
+            const cell = ctx.getCell();
+            const newValue = cell ? (cell.displayValue || cell.rawValue || '') : '';
+            const rowNumber = typeof rowIndex === 'number' ? rowIndex + 1 : false;
+            const rowText = rowNumber ? `Row ${rowNumber}` : 'Row';
+
+            if (columnIndex === 0) {
+                console.log('GridTableLight demo: record renamed', {row: rowNumber, value: newValue});
+                Utils.setWidgetValue('gridTableLightDemoLastAction', {
+                    title: 'Record renamed',
+                    body: newValue ? `${rowText} renamed to ${newValue}` : `${rowText} renamed`
+                });
+                Api.updateContent('gridTableLightDemoInfoText');
+                return;
+            }
+        },
+        change(ctx) {
+            const columnIndex = ctx.getColumn();
+            if (columnIndex !== 2) {
+                return;
+            }
+            const rowIndex = ctx.getRow();
+            const row = Utils.getGridTableCurrentRow(ctx.getWidgetId()) || [];
+            const recordCell = row[0] || {};
+            const recordLabel = recordCell.displayValue || recordCell.title || recordCell.rawValue || '';
+            const cell = ctx.getCell();
+            const newValue = cell ? (cell.displayValue || cell.rawValue || '') : '';
+            const rowNumber = typeof rowIndex === 'number' ? rowIndex + 1 : false;
+            const rowText = rowNumber ? `Row ${rowNumber}` : 'Row';
+
+            Utils.setWidgetValue('gridTableLightDemoLastAction', {
+                title: 'Owner updated',
+                body: recordLabel ? `${recordLabel} assigned to ${newValue}` : `${rowText} assigned to ${newValue}`
+            });
+            Api.updateContent('gridTableLightDemoInfoText');
+        }
+    },
+    // gridTableLightServerTable: {
+    //     init() {
+    //         return new RestRequest(this.request);
+    //     },
+    //     request: {
+    //         url: () => '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))',
+    //         type: 'POST',
+    //         server: true,
+    //         body: () => ({
+    //             key: 'safariAssetRegister2_mdx'
+    //         }),
+    //         parsingControl: {
+    //             type: 'script',
+    //             script: (data) => {
+    //                 const transformed = Utils.transformMdxResponseToGridTableLight(data);
+    //
+    //                 if (0 === transformed.columns.length && 0 === transformed.content.length) {
+    //                     console.error('gridTableLightServerTable: the MDX response could not be transformed into table data.');
+    //                     return transformed;
+    //                 }
+    //
+    //                 return Object.assign({
+    //                     freezeHeader: true,
+    //                     allowCopyToClipBoard: true,
+    //                     enableExport: true,
+    //                     exportConfig: {fileName: 'safari-asset-register.xlsx'}
+    //                 }, transformed);
+    //             }
+    //         }
+    //     }
+    // },
+    //
+    // gridTableLightServerTable2: {
+    //     init(ctx) {
+    //         return new RestRequest(this.request);
+    //     },
+    //     request: {
+    //         url: (widgets, ctx) => {
+    //             const baseUrl = '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))';
+    //             const result = Utils.buildMdxQueryUrl(baseUrl, {
+    //                 includeCount: true,
+    //                 columnCount: GRID_TABLE_LIGHT_SERVER_TABLE2_COLUMN_COUNT,
+    //                 defaultRowCount: GRID_TABLE_LIGHT_SERVER_TABLE2_DEFAULT_ROW_COUNT,
+    //                 metadataKey: GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY,
+    //                 returnMetadata: true
+    //             }, ctx);
+    //
+    //             return result && result.url ? result.url : baseUrl;
+    //         },
+    //         type: 'POST',
+    //         server: true,
+    //         body: () => ({key: 'safariAssetRegister2_mdx'}),
+    //         parsingControl: {
+    //             type: 'script',
+    //             script: (data, widgetId, repoObj, ctx) => {
+    //                 const transformed = Utils.transformMdxResponseToGridTableLight(data);
+    //                 if (0 === transformed.columns.length && 0 === transformed.content.length) {
+    //                     console.error('gridTableLightServerTable2: the MDX response could not be transformed into table data.');
+    //                     return transformed;
+    //                 }
+    //
+    //                 const metadata = ctx && ctx[GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY] ? ctx[GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY] : {};
+    //                 const exportAll = !!(metadata && metadata.exportAll);
+    //                 const pageSize = Number.isFinite(metadata && metadata.rowCount) && metadata.rowCount > 0
+    //                     ? metadata.rowCount
+    //                     : GRID_TABLE_LIGHT_SERVER_TABLE2_DEFAULT_ROW_COUNT;
+    //                 const safeSkipRows = Number.isFinite(metadata && metadata.skipRows) && metadata.skipRows >= 0
+    //                     ? metadata.skipRows
+    //                     : 0;
+    //                 const columnCount = Number.isFinite(metadata && metadata.columnCount) && metadata.columnCount > 0
+    //                     ? metadata.columnCount
+    //                     : GRID_TABLE_LIGHT_SERVER_TABLE2_COLUMN_COUNT;
+    //                 const page = Number.isFinite(metadata && metadata.page) && metadata.page > 0
+    //                     ? metadata.page
+    //                     : (exportAll ? 1 : (pageSize > 0 ? Math.floor(safeSkipRows / pageSize) + 1 : 1));
+    //                 const countValue = data ? data['Cells@odata.count'] : undefined;
+    //                 const parsedCountValue = typeof countValue === 'number' ? countValue : Number.parseInt(countValue, 10);
+    //                 let totalCount;
+    //                 if (Number.isFinite(parsedCountValue)) {
+    //                     totalCount = Math.ceil(parsedCountValue / columnCount);
+    //                 } else {
+    //                     const contentRows = Array.isArray(transformed.content) ? transformed.content.length : 0;
+    //                     totalCount = contentRows + (exportAll ? 0 : safeSkipRows);
+    //                 }
+    //                 totalCount = Math.max(0, totalCount);
+    //
+    //                 return {
+    //                     columns: transformed.columns,
+    //                     content: transformed.content,
+    //                     pageSize: pageSize,
+    //                     page: page,
+    //                     totalCount: totalCount,
+    //                     freezeHeader: true,
+    //                     allowCopyToClipBoard: true,
+    //                     enableExport: true,
+    //                     exportConfig: {fileName: 'safari-asset-register-paged.xlsx'}
+    //                 };
+    //             }
+    //         }
+    //     }
+    // },
+
+    gridTableLightColumnCountSelector: {
+        init: {
+            execute: () => {
+                let selected = v('gridTableLightDemoColumnCount');
+                selected = typeof selected === 'number' ? selected : parseInt(selected, 10);
+                if (!Number.isFinite(selected)) {
+                    selected = 20;
+                }
+                selected = Math.min(30, Math.max(6, selected));
+                if (v('gridTableLightDemoColumnCount') !== selected) {
+                    Utils.setWidgetValue('gridTableLightDemoColumnCount', selected);
+                }
+
+                const items = [];
+                for (let count = 6; count <= 30; count++) {
+                    items.push({name: String(count), on: count === selected});
+                }
+
+                return {
+                    title: 'Columns',
+                    items: items
+                };
+            }
+        },
+        choose: {
+            execute: () => {
+                let selected = v('gridTableLightColumnCountSelector.value');
+                selected = typeof selected === 'number' ? selected : parseInt(selected, 10);
+                if (!Number.isFinite(selected)) {
+                    selected = 20;
+                }
+                selected = Math.min(30, Math.max(6, selected));
+                Utils.setWidgetValue('gridTableLightDemoColumnCount', selected);
+                Api.updateContent('gridTableLightDemoTable');
+            }
+        }
+    },
+    gridTableLightCompactTable: {
+        init() {
+            const owners = [
+                {value: 'alex', label: 'Alex Doe'},
+                {value: 'brianna', label: 'Brianna Lee'},
+                {value: 'carlos', label: 'Carlos Mendes'},
+                {value: 'dina', label: 'Dina Patel'}
+            ];
+            const priorities = [
+                {label: 'High', color: '#b91c1c'},
+                {label: 'Medium', color: '#b45309'},
+                {label: 'Low', color: '#047857'}
+            ];
+            const statuses = ['Draft', 'Planned', 'In Review', 'Completed'];
+
+            const columns = [
+                {key: 'task', title: 'Task', width: 200},
+                {key: 'category', title: 'Category', width: 140},
+                {key: 'owner', title: 'Owner', width: 160},
+                {key: 'priority', title: 'Priority', width: 120, alignment: 'center-center'},
+                {key: 'action', title: 'Action', width: 100, alignment: 'center-center'},
+                {key: 'status', title: 'Status', width: 120, alignment: 'center-center'},
+                {key: 'start', title: 'Start'},
+                {key: 'end', title: 'End'},
+                {key: 'progress', title: 'Progress', alignment: 'center-right'},
+                {key: 'score', title: 'Score', alignment: 'center-right'}
+            ];
+
+            const baseDate = new Date('2024-01-08');
+            const content = [];
+            for (let idx = 0; idx < 10; idx++) {
+                const owner = owners[idx % owners.length];
+                const priority = priorities[idx % priorities.length];
+                const status = statuses[idx % statuses.length];
+                const start = new Date(baseDate.getTime() + idx * 86400000);
+                const end = new Date(start.getTime() + (idx % 5 + 2) * 86400000);
+                const progressValue = Math.min(100, 15 + idx * 7);
+                const scoreValue = (72 + (idx * 3) % 20).toString();
+
+                content.push([
+                    {
+                        type: 'text',
+                        displayValue: `Task ${idx + 1}`,
+                        rawValue: `Task ${idx + 1}`,
+                        editable: true,
+                        tooltip: 'Rename the task'
+                    },
+                    {
+                        type: 'text',
+                        displayValue: idx % 2 === 0 ? 'Finance' : 'Operations',
+                        rawValue: idx % 2 === 0 ? 'Finance' : 'Operations'
+                    },
+                    {
+                        type: 'combo',
+                        rawValue: owner.value,
+                        options: owners
+                    },
+                    {
+                        type: 'custom',
+                        rawValue: priority.label,
+                        alignment: 'center-center',
+                        html: `<span class="grid-table-light-demo-badge" style="color:${priority.color};background:${priority.color}1A"><span class="dot"></span>${priority.label}</span>`
+                    },
+                    {
+                        type: 'button',
+                        displayValue: 'Open',
+                        alignment: 'center-center'
+                    },
+                    {
+                        type: 'text',
+                        displayValue: status,
+                        rawValue: status,
+                        alignment: 'center-center'
+                    },
+                    {
+                        type: 'text',
+                        displayValue: start.toISOString().slice(0, 10),
+                        rawValue: start.toISOString().slice(0, 10)
+                    },
+                    {
+                        type: 'text',
+                        displayValue: end.toISOString().slice(0, 10),
+                        rawValue: end.toISOString().slice(0, 10)
+                    },
+                    {
+                        type: 'text',
+                        displayValue: `${progressValue}%`,
+                        rawValue: `${progressValue}%`,
+                        alignment: 'center-right'
+                    },
+                    {
+                        type: 'text',
+                        displayValue: scoreValue,
+                        rawValue: scoreValue,
+                        alignment: 'center-right'
+                    }
+                ]);
+            }
+
+            return {
+                columns: columns,
+                content: content,
+                totalCount: content.length,
+                page: 1,
+                pageSize: content.length,
+                freezeHeader: true,
+                freezeFirstColumns: 1,
+                allowCopyToClipBoard: true
+            };
+        },
+        text_change(ctx) {
+            const columnIndex = ctx.getColumn();
+            const rowIndex = ctx.getRow();
+            const cell = ctx.getCell();
+            const newValue = cell ? (cell.displayValue || cell.rawValue || '') : '';
+            console.log('GridTableLight compact table text change', {column: columnIndex, row: rowIndex, value: newValue});
+        },
+        change(ctx) {
+            const columnIndex = ctx.getColumn();
+            if (columnIndex !== 2) {
+                return;
+            }
+            const rowIndex = ctx.getRow();
+            const cell = ctx.getCell();
+            const newValue = cell ? (cell.displayValue || cell.rawValue || '') : '';
+            console.log('GridTableLight compact table owner change', {row: rowIndex, value: newValue});
+        },
+        launch(ctx) {
+            const rowIndex = ctx.getRow();
+            const row = Utils.getGridTableCurrentRow(ctx.getWidgetId()) || [];
+            const taskCell = row[0] || {};
+            const taskLabel = taskCell.displayValue || taskCell.rawValue || `Row ${typeof rowIndex === 'number' ? rowIndex + 1 : ''}`;
+            console.log('GridTableLight compact table launch', {row: rowIndex, task: taskLabel});
+        }
+    },
+    gridTableLightTextTable: {
+        init() {
+            const columnCount = 15;
+            const rowCount = 60;
+            const columns = [];
+            for (let index = 0; index < columnCount; index++) {
+                columns.push({
+                    key: `col${index + 1}`,
+                    title: `Column ${index + 1}`,
+                    width: index < 2 ? 200 : 160
+                });
+            }
+            const content = [];
+            for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+                const row = [];
+                for (let colIndex = 0; colIndex < columnCount; colIndex++) {
+                    row.push(`Row ${rowIndex + 1} · Col ${colIndex + 1}`);
+                }
+                content.push(row);
+            }
+            return {
+                columns: columns,
+                content: content,
+                totalCount: content.length,
+                page: 1,
+                freezeFirstColumns: 2,
+                allowCopyToClipBoard: true,
+                bodyStyle: 'max-height:360px;'
+            };
+        }
+    },
+    gridTableLightDemoInfoText: {
+        init() {
+            const info = v('gridTableLightDemoLastAction') || {
+                title: 'GridTableLight demo',
+                body: 'Use the Details buttons or Owner dropdowns to trigger repository events.'
+            };
+            return info;
+        }
+    },
     // Add Clone Contracts
     analogicDemoAddCloneContractContractsTable: {
         init: {

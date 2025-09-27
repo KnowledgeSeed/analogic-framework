@@ -3431,3 +3431,270 @@ contributions.
 .. |image66| image:: /sliderWidget.png
 .. |image67| image:: /slider_example.png
 
+GridTableLightWidget
+--------------------
+
+Overview
+~~~~~~~~
+
+``GridTableLightWidget`` is the lightweight successor of
+``GridTableWidget``. Instead of creating individual child widgets per
+cell it renders the entire table directly from the data returned by the
+repository. This dramatically simplifies widget configuration while the
+runtime still supports:
+
+- sticky/frozen headers and columns,
+- copy-to-clipboard support that respects the user's current selection,
+- paging with context aware requests,
+- Excel export (full dataset or current page),
+- the familiar event map for ``launch``, ``change`` and ``text_change``
+  events.
+
+The widget is ideal for large datasets, grids generated from TM1 MDX
+responses, or any scenario where the classic grid widgets caused
+configuration bloat. The `helloanalogic` demo application showcases three
+flavours of the widget (interactive, compact card-style and plain text)
+so the examples below reference those assets for consistency.
+
+Typical use cases
+~~~~~~~~~~~~~~~~~
+
+- **Planning dashboards:** render multi-thousand row TM1 cubes without
+  pre-creating child widgets and still offer inline editing for text
+  fields or combo boxes.
+- **Operations consoles:** blend button, select and custom HTML cells to
+  trigger repository logic (launching detail pages, reassigning owners,
+  etc.).
+- **Read-only reports:** emit a simple ``columns`` + matrix ``content``
+  payload to display an existing table with frozen columns.
+
+Widget configuration
+~~~~~~~~~~~~~~~~~~~~
+
+Only a handful of parameters are defined in ``widget-config.js`` because
+almost every behaviour is described by the repository payload:
+
+- ``id`` (**required**): unique identifier used by events and the
+  repository.
+- ``type`` (**required**): always ``GridTableLightWidget``.
+- ``skin`` (optional): CSS skin applied to the widget container.
+- ``pageSize`` (optional): default page size override when the
+  repository honours paging metadata.
+
+Example from ``apps/helloanalogic/static/assets/js/configs/widget-config.js``:
+
+.. code-block:: javascript
+
+   {
+       id: 'gridTableLightDemoTable',
+       type: GridTableLightWidget,
+       skin: 'gridTableLightDemo'
+   }
+
+   {
+       id: 'gridTableLightCompactTable',
+       type: GridTableLightWidget,
+       skin: 'gridTableLightCompact'
+   }
+
+   {
+       id: 'gridTableLightTextTable',
+       type: GridTableLightWidget,
+       skin: 'gridTableLightText'
+   }
+
+   // Commented examples demonstrating server driven paging
+   // {
+   //     id: 'gridTableLightServerTable',
+   //     type: GridTableLightWidget,
+   //     skin: 'gridTableLightDemo'
+   // },
+   // {
+   //     id: 'gridTableLightServerTable2',
+   //     type: GridTableLightWidget,
+   //     skin: 'gridTableLightDemo',
+   //     pageSize: 20
+   // }
+
+Repository contract
+~~~~~~~~~~~~~~~~~~~
+
+The repository (``apps/helloanalogic/static/assets/js/configs/repository.js``)
+drives almost everything:
+
+- ``init`` must return an object with ``columns`` and ``content``. The
+  ``columns`` array describes column keys, titles and optional sizing or
+  alignment. ``content`` is a list of rows; each row can either be a
+  shorthand array of raw values (text only) or an object with ``cells``
+  describing individual cell types.
+- Optional metadata extends behaviour without updating the widget
+  config: ``totalCount``, ``page``, ``pageSize``,
+  ``allowCopyToClipBoard``, ``freezeHeader``, ``freezeFirstColumns``,
+  ``enableExport`` or ``exportConfig``.
+- Styling hooks accept strings, plain objects or arrays at multiple
+  levels (root container, table, rows, cells, rendered element).
+- Event handlers ``launch``, ``change`` and ``text_change`` receive the
+  familiar grid context (``ctx.getRow()``, ``ctx.getColumn()``,
+  ``ctx.getCell()``) so repository logic can coordinate updates across
+  widgets.
+
+The ``gridTableLightDemoTable`` repository entry demonstrates interactive
+cells, paging, export and styling:
+
+.. code-block:: javascript
+
+   gridTableLightDemoTable: {
+       init(ctx) {
+           const extra = ctx && ctx.getExtraParams ? ctx.getExtraParams() : {};
+           const DEFAULT_PAGE_SIZE = 100;
+           const requestedPageSize = typeof extra.pageSize === 'number' ? extra.pageSize : DEFAULT_PAGE_SIZE;
+           const pageSize = requestedPageSize === 0 ? 0 : (requestedPageSize || DEFAULT_PAGE_SIZE);
+           const totalCount = 20000;
+           const page = extra.page ? Math.max(1, parseInt(extra.page, 10) || 1) : 1;
+           const startIndex = pageSize ? Math.max(0, (page - 1) * pageSize) : 0;
+           const endIndex = pageSize ? Math.min(totalCount, startIndex + pageSize) : totalCount;
+
+           const columns = [];
+           for (let idx = 0; idx < Math.min(30, Math.max(6, v('gridTableLightDemoColumnCount') || 20)); idx++) {
+               // ...push column descriptors (record, status, owner, etc.)
+           }
+
+           const content = [];
+           for (let index = startIndex; index < endIndex; index++) {
+               // ...compose cells with text/combo/button/custom types and styling
+           }
+
+           return {
+               columns,
+               content,
+               totalCount,
+               page,
+               pageSize,
+               allowCopyToClipBoard: true,
+               freezeHeader: true,
+               freezeFirstColumns: 2,
+               enableExport: true,
+               exportConfig: {fileName: 'grid-table-light-demo.xlsx'},
+               rootClasses: ['grid-table-light-demo-root'],
+               tableClasses: 'grid-table-light-demo-table',
+               bodyStyle: 'max-height:520px'
+           };
+       },
+       launch(ctx) { /* update info banner */ },
+       change(ctx) { /* owner select change */ },
+       text_change(ctx) { /* inline rename */ }
+   }
+
+Other repository entries show specialised payloads:
+
+- ``gridTableLightCompactTable`` builds rows entirely in memory, returns
+  a ``pageSize`` that matches the total row count, and logs events.
+- ``gridTableLightTextTable`` sends a ``columns`` array and a plain
+  two-dimensional ``content`` array for read-only scenarios.
+- ``gridTableLightDemoInfoText`` reacts to widget events to display the
+  last user action.
+
+Server backed MDX examples
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Two commented repository entries document how to connect a
+``GridTableLightWidget`` directly to TM1 MDX queries. Although disabled
+in the demo, the snippets are production ready:
+
+.. code-block:: javascript
+
+   gridTableLightServerTable: {
+       init() {
+           return new RestRequest(this.request);
+       },
+       request: {
+           url: () => '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))',
+           type: 'POST',
+           server: true,
+           body: () => ({key: 'safariAssetRegister2_mdx'}),
+           parsingControl: {
+               type: 'script',
+               script: (data) => {
+                   const transformed = Utils.transformMdxResponseToGridTableLight(data);
+                   return Object.assign({
+                       freezeHeader: true,
+                       allowCopyToClipBoard: true,
+                       enableExport: true,
+                       exportConfig: {fileName: 'safari-asset-register.xlsx'}
+                   }, transformed);
+               }
+           }
+       }
+   }
+
+   gridTableLightServerTable2: {
+       init() {
+           return new RestRequest(this.request);
+       },
+       request: {
+           url: (widgets, ctx) => {
+               const baseUrl = '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))';
+               const result = Utils.buildMdxQueryUrl(baseUrl, {
+                   includeCount: true,
+                   columnCount: GRID_TABLE_LIGHT_SERVER_TABLE2_COLUMN_COUNT,
+                   defaultRowCount: GRID_TABLE_LIGHT_SERVER_TABLE2_DEFAULT_ROW_COUNT,
+                   metadataKey: GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY,
+                   returnMetadata: true
+               }, ctx);
+               return result && result.url ? result.url : baseUrl;
+           },
+           type: 'POST',
+           server: true,
+           body: () => ({key: 'safariAssetRegister2_mdx'}),
+           parsingControl: {
+               type: 'script',
+               script: (data, widgetId, repoObj, ctx) => {
+                   const transformed = Utils.transformMdxResponseToGridTableLight(data);
+                   const metadata = ctx && ctx[GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY] ? ctx[GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY] : {};
+                   const pageSize = Number.isFinite(metadata.rowCount) && metadata.rowCount > 0 ? metadata.rowCount : GRID_TABLE_LIGHT_SERVER_TABLE2_DEFAULT_ROW_COUNT;
+                   const page = Number.isFinite(metadata.page) && metadata.page > 0
+                       ? metadata.page
+                       : (metadata.exportAll ? 1 : (pageSize > 0 ? Math.floor((metadata.skipRows || 0) / pageSize) + 1 : 1));
+                   const countValue = data ? data['Cells@odata.count'] : undefined;
+                   const parsedCountValue = typeof countValue === 'number' ? countValue : Number.parseInt(countValue, 10);
+                   const totalCount = Number.isFinite(parsedCountValue)
+                       ? Math.ceil(parsedCountValue / (metadata.columnCount || GRID_TABLE_LIGHT_SERVER_TABLE2_COLUMN_COUNT))
+                       : Math.max(0, (transformed.content || []).length + (metadata.exportAll ? 0 : (metadata.skipRows || 0)));
+                   return Object.assign({
+                       pageSize,
+                       page,
+                       totalCount,
+                       freezeHeader: true,
+                       allowCopyToClipBoard: true,
+                       enableExport: true,
+                       exportConfig: {fileName: 'safari-asset-register-paged.xlsx'}
+                   }, transformed);
+               }
+           }
+       }
+   }
+
+The first example performs a one-shot MDX execution and enriches the
+transformed payload with clipboard and export toggles. The second
+example shows how to honour paging metadata stored on the context object
+(``ctx``) so Excel export can temporarily request ``pageSize: 0`` and the
+client can fetch all rows.
+
+Implementation checklist
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Add the widget to ``widget-config.js`` with the desired skin.
+2. Implement a repository ``init`` method that returns ``columns`` and
+   ``content`` (plus optional metadata).
+3. Wire event handlers to update auxiliary widgets (see
+   ``gridTableLightDemoInfoText`` in the demo).
+4. When loading data from TM1 or another REST source, wrap the request
+   with ``RestRequest`` and convert the payload using
+   ``Utils.transformMdxResponseToGridTableLight``.
+5. Optionally store paging/column settings in ``ctx`` or widget values to
+   persist user selections across refreshes.
+
+By following the above steps you can replace verbose ``GridTableWidget``
+setups with a single lightweight configuration while retaining full
+control over styling, behaviour and TM1 integrations.
+
