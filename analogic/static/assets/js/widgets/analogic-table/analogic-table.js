@@ -229,25 +229,118 @@ class AnalogicTableWidget extends Widget {
     }
 
     getCellFromTabulatorCell(cell) {
-        if (!cell || typeof cell.getField !== 'function' || typeof cell.getRow !== 'function') {
+        const context = this.resolveCellContext(cell);
+        return context ? context.meta : null;
+    }
+
+    resolveCellContext(cellComponent) {
+        if (!this.isCellComponent(cellComponent)) {
             return null;
         }
-        const field = cell.getField();
+
+        const field = typeof cellComponent.getField === 'function' ? cellComponent.getField() : null;
+        const columnIndex = typeof field === 'string' && this.fieldToIndex[field] !== undefined ? this.fieldToIndex[field] : null;
+
         let rowComponent = null;
-        try {
-            rowComponent = cell.getRow();
-        } catch (error) {
-            console.warn('AnalogicTableWidget: unable to resolve row from cell component', error);
+        if (typeof cellComponent.getRow === 'function') {
+            try {
+                rowComponent = cellComponent.getRow();
+            } catch (error) {
+                console.warn('AnalogicTableWidget: unable to resolve row from cell component', error);
+            }
+        }
+
+        let rowData = null;
+        if (rowComponent && typeof rowComponent.getData === 'function') {
+            try {
+                rowData = rowComponent.getData();
+            } catch (error) {
+                console.warn('AnalogicTableWidget: unable to access row data from row component', error);
+            }
+        }
+
+        let meta = null;
+        if (rowData && rowData.__analogicCells && field) {
+            meta = rowData.__analogicCells[field] || null;
+        }
+
+        let rowIndex = meta && typeof meta.rowIndex === 'number' ? meta.rowIndex : null;
+        if (rowIndex === null && rowData && typeof rowData.__analogicRowIndex === 'number') {
+            rowIndex = rowData.__analogicRowIndex;
+        }
+        if (rowIndex === null && rowComponent && typeof rowComponent.getIndex === 'function') {
+            try {
+                const index = rowComponent.getIndex();
+                if (typeof index === 'number') {
+                    rowIndex = index;
+                }
+            } catch (error) {
+                console.warn('AnalogicTableWidget: unable to resolve row index from row component', error);
+            }
+        }
+
+        let resolvedColumnIndex = columnIndex;
+        if (resolvedColumnIndex === null && meta && typeof meta.columnIndex === 'number') {
+            resolvedColumnIndex = meta.columnIndex;
+        }
+
+        if (!meta && typeof rowIndex === 'number' && typeof resolvedColumnIndex === 'number' && Array.isArray(this.cellData[rowIndex])) {
+            meta = this.cellData[rowIndex][resolvedColumnIndex] || null;
+        }
+
+        if (!meta) {
+            const element = typeof cellComponent.getElement === 'function' ? (() => {
+                try {
+                    return cellComponent.getElement();
+                } catch (error) {
+                    console.warn('AnalogicTableWidget: unable to resolve cell element while locating metadata', error);
+                    return null;
+                }
+            })() : null;
+            if (element && element.getAttribute) {
+                const rowAttr = element.getAttribute('data-row');
+                const colAttr = element.getAttribute('data-col');
+                const parsedRow = rowAttr !== null ? Number(rowAttr) : NaN;
+                const parsedCol = colAttr !== null ? Number(colAttr) : NaN;
+                if (!Number.isNaN(parsedRow) && !Number.isNaN(parsedCol) && Array.isArray(this.cellData[parsedRow])) {
+                    meta = this.cellData[parsedRow][parsedCol] || null;
+                    if (meta) {
+                        rowIndex = parsedRow;
+                        resolvedColumnIndex = parsedCol;
+                    }
+                }
+            }
+        }
+
+        if (!meta) {
             return null;
         }
-        if (!rowComponent || typeof rowComponent.getData !== 'function') {
-            return null;
+
+        if (typeof meta.field === 'undefined' && field) {
+            meta.field = field;
         }
-        const rowData = rowComponent.getData();
-        if (!rowData.__analogicCells) {
-            return null;
+        if (typeof meta.rowIndex !== 'number' && typeof rowIndex === 'number') {
+            meta.rowIndex = rowIndex;
         }
-        return rowData.__analogicCells[field] || null;
+        if (typeof meta.columnIndex !== 'number' && typeof resolvedColumnIndex === 'number') {
+            meta.columnIndex = resolvedColumnIndex;
+        }
+
+        if (rowData) {
+            if (!rowData.__analogicCells) {
+                rowData.__analogicCells = {};
+            }
+            rowData.__analogicCells[meta.field] = meta;
+        }
+
+        return {
+            field: meta.field,
+            rowComponent: rowComponent || null,
+            rowData: rowData || null,
+            rowIndex: typeof meta.rowIndex === 'number' ? meta.rowIndex : rowIndex,
+            columnIndex: typeof meta.columnIndex === 'number' ? meta.columnIndex : resolvedColumnIndex,
+            meta: meta
+        };
     }
 
     getHtml(widgetHtmls, processedData) {
@@ -504,6 +597,7 @@ class AnalogicTableWidget extends Widget {
         if (!this.isCellComponent(cellComponent)) {
             return;
         }
+        this.syncCellMetadataFromComponent(cellComponent, {skipDomCapture: true});
         const sync = () => {
             this.syncCellMetadataFromComponent(cellComponent);
         };
@@ -516,26 +610,33 @@ class AnalogicTableWidget extends Widget {
         }
     }
 
-    syncCellMetadataFromComponent(cellComponent) {
-        if (!this.isCellComponent(cellComponent) || typeof cellComponent.getField !== 'function') {
-            return;
+    captureCellElementHtml(cellComponent) {
+        if (!cellComponent || typeof cellComponent.getElement !== 'function') {
+            return undefined;
         }
-        const field = cellComponent.getField();
-        let rowComponent = null;
         try {
-            rowComponent = typeof cellComponent.getRow === 'function' ? cellComponent.getRow() : null;
+            const element = cellComponent.getElement();
+            if (element && typeof element.innerHTML !== 'undefined') {
+                return element.innerHTML;
+            }
         } catch (error) {
-            console.warn('AnalogicTableWidget: unable to resolve row while syncing cell metadata', error);
+            console.warn('AnalogicTableWidget: unable to resolve cell element while syncing metadata', error);
+        }
+        return undefined;
+    }
+
+    syncCellMetadataFromComponent(cellComponent, options = {}) {
+        if (!this.isCellComponent(cellComponent)) {
             return;
         }
-        if (!rowComponent || typeof rowComponent.getData !== 'function') {
+
+        const context = this.resolveCellContext(cellComponent);
+        if (!context) {
             return;
         }
-        const rowData = rowComponent.getData();
-        if (!rowData || !rowData.__analogicCells || !rowData.__analogicCells[field]) {
-            return;
-        }
-        const meta = rowData.__analogicCells[field];
+
+        const {meta, field, rowData, rowIndex, columnIndex} = context;
+        const skipDomCapture = options && options.skipDomCapture === true;
 
         let value;
         if (typeof cellComponent.getValue === 'function') {
@@ -550,38 +651,54 @@ class AnalogicTableWidget extends Widget {
             meta.value = value;
         }
 
-        const element = typeof cellComponent.getElement === 'function' ? cellComponent.getElement() : null;
         let displayValue;
-        if (element) {
-            displayValue = element.innerHTML;
+        if (!skipDomCapture) {
+            displayValue = this.captureCellElementHtml(cellComponent);
         }
-        if (typeof displayValue === 'undefined') {
+        if (typeof displayValue === 'undefined' && typeof value !== 'undefined') {
             displayValue = value;
         }
-        if (typeof displayValue === 'undefined' && typeof rowData[field] !== 'undefined') {
-            displayValue = rowData[field];
+        if (typeof displayValue === 'undefined' && meta && typeof meta.displayValue !== 'undefined') {
+            displayValue = meta.displayValue;
         }
 
-        if (typeof displayValue !== 'undefined') {
-            meta.displayValue = displayValue;
+        if (typeof displayValue === 'undefined') {
+            return;
+        }
+
+        meta.displayValue = displayValue;
+
+        if (rowData && field) {
             rowData[field] = displayValue;
-
-            if (element && element.innerHTML !== displayValue) {
-                element.innerHTML = displayValue;
+            if (!rowData.__analogicCells) {
+                rowData.__analogicCells = {};
             }
+            rowData.__analogicCells[field] = meta;
+        }
 
-            if (typeof meta.rowIndex === 'number' && Array.isArray(this.cellData[meta.rowIndex])) {
-                this.cellData[meta.rowIndex][meta.columnIndex] = meta;
-            }
+        if (typeof rowIndex === 'number' && typeof columnIndex === 'number' && Array.isArray(this.cellData[rowIndex])) {
+            this.cellData[rowIndex][columnIndex] = meta;
+        }
 
-            if (this.tabulatorDefinition && Array.isArray(this.tabulatorDefinition.data)) {
-                const storedRow = this.tabulatorDefinition.data[meta.rowIndex];
-                if (storedRow) {
-                    storedRow[field] = displayValue;
-                    if (storedRow.__analogicCells && storedRow.__analogicCells[field]) {
-                        storedRow.__analogicCells[field] = meta;
-                    }
+        if (this.tabulatorDefinition && Array.isArray(this.tabulatorDefinition.data) && typeof rowIndex === 'number') {
+            const storedRow = this.tabulatorDefinition.data[rowIndex];
+            if (storedRow) {
+                storedRow[field] = displayValue;
+                if (!storedRow.__analogicCells) {
+                    storedRow.__analogicCells = {};
                 }
+                storedRow.__analogicCells[field] = meta;
+            }
+        }
+
+        if (!skipDomCapture && typeof cellComponent.getElement === 'function') {
+            try {
+                const element = cellComponent.getElement();
+                if (element && element.innerHTML !== displayValue) {
+                    element.innerHTML = displayValue;
+                }
+            } catch (error) {
+                console.warn('AnalogicTableWidget: unable to update cell element while syncing metadata', error);
             }
         }
     }

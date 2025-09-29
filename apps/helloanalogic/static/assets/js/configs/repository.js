@@ -707,7 +707,7 @@ Repository = {
                     return null;
                 }
                 const element = cell.getElement();
-                const row = cell.getRow();
+                const row = typeof cell.getRow === 'function' ? cell.getRow() : null;
                 const field = cell.getField();
                 const rowData = row && typeof row.getData === 'function' ? row.getData() : {};
                 const meta = rowData.__analogicCells ? rowData.__analogicCells[field] : null;
@@ -806,7 +806,7 @@ Repository = {
                     frozen: true,
                     tooltip(cell) {
                         const meta = syncAttributes(cell);
-                        const row = cell.getRow();
+                        const row = typeof cell.getRow === 'function' ? cell.getRow() : null;
                         const rowData = row && typeof row.getData === 'function' ? row.getData() : {};
                         const ownerMeta = rowData.__analogicCells ? rowData.__analogicCells.owner : null;
                         const owner = ownerMeta ? ownerMeta.value : '';
