@@ -1050,6 +1050,226 @@ Repository = {
         }
     },
 
+    analogicTableDemoSimpleTable: {
+        columnCount: 10,
+        rowCount: 30,
+        init(source) {
+            const payload = this.preparePayload(source);
+            return this.buildResponse(payload);
+        },
+        preparePayload(source) {
+            const columnCount = this.columnCount || 10;
+            const rowCount = this.rowCount || 30;
+            const incomingCells = this.resolveIncomingCells(source);
+            if (incomingCells) {
+                return {
+                    columnCount,
+                    rowCount,
+                    cells: this.normalizeIncomingCells(incomingCells, columnCount, rowCount)
+                };
+            }
+            return this.generateSyntheticPayload(columnCount, rowCount);
+        },
+        resolveIncomingCells(source) {
+            if (!source) {
+                return null;
+            }
+            if (Array.isArray(source)) {
+                return source;
+            }
+            if (source && Array.isArray(source.cells)) {
+                return source.cells;
+            }
+            if (source && Array.isArray(source.data)) {
+                return source.data;
+            }
+            if (source && typeof source.getData === 'function') {
+                const data = source.getData();
+                if (Array.isArray(data)) {
+                    return data;
+                }
+                if (data && Array.isArray(data.cells)) {
+                    return data.cells;
+                }
+                if (data && Array.isArray(data.data)) {
+                    return data.data;
+                }
+            }
+            if (source && typeof source.getExtraParams === 'function') {
+                const extra = source.getExtraParams();
+                if (extra && Array.isArray(extra.cells)) {
+                    return extra.cells;
+                }
+                if (extra && Array.isArray(extra.data)) {
+                    return extra.data;
+                }
+            }
+            return null;
+        },
+        normalizeIncomingCells(cells, columnCount, rowCount) {
+            const total = columnCount * rowCount;
+            const normalized = [];
+            for (let index = 0; index < total; index++) {
+                const incoming = cells[index];
+                const ordinal = index;
+                if (incoming && typeof incoming === 'object') {
+                    const formatted = typeof incoming.FormattedValue !== 'undefined' ? incoming.FormattedValue : '';
+                    normalized.push({Ordinal: ordinal, FormattedValue: formatted});
+                } else {
+                    normalized.push({Ordinal: ordinal, FormattedValue: ''});
+                }
+            }
+            return normalized;
+        },
+        generateSyntheticPayload(columnCount, rowCount) {
+            const cells = [];
+            let ordinal = 0;
+            for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+                for (let columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                    cells.push({
+                        Ordinal: ordinal,
+                        FormattedValue: `Row ${rowIndex + 1} • Col ${columnIndex + 1}`
+                    });
+                    ordinal += 1;
+                }
+            }
+            return {columnCount, rowCount, cells};
+        },
+        buildResponse({columnCount, rowCount, cells}) {
+            const columns = Array.from({length: columnCount}, (_, index) => ({
+                title: `Column ${index + 1}`,
+                field: `col_${index + 1}`,
+                headerFilter: 'input',
+                headerFilterPlaceholder: 'Filter…',
+                sorter: 'string',
+                editor: 'input',
+                headerSortTristate: true
+            }));
+
+            const matrix = [];
+            const ordinalLookup = {};
+            const data = Array.from({length: rowCount}, (_, rowIndex) => {
+                const row = {};
+                const cellRow = [];
+                columns.forEach((column, columnIndex) => {
+                    const payloadIndex = rowIndex * columnCount + columnIndex;
+                    const payload = cells[payloadIndex] || {};
+                    const cell = this.normalizePayloadCell(payload, rowIndex, columnIndex, column.field);
+                    row[column.field] = cell;
+                    cellRow.push(cell);
+                    const cellOrdinal = cell && cell.metadata ? cell.metadata.ordinal : null;
+                    if (typeof cellOrdinal === 'number') {
+                        ordinalLookup[cellOrdinal] = {rowIndex, columnIndex, field: column.field, cell: cell};
+                    }
+                });
+                matrix.push(cellRow);
+                return row;
+            });
+
+            this.simpleTableState = {
+                columnCount: columnCount,
+                rowCount: rowCount,
+                cells: cells,
+                matrix: matrix,
+                ordinalLookup: ordinalLookup
+            };
+
+            const options = {
+                layout: 'fitDataStretch',
+                height: '460px',
+                columnDefaults: {
+                    headerFilterPlaceholder: 'Filter…'
+                }
+            };
+
+            return {
+                columns: columns,
+                data: data,
+                options: options,
+                events: {
+                    cellEdited: 'cellEdited'
+                }
+            };
+        },
+        normalizePayloadCell(payload, rowIndex, columnIndex, field) {
+            const formattedValue = payload && typeof payload.FormattedValue !== 'undefined' ? payload.FormattedValue : '';
+            const ordinal = payload && typeof payload.Ordinal !== 'undefined' ? payload.Ordinal : null;
+            const metadata = {
+                ordinal: ordinal,
+                payload: payload,
+                rowIndex: rowIndex,
+                columnIndex: columnIndex,
+                field: field
+            };
+
+            return {
+                value: formattedValue,
+                displayValue: formattedValue,
+                metadata: metadata
+            };
+        },
+        cellEdited(ctx) {
+            const component = typeof ctx.getCellComponent === 'function' ? ctx.getCellComponent() : null;
+            const meta = typeof ctx.getCell === 'function' ? ctx.getCell() : null;
+            const updatedValue = component && typeof component.getValue === 'function' ? component.getValue() : undefined;
+
+            if (!meta) {
+                return;
+            }
+
+            meta.value = updatedValue;
+            meta.displayValue = updatedValue;
+
+            if (!meta.metadata || typeof meta.metadata !== 'object') {
+                meta.metadata = {};
+            }
+
+            meta.metadata.updatedValue = updatedValue;
+            if (meta.metadata.payload && typeof meta.metadata.payload === 'object') {
+                meta.metadata.payload.FormattedValue = updatedValue;
+            }
+
+            const ordinal = meta.metadata && typeof meta.metadata.ordinal !== 'undefined' ? meta.metadata.ordinal : null;
+
+            const rowIndex = typeof ctx.getRowIndex === 'function' ? ctx.getRowIndex() : undefined;
+            const columnIndex = typeof ctx.getColumnIndex === 'function' ? ctx.getColumnIndex() : undefined;
+
+            if (typeof rowIndex === 'number' && typeof columnIndex === 'number' && this.simpleTableState && Array.isArray(this.simpleTableState.matrix)) {
+                const row = this.simpleTableState.matrix[rowIndex];
+                if (row && row[columnIndex]) {
+                    row[columnIndex].value = updatedValue;
+                    row[columnIndex].displayValue = updatedValue;
+                    if (!row[columnIndex].metadata || typeof row[columnIndex].metadata !== 'object') {
+                        row[columnIndex].metadata = {};
+                    }
+                    row[columnIndex].metadata.updatedValue = updatedValue;
+                }
+            }
+
+            if (typeof ordinal === 'number' && this.simpleTableState && Array.isArray(this.simpleTableState.cells)) {
+                const originalPayload = this.simpleTableState.cells[ordinal];
+                if (originalPayload) {
+                    originalPayload.FormattedValue = updatedValue;
+                }
+            }
+
+            if (typeof ordinal === 'number' && this.simpleTableState && this.simpleTableState.ordinalLookup) {
+                this.simpleTableState.ordinalLookup[ordinal] = {
+                    rowIndex: typeof rowIndex === 'number' ? rowIndex : null,
+                    columnIndex: typeof columnIndex === 'number' ? columnIndex : null,
+                    field: meta.field || (typeof ctx.getColumnField === 'function' ? ctx.getColumnField() : undefined),
+                    cell: meta
+                };
+            }
+
+            console.log('[AnalogicTableSimpleDemo] cell edited', {
+                field: meta.field || (typeof ctx.getColumnField === 'function' ? ctx.getColumnField() : undefined),
+                ordinal: ordinal,
+                value: updatedValue
+            });
+        }
+    },
+
 
     // Review Contracts
     analogicDemoReviewContracts: {

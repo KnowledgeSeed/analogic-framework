@@ -6487,6 +6487,61 @@ WidgetConfig = {
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            id: 'analogicTableDemoSimpleInfoRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginTop: '24',
+                            marginBottom: '8',
+                            widgets: [
+                                {
+                                    id: 'analogicTableDemoSimpleInfoCell',
+                                    type: GridCellWidget,
+                                    width: '100%',
+                                    alignment: 'top-left',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoSimpleInfoText',
+                                            type: TextWidget,
+                                            title: 'Editable Ordinal Matrix',
+                                            body: 'Simple 10×30 grid with inline editing, filtering and ordinal tracking for each cell.',
+                                            titleFontSize: 18,
+                                            titleFontWeight: 600,
+                                            bodyFontColor: '#475569'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'analogicTableDemoSimpleTableRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginBottom: '24',
+                            widgets: [
+                                {
+                                    id: 'analogicTableDemoSimpleTableCell',
+                                    type: GridCellWidget,
+                                    width: '100%',
+                                    alignment: 'top-left',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoSimpleTable',
+                                            type: AnalogicTableWidget,
+                                            title: 'Editable Data Grid',
+                                            minWidth: 960,
+                                            hideIfNoData: false,
+                                            tabulatorOptions: {
+                                                height: '460px',
+                                                layout: 'fitDataStretch',
+                                                selectable: false,
+                                                resizableColumnFit: true
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 }

@@ -182,22 +182,36 @@ class AnalogicTableWidget extends Widget {
             cell.value = value;
         }
 
-        cell.rowIndex = rowIndex;
-        cell.columnIndex = columnIndex;
-        cell.field = field;
-        cell.id = `${this.id}_${rowIndex}_${columnIndex}`;
-        cell.cellId = `${this.id}Cell${rowIndex}-${columnIndex}`;
-        cell.widgetId = this.id;
+        if (typeof cell.value === 'undefined') {
+            if (typeof cell.Value !== 'undefined') {
+                cell.value = cell.Value;
+            } else if (typeof cell.FormattedValue !== 'undefined') {
+                cell.value = cell.FormattedValue;
+            } else if (typeof cell.formattedValue !== 'undefined') {
+                cell.value = cell.formattedValue;
+            }
+        }
 
         if (typeof cell.displayValue === 'undefined') {
             if (typeof cell.html !== 'undefined') {
                 cell.displayValue = cell.html;
             } else if (typeof cell.title !== 'undefined') {
                 cell.displayValue = cell.title;
+            } else if (typeof cell.FormattedValue !== 'undefined') {
+                cell.displayValue = cell.FormattedValue;
+            } else if (typeof cell.formattedValue !== 'undefined') {
+                cell.displayValue = cell.formattedValue;
             } else {
                 cell.displayValue = typeof cell.value === 'undefined' ? '' : cell.value;
             }
         }
+
+        cell.rowIndex = rowIndex;
+        cell.columnIndex = columnIndex;
+        cell.field = field;
+        cell.id = `${this.id}_${rowIndex}_${columnIndex}`;
+        cell.cellId = `${this.id}Cell${rowIndex}-${columnIndex}`;
+        cell.widgetId = this.id;
 
         return cell;
     }
@@ -219,7 +233,13 @@ class AnalogicTableWidget extends Widget {
             return null;
         }
         const field = cell.getField();
-        const rowComponent = cell.getRow();
+        let rowComponent = null;
+        try {
+            rowComponent = cell.getRow();
+        } catch (error) {
+            console.warn('AnalogicTableWidget: unable to resolve row from cell component', error);
+            return null;
+        }
         if (!rowComponent || typeof rowComponent.getData !== 'function') {
             return null;
         }
@@ -367,8 +387,22 @@ class AnalogicTableWidget extends Widget {
 
     buildRepositoryContext(eventName, args) {
         const cellComponent = this.extractCellComponent(args);
-        const rowComponent = this.extractRowComponent(args) || (cellComponent ? cellComponent.getRow() : null);
-        const columnComponent = this.extractColumnComponent(args) || (cellComponent ? cellComponent.getColumn() : null);
+        let rowComponent = this.extractRowComponent(args);
+        if (!rowComponent && cellComponent && typeof cellComponent.getRow === 'function') {
+            try {
+                rowComponent = cellComponent.getRow();
+            } catch (error) {
+                console.warn('AnalogicTableWidget: unable to resolve row component from cell', error);
+            }
+        }
+        let columnComponent = this.extractColumnComponent(args);
+        if (!columnComponent && cellComponent && typeof cellComponent.getColumn === 'function') {
+            try {
+                columnComponent = cellComponent.getColumn();
+            } catch (error) {
+                console.warn('AnalogicTableWidget: unable to resolve column component from cell', error);
+            }
+        }
         const cellData = this.getCellFromTabulatorCell(cellComponent);
         const rowIndex = cellData ? cellData.rowIndex : (rowComponent && typeof rowComponent.getIndex === 'function' ? rowComponent.getIndex() : null);
         const columnField = cellData ? cellData.field : (columnComponent && typeof columnComponent.getField === 'function' ? columnComponent.getField() : null);
@@ -437,6 +471,7 @@ class AnalogicTableWidget extends Widget {
                 return {
                     value: cellData ? cellData.value : undefined,
                     displayValue: cellData ? cellData.displayValue : undefined,
+                    metadata: cellData && typeof cellData.metadata !== 'undefined' ? cellData.metadata : undefined,
                     field: columnField,
                     rowIndex: rowIndex,
                     columnIndex: columnIndex,
