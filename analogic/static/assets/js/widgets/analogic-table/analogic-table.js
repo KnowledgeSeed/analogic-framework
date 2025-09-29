@@ -534,14 +534,39 @@ class AnalogicTableWidget extends Widget {
             meta.value = value;
         }
 
-        let displayValue = typeof rowData[field] !== 'undefined' ? rowData[field] : value;
-        if (typeof displayValue === 'undefined') {
-            const element = typeof cellComponent.getElement === 'function' ? cellComponent.getElement() : null;
-            displayValue = element ? element.innerHTML : value;
+        const element = typeof cellComponent.getElement === 'function' ? cellComponent.getElement() : null;
+        let displayValue;
+        if (element && element.innerHTML !== '') {
+            displayValue = element.innerHTML;
         }
+        if (typeof displayValue === 'undefined' && typeof rowData[field] !== 'undefined') {
+            displayValue = rowData[field];
+        }
+        if (typeof displayValue === 'undefined') {
+            displayValue = value;
+        }
+
         if (typeof displayValue !== 'undefined') {
             meta.displayValue = displayValue;
             rowData[field] = displayValue;
+
+            if (element && element.innerHTML !== displayValue) {
+                element.innerHTML = displayValue;
+            }
+
+            if (typeof meta.rowIndex === 'number' && Array.isArray(this.cellData[meta.rowIndex])) {
+                this.cellData[meta.rowIndex][meta.columnIndex] = meta;
+            }
+
+            if (this.tabulatorDefinition && Array.isArray(this.tabulatorDefinition.data)) {
+                const storedRow = this.tabulatorDefinition.data[meta.rowIndex];
+                if (storedRow) {
+                    storedRow[field] = displayValue;
+                    if (storedRow.__analogicCells && storedRow.__analogicCells[field]) {
+                        storedRow.__analogicCells[field] = meta;
+                    }
+                }
+            }
         }
     }
 
