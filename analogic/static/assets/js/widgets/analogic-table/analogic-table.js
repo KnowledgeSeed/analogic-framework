@@ -486,7 +486,7 @@ class AnalogicTableWidget extends Widget {
     }
 
     extractCellComponent(args) {
-        return (args || []).find(arg => arg && typeof arg.getField === 'function' && typeof arg.getRow === 'function') || null;
+        return (args || []).find(arg => this.isCellComponent(arg)) || null;
     }
 
     extractRowComponent(args) {
@@ -497,30 +497,52 @@ class AnalogicTableWidget extends Widget {
         return (args || []).find(arg => this.isColumnComponent(arg)) || null;
     }
 
+    isCellComponent(arg) {
+        if (!arg || typeof arg !== 'object') {
+            return false;
+        }
+        if (typeof arg.getType === 'function') {
+            try {
+                return arg.getType() === 'cell';
+            } catch (error) {
+                return false;
+            }
+        }
+        return '_cell' in arg;
+    }
+
     isRowComponent(arg) {
         if (!arg || typeof arg !== 'object') {
             return false;
         }
-        if (typeof arg.getType === 'function' && arg.getType() === 'row') {
-            return true;
+        if (typeof arg.getType === 'function') {
+            try {
+                return arg.getType() === 'row';
+            } catch (error) {
+                return false;
+            }
         }
         if ('_row' in arg && arg._row) {
             return true;
         }
-        return typeof arg.getTreeParent === 'function' || typeof arg.getNextRow === 'function';
+        return typeof arg.getIndex === 'function' && typeof arg.getData === 'function' && !this.isCellComponent(arg);
     }
 
     isColumnComponent(arg) {
         if (!arg || typeof arg !== 'object') {
             return false;
         }
-        if (typeof arg.getType === 'function' && arg.getType() === 'column') {
-            return true;
+        if (typeof arg.getType === 'function') {
+            try {
+                return arg.getType() === 'column';
+            } catch (error) {
+                return false;
+            }
         }
         if ('_column' in arg && arg._column) {
             return true;
         }
-        return typeof arg.getDefinition === 'function' && typeof arg.getCells === 'function';
+        return typeof arg.getField === 'function' && typeof arg.getCells === 'function' && !this.isCellComponent(arg);
     }
 
     executeRestRequest(restRequest, context) {
