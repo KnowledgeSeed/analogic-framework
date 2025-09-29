@@ -367,6 +367,9 @@ class AnalogicTableWidget extends Widget {
         const cellComponent = this.extractCellComponent(args);
         if (cellComponent) {
             this.updateCurrentPositionFromCell(cellComponent);
+            if (eventName === 'cellEdited') {
+                this.syncCellMetadataFromComponent(cellComponent);
+            }
         }
         const repository = Repository[this.id] || {};
         const handler = repository[handlerName];
@@ -495,6 +498,51 @@ class AnalogicTableWidget extends Widget {
 
     extractColumnComponent(args) {
         return (args || []).find(arg => this.isColumnComponent(arg)) || null;
+    }
+
+    syncCellMetadataFromComponent(cellComponent) {
+        if (!this.isCellComponent(cellComponent) || typeof cellComponent.getField !== 'function') {
+            return;
+        }
+        const field = cellComponent.getField();
+        let rowComponent = null;
+        try {
+            rowComponent = typeof cellComponent.getRow === 'function' ? cellComponent.getRow() : null;
+        } catch (error) {
+            console.warn('AnalogicTableWidget: unable to resolve row while syncing cell metadata', error);
+            return;
+        }
+        if (!rowComponent || typeof rowComponent.getData !== 'function') {
+            return;
+        }
+        const rowData = rowComponent.getData();
+        if (!rowData || !rowData.__analogicCells || !rowData.__analogicCells[field]) {
+            return;
+        }
+        const meta = rowData.__analogicCells[field];
+
+        let value;
+        if (typeof cellComponent.getValue === 'function') {
+            try {
+                value = cellComponent.getValue();
+            } catch (error) {
+                console.warn('AnalogicTableWidget: unable to resolve cell value while syncing metadata', error);
+            }
+        }
+
+        if (typeof value !== 'undefined') {
+            meta.value = value;
+        }
+
+        let displayValue = typeof rowData[field] !== 'undefined' ? rowData[field] : value;
+        if (typeof displayValue === 'undefined') {
+            const element = typeof cellComponent.getElement === 'function' ? cellComponent.getElement() : null;
+            displayValue = element ? element.innerHTML : value;
+        }
+        if (typeof displayValue !== 'undefined') {
+            meta.displayValue = displayValue;
+            rowData[field] = displayValue;
+        }
     }
 
     isCellComponent(arg) {
