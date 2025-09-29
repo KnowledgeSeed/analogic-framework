@@ -490,11 +490,37 @@ class AnalogicTableWidget extends Widget {
     }
 
     extractRowComponent(args) {
-        return (args || []).find(arg => arg && typeof arg.getData === 'function' && typeof arg.getIndex === 'function') || null;
+        return (args || []).find(arg => this.isRowComponent(arg)) || null;
     }
 
     extractColumnComponent(args) {
-        return (args || []).find(arg => arg && typeof arg.getField === 'function' && typeof arg.getDefinition === 'function') || null;
+        return (args || []).find(arg => this.isColumnComponent(arg)) || null;
+    }
+
+    isRowComponent(arg) {
+        if (!arg || typeof arg !== 'object') {
+            return false;
+        }
+        if (typeof arg.getType === 'function' && arg.getType() === 'row') {
+            return true;
+        }
+        if ('_row' in arg && arg._row) {
+            return true;
+        }
+        return typeof arg.getTreeParent === 'function' || typeof arg.getNextRow === 'function';
+    }
+
+    isColumnComponent(arg) {
+        if (!arg || typeof arg !== 'object') {
+            return false;
+        }
+        if (typeof arg.getType === 'function' && arg.getType() === 'column') {
+            return true;
+        }
+        if ('_column' in arg && arg._column) {
+            return true;
+        }
+        return typeof arg.getDefinition === 'function' && typeof arg.getCells === 'function';
     }
 
     executeRestRequest(restRequest, context) {
