@@ -3504,17 +3504,17 @@ Example from ``apps/helloanalogic/static/assets/js/configs/widget-config.js``:
    }
 
    // Commented examples demonstrating server driven paging
-   // {
-   //     id: 'gridTableLightServerTable',
-   //     type: GridTableLightWidget,
-   //     skin: 'gridTableLightDemo'
-   // },
-   // {
-   //     id: 'gridTableLightServerTable2',
-   //     type: GridTableLightWidget,
-   //     skin: 'gridTableLightDemo',
-   //     pageSize: 20
-   // }
+    {
+        id: 'gridTableLightServerTable',
+        type: GridTableLightWidget,
+        skin: 'gridTableLightDemo'
+    },
+    {
+        id: 'gridTableLightServerTable2',
+        type: GridTableLightWidget,
+        skin: 'gridTableLightDemo',
+        pageSize: 20
+    }
 
 Repository contract
 ~~~~~~~~~~~~~~~~~~~
@@ -3611,7 +3611,7 @@ in the demo, the snippets are production ready:
            url: () => '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))',
            type: 'POST',
            server: true,
-           body: () => ({key: 'safariAssetRegister2_mdx'}),
+           body: () => ({key: 'custom_widget_id_mdx'}),
            parsingControl: {
                type: 'script',
                script: (data) => {
@@ -3620,7 +3620,7 @@ in the demo, the snippets are production ready:
                        freezeHeader: true,
                        allowCopyToClipBoard: true,
                        enableExport: true,
-                       exportConfig: {fileName: 'safari-asset-register.xlsx'}
+                       exportConfig: {fileName: 'export-asset-register.xlsx'}
                    }, transformed);
                }
            }
@@ -3645,7 +3645,7 @@ in the demo, the snippets are production ready:
            },
            type: 'POST',
            server: true,
-           body: () => ({key: 'safariAssetRegister2_mdx'}),
+           body: () => ({key: 'custom_widget_id_mdx'}),
            parsingControl: {
                type: 'script',
                script: (data, widgetId, repoObj, ctx) => {
@@ -3667,7 +3667,7 @@ in the demo, the snippets are production ready:
                        freezeHeader: true,
                        allowCopyToClipBoard: true,
                        enableExport: true,
-                       exportConfig: {fileName: 'safari-asset-register-paged.xlsx'}
+                       exportConfig: {fileName: 'export-asset-register-paged.xlsx'}
                    }, transformed);
                }
            }

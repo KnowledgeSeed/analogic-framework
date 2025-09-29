@@ -893,7 +893,7 @@ Repository = {
                             const parsed = parseFloat(current);
                             return sum + (Number.isNaN(parsed) ? 0 : parsed);
                         }, 0);
-                        return `<span style="font-weight:700;">€${total.toLocaleString('en-US')}</span>`;
+                        return `€${total.toLocaleString('en-US')}`;
                     }
                 },
                 {
