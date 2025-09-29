@@ -26,3 +26,4 @@ analogic/tests/apps/default/app.json
 analogic/tests/apps/logincam/app.json
 long_running_tasks
 analogic.properties
+node_modules/
