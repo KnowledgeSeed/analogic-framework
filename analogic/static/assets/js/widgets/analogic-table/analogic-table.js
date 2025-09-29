@@ -368,7 +368,7 @@ class AnalogicTableWidget extends Widget {
         if (cellComponent) {
             this.updateCurrentPositionFromCell(cellComponent);
             if (eventName === 'cellEdited') {
-                this.syncCellMetadataFromComponent(cellComponent);
+                this.scheduleCellMetadataSync(cellComponent);
             }
         }
         const repository = Repository[this.id] || {};
@@ -500,6 +500,22 @@ class AnalogicTableWidget extends Widget {
         return (args || []).find(arg => this.isColumnComponent(arg)) || null;
     }
 
+    scheduleCellMetadataSync(cellComponent) {
+        if (!this.isCellComponent(cellComponent)) {
+            return;
+        }
+        const sync = () => {
+            this.syncCellMetadataFromComponent(cellComponent);
+        };
+        if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+            window.requestAnimationFrame(() => {
+                window.requestAnimationFrame(sync);
+            });
+        } else {
+            setTimeout(sync, 0);
+        }
+    }
+
     syncCellMetadataFromComponent(cellComponent) {
         if (!this.isCellComponent(cellComponent) || typeof cellComponent.getField !== 'function') {
             return;
@@ -536,14 +552,14 @@ class AnalogicTableWidget extends Widget {
 
         const element = typeof cellComponent.getElement === 'function' ? cellComponent.getElement() : null;
         let displayValue;
-        if (element && element.innerHTML !== '') {
+        if (element) {
             displayValue = element.innerHTML;
-        }
-        if (typeof displayValue === 'undefined' && typeof rowData[field] !== 'undefined') {
-            displayValue = rowData[field];
         }
         if (typeof displayValue === 'undefined') {
             displayValue = value;
+        }
+        if (typeof displayValue === 'undefined' && typeof rowData[field] !== 'undefined') {
+            displayValue = rowData[field];
         }
 
         if (typeof displayValue !== 'undefined') {
