@@ -27,6 +27,35 @@ install and hook up with a TM1 server.
 
 The framework requires 3.11 > Python >= 3.9.
 
+## Configuring the secret key
+
+Analogic relies on Flask session cookies and therefore requires a secret key. Provide it either as an environment variable or by
+creating an instance configuration file so that the key can be rotated without code changes.
+
+If no `ANALOGIC_SECRET_KEY` environment variable is present when the application starts, Analogic automatically generates a new
+secret key and writes it to `instance/config.py` (the `instance` directory is the path passed to `create_app`). The generated key
+is reused on subsequent starts until you replace it.
+
+Generate a key and export it as an environment variable before launching the application:
+
+```
+# git bash
+export ANALOGIC_SECRET_KEY=$(python -c "import secrets; print(secrets.token_hex(32))")
+
+# command line
+set ANALOGIC_SECRET_KEY=<your-secret-key>
+```
+
+Alternatively, create or edit the `instance/config.py` file with the following content:
+
+```
+SECRET_KEY = "<your-secret-key>"
+```
+
+To rotate the secret key simply generate a new value and update the environment variable or the `config.py` file before
+restarting Analogic. When relying on the automatically generated configuration, delete the existing `config.py` file (or replace
+the `SECRET_KEY` value) so a fresh key will be generated on the next launch.
+
 ## Getting Started
 
 ### Running from code

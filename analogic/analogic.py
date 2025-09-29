@@ -1,4 +1,5 @@
 import os
+import secrets
 from flask import Flask, Blueprint, request, send_file, session, render_template, current_app, g
 import typing as t
 
@@ -288,7 +289,29 @@ def create_app(instance_path, start_scheduler=True, initialize_auth_providers=Tr
     app = Analogic(__name__, instance_path=instance_path)
     app.initialize_auth_providers = initialize_auth_providers
 
-    app.secret_key = b'\x18m\x18\\]\xec\xcf\xbd\xf2\x89\xb9\xa3\x06N\x07\xfd'
+    app.config.from_pyfile('config.py', silent=True)
+
+    secret_key = os.environ.get('ANALOGIC_SECRET_KEY')
+    if not secret_key:
+        secret_key = app.config.get('SECRET_KEY')
+
+    if not secret_key:
+        secret_key = secrets.token_hex(32)
+
+        os.makedirs(app.instance_path, exist_ok=True)
+        config_path = os.path.join(app.instance_path, 'config.py')
+
+        secret_line = f"SECRET_KEY = {secret_key!r}\n"
+        if os.path.exists(config_path):
+            with open(config_path, 'a', encoding='utf-8') as config_file:
+                config_file.write('\n' + secret_line)
+        else:
+            with open(config_path, 'w', encoding='utf-8') as config_file:
+                config_file.write(secret_line)
+
+        app.config['SECRET_KEY'] = secret_key
+
+    app.secret_key = secret_key
 
     _load_logging(app)  # Todo overwrite
 
