@@ -2,7 +2,7 @@ from flask import session, current_app, send_file, request, jsonify, Response, r
 from analogic.loader import ClassLoader
 import analogic.pivot as PivotApi
 from analogic.exceptions import AnalogicProxyException, AnalogicAccessDeniedException, AnalogicException, \
-    AnalogicAcceptedException
+    AnalogicAcceptedException, AnalogicTM1ServiceException
 from analogic.session_handler import SessionHandler
 from analogic.request_logger import RequestLogger
 from analogic.setting import SettingManager
@@ -208,9 +208,16 @@ class AuthenticationProvider(ABC):
 
         try:
             response = ClassLoader().call(export_description, request, self.get_tm1_service(), self.setting, self)
-        except Exception as e:  # Todo 500, 401
+        except AnalogicAccessDeniedException as e:
             self.getLogger().error(e, exc_info=True)
-            return {'message': str(e)}, 404, {'Content-type': 'application/json'}
+            return {'message': str(e)}, 403, {'Content-Type': 'application/json'}
+        except AnalogicTM1ServiceException as e:
+            self.getLogger().error(e, exc_info=True)
+            return {'message': str(e)}, 400, {'Content-Type': 'application/json'}
+        except Exception as e:
+            self.getLogger().error(e, exc_info=True)
+            error_payload = {'message': 'Internal server error', 'details': str(e)}
+            return error_payload, 500, {'Content-Type': 'application/json'}
 
         return send_file(response,
                          download_name=file_name,
@@ -231,9 +238,16 @@ class AuthenticationProvider(ABC):
             return self.get_not_found_response()
         try:
             return ClassLoader().call(description, request, self.get_tm1_service(), self.setting, self)
-        except Exception as e:  # Todo 500, 401
+        except AnalogicAccessDeniedException as e:
             self.getLogger().error(e, exc_info=True)
-            return {'message': str(e)}, 404, {'Content-type': 'application/json'}
+            return {'message': str(e)}, 403, {'Content-Type': 'application/json'}
+        except AnalogicTM1ServiceException as e:
+            self.getLogger().error(e, exc_info=True)
+            return {'message': str(e)}, 400, {'Content-Type': 'application/json'}
+        except Exception as e:
+            self.getLogger().error(e, exc_info=True)
+            error_payload = {'message': 'Internal server error', 'details': str(e)}
+            return error_payload, 500, {'Content-Type': 'application/json'}
 
     def upload_image(self):
         try:

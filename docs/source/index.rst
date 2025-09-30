@@ -19,6 +19,7 @@ Contents
 
    usage
    widgets
+   Developer_doc
    repository
    eventmap
    createapp
