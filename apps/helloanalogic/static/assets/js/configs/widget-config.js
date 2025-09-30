@@ -6448,7 +6448,7 @@ WidgetConfig = {
                                             id: 'analogicTableDemoHeaderInfo',
                                             type: TextWidget,
                                             title: 'Tabulator v6 Demo',
-                                            body: 'Live inside AnalogicTableWidget',
+                                            body: 'Live inside GridTablePlusWidget',
                                             skin: 'menu',
                                             titleFontSize: 16,
                                             bodyFontColor: '#4F5B66'
@@ -6470,7 +6470,7 @@ WidgetConfig = {
                                     widgets: [
                                         {
                                             id: 'analogicTableDemoTable',
-                                            type: AnalogicTableWidget,
+                                            type: GridTablePlusWidget,
                                             title: 'Project Portfolio Overview',
                                             minWidth: 960,
                                             hideIfNoData: false,
@@ -6528,7 +6528,7 @@ WidgetConfig = {
                                     widgets: [
                                         {
                                             id: 'analogicTableDemoSimpleTable',
-                                            type: AnalogicTableWidget,
+                                            type: GridTablePlusWidget,
                                             title: 'Editable Data Grid',
                                             minWidth: 960,
                                             hideIfNoData: false,

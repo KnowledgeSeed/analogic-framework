@@ -552,7 +552,7 @@ const Utils = {
             return;
         }
 
-        if (widgetInstance && widgetInstance.isAnalogicTableWidget) {
+        if (widgetInstance && widgetInstance.isGridTablePlusWidget) {
             for (i = 0; i < cellData.length; ++i) {
                 const row = cellData[i] || [];
                 const cell = row[col];

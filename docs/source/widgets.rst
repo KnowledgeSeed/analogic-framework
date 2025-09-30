@@ -3431,6 +3431,129 @@ contributions.
 .. |image66| image:: /sliderWidget.png
 .. |image67| image:: /slider_example.png
 
+GridTablePlusWidget
+-------------------
+
+Overview
+~~~~~~~~
+
+``GridTablePlusWidget`` layers the Analogic widget framework on top of
+the `Tabulator <https://tabulator.info/>`_ grid. It accepts repository
+payloads that describe ``columns``, ``data``, ``options`` and
+``events``, normalises each cell into ``value``/``displayValue``
+metadata and persists that metadata alongside the Tabulator row so
+Analogic actions can reuse it later. The widget merges global defaults,
+widget configuration and repository overrides for Tabulator options,
+column options and event handlers, then stores the resulting definition
+for later refreshes.
+
+Key capabilities include:
+
+- Parameter driven sizing and skinning via ``minWidth``, ``width``,
+  ``height``, ``hideIfNoData`` and ``skin`` options inherited from the
+  widget config or repository payload.
+- Normalisation of repository data into a cell matrix and
+  ``__analogicCells`` map for each row, preserving ``value``,
+  ``displayValue`` and metadata for later use.
+- Automatic wiring of Tabulator events (``cellClick``, ``cellEdited``
+  and any custom mappings) to repository handlers with a rich context
+  object that exposes the Tabulator components, indices and event
+  arguments.
+- Metadata synchronisation after edits, ensuring the stored cell state,
+  table definition and DOM stay aligned with user changes.
+
+Typical use cases
+~~~~~~~~~~~~~~~~~
+
+- Rich analytical tables that need the full Tabulator feature set
+  (selection, grouping, context menus) while still delegating business
+  logic to the repository.
+- Inline editing scenarios that need to capture the edited value and
+  keep the repository payload in sync without rebuilding the table from
+  scratch.
+- Composite dashboards where a repository wants to control Tabulator
+  column definitions but let designers tweak styling or behaviour
+  through widget overrides.
+
+Widget configuration
+~~~~~~~~~~~~~~~~~~~~
+
+Define the widget in ``widget-config.js`` with
+``type: GridTablePlusWidget``. The following parameters are recognised:
+
+- ``minWidth`` / ``width`` / ``height``: sizing hints applied to the
+  wrapper element before Tabulator initialises.
+- ``hideIfNoData``: hides the widget container when the repository
+  returns an empty dataset.
+- ``skin``: CSS skin suffix appended to the widget root element.
+- ``tabulatorOptions``: Tabulator constructor options merged with the
+  defaults and repository supplied options.
+- ``tabulatorColumnOptions``: per-column overrides merged onto
+  repository column definitions before the table is created.
+- ``tabulatorEvents``: mapping of Tabulator event names to repository
+  handler names combined with any repository provided event map.
+
+Example configuration from the demo application:
+
+.. code-block:: javascript
+
+   {
+       id: 'analogicTableDemoTable',
+       type: GridTablePlusWidget,
+       title: 'Project Portfolio Overview',
+       minWidth: 960,
+       tabulatorOptions: {
+           height: '520px',
+           layout: 'fitDataStretch',
+           movableColumns: true
+       }
+   }
+
+Repository contract
+~~~~~~~~~~~~~~~~~~~
+
+Repository handlers must return an object with:
+
+- ``columns``: Tabulator column definitions (``title``, ``field``,
+  sizing, formatters, editors, etc.). Widget-level
+  ``tabulatorColumnOptions`` can override formatter/editor behaviour per
+  field.
+- ``data``: Array of rows where each property matches a column
+  ``field`` and can be either a primitive or an object describing
+  ``value``, ``displayValue`` and optional metadata.
+- ``options``: Additional Tabulator options to merge into the final
+  table configuration.
+- ``events``: Map of Tabulator event names to repository handler
+  function names. Those functions receive the context described above
+  together with the raw Tabulator event arguments.
+
+The ``analogicTableDemo`` entry in
+``apps/helloanalogic/static/assets/js/configs/repository.js``
+demonstrates grouping, context menus and inline edits:
+
+.. code-block:: javascript
+
+   analogicTableDemoTable: {
+       init() {
+           return {
+               columns,
+               data: rows,
+               options,
+               events: {
+                   tableBuilt: 'tableBuilt',
+                   rowSelectionChanged: 'selectionChanged',
+                   cellClick: 'cellClicked',
+                   cellEdited: 'cellEdited'
+               }
+           };
+       },
+       tableBuilt(ctx) {
+           const table = ctx.getTabulator();
+           const rowCount = table && typeof table.getData === 'function' ? table.getData().length : 0;
+           console.log('[GridTablePlusDemo] table built with', rowCount, 'rows');
+       }
+   }
+
 GridTableLightWidget
 --------------------
 

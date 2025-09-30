@@ -793,8 +793,8 @@ Repository = {
                 }
             ];
             const actionButtons = (code) => `<div style="display:flex;gap:6px;justify-content:center;">
-    <button class="analogic-table-demo__action-button" data-action="details" data-project="${code}" style="padding:6px 12px;border-radius:6px;border:1px solid #CBD5E1;background:#FFFFFF;color:#1E293B;font-weight:600;cursor:pointer;">Details</button>
-    <button class="analogic-table-demo__action-button analogic-table-demo__action-button--primary" data-action="focus" data-project="${code}" style="padding:6px 12px;border-radius:6px;border:none;background:#2563EB;color:#FFFFFF;font-weight:600;cursor:pointer;">Focus</button>
+    <button class="grid-table-plus-demo__action-button" data-action="details" data-project="${code}" style="padding:6px 12px;border-radius:6px;border:1px solid #CBD5E1;background:#FFFFFF;color:#1E293B;font-weight:600;cursor:pointer;">Details</button>
+    <button class="grid-table-plus-demo__action-button grid-table-plus-demo__action-button--primary" data-action="focus" data-project="${code}" style="padding:6px 12px;border-radius:6px;border:none;background:#2563EB;color:#FFFFFF;font-weight:600;cursor:pointer;">Focus</button>
 </div>`;
             const columns = [
                 {
@@ -994,13 +994,13 @@ Repository = {
                         action(e, row) {
                             const data = row.getData().__analogicCells || {};
                             const project = data.project ? data.project.value : 'Unknown project';
-                            console.log('[AnalogicTableDemo] context menu -> focus project', project);
+                            console.log('[GridTablePlusDemo] context menu -> focus project', project);
                         }
                     },
                     {
                         label: 'Log raw row data',
                         action(e, row) {
-                            console.log('[AnalogicTableDemo] context menu -> row data', row.getData());
+                            console.log('[GridTablePlusDemo] context menu -> row data', row.getData());
                         }
                     }
                 ],
@@ -1021,7 +1021,7 @@ Repository = {
         tableBuilt(ctx) {
             const table = ctx.getTabulator();
             const rowCount = table && typeof table.getData === 'function' ? table.getData().length : 0;
-            console.log('[AnalogicTableDemo] table built with', rowCount, 'rows');
+            console.log('[GridTablePlusDemo] table built with', rowCount, 'rows');
         },
         selectionChanged(ctx, data) {
             const selected = Array.isArray(data) ? data.map((item) => {
@@ -1030,21 +1030,21 @@ Repository = {
                 }
                 return item && item.project ? item.project : '';
             }).filter(Boolean) : [];
-            console.log('[AnalogicTableDemo] selection changed:', selected);
+            console.log('[GridTablePlusDemo] selection changed:', selected);
         },
         cellClicked(ctx, event) {
             const rowComponent = ctx.getRowComponent();
             const cells = rowComponent && typeof rowComponent.getData === 'function' ? rowComponent.getData().__analogicCells : null;
             const projectName = cells && cells.project ? cells.project.value : 'Unknown project';
-            if (event && event.target && event.target.classList && event.target.classList.contains('analogic-table-demo__action-button')) {
+            if (event && event.target && event.target.classList && event.target.classList.contains('grid-table-plus-demo__action-button')) {
                 const action = event.target.getAttribute('data-action') || 'action';
-                console.log(`[AnalogicTableDemo] ${action} button clicked for ${projectName}`);
+                console.log(`[GridTablePlusDemo] ${action} button clicked for ${projectName}`);
                 event.stopPropagation();
                 return;
             }
             const meta = ctx.getCell();
             const field = meta ? meta.field : 'n/a';
-            console.log('[AnalogicTableDemo] cell click ->', field, 'value:', meta ? meta.value : undefined, 'project:', projectName);
+            console.log('[GridTablePlusDemo] cell click ->', field, 'value:', meta ? meta.value : undefined, 'project:', projectName);
         },
         cellEdited(ctx) {
             const meta = ctx.getCell();
@@ -1058,7 +1058,7 @@ Repository = {
                     meta.value = updatedValue;
                     meta.displayValue = updatedValue;
                 }
-                console.log('[AnalogicTableDemo] cell edited ->', meta.field, 'is now', meta.value, 'for', projectName);
+                console.log('[GridTablePlusDemo] cell edited ->', meta.field, 'is now', meta.value, 'for', projectName);
             }
         }
     },
@@ -1275,7 +1275,7 @@ Repository = {
                 };
             }
 
-            console.log('[AnalogicTableSimpleDemo] cell edited', {
+            console.log('[GridTablePlusSimpleDemo] cell edited', {
                 field: meta.field || (typeof ctx.getColumnField === 'function' ? ctx.getColumnField() : undefined),
                 ordinal: ordinal,
                 value: updatedValue
