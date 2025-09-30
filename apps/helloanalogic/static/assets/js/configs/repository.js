@@ -804,7 +804,7 @@ Repository = {
                     headerFilter: 'input',
                     headerSortTristate: true,
                     frozen: true,
-                    tooltip(cell) {
+                    tooltip(e, cell) {
                         const meta = syncAttributes(cell);
                         const row = typeof cell.getRow === 'function' ? cell.getRow() : null;
                         const rowData = row && typeof row.getData === 'function' ? row.getData() : {};
