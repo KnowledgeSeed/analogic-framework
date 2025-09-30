@@ -765,12 +765,12 @@ class AnalogicTableWidget extends Widget {
         }
 
         Loader.start(true);
-        Auth.getAjaxRequest(QB.getUrl(finalUrl, description.source), finalBody, type, this.id, false, `tabulator.${context.getEventName()}.${this.id}`).then((response) => {
+        Auth.getAjaxRequest(QB.getUrl(finalUrl, description.source), finalBody, type, this.id, false, `${context.getEventName()}.${this.id}`).then((response) => {
             Loader.stop(true);
             if (typeof callback === 'function') {
                 callback({getResponse: () => response, ...context});
             }
-            QB.executeEventMapAction(`tabulator.${context.getEventName()}.${this.id}.finished`, context, response);
+            QB.executeEventMapAction(`${context.getEventName()}.${this.id}.finished`, context, response);
         }).fail(() => {
             Loader.stop(true);
         });
