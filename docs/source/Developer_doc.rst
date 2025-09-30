@@ -1,104 +1,194 @@
-Developer reference
-===================
+Repository Function Documentation
+=================================
 
-This page summarises the repository event handlers, helper executors and
-utility APIs that Analogic widgets rely on at runtime. Use it as a quick
-reference while extending existing screens or adding new behaviours.
+This document describes common functions found in the ``repository.js`` examples. Each function is summarised with its purpose, typical parameters, and usage patterns.
 
-Lifecycle hooks
----------------
+init
+----
 
-* ``init`` loads the initial payload for a widget. It can call REST
-  endpoints, transform TM1 responses and even pull values from other
-  widgets before render time.【F:docs/source/repository.rst†L73-L159】
-* ``initCondition`` and ``initDefault`` let a repository entry decide at
-  runtime whether the normal ``init`` logic should execute or fall back
-  to a lightweight default payload.【F:docs/source/repository.rst†L261-L278】
-* ``initFinished`` fires after the very first render completes, allowing
-  follow-up actions (for example, event-map subscriptions) to run only
-  when the widget is fully ready.【F:analogic/static/assets/js/widgets/base/widget.js†L160-L207】【F:analogic/static/assets/js/widgets/base/widget.js†L405-L417】
-* ``refresh`` requests rerender the widget and trigger
-  ``refreshFinished`` once the new HTML is in place, making it ideal for
-  loader-backed updates that rebuild the DOM.【F:analogic/static/assets/js/widgets/base/widget.js†L90-L153】【F:analogic/static/assets/js/widgets/base/widget.js†L405-L417】
-* ``updateContent`` keeps the widget structure intact while swapping the
-  data model. Upon completion ``updateContentFinished`` emits a finished
-  event that can drive chained refreshes.【F:analogic/static/assets/js/widgets/base/widget.js†L201-L210】【F:analogic/static/assets/js/widgets/base/widget.js†L409-L417】
+``init()`` runs when a widget or page is first created. It often sets default values (such as selected year or company) or returns a configuration object that describes how to fetch data from the server.
 
-Interaction events
-------------------
+launch
+------
 
-* ``launch`` executes button actions, including validations, POST/GET
-  calls and optional server-side MDX lookups.【F:docs/source/repository.rst†L281-L322】
-* ``perform`` runs when a text widget icon is activated. The HTML markup
-  exposes the custom event name, and repository handlers often wrap the
-  work inside an ``execute`` function for reuse across multiple cells.【F:analogic/static/assets/js/widgets/text.js†L48-L55】【F:apps/helloanalogic/static/assets/js/configs/repository.js†L910-L951】
-* ``text_click`` is the default click action for text content, making it
-  easy to drive navigation or open popups from inline labels.【F:analogic/static/assets/js/widgets/text.js†L48-L55】
-* ``change`` and ``text_change`` are emitted by grid-style widgets when a
-  user edits an inline value. Repository handlers receive the column,
-  row and cell metadata so they can coordinate UI updates or persist the
-  change elsewhere.【F:apps/helloanalogic/static/assets/js/configs/repository.js†L175-L225】
-* ``choose`` reacts to drop-down selections and supports the same
-  validation, body and server flags as ``launch``.【F:docs/source/repository.rst†L325-L366】
-* ``cellEdit`` captures single cell edits from horizontal or scrollable
-  grids, forwarding the entered value to TM1 or other services.【F:docs/source/repository.rst†L368-L409】
-* ``pick`` handles DatePicker selections and can trigger follow-up
-  updates just like button events.【F:docs/source/repository.rst†L412-L453】
-* ``pasteCells`` batches bulk paste operations from scrollable grids and
-  sends them to TM1 via a PATCH request.【F:docs/source/repository.rst†L456-L487】
-* ``switch`` drives segmented controls and toggles, supporting optional
-  validation and REST execution.【F:docs/source/repository.rst†L490-L531】
-* ``slide`` is emitted by Slider widgets so repository logic can persist
-  or react to the numeric change.【F:docs/source/repository.rst†L534-L575】
-* ``write`` captures inline text edits, while ``save`` targets multiline
-  text areas. Both share the validation/REST contract described above.【F:docs/source/repository.rst†L577-L662】
-* ``writeEnd`` and ``writeKey`` allow fine-grained handling of textbox
-  edits—either on blur or specific key presses—before refreshing related
-  widgets.【F:docs/source/repository.rst†L665-L748】
-* ``rightclick`` is fired by context menu interactions, storing the
-  clicked cell information so custom menus or repository logic can act
-  on it.【F:analogic/static/assets/js/widgets/grid-table-light/grid-table-light.js†L789-L806】
+``launch()`` is usually bound to buttons or icons. It performs navigation or activates features, typically by calling ``Api.openPage()`` and optionally adjusting widget values beforehand.
 
-Data operations and executors
------------------------------
+perform
+-------
 
-* ``download`` event handlers can return download descriptors that the
-  framework passes to ``Server.download``, which streams the file and
-  saves it with the provided name.【F:analogic/static/assets/js/framework/write-executor/download.js†L3-L6】【F:analogic/static/assets/js/framework/server.js†L4-L98】
-* ``uploadImage`` handlers prepare ``FormData`` payloads, optional
-  callbacks and success messaging before the framework posts the file to
-  the backend.【F:analogic/static/assets/js/framework/server.js†L102-L180】
-* ``execute`` functions run immediately instead of issuing REST calls.
-  They are resolved by the write executor, which also invokes optional
-  callbacks once execution completes.【F:analogic/static/assets/js/framework/write-executor/base.js†L9-L106】
-* ``callback`` provides post-processing hooks that receive the original
-  context plus the handler response, making it easy to trigger chained
-  refreshes or popups.【F:analogic/static/assets/js/framework/write-executor/base.js†L68-L105】
-* ``script`` parsing controls enable bespoke transformation of TM1
-  responses when the built-in object/list/matrix parsers are not
-  sufficient.【F:docs/source/repository.rst†L247-L258】
-* ``RestRequest`` wrappers describe reusable REST calls that can be
-  returned from ``init`` or other handlers whenever the repository needs
-  to defer execution to the loader pipeline.【F:analogic/static/assets/js/framework/rest-request.js†L3-L11】
+``perform()`` is usually bound to icons. It performs navigation or activates features.
 
-API helpers
+text_click
+----------
+
+Handles click events on text widgets. Common uses include navigating back to a main page or triggering context-specific actions.
+
+switch
+------
+
+Executed when a segmented control changes state. It is responsible for refreshing or updating related widgets to reflect the new segment.
+
+initCondition
+-------------
+
+Evaluates whether the main ``init`` logic should run. Returning a truthy value allows initialization; otherwise it may be skipped.
+
+initDefault
 -----------
 
-The client ``Api`` object offers navigation, refresh and popup helpers
-that can be triggered from repository handlers or event-map entries. Key
-methods include navigation helpers (``openPage``, ``openPageWithState``
-variants, ``goToUrl``/``goToUrlNewTab``), refresh utilities
-(``forceRefresh*`` and ``updateContent*``) and popup controls
-(``openPopup``, ``closePopup``). Each method lists its parameters in the
-Event Map reference.【F:docs/source/eventmap.rst†L48-L205】
+Provides a fallback initialization when no specific condition is met, ensuring the component has baseline data.
 
-Utility helpers
+refreshFinished and initFinished
+--------------------------------
+
+Run after initial loading or a refresh has completed. These hooks typically force dependent widgets to reload or synchronise state.
+
+download
+--------
+
+``download()`` constructs parameters for exporting data, such as file name, segment selections, and query keys. Returned values are passed to the export service to generate a file.
+
+upload
+------
+
+``upload()`` prepares configuration for uploading files. It sets paths, validation settings, and optional callbacks to trigger processes after the upload completes.
+
+execute
+-------
+
+``execute()`` performs an action immediately, often returning option lists for segmented controls or executing logic when a switch or init event fires.
+
+script
+------
+
+``script()`` transforms raw query results into custom structures when default parsing is insufficient. Used when ``parsingControl.type`` is ``script``.
+
+callback
+--------
+
+``callback()`` runs after an action (like upload or process execution) finishes. It is typically used to trigger refreshes or follow-up requests.
+
+choose
+------
+
+``choose()`` runs when a user selects an item in widgets like drop-downs. It typically sends the chosen value to the server and may refresh widgets or close popups afterwards.
+
+write
+-----
+
+``write()`` submits edited values to the server. It patches cellsets or calls processes so grid or form changes persist.
+
+writeEnd
+--------
+
+``writeEnd()`` fires after editing completes. It stores the final value and refreshes any dependent widgets or charts.
+
+save
+----
+
+``save()`` commits text box or single-field edits to the server, usually by patching a specific cell ordinal with a new value.
+
+rightclick
+----------
+
+``rightclick()`` handles context menu actions on grid cells, often capturing the clicked cell and opening a popup with options.
+
+RestRequest
+-----------
+
+``RestRequest`` creates a configurable request object for server-side processes or writes, defining URL, method, payload, and callbacks.
+
+Api functions
+-------------
+
+- ``Api.openPage(page)`` navigates to the specified page.
+- ``Api.openPopup(id)`` displays a popup dialog.
+- ``Api.showPopup(id)`` reveals an already defined popup.
+- ``Api.closePopup(id)`` closes the given popup.
+- ``Api.goToStartPage()`` returns the user to the application's start screen.
+- ``Api.logout()`` signs the current user out.
+- ``Api.forceRefresh(widget)`` reloads a widget's data.
+- ``Api.forceRefreshWidgets([widgets])`` reloads multiple widgets at once.
+- ``Api.forceRefreshWithoutLoader(widget)`` refreshes a widget without showing a loading indicator.
+- ``Api.updateContent(widget)`` updates the content of a single widget.
+- ``Api.updateContentWithoutLoader(widget)`` updates a widget without a loader.
+- ``Api.updateWidgetsContent([widgets])`` updates several widgets.
+- ``Api.updateWidgetsContentWithoutLoader([widgets])`` updates several widgets without loaders.
+- ``Api.removeWidgetValues([widgets])`` clears cached values for the specified widgets.
+- ``Api.executeRequest(name)`` runs a named process or write request.
+- ``Api.executeQueryRequest(name)`` runs a query request and returns data.
+- ``Api.triggerWidgetEvent(widget, event)`` triggers a specific event on a widget.
+- ``Api.openPageWithState(page, state)`` opens a page and applies the provided state object.
+- ``Api.goToUrlNewTab(url)`` opens the specified URL in a new browser tab.
+- ``Api.hideWidgets([widgets])`` hides the given widgets.
+- ``Api.showWidgets([widgets])`` shows the specified widgets.
+- ``Api.togglePopup(id)`` toggles a popup's visibility.
+- ``Api.toggleWidget(widget)`` toggles the visibility of a widget.
+
+Utils functions
 ---------------
 
-``Utils`` centralises formatting, widget state access and grid table
-helpers. Highlights include number/date utilities such as
-``parseNumber`` and ``getFormattedDate``, grid-table accessors like
-``getGridTableCurrentCell``/``getGridTableCurrentRow``, and widget value
-setters like ``setWidgetValue``/``setWidgetValueIfNotExist``. These tools
-make it easy to read or update widget values without manually traversing
-the DOM.【F:analogic/static/assets/js/framework/utils.js†L47-L140】【F:analogic/static/assets/js/framework/utils.js†L207-L320】【F:analogic/static/assets/js/framework/utils.js†L374-L399】
+- ``Utils.openPopup(id)`` opens a client-side popup without server round trips.
+- ``Utils.closePopup(id)`` closes the specified popup.
+- ``Utils.togglePopup(id)`` toggles a popup's visibility.
+- ``Utils.setWidgetValue(widget, value)`` assigns a value to a widget.
+- ``Utils.setWidgetValueIfNotExist(widget, value)`` assigns a value only if the widget is empty.
+- ``Utils.getGridTableCurrentCell(table)`` returns information about the currently selected cell.
+- ``Utils.getGridTableCurrentRow(table)`` returns the current row object or index.
+- ``Utils.getGridTableCellByRowAndColumn(table, row, column)`` retrieves a cell by coordinates.
+- ``Utils.isGridTableLoaded(table)`` checks whether a grid table has finished loading.
+- ``Utils.getDropBoxSelectedItemAttribute(dropbox, attribute)`` reads an attribute from the selected dropdown item.
+- ``Utils.getFormattedDate(date)`` converts a Date object to a formatted string.
+- ``Utils.parseNumber(text)`` converts a formatted string to a numeric value.
+- ``Utils.separatesThousands(number)`` adds thousand separators to a number.
+- ``Utils.modifyFileName(name)`` adjusts file names, often appending timestamps or context.
+- ``Utils.getImpersonatingUserName()`` returns the username being impersonated.
+- ``Utils.isImpersonated()`` indicates whether the current session is impersonated.
+- ``Utils.reloadApp()`` reloads the entire application.
+- ``Utils.getGridTableCell(table, column)`` gets a cell from the current row at the specified column.
+- ``Utils.getGridTableToggleValue(table, row)`` retrieves the toggle state for a row in a grid table.
+- ``Utils.saveGridTableToggles(table, column)`` saves the current toggle states for later use.
+- ``Utils.getNavigationUrl(params)`` builds a navigation URL based on the provided parameters.
+- ``Utils.getDecimalFromPercentString(text)`` converts a percentage string into a decimal number.
+- ``Utils.escapeText(text)`` escapes special characters in a string, useful for pasted data.
+- ``Utils.toTitleCase(text)`` converts a string to title case.
+
+Additional widget events
+------------------------
+
+Beyond the common handlers above, repository files often define supplementary widget events:
+
+- ``pick()`` handles DatePicker selections so that repository logic can push calendar choices back to TM1 or refresh related widgets.
+- ``cellEdit()`` captures inline edits from grid-style widgets and forwards the changes to processes or PATCH requests.
+- ``pasteCells()`` batches clipboard pastes into scrollable grids, combining the payload before sending a single write request.
+- ``text_change()`` and ``change()`` respond to live text edits in grid tables, allowing repositories to validate or persist keystrokes.
+- ``slide()`` fires when slider widgets move, which is useful for updating dependent calculations immediately.
+- ``writeKey()`` triggers on specific key presses in text boxes, enabling actions before focus leaves the field.
+
+Additional Api helpers
+----------------------
+
+The framework exposes further navigation and refresh helpers that appear in event-map driven integrations:
+
+- ``Api.scrollTo(widget)`` scrolls the viewport to the given widget while triggering its refresh event.
+- ``Api.jumpTo(widget)`` jumps to a widget without animated scrolling.
+- ``Api.openPrevPage()`` returns to the previously viewed page, and ``Api.openPrevPageWithState()`` restores it with cached state.
+- ``Api.openPageWithWaitingForEvent(...)`` and its "scroll to section" variant delay navigation until a specified widget event completes.
+- ``Api.forceRefreshWithDelay([widget, delay])`` schedules a refresh after waiting for the supplied milliseconds.
+- ``Api.openPageAndScrollToSection(...)`` and related helpers combine navigation with scrolling and optional refresh lists.
+- ``Api.removePageValues(page)`` clears stored values for every widget on a page, while ``Api.removeValuesRecursively(page)`` also resets nested widgets.
+
+Additional Utils helpers
+------------------------
+
+Utility helpers extend far beyond value setters. Common patterns include:
+
+- ``Utils.sleep(ms)`` to pause async flows before chaining more repository actions.
+- ``Utils.stopEvent(event)`` to cancel DOM bubbling when custom controls wrap native inputs.
+- ``Utils.clone(object, deep)`` to create safe copies before mutating payloads.
+- ``Utils.scrollTop(duration)`` and ``Utils.scrollTo(target, duration, offset)`` for viewport management.
+- ``Utils.getRandomId()`` to generate stable identifiers for dynamic widget elements.
+- ``Utils.parseFormatStringToCSSClasses(text)`` to convert TM1-style format strings into CSS helper classes.
+- ``Utils.getTimestamp(date, forwardTime)`` and ``Utils.getToday(delimiter)`` to build TM1 friendly date strings.
+- ``Utils.stripHtml(text)`` and ``Utils.nl2br(text)`` when sanitising or reformatting rich text responses.
+- ``Utils.precisionRound(number, precision, toFixed)`` for consistent rounding logic in charting or grid summaries.
