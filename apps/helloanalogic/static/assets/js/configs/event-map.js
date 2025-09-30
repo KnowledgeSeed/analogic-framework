@@ -55,6 +55,12 @@ EventMap = {
             argument: 'analogicDemoPlanReport'
         }
     ],
+    'launch.analogicDemoMainRow3Cell7Button': [
+        {
+            action: Api.openPageWithState,
+            argument: 'analogicTableDemo'
+        }
+    ],
     'text_click.analogicDemoPlanReportRow1Cell1Text.finished': [
         {
             action: Api.openPageWithState,
@@ -393,6 +399,12 @@ EventMap = {
         }
     ],
     'text_click.analogicDemoReleaseAndValidationRow1Cell1Text.finished': [
+        {
+            action: Api.openPageWithState,
+            argument: 'analogicDemoMain'
+        }
+    ],
+    'launch.analogicTableDemoHeaderBack': [
         {
             action: Api.openPageWithState,
             argument: 'analogicDemoMain'
