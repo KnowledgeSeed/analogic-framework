@@ -461,7 +461,7 @@ class AnalogicTableWidget extends Widget {
         if (cellComponent) {
             this.updateCurrentPositionFromCell(cellComponent);
             if (eventName === 'cellEdited') {
-                this.scheduleCellMetadataSync(cellComponent);
+                this.syncCellMetadataFromComponent(cellComponent, {preferRowData: true});
             }
         }
         const repository = Repository[this.id] || {};
@@ -593,23 +593,6 @@ class AnalogicTableWidget extends Widget {
         return (args || []).find(arg => this.isColumnComponent(arg)) || null;
     }
 
-    scheduleCellMetadataSync(cellComponent) {
-        if (!this.isCellComponent(cellComponent)) {
-            return;
-        }
-        this.syncCellMetadataFromComponent(cellComponent, {skipDomCapture: true});
-        const sync = () => {
-            this.syncCellMetadataFromComponent(cellComponent);
-        };
-        if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
-            window.requestAnimationFrame(() => {
-                window.requestAnimationFrame(sync);
-            });
-        } else {
-            setTimeout(sync, 0);
-        }
-    }
-
     captureCellElementHtml(cellComponent) {
         if (!cellComponent || typeof cellComponent.getElement !== 'function') {
             return undefined;
@@ -637,6 +620,7 @@ class AnalogicTableWidget extends Widget {
 
         const {meta, field, rowData, rowIndex, columnIndex} = context;
         const skipDomCapture = options && options.skipDomCapture === true;
+        const preferRowData = options && options.preferRowData === true;
 
         let value;
         if (typeof cellComponent.getValue === 'function') {
@@ -652,7 +636,10 @@ class AnalogicTableWidget extends Widget {
         }
 
         let displayValue;
-        if (!skipDomCapture) {
+        if (preferRowData && rowData && field && Object.prototype.hasOwnProperty.call(rowData, field)) {
+            displayValue = rowData[field];
+        }
+        if (typeof displayValue === 'undefined' && !skipDomCapture) {
             displayValue = this.captureCellElementHtml(cellComponent);
         }
         if (typeof displayValue === 'undefined' && typeof value !== 'undefined') {
@@ -714,6 +701,10 @@ class AnalogicTableWidget extends Widget {
                 return false;
             }
         }
+        const requiredMethods = ['getRow', 'getField', 'getValue', 'getElement'];
+        if (requiredMethods.every((method) => typeof arg[method] === 'function')) {
+            return true;
+        }
         return '_cell' in arg;
     }
 
@@ -748,7 +739,10 @@ class AnalogicTableWidget extends Widget {
         if ('_column' in arg && arg._column) {
             return true;
         }
-        return typeof arg.getField === 'function' && typeof arg.getCells === 'function' && !this.isCellComponent(arg);
+        if (typeof arg.getField === 'function' && typeof arg.getCells === 'function' && !this.isCellComponent(arg)) {
+            return true;
+        }
+        return false;
     }
 
     executeRestRequest(restRequest, context) {
