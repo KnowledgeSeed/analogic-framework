@@ -2,11 +2,11 @@
 
 'use strict';
 
-class AnalogicTableWidget extends Widget {
+class GridTablePlusWidget extends Widget {
 
     constructor(options) {
         super(options);
-        this.isAnalogicTableWidget = true;
+        this.isGridTablePlusWidget = true;
         this.boundTabulatorHandlers = [];
         this.reset();
     }
@@ -35,7 +35,7 @@ class AnalogicTableWidget extends Widget {
     }
 
     getCssPrefix() {
-        return 'ks-analogic-table';
+        return 'ks-grid-table-plus';
     }
 
     getParameters(data) {
@@ -246,7 +246,7 @@ class AnalogicTableWidget extends Widget {
             try {
                 rowComponent = cellComponent.getRow();
             } catch (error) {
-                console.warn('AnalogicTableWidget: unable to resolve row from cell component', error);
+                console.warn('GridTablePlusWidget: unable to resolve row from cell component', error);
             }
         }
 
@@ -255,7 +255,7 @@ class AnalogicTableWidget extends Widget {
             try {
                 rowData = rowComponent.getData();
             } catch (error) {
-                console.warn('AnalogicTableWidget: unable to access row data from row component', error);
+                console.warn('GridTablePlusWidget: unable to access row data from row component', error);
             }
         }
 
@@ -275,7 +275,7 @@ class AnalogicTableWidget extends Widget {
                     rowIndex = index;
                 }
             } catch (error) {
-                console.warn('AnalogicTableWidget: unable to resolve row index from row component', error);
+                console.warn('GridTablePlusWidget: unable to resolve row index from row component', error);
             }
         }
 
@@ -293,7 +293,7 @@ class AnalogicTableWidget extends Widget {
                 try {
                     return cellComponent.getElement();
                 } catch (error) {
-                    console.warn('AnalogicTableWidget: unable to resolve cell element while locating metadata', error);
+                    console.warn('GridTablePlusWidget: unable to resolve cell element while locating metadata', error);
                     return null;
                 }
             })() : null;
@@ -345,7 +345,7 @@ class AnalogicTableWidget extends Widget {
 
     getHtml(widgetHtmls, processedData) {
         const definition = this.prepareTabulatorSetup(processedData || {});
-        const classes = ['ks-analogic-table', `ks-analogic-table-${definition.parameters.skin || 'standard'}`];
+        const classes = ['ks-grid-table-plus', `ks-grid-table-plus-${definition.parameters.skin || 'standard'}`];
         const styles = this.getGeneralStyles(processedData);
         if (definition.parameters.hideIfNoData && definition.data.length === 0) {
             styles.push('display:none;');
@@ -359,7 +359,7 @@ class AnalogicTableWidget extends Widget {
         const containerId = `${this.id}__tabulator`;
         return `<div class="${classes.join(' ')}" style="${styles.join('')}">
     ${this.options.title ? `<h3>${this.options.title}</h3>` : ''}
-    <div class="ks-analogic-table-inner">
+    <div class="ks-grid-table-plus-inner">
         <div class="analogic-tabulator" id="${containerId}"></div>
     </div>
 </div>`;
@@ -382,7 +382,7 @@ class AnalogicTableWidget extends Widget {
         container.innerHTML = '';
 
         if (typeof Tabulator === 'undefined') {
-            console.warn('Tabulator library is not available. AnalogicTableWidget cannot initialize.');
+            console.warn('Tabulator library is not available. GridTablePlusWidget cannot initialize.');
             return;
         }
 
@@ -488,7 +488,7 @@ class AnalogicTableWidget extends Widget {
             try {
                 rowComponent = cellComponent.getRow();
             } catch (error) {
-                console.warn('AnalogicTableWidget: unable to resolve row component from cell', error);
+                console.warn('GridTablePlusWidget: unable to resolve row component from cell', error);
             }
         }
         let columnComponent = this.extractColumnComponent(args);
@@ -496,7 +496,7 @@ class AnalogicTableWidget extends Widget {
             try {
                 columnComponent = cellComponent.getColumn();
             } catch (error) {
-                console.warn('AnalogicTableWidget: unable to resolve column component from cell', error);
+                console.warn('GridTablePlusWidget: unable to resolve column component from cell', error);
             }
         }
         const cellData = this.getCellFromTabulatorCell(cellComponent);
@@ -603,7 +603,7 @@ class AnalogicTableWidget extends Widget {
                 return element.innerHTML;
             }
         } catch (error) {
-            console.warn('AnalogicTableWidget: unable to resolve cell element while syncing metadata', error);
+            console.warn('GridTablePlusWidget: unable to resolve cell element while syncing metadata', error);
         }
         return undefined;
     }
@@ -627,7 +627,7 @@ class AnalogicTableWidget extends Widget {
             try {
                 value = cellComponent.getValue();
             } catch (error) {
-                console.warn('AnalogicTableWidget: unable to resolve cell value while syncing metadata', error);
+                console.warn('GridTablePlusWidget: unable to resolve cell value while syncing metadata', error);
             }
         }
 
@@ -685,7 +685,7 @@ class AnalogicTableWidget extends Widget {
                     element.innerHTML = displayValue;
                 }
             } catch (error) {
-                console.warn('AnalogicTableWidget: unable to update cell element while syncing metadata', error);
+                console.warn('GridTablePlusWidget: unable to update cell element while syncing metadata', error);
             }
         }
     }
@@ -820,7 +820,7 @@ class AnalogicTableWidget extends Widget {
     updateHtml(data) {
         const definition = this.tabulatorDefinition || this.prepareTabulatorSetup(data || {});
         const section = $('#' + this.id);
-        const main = section.find('.ks-analogic-table').first();
+        const main = section.find('.ks-grid-table-plus').first();
         if (!main.length) {
             return;
         }

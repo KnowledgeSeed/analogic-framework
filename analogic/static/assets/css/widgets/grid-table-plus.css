@@ -1,20 +1,20 @@
-.ks-analogic-table {
+.ks-grid-table-plus {
     width: 100%;
     display: block;
 }
 
-.ks-analogic-table .ks-analogic-table-inner {
+.ks-grid-table-plus .ks-grid-table-plus-inner {
     width: 100%;
     overflow-x: auto;
 }
 
-.ks-analogic-table h3 {
+.ks-grid-table-plus h3 {
     margin: 0 0 8px;
     font-size: 16px;
     font-weight: 600;
 }
 
-.ks-analogic-table .tabulator {
+.ks-grid-table-plus .tabulator {
     border: none;
     background: transparent;
     font-family: inherit;
@@ -23,42 +23,42 @@
     color: #111827;
 }
 
-.ks-analogic-table .tabulator .tabulator-header {
+.ks-grid-table-plus .tabulator .tabulator-header {
     border-bottom: 1px solid #d1d5db;
     background-color: transparent;
 }
 
-.ks-analogic-table .tabulator .tabulator-header .tabulator-col {
+.ks-grid-table-plus .tabulator .tabulator-header .tabulator-col {
     background-color: #f3f4f6;
     color: #111827;
     border-right: 1px solid #e5e7eb;
     font-weight: 600;
 }
 
-.ks-analogic-table .tabulator .tabulator-header .tabulator-col:last-child {
+.ks-grid-table-plus .tabulator .tabulator-header .tabulator-col:last-child {
     border-right: none;
 }
 
-.ks-analogic-table .tabulator .tabulator-tableholder {
+.ks-grid-table-plus .tabulator .tabulator-tableholder {
     overflow-x: auto;
 }
 
-.ks-analogic-table .tabulator .tabulator-tableholder .tabulator-table {
+.ks-grid-table-plus .tabulator .tabulator-tableholder .tabulator-table {
     background-color: #ffffff;
 }
 
-.ks-analogic-table .tabulator .tabulator-row {
+.ks-grid-table-plus .tabulator .tabulator-row {
     border-bottom: 1px solid #e5e7eb;
 }
 
-.ks-analogic-table .tabulator .tabulator-row:nth-child(even) {
+.ks-grid-table-plus .tabulator .tabulator-row:nth-child(even) {
     background-color: #f9fafb;
 }
 
-.ks-analogic-table .tabulator .tabulator-row .tabulator-cell {
+.ks-grid-table-plus .tabulator .tabulator-row .tabulator-cell {
     border-right: 1px solid #e5e7eb;
 }
 
-.ks-analogic-table .tabulator .tabulator-row .tabulator-cell:last-child {
+.ks-grid-table-plus .tabulator .tabulator-row .tabulator-cell:last-child {
     border-right: none;
 }
