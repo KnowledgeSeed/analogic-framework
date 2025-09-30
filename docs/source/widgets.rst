@@ -1415,6 +1415,139 @@ By following the above steps you can replace verbose ``GridTableWidget``
 setups with a single lightweight configuration while retaining full
 control over styling, behaviour and TM1 integrations.
 
+GridTablePlusWidget
+-------------------
+
+Overview
+~~~~~~~~
+
+``GridTablePlusWidget`` embeds a full `Tabulator <https://tabulator.info>`_
+instance inside Analogic. It accepts high level column and cell metadata
+from the repository, translates them to Tabulator column definitions and
+renders the grid with built-in support for grouping, selection, inline
+editing and clipboard integration. Compared to
+``GridTableLightWidget`` it targets interactive dashboards where Tabulator's
+rich feature set (re-sizable columns, range selection, context menus,
+custom formatters/editors) is required out of the box.
+
+Typical use cases
+~~~~~~~~~~~~~~~~~
+
+- **Portfolio tables:** grouped, filterable project lists with context
+  menus and inline editing as showcased by
+  ``analogicTableDemoTable`` in ``helloanalogic``.【F:apps/helloanalogic/static/assets/js/configs/repository.js†L964-L1035】【F:apps/helloanalogic/static/assets/js/configs/widget-config.js†L6433-L6484】
+- **Ad-hoc data grids:** quickly render TM1 payloads or custom arrays
+  with editors/filters for each column, such as the
+  ``analogicTableDemoSimpleTable`` example.【F:apps/helloanalogic/static/assets/js/configs/repository.js†L1102-L1284】【F:apps/helloanalogic/static/assets/js/configs/widget-config.js†L6485-L6529】
+- **Embedded analytics:** mix standard Tabulator options (grouping,
+  clipboard, tooltips) with Analogic skins to build rich analysis
+  panels without wiring dozens of child widgets.【F:apps/helloanalogic/static/assets/js/configs/repository.js†L977-L1003】【F:apps/helloanalogic/static/assets/js/configs/widget-config.js†L6459-L6479】
+
+Widget configuration
+~~~~~~~~~~~~~~~~~~~~
+
+Only a minimal configuration lives in ``widget-config.js`` because
+Tabulator behaviour is mostly repository-driven:
+
+- ``id`` (**required**): unique widget identifier.
+- ``type`` (**required**): must be ``GridTablePlusWidget``.
+- ``title``: optional caption displayed above the table.
+- ``minWidth``/``width``/``height``: sizing hints passed to the widget
+  container.【F:apps/helloanalogic/static/assets/js/configs/widget-config.js†L6465-L6484】【F:apps/helloanalogic/static/assets/js/configs/widget-config.js†L6506-L6527】
+- ``hideIfNoData``: hides the widget when the repository returns no
+  rows.【F:apps/helloanalogic/static/assets/js/configs/widget-config.js†L6465-L6484】
+- ``tabulatorOptions``: default Tabulator options merged with
+  repository-supplied settings (for example layout, selection mode or
+  tooltips).【F:apps/helloanalogic/static/assets/js/configs/widget-config.js†L6468-L6480】【F:analogic/static/assets/js/widgets/grid-table-plus/grid-table-plus.js†L51-L96】
+- ``tabulatorColumnOptions``/``tabulatorEvents``: optional overrides for
+  individual columns or Tabulator callbacks that are merged with the
+  repository payload.【F:analogic/static/assets/js/widgets/grid-table-plus/grid-table-plus.js†L47-L96】
+
+Widget behaviour
+~~~~~~~~~~~~~~~~
+
+At runtime ``GridTablePlusWidget`` merges three sources of options: the
+widget configuration, repository payload and data-driven column/cell
+metadata. Columns returned by the repository are normalised, default
+formatters are wrapped to ensure Analogic styling, and the widget keeps a
+``cellData`` matrix for quick access to the underlying metadata during
+events.【F:analogic/static/assets/js/widgets/grid-table-plus/grid-table-plus.js†L53-L124】 Tabulator receives the combined
+definition via ``prepareTabulatorSetup`` and is recreated when the
+repository sends fresh data.【F:analogic/static/assets/js/widgets/grid-table-plus/grid-table-plus.js†L69-L124】
+
+Repository contract
+~~~~~~~~~~~~~~~~~~~
+
+The repository entry must return an object with the following keys:
+
+- ``columns``: an array of column definitions (``title``, ``field``,
+  optional formatter/editor, alignment etc.). The widget augments each
+  column with Tabulator-specific defaults and merges overrides from
+  ``tabulatorColumnOptions``.【F:apps/helloanalogic/static/assets/js/configs/repository.js†L965-L1002】【F:analogic/static/assets/js/widgets/grid-table-plus/grid-table-plus.js†L69-L111】
+- ``data``: either plain values or Analogic cell objects (``value``,
+  ``displayValue``, ``metadata``). Each row is converted into Tabulator
+  data while preserving the ``__analogicCells`` map for event handlers.
+  【F:apps/helloanalogic/static/assets/js/configs/repository.js†L1005-L1048】【F:analogic/static/assets/js/widgets/grid-table-plus/grid-table-plus.js†L96-L124】
+- ``options``: additional Tabulator options (grouping, clipboard, height
+  etc.) that are merged with widget and default settings.【F:apps/helloanalogic/static/assets/js/configs/repository.js†L976-L1003】【F:analogic/static/assets/js/widgets/grid-table-plus/grid-table-plus.js†L102-L124】
+- ``events``: map of Tabulator event names to repository functions (for
+  example ``tableBuilt`` or ``cellEdited``). The widget binds them and
+  exposes helpers like ``ctx.getTabulator()``, ``ctx.getRowComponent()``
+  or ``ctx.getCell()`` for deeper integrations.【F:apps/helloanalogic/static/assets/js/configs/repository.js†L1003-L1067】【F:analogic/static/assets/js/widgets/grid-table-plus/grid-table-plus.js†L47-L124】
+
+Usage example
+~~~~~~~~~~~~~
+
+``helloanalogic`` demonstrates two variations:
+
+.. code-block:: javascript
+
+   // widget-config.js
+   {
+       id: 'analogicTableDemoTable',
+       type: GridTablePlusWidget,
+       title: 'Project Portfolio Overview',
+       minWidth: 960,
+       hideIfNoData: false,
+       tabulatorOptions: {
+           height: '520px',
+           layout: 'fitDataStretch',
+           movableColumns: true,
+           resizableColumnFit: true,
+           selectable: true,
+           selectableRangeMode: 'drag',
+           tooltipGenerationMode: 'hover'
+       }
+   }
+
+   // repository.js
+   {
+       analogicTableDemoTable: {
+           init() {
+               return {
+                   columns,
+                   data: rows,
+                   options: {
+                       groupBy: 'department',
+                       placeholder: 'No project portfolio data available',
+                       clipboard: true
+                   },
+                   events: {
+                       tableBuilt: 'tableBuilt',
+                       rowSelectionChanged: 'selectionChanged',
+                       cellClick: 'cellClicked',
+                       cellEdited: 'cellEdited'
+                   }
+               };
+           }
+       }
+   }
+
+The simplified table follows the same contract but returns synthetic
+cells and only subscribes to ``cellEdited`` events, proving that the
+widget can handle both complex and lightweight use cases with the same
+API.【F:apps/helloanalogic/static/assets/js/configs/repository.js†L1102-L1284】
+
 GridTableWidget
 ---------------
 
