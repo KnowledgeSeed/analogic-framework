@@ -810,7 +810,20 @@ Repository = {
                         const rowData = row && typeof row.getData === 'function' ? row.getData() : {};
                         const ownerMeta = rowData.__analogicCells ? rowData.__analogicCells.owner : null;
                         const owner = ownerMeta ? ownerMeta.value : '';
-                        return `${meta ? meta.value : cell.getValue()} • ${owner}`;
+                        let value;
+                        if (meta && typeof meta.displayValue !== 'undefined') {
+                            value = meta.displayValue;
+                        } else if (typeof cell.getValue === 'function') {
+                            value = cell.getValue();
+                        } else {
+                            const field = typeof cell.getField === 'function' ? cell.getField() : null;
+                            if (field && Object.prototype.hasOwnProperty.call(rowData, field)) {
+                                value = rowData[field];
+                            } else if (meta && typeof meta.value !== 'undefined') {
+                                value = meta.value;
+                            }
+                        }
+                        return `${typeof value !== 'undefined' ? value : ''} • ${owner}`;
                     }
                 },
                 {
