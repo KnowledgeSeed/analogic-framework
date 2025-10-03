@@ -372,7 +372,19 @@ WidgetConfig = {
                                     alignment: 'top-right',
                                     width: '23%',
                                     skin: '',
-                                    widgets: []
+                                    widgets: [
+                                        {
+                                            id: 'analogicDemoMainRow3Cell7Button',
+                                            type: ButtonWidget,
+                                            label: 'Tabulator Demo',
+                                            action: '',
+                                            width: '145',
+                                            icon: 'icon-grid',
+                                            fontColor: 'white',
+                                            skin: 'analogicDemomain_blue',
+                                            height: '145'
+                                        }
+                                    ]
                                 }
                             ]
                         },
@@ -6367,6 +6379,167 @@ WidgetConfig = {
                                     skin: 'table_header_2',
                                     iconColor: '#8FAB33',
                                     iconFontSize: 16
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+
+    analogicTableDemo:
+        {
+            id: 'analogicTableDemo',
+            type: PageWidget,
+            widgets: [
+                {
+                    id: 'analogicTableDemoGrid',
+                    type: GridWidget,
+                    marginLeft: '40',
+                    marginRight: '40',
+                    marginTop: '20',
+                    widgets: [
+                        {
+                            id: 'analogicTableDemoHeaderRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginBottom: '20',
+                            widgets: [
+                                {
+                                    id: 'analogicTableDemoHeaderBackCell',
+                                    type: GridCellWidget,
+                                    width: '18%',
+                                    alignment: 'center-left',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoHeaderBack',
+                                            type: ButtonWidget,
+                                            label: 'Back to Dashboard',
+                                            icon: 'icon-arrow-left',
+                                            width: '220',
+                                            skin: 'material_analogicDemo'
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'analogicTableDemoHeaderTitleCell',
+                                    type: GridCellWidget,
+                                    width: '62%',
+                                    alignment: 'center-left',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoHeaderTitle',
+                                            type: TextWidget,
+                                            title: 'Analogic Tabulator Showcase',
+                                            body: 'Explore selection, grouping, inline edits and custom renderers.',
+                                            skin: 'review_gd_header',
+                                            titleFontSize: 26,
+                                            bodyFontColor: '#6B6C6E'
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'analogicTableDemoHeaderInfoCell',
+                                    type: GridCellWidget,
+                                    width: '20%',
+                                    alignment: 'center-right',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoHeaderInfo',
+                                            type: TextWidget,
+                                            title: 'Tabulator v6 Demo',
+                                            body: 'Live inside GridTablePlusWidget',
+                                            skin: 'menu',
+                                            titleFontSize: 16,
+                                            bodyFontColor: '#4F5B66'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'analogicTableDemoContentRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            widgets: [
+                                {
+                                    id: 'analogicTableDemoContentCell',
+                                    type: GridCellWidget,
+                                    width: '100%',
+                                    alignment: 'top-left',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoTable',
+                                            type: GridTablePlusWidget,
+                                            title: 'Project Portfolio Overview',
+                                            minWidth: 960,
+                                            hideIfNoData: false,
+                                            tabulatorOptions: {
+                                                height: '520px',
+                                                layout: 'fitDataStretch',
+                                                movableColumns: true,
+                                                resizableColumnFit: true,
+                                                selectable: true,
+                                                selectableRangeMode: 'drag',
+                                                tooltipGenerationMode: 'hover'
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'analogicTableDemoSimpleInfoRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginTop: '24',
+                            marginBottom: '8',
+                            widgets: [
+                                {
+                                    id: 'analogicTableDemoSimpleInfoCell',
+                                    type: GridCellWidget,
+                                    width: '100%',
+                                    alignment: 'top-left',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoSimpleInfoText',
+                                            type: TextWidget,
+                                            title: 'Editable Ordinal Matrix',
+                                            body: 'Simple 10×30 grid with inline editing, filtering and ordinal tracking for each cell.',
+                                            titleFontSize: 18,
+                                            titleFontWeight: 600,
+                                            bodyFontColor: '#475569'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'analogicTableDemoSimpleTableRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginBottom: '24',
+                            widgets: [
+                                {
+                                    id: 'analogicTableDemoSimpleTableCell',
+                                    type: GridCellWidget,
+                                    width: '100%',
+                                    alignment: 'top-left',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoSimpleTable',
+                                            type: GridTablePlusWidget,
+                                            title: 'Editable Data Grid',
+                                            minWidth: 960,
+                                            hideIfNoData: false,
+                                            tabulatorOptions: {
+                                                height: '460px',
+                                                layout: 'fitDataStretch',
+                                                selectable: false,
+                                                resizableColumnFit: true
+                                            }
+                                        }
+                                    ]
                                 }
                             ]
                         }

@@ -673,6 +673,617 @@ Repository = {
         }
     },
 
+
+    analogicTableDemoTable: {
+        init() {
+            return this.buildResponse();
+        },
+        buildResponse() {
+            const statuses = ['Proposed', 'In Progress', 'At Risk', 'Completed'];
+            const healthStates = ['On Track', 'Needs Attention', 'Critical'];
+            const statusStyles = {
+                'Proposed': {bg: '#E0F2FE', color: '#0369A1'},
+                'In Progress': {bg: '#DBF4FF', color: '#0F6DCA'},
+                'At Risk': {bg: '#FEF3C7', color: '#B45309'},
+                'Completed': {bg: '#DCFCE7', color: '#047857'},
+                default: {bg: '#E2E8F0', color: '#475569'}
+            };
+            const healthStyles = {
+                'On Track': {bg: '#DCFCE7', color: '#166534'},
+                'Needs Attention': {bg: '#FEF3C7', color: '#B45309'},
+                'Critical': {bg: '#FEE2E2', color: '#B91C1C'},
+                default: {bg: '#E2E8F0', color: '#475569'}
+            };
+            const formatStatus = (value) => {
+                const style = statusStyles[value] || statusStyles.default;
+                return `<span style="display:inline-flex;align-items:center;padding:4px 12px;border-radius:999px;font-weight:600;background:${style.bg};color:${style.color};">${value}</span>`;
+            };
+            const formatHealth = (value) => {
+                const style = healthStyles[value] || healthStyles.default;
+                return `<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;font-weight:600;background:${style.bg};color:${style.color};">${value}</span>`;
+            };
+            const syncAttributes = (cell) => {
+                if (!cell || typeof cell.getElement !== 'function') {
+                    return null;
+                }
+                const element = cell.getElement();
+                const row = typeof cell.getRow === 'function' ? cell.getRow() : null;
+                const field = cell.getField();
+                const rowData = row && typeof row.getData === 'function' ? row.getData() : {};
+                const meta = rowData.__analogicCells ? rowData.__analogicCells[field] : null;
+                if (element && meta) {
+                    element.setAttribute('data-widget-id', meta.widgetId);
+                    element.setAttribute('data-row', meta.rowIndex);
+                    element.setAttribute('data-col', meta.columnIndex);
+                }
+                return meta;
+            };
+            const projects = [
+                {
+                    name: 'Enterprise Planning Revamp',
+                    code: 'EN-1021',
+                    owner: 'Alice Carter',
+                    department: 'Corporate Strategy',
+                    status: 'In Progress',
+                    progress: 68,
+                    budget: 1250000,
+                    start: '2024-01-15',
+                    end: '2024-07-31',
+                    health: 'On Track'
+                },
+                {
+                    name: 'Global Pricing Refresh',
+                    code: 'GP-2044',
+                    owner: 'Rajesh Patel',
+                    department: 'Commercial Excellence',
+                    status: 'Proposed',
+                    progress: 25,
+                    budget: 820000,
+                    start: '2024-03-01',
+                    end: '2024-09-15',
+                    health: 'Needs Attention'
+                },
+                {
+                    name: 'Inventory Visibility 360',
+                    code: 'SC-1180',
+                    owner: 'Maria Gomez',
+                    department: 'Supply Chain',
+                    status: 'At Risk',
+                    progress: 42,
+                    budget: 990000,
+                    start: '2023-11-10',
+                    end: '2024-06-21',
+                    health: 'Needs Attention'
+                },
+                {
+                    name: 'Sales Enablement 2.0',
+                    code: 'SE-0875',
+                    owner: 'Tomoko Ishikawa',
+                    department: 'Commercial Excellence',
+                    status: 'In Progress',
+                    progress: 81,
+                    budget: 760000,
+                    start: '2024-02-05',
+                    end: '2024-08-30',
+                    health: 'On Track'
+                },
+                {
+                    name: 'Data Lake Hardening',
+                    code: 'IT-3320',
+                    owner: 'Lukas Steiner',
+                    department: 'Technology Services',
+                    status: 'Completed',
+                    progress: 100,
+                    budget: 640000,
+                    start: '2023-05-02',
+                    end: '2024-01-19',
+                    health: 'On Track'
+                },
+                {
+                    name: 'Customer Portal UX Sprint',
+                    code: 'CX-4512',
+                    owner: 'Sofia Eriksen',
+                    department: 'Digital Experience',
+                    status: 'At Risk',
+                    progress: 58,
+                    budget: 540000,
+                    start: '2024-01-22',
+                    end: '2024-05-14',
+                    health: 'Critical'
+                }
+            ];
+            const actionButtons = (code) => `<div style="display:flex;gap:6px;justify-content:center;">
+    <button class="grid-table-plus-demo__action-button" data-action="details" data-project="${code}" style="padding:6px 12px;border-radius:6px;border:1px solid #CBD5E1;background:#FFFFFF;color:#1E293B;font-weight:600;cursor:pointer;">Details</button>
+    <button class="grid-table-plus-demo__action-button grid-table-plus-demo__action-button--primary" data-action="focus" data-project="${code}" style="padding:6px 12px;border-radius:6px;border:none;background:#2563EB;color:#FFFFFF;font-weight:600;cursor:pointer;">Focus</button>
+</div>`;
+            const columns = [
+                {
+                    title: 'Project',
+                    field: 'project',
+                    width: 250,
+                    headerFilter: 'input',
+                    headerSortTristate: true,
+                    frozen: true,
+                    tooltip(e, cell) {
+                        const meta = syncAttributes(cell);
+                        const row = typeof cell.getRow === 'function' ? cell.getRow() : null;
+                        const rowData = row && typeof row.getData === 'function' ? row.getData() : {};
+                        const ownerMeta = rowData.__analogicCells ? rowData.__analogicCells.owner : null;
+                        const owner = ownerMeta ? ownerMeta.value : '';
+                        let value;
+                        if (meta && typeof meta.displayValue !== 'undefined') {
+                            value = meta.displayValue;
+                        } else if (typeof cell.getValue === 'function') {
+                            value = cell.getValue();
+                        } else {
+                            const field = typeof cell.getField === 'function' ? cell.getField() : null;
+                            if (field && Object.prototype.hasOwnProperty.call(rowData, field)) {
+                                value = rowData[field];
+                            } else if (meta && typeof meta.value !== 'undefined') {
+                                value = meta.value;
+                            }
+                        }
+                        return `${typeof value !== 'undefined' ? value : ''} • ${owner}`;
+                    }
+                },
+                {
+                    title: 'Owner',
+                    field: 'owner',
+                    width: 170,
+                    headerFilter: 'input'
+                },
+                {
+                    title: 'Department',
+                    field: 'department',
+                    width: 190,
+                    headerFilter: 'select',
+                    headerFilterParams: {values: true}
+                },
+                {
+                    title: 'Status',
+                    field: 'status',
+                    width: 140,
+                    headerFilter: 'select',
+                    headerFilterParams: {values: statuses},
+                    editor: 'select',
+                    editorParams: {values: statuses},
+                    formatter(cell) {
+                        const meta = syncAttributes(cell);
+                        const raw = cell.getValue();
+                        const value = typeof raw !== 'undefined' ? raw : (meta && typeof meta.value !== 'undefined' ? meta.value : '');
+                        return formatStatus(value);
+                    }
+                },
+                {
+                    title: 'Progress',
+                    field: 'progress',
+                    width: 160,
+                    hozAlign: 'center',
+                    editor: 'number',
+                    editorParams: {min: 0, max: 100, step: 1},
+                    formatter(cell) {
+                        const meta = syncAttributes(cell);
+                        const rawValue = cell.getValue();
+                        let value = Number(rawValue);
+                        if (Number.isNaN(value)) {
+                            const fallback = meta && typeof meta.value !== 'undefined' ? Number(meta.value) : 0;
+                            value = Number.isNaN(fallback) ? 0 : fallback;
+                        }
+                        value = Math.max(0, Math.min(100, Math.round(value)));
+                        const accent = value >= 80 ? '#16A34A' : value >= 50 ? '#2563EB' : '#F97316';
+                        return `<div style="display:flex;align-items:center;gap:8px;width:100%;">
+    <div style="flex:1;height:8px;border-radius:999px;background:#E2E8F0;overflow:hidden;">
+        <div style="height:100%;width:${value}%;background:${accent};border-radius:999px;"></div>
+    </div>
+    <span style="min-width:42px;text-align:right;font-weight:600;color:#1F2937;">${value}%</span>
+</div>`;
+                    }
+                },
+                {
+                    title: 'Budget',
+                    field: 'budget',
+                    width: 140,
+                    hozAlign: 'right',
+                    headerFilter: 'input',
+                    formatter(cell) {
+                        const meta = syncAttributes(cell);
+                        const rawValue = cell.getValue();
+                        let value = Number(rawValue);
+                        if (Number.isNaN(value) && meta && typeof meta.value === 'number') {
+                            value = meta.value;
+                        }
+                        if (Number.isNaN(value)) {
+                            return cell.getValue();
+                        }
+                        const formatted = value >= 1000000 ? `€${(value / 1000000).toFixed(2)}M` : `€${value.toLocaleString('en-US')}`;
+                        return `<span style="font-variant-numeric:tabular-nums;font-weight:600;color:#1F2937;">${formatted}</span>`;
+                    },
+                    topCalc(values) {
+                        const total = (values || []).reduce((sum, current) => {
+                            if (typeof current === 'number') {
+                                return sum + current;
+                            }
+                            const parsed = parseFloat(current);
+                            return sum + (Number.isNaN(parsed) ? 0 : parsed);
+                        }, 0);
+                        return `€${total.toLocaleString('en-US')}`;
+                    }
+                },
+                {
+                    title: 'Start',
+                    field: 'start',
+                    width: 120,
+                    headerFilter: 'input',
+                    hozAlign: 'center'
+                },
+                {
+                    title: 'End',
+                    field: 'end',
+                    width: 120,
+                    headerFilter: 'input',
+                    hozAlign: 'center'
+                },
+                {
+                    title: 'Health',
+                    field: 'health',
+                    width: 150,
+                    hozAlign: 'center',
+                    headerFilter: 'select',
+                    headerFilterParams: {values: healthStates},
+                    formatter(cell) {
+                        const meta = syncAttributes(cell);
+                        const raw = cell.getValue();
+                        const value = typeof raw !== 'undefined' ? raw : (meta && typeof meta.value !== 'undefined' ? meta.value : '');
+                        return formatHealth(value);
+                    }
+                },
+                {
+                    title: 'Actions',
+                    field: 'actions',
+                    width: 200,
+                    hozAlign: 'center',
+                    headerSort: false
+                }
+            ];
+            const rows = projects.map((project) => ({
+                project: {
+                    value: project.name,
+                    displayValue: `<div style="display:flex;flex-direction:column;gap:2px;">
+    <span style="font-weight:600;color:#1F2933;">${project.name}</span>
+    <span style="font-size:12px;color:#6B7280;">${project.code}</span>
+</div>`
+                },
+                owner: project.owner,
+                department: project.department,
+                status: {
+                    value: project.status
+                },
+                progress: {
+                    value: project.progress
+                },
+                budget: {
+                    value: project.budget
+                },
+                start: project.start,
+                end: project.end,
+                health: {
+                    value: project.health
+                },
+                actions: {
+                    value: project.code,
+                    displayValue: actionButtons(project.code)
+                }
+            }));
+            const options = {
+                groupBy: 'department',
+                groupHeader(value, count) {
+                    return `<span style="font-weight:600;color:#1F2937;">${value}</span><span style="color:#64748B;margin-left:8px;">${count} project${count === 1 ? '' : 's'}</span>`;
+                },
+                placeholder: 'No project portfolio data available',
+                initialSort: [
+                    {column: 'status', dir: 'asc'},
+                    {column: 'progress', dir: 'desc'}
+                ],
+                columnDefaults: {
+                    headerFilterPlaceholder: 'Filter…',
+                    tooltip: true
+                },
+                rowContextMenu: [
+                    {
+                        label: 'Focus project in console',
+                        action(e, row) {
+                            const data = row.getData().__analogicCells || {};
+                            const project = data.project ? data.project.value : 'Unknown project';
+                            console.log('[GridTablePlusDemo] context menu -> focus project', project);
+                        }
+                    },
+                    {
+                        label: 'Log raw row data',
+                        action(e, row) {
+                            console.log('[GridTablePlusDemo] context menu -> row data', row.getData());
+                        }
+                    }
+                ],
+                clipboard: true
+            };
+            return {
+                columns: columns,
+                data: rows,
+                options: options,
+                events: {
+                    tableBuilt: 'tableBuilt',
+                    rowSelectionChanged: 'selectionChanged',
+                    cellClick: 'cellClicked',
+                    cellEdited: 'cellEdited'
+                }
+            };
+        },
+        tableBuilt(ctx) {
+            const table = ctx.getTabulator();
+            const rowCount = table && typeof table.getData === 'function' ? table.getData().length : 0;
+            console.log('[GridTablePlusDemo] table built with', rowCount, 'rows');
+        },
+        selectionChanged(ctx, data) {
+            const selected = Array.isArray(data) ? data.map((item) => {
+                if (item && item.__analogicCells && item.__analogicCells.project) {
+                    return item.__analogicCells.project.value;
+                }
+                return item && item.project ? item.project : '';
+            }).filter(Boolean) : [];
+            console.log('[GridTablePlusDemo] selection changed:', selected);
+        },
+        cellClicked(ctx, event) {
+            const rowComponent = ctx.getRowComponent();
+            const cells = rowComponent && typeof rowComponent.getData === 'function' ? rowComponent.getData().__analogicCells : null;
+            const projectName = cells && cells.project ? cells.project.value : 'Unknown project';
+            if (event && event.target && event.target.classList && event.target.classList.contains('grid-table-plus-demo__action-button')) {
+                const action = event.target.getAttribute('data-action') || 'action';
+                console.log(`[GridTablePlusDemo] ${action} button clicked for ${projectName}`);
+                event.stopPropagation();
+                return;
+            }
+            const meta = ctx.getCell();
+            const field = meta ? meta.field : 'n/a';
+            console.log('[GridTablePlusDemo] cell click ->', field, 'value:', meta ? meta.value : undefined, 'project:', projectName);
+        },
+        cellEdited(ctx) {
+            const meta = ctx.getCell();
+            const rowComponent = ctx.getRowComponent();
+            const cells = rowComponent && typeof rowComponent.getData === 'function' ? rowComponent.getData().__analogicCells : null;
+            const projectName = cells && cells.project ? cells.project.value : 'Unknown project';
+            if (meta) {
+                const component = typeof ctx.getCellComponent === 'function' ? ctx.getCellComponent() : null;
+                if (component && typeof component.getValue === 'function') {
+                    const updatedValue = component.getValue();
+                    meta.value = updatedValue;
+                    meta.displayValue = updatedValue;
+                }
+                console.log('[GridTablePlusDemo] cell edited ->', meta.field, 'is now', meta.value, 'for', projectName);
+            }
+        }
+    },
+
+    analogicTableDemoSimpleTable: {
+        columnCount: 10,
+        rowCount: 30,
+        init(source) {
+            const payload = this.preparePayload(source);
+            return this.buildResponse(payload);
+        },
+        preparePayload(source) {
+            const columnCount = this.columnCount || 10;
+            const rowCount = this.rowCount || 30;
+            const incomingCells = this.resolveIncomingCells(source);
+            if (incomingCells) {
+                return {
+                    columnCount,
+                    rowCount,
+                    cells: this.normalizeIncomingCells(incomingCells, columnCount, rowCount)
+                };
+            }
+            return this.generateSyntheticPayload(columnCount, rowCount);
+        },
+        resolveIncomingCells(source) {
+            if (!source) {
+                return null;
+            }
+            if (Array.isArray(source)) {
+                return source;
+            }
+            if (source && Array.isArray(source.cells)) {
+                return source.cells;
+            }
+            if (source && Array.isArray(source.data)) {
+                return source.data;
+            }
+            if (source && typeof source.getData === 'function') {
+                const data = source.getData();
+                if (Array.isArray(data)) {
+                    return data;
+                }
+                if (data && Array.isArray(data.cells)) {
+                    return data.cells;
+                }
+                if (data && Array.isArray(data.data)) {
+                    return data.data;
+                }
+            }
+            if (source && typeof source.getExtraParams === 'function') {
+                const extra = source.getExtraParams();
+                if (extra && Array.isArray(extra.cells)) {
+                    return extra.cells;
+                }
+                if (extra && Array.isArray(extra.data)) {
+                    return extra.data;
+                }
+            }
+            return null;
+        },
+        normalizeIncomingCells(cells, columnCount, rowCount) {
+            const total = columnCount * rowCount;
+            const normalized = [];
+            for (let index = 0; index < total; index++) {
+                const incoming = cells[index];
+                const ordinal = index;
+                if (incoming && typeof incoming === 'object') {
+                    const formatted = typeof incoming.FormattedValue !== 'undefined' ? incoming.FormattedValue : '';
+                    normalized.push({Ordinal: ordinal, FormattedValue: formatted});
+                } else {
+                    normalized.push({Ordinal: ordinal, FormattedValue: ''});
+                }
+            }
+            return normalized;
+        },
+        generateSyntheticPayload(columnCount, rowCount) {
+            const cells = [];
+            let ordinal = 0;
+            for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+                for (let columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                    cells.push({
+                        Ordinal: ordinal,
+                        FormattedValue: `Row ${rowIndex + 1} • Col ${columnIndex + 1}`
+                    });
+                    ordinal += 1;
+                }
+            }
+            return {columnCount, rowCount, cells};
+        },
+        buildResponse({columnCount, rowCount, cells}) {
+            const columns = Array.from({length: columnCount}, (_, index) => ({
+                title: `Column ${index + 1}`,
+                field: `col_${index + 1}`,
+                headerFilter: 'input',
+                headerFilterPlaceholder: 'Filter…',
+                sorter: 'string',
+                editor: 'input',
+                headerSortTristate: true
+            }));
+
+            const matrix = [];
+            const ordinalLookup = {};
+            const data = Array.from({length: rowCount}, (_, rowIndex) => {
+                const row = {};
+                const cellRow = [];
+                columns.forEach((column, columnIndex) => {
+                    const payloadIndex = rowIndex * columnCount + columnIndex;
+                    const payload = cells[payloadIndex] || {};
+                    const cell = this.normalizePayloadCell(payload, rowIndex, columnIndex, column.field);
+                    row[column.field] = cell;
+                    cellRow.push(cell);
+                    const cellOrdinal = cell && cell.metadata ? cell.metadata.ordinal : null;
+                    if (typeof cellOrdinal === 'number') {
+                        ordinalLookup[cellOrdinal] = {rowIndex, columnIndex, field: column.field, cell: cell};
+                    }
+                });
+                matrix.push(cellRow);
+                return row;
+            });
+
+            this.simpleTableState = {
+                columnCount: columnCount,
+                rowCount: rowCount,
+                cells: cells,
+                matrix: matrix,
+                ordinalLookup: ordinalLookup
+            };
+
+            const options = {
+                layout: 'fitDataStretch',
+                height: '460px',
+                columnDefaults: {
+                    headerFilterPlaceholder: 'Filter…'
+                }
+            };
+
+            return {
+                columns: columns,
+                data: data,
+                options: options,
+                events: {
+                    cellEdited: 'cellEdited'
+                }
+            };
+        },
+        normalizePayloadCell(payload, rowIndex, columnIndex, field) {
+            const formattedValue = payload && typeof payload.FormattedValue !== 'undefined' ? payload.FormattedValue : '';
+            const ordinal = payload && typeof payload.Ordinal !== 'undefined' ? payload.Ordinal : null;
+            const metadata = {
+                ordinal: ordinal,
+                payload: payload,
+                rowIndex: rowIndex,
+                columnIndex: columnIndex,
+                field: field
+            };
+
+            return {
+                value: formattedValue,
+                displayValue: formattedValue,
+                metadata: metadata
+            };
+        },
+        cellEdited(ctx) {
+            const component = typeof ctx.getCellComponent === 'function' ? ctx.getCellComponent() : null;
+            const meta = typeof ctx.getCell === 'function' ? ctx.getCell() : null;
+            const updatedValue = component && typeof component.getValue === 'function' ? component.getValue() : undefined;
+
+            if (!meta) {
+                return;
+            }
+
+            meta.value = updatedValue;
+            meta.displayValue = updatedValue;
+
+            if (!meta.metadata || typeof meta.metadata !== 'object') {
+                meta.metadata = {};
+            }
+
+            meta.metadata.updatedValue = updatedValue;
+            if (meta.metadata.payload && typeof meta.metadata.payload === 'object') {
+                meta.metadata.payload.FormattedValue = updatedValue;
+            }
+
+            const ordinal = meta.metadata && typeof meta.metadata.ordinal !== 'undefined' ? meta.metadata.ordinal : null;
+
+            const rowIndex = typeof ctx.getRowIndex === 'function' ? ctx.getRowIndex() : undefined;
+            const columnIndex = typeof ctx.getColumnIndex === 'function' ? ctx.getColumnIndex() : undefined;
+
+            if (typeof rowIndex === 'number' && typeof columnIndex === 'number' && this.simpleTableState && Array.isArray(this.simpleTableState.matrix)) {
+                const row = this.simpleTableState.matrix[rowIndex];
+                if (row && row[columnIndex]) {
+                    row[columnIndex].value = updatedValue;
+                    row[columnIndex].displayValue = updatedValue;
+                    if (!row[columnIndex].metadata || typeof row[columnIndex].metadata !== 'object') {
+                        row[columnIndex].metadata = {};
+                    }
+                    row[columnIndex].metadata.updatedValue = updatedValue;
+                }
+            }
+
+            if (typeof ordinal === 'number' && this.simpleTableState && Array.isArray(this.simpleTableState.cells)) {
+                const originalPayload = this.simpleTableState.cells[ordinal];
+                if (originalPayload) {
+                    originalPayload.FormattedValue = updatedValue;
+                }
+            }
+
+            if (typeof ordinal === 'number' && this.simpleTableState && this.simpleTableState.ordinalLookup) {
+                this.simpleTableState.ordinalLookup[ordinal] = {
+                    rowIndex: typeof rowIndex === 'number' ? rowIndex : null,
+                    columnIndex: typeof columnIndex === 'number' ? columnIndex : null,
+                    field: meta.field || (typeof ctx.getColumnField === 'function' ? ctx.getColumnField() : undefined),
+                    cell: meta
+                };
+            }
+
+            console.log('[GridTablePlusSimpleDemo] cell edited', {
+                field: meta.field || (typeof ctx.getColumnField === 'function' ? ctx.getColumnField() : undefined),
+                ordinal: ordinal,
+                value: updatedValue
+            });
+        }
+    },
+
+
     // Review Contracts
     analogicDemoReviewContracts: {
         updateanalogicDemoReviewContractsGridTableCell: (gridTableId, actualRow, actualColumn) => {
