@@ -187,3 +187,152 @@ The backend automatically fetches the file from the correct storage based on the
 #. Test uploads and downloads through the ``sharepoint/upload`` and ``sharepoint/download`` endpoints.
 
 Following these steps allows you to integrate the SharePoint upload widget into any Analogic-based project quickly.
+
+Analogic File Upload Extension – Comprehensive Guide
+----------------------------------------------------
+
+1. Overview
+~~~~~~~~~~~
+
+The ``analogic-ext-file-upload`` project delivers a secure file-upload pipeline with optional validation and preprocessing for business data loading scenarios. The main entry point is the ``/upload`` endpoint, built on the Flask-based Analogic endpoint system and orchestrated by the ``FileUploadManager`` class, which coordinates the upload, validation, and file-movement steps. See ``analogic_file_upload/file_upload_endpoints.py`` and ``analogic_file_upload/upload.py`` for the implementation details.
+
+2. Prerequisites and dependencies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The extension relies on the following components:
+
+* **Analogic platform** – classes such as ``AnalogicEndpoint`` and ``get_authentication_provider`` come from the Analogic ecosystem, so the application must run inside this framework. (``analogic_file_upload/file_upload_endpoints.py``)
+* **Flask** – upload handling uses Flask's ``request`` object. (``analogic_file_upload/file_upload_endpoints.py``)
+* **TM1/TM1py** – preprocessing rules are retrieved from a TM1 service via TM1py's ``build_pandas_dataframe_from_cellset`` helper. (``analogic_file_upload/upload.py``)
+* **Pandas, chardet, PyYAML** – Pandas powers file parsing, chardet infers character encoding, and PyYAML loads ``mdx.yml``. (``analogic_file_upload/upload.py``)
+* **File-system access** – ensure the configured ``target`` and optional ``staging`` directories exist and are writable.
+
+3. Installation and packaging
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Follow the steps in the root ``README.md`` (building, uploading to devpi, installing) to install the project. When publishing the package, bump the version and copy ``setup.py``, ``MANIFEST.in``, and ``pyproject.toml`` to the required locations.
+
+4. Core components
+~~~~~~~~~~~~~~~~~~
+
+4.1 ``FileUploadManager``
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``FileUploadManager`` orchestrates every phase of the upload process:
+
+* ``upload(target, staging, sub_folder, files, excel_header_row_end, float_format_number)`` – saves incoming files to the specified staging or target directory, optionally creating a sub-folder, and converts Excel files to CSV. Both decimal precision and header range are configurable. (``analogic_file_upload/upload.py``)
+* ``pre_process(tm1_service, preprocess_template, target)`` – loads preprocessing rules via MDX, then validates files in the target directory (extension, empty content, column counts, and more). (``analogic_file_upload/upload.py``)
+* ``move(target, staging, sub_folder)`` – moves files from staging to the final ``target`` directory and removes the temporary folder afterwards. (``analogic_file_upload/upload.py``)
+* ``_check_*`` helpers – perform detailed checks for extensions, non-empty contents, delimiters, quotes, headers, and encodings. (``analogic_file_upload/upload.py``)
+
+4.2 ``mdx.yml``
+^^^^^^^^^^^^^^^
+
+Stores the MDX query used to fetch preprocessing rules along with configuration for index/value fields. The ``$preprocess_template`` placeholder is replaced by the template value supplied in the request. (``analogic_file_upload/mdx.yml``)
+
+4.3 ``file_upload_endpoints``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Registers the ``/upload`` route and coordinates authentication, validation, and preprocessing by delegating to ``FileUploadManager``. (``analogic_file_upload/file_upload_endpoints.py``)
+
+5. Process walkthrough
+~~~~~~~~~~~~~~~~~~~~~~
+
+#. The client sends a POST request to ``/upload`` with the required form fields and files.
+#. The endpoint authenticates the user and calls ``FileUploadManager.upload``.
+#. If provided, custom validation logic (``validation`` parameter) is loaded and executed.
+#. When preprocessing is requested, files are validated according to MDX-based rules.
+#. If a staging directory is specified, files are moved to the final target at the end.
+#. The response is ``ok`` or an HTML-formatted error message when something fails.
+
+6. HTTP endpoint and parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``/upload`` endpoint accepts HTTP ``POST`` requests with ``multipart/form-data`` content. Supported form fields:
+
+.. list-table::
+   :header-rows: 1
+
+   * - Parameter
+     - Type
+     - Required
+     - Description
+   * - ``target``
+     - string
+     - yes
+     - Final destination directory for the uploaded files (write permissions required). (``analogic_file_upload/file_upload_endpoints.py``)
+   * - ``staging``
+     - string
+     - no
+     - Temporary directory used during validation and preprocessing; when omitted, files go straight to ``target``. (``analogic_file_upload/upload.py``)
+   * - ``subFolder``
+     - string
+     - no
+     - Name of the subdirectory created under staging/target to isolate each upload. (``analogic_file_upload/upload.py``)
+   * - ``excelHeaderRowEnd``
+     - int
+     - no
+     - Last index of the header rows for multi-line Excel headers, passed to the Pandas ``header`` parameter. (``analogic_file_upload/file_upload_endpoints.py``)
+   * - ``floatFormatNumber``
+     - int
+     - no
+     - Decimal precision when converting Excel to CSV (default: 2). (``analogic_file_upload/file_upload_endpoints.py``)
+   * - ``validation``
+     - string
+     - no
+     - Key of a custom validation object defined in Analogic settings; the ClassLoader executes the referenced logic. Leave blank to skip extra validation. (``analogic_file_upload/file_upload_endpoints.py``)
+   * - ``preProcessTemplate``
+     - string
+     - no
+     - MDX template name for preprocessing rules; leave blank to skip preprocessing. (``analogic_file_upload/file_upload_endpoints.py``)
+   * - ``files``
+     - file(s)
+     - yes
+     - One or more files to upload.
+
+7. Validation hooks
+~~~~~~~~~~~~~~~~~~~
+
+* The ``validation`` parameter points to an Analogic custom object. Based on the retrieved ``description``, ``ClassLoader().call(...)`` executes the referenced Python code, which receives the Flask request, TM1 service, settings, authentication provider, and temporary file path. (``analogic_file_upload/file_upload_endpoints.py``)
+* The validator returns an HTML-formatted string; when non-empty, the endpoint responds with ``ERROR!`` followed by the message.
+
+8. Preprocessing rules and checks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* The ``upload_preprocess`` entry in ``mdx.yml`` determines which TM1 measures are read (extension, expected column counts, headers, quotes, emptiness, and more). (``analogic_file_upload/mdx.yml``)
+* ``_pre_process_validate`` runs the following checks for each file: ``_check_extension``, ``_check_not_empty``, and ``_check_content`` (delimiter, quote pairs, column counts, headers, optional encoding). (``analogic_file_upload/upload.py``)
+* On errors, offending files are removed from staging and users receive a detailed HTML-formatted error message. (``analogic_file_upload/upload.py``)
+
+9. Directory and file management
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* When ``subFolder`` is provided, ``upload`` creates the directory if it does not already exist. (``analogic_file_upload/upload.py``)
+* Using staging helps isolate incoming files and only move them to the target after successful validation via ``move``. (``analogic_file_upload/upload.py``)
+* If the upload fails, the staging directory can remain for troubleshooting; cleanup is up to the caller.
+
+10. Extending and customizing the code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. **Create a custom validator** – add a Python module within your project and register it as a custom object in the Analogic admin interface. The function can accept ``request``, ``tm1_service``, ``setting``, ``auth_provider``, and ``path``, returning a string.
+
+   .. code-block:: python
+
+      def validate_sales_upload(request, tm1_service, setting, auth_provider, path, **kwargs):
+          """Example: ensure at least one CSV is provided."""
+          files = [f for f in os.listdir(path) if f.lower().endswith('.csv')]
+          if not files:
+              return 'At least one CSV file must be uploaded.'
+          return ''
+
+2. **Add a new preprocessing template** – extend your TM1 cube with the required rules, then record the corresponding measures in the MDX query.
+3. **Adjust Excel → CSV conversion** – supply ``excelHeaderRowEnd`` and ``floatFormatNumber`` from the client to control formatting.
+4. **Error handling** – the endpoint logs every exception via the authentication provider's logger before returning a generic error. Inspect the logs for deeper analysis. (``analogic_file_upload/file_upload_endpoints.py``)
+
+11. Developer tips
+~~~~~~~~~~~~~~~~~~
+
+* **Permissions** – ensure the ``target`` and ``staging`` directories are accessible before running the upload.
+* **Environment differences** – Pandas' Excel support may require ``openpyxl`` or ``xlrd``, depending on the environment.
+* **Testing** – use isolated staging folders and automated fixture files so the validation logic is easier to verify.
+
+This guide summarises how the Analogic file upload extension works, its integration points, and customisation opportunities to accelerate onboarding and project integration.
