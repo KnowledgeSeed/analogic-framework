@@ -25,3 +25,4 @@ Contents
    eventmap
    createapp
    authenticationmodes
+   extensions/index
