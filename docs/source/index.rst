@@ -25,3 +25,4 @@ Contents
    eventmap
    createapp
    authenticationmodes
+   Extensions/Ext. Widgets <extensions/ext_widgets/index>
