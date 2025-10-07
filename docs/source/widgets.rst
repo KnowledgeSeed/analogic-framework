@@ -182,127 +182,103 @@ Usage example
 Configuration
 ~~~~~~~~~~~~~
 
-- data:
-- datasets:
-- paddingTop:
-- paddingRight:
-- padding Bottom:
-- PaddingLeft:
-- tooltipsEnabled\ **:** true or false, parameters of dataset are shown
-   on mouse hover
-- tooltipsMode\ **:** mode of hover tooltip menu
-- legendGroupByStack\ **:** makes group from dataset legends
-- skin\ **:** Selected skin of widget
-- plot\ **:** true or false, not just y, but x values are also given
-   (not just categories, like years, types, etc.)
-- id\ **:** widget id which used for reference in framework
-- xAxesLabel\ **:** label of X axes
-- xAxesDisplay\ **:** true or false,, default true, display the x axes
-- xAxesGridLinesDisplay\ **:**  true or false, display the x axes grid
-   lines
-- xAxesGridLinesDrawBorder\ **:**  true or false, display the x axes
-   grid lines drow border
-- xAxesGridLinesDrawOnChartArea\ **:**  true or false, display the x
-   axes grid lines draw on chart are
-- xAxesGridLinesDrawTicks\ **:**  true or false, display the x axes
-   grid lines draw ticks
-- xAxesGridLinesColor\ **:** color of the x axes grid lines
-- xAxesTicksFontSize\ **:** size of the x axes ticks
-- xAxesTicksFontFamily\ **:** string, default 'imago, sans-serif'
-- xAxesTicksFontStyle\ **:** string, default 'bold'
-- xAxesTicksFontColor\ **:** color of the x axes ticks
-- xAxesTicksPadding\ **:** padding between X axes ticks
-- xAxesTicksOffset:
-- xAxesLabelDisplay\ **:**  true or false, display the x axes label
-- xAxesLabelFontSize\ **:** size of the x axes label
-- xAxesLabelFontFamily\ **:** font family of the x axes label
-- xAxesLabelFontColor\ **:** color of the a axes label
-- xAxesLabelFontStyle\ **:** style of the x axes label
-- xAxesLabelPadding\ **:** padding between X axes label
-- xAxesLabelRotation\ **:** vertical, horizontal
-- xAxesStacked\ **:** stack datasets on X axes
-- xAxesTicksBegintAtZero\ **:** true or false, begin the x axes at zero
-- xAxesOffsetGridLines\ **:** if true, grid lines will be shifted to be
-   between labels
-- xAxesZeroLineColor\ **:** color of the X axes zero line
-- leftYAxesDisplay\ **:**  true or false, display the left y axes
-- leftYAxesBorderDash\ **:** length and spacing of dashes on grid lines
-- leftYAxesStacked\ **:** stack datasets on Y axes
-- leftYAxesMin\ **:** minimum of the left y axes
-- leftYAxesMax\ **:** max of the left y axes
-- leftYAxesStepSize\ **:** step size of the left y axes
-- leftYAxesZeroLineColor\ **:** color of the left Y axes zero line
-- leftYAxesGridLinesDisplay\ **:**  true or false, display the left y
-   axes grid lines
-- leftYAxesGridLinesDrawBorder\ **:** first grid line is visible, even
-   if others are not
-- leftYAxesGridLinesColor\ **:** color of the left y axes grid lines
-- leftYAxesGridLinesDrawOnChartArea\ **:** true or false, display the y
-   axes grid lines draw on chart are
-- leftYAxesGridLinesDrawTicks\ **:** true or false, display the left y
-   axes grid line ticks
-- leftYAxesLabel\ **:** label of the left y axes
-- leftYAxesLabelConcat\ **:** str to add to the left Y axes ticks
-- leftYAxesLabelFontSize\ **:** font size of the left y axes label
-- leftYAxesLabelFontFamily\ **:** font family of the left y axes label
-- leftYAxesLabelFontColor\ **:** font color of the left y axes label
-- leftYAxesLabelFontStyle\ **:** font style of the left y axes label
-- leftYAxesLabelPadding\ **:** padding between Y axes label
-- leftYAxesLabelRotation\ **:** vertical, horizontal
-- leftYAxesTicksBegintAtZero\ **:**  true or false, begin the left y
-   axes with zero
-- leftYAxesTicksFontSize\ **:** font size of the left y axes ticks
-- leftYAxesTicksFontFamily\ **:** font family of the left y axes ticks
-- leftYAxesTicksFontStyle\ **:** font style of the left y axes ticks
-- leftYAxesTicksFontColor\ **:** font color of the left y axes ticks
-- leftYAxesTicksPadding\ **:** padding between Y axes ticks
-- leftYAxesTicksDisplay\ **:** true or false, display the left y axes
-   ticks
-- leftYAxesTicksOffset\ **:** offset (distance) between ticks of left Y
-   axes
-- leftYAxesLabelSeparatesThousands\ **:** Separates the Y Axes
-- rightYAxesBorderDash\ **:**  length and spacing of dashes on grid
-   lines
-- rightYAxesTicksBegintAtZero\ **:** begin at zero the right y axes
-   ticks
-- rightYAxesTicksPadding\ **:** padding between Y axes ticks
-- rightYAxesTicksDisplay\ **:** true or false, display the right y axes
-   ticks
-- rightYAxesGridLinesDisplay\ **:** true or false display the right y
-   axes grid lines
-- rightYAxesLabel\ **:** label of the right y axes label
-- rightYAxesLabelDisplay\ **:**  true or false, display the right y
-   axes label
-- rightYAxesLabelFontColor\ **:**  color of the right y axes label
-- rightYAxesLabelFontFamily\ **:** font family of the right y axes
-   label
-- rightYAxesLabelFontSize\ **:** size of the right y axes label
-- rightYAxesLabelFontStyle\ **:** style of the right y axes label
-- rightYAxesLabelPadding\ **:**  padding between Y axes label
-- rightYAxesLabelRotation\ **:**  vertical, horizontal
-- rightYAxesStacked\ **:** stack datasets on Y axes
-- rightYAxesDisplay\ **:** true or false, display the right y axes
-   display
-- rightYAxesGridLinesColor\ **:** color of the right y axes grid lines
-- rightYAxesGridLinesDrawBorder\ **:** border of the right y axes grid
-   lines
-- rightYAxesTicksFontColor\ **:** color of the right y axes ticks
-- rightYAxesTicksFontFamily\ **:** font family of the right y axes
-   ticks
-- rightYAxesTicksFontSize\ **:** size of the right y axes ticks
-- rightYAxesTicksFontStyle\ **:** style of the right y axes ticks
-- rightYAxesTicksOffset\ **:** offset (distance) between ticks of right
-   Y axes
-- canvasHeight\ **:** height of the canvas
-- canvasWidth\ **:** width of the canvas
-- draggable\ **:** true or false, if chart is draggable and moveable
-- responsive\ **:** true or false, chart size depends on screen size
-- aspectRatio:
-- maintainAspectRatio\ **:** true or false, width depends on height
-- bezierCurve\ **:** true or false, display the bezier curve
-- showLinearXAxes\ **:**  true or false, display the linear x axes
-- customLabelsForYAxes:\ **:** Labels For Y Axes like %
-- tooltipsSeparatesThousands:\ **:** Separates the the tooltips
+- ``data``:
+- ``datasets``:
+- ``paddingTop``:
+- ``paddingRight``:
+- ``padding Bottom``:
+- ``PaddingLeft``:
+- ``tooltipsEnabled``: true or false, parameters of dataset are shown on mouse hover
+- ``tooltipsMode``: mode of hover tooltip menu
+- ``legendGroupByStack``: makes group from dataset legends
+- ``skin``: Selected skin of widget
+- ``plot``: true or false, not just y, but x values are also given (not just categories, like years, types, etc.)
+- ``id``: widget id which used for reference in framework
+- ``xAxesLabel``: label of X axes
+- ``xAxesDisplay``: true or false,, default true, display the x axes
+- ``xAxesGridLinesDisplay``: true or false, display the x axes grid lines
+- ``xAxesGridLinesDrawBorder``: true or false, display the x axes grid lines drow border
+- ``xAxesGridLinesDrawOnChartArea``: true or false, display the x axes grid lines draw on chart are
+- ``xAxesGridLinesDrawTicks``: true or false, display the x axes grid lines draw ticks
+- ``xAxesGridLinesColor``: color of the x axes grid lines
+- ``xAxesTicksFontSize``: size of the x axes ticks
+- ``xAxesTicksFontFamily``: string, default 'imago, sans-serif'
+- ``xAxesTicksFontStyle``: string, default 'bold'
+- ``xAxesTicksFontColor``: color of the x axes ticks
+- ``xAxesTicksPadding``: padding between X axes ticks
+- ``xAxesTicksOffset``:
+- ``xAxesLabelDisplay``: true or false, display the x axes label
+- ``xAxesLabelFontSize``: size of the x axes label
+- ``xAxesLabelFontFamily``: font family of the x axes label
+- ``xAxesLabelFontColor``: color of the a axes label
+- ``xAxesLabelFontStyle``: style of the x axes label
+- ``xAxesLabelPadding``: padding between X axes label
+- ``xAxesLabelRotation``: vertical, horizontal
+- ``xAxesStacked``: stack datasets on X axes
+- ``xAxesTicksBegintAtZero``: true or false, begin the x axes at zero
+- ``xAxesOffsetGridLines``: if true, grid lines will be shifted to be between labels
+- ``xAxesZeroLineColor``: color of the X axes zero line
+- ``leftYAxesDisplay``: true or false, display the left y axes
+- ``leftYAxesBorderDash``: length and spacing of dashes on grid lines
+- ``leftYAxesStacked``: stack datasets on Y axes
+- ``leftYAxesMin``: minimum of the left y axes
+- ``leftYAxesMax``: max of the left y axes
+- ``leftYAxesStepSize``: step size of the left y axes
+- ``leftYAxesZeroLineColor``: color of the left Y axes zero line
+- ``leftYAxesGridLinesDisplay``: true or false, display the left y axes grid lines
+- ``leftYAxesGridLinesDrawBorder``: first grid line is visible, even if others are not
+- ``leftYAxesGridLinesColor``: color of the left y axes grid lines
+- ``leftYAxesGridLinesDrawOnChartArea``: true or false, display the y axes grid lines draw on chart are
+- ``leftYAxesGridLinesDrawTicks``: true or false, display the left y axes grid line ticks
+- ``leftYAxesLabel``: label of the left y axes
+- ``leftYAxesLabelConcat``: str to add to the left Y axes ticks
+- ``leftYAxesLabelFontSize``: font size of the left y axes label
+- ``leftYAxesLabelFontFamily``: font family of the left y axes label
+- ``leftYAxesLabelFontColor``: font color of the left y axes label
+- ``leftYAxesLabelFontStyle``: font style of the left y axes label
+- ``leftYAxesLabelPadding``: padding between Y axes label
+- ``leftYAxesLabelRotation``: vertical, horizontal
+- ``leftYAxesTicksBegintAtZero``: true or false, begin the left y axes with zero
+- ``leftYAxesTicksFontSize``: font size of the left y axes ticks
+- ``leftYAxesTicksFontFamily``: font family of the left y axes ticks
+- ``leftYAxesTicksFontStyle``: font style of the left y axes ticks
+- ``leftYAxesTicksFontColor``: font color of the left y axes ticks
+- ``leftYAxesTicksPadding``: padding between Y axes ticks
+- ``leftYAxesTicksDisplay``: true or false, display the left y axes ticks
+- ``leftYAxesTicksOffset``: offset (distance) between ticks of left Y axes
+- ``leftYAxesLabelSeparatesThousands``: Separates the Y Axes
+- ``rightYAxesBorderDash``: length and spacing of dashes on grid lines
+- ``rightYAxesTicksBegintAtZero``: begin at zero the right y axes ticks
+- ``rightYAxesTicksPadding``: padding between Y axes ticks
+- ``rightYAxesTicksDisplay``: true or false, display the right y axes ticks
+- ``rightYAxesGridLinesDisplay``: true or false display the right y axes grid lines
+- ``rightYAxesLabel``: label of the right y axes label
+- ``rightYAxesLabelDisplay``: true or false, display the right y axes label
+- ``rightYAxesLabelFontColor``: color of the right y axes label
+- ``rightYAxesLabelFontFamily``: font family of the right y axes label
+- ``rightYAxesLabelFontSize``: size of the right y axes label
+- ``rightYAxesLabelFontStyle``: style of the right y axes label
+- ``rightYAxesLabelPadding``: padding between Y axes label
+- ``rightYAxesLabelRotation``: vertical, horizontal
+- ``rightYAxesStacked``: stack datasets on Y axes
+- ``rightYAxesDisplay``: true or false, display the right y axes display
+- ``rightYAxesGridLinesColor``: color of the right y axes grid lines
+- ``rightYAxesGridLinesDrawBorder``: border of the right y axes grid lines
+- ``rightYAxesTicksFontColor``: color of the right y axes ticks
+- ``rightYAxesTicksFontFamily``: font family of the right y axes ticks
+- ``rightYAxesTicksFontSize``: size of the right y axes ticks
+- ``rightYAxesTicksFontStyle``: style of the right y axes ticks
+- ``rightYAxesTicksOffset``: offset (distance) between ticks of right Y axes
+- ``canvasHeight``: height of the canvas
+- ``canvasWidth``: width of the canvas
+- ``draggable``: true or false, if chart is draggable and moveable
+- ``responsive``: true or false, chart size depends on screen size
+- ``aspectRatio``:
+- ``maintainAspectRatio``: true or false, width depends on height
+- ``bezierCurve``: true or false, display the bezier curve
+- ``showLinearXAxes``: true or false, display the linear x axes
+- ``customLabelsForYAxes``: Labels For Y Axes like %
+- ``tooltipsSeparatesThousands``: Separates the the tooltips
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -470,25 +446,25 @@ popup)
 Configuration
 ~~~~~~~~~~~~~
 
-- id: widget id which used for reference in framework
-- anchor: anchor to link the container
-- widthStr:
-- heightStr: height of widget (in % or px)
-- offset: size of the offset
-- bgColor: background color of the widget
-- anchorVisible: if anchor visible (flag)
-- anchorOnClick: toggle backdrop (flag)
-- visible:  if widget visible (flag)
-- bgScrollable: scrollability of the background (flag)
-- closeBtn: if widget has a close button(flag)
-- fixed: if widget fixed (flag)
-- position: position of the widget
-- skin: skin of the widget
-- backdrop: boolean if display backdrop, default false
-- closeOnClickBackdrop: boolean, default true
-- heightFixed: boolean, default true
-- positionAndCalculateBestSpace: string (right, left)
-- fadingSpeed: int, default 300
+- ``id``: widget id which used for reference in framework
+- ``anchor``: anchor to link the container
+- ``widthStr``:
+- ``heightStr``: height of widget (in % or px)
+- ``offset``: size of the offset
+- ``bgColor``: background color of the widget
+- ``anchorVisible``: if anchor visible (flag)
+- ``anchorOnClick``: toggle backdrop (flag)
+- ``visible``: if widget visible (flag)
+- ``bgScrollable``: scrollability of the background (flag)
+- ``closeBtn``: if widget has a close button(flag)
+- ``fixed``: if widget fixed (flag)
+- ``position``: position of the widget
+- ``skin``: skin of the widget
+- ``backdrop``: boolean if display backdrop, default false
+- ``closeOnClickBackdrop``: boolean, default true
+- ``heightFixed``: boolean, default true
+- ``positionAndCalculateBestSpace``: string (right, left)
+- ``fadingSpeed``: int, default 300
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -548,22 +524,22 @@ This widget allows users to select a date
 Configuration
 ~~~~~~~~~~~~~
 
-- allowEmptyDate: Allows selecting no date (empty value)
-- closeAfterSelectingTheDate: Closes the calendar popup after a date is selected
-- datePicked: Initially selected date in the widget (format: yyyy.mm.dd or yyyy.mm)
-- editable: Determines if the input field is editable manually
-- fullYearButtonText: Label of the full year selection button
-- fullYearButtonVisible: Whether the full year button is visible
-- local: Locale used for formatting the displayed date
-- maxDate: Maximum selectable date
-- minDate: Minimum selectable date
-- monthLocale: Locale used for displaying month names (e.g. 'en-US')
-- monthPicker: Enables month-only selection mode (year + month, no days)
-- ordinal: Unique string to distinguish pick actions (used internally)
-- panelFixed: Prevents the calendar popup from closing automatically
-- skin: Selected skin of the widget (affects visual appearance)
-- title: Title text displayed above the date field
-- titleVisible: Determines if the title should be shown
+- ``allowEmptyDate``: Allows selecting no date (empty value)
+- ``closeAfterSelectingTheDate``: Closes the calendar popup after a date is selected
+- ``datePicked``: Initially selected date in the widget (format: yyyy.mm.dd or yyyy.mm)
+- ``editable``: Determines if the input field is editable manually
+- ``fullYearButtonText``: Label of the full year selection button
+- ``fullYearButtonVisible``: Whether the full year button is visible
+- ``local``: Locale used for formatting the displayed date
+- ``maxDate``: Maximum selectable date
+- ``minDate``: Minimum selectable date
+- ``monthLocale``: Locale used for displaying month names (e.g. 'en-US')
+- ``monthPicker``: Enables month-only selection mode (year + month, no days)
+- ``ordinal``: Unique string to distinguish pick actions (used internally)
+- ``panelFixed``: Prevents the calendar popup from closing automatically
+- ``skin``: Selected skin of the widget (affects visual appearance)
+- ``title``: Title text displayed above the date field
+- ``titleVisible``: Determines if the title should be shown
 
 
 TM1 integration
@@ -634,14 +610,12 @@ of the rows.
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** widget id which used for reference in framework
-- type\ **:** type of widget
-- action\ **:** executed action. currently choose only (only action is
-   delete)
-- deleteMessage\ **:** 'Are you sure to clear all data of this
-   product?'
-- align\ **:** left or right side of horizontal table
-- position\ **:** position of widget in horizontal table
+- ``id``: widget id which used for reference in framework
+- ``type``: type of widget
+- ``action``: executed action. currently choose only (only action is delete)
+- ``deleteMessage``: 'Are you sure to clear all data of this product?'
+- ``align``: left or right side of horizontal table
+- ``position``: position of widget in horizontal table
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -675,26 +649,26 @@ items at a time from a given list of items.
 Configuration
 ~~~~~~~~~~~~~
 
-- backdrop: boolean, default false, whether the backdrop is displayed
-- editable: boolean, default true
-- itemIconOff: string, icon
-- itemIconOn: string, icon
-- disableSearch: disable search function
-- panelWidth:\ **:** Width of the panel
-- placeHolder:
-- selectFirst: boolean, default false, if there is no selected item the first displayed as selected
-- serverSideFilter:
-- titleFontSize\ **:** font size of the title
-- titleFontColor\ **:** font color of the title
-- textFontSize\ **:** font size of the text
-- textFontColor\ **:** font color of the text
-- titleTextAlignment\ **:** alignment of the title
-- textAlignment\ **:** alignment of the text
-- title: title of the drop-down
-- titleVisible: if widget title visible (flag)
-- multiselect\ **:** simple or multiple options can be selected (flag)
-- hideIfNoData\ **:** hide widget if no data inside (flag)
-- skin\ **:** skin of the widget
+- ``backdrop``: boolean, default false, whether the backdrop is displayed
+- ``editable``: boolean, default true
+- ``itemIconOff``: string, icon
+- ``itemIconOn``: string, icon
+- ``disableSearch``: disable search function
+- ``panelWidth``: Width of the panel
+- ``placeHolder``:
+- ``selectFirst``: boolean, default false, if there is no selected item the first displayed as selected
+- ``serverSideFilter``:
+- ``titleFontSize``: font size of the title
+- ``titleFontColor``: font color of the title
+- ``textFontSize``: font size of the text
+- ``textFontColor``: font color of the text
+- ``titleTextAlignment``: alignment of the title
+- ``textAlignment``: alignment of the text
+- ``title``: title of the drop-down
+- ``titleVisible``: if widget title visible (flag)
+- ``multiselect``: simple or multiple options can be selected (flag)
+- ``hideIfNoData``: hide widget if no data inside (flag)
+- ``skin``: skin of the widget
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -774,18 +748,18 @@ reports to show KPI-s.
 Configuration
 ~~~~~~~~~~~~~
 
-- canvasId\ **:**
-- title: Widget title text
-- colors: color of the widget
-- skin\ **:** Selected skin of widget
-- values: The values on the chart
-- valueLabels:
-- labels: the labels on the chart
-- minRange: the minimum value on the chart
-- maxRange: the maximum value on the chart
-- showAxisValues: It's a boolean, default true
-- separatesThousands: It's separates the values
-- fontFamily: font family of the chart
+- ``canvasId``:
+- ``title``: Widget title text
+- ``colors``: color of the widget
+- ``skin``: Selected skin of widget
+- ``values``: The values on the chart
+- ``valueLabels``:
+- ``labels``: the labels on the chart
+- ``minRange``: the minimum value on the chart
+- ``maxRange``: the maximum value on the chart
+- ``showAxisValues``: It's a boolean, default true
+- ``separatesThousands``: It's separates the values
+- ``fontFamily``: font family of the chart
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -871,19 +845,18 @@ GridRowWidget
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** widget id which used for reference in framework
-- type\ **:** type of widget
-- marginLeft\ **:** left margin
-- marginRight\ **:** right margin
-- marginTop\ **:** top margin
-- marginBottom\ **:** bottom margin
-- width\ **:** width of the widget (in % or px)
-- height\ **:** height of the widget
-- visible\ **:**  if widget visible (flag)
-- skin:skin of the widget
-- alignment\ **:** alignment of the widget (dropbox)
-- listen:{event, method} events for the widget listen to and method to
-   do
+- ``id``: widget id which used for reference in framework
+- ``type``: type of widget
+- ``marginLeft``: left margin
+- ``marginRight``: right margin
+- ``marginTop``: top margin
+- ``marginBottom``: bottom margin
+- ``width``: width of the widget (in % or px)
+- ``height``: height of the widget
+- ``visible``: if widget visible (flag)
+- ``skin``: skin of the widget
+- ``alignment``: alignment of the widget (dropbox)
+- ``listen``: {event, method} events for the widget listen to and method to do
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -923,21 +896,19 @@ GridWidget
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** Widget Id which used for reference in framework
-- type\ **:** Type of Widget
-- visible: Toggle visibility of panel content
-- width: width of the widget
-- height: height of widget
-- marginLeft: pixel count of margin position
-- marginRight: pixel count of margin position
-- marginTop: pixel count of margin position
-- marginBottom: pixel count of margin position
-- alignment: left, center or right side
-- listen: {event, method} events for the widget listen to and method to
-   do
-- skin: Selected skin of widget
-- widgets: [{id: 'tab1name',label: 'text',action: 'text',selected:
-   true},…
+- ``id``: Widget Id which used for reference in framework
+- ``type``: Type of Widget
+- ``visible``: Toggle visibility of panel content
+- ``width``: width of the widget
+- ``height``: height of widget
+- ``marginLeft``: pixel count of margin position
+- ``marginRight``: pixel count of margin position
+- ``marginTop``: pixel count of margin position
+- ``marginBottom``: pixel count of margin position
+- ``alignment``: left, center or right side
+- ``listen``: {event, method} events for the widget listen to and method to do
+- ``skin``: Selected skin of widget
+- ``widgets``: [{id: 'tab1name',label: 'text',action: 'text',selected: true},…
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -981,33 +952,33 @@ followingtypes text, textbox, dropBox, slider, toggle, datepicker  
 Configuration
 ~~~~~~~~~~~~~
 
-- borderLeft:
-- borderRight:
-- cellBackgroundColor
-- cellVisible:
-- cellSkin:
-- cellWidth:
-- cellPaddingRight:
-- cellPaddingLeft:
-- paddingRight
-- paddingLeft
-- skin\ **:** skin of the widget
-- alignment\ **:** string, default center-center alignment of the contained widget (dropbox)
-     - top-left
-     - center-left
-     - bottom-left
-     - top-center
-     - center-center
-     - bottom-center
-     - top-right
-     - center-right
-     - bottom-right
-     - top-space-between
-     - center-space-between
-     - bottom-space-between
-- borderLeft\ **:** if widget has a left border (flag)
-- borderRight\ **:** if widget has a right border (flag)
-- width
+- ``borderLeft``:
+- ``borderRight``:
+- ``cellBackgroundColor``
+- ``cellVisible``:
+- ``cellSkin``:
+- ``cellWidth``:
+- ``cellPaddingRight``:
+- ``cellPaddingLeft``:
+- ``paddingRight``
+- ``paddingLeft``
+- ``skin``: skin of the widget
+- ``alignment``: string, default center-center alignment of the contained widget (dropbox)
+     - ``top-left``
+     - ``center-left``
+     - ``bottom-left``
+     - ``top-center``
+     - ``center-center``
+     - ``bottom-center``
+     - ``top-right``
+     - ``center-right``
+     - ``bottom-right``
+     - ``top-space-between``
+     - ``center-space-between``
+     - ``bottom-space-between``
+- ``borderLeft``: if widget has a left border (flag)
+- ``borderRight``: if widget has a right border (flag)
+- ``width``
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -1047,28 +1018,26 @@ GridTableHeaderRowWidget.
 Configuration
 ~~~~~~~~~~~~~
 
-- cellHeaderSkin:
-- cellVisible:
-- alignment: alignment of the widget
+- ``cellHeaderSkin``:
+- ``cellVisible``:
+- ``alignment``: alignment of the widget
 
-   -  top-left
-   -  center-left
-   -  bottom-left
-   -  top-center
-   -  center-center
-   -  bottom-center
-   -  top-right
-   -  center-right
-   -  bottom-right
-   -  top-space-between
-   -  center-space-between
-   -  bottom-space-between
+   - ``top-left``
+   - ``center-left``
+   - ``bottom-left``
+   - ``top-center``
+   - ``center-center``
+   - ``bottom-center``
+   - ``top-right``
+   - ``center-right``
+   - ``bottom-right``
+   - ``top-space-between``
+   - ``center-space-between``
+   - ``bottom-space-between``
 
-- borderLeft: true or false, toggle the left border visibility of the
-   table
-- borderRight: true or false, toggle the right border visibility of the
-   table
-- width:
+- ``borderLeft``: true or false, toggle the left border visibility of the table
+- ``borderRight``: true or false, toggle the right border visibility of the table
+- ``width``:
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -1108,10 +1077,10 @@ GridTableHeaderCellWidgets.
 Configuration
 ~~~~~~~~~~~~~
 
-- alignment\ **:** alignment of the widget (dropbox)
-- borderBottom\ **:** if widget has a bottom border (flag)
-- borderTop\ **:** if widget has a top border (flag)
-- height:
+- ``alignment``: alignment of the widget (dropbox)
+- ``borderBottom``: if widget has a bottom border (flag)
+- ``borderTop``: if widget has a top border (flag)
+- ``height``:
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -1568,20 +1537,18 @@ widget (except for the header row).
 Configuration
 ~~~~~~~~~~~~~
 
-- hideIfNoData:
-- skin: Selected skin of widget
-- maxRows:
-- minWidth:
-- allowFullContentUpdated:
-- allowChangedDataUpdate:
-- allowCopyToClipBoard:
-- disableRefreshGridCell:
-- width:
-- borderTop\ **:** true or false, toggle the top border visibility of
-   the table
-- borderBottom\ **:** true or false, toggle the bottom border
-   visibility of the table
-- rowHeight\ **:** toggle the height of the row
+- ``hideIfNoData``:
+- ``skin``: Selected skin of widget
+- ``maxRows``:
+- ``minWidth``:
+- ``allowFullContentUpdated``:
+- ``allowChangedDataUpdate``:
+- ``allowCopyToClipBoard``:
+- ``disableRefreshGridCell``:
+- ``width``:
+- ``borderTop``: true or false, toggle the top border visibility of the table
+- ``borderBottom``: true or false, toggle the bottom border visibility of the table
+- ``rowHeight``: toggle the height of the row
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -1616,11 +1583,10 @@ in an orthogonal grid. 
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** widget id which used for reference in framework
-- type\ **:** type of widget
-- skin\ **:** skin of the widget
-- listen\ **:** {event, method} events for the widget listen to and
-   method to do
+- ``id``: widget id which used for reference in framework
+- ``type``: type of widget
+- ``skin``: skin of the widget
+- ``listen``: {event, method} events for the widget listen to and method to do
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -1644,69 +1610,62 @@ histogram and a line chart.
 Configuration
 ~~~~~~~~~~~~~
 
-- **id:** Widget Id which used for reference in framework
-- type\ **:** Type of Widget
-- title\ **:** title of the widget
-- paddingTop:
-- paddingRight:
-- paddingBottom:
-- paddingLeft:
-- datasets:
-- xAxesGridLinesDrawOnChartArea:
-- yAxesGridLinesDrawOnChartArea:
-- xAxesLabelRotation:
-- yAxesLabelRotation:
-- xAxesDisplay: Display of the x Axes
-- yAxesGridLinesDrawBorder: display the lines on y axes
-- xAxesGridLinesDrawBorder: display the lines on x axes
-- yAxesTicksPadding: Padding of the y Axes ticks
-- xAxesTicksPadding: Padding of the x Axes ticks
-- xAxesTicksOffset: Off sett of the x Axes ticks
-- yAxesTicksOffset: Off sett of the y Axes ticks
-- xAxesLabelDisplay: Boolean, display of the x Axes label
-- yAxesLabelDisplay: Boolean, display of the y Axes label
-- xAxesLabelFontSize: Font size of the x Axes label
-- yAxesLabelFontSize: Font size of the y Axes label
-- yAxesLabelPadding: Padding of the y axes label
-- xAxesLabelPadding: Padding of the x axes label
-- aspectRatio:
-- maintainAspectRatio:
-- datasetHistogram\ **:** dataset of the histogram
-- datasetsLine\ **:** dataset of the line(s)
-- listen\ **:** {event, method} events for the widget listen to and
-      method to do
-- xAxesGridLinesDisplay\ **:** true or false, display the x axes
-      grid lines
-- xAxesGridLinesColor\ **:** color of the x axes grid lines
-- xAxesTicksFontSize\ **:** size of the x axes ticks
-- xAxesTicksFontFamily\ **:** font family of the x axes ticks
-- xAxesTicksFontStyle\ **:** font style of the x axes ticks
-- xAxesTicksFontColor\ **:**  color of the x axes ticks
-- yAxesDisplay\ **:**\ true or false, display the y axes
-- yAxesGridLinesDisplay\ **:**   true or false, display the y axes
-      grid lines
-- yAxesGridLinesColor\ **:** color of the y axes grid lines
-- yAxesTicksFontSize\ **:** size of the y axes ticks
-- yAxesTicksFontFamily\ **:** font family of the y axes ticks
-- yAxesTicksFontStyle\ **:** font style of the y axes ticks 
-- yAxesTicksFontColor\ **:**  color of the y axes ticks
-- xAxesLabelFontFamily\ **:** font family of x axes label
-- xAxesLabelFontColor\ **:** color of the x axes label
-- yAxesLabelFontFamily\ **:** font family y axes label
-- yAxesLabelFontColor\ **:** color of the y axes label
-- yAxisStacked\ **:**  stack datasets on Y axes
-- xAxisLabel\ **:** label of the x axis
-- yAxisLabel\ **:** y axis label
-- histYAxisBufferTop\ **:** buffer on the top of the maximum value
-      (%) on the histogram
-- histYAxisBufferBottom\ **:** buffer on the bottom of the minimum
-      value (%) on the histogram
-- lineYAxisBufferTop\ **:** buffer on the top of the maximum value
-      (%) on the line
-- lineYAxisBufferBottom\ **:** buffer on the bottom of the minimum
-      value (%) on the line
-- yAxesGridLinesNum\ **:** number of grid line on Y axes
-- widgets\ **:** segmentedBar widget ID (see on figure)
+- ``id``: Widget Id which used for reference in framework
+- ``type``: Type of Widget
+- ``title``: title of the widget
+- ``paddingTop``:
+- ``paddingRight``:
+- ``paddingBottom``:
+- ``paddingLeft``:
+- ``datasets``:
+- ``xAxesGridLinesDrawOnChartArea``:
+- ``yAxesGridLinesDrawOnChartArea``:
+- ``xAxesLabelRotation``:
+- ``yAxesLabelRotation``:
+- ``xAxesDisplay``: Display of the x Axes
+- ``yAxesGridLinesDrawBorder``: display the lines on y axes
+- ``xAxesGridLinesDrawBorder``: display the lines on x axes
+- ``yAxesTicksPadding``: Padding of the y Axes ticks
+- ``xAxesTicksPadding``: Padding of the x Axes ticks
+- ``xAxesTicksOffset``: Off sett of the x Axes ticks
+- ``yAxesTicksOffset``: Off sett of the y Axes ticks
+- ``xAxesLabelDisplay``: Boolean, display of the x Axes label
+- ``yAxesLabelDisplay``: Boolean, display of the y Axes label
+- ``xAxesLabelFontSize``: Font size of the x Axes label
+- ``yAxesLabelFontSize``: Font size of the y Axes label
+- ``yAxesLabelPadding``: Padding of the y axes label
+- ``xAxesLabelPadding``: Padding of the x axes label
+- ``aspectRatio``:
+- ``maintainAspectRatio``:
+- ``datasetHistogram``: dataset of the histogram
+- ``datasetsLine``: dataset of the line(s)
+- ``listen``: {event, method} events for the widget listen to and method to do
+- ``xAxesGridLinesDisplay``: true or false, display the x axes grid lines
+- ``xAxesGridLinesColor``: color of the x axes grid lines
+- ``xAxesTicksFontSize``: size of the x axes ticks
+- ``xAxesTicksFontFamily``: font family of the x axes ticks
+- ``xAxesTicksFontStyle``: font style of the x axes ticks
+- ``xAxesTicksFontColor``: color of the x axes ticks
+- ``yAxesDisplay``: true or false, display the y axes
+- ``yAxesGridLinesDisplay``: true or false, display the y axes grid lines
+- ``yAxesGridLinesColor``: color of the y axes grid lines
+- ``yAxesTicksFontSize``: size of the y axes ticks
+- ``yAxesTicksFontFamily``: font family of the y axes ticks
+- ``yAxesTicksFontStyle``: font style of the y axes ticks
+- ``yAxesTicksFontColor``: color of the y axes ticks
+- ``xAxesLabelFontFamily``: font family of x axes label
+- ``xAxesLabelFontColor``: color of the x axes label
+- ``yAxesLabelFontFamily``: font family y axes label
+- ``yAxesLabelFontColor``: color of the y axes label
+- ``yAxisStacked``: stack datasets on Y axes
+- ``xAxisLabel``: label of the x axis
+- ``yAxisLabel``: y axis label
+- ``histYAxisBufferTop``: buffer on the top of the maximum value (%) on the histogram
+- ``histYAxisBufferBottom``: buffer on the bottom of the minimum value (%) on the histogram
+- ``lineYAxisBufferTop``: buffer on the top of the maximum value (%) on the line
+- ``lineYAxisBufferBottom``: buffer on the bottom of the minimum value (%) on the line
+- ``yAxesGridLinesNum``: number of grid line on Y axes
+- ``widgets``: segmentedBar widget ID (see on figure)
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -1743,16 +1702,16 @@ search field), but the content of the cells is read-only.
 Configuration
 ~~~~~~~~~~~~~
 
-- columnNames: list of column name: ['column1', 'column2',...]
-- columnTypes: list of column type: ['int', 'string',...]
-- columnWidths: list of column width(pixel): ['200', '300',...]
-- searchField\ **:** toggle Search widget component visibility
-- selectFirst:
-- fadeOutNum\ **:** max displayed rows without scrolling, default 10
-- hideIfNoData:
-- multiselect:
-- skin\ **:** skin of the widget
-- selectedRowBackgroundColor
+- ``columnNames``: list of column name: ['column1', 'column2',...]
+- ``columnTypes``: list of column type: ['int', 'string',...]
+- ``columnWidths``: list of column width(pixel): ['200', '300',...]
+- ``searchField``: toggle Search widget component visibility
+- ``selectFirst``:
+- ``fadeOutNum``: max displayed rows without scrolling, default 10
+- ``hideIfNoData``:
+- ``multiselect``:
+- ``skin``: skin of the widget
+- ``selectedRowBackgroundColor``
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -1789,31 +1748,31 @@ This widget is used for uploading images and photos.
 Configuration
 ~~~~~~~~~~~~~
 
-- allowedMimeTypes: Allowed MIME types for file upload
-- allowedWidthInPixel: Maximum allowed width of uploaded image in pixels
-- allowedHeightInPixel: Maximum allowed height of uploaded image in pixels
-- backgroundColor: Background color of the widget
-- borderColor: Color of the border around the widget
-- borderWidth: Width of the border in pixels
-- cornerRadius: Radius of the widget's corners in pixels
-- dividerWidth: Width of the divider line between elements
-- effect: Visual effect applied to the widget
-- fontBold: Whether the text should be bold
-- fontColor: Color of the text
-- fontSize: Size of the font used for text
-- gradient: Background gradient style
-- icon: Icon of the widget
-- iconHeight: Height of the icon in pixels
-- iconPosition: Position of the icon (e.g., left, right)
-- iconWidth: Width of the icon in pixels
-- label: Text label shown on the widget
-- maxFileSize: Maximum total upload size in megabytes
-- maxFileSizePerFile: Maximum file size per individual file in megabytes
-- progressVisible: Show progress bar during upload
-- skin: Selected skin of the widget
-- uploadSuccessMessage: Message shown after successful upload
-- showUploadSuccessMessage: Whether to show success message after upload
-- skipStoppingTheLoaderAfterSuccessUpload: Skip hiding the loader after successful upload
+- ``allowedMimeTypes``: Allowed MIME types for file upload
+- ``allowedWidthInPixel``: Maximum allowed width of uploaded image in pixels
+- ``allowedHeightInPixel``: Maximum allowed height of uploaded image in pixels
+- ``backgroundColor``: Background color of the widget
+- ``borderColor``: Color of the border around the widget
+- ``borderWidth``: Width of the border in pixels
+- ``cornerRadius``: Radius of the widget's corners in pixels
+- ``dividerWidth``: Width of the divider line between elements
+- ``effect``: Visual effect applied to the widget
+- ``fontBold``: Whether the text should be bold
+- ``fontColor``: Color of the text
+- ``fontSize``: Size of the font used for text
+- ``gradient``: Background gradient style
+- ``icon``: Icon of the widget
+- ``iconHeight``: Height of the icon in pixels
+- ``iconPosition``: Position of the icon (e.g., left, right)
+- ``iconWidth``: Width of the icon in pixels
+- ``label``: Text label shown on the widget
+- ``maxFileSize``: Maximum total upload size in megabytes
+- ``maxFileSizePerFile``: Maximum file size per individual file in megabytes
+- ``progressVisible``: Show progress bar during upload
+- ``skin``: Selected skin of the widget
+- ``uploadSuccessMessage``: Message shown after successful upload
+- ``showUploadSuccessMessage``: Whether to show success message after upload
+- ``skipStoppingTheLoaderAfterSuccessUpload``: Skip hiding the loader after successful upload
 
 
 TM1 integration
@@ -1834,12 +1793,10 @@ This widget is used for displaying images and photos.
 Configuration
 ~~~~~~~~~~~~~
 
-- icon: Icon of widget
-- fileName: if image is not an icon, name of the image file needs to be
-   uploaded under
-   ..\AnalogicDeployments\template\Skins\\\ *usedSkin*\\images\.
-- title: title of the image widget
-- skin: Selected skin of widget
+- ``icon``: Icon of widget
+- ``fileName``: if image is not an icon, name of the image file needs to be uploaded under ..AnalogicDeploymentstemplateSkins *usedSkin*images.
+- ``title``: title of the image widget
+- ``skin``: Selected skin of widget
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -1872,95 +1829,85 @@ LineAreaChartWidget
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** widget id which used for reference in framework
-- type: Type of Widget
-- title: Widget title text
-- listen: {event, method} events for the widget listen to and method to
-   do
-- skin: Selected skin of widget
-- datasets: [{legendLabel: string, borderColor: string, borderWidth:
-   int, backgroundColor: string, fill: boolean, lineTension: float,
-   pointRadius: int},…]
-- legendSkin\ **:** Selected skin of widget
-- xAxisLabel\ **:** label of X axes
-- xAxesDisplay\ **:** true or false,, default true, display the x axes
-- xAxesGridLinesDisplay\ **:**  true or false, display the x axes grid
-   lines
-- xAxesTicksDisplay: the ticks of the X axes
-- xAxesTicksLabelDisplay: the labes of the ticks of the Y axes
-- xAxesGridLinesDrawBorder\ **:**  true or false, display the x axes
-   grid lines drow border
-- xAxesGridLinesColor\ **:** color of the x axes grid lines
-- xAxesTicksFontSize\ **:** size of the x axes ticks
-- xAxesTicksFontFamily\ **:** string, default 'imago, sans-serif'
-- xAxesTicksFontStyle\ **:** string, default 'bold'
-- xAxesTicksFontColor\ **:** color of the x axes ticks
-- xAxesTicksPadding\ **:** padding between X axes ticks
-- xAxesLabelDisplay\ **:**  true or false, display the x axes label
-- xAxesLabelFontSize\ **:** size of the x axes label
-- xAxesLabelFontFamily\ **:** font family of the x axes label
-- xAxesLabelFontColor\ **:** color of the a axes label
-- xAxesLabelFontStyle\ **:** style of the x axes label
-- xAxesLabelPadding\ **:** padding between X axes label
-- xAxesLabelRotation\ **:** vertical, horizontal
-- xAxesTicksOffset: Off sett of the x Axes ticks
-- xAxesOffset: Off sett of the X
-- xAxesOffsetGridLines\ **:** if true, grid lines will be shifted to be
-   between labels
-- xAxesOffsetRight: Off sett of the X on right
-- xAxesOffsetLeft: Off sett of the X on left
-- xMin: the max value of theX axis
-- yAxisLabel\ **:** label of Y axes
-- yAxisDisplay\ **:**  true or false, display the left y axes
-- yAxesGridLinesDisplay\ **:**  true or false, display the left y axes
-   grid lines
-- yAxesGridLinesDrawBorder\ **:** first grid line is visible, even if
-   others are not
-- yMin: the max value of the Y axis
-- yAxesTicksDisplay: the ticks of the Y axes
-- yAxesTicksLabelDisplay: the labes of the ticks of the Y axes
-- yAxesGridLinesColor\ **:** color of the left y axes grid lines
-- yAxesLabel\ **:** label of the left y axes
-- yAxesLabelDisplay\ **:**  true or false, display the y axes label
-- yAxesLabelConcat\ **:** str to add to the left Y axes ticks
-- yAxesLabelFontSize\ **:** font size of the left y axes label
-- yAxesLabelFontFamily\ **:** font family of the left y axes label
-- yAxesLabelFontColor\ **:** font color of the left y axes label
-- yAxesLabelFontStyle\ **:** font style of the left y axes label
-- yAxesLabelPadding\ **:** padding between Y axes label
-- yAxesLabelRotation\ **:** vertical, horizontal
-- yAxesTicksOffset: Off sett of the Y Axes ticks
-- yAxesTicksBegintAtZero\ **:**  true or false, begin the left y axes
-   with zero
-- yAxesStacked: true or false,
-- yAxesUnit:
-- yAxesDecimalNum:
-- yAxesSeparatesThousands: true or false,
-- yAxesTicksPrecisionFixed: true or false,
-- yAxesTicksFontSize\ **:** font size of the left y axes ticks
-- yAxesTicksFontFamily\ **:** font family of the left y axes ticks
-- yAxesTicksFontStyle\ **:** font style of the left y axes ticks
-- yAxesTicksFontColor\ **:** font color of the left y axes ticks
-- yAxesTicksPadding\ **:** padding between Y axes ticks
-- yAxesTicksDisplay\ **:** true or false, display the left y axes ticks
-- yAxesTicksOffset\ **et:** offset (distance) between ticks of left Y
-   axes
-- data
-- defaultBezierCurveTension
-- labelClickPopup
-- manualLabelAlignment
-- openPopupOnLabelClick
-- openendPopupOffsetLeft
-- openendPopupOffsetTop
-- yAxesOffset
-- yAxesOffsetBottom
-- yAxesOffsetTop
-- yMax
-- tooltipsEnabled: Boolean , it's enable the mouse over info
-- tooltipsMode:
-- tooltipsIntersect: Boolean
-- aspectRatio:
-- maintainAspectRatio: Boolean
+- ``id``: widget id which used for reference in framework
+- ``type``: Type of Widget
+- ``title``: Widget title text
+- ``listen``: {event, method} events for the widget listen to and method to do
+- ``skin``: Selected skin of widget
+- ``datasets``: [{legendLabel: string, borderColor: string, borderWidth: int, backgroundColor: string, fill: boolean, lineTension: float, pointRadius: int},…]
+- ``legendSkin``: Selected skin of widget
+- ``xAxisLabel``: label of X axes
+- ``xAxesDisplay``: true or false,, default true, display the x axes
+- ``xAxesGridLinesDisplay``: true or false, display the x axes grid lines
+- ``xAxesTicksDisplay``: the ticks of the X axes
+- ``xAxesTicksLabelDisplay``: the labes of the ticks of the Y axes
+- ``xAxesGridLinesDrawBorder``: true or false, display the x axes grid lines drow border
+- ``xAxesGridLinesColor``: color of the x axes grid lines
+- ``xAxesTicksFontSize``: size of the x axes ticks
+- ``xAxesTicksFontFamily``: string, default 'imago, sans-serif'
+- ``xAxesTicksFontStyle``: string, default 'bold'
+- ``xAxesTicksFontColor``: color of the x axes ticks
+- ``xAxesTicksPadding``: padding between X axes ticks
+- ``xAxesLabelDisplay``: true or false, display the x axes label
+- ``xAxesLabelFontSize``: size of the x axes label
+- ``xAxesLabelFontFamily``: font family of the x axes label
+- ``xAxesLabelFontColor``: color of the a axes label
+- ``xAxesLabelFontStyle``: style of the x axes label
+- ``xAxesLabelPadding``: padding between X axes label
+- ``xAxesLabelRotation``: vertical, horizontal
+- ``xAxesTicksOffset``: Off sett of the x Axes ticks
+- ``xAxesOffset``: Off sett of the X
+- ``xAxesOffsetGridLines``: if true, grid lines will be shifted to be between labels
+- ``xAxesOffsetRight``: Off sett of the X on right
+- ``xAxesOffsetLeft``: Off sett of the X on left
+- ``xMin``: the max value of theX axis
+- ``yAxisLabel``: label of Y axes
+- ``yAxisDisplay``: true or false, display the left y axes
+- ``yAxesGridLinesDisplay``: true or false, display the left y axes grid lines
+- ``yAxesGridLinesDrawBorder``: first grid line is visible, even if others are not
+- ``yMin``: the max value of the Y axis
+- ``yAxesTicksDisplay``: the ticks of the Y axes
+- ``yAxesTicksLabelDisplay``: the labes of the ticks of the Y axes
+- ``yAxesGridLinesColor``: color of the left y axes grid lines
+- ``yAxesLabel``: label of the left y axes
+- ``yAxesLabelDisplay``: true or false, display the y axes label
+- ``yAxesLabelConcat``: str to add to the left Y axes ticks
+- ``yAxesLabelFontSize``: font size of the left y axes label
+- ``yAxesLabelFontFamily``: font family of the left y axes label
+- ``yAxesLabelFontColor``: font color of the left y axes label
+- ``yAxesLabelFontStyle``: font style of the left y axes label
+- ``yAxesLabelPadding``: padding between Y axes label
+- ``yAxesLabelRotation``: vertical, horizontal
+- ``yAxesTicksOffset``: Off sett of the Y Axes ticks
+- ``yAxesTicksBegintAtZero``: true or false, begin the left y axes with zero
+- ``yAxesStacked``: true or false,
+- ``yAxesUnit``:
+- ``yAxesDecimalNum``:
+- ``yAxesSeparatesThousands``: true or false,
+- ``yAxesTicksPrecisionFixed``: true or false,
+- ``yAxesTicksFontSize``: font size of the left y axes ticks
+- ``yAxesTicksFontFamily``: font family of the left y axes ticks
+- ``yAxesTicksFontStyle``: font style of the left y axes ticks
+- ``yAxesTicksFontColor``: font color of the left y axes ticks
+- ``yAxesTicksPadding``: padding between Y axes ticks
+- ``yAxesTicksDisplay``: true or false, display the left y axes ticks
+- ``yAxesTicksOffset``: offset (distance) between ticks of left Y axes
+- ``data``
+- ``defaultBezierCurveTension``
+- ``labelClickPopup``
+- ``manualLabelAlignment``
+- ``openPopupOnLabelClick``
+- ``openendPopupOffsetLeft``
+- ``openendPopupOffsetTop``
+- ``yAxesOffset``
+- ``yAxesOffsetBottom``
+- ``yAxesOffsetTop``
+- ``yMax``
+- ``tooltipsEnabled``: Boolean , it's enable the mouse over info
+- ``tooltipsMode``:
+- ``tooltipsIntersect``: Boolean
+- ``aspectRatio``:
+- ``maintainAspectRatio``: Boolean
 
 
 
@@ -2101,63 +2048,63 @@ scatter plot diagram and a line chart.
 Configuration
 ~~~~~~~~~~~~~
 
-- datasets:
-- legendVisible: Boolean, Set the visibility of the legend
-- canvasPaddingTop:
-- canvasPaddingRight:
-- canvasPaddingBottom:
-- canvasPaddingLeft:
-- tooltipsEnabled: Boolean, Mouse Over
-- tooltipsMode:
-- aspectRatio:
-- maintainAspectRatio:
-- xAxisVisible: Boolean, It's set the visibility of the x Axis
-- xAxisGridLinesDisplay:  Boolean, It's set the visibility of the x Axis Grid Lines
-- xAxisGridLinesDrawOnChartArea:  Boolean, It's set the visibility of the x Axis GridLines on chart
-- xAxisTicksDisplay: Boolean, It's set the visibility of the x Axis ticks
-- xAxisTicksLabelDisplay: Boolean, It's set the visibility of the x Axis ticks label
-- xAxisTicksStepSize: It's set the step of the x Axis ticks
-- xAxisOffsetGridLines: Boolean, It's set the off sett of the y axis
-- yAxisVisible: Boolean, It's set the visibility of the x Axis
-- yAxisGridLinesDisplay:  Boolean, It's set the visibility of the y Axis Grid Lines
-- yAxisGridLinesDrawOnChartArea: Boolean, It's set the visibility of the y Axis GridLines on chart
-- yAxisTicksDisplay: Boolean, It's set the visibility of the y Axis ticks
-- yAxisTicksLabelDisplay: Boolean, It's set the visibility of the y Axis ticks label
-- xAxisTicksFontSize: It's set the size of the x axis ticks font size
-- yAxisTicksFontSize: It's set the size of the y axis ticks font size
-- xAxisTicksFontFamily: It's set the size of the x axis ticks font family
-- yAxisTicksFontFamily: It's set the size of the y axis ticks font family
-- xAxisTicksFontStyle: It's set the size of the x axis ticks font style
-- yAxisTicksFontStyle: It's set the size of the y axis ticks font style
-- xAxisTicksFontColor: It's set the size of the x axis ticks font color
-- yAxisTicksFontColor: It's set the size of the y axis ticks font color
-- xAxisTicksPadding: It's set the size of the x axis ticks padding
-- yAxisTicksPadding: It's set the size of the y axis ticks padding
-- xAxisTicksOffset: It's set the size of the x axis ticks off set
-- yAxisTicksOffset: It's set the size of the y axis ticks off set
-- yAxisTicksPrecision: It's set the size of the y axis ticks precision
-- yAxisTicksPrecisionFixed: Boolean, It's set the size of the y axis ticks precision
-- yAxisGridLinesNum: Boolean, It's set the size of the y axis gird line nuzms
-- rightBorderVisible: Boolean, It's set the visibility of the right border
-- topBorderVisible: Boolean, It's set the visibility of the top border
-- xMin: It's set the size of the x axis min value
-- xMax: It's set the size of the x axis max value
-- yMin: It's set the size of the y axis min value
-- yMax: It's set the size of the y axis max value
-- xAxisOffset: Boolean, It's set the visibility of the x axes off set
-- xAxisOffsetRight: It's set the visibility of the x axes off set right
-- xAxisOffsetLeft: It's set the visibility of the x axes off set left
-- yAxisSeparatesThousand: It's seperate the y axis
-- yAxisTicksPrecision:
-- yAxisTicksPrecisionFixed:
-- yAxisSeparatesThousands:
-- yAxisGridLinesNum:
-- yAxisUnit:
-- bezierCurveBorderWidth:
-- bezierCurveTension:
-- auxLineColor:
-- auxLineWidth:
-- auxLineDash:
+- ``datasets``:
+- ``legendVisible``: Boolean, Set the visibility of the legend
+- ``canvasPaddingTop``:
+- ``canvasPaddingRight``:
+- ``canvasPaddingBottom``:
+- ``canvasPaddingLeft``:
+- ``tooltipsEnabled``: Boolean, Mouse Over
+- ``tooltipsMode``:
+- ``aspectRatio``:
+- ``maintainAspectRatio``:
+- ``xAxisVisible``: Boolean, It's set the visibility of the x Axis
+- ``xAxisGridLinesDisplay``: Boolean, It's set the visibility of the x Axis Grid Lines
+- ``xAxisGridLinesDrawOnChartArea``: Boolean, It's set the visibility of the x Axis GridLines on chart
+- ``xAxisTicksDisplay``: Boolean, It's set the visibility of the x Axis ticks
+- ``xAxisTicksLabelDisplay``: Boolean, It's set the visibility of the x Axis ticks label
+- ``xAxisTicksStepSize``: It's set the step of the x Axis ticks
+- ``xAxisOffsetGridLines``: Boolean, It's set the off sett of the y axis
+- ``yAxisVisible``: Boolean, It's set the visibility of the x Axis
+- ``yAxisGridLinesDisplay``: Boolean, It's set the visibility of the y Axis Grid Lines
+- ``yAxisGridLinesDrawOnChartArea``: Boolean, It's set the visibility of the y Axis GridLines on chart
+- ``yAxisTicksDisplay``: Boolean, It's set the visibility of the y Axis ticks
+- ``yAxisTicksLabelDisplay``: Boolean, It's set the visibility of the y Axis ticks label
+- ``xAxisTicksFontSize``: It's set the size of the x axis ticks font size
+- ``yAxisTicksFontSize``: It's set the size of the y axis ticks font size
+- ``xAxisTicksFontFamily``: It's set the size of the x axis ticks font family
+- ``yAxisTicksFontFamily``: It's set the size of the y axis ticks font family
+- ``xAxisTicksFontStyle``: It's set the size of the x axis ticks font style
+- ``yAxisTicksFontStyle``: It's set the size of the y axis ticks font style
+- ``xAxisTicksFontColor``: It's set the size of the x axis ticks font color
+- ``yAxisTicksFontColor``: It's set the size of the y axis ticks font color
+- ``xAxisTicksPadding``: It's set the size of the x axis ticks padding
+- ``yAxisTicksPadding``: It's set the size of the y axis ticks padding
+- ``xAxisTicksOffset``: It's set the size of the x axis ticks off set
+- ``yAxisTicksOffset``: It's set the size of the y axis ticks off set
+- ``yAxisTicksPrecision``: It's set the size of the y axis ticks precision
+- ``yAxisTicksPrecisionFixed``: Boolean, It's set the size of the y axis ticks precision
+- ``yAxisGridLinesNum``: Boolean, It's set the size of the y axis gird line nuzms
+- ``rightBorderVisible``: Boolean, It's set the visibility of the right border
+- ``topBorderVisible``: Boolean, It's set the visibility of the top border
+- ``xMin``: It's set the size of the x axis min value
+- ``xMax``: It's set the size of the x axis max value
+- ``yMin``: It's set the size of the y axis min value
+- ``yMax``: It's set the size of the y axis max value
+- ``xAxisOffset``: Boolean, It's set the visibility of the x axes off set
+- ``xAxisOffsetRight``: It's set the visibility of the x axes off set right
+- ``xAxisOffsetLeft``: It's set the visibility of the x axes off set left
+- ``yAxisSeparatesThousand``: It's seperate the y axis
+- ``yAxisTicksPrecision``:
+- ``yAxisTicksPrecisionFixed``:
+- ``yAxisSeparatesThousands``:
+- ``yAxisGridLinesNum``:
+- ``yAxisUnit``:
+- ``bezierCurveBorderWidth``:
+- ``bezierCurveTension``:
+- ``auxLineColor``:
+- ``auxLineWidth``:
+- ``auxLineDash``:
 
 
 Usage example
@@ -2252,12 +2199,10 @@ displayed in a single page. 
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** widget id which used for reference in framework
-- type\ **:** type of widget
-- listen\ **:** {event, method} events for the widget listen to and
-   method to do
-- **widgets: contains all widgets on the page (eg.:
-   BusinessCaseDashboard, BusinessCaseDashboardDraft, etc.)**
+- ``id``: widget id which used for reference in framework
+- ``type``: type of widget
+- ``listen``: {event, method} events for the widget listen to and method to do
+- ``widgets``: contains all widgets on the page (eg.: BusinessCaseDashboard, BusinessCaseDashboardDraft, etc.)
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -2277,13 +2222,12 @@ GridWidget provides the same functionality.
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** Widget Id which used for reference in framework
-- type\ **:** Type of Widget
-- widgets: widget list, contains all widget on selected page
-- width: width of widget
-- listen: {event, method} events for the widget listen to and method to
-   do
-- skin:
+- ``id``: Widget Id which used for reference in framework
+- ``type``: Type of Widget
+- ``widgets``: widget list, contains all widget on selected page
+- ``width``: width of widget
+- ``listen``: {event, method} events for the widget listen to and method to do
+- ``skin``:
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -2302,9 +2246,9 @@ This widget is used for Passwords
 Configuration
 ~~~~~~~~~~~~~
 
-- id: Unique identifier of the widget, used for binding value and events
-- skin: Selected skin style for the widget (affects styling via class name)
-- value: Initial value of the password field (optional, not explicitly used here but can be set programmatically)
+- ``id``: Unique identifier of the widget, used for binding value and events
+- ``skin``: Selected skin style for the widget (affects styling via class name)
+- ``value``: Initial value of the password field (optional, not explicitly used here but can be set programmatically)
 
 
 
@@ -2327,31 +2271,30 @@ A standard pie chart to show relative sizes of data.
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** Widget Id which used for reference in framework
-- type\ **:** Type of Widget
-- canvasHeight:
-- canvasWidth:
-- data:
-- skin\ **:** selected skin of widget
-- legendSkin\ **:** selected skin of legend
-- labelAlign\ **:** alignment of label on chart (center, end, start)
-- labelDisplay\ **:** toggle visibility of label
-- labelBorderColor\ **:** border color of label rectangle
-- labelBackgroundColor\ **:** background color of label rectangle
-- labelBorderWidth\ **:** border width of label rectangle in pixel
-- labelBorderRadius\ **:** border radius of label rectangle in pixel
-- labelTextAlign:
-- labelAnchor\ **:** defines the anchor point of label (center, end ,
-   start)
-- labelPaddingTop\ **:** label top padding in pixel
-- labelPaddingRight\ **:** label right padding in pixel
-- labelPaddingLeft\ **:** label left padding in pixel
-- labelPaddingBottom\ **:** label bottom padding in pixel
-- labelFontSize\ **:** label font size
-- labelFontColor\ **:** color of font
-- labelFontWeight\ **:** weight of fon(normal, bold)
-- aspectRatio:
-- maintainAspectRatio:
+- ``id``: Widget Id which used for reference in framework
+- ``type``: Type of Widget
+- ``canvasHeight``:
+- ``canvasWidth``:
+- ``data``:
+- ``skin``: selected skin of widget
+- ``legendSkin``: selected skin of legend
+- ``labelAlign``: alignment of label on chart (center, end, start)
+- ``labelDisplay``: toggle visibility of label
+- ``labelBorderColor``: border color of label rectangle
+- ``labelBackgroundColor``: background color of label rectangle
+- ``labelBorderWidth``: border width of label rectangle in pixel
+- ``labelBorderRadius``: border radius of label rectangle in pixel
+- ``labelTextAlign``:
+- ``labelAnchor``: defines the anchor point of label (center, end , start)
+- ``labelPaddingTop``: label top padding in pixel
+- ``labelPaddingRight``: label right padding in pixel
+- ``labelPaddingLeft``: label left padding in pixel
+- ``labelPaddingBottom``: label bottom padding in pixel
+- ``labelFontSize``: label font size
+- ``labelFontColor``: color of font
+- ``labelFontWeight``: weight of fon(normal, bold)
+- ``aspectRatio``:
+- ``maintainAspectRatio``:
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -2449,13 +2392,12 @@ Overview
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** Widget Id which used for reference in framework
-- selectorTreeColNames: ['Dimensions', 'Hierarchies', 'Subsets',
-   'Elements']
-- colors:
-- data:
-- presetData:
-- tree:
+- ``id``: Widget Id which used for reference in framework
+- ``selectorTreeColNames``: ['Dimensions', 'Hierarchies', 'Subsets', 'Elements']
+- ``colors``:
+- ``data``:
+- ``presetData``:
+- ``tree``:
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -2598,11 +2540,11 @@ selecting rows of the HorizontalTableWidget
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** widget id which used for reference in framework
-- type\ **:** type of widget
-- action\ **:** executed action. currently choose only
-- align\ **:** left or right side of horizontal table
-- position\ **:** position of widget in horizontal table
+- ``id``: widget id which used for reference in framework
+- ``type``: type of widget
+- ``action``: executed action. currently choose only
+- ``align``: left or right side of horizontal table
+- ``position``: position of widget in horizontal table
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -2636,34 +2578,34 @@ This widget is used for text editing
 Configuration
 ~~~~~~~~~~~~~
 
-- bold: Enables bold text formatting in the editor
-- italic: Enables italic text formatting in the editor
-- underline: Enables underline formatting
-- leftAlign: Enables left text alignment
-- centerAlign: Enables center text alignment
-- rightAlign: Enables right text alignment
-- justify: Enables justified text alignment
-- ol: Enables ordered (numbered) list formatting
-- ul: Enables unordered (bullet) list formatting
-- heading: Enables heading/title formatting
-- fonts: Allows changing fonts in the editor
-- fontList: List of available font families
-- fontColor: Enables font color selection
-- backgroundColor: Enables background color selection
-- fontSize: Enables font size selection
-- imageUpload: Allows inserting uploaded images
-- fileUpload: Allows uploading and inserting files
-- videoEmbed: Allows embedding videos
-- urls: Enables hyperlink insertion
-- table: Enables inserting tables into the editor
-- removeStyles: Allows removing inline styles
-- code: Enables HTML source code editing
-- colors: Custom color palette for text and background
-- youtubeCookies: Whether to allow YouTube cookies in embedded videos
-- preview: Enables live preview mode
-- undoRedo: Enables undo and redo functionality
-- placeholder: Placeholder text shown when editor is empty
-- skin: Selected skin style for the editor appearance
+- ``bold``: Enables bold text formatting in the editor
+- ``italic``: Enables italic text formatting in the editor
+- ``underline``: Enables underline formatting
+- ``leftAlign``: Enables left text alignment
+- ``centerAlign``: Enables center text alignment
+- ``rightAlign``: Enables right text alignment
+- ``justify``: Enables justified text alignment
+- ``ol``: Enables ordered (numbered) list formatting
+- ``ul``: Enables unordered (bullet) list formatting
+- ``heading``: Enables heading/title formatting
+- ``fonts``: Allows changing fonts in the editor
+- ``fontList``: List of available font families
+- ``fontColor``: Enables font color selection
+- ``backgroundColor``: Enables background color selection
+- ``fontSize``: Enables font size selection
+- ``imageUpload``: Allows inserting uploaded images
+- ``fileUpload``: Allows uploading and inserting files
+- ``videoEmbed``: Allows embedding videos
+- ``urls``: Enables hyperlink insertion
+- ``table``: Enables inserting tables into the editor
+- ``removeStyles``: Allows removing inline styles
+- ``code``: Enables HTML source code editing
+- ``colors``: Custom color palette for text and background
+- ``youtubeCookies``: Whether to allow YouTube cookies in embedded videos
+- ``preview``: Enables live preview mode
+- ``undoRedo``: Enables undo and redo functionality
+- ``placeholder``: Placeholder text shown when editor is empty
+- ``skin``: Selected skin style for the editor appearance
 
 
 
@@ -2687,20 +2629,19 @@ columns. It provides Excel-like functionality including editing cells 
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** widget id which used for reference in framework
-- type\ **:** type of widget
-- headerWidth\ **:** width of header in pixel
-- format\ **:** W-B-N format for default formatting
-- startYear\ **:** Name of the starting year in numbers
-- endYear\ **:** Name of the ending year in numbers
-- **ribbons (hidden in current version):**
+- ``id``: widget id which used for reference in framework
+- ``type``: type of widget
+- ``headerWidth``: width of header in pixel
+- ``format``: W-B-N format for default formatting
+- ``startYear``: Name of the starting year in numbers
+- ``endYear``: Name of the ending year in numbers
+- ``ribbons (hidden in current version)``:
 
-   -  bar1:  {name, textColor, backgroundColor}
-   -  bar2:  {name, textColor, backgroundColor}
-   -  ..bar5: {name, textColor, backgroundColor}
+   - ``bar1``: {name, textColor, backgroundColor}
+   - ``bar2``: {name, textColor, backgroundColor}
+   - ``..bar5``: {name, textColor, backgroundColor}
 
-- listen\ **:** {event, method} events for the widget listen to and
-   method to do
+- ``listen``: {event, method} events for the widget listen to and method to do
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -2748,15 +2689,12 @@ for statistical analysis
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** Widget Id which used for reference in framework
-- type\ **:** Type of Widget
-- hideIfNoData\ **:** boolean if true the widget will hide with empty
-   content
-- listen: {event, method} events for the widget listen to and method to
-   do
-- skin: Selected button skin
-- dataset\ **:** [dataset1:
-   {value:-300,color:color1,bgColor:color2,separatorVisible:true}
+- ``id``: Widget Id which used for reference in framework
+- ``type``: Type of Widget
+- ``hideIfNoData``: boolean if true the widget will hide with empty content
+- ``listen``: {event, method} events for the widget listen to and method to do
+- ``skin``: Selected button skin
+- ``dataset``: [dataset1: {value:-300,color:color1,bgColor:color2,separatorVisible:true}
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -2786,16 +2724,13 @@ SegmentedControlWidget options. 
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** Widget Id which used for reference in framework
-- type\ **:** Type of Widget
-- skin: Selected skin of widget
-- value\ **:**  '1' if the default value is ON, and '0' if the default
-   vaule is OFF
-- label\ **:** Label of the widget
-- action\ **:** Action of Segmented Control Item (scroll, open or
-   launch)
-- selected\ **:** true false value: sign which Item of SegmentedControl
-   is active
+- ``id``: Widget Id which used for reference in framework
+- ``type``: Type of Widget
+- ``skin``: Selected skin of widget
+- ``value``: '1' if the default value is ON, and '0' if the default vaule is OFF
+- ``label``: Label of the widget
+- ``action``: Action of Segmented Control Item (scroll, open or launch)
+- ``selected``: true false value: sign which Item of SegmentedControl is active
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -2818,11 +2753,10 @@ different sets of data.
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** widget id which used for reference in framework
-- type\ **:** type of widget
-- skin\ **:** skin of the widget
-- listen\ **:** {event, method} events for the widget listen to and
-   method to do
+- ``id``: widget id which used for reference in framework
+- ``type``: type of widget
+- ``skin``: skin of the widget
+- ``listen``: {event, method} events for the widget listen to and method to do
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -2956,14 +2890,14 @@ Overview
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** widget id which used for reference in framework
-- type\ **:** type of widget
-- minValue:
-- maxValue:
-- currentValue:
-- unit:
-- ordinal:
-- parentWidgetId:
+- ``id``: widget id which used for reference in framework
+- ``type``: type of widget
+- ``minValue``:
+- ``maxValue``:
+- ``currentValue``:
+- ``unit``:
+- ``ordinal``:
+- ``parentWidgetId``:
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -2981,11 +2915,10 @@ Overview
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** widget id which used for reference in framework
-- type\ **:** type of widget
-- skin\ **:** skin of the widget
-- listen\ **:** {event, method} events for the widget listen to and
-   method to do
+- ``id``: widget id which used for reference in framework
+- ``type``: type of widget
+- ``skin``: skin of the widget
+- ``listen``: {event, method} events for the widget listen to and method to do
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -3005,33 +2938,30 @@ This widget allows users to set or adjust a value.  
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** Widget Id which used for refeerence in framework
-- type: Type of Widget
-- width: width of the button (%), if hasLayout == true, default: 50%
-- hideIfNoData: boolean if true the widget will hide with empty content
-- largeIncrement: The larger value you can increase
-- listen: {event, method} events for the widget listen to and method to
-   do
-- unit:
-- updateableWidgetId:
-- updateableWidgetValueHandler:
-- updateCallBack:
-- originalValue:
-- maxRange\ **:** Maximal value
-- minRange\ **:** Minimal value
-- skin: Selected skin of the widget
-- smallIncrement\ **:** The smaller value you can increase
-- title\ **:** title of the widget
-- trackValueFontColor: color of the track value label font
-- trackValueFontSize: size of the track value label font
-- trackValueMagnifierLabelFontColor: color of the magnifier label font
-- trackValueMagnifierLabelFontSize: size of the magnifier label font
-- value: default value of slider (can be array)
-- buttonsVisible: if buttons visible (flag)
-- legend: gives a description of each series. ([{name: 'First Val',
-   color: 'red'}, {name: 'Second Val', color: 'pink'}, {name: 'Third
-   Val', color: 'orange'}])
-- visible: if widget visible (flag)
+- ``id``: Widget Id which used for refeerence in framework
+- ``type``: Type of Widget
+- ``width``: width of the button (%), if hasLayout == true, default: 50%
+- ``hideIfNoData``: boolean if true the widget will hide with empty content
+- ``largeIncrement``: The larger value you can increase
+- ``listen``: {event, method} events for the widget listen to and method to do
+- ``unit``:
+- ``updateableWidgetId``:
+- ``updateableWidgetValueHandler``:
+- ``updateCallBack``:
+- ``originalValue``:
+- ``maxRange``: Maximal value
+- ``minRange``: Minimal value
+- ``skin``: Selected skin of the widget
+- ``smallIncrement``: The smaller value you can increase
+- ``title``: title of the widget
+- ``trackValueFontColor``: color of the track value label font
+- ``trackValueFontSize``: size of the track value label font
+- ``trackValueMagnifierLabelFontColor``: color of the magnifier label font
+- ``trackValueMagnifierLabelFontSize``: size of the magnifier label font
+- ``value``: default value of slider (can be array)
+- ``buttonsVisible``: if buttons visible (flag)
+- ``legend``: gives a description of each series. ([{name: 'First Val', color: 'red'}, {name: 'Second Val', color: 'pink'}, {name: 'Third Val', color: 'orange'}])
+- ``visible``: if widget visible (flag)
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -3138,166 +3068,166 @@ at, by breaking down the aggregate effect of negative and positive contributions
 Configuration
 ~~~~~~~~~~~~~
 
-- fontFamily : font family of the chart
-- fontSize : font size of the chart
-- fontStyle :font style of the chart
-- fontWeight : font weight of the chart
-- fontLineHeight : font line height of the chart
-- fontColor : font color of the chart
-- gridColor : grid color of the chart
-- gridWidth : gird Width of the chart
-- xAxisGridDisplay : true or false
-- yAxisGridDisplay : true or false
-- aspectRatio:
-- maintainAspectRatio: true or false
-- tooltipsEnabled: true or false
-- animationEnabled: true or false
-- rightBorderVisible: true or false, visible of the right border
-- rightBorderWidth: width of the right border
-- rightBorderColor: color of the right border
-- topBorderVisible: true or false, visible of the top border
-- topBorderWidth: width of the top border
-- topBorderColor: color of the top border
-- interactionMode:
-- interactionAxis:
-- interactionIsIntersect: true or false
-- lineColor: color of the line
-- lineWidth: width of the line
-- lineTension: Tension of the line
-- barBorderColor: Color of the border bar
-- barBorderRadius: Radius of the border bar
-- barBorderWidth: width of the border bar
-- barInflateAmount:
-- barPercentage: percentage of the bar
-- barCategoryPercentage:
-- barThickness: thickness of the bar
-- barMaxThickness: max thickness of the bar
-- barMinLength: min length of the bar
-- canvasPaddingTop: paddingTop of the canvas
-- canvasPaddingRight: paddingRight of the canvas
-- canvasPaddingBottom: paddingBottom of the canvas
-- canvasPaddingLeft: paddingLeft of the canvas
-- legendVisible: true or false, Visible of the legend
-- legendPosition: position of the legend
-- legendAlign: alignment of the legend
-- legendFontFamily: family of the legend
-- legendFontSize: font size of the legend
-- legendFontStyle: font style of the legend
-- legendFontWeight: font weight of the legend
-- legendFontLineHeight: font line height of the legend
-- xAxisBorderDisplay: true or false, display the border of x axis
-- xAxisDisplay: true or false, display the x axis
-- xAxisAlignToPixels: true or false, align the x axis to pixels
-- xAxisStacked: true or false
-- xAxisBorderColor: Color of the x axis border
-- xAxisBorderWidth: width of the x axis border
-- xAxisTicksLabelDisplay: true or false, display the ticks of the x axis label
-- xAxisTicksFontColor: Color of the x axis ticks
-- xAxisTicksFontFamily: Font family of the x axis ticks
-- xAxisTicksFontSize: Font size of the x axis ticks
-- xAxisTicksFontStyle: Font style of the x axis ticks
-- xAxisTicksFontWeight: Font weight of the x axis ticks
-- xAxisTicksFontLineHeight: Font line height of the x axis ticks
-- xAxisTicksLabelPadding: Padding of the x axis ticks label
-- xAxisGridDisplay: display of the x axis grid
-- xAxisGridColor: color of the x axis grid
-- xAxisGridOffset: true or false, offset of the x axis grid
-- xAxisTicksDisplay: display of the x axis ticks
-- xAxisGridDrawOnChartArea: Draw on chart area of the x axis
-- xAxisGridLineWidth: line width of the x axis grid
-- yMin: minimum value of the y axis
-- yMax: maximum value of the y axis
-- yMarginTop: margin top of the y axis
-- yMarginBottom: margin bottom of y axis
-- yMarginLeft: margin left of the y axis
-- yMarginRight: margin right of the y axis
-- yAxisDisplay: ture or false, display the y axis
-- yAxisAlignToPixels: true or false, align to pixels of the y axis
-- yAxisStacked: true or false
-- yAxisBorderDisplay: true or false, display the y axis
-- yAxisBorderColor: Color of the y axis border
-- yAxisBorderWidth: width of the y axis border
-- yAxisGridDisplay: display the y axis grid
-- yAxisGridDrawOnChartArea:
-- yAxisGridLineWidth: width of the y axis gird line
-- yAxisTicksDisplay: display of the y axis ticks
-- yAxisTicksLabelDisplay: display of the y axis ticks labels
-- yAxisTicksFontColor: font color of the y axis ticks
-- yAxisTicksFontFamily: font family of the y axis ticks
-- yAxisTicksFontSize: font size of the y axis ticks
-- yAxisTicksFontStyle: font style of the y axis ticks
-- yAxisTicksFontWeight: font weight of the y axis ticks
-- yAxisTicksFontLineHeight: font line height of the y axis ticks
-- yAxisTicksLabelPadding: padding of the y axis ticks labels
-- yAxisTicksCount: number of y axis ticks
-- yAxisTicksLimit: limit of the y axis ticks
-- yAxisGridColor: color of the y axis
-- yAxisGridLinesNum: number of y axis lines
-- yAxisShowOnlyZeroLine: true or false,show only zero line
-- yAxisUnit: unit of the y axis
-- yAxisDecimalNum: decimal number of the y axis
-- yAxisSeparatesThousands: true or false
-- yAxiyAxisTicksPrecisionFixed: true or false
-- labelColor: Color of the label
-- labelBackgroundColor: Color of the label background
-- labelFontFamily: Font family of the label
-- labelFontSize: Font size of the label
-- labelFontStyle: Font style of the label
-- labelFontWeight: Font weight of the label
-- labelFontLineHeight: Font line height of the label
-- labelPaddingTop: padding top of the label
-- labelPaddingLeft: padding left of the label
-- labelPaddingRight: padding right of the label
-- labelPaddingBottom: padding bottom of the label
-- labelAlign: align of the label
-- labelOffset: offset of the label
-- labelAnchor: anchor of the label
-- labelClamp: true or false, clamp of the label
-- labelClip: true or false, clip of the label
-- labelBorderRadius: border radius of the label
-- arrowEnabled: true or false
-- arrowMarginTop: margin top of the arrow
-- arrowMarginMiddle: margin middle of the arrow
-- arrowMarginBottom: margin bottom of the arrow
-- arrowLength: length of the arrow
-- arrowLineColor: line color of the arrow
-- arrowLineWidth: line width of the arrow
-- arrowCircleColor: circle color of the arrow
-- arrowCircleRadius: circle radius of the arrow
-- arrowCircleWidth: circle width of the arrow
-- arrowTriangleColor: Trinagle color of the arrow
-- arrowTriangleSize: triangle size of the arrow
-- arrowLabelVisible: true or false
-- arrowLabelColor: label color of the arrow
-- arrowLabelBackgroundColor: background color of the arrow
-- arrowLabelFontFamily: font family of the arrow
-- arrowLabelFontSize: font size of the arrow
-- arrowLabelFontStyle: font style of the arrow
-- arrowLabelFontWeight: font weight of the arrow
-- arrowLabelFontLineHeight: font line height of the arrow
-- arrowLabelPaddingTop: padding top of the arrow label
-- arrowLabelPaddingLeft: padding left of the arrow label
-- arrowLabelPaddingRight: padding right of the arrow label
-- arrowLabelPaddingBottom: padding bottom of the arrow label
-- arrowLabelAlign: align of the arrow label
-- arrowLabelOffset: offset of the arrow label
-- arrowLabelAnchor: anchor of the arrow label
-- arrowLabelClamp: true or false, clamp of the arrow label
-- arrowLabelClip: true or false, clip of the arrow label
-- arrowLabelBorderRadius: border radius of the arrow label
-- data: Data series to be displayed in the widget
-- hideZeroBars: true or false, hide bars with zero value
-- yAxisTicksLimit: Maximum number of tick lines on Y axis
-- labelDataPointVisible: true or false, show label directly at data point
-- labelDataLabelVisible: true or false, show label text for data
-- labelAlignments: Label alignment direction (e.g. 'start', 'center', 'end')
-- lalelsForceDisplay: true or false, force label visibility even in tight spaces
-- showZeroValueLabels: true or false, show labels for zero values
-- manualLabelAlignmentSetting: true or false, allow manual alignment of labels
-- labelClickPopup: ID of the popup to open when label is clicked
-- openPopupOnLabelClick: true or false, enable label click to open popup
-- openendPopupOffsetLeft: Horizontal offset in pixels for popup opening
-- openendPopupOffsetTop: Vertical offset in pixels for popup opening
+- ``fontFamily``: font family of the chart
+- ``fontSize``: font size of the chart
+- ``fontStyle``: font style of the chart
+- ``fontWeight``: font weight of the chart
+- ``fontLineHeight``: font line height of the chart
+- ``fontColor``: font color of the chart
+- ``gridColor``: grid color of the chart
+- ``gridWidth``: gird Width of the chart
+- ``xAxisGridDisplay``: true or false
+- ``yAxisGridDisplay``: true or false
+- ``aspectRatio``:
+- ``maintainAspectRatio``: true or false
+- ``tooltipsEnabled``: true or false
+- ``animationEnabled``: true or false
+- ``rightBorderVisible``: true or false, visible of the right border
+- ``rightBorderWidth``: width of the right border
+- ``rightBorderColor``: color of the right border
+- ``topBorderVisible``: true or false, visible of the top border
+- ``topBorderWidth``: width of the top border
+- ``topBorderColor``: color of the top border
+- ``interactionMode``:
+- ``interactionAxis``:
+- ``interactionIsIntersect``: true or false
+- ``lineColor``: color of the line
+- ``lineWidth``: width of the line
+- ``lineTension``: Tension of the line
+- ``barBorderColor``: Color of the border bar
+- ``barBorderRadius``: Radius of the border bar
+- ``barBorderWidth``: width of the border bar
+- ``barInflateAmount``:
+- ``barPercentage``: percentage of the bar
+- ``barCategoryPercentage``:
+- ``barThickness``: thickness of the bar
+- ``barMaxThickness``: max thickness of the bar
+- ``barMinLength``: min length of the bar
+- ``canvasPaddingTop``: paddingTop of the canvas
+- ``canvasPaddingRight``: paddingRight of the canvas
+- ``canvasPaddingBottom``: paddingBottom of the canvas
+- ``canvasPaddingLeft``: paddingLeft of the canvas
+- ``legendVisible``: true or false, Visible of the legend
+- ``legendPosition``: position of the legend
+- ``legendAlign``: alignment of the legend
+- ``legendFontFamily``: family of the legend
+- ``legendFontSize``: font size of the legend
+- ``legendFontStyle``: font style of the legend
+- ``legendFontWeight``: font weight of the legend
+- ``legendFontLineHeight``: font line height of the legend
+- ``xAxisBorderDisplay``: true or false, display the border of x axis
+- ``xAxisDisplay``: true or false, display the x axis
+- ``xAxisAlignToPixels``: true or false, align the x axis to pixels
+- ``xAxisStacked``: true or false
+- ``xAxisBorderColor``: Color of the x axis border
+- ``xAxisBorderWidth``: width of the x axis border
+- ``xAxisTicksLabelDisplay``: true or false, display the ticks of the x axis label
+- ``xAxisTicksFontColor``: Color of the x axis ticks
+- ``xAxisTicksFontFamily``: Font family of the x axis ticks
+- ``xAxisTicksFontSize``: Font size of the x axis ticks
+- ``xAxisTicksFontStyle``: Font style of the x axis ticks
+- ``xAxisTicksFontWeight``: Font weight of the x axis ticks
+- ``xAxisTicksFontLineHeight``: Font line height of the x axis ticks
+- ``xAxisTicksLabelPadding``: Padding of the x axis ticks label
+- ``xAxisGridDisplay``: display of the x axis grid
+- ``xAxisGridColor``: color of the x axis grid
+- ``xAxisGridOffset``: true or false, offset of the x axis grid
+- ``xAxisTicksDisplay``: display of the x axis ticks
+- ``xAxisGridDrawOnChartArea``: Draw on chart area of the x axis
+- ``xAxisGridLineWidth``: line width of the x axis grid
+- ``yMin``: minimum value of the y axis
+- ``yMax``: maximum value of the y axis
+- ``yMarginTop``: margin top of the y axis
+- ``yMarginBottom``: margin bottom of y axis
+- ``yMarginLeft``: margin left of the y axis
+- ``yMarginRight``: margin right of the y axis
+- ``yAxisDisplay``: ture or false, display the y axis
+- ``yAxisAlignToPixels``: true or false, align to pixels of the y axis
+- ``yAxisStacked``: true or false
+- ``yAxisBorderDisplay``: true or false, display the y axis
+- ``yAxisBorderColor``: Color of the y axis border
+- ``yAxisBorderWidth``: width of the y axis border
+- ``yAxisGridDisplay``: display the y axis grid
+- ``yAxisGridDrawOnChartArea``:
+- ``yAxisGridLineWidth``: width of the y axis gird line
+- ``yAxisTicksDisplay``: display of the y axis ticks
+- ``yAxisTicksLabelDisplay``: display of the y axis ticks labels
+- ``yAxisTicksFontColor``: font color of the y axis ticks
+- ``yAxisTicksFontFamily``: font family of the y axis ticks
+- ``yAxisTicksFontSize``: font size of the y axis ticks
+- ``yAxisTicksFontStyle``: font style of the y axis ticks
+- ``yAxisTicksFontWeight``: font weight of the y axis ticks
+- ``yAxisTicksFontLineHeight``: font line height of the y axis ticks
+- ``yAxisTicksLabelPadding``: padding of the y axis ticks labels
+- ``yAxisTicksCount``: number of y axis ticks
+- ``yAxisTicksLimit``: limit of the y axis ticks
+- ``yAxisGridColor``: color of the y axis
+- ``yAxisGridLinesNum``: number of y axis lines
+- ``yAxisShowOnlyZeroLine``: true or false,show only zero line
+- ``yAxisUnit``: unit of the y axis
+- ``yAxisDecimalNum``: decimal number of the y axis
+- ``yAxisSeparatesThousands``: true or false
+- ``yAxiyAxisTicksPrecisionFixed``: true or false
+- ``labelColor``: Color of the label
+- ``labelBackgroundColor``: Color of the label background
+- ``labelFontFamily``: Font family of the label
+- ``labelFontSize``: Font size of the label
+- ``labelFontStyle``: Font style of the label
+- ``labelFontWeight``: Font weight of the label
+- ``labelFontLineHeight``: Font line height of the label
+- ``labelPaddingTop``: padding top of the label
+- ``labelPaddingLeft``: padding left of the label
+- ``labelPaddingRight``: padding right of the label
+- ``labelPaddingBottom``: padding bottom of the label
+- ``labelAlign``: align of the label
+- ``labelOffset``: offset of the label
+- ``labelAnchor``: anchor of the label
+- ``labelClamp``: true or false, clamp of the label
+- ``labelClip``: true or false, clip of the label
+- ``labelBorderRadius``: border radius of the label
+- ``arrowEnabled``: true or false
+- ``arrowMarginTop``: margin top of the arrow
+- ``arrowMarginMiddle``: margin middle of the arrow
+- ``arrowMarginBottom``: margin bottom of the arrow
+- ``arrowLength``: length of the arrow
+- ``arrowLineColor``: line color of the arrow
+- ``arrowLineWidth``: line width of the arrow
+- ``arrowCircleColor``: circle color of the arrow
+- ``arrowCircleRadius``: circle radius of the arrow
+- ``arrowCircleWidth``: circle width of the arrow
+- ``arrowTriangleColor``: Trinagle color of the arrow
+- ``arrowTriangleSize``: triangle size of the arrow
+- ``arrowLabelVisible``: true or false
+- ``arrowLabelColor``: label color of the arrow
+- ``arrowLabelBackgroundColor``: background color of the arrow
+- ``arrowLabelFontFamily``: font family of the arrow
+- ``arrowLabelFontSize``: font size of the arrow
+- ``arrowLabelFontStyle``: font style of the arrow
+- ``arrowLabelFontWeight``: font weight of the arrow
+- ``arrowLabelFontLineHeight``: font line height of the arrow
+- ``arrowLabelPaddingTop``: padding top of the arrow label
+- ``arrowLabelPaddingLeft``: padding left of the arrow label
+- ``arrowLabelPaddingRight``: padding right of the arrow label
+- ``arrowLabelPaddingBottom``: padding bottom of the arrow label
+- ``arrowLabelAlign``: align of the arrow label
+- ``arrowLabelOffset``: offset of the arrow label
+- ``arrowLabelAnchor``: anchor of the arrow label
+- ``arrowLabelClamp``: true or false, clamp of the arrow label
+- ``arrowLabelClip``: true or false, clip of the arrow label
+- ``arrowLabelBorderRadius``: border radius of the arrow label
+- ``data``: Data series to be displayed in the widget
+- ``hideZeroBars``: true or false, hide bars with zero value
+- ``yAxisTicksLimit``: Maximum number of tick lines on Y axis
+- ``labelDataPointVisible``: true or false, show label directly at data point
+- ``labelDataLabelVisible``: true or false, show label text for data
+- ``labelAlignments``: Label alignment direction (e.g. 'start', 'center', 'end')
+- ``lalelsForceDisplay``: true or false, force label visibility even in tight spaces
+- ``showZeroValueLabels``: true or false, show labels for zero values
+- ``manualLabelAlignmentSetting``: true or false, allow manual alignment of labels
+- ``labelClickPopup``: ID of the popup to open when label is clicked
+- ``openPopupOnLabelClick``: true or false, enable label click to open popup
+- ``openendPopupOffsetLeft``: Horizontal offset in pixels for popup opening
+- ``openendPopupOffsetTop``: Vertical offset in pixels for popup opening
 
 
 
@@ -3317,28 +3247,27 @@ text. The widget is resizable by bottom right corner drag and drop
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** widget id which used for reference in framework
-- type\ **:** type of widget
-- listen: {event, method} events for the widget listen to and method to
-   do
-- editable: Boolean, It's set editable true or false
-- skin: Selected skin of widget:
-- title: title of the textbox
-- titleVisible: visibility
-- defaultText: shown default
-- tooltip: Widget tool tip text
-- tooltipTitle: WidgetTootTip Title
-- visible: if widget visible (flag)
-- width: width of the button (%), if hasLayout == true, default: 50%
-- icon:
-- highlight:
-- placeholder:
-- textAlignment: alignment of the text
-- textFontColor: font color of the text
-- textFontSzite: font size of the text
-- titleFontColor: font color of the title
-- titleFontSize: font size of the title
-- titleTextAlignment: alignment of the title
+- ``id``: widget id which used for reference in framework
+- ``type``: type of widget
+- ``listen``: {event, method} events for the widget listen to and method to do
+- ``editable``: Boolean, It's set editable true or false
+- ``skin``: Selected skin of widget:
+- ``title``: title of the textbox
+- ``titleVisible``: visibility
+- ``defaultText``: shown default
+- ``tooltip``: Widget tool tip text
+- ``tooltipTitle``: WidgetTootTip Title
+- ``visible``: if widget visible (flag)
+- ``width``: width of the button (%), if hasLayout == true, default: 50%
+- ``icon``:
+- ``highlight``:
+- ``placeholder``:
+- ``textAlignment``: alignment of the text
+- ``textFontColor``: font color of the text
+- ``textFontSzite``: font size of the text
+- ``titleFontColor``: font color of the title
+- ``titleFontSize``: font size of the title
+- ``titleTextAlignment``: alignment of the title
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -3438,30 +3367,27 @@ This widget is used for entering a single line of text.
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** widget ID used for reference in framework
-- type\ **:** type of widget
-- titleFontSize\ **:** font size of the title
-- titleFontColor\ **:** font color of the title
-- textFontSize\ **:** font size of the text
-- textFontColor\ **:** font color of the text
-- title\ **:** title of the textbox
-- titleVisible\ **:** if widget title visible (flag)
-- defaultText\ **:** shown by default in an empty cell, like a hint for
-   expected content
-- visible\ **:** if widget visible (flag)
-- hideIfNoData\ **:** boolean if true the widget will hide with empty
-   content
-- listen\ **:** {event, method} events for the widget listen to and
-   method to do
-- skin\ **:** skin of the widget
-- textBoxType\ **:** type of the textbox (drop-down)
-- titleTextAlignment\ **:** alignment of the title
-- textAlignment\ **:** alignment of the text
-- icon\ **:** icon of the widget (drop-down)n to and method to do
-- highlight:
-- defaultText:
-- editable: Boolean, It's set editable true or false
-- skin:
+- ``id``: widget ID used for reference in framework
+- ``type``: type of widget
+- ``titleFontSize``: font size of the title
+- ``titleFontColor``: font color of the title
+- ``textFontSize``: font size of the text
+- ``textFontColor``: font color of the text
+- ``title``: title of the textbox
+- ``titleVisible``: if widget title visible (flag)
+- ``defaultText``: shown by default in an empty cell, like a hint for expected content
+- ``visible``: if widget visible (flag)
+- ``hideIfNoData``: boolean if true the widget will hide with empty content
+- ``listen``: {event, method} events for the widget listen to and method to do
+- ``skin``: skin of the widget
+- ``textBoxType``: type of the textbox (drop-down)
+- ``titleTextAlignment``: alignment of the title
+- ``textAlignment``: alignment of the text
+- ``icon``: icon of the widget (drop-down)n to and method to do
+- ``highlight``:
+- ``defaultText``:
+- ``editable``: Boolean, It's set editable true or false
+- ``skin``:
 
 
 TM1 integration
@@ -3555,35 +3481,34 @@ This widget is used to display text
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** widget id which used for reference in framework
-- type\ **:** type of widget
-- icon:
-- iconColor:
-- iconCustomEventName:
-- iconHeight:
-- iconPosition:
-- iconWidth:
-- title\ **:** title of the widget
-- body\ **:** text in the body of the widget
-- titleFontSize\ **:** size of the text in the title
-- titleFontColor\ **:** color of the text in the title
-- titleBackgroundColor:
-- titleCursor:
-- titleFontWeight:
-- bodyFontSize\ **:** size of the text in the body
-- bodyFontColor\ **:** color of the text in the body
-- bodyBackgroundColor:
-- bodyCursor:
-- bodyFontWeight:
-- skin\ **:** skin of the widget
-- titleAlignment\ **:** alignment of the title
-- bodyAlignment\ **:** the alignment of the text in the body
-- editable\ **:** If the text in the body is editable (flag)
-- performable:
-- visible\ **:** if widget is visible (flag)
-- ordinal:
-- listen\ **:** {event, method} events for the widget listen to and
-   method to do
+- ``id``: widget id which used for reference in framework
+- ``type``: type of widget
+- ``icon``:
+- ``iconColor``:
+- ``iconCustomEventName``:
+- ``iconHeight``:
+- ``iconPosition``:
+- ``iconWidth``:
+- ``title``: title of the widget
+- ``body``: text in the body of the widget
+- ``titleFontSize``: size of the text in the title
+- ``titleFontColor``: color of the text in the title
+- ``titleBackgroundColor``:
+- ``titleCursor``:
+- ``titleFontWeight``:
+- ``bodyFontSize``: size of the text in the body
+- ``bodyFontColor``: color of the text in the body
+- ``bodyBackgroundColor``:
+- ``bodyCursor``:
+- ``bodyFontWeight``:
+- ``skin``: skin of the widget
+- ``titleAlignment``: alignment of the title
+- ``bodyAlignment``: the alignment of the text in the body
+- ``editable``: If the text in the body is editable (flag)
+- ``performable``:
+- ``visible``: if widget is visible (flag)
+- ``ordinal``:
+- ``listen``: {event, method} events for the widget listen to and method to do
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -3652,43 +3577,40 @@ exclusive options. (for example: on-off choice)
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** Widget Id which used for reference in framework
-- type: Type of Widget
-- action: action if button clicked, name of action in repository
-- confirmMessage: what confirm message should pop up
-- groupId: ID of the connected toggle's, each toggle has to be refer to
-   the same group naming
-- icon: selected icon of toggle when ON
-- iconOff: selected icon of toggle when OFF
-- listen: {event, method} events for the widget listen to and method to
-   do
-- skin: Selected button skin
-- titleFontColor: color of the button label font
-- titleFontSize: size of the button label font
-- titleOff: title of OFF state
-- titleOn: title of ON state
-- **value: '1' if the default value is ON, and '0' if the default value
-   is OFF**
-- visible: if widget visible (flag)
-- width: width of the button (%), if hasLayout == true, default: 5
-- backgroundColor:
-- isGridTableHierarchyExpander:
-- editable:
-- groupId:
-- icon:
-- iconOff:
-- icontFontSize:
-- icontFontColor:
-- skin:
-- titleFontColor:
-- titleFontSize:
-- titleOn:
-- titleOff:
-- value:
-- backgroundColor:
-- editable:
-- iconFontSize:
-- iconFontColor:
+- ``id``: Widget Id which used for reference in framework
+- ``type``: Type of Widget
+- ``action``: action if button clicked, name of action in repository
+- ``confirmMessage``: what confirm message should pop up
+- ``groupId``: ID of the connected toggle's, each toggle has to be refer to the same group naming
+- ``icon``: selected icon of toggle when ON
+- ``iconOff``: selected icon of toggle when OFF
+- ``listen``: {event, method} events for the widget listen to and method to do
+- ``skin``: Selected button skin
+- ``titleFontColor``: color of the button label font
+- ``titleFontSize``: size of the button label font
+- ``titleOff``: title of OFF state
+- ``titleOn``: title of ON state
+- ``value``: '1' if the default value is ON, and '0' if the default value is OFF
+- ``visible``: if widget visible (flag)
+- ``width``: width of the button (%), if hasLayout == true, default: 5
+- ``backgroundColor``:
+- ``isGridTableHierarchyExpander``:
+- ``editable``:
+- ``groupId``:
+- ``icon``:
+- ``iconOff``:
+- ``icontFontSize``:
+- ``icontFontColor``:
+- ``skin``:
+- ``titleFontColor``:
+- ``titleFontSize``:
+- ``titleOn``:
+- ``titleOff``:
+- ``value``:
+- ``backgroundColor``:
+- ``editable``:
+- ``iconFontSize``:
+- ``iconFontColor``:
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -3743,28 +3665,26 @@ analysis
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** widget id which used for reference in framework
-- type\ **:** type of widget
-- title\ **:** title of the widget
-- xAxisLabel\ **:** label of the x-axis
-- baseValue\ **:** base value of the chart
-- xMin\ **:** minimum value of the x-axis
-- xMax\ **:** maximum value of the x-axis
-- range\ **:** range of the chart (= xMax - xMin)
-- zoomable\ **:** if the widget can be enlarged (flag)
-- skin\ **:** skin of the widget
-- dataset\ **:** $.extend(true, o.dataset \|\| [], data.dataset \|\|
-   demo)
-- listen\ **:** {event, method} events for the widget listen to and
-   method to do
-- legendsVisible\ **:** if legends visible
-- dataset:
-- xAxisLabel:
-- baseValue:
-- legendVisible:
-- skin:
-- xMin:
-- range:
+- ``id``: widget id which used for reference in framework
+- ``type``: type of widget
+- ``title``: title of the widget
+- ``xAxisLabel``: label of the x-axis
+- ``baseValue``: base value of the chart
+- ``xMin``: minimum value of the x-axis
+- ``xMax``: maximum value of the x-axis
+- ``range``: range of the chart (= xMax - xMin)
+- ``zoomable``: if the widget can be enlarged (flag)
+- ``skin``: skin of the widget
+- ``dataset``: $.extend(true, o.dataset || [], data.dataset || demo)
+- ``listen``: {event, method} events for the widget listen to and method to do
+- ``legendsVisible``: if legends visible
+- ``dataset``:
+- ``xAxisLabel``:
+- ``baseValue``:
+- ``legendVisible``:
+- ``skin``:
+- ``xMin``:
+- ``range``:
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -3867,14 +3787,10 @@ Sub-widget of LineAreaChartWidget
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** Widget Id which used for reference in framework
-- type\ **:** Type of Widget
-- listen: {event, method} events for the widget listen to and method to
-   do
-- dataset\ **:** [{lineVisible: boolean, lineStyle:
-   'dotted'/'solid'/'dashed', lineWidth: int, labelVisible: boolean,
-   titleVisible: int, value: float, label: string,  lineColor: string,
-   labelColor: string, titleColor: string, titleBgColor: string},…]
+- ``id``: Widget Id which used for reference in framework
+- ``type``: Type of Widget
+- ``listen``: {event, method} events for the widget listen to and method to do
+- ``dataset``: [{lineVisible: boolean, lineStyle: 'dotted'/'solid'/'dashed', lineWidth: int, labelVisible: boolean, titleVisible: int, value: float, label: string, lineColor: string, labelColor: string, titleColor: string, titleBgColor: string},…]
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -3904,35 +3820,30 @@ contributions.
 Configuration
 ~~~~~~~~~~~~~
 
-- id\ **:** widget id which used for reference in framework
-- dataset1\ **:** $.extend(true, dataset1Config, d.dataset1 \|\|
-   {legendLabel: 'Dataset One', legendColor: 'pink', datapoints:
-   [{value: 9.06}, {value: -0.06}, {value: 0.5}, {value: 0}, {value:
-   9.5}]})
-- dataset2\ **:** $.extend(true, dataset2Config, d.dataset2 \|\|
-   {legendLabel: 'Dataset One', legendColor: 'red', datapoints: [{value:
-   8.06}, {value: -3.06}, {value: 1.5}, {value: 5}, {value: 4.5}]})
-- xAxisLabels\ **:** labels of the x-axis
-- labelVisible\ **:** if label visible (flag)
-- legendVisible\ **:** if legend visible (flag)
-- minYAxis\ **:** minimum value of the y-axis
-- maxYAxis\ **:** maximum value of the y-axis
-- yAxisGridLineNum\ **:** number of horizontal grid lines
-- yAxisDecimalNum:
-- yAxisUnit:
-- defaultColor\ **:** default color of the widget (currently #F3F4F6)
-- skin\ **:** skin of the widget
-- yAxisTicksPrecisionFixed: true or false,
-- yAxisSeparatesThousands: true or false,
-- height: height of the chart
-- allowLastColumnToZero: true or false
-- allowLastColumnToZero: true or false, allow the last column to show zero value
-- labelFontSize: Font size of the labels
-- labelHasAction: true or false, indicates if label has a click action
-- openPopupOnLabel: true or false, open a popup when clicking the label
-- popupToOpenId: ID of the popup to be opened when label is clicked
-- xAxisFontSize: Font size of the X axis labels
-- yAxisFontSize: Font size of the Y axis labels
+- ``id``: widget id which used for reference in framework
+- ``dataset1``: $.extend(true, dataset1Config, d.dataset1 || {legendLabel: 'Dataset One', legendColor: 'pink', datapoints: [{value: 9.06}, {value: -0.06}, {value: 0.5}, {value: 0}, {value: 9.5}]})
+- ``dataset2``: $.extend(true, dataset2Config, d.dataset2 || {legendLabel: 'Dataset One', legendColor: 'red', datapoints: [{value: 8.06}, {value: -3.06}, {value: 1.5}, {value: 5}, {value: 4.5}]})
+- ``xAxisLabels``: labels of the x-axis
+- ``labelVisible``: if label visible (flag)
+- ``legendVisible``: if legend visible (flag)
+- ``minYAxis``: minimum value of the y-axis
+- ``maxYAxis``: maximum value of the y-axis
+- ``yAxisGridLineNum``: number of horizontal grid lines
+- ``yAxisDecimalNum``:
+- ``yAxisUnit``:
+- ``defaultColor``: default color of the widget (currently #F3F4F6)
+- ``skin``: skin of the widget
+- ``yAxisTicksPrecisionFixed``: true or false,
+- ``yAxisSeparatesThousands``: true or false,
+- ``height``: height of the chart
+- ``allowLastColumnToZero``: true or false
+- ``allowLastColumnToZero``: true or false, allow the last column to show zero value
+- ``labelFontSize``: Font size of the labels
+- ``labelHasAction``: true or false, indicates if label has a click action
+- ``openPopupOnLabel``: true or false, open a popup when clicking the label
+- ``popupToOpenId``: ID of the popup to be opened when label is clicked
+- ``xAxisFontSize``: Font size of the X axis labels
+- ``yAxisFontSize``: Font size of the Y axis labels
 
 
 TM1 integration
