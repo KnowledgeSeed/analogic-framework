@@ -181,7 +181,7 @@ Repository = {
             const rowLabel = rowNumber ? `row ${rowNumber}` : 'selected row';
             Utils.setWidgetValue('gridTableLightDemoLastAction', {
                 title: 'Details requested',
-                body: recordLabel ? `${recordLabel} – ${rowLabel}` : `Details requested for ${rowLabel}`
+                body: recordLabel ? `${recordLabel} - ${rowLabel}` : `Details requested for ${rowLabel}`
             });
             Api.updateContent('gridTableLightDemoInfoText');
         },
