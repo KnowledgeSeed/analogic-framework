@@ -56,8 +56,8 @@ into a ``perform`` action. The widget markup wires the inner container to the
 icon event, while the runtime registers editable/performable behaviour based on
 those flags.
 
-Repository ``perform`` handlers let you centralise complex cascades—such as
-resetting filters or triggering shared logic—without duplicating code across
+Repository ``perform`` handlers let you centralise complex cascades such as
+resetting filters or triggering shared logic without duplicating code across
 multiple cells.
 
 TextBoxWidget

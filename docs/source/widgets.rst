@@ -208,8 +208,8 @@ Configuration
    grid lines draw ticks
 - xAxesGridLinesColor\ **:** color of the x axes grid lines
 - xAxesTicksFontSize\ **:** size of the x axes ticks
-- xAxesTicksFontFamily\ **:** string, default ‘imago, sans-serif’
-- xAxesTicksFontStyle\ **:** string, default ‘bold’
+- xAxesTicksFontFamily\ **:** string, default 'imago, sans-serif'
+- xAxesTicksFontStyle\ **:** string, default 'bold'
 - xAxesTicksFontColor\ **:** color of the x axes ticks
 - xAxesTicksPadding\ **:** padding between X axes ticks
 - xAxesTicksOffset:
@@ -638,8 +638,8 @@ Configuration
 - type\ **:** type of widget
 - action\ **:** executed action. currently choose only (only action is
    delete)
-- deleteMessage\ **:** ‘Are you sure to clear all data of this
-   product?’
+- deleteMessage\ **:** 'Are you sure to clear all data of this
+   product?'
 - align\ **:** left or right side of horizontal table
 - position\ **:** position of widget in horizontal table
 
@@ -936,7 +936,7 @@ Configuration
 - listen: {event, method} events for the widget listen to and method to
    do
 - skin: Selected skin of widget
-- widgets: [{id: ‘tab1name’,label: ‘text’,action: ‘text’,selected:
+- widgets: [{id: 'tab1name',label: 'text',action: 'text',selected:
    true},…
 
 TM1 integration
@@ -1892,8 +1892,8 @@ Configuration
    grid lines drow border
 - xAxesGridLinesColor\ **:** color of the x axes grid lines
 - xAxesTicksFontSize\ **:** size of the x axes ticks
-- xAxesTicksFontFamily\ **:** string, default ‘imago, sans-serif’
-- xAxesTicksFontStyle\ **:** string, default ‘bold’
+- xAxesTicksFontFamily\ **:** string, default 'imago, sans-serif'
+- xAxesTicksFontStyle\ **:** string, default 'bold'
 - xAxesTicksFontColor\ **:** color of the x axes ticks
 - xAxesTicksPadding\ **:** padding between X axes ticks
 - xAxesLabelDisplay\ **:**  true or false, display the x axes label
@@ -2450,8 +2450,8 @@ Configuration
 ~~~~~~~~~~~~~
 
 - id\ **:** Widget Id which used for reference in framework
-- selectorTreeColNames: [‘Dimensions’, ‘Hierarchies’, ‘Subsets’,
-   ‘Elements’]
+- selectorTreeColNames: ['Dimensions', 'Hierarchies', 'Subsets',
+   'Elements']
 - colors:
 - data:
 - presetData:
@@ -2731,7 +2731,7 @@ Repository behaviour
 
 Data repository specifics (Comment functionality working with 2 special
 event commentEdit and commentShow, these events transfer the clicked
-scroll table row information to the comment container’s widgets).
+scroll table row information to the comment container's widgets).
 
 
 SegmentedBarWidget
@@ -2789,7 +2789,7 @@ Configuration
 - id\ **:** Widget Id which used for reference in framework
 - type\ **:** Type of Widget
 - skin: Selected skin of widget
-- value\ **:**  ‘1’ if the default value is ON, and ‘0’ if the default
+- value\ **:**  '1' if the default value is ON, and '0' if the default
    vaule is OFF
 - label\ **:** Label of the widget
 - action\ **:** Action of Segmented Control Item (scroll, open or
@@ -3028,9 +3028,9 @@ Configuration
 - trackValueMagnifierLabelFontSize: size of the magnifier label font
 - value: default value of slider (can be array)
 - buttonsVisible: if buttons visible (flag)
-- legend: gives a description of each series. ([{name: ‘First Val’,
-   color: ‘red’}, {name: ‘Second Val’, color: ‘pink’}, {name: ‘Third
-   Val’, color: ‘orange’}])
+- legend: gives a description of each series. ([{name: 'First Val',
+   color: 'red'}, {name: 'Second Val', color: 'pink'}, {name: 'Third
+   Val', color: 'orange'}])
 - visible: if widget visible (flag)
 
 TM1 integration
@@ -3656,7 +3656,7 @@ Configuration
 - type: Type of Widget
 - action: action if button clicked, name of action in repository
 - confirmMessage: what confirm message should pop up
-- groupId: ID of the connected toggle’s, each toggle has to be refer to
+- groupId: ID of the connected toggle's, each toggle has to be refer to
    the same group naming
 - icon: selected icon of toggle when ON
 - iconOff: selected icon of toggle when OFF
@@ -3667,7 +3667,7 @@ Configuration
 - titleFontSize: size of the button label font
 - titleOff: title of OFF state
 - titleOn: title of ON state
-- **value: ‘1’ if the default value is ON, and ‘0’ if the default value
+- **value: '1' if the default value is ON, and '0' if the default value
    is OFF**
 - visible: if widget visible (flag)
 - width: width of the button (%), if hasLayout == true, default: 5
@@ -3872,7 +3872,7 @@ Configuration
 - listen: {event, method} events for the widget listen to and method to
    do
 - dataset\ **:** [{lineVisible: boolean, lineStyle:
-   ‘dotted’/’solid’/’dashed’, lineWidth: int, labelVisible: boolean,
+   'dotted'/'solid'/'dashed', lineWidth: int, labelVisible: boolean,
    titleVisible: int, value: float, label: string,  lineColor: string,
    labelColor: string, titleColor: string, titleBgColor: string},…]
 
@@ -3906,11 +3906,11 @@ Configuration
 
 - id\ **:** widget id which used for reference in framework
 - dataset1\ **:** $.extend(true, dataset1Config, d.dataset1 \|\|
-   {legendLabel: ‘Dataset One’, legendColor: ‘pink’, datapoints:
+   {legendLabel: 'Dataset One', legendColor: 'pink', datapoints:
    [{value: 9.06}, {value: -0.06}, {value: 0.5}, {value: 0}, {value:
    9.5}]})
 - dataset2\ **:** $.extend(true, dataset2Config, d.dataset2 \|\|
-   {legendLabel: ‘Dataset One’, legendColor: ‘red’, datapoints: [{value:
+   {legendLabel: 'Dataset One', legendColor: 'red', datapoints: [{value:
    8.06}, {value: -3.06}, {value: 1.5}, {value: 5}, {value: 4.5}]})
 - xAxisLabels\ **:** labels of the x-axis
 - labelVisible\ **:** if label visible (flag)
