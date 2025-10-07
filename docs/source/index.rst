@@ -19,6 +19,7 @@ Contents
 
    usage
    widgets
+   extensions
    Developer_doc
    widget_events
    repository

@@ -11,7 +11,7 @@ The framework consists of two main parts
       :name: js-frontend-framework
 
    The frontend framework is in essence a collection of JavaScript
-   elements called “widgets”. Widgets are the main building blocks of
+   elements called "widgets". Widgets are the main building blocks of
    the applications built using the Analogic Framework. Every element in
    the final application UI is always an instance of a widget. Some
    widgets are very simple both in appearance and function (eg. a Button
@@ -94,7 +94,7 @@ Running from code
 Using pip
 ~~~~~~~~~
 
-1. Create a folder where analogic’s root will be. e.g:
+1. Create a folder where analogic's root will be. e.g:
 
    yourpath/analogicroot
 
@@ -142,10 +142,10 @@ Using pip
    .. rubric:: Hello world app
       :name: hello-world-app
 
-   -  create a “default” folder in apps folder.
+   -  create a "default" folder in apps folder.
    -  download and unzip
       `this <https://github.com/KnowledgeSeed/analogic/blob/main/app_structure.zip>`__
-      into “default” folder
+      into "default" folder
 
    or
 
@@ -203,7 +203,7 @@ framework. This application indents to demonstrate the Web UI features
 without needing to install and hook up with a TM1 server.
 
 There are some sample ``docker-compose`` recipes provided in this
-repository to begin with. It’s important to note that these are
+repository to begin with. It's important to note that these are
 considered samples and patterns. Your deployment setup might require
 further customizations or extensions.
 
