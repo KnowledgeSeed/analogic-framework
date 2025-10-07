@@ -19,23 +19,27 @@ The SharePoint widget consists of two main components:
 
 Create (or copy) the following folder structure under your application. A working example is available in ``analogic_sharepoint/tests/apps/sharepointtest``, which provides a good starting point for your own project.
 
+
 .. code-block:: text
 
    <project_root>/
-   ├── app.json
-   ├── app.py
-   ├── server/
-   │   └── configs/
-   │       └── repository.yml
-   └── static/
-       └── assets/
-           ├── js/
-           │   └── configs/
-           │       ├── widget-config.js
-           │       ├── repository.js
-           │       └── event-map.js
-           └── skin/
-               └── css/
+   |- app.json
+   |- app.py
+   |- server/
+   |  \- configs/
+   |     \- repository.yml
+   \- static/
+      \- assets/
+         |- js/
+         |  \- configs/
+         |     |- widget-config.js
+         |     |- repository.js
+         |     \- event-map.js
+         \- skin/
+            \- css/
+
+
+
 
 * ``app.json`` - global configuration for the application.
 * ``static/assets/js/configs/widget-config.js`` - registers widgets on the page.
