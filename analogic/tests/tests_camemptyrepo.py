@@ -2,6 +2,8 @@ import configparser
 import unittest
 from pathlib import Path
 import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 import analogic.cam
 from analogic.analogic import create_app
 from unittest.mock import patch
@@ -9,12 +11,15 @@ import requests
 from requests_ntlm import HttpNtlmAuth
 import orjson
 import gzip
+from analogic.tests.mock_tm1 import start_tm1_mocks, stop_tm1_mocks
 
 
 class TestCamEmptyRepoAuthenticationProvider(unittest.TestCase):
+    _tm1_patchers = []
 
     @classmethod
     def setUpClass(cls) -> None:
+        cls._tm1_patchers = start_tm1_mocks()
         cls.config = configparser.ConfigParser()
         cls.config.read(Path(__file__).parent.joinpath('camemptyrepo.ini'))
 
@@ -132,6 +137,6 @@ class TestCamEmptyRepoAuthenticationProvider(unittest.TestCase):
             return c_pp
 
 
-@classmethod
-def tearDownClass(cls):
-    pass
+    @classmethod
+    def tearDownClass(cls):
+        stop_tm1_mocks(cls._tm1_patchers)

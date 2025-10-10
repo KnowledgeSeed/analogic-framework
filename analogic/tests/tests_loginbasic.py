@@ -2,20 +2,22 @@ import configparser
 import unittest
 from pathlib import Path
 import os
-import analogic.cam
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 import analogic.loginbasic
 from analogic.analogic import create_app
 from unittest.mock import patch
-import requests
-from requests_ntlm import HttpNtlmAuth
 import orjson
 import gzip
+from analogic.tests.mock_tm1 import start_tm1_mocks, stop_tm1_mocks
 
 
 class TestLoginBasicAuthenticationProvider(unittest.TestCase):
+    _tm1_patchers = []
 
     @classmethod
     def setUpClass(cls) -> None:
+        cls._tm1_patchers = start_tm1_mocks()
         cls.config = configparser.ConfigParser()
         cls.config.read(Path(__file__).parent.joinpath('loginbasic.ini'))
         cls.tm1_config = cls.config['tm1']
@@ -152,4 +154,4 @@ class TestLoginBasicAuthenticationProvider(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        pass
+        stop_tm1_mocks(cls._tm1_patchers)
