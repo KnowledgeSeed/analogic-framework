@@ -55,41 +55,123 @@ const GridTableExport = {
             return [];
         }
 
-        if (typeof attributes === 'string') {
-            return attributes
-                .split(',')
-                .map(value => value.trim())
-                .filter(value => value !== '');
-        }
+        const values = [];
 
-        if (Array.isArray(attributes)) {
-            return attributes
-                .map(value => (value === null || value === undefined) ? '' : String(value).trim())
-                .filter(value => value !== '');
-        }
+        const removeWrappingQuotes = (text) => {
+            if (typeof text !== 'string') {
+                return text;
+            }
+            const trimmed = text.trim();
+            const startsWithQuote = trimmed.startsWith("\"") || trimmed.startsWith("'");
+            const endsWithQuote = trimmed.endsWith("\"") || trimmed.endsWith("'");
+            if (trimmed.length >= 2 && startsWithQuote && endsWithQuote && trimmed[0] === trimmed[trimmed.length - 1]) {
+                return trimmed.substring(1, trimmed.length - 1);
+            }
+            return trimmed;
+        };
 
-        if (typeof attributes === 'object') {
-            const values = [];
-            Object.entries(attributes).forEach(([key, value]) => {
-                if (value === null || value === undefined) {
+        const pushValue = (value, targetIndex) => {
+            if (value === null || value === undefined) {
+                return;
+            }
+            const stringValue = removeWrappingQuotes(String(value).trim());
+            if (stringValue === '') {
+                return;
+            }
+
+            if (typeof targetIndex === 'number' && targetIndex >= 0) {
+                values[targetIndex] = stringValue;
+            } else {
+                values.push(stringValue);
+            }
+        };
+
+        const handleIterable = (iterable, startIndex) => {
+            if (typeof Map !== 'undefined' && iterable instanceof Map) {
+                iterable.forEach((value, key) => {
+                    const numericKey = Number(key);
+                    if (!Number.isNaN(numericKey) && numericKey >= 0) {
+                        const index = numericKey > 0 ? numericKey - 1 : numericKey;
+                        processValue(value, index);
+                    } else {
+                        processValue(value);
+                    }
+                });
+                return;
+            }
+
+            let offset = 0;
+            for (const entry of iterable) {
+                const index = (typeof startIndex === 'number') ? startIndex + offset : undefined;
+                processValue(entry, index);
+                offset += 1;
+            }
+        };
+
+        const processValue = (input, forcedIndex) => {
+            if (input === null || input === undefined) {
+                return;
+            }
+
+            if (typeof input === 'function') {
+                try {
+                    const result = input();
+                    processValue(result, forcedIndex);
+                } catch (error) {
+                    console.error('[GridTableExport] Failed to evaluate attribute function input:', error);
+                }
+                return;
+            }
+
+            if (Array.isArray(input)) {
+                input.forEach((item, idx) => {
+                    const index = (typeof forcedIndex === 'number') ? forcedIndex + idx : undefined;
+                    processValue(item, index);
+                });
+                return;
+            }
+
+            if (typeof input === 'string') {
+                const segments = input.split(',');
+                if (segments.length === 1) {
+                    pushValue(segments[0], forcedIndex);
                     return;
                 }
-                const normalizedValue = String(value).trim();
-                if (normalizedValue === '') {
+                segments.forEach((segment, idx) => {
+                    const index = (typeof forcedIndex === 'number') ? forcedIndex + idx : undefined;
+                    pushValue(segment, index);
+                });
+                return;
+            }
+
+            if (typeof input === 'object') {
+                if (typeof input[Symbol.iterator] === 'function') {
+                    handleIterable(input, forcedIndex);
                     return;
                 }
 
-                const numericKey = Number(key);
-                if (!Number.isNaN(numericKey) && numericKey > 0) {
-                    values[numericKey - 1] = normalizedValue;
-                } else {
-                    values.push(normalizedValue);
-                }
-            });
-            return values.length ? values.map(value => (value === undefined ? '' : value)) : [];
+                Object.entries(input).forEach(([key, value]) => {
+                    const numericKey = Number(key);
+                    if (!Number.isNaN(numericKey) && numericKey >= 0) {
+                        const index = numericKey > 0 ? numericKey - 1 : numericKey;
+                        processValue(value, index);
+                    } else {
+                        processValue(value);
+                    }
+                });
+                return;
+            }
+
+            pushValue(input, forcedIndex);
+        };
+
+        processValue(attributes);
+
+        if (values.length === 0) {
+            return [];
         }
 
-        return [];
+        return values.map(value => (value === undefined ? '' : value));
     },
 
     populateAttributeRow: (worksheet, attributeValues, rowIndex, startColIndex) => {
