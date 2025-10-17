@@ -536,7 +536,9 @@ const GridTableExport = {
             editingEnabled
         );
 
-        const resizeStartRow = headerCanBeRendered ? headerRowActualIndex : dataStartRowIndex;
+        const resizeStartRow = attrRowEnabled
+            ? attributeRowIndex
+            : (headerCanBeRendered ? headerRowActualIndex : dataStartRowIndex);
         if (columnMapping.length > 0 && resizeStartRow > 0 && worksheet.lastRow?.number >= resizeStartRow) {
            GridTableExport.autoResizeColumnsFromRow(worksheet, resizeStartRow);
         } else {
