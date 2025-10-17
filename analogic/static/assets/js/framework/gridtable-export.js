@@ -115,24 +115,6 @@ const GridTableExport = {
         return !!value;
     },
 
-    isCommentFieldIncluded: (value) => {
-        if (value === undefined || value === null) {
-            return true;
-        }
-
-        if (typeof value === 'string') {
-            const normalized = value.trim().toLowerCase();
-            if (['false', '0', 'no', 'off'].includes(normalized)) {
-                return false;
-            }
-            if (['true', '1', 'yes', 'on'].includes(normalized)) {
-                return true;
-            }
-        }
-
-        return !!value;
-    },
-
     getTotalColumnCount: (headerArray, tableData) => {
         let maxColumns = 0;
 
@@ -372,7 +354,6 @@ const GridTableExport = {
         const attributeRowIndex = 1;
         const headerRowIndex = 3;
         const repeatingCellsEnabled = GridTableExport.isRepeatingCellsEnabled(config.repeatingCells);
-        const commentFieldIncluded = GridTableExport.isCommentFieldIncluded(config.includeCommentField);
 
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet(sheetName);
@@ -385,10 +366,6 @@ const GridTableExport = {
         const tableData = tableObject?.cellData;
         const totalColumns = GridTableExport.getTotalColumnCount(headerTitlesArray, tableData);
         const excludedColumnsSet = GridTableExport.normalizeExcludedColumns(config.excludeColumns, totalColumns);
-
-        if (!commentFieldIncluded && totalColumns > 0) {
-            excludedColumnsSet.add(totalColumns - 1);
-        }
 
         const columnMapping = GridTableExport.buildColumnMapping(totalColumns, excludedColumnsSet);
 
@@ -454,7 +431,6 @@ const GridTableExport = {
             fileName: exportConfig.fileName || GridTableExport.defaultFileName,
             attributes: Array.isArray(exportConfig.attributes) ? exportConfig.attributes : [],
             repeatingCells: exportConfig.repeatingCells,
-            includeCommentField: exportConfig.includeCommentField,
             excludeColumns: Array.isArray(exportConfig.excludeColumns) ? exportConfig.excludeColumns : []
         };
 
