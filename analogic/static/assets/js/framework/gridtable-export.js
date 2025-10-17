@@ -409,22 +409,93 @@ const GridTableExport = {
         });
         const buffer = await workbook.xlsx.writeBuffer();
         return buffer;
-   },
+    },
 
-   triggerExcelExport: async (gridTableId, exportConfig = {}) => {
-        let tableObject;
+    resolveTableSource: async (source) => {
+        let currentValue = source;
+
         try {
-            tableObject = v(gridTableId);
-            if (!tableObject || !tableObject.options || !tableObject.cellData) {
-                 console.error(`[Debug trigger] Validation Failed: tableObject=${!!tableObject}, options=${!!tableObject?.options}, cellData=${!!tableObject?.cellData}`);
-                 throw new Error("Invalid table data structure received for ID: " + gridTableId);
+            while (typeof currentValue === 'function') {
+                currentValue = currentValue();
             }
-            L("[Debug trigger] Table Object for Export:", tableObject);
-        } catch (err) {
-            console.error("Failed to get table data:", err);
-            alert("Error: Could not retrieve data for export. Terminating. " + err);
+
+            if (currentValue && typeof currentValue.then === 'function') {
+                currentValue = await currentValue;
+                while (typeof currentValue === 'function') {
+                    currentValue = currentValue();
+                }
+            }
+        } catch (evaluationError) {
+            console.error('[GridTableExport] Failed to evaluate table source:', evaluationError);
+            return null;
+        }
+
+        if (typeof currentValue === 'string') {
+            const lookupKey = currentValue.trim();
+            if (!lookupKey) {
+                console.warn('[GridTableExport] Empty string provided as table source.');
+                return null;
+            }
+            try {
+                const resolved = v(lookupKey);
+                return GridTableExport.normalizeTableObject(resolved, lookupKey);
+            } catch (lookupError) {
+                console.error(`[GridTableExport] Unable to resolve table data for key "${lookupKey}":`, lookupError);
+                return null;
+            }
+        }
+
+        return GridTableExport.normalizeTableObject(currentValue);
+    },
+
+    normalizeTableObject: (value, debugLabel = '') => {
+        if (value === null || value === undefined) {
+            return null;
+        }
+
+        if (Array.isArray(value)) {
+            return { cellData: value, options: null };
+        }
+
+        if (typeof value === 'object') {
+            if (Array.isArray(value.cellData)) {
+                return {
+                    ...value,
+                    options: value.options ?? value.tableOptions ?? null
+                };
+            }
+
+            if (Array.isArray(value.data)) {
+                return {
+                    ...value,
+                    cellData: value.data,
+                    options: value.options ?? value.tableOptions ?? null
+                };
+            }
+        }
+
+        if (debugLabel) {
+            console.warn(`[GridTableExport] Unsupported table data structure for "${debugLabel}".`, value);
+        } else {
+            console.warn('[GridTableExport] Unsupported table data structure supplied to export.', value);
+        }
+
+        return null;
+    },
+
+    triggerExcelExport: async (tableSource, exportConfig = {}) => {
+        const tableObject = await GridTableExport.resolveTableSource(tableSource);
+
+        if (!tableObject || !Array.isArray(tableObject.cellData)) {
+            const sourceLabel = typeof tableSource === 'string'
+                ? `source "${tableSource}"`
+                : 'the provided source';
+            console.error(`[GridTableExport] Failed to resolve table data for export from ${sourceLabel}.`, tableSource);
+            alert(`Error: Could not retrieve data for export from ${sourceLabel}. Terminating.`);
             return;
         }
+
+        L('[Debug trigger] Table Object for Export:', tableObject);
 
         const config = {
             sheetName: exportConfig.sheetName || GridTableExport.defaultSheetName,
@@ -440,12 +511,12 @@ const GridTableExport = {
                 config
             );
             if (!fileBuffer || fileBuffer.byteLength < 50) {
-                 console.warn("[Debug trigger] Generated buffer seems very small or empty:", fileBuffer?.byteLength);
+                 console.warn('[Debug trigger] Generated buffer seems very small or empty:', fileBuffer?.byteLength);
             }
             GridTableExport.downloadBuffer(fileBuffer, config.fileName);
         } catch (error) {
-            console.error("Error during XLSX export process:", error);
-            alert("Failed to export data. Please check the console for details.");
+            console.error('Error during XLSX export process:', error);
+            alert('Failed to export data. Please check the console for details.');
         }
     }
 };
