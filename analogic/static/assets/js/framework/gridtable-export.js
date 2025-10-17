@@ -50,6 +50,64 @@ const GridTableExport = {
         });
     },
 
+    parseAttributeValues: (attributes) => {
+        if (attributes === null || attributes === undefined) {
+            return [];
+        }
+
+        if (typeof attributes === 'string') {
+            return attributes
+                .split(',')
+                .map(value => value.trim())
+                .filter(value => value !== '');
+        }
+
+        if (Array.isArray(attributes)) {
+            return attributes
+                .map(value => (value === null || value === undefined) ? '' : String(value).trim())
+                .filter(value => value !== '');
+        }
+
+        if (typeof attributes === 'object') {
+            const values = [];
+            Object.entries(attributes).forEach(([key, value]) => {
+                if (value === null || value === undefined) {
+                    return;
+                }
+                const normalizedValue = String(value).trim();
+                if (normalizedValue === '') {
+                    return;
+                }
+
+                const numericKey = Number(key);
+                if (!Number.isNaN(numericKey) && numericKey > 0) {
+                    values[numericKey - 1] = normalizedValue;
+                } else {
+                    values.push(normalizedValue);
+                }
+            });
+            return values.length ? values.map(value => (value === undefined ? '' : value)) : [];
+        }
+
+        return [];
+    },
+
+    populateAttributeRow: (worksheet, attributeValues, rowIndex, startColIndex) => {
+        if (!attributeValues || attributeValues.length === 0) return;
+        attributeValues.forEach((value, index) => {
+            const excelCol = startColIndex + index;
+            const cell = worksheet.getCell(rowIndex, excelCol);
+            cell.value = value !== undefined && value !== null ? String(value) : '';
+        });
+    },
+
+    isRepeatingCellsEnabled: (value) => {
+        if (typeof value === 'string') {
+            return value.toLowerCase() === 'true';
+        }
+        return !!value;
+    },
+
     getHeaderRowValues: (tableOptionsObject) =>{
         let headerTitlesArray = [];
 
@@ -129,8 +187,10 @@ const GridTableExport = {
         });
     },
 
-    populateDataCells: (worksheet, tableData, startRowIndex, startColIndex) => {
+    populateDataCells: (worksheet, tableData, startRowIndex, startColIndex, repeatingCells = false) => {
         if (!tableData) return;
+
+        const previousColumnValues = repeatingCells ? [] : null;
 
         tableData.forEach((rowData, r) => {
             if (!Array.isArray(rowData)) {
@@ -149,7 +209,19 @@ const GridTableExport = {
                 const isEditable = cellObj?.editable ?? false;
 
                 const parsedObject = GridTableExport.parseValue(valueToParse);
-                const finalCellValue = parsedObject.value;
+                let finalCellValue = parsedObject.value;
+
+                if (repeatingCells) {
+                    const trimmedValue = valueToParse.trim();
+                    const hasStoredValue = Object.prototype.hasOwnProperty.call(previousColumnValues, c);
+                    const storedValue = previousColumnValues ? previousColumnValues[c] : undefined;
+
+                    if (trimmedValue === '' && hasStoredValue) {
+                        finalCellValue = storedValue;
+                    } else if (trimmedValue !== '') {
+                        previousColumnValues[c] = finalCellValue;
+                    }
+                }
 
                 cell.value = finalCellValue;
 
@@ -172,39 +244,40 @@ const GridTableExport = {
     ) => {
 
         const sheetName = config.sheetName || GridTableExport.defaultSheetName;
-        const attrRowEnabled = config.attributes && Object.keys(config.attributes).length > 0;
-        const attributes = config.attributes || {};
+        const attributeValues = GridTableExport.parseAttributeValues(config.attributes);
+        const attrRowEnabled = attributeValues.length > 0;
 
-        const emptyRowsAbove = 1;
         const emptyColsLeft = 1;
         const attributeRowIndex = 1;
+        const headerRowIndex = 3;
+        const repeatingCellsEnabled = GridTableExport.isRepeatingCellsEnabled(config.repeatingCells);
 
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet(sheetName);
 
-        let currentRowIndex = 1;
-
         if (attrRowEnabled) {
-            // TODO: Populate attribute row here if needed
-            currentRowIndex = attributeRowIndex + emptyRowsAbove + 1;
-        } else {
-            currentRowIndex = emptyRowsAbove + 1;
+            GridTableExport.populateAttributeRow(worksheet, attributeValues, attributeRowIndex, emptyColsLeft + 1);
         }
 
         const headerTitlesArray = GridTableExport.getHeaderRowValues(tableObject?.options);
         const headerRowEnabled = headerTitlesArray && headerTitlesArray.length > 0;
         let headerRowActualIndex = 0;
+        let dataStartRowIndex = headerRowIndex;
 
         if (headerRowEnabled) {
-            headerRowActualIndex = currentRowIndex;
+            headerRowActualIndex = headerRowIndex;
             GridTableExport.populateHeaderCells(worksheet, headerTitlesArray, headerRowActualIndex, emptyColsLeft + 1);
-            currentRowIndex++;
+            dataStartRowIndex = headerRowActualIndex + 1;
+        }
+
+        if (!headerRowEnabled) {
+            dataStartRowIndex = headerRowIndex;
         }
 
         const tableData = tableObject?.cellData;
-        GridTableExport.populateDataCells(worksheet, tableData, currentRowIndex, emptyColsLeft + 1);
+        GridTableExport.populateDataCells(worksheet, tableData, dataStartRowIndex, emptyColsLeft + 1, repeatingCellsEnabled);
 
-        const resizeStartRow = headerRowEnabled ? headerRowActualIndex : currentRowIndex;
+        const resizeStartRow = headerRowEnabled ? headerRowActualIndex : dataStartRowIndex;
         if (resizeStartRow > 0 && worksheet.lastRow?.number >= resizeStartRow) {
            GridTableExport.autoResizeColumnsFromRow(worksheet, resizeStartRow);
         } else {
@@ -246,7 +319,8 @@ const GridTableExport = {
         const config = {
             sheetName: exportConfig.sheetName || GridTableExport.defaultSheetName,
             fileName: exportConfig.fileName || GridTableExport.defaultFileName,
-            attributes: exportConfig.attributes || {}
+            attributes: exportConfig.attributes,
+            repeatingCells: exportConfig.repeatingCells
         };
 
         try {
