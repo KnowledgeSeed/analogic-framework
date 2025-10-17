@@ -115,6 +115,13 @@ const GridTableExport = {
         return !!value;
     },
 
+    isEditingEnabled: (value) => {
+        if (typeof value === 'string') {
+            return value.toLowerCase() === 'true';
+        }
+        return !!value;
+    },
+
     getTotalColumnCount: (headerArray, tableData) => {
         let maxColumns = 0;
 
@@ -141,23 +148,7 @@ const GridTableExport = {
             console.warn('[GridTableExport] Ignoring invalid excludeColumns entry:', entry);
         };
 
-        const appendIndex = (value) => {
-            if (value === null || value === undefined || value === '') {
-                return;
-            }
-
-            if (Array.isArray(value)) {
-                value.forEach(appendIndex);
-                return;
-            }
-
-            if (typeof value === 'string') {
-                value.split(',').forEach(segment => {
-                    appendIndex(segment.trim());
-                });
-                return;
-            }
-
+        const appendSingleIndex = (value) => {
             const numeric = Number(value);
             if (!Number.isFinite(numeric)) {
                 reportInvalid(value);
@@ -177,6 +168,78 @@ const GridTableExport = {
             }
 
             normalized.add(zeroBased);
+        };
+
+        const appendRange = (startValue, endValue) => {
+            const start = Number(startValue);
+            const end = Number(endValue);
+
+            if (!Number.isFinite(start) || !Number.isFinite(end)) {
+                reportInvalid(`${startValue}-${endValue}`);
+                return;
+            }
+
+            let rangeStart = Math.trunc(start);
+            let rangeEnd = Math.trunc(end);
+
+            if (rangeStart < 1 || rangeEnd < 1) {
+                reportInvalid(`${startValue}-${endValue}`);
+                return;
+            }
+
+            if (rangeStart > rangeEnd) {
+                const temp = rangeStart;
+                rangeStart = rangeEnd;
+                rangeEnd = temp;
+            }
+
+            for (let current = rangeStart; current <= rangeEnd; current++) {
+                appendSingleIndex(current);
+            }
+        };
+
+        const processStringSegment = (segment) => {
+            if (!segment) {
+                return;
+            }
+
+            const trimmed = segment.trim();
+            if (trimmed === '') {
+                return;
+            }
+
+            const rangeMatch = trimmed.match(/^(-?\d+)\s*-\s*(-?\d+)$/);
+            if (rangeMatch) {
+                appendRange(rangeMatch[1], rangeMatch[2]);
+                return;
+            }
+
+            if (trimmed.includes('.')) {
+                trimmed.split('.').forEach(part => processStringSegment(part));
+                return;
+            }
+
+            appendSingleIndex(trimmed);
+        };
+
+        const appendIndex = (value) => {
+            if (value === null || value === undefined || value === '') {
+                return;
+            }
+
+            if (Array.isArray(value)) {
+                value.forEach(appendIndex);
+                return;
+            }
+
+            if (typeof value === 'string') {
+                value.split(',').forEach(segment => {
+                    processStringSegment(segment);
+                });
+                return;
+            }
+
+            appendSingleIndex(value);
         };
 
         if (!Array.isArray(columns)) {
@@ -287,7 +350,15 @@ const GridTableExport = {
         });
     },
 
-    populateDataCells: (worksheet, tableData, startRowIndex, startColIndex, repeatingCells = false, columnMapping = []) => {
+    populateDataCells: (
+        worksheet,
+        tableData,
+        startRowIndex,
+        startColIndex,
+        repeatingCells = false,
+        columnMapping = [],
+        editingEnabled = false
+    ) => {
         if (!tableData) return;
         if (!Array.isArray(columnMapping) || columnMapping.length === 0) return;
 
@@ -308,7 +379,7 @@ const GridTableExport = {
                 const hasExportValue = cellObj && Object.prototype.hasOwnProperty.call(cellObj, 'exportValue');
                 const rawExport = hasExportValue ? cellObj.exportValue : (cellObj?.title ?? "");
                 const valueToParse = rawExport !== null && rawExport !== undefined ? String(rawExport) : "";
-                const isEditable = cellObj?.editable ?? false;
+                const isEditable = editingEnabled || (cellObj?.editable ?? false);
 
                 const parsedObject = GridTableExport.parseValue(valueToParse);
                 let finalCellValue = parsedObject.value;
@@ -354,6 +425,7 @@ const GridTableExport = {
         const attributeRowIndex = 1;
         const headerRowIndex = 3;
         const repeatingCellsEnabled = GridTableExport.isRepeatingCellsEnabled(config.repeatingCells);
+        const editingEnabled = GridTableExport.isEditingEnabled(config.enableEditing);
 
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet(sheetName);
@@ -385,7 +457,15 @@ const GridTableExport = {
             dataStartRowIndex = headerRowIndex;
         }
 
-        GridTableExport.populateDataCells(worksheet, tableData, dataStartRowIndex, emptyColsLeft + 1, repeatingCellsEnabled, columnMapping);
+        GridTableExport.populateDataCells(
+            worksheet,
+            tableData,
+            dataStartRowIndex,
+            emptyColsLeft + 1,
+            repeatingCellsEnabled,
+            columnMapping,
+            editingEnabled
+        );
 
         const resizeStartRow = headerCanBeRendered ? headerRowActualIndex : dataStartRowIndex;
         if (columnMapping.length > 0 && resizeStartRow > 0 && worksheet.lastRow?.number >= resizeStartRow) {
@@ -502,7 +582,8 @@ const GridTableExport = {
             fileName: exportConfig.fileName || GridTableExport.defaultFileName,
             attributes: Array.isArray(exportConfig.attributes) ? exportConfig.attributes : [],
             repeatingCells: exportConfig.repeatingCells,
-            excludeColumns: Array.isArray(exportConfig.excludeColumns) ? exportConfig.excludeColumns : []
+            excludeColumns: Array.isArray(exportConfig.excludeColumns) ? exportConfig.excludeColumns : [],
+            enableEditing: exportConfig.enableEditing
         };
 
         try {
