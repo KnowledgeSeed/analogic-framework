@@ -16,10 +16,42 @@ const GridTableExport = {
     defaultFileName: 'export.xlsx',
 
     parseValue: (cellValue) => {
-        if(cellValue == "") return {type: 'string', value: ""};
-        let modifiedString = cellValue.trim().replace(',', '.');
-        if (!isNaN(modifiedString)) return {type: 'number', value: parseFloat(modifiedString)};
-        else return {type: 'string', value: cellValue};
+        if (cellValue === "" || cellValue === null || cellValue === undefined) {
+            return { type: 'string', value: "" };
+        }
+
+        const stringValue = String(cellValue);
+        const trimmedValue = stringValue.trim();
+
+        if (trimmedValue === '') {
+            return { type: 'string', value: "" };
+        }
+
+        const isPercent = trimmedValue.endsWith('%');
+        const numericPortion = isPercent ? trimmedValue.slice(0, -1) : trimmedValue;
+        const normalizedNumeric = numericPortion.replace(/\s+/g, '').replace(',', '.');
+
+        if (normalizedNumeric !== '' && !isNaN(normalizedNumeric)) {
+            const parsedNumber = parseFloat(normalizedNumeric);
+            const decimalMatch = normalizedNumeric.match(/\.([0-9]+)$/);
+            const decimalCount = decimalMatch ? decimalMatch[1].length : 0;
+
+            if (isPercent) {
+                return {
+                    type: 'percent',
+                    value: parsedNumber / 100,
+                    decimals: decimalCount
+                };
+            }
+
+            return {
+                type: 'number',
+                value: parsedNumber,
+                decimals: decimalCount
+            };
+        }
+
+        return { type: 'string', value: stringValue };
     },
 
     downloadBuffer: (buffer, filename)=>{
@@ -157,7 +189,11 @@ const GridTableExport = {
 
             const integer = Math.trunc(numeric);
             if (integer < 1) {
-                reportInvalid(value);
+                console.warn(
+                    '[GridTableExport] excludeColumns entries must be positive (1-based).',
+                    value,
+                    'If you intended to specify a range like 7-20, wrap it in quotes ("7-20") so it is parsed correctly.'
+                );
                 return;
             }
 
@@ -214,11 +250,6 @@ const GridTableExport = {
                 return;
             }
 
-            if (trimmed.includes('.')) {
-                trimmed.split('.').forEach(part => processStringSegment(part));
-                return;
-            }
-
             appendSingleIndex(trimmed);
         };
 
@@ -242,15 +273,39 @@ const GridTableExport = {
             appendSingleIndex(value);
         };
 
-        if (!Array.isArray(columns)) {
-            if (columns !== undefined && columns !== null) {
-                console.warn('[GridTableExport] excludeColumns must be provided as an array.');
+        let workingColumns = columns;
+
+        if (typeof workingColumns === 'string') {
+            workingColumns = [workingColumns];
+        }
+
+        if (!Array.isArray(workingColumns)) {
+            if (workingColumns !== undefined && workingColumns !== null) {
+                console.warn('[GridTableExport] excludeColumns must be provided as an array or comma-separated string.');
             }
             return normalized;
         }
 
-        columns.forEach(appendIndex);
+        workingColumns.forEach(appendIndex);
         return normalized;
+    },
+
+    getNumberFormatPattern: (decimalCount = 0) => {
+        if (!Number.isInteger(decimalCount) || decimalCount <= 0) {
+            return '#,##0';
+        }
+
+        const clamped = Math.min(decimalCount, 6);
+        return `#,##0.${'0'.repeat(clamped)}`;
+    },
+
+    getPercentFormatPattern: (decimalCount = 0) => {
+        if (!Number.isInteger(decimalCount) || decimalCount <= 0) {
+            return '0%';
+        }
+
+        const clamped = Math.min(decimalCount, 6);
+        return `0.${'0'.repeat(clamped)}%`;
     },
 
     buildColumnMapping: (totalColumns, excludedColumnsSet) => {
@@ -383,21 +438,35 @@ const GridTableExport = {
 
                 const parsedObject = GridTableExport.parseValue(valueToParse);
                 let finalCellValue = parsedObject.value;
+                let cellType = parsedObject.type;
+                let cellDecimals = parsedObject.decimals ?? 0;
 
                 if (repeatingCells && previousColumnValues) {
                     const trimmedValue = valueToParse.trim();
                     const columnKey = originalIndex;
                     const hasStoredValue = Object.prototype.hasOwnProperty.call(previousColumnValues, columnKey);
-                    const storedValue = hasStoredValue ? previousColumnValues[columnKey] : undefined;
+                    const storedEntry = hasStoredValue ? previousColumnValues[columnKey] : undefined;
 
-                    if (trimmedValue === '' && hasStoredValue) {
-                        finalCellValue = storedValue;
+                    if (trimmedValue === '' && hasStoredValue && storedEntry) {
+                        finalCellValue = storedEntry.value;
+                        cellType = storedEntry.type;
+                        cellDecimals = storedEntry.decimals ?? 0;
                     } else if (trimmedValue !== '') {
-                        previousColumnValues[columnKey] = finalCellValue;
+                        previousColumnValues[columnKey] = {
+                            value: finalCellValue,
+                            type: cellType,
+                            decimals: cellDecimals
+                        };
                     }
                 }
 
                 cell.value = finalCellValue;
+
+                if (cellType === 'number') {
+                    cell.numFmt = GridTableExport.getNumberFormatPattern(cellDecimals);
+                } else if (cellType === 'percent') {
+                    cell.numFmt = GridTableExport.getPercentFormatPattern(cellDecimals);
+                }
 
                 if (isEditable) {
                     cell.protection = { locked: false };
@@ -582,7 +651,9 @@ const GridTableExport = {
             fileName: exportConfig.fileName || GridTableExport.defaultFileName,
             attributes: Array.isArray(exportConfig.attributes) ? exportConfig.attributes : [],
             repeatingCells: exportConfig.repeatingCells,
-            excludeColumns: Array.isArray(exportConfig.excludeColumns) ? exportConfig.excludeColumns : [],
+            excludeColumns: Array.isArray(exportConfig.excludeColumns) || typeof exportConfig.excludeColumns === 'string'
+                ? exportConfig.excludeColumns
+                : [],
             enableEditing: exportConfig.enableEditing
         };
 
