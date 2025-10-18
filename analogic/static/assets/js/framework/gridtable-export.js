@@ -137,6 +137,7 @@ const GridTableExport = {
             const cell = worksheet.getCell(rowIndex, excelCol);
             const value = attributeValues[index];
             cell.value = value !== undefined && value !== null ? String(value) : '';
+            cell.protection = { locked: true };
         }
     },
 
@@ -147,11 +148,47 @@ const GridTableExport = {
         return !!value;
     },
 
-    isEditingEnabled: (value) => {
-        if (typeof value === 'string') {
-            return value.toLowerCase() === 'true';
+    normalizeEditingConfig: (value, totalColumns) => {
+        if (value === null || value === undefined) {
+            return { mode: 'none', columns: null };
         }
-        return !!value;
+
+        if (typeof value === 'boolean') {
+            return value
+                ? { mode: 'all', columns: null }
+                : { mode: 'none', columns: null };
+        }
+
+        if (typeof value === 'string') {
+            const trimmed = value.trim();
+            if (trimmed === '') {
+                return { mode: 'none', columns: null };
+            }
+
+            const lowered = trimmed.toLowerCase();
+            if (lowered === 'true') {
+                return { mode: 'all', columns: null };
+            }
+
+            if (lowered === 'false') {
+                return { mode: 'none', columns: null };
+            }
+
+            const parsed = GridTableExport.normalizeColumnSelection(trimmed, totalColumns, 'enableEditing');
+            return parsed.size > 0
+                ? { mode: 'columns', columns: parsed }
+                : { mode: 'none', columns: null };
+        }
+
+        if (Array.isArray(value)) {
+            const parsed = GridTableExport.normalizeColumnSelection(value, totalColumns, 'enableEditing');
+            return parsed.size > 0
+                ? { mode: 'columns', columns: parsed }
+                : { mode: 'none', columns: null };
+        }
+
+        console.warn('[GridTableExport] Unsupported enableEditing configuration. Expected boolean, array, or comma-separated range string.');
+        return { mode: 'none', columns: null };
     },
 
     getTotalColumnCount: (headerArray, tableData) => {
@@ -173,11 +210,15 @@ const GridTableExport = {
         return maxColumns;
     },
 
-    normalizeExcludedColumns: (columns, totalColumns) => {
+    normalizeColumnSelection: (columns, totalColumns, optionName) => {
         const normalized = new Set();
 
         const reportInvalid = (entry) => {
-            console.warn('[GridTableExport] Ignoring invalid excludeColumns entry:', entry);
+            if (optionName) {
+                console.warn(`[GridTableExport] Ignoring invalid ${optionName} entry:`, entry);
+            } else {
+                console.warn('[GridTableExport] Ignoring invalid column selection entry:', entry);
+            }
         };
 
         const appendSingleIndex = (value) => {
@@ -189,8 +230,9 @@ const GridTableExport = {
 
             const integer = Math.trunc(numeric);
             if (integer < 1) {
+                const optionLabel = optionName || 'column selections';
                 console.warn(
-                    '[GridTableExport] excludeColumns entries must be positive (1-based).',
+                    `[GridTableExport] ${optionLabel} entries must be positive (1-based).`,
                     value,
                     'If you intended to specify a range like 7-20, wrap it in quotes ("7-20") so it is parsed correctly.'
                 );
@@ -199,7 +241,11 @@ const GridTableExport = {
 
             const zeroBased = integer - 1;
             if (typeof totalColumns === 'number' && totalColumns > 0 && zeroBased >= totalColumns) {
-                console.warn('[GridTableExport] excludeColumns entry exceeds available columns:', value);
+                if (optionName) {
+                    console.warn(`[GridTableExport] ${optionName} entry exceeds available columns:`, value);
+                } else {
+                    console.warn('[GridTableExport] Column selection entry exceeds available columns:', value);
+                }
                 return;
             }
 
@@ -281,13 +327,21 @@ const GridTableExport = {
 
         if (!Array.isArray(workingColumns)) {
             if (workingColumns !== undefined && workingColumns !== null) {
-                console.warn('[GridTableExport] excludeColumns must be provided as an array or comma-separated string.');
+                if (optionName) {
+                    console.warn(`[GridTableExport] ${optionName} must be provided as an array or comma-separated string.`);
+                } else {
+                    console.warn('[GridTableExport] Column selections must be provided as an array or comma-separated string.');
+                }
             }
             return normalized;
         }
 
         workingColumns.forEach(appendIndex);
         return normalized;
+    },
+
+    normalizeExcludedColumns: (columns, totalColumns) => {
+        return GridTableExport.normalizeColumnSelection(columns, totalColumns, 'excludeColumns');
     },
 
     getNumberFormatPattern: (decimalCount = 0) => {
@@ -412,12 +466,14 @@ const GridTableExport = {
         startColIndex,
         repeatingCells = false,
         columnMapping = [],
-        editingEnabled = false
+        editingConfig = { mode: 'none', columns: null }
     ) => {
         if (!tableData) return;
         if (!Array.isArray(columnMapping) || columnMapping.length === 0) return;
 
         const previousColumnValues = repeatingCells ? {} : null;
+        const editingMode = editingConfig?.mode || 'none';
+        const editableColumns = editingConfig?.columns || null;
 
         tableData.forEach((rowData, r) => {
             if (!Array.isArray(rowData)) {
@@ -434,7 +490,10 @@ const GridTableExport = {
                 const hasExportValue = cellObj && Object.prototype.hasOwnProperty.call(cellObj, 'exportValue');
                 const rawExport = hasExportValue ? cellObj.exportValue : (cellObj?.title ?? "");
                 const valueToParse = rawExport !== null && rawExport !== undefined ? String(rawExport) : "";
-                const isEditable = editingEnabled || (cellObj?.editable ?? false);
+                const baseEditable = cellObj?.editable ?? false;
+                const editingOverride = editingMode === 'all'
+                    || (editingMode === 'columns' && editableColumns && editableColumns.has(originalIndex));
+                const isEditable = editingOverride || baseEditable;
 
                 const parsedObject = GridTableExport.parseValue(valueToParse);
                 let finalCellValue = parsedObject.value;
@@ -494,7 +553,6 @@ const GridTableExport = {
         const attributeRowIndex = 1;
         const headerRowIndex = 3;
         const repeatingCellsEnabled = GridTableExport.isRepeatingCellsEnabled(config.repeatingCells);
-        const editingEnabled = GridTableExport.isEditingEnabled(config.enableEditing);
 
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet(sheetName);
@@ -509,6 +567,7 @@ const GridTableExport = {
         const excludedColumnsSet = GridTableExport.normalizeExcludedColumns(config.excludeColumns, totalColumns);
 
         const columnMapping = GridTableExport.buildColumnMapping(totalColumns, excludedColumnsSet);
+        const editingConfig = GridTableExport.normalizeEditingConfig(config.enableEditing, totalColumns);
 
         if (attrRowEnabled) {
             GridTableExport.populateAttributeRow(worksheet, attributeValues, attributeRowIndex, emptyColsLeft + 1, columnMapping);
@@ -533,7 +592,7 @@ const GridTableExport = {
             emptyColsLeft + 1,
             repeatingCellsEnabled,
             columnMapping,
-            editingEnabled
+            editingConfig
         );
 
         const resizeStartRow = attrRowEnabled
