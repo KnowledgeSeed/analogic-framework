@@ -378,6 +378,77 @@ const GridTableExport = {
         return mapping;
     },
 
+    extractHeaderCellText: (cell) => {
+        if (cell === null || cell === undefined) {
+            return '';
+        }
+
+        if (typeof cell === 'string' || typeof cell === 'number' || typeof cell === 'boolean') {
+            return String(cell);
+        }
+
+        if (typeof cell === 'object') {
+            if (Object.prototype.hasOwnProperty.call(cell, 'exportValue')) {
+                const exportValue = cell.exportValue;
+                return exportValue !== null && exportValue !== undefined ? String(exportValue) : '';
+            }
+
+            if (Object.prototype.hasOwnProperty.call(cell, 'title')) {
+                const titleValue = cell.title;
+                return titleValue !== null && titleValue !== undefined ? String(titleValue) : '';
+            }
+
+            if (Object.prototype.hasOwnProperty.call(cell, 'text')) {
+                const textValue = cell.text;
+                return textValue !== null && textValue !== undefined ? String(textValue) : '';
+            }
+
+            if (Object.prototype.hasOwnProperty.call(cell, 'value')) {
+                const valueField = cell.value;
+                return valueField !== null && valueField !== undefined ? String(valueField) : '';
+            }
+        }
+
+        return String(cell);
+    },
+
+    extractHeaderFromTableData: (tableData) => {
+        if (!Array.isArray(tableData) || tableData.length === 0) {
+            return {
+                headerValues: null,
+                dataRows: Array.isArray(tableData) ? tableData : [],
+                detected: false
+            };
+        }
+
+        const firstRow = tableData[0];
+        if (!Array.isArray(firstRow)) {
+            return {
+                headerValues: null,
+                dataRows: tableData,
+                detected: false
+            };
+        }
+
+        const headerDetectedByFlag = firstRow.some(cell => cell && typeof cell === 'object' && cell.isHeader === true);
+        const headerValues = firstRow.map(cell => GridTableExport.extractHeaderCellText(cell));
+        const hasNonEmptyHeader = headerValues.some(value => value !== '');
+
+        if (!headerDetectedByFlag && !hasNonEmptyHeader) {
+            return {
+                headerValues: null,
+                dataRows: tableData,
+                detected: false
+            };
+        }
+
+        return {
+            headerValues,
+            dataRows: tableData.slice(1),
+            detected: headerDetectedByFlag ? 'flag' : 'firstRow'
+        };
+    },
+
     getHeaderRowValues: (tableOptionsObject) =>{
         let headerTitlesArray = [];
 
@@ -557,13 +628,24 @@ const GridTableExport = {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet(sheetName);
 
-        const headerTitlesArray = GridTableExport.getHeaderRowValues(tableObject?.options);
-        const headerRowEnabled = headerTitlesArray && headerTitlesArray.length > 0;
+        let headerTitlesArray = GridTableExport.getHeaderRowValues(tableObject?.options);
+        let headerRowEnabled = headerTitlesArray && headerTitlesArray.length > 0;
         let headerRowActualIndex = 0;
         let dataStartRowIndex = headerRowIndex;
 
-        const tableData = tableObject?.cellData;
-        const totalColumns = GridTableExport.getTotalColumnCount(headerTitlesArray, tableData);
+        const tableDataOriginal = Array.isArray(tableObject?.cellData) ? tableObject.cellData : [];
+
+        let workingTableData = tableDataOriginal;
+        if (!headerRowEnabled) {
+            const derivedHeaderInfo = GridTableExport.extractHeaderFromTableData(workingTableData);
+            if (derivedHeaderInfo.headerValues && derivedHeaderInfo.headerValues.length > 0) {
+                headerTitlesArray = derivedHeaderInfo.headerValues;
+                headerRowEnabled = true;
+                workingTableData = derivedHeaderInfo.dataRows;
+            }
+        }
+
+        const totalColumns = GridTableExport.getTotalColumnCount(headerTitlesArray, workingTableData);
         const excludedColumnsSet = GridTableExport.normalizeExcludedColumns(config.excludeColumns, totalColumns);
 
         const columnMapping = GridTableExport.buildColumnMapping(totalColumns, excludedColumnsSet);
@@ -587,7 +669,7 @@ const GridTableExport = {
 
         GridTableExport.populateDataCells(
             worksheet,
-            tableData,
+            workingTableData,
             dataStartRowIndex,
             emptyColsLeft + 1,
             repeatingCellsEnabled,
