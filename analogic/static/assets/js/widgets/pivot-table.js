@@ -422,10 +422,12 @@ class PivotTableWidget extends Widget {
         let d, card = $(e.item), dim = card.data('dimension'), hier = card.data('hierarchy'),
             subset = card.data('subset');
 
+        const targetHolder = $(e.to);
+
         this.options.isPrivateSubset = card.data('private') || false;
 
-        if ('pivotSlicer' === e.to.id) {
-            $(e.to).children('[data-dimension="' + dim + '"][data-hierarchy="' + hier + '"]').not(card).remove();
+        if (targetHolder.hasClass('pivot-slicer')) {
+            targetHolder.children('[data-dimension="' + dim + '"][data-hierarchy="' + hier + '"]').not(card).remove();
 
             d = this.tree.children[dim];
 
@@ -1815,7 +1817,9 @@ class PivotTableWidget extends Widget {
     }
 
     isTaintedHolderSlicer() {
-        return ('pivotSlicer' === (this.taintedHolder || (this.taintedCard || $()).parent()).attr('id'));
+        const holder = this.taintedHolder ? $(this.taintedHolder) : $(this.taintedCard).parent();
+
+        return holder.hasClass('pivot-slicer');
     }
 
     getPivotTable() {
