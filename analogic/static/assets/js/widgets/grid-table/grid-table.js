@@ -408,6 +408,12 @@ class GridTableWidget extends Widget {
         if ($(e.target).is('input, textarea')) {
             return;
         }
+
+        const activeElement = document.activeElement;
+        if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+            activeElement.blur();
+        }
+
         e.preventDefault();
 
         this.isMouseDown = true;
@@ -457,6 +463,10 @@ class GridTableWidget extends Widget {
     }
 
     handleKeyDown(e) {
+        if ($(e.target).is('input, textarea')) {
+            return;
+        }
+
         if (e.ctrlKey && e.key.toLowerCase() === 'c') {
             e.preventDefault();
             this.copySelectedCellsToClipboard();
