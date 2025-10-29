@@ -21,6 +21,8 @@ class PivotTableWidget extends Widget {
             resizeMargin: 2,
             resizeMinWidth: 4
         };
+
+        this.decimalPlaces = this._normalizeDecimalOption(this.options.Decimal);
     }
 
     getHtml() {
@@ -114,6 +116,8 @@ class PivotTableWidget extends Widget {
 
     initEventHandlers() {
         const o = this.options;
+
+        this.decimalPlaces = this._normalizeDecimalOption(o.Decimal);
 
         this.$section = this.getSection();
         this.$content = this.$section.children('.ks-pivot');
@@ -2425,7 +2429,8 @@ class PivotTableWidget extends Widget {
         if (p.hasClass('err')) {
             p.html(i.data('value')).removeClass('sel');
         } else if (p.hasClass('ok')) {
-            p.html(i.val().trim()).removeClass('sel');
+            const updatedValue = this._formatNumberForDisplay(i.val().trim());
+            p.html(updatedValue).removeClass('sel');
         } else {
             p.html(i.data('value'));
         }
@@ -2439,6 +2444,42 @@ class PivotTableWidget extends Widget {
         return c.prevAll(s).length + r.children(s).length * r.prevAll(':not([data-i])').length;
     }
 
+    _normalizeDecimalOption(decimalOption) {
+        if (decimalOption === undefined || decimalOption === null) {
+            return null;
+        }
+
+        if (typeof decimalOption === 'string') {
+            decimalOption = decimalOption.trim();
+            if (decimalOption === '') {
+                return null;
+            }
+        }
+
+        const parsed = Number(decimalOption);
+        if (!Number.isFinite(parsed)) {
+            return null;
+        }
+
+        const normalized = Math.trunc(parsed);
+
+        return normalized >= 0 ? normalized : null;
+    }
+
+    _getDecimalPlaces() {
+        return Number.isInteger(this.decimalPlaces) && this.decimalPlaces >= 0 ? this.decimalPlaces : null;
+    }
+
+    _getExportNumberFormat() {
+        const decimalPlaces = this._getDecimalPlaces();
+
+        if (decimalPlaces === null || decimalPlaces === 0) {
+            return '#,##0';
+        }
+
+        return '#,##0.' + '0'.repeat(decimalPlaces);
+    }
+
     _formatNumberForDisplay(value) {
         if (value === null || value === undefined) return value;
 
@@ -2448,8 +2489,20 @@ class PivotTableWidget extends Widget {
         if (raw.includes('%')) return raw;
 
         if (/[,\u00A0\u202F ]/.test(raw)) return raw;
-        const m = raw.match(/^(-?)(\d+)(\.\d+)?$/);
-        if (!m) return raw;
+        const baseMatch = raw.match(/^(-?)(\d+)(\.\d+)?$/);
+        if (!baseMatch) return raw;
+
+        let normalized = raw;
+        const decimalPlaces = this._getDecimalPlaces();
+        if (decimalPlaces !== null) {
+            const numericValue = Number(raw);
+            if (!Number.isNaN(numericValue)) {
+                normalized = Utils.precisionRound(numericValue, decimalPlaces, true);
+            }
+        }
+
+        const m = normalized.match(/^(-?)(\d+)(\.\d+)?$/);
+        if (!m) return normalized;
 
         const sign = m[1] || '';
         const intPart = m[2];
@@ -2644,7 +2697,12 @@ const parseAndNestDataRows = (dataRows, numRowDims) => {
 
     const modifiedString = raw.replace(/[\s,]/g, '');
     if (!isNaN(modifiedString) && modifiedString !== '') {
-        return {type: 'number', value: parseFloat(modifiedString)};
+        let numericValue = parseFloat(modifiedString);
+        const decimalPlaces = this._getDecimalPlaces();
+        if (decimalPlaces !== null && !Number.isNaN(numericValue)) {
+            numericValue = Utils.precisionRound(numericValue, decimalPlaces, false);
+        }
+        return {type: 'number', value: numericValue};
     }
 
     return {type: 'string', value: cellValue};
@@ -2796,7 +2854,7 @@ async _generateAndDownloadExcel(gridTableObj, slicerData, config) {
                 }
 
                 if (parsedResult.type === 'number') {
-                    cell.numFmt = '#,##0';
+                    cell.numFmt = this._getExportNumberFormat();
                 } else if (parsedResult.type === 'percent') {
                     cell.numFmt = '0.00%';
                 }
