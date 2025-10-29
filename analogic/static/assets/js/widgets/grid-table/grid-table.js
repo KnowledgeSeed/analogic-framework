@@ -358,6 +358,8 @@ class GridTableWidget extends Widget {
 
         contentArea.on('mousedown', '.ks-grid-table-cell', this.handleMouseDown.bind(this));
         contentArea.on('mouseover', '.ks-grid-table-cell', this.handleMouseOver.bind(this));
+        contentArea.on('keydown', 'input, textarea', this.handleEditorKeyDown.bind(this));
+        contentArea.on('focus', 'input, textarea', this.handleEditorFocus.bind(this));
         $(document).on('mouseup', this.handleMouseUp.bind(this));
 
         gridContainer.on('click', (e) => {
@@ -408,6 +410,12 @@ class GridTableWidget extends Widget {
         if ($(e.target).is('input, textarea')) {
             return;
         }
+
+        const activeElement = document.activeElement;
+        if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+            activeElement.blur();
+        }
+
         e.preventDefault();
 
         this.isMouseDown = true;
@@ -456,7 +464,62 @@ class GridTableWidget extends Widget {
         this.lastHoveredCell = null;
     }
 
+    handleEditorFocus(e) {
+        const editorCell = $(e.target).closest('.ks-grid-table-cell');
+
+        if (!editorCell.length) {
+            return;
+        }
+
+        this.activeCell = editorCell;
+
+        if (!this.selectedCells.has(editorCell.attr('id'))) {
+            this.clearSelection();
+            this.selectedCells.add(editorCell.attr('id'));
+        }
+
+        this.selectionAnchor = editorCell;
+        this.updateSelectionUI();
+    }
+
+    handleEditorKeyDown(e) {
+        if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+            return;
+        }
+
+        const editor = $(e.target);
+        const editorCell = editor.closest('.ks-grid-table-cell');
+
+        if (!editorCell.length) {
+            return;
+        }
+
+        this.activeCell = editorCell;
+
+        if (!this.selectionAnchor) {
+            this.selectionAnchor = editorCell;
+        }
+
+        e.preventDefault();
+        editor.blur();
+
+        const navigated = this.moveSelectionFromKey(e.key, {
+            extend: e.shiftKey,
+            keepAnchor: e.ctrlKey,
+            focusEditor: true,
+            startCell: editorCell
+        });
+
+        if (!navigated) {
+            editor.focus();
+        }
+    }
+
     handleKeyDown(e) {
+        if ($(e.target).is('input, textarea')) {
+            return;
+        }
+
         if (e.ctrlKey && e.key.toLowerCase() === 'c') {
             e.preventDefault();
             this.copySelectedCellsToClipboard();
@@ -468,55 +531,101 @@ class GridTableWidget extends Widget {
         }
         e.preventDefault();
 
-        if (!this.activeCell) {
-            this.activeCell = $('#' + this.id).find('.ks-grid-table-cell[data-row="0"][data-col="0"]');
-            if (!this.activeCell.length) return;
+        this.moveSelectionFromKey(e.key, {
+            extend: e.shiftKey,
+            keepAnchor: e.ctrlKey,
+            focusEditor: false
+        });
+    }
 
+    moveSelectionFromKey(key, options = {}) {
+        const deltas = {
+            ArrowUp: [-1, 0],
+            ArrowDown: [1, 0],
+            ArrowLeft: [0, -1],
+            ArrowRight: [0, 1]
+        };
+
+        const delta = deltas[key];
+
+        if (!delta) {
+            return false;
+        }
+
+        let baseCell = options.startCell || this.activeCell;
+
+        if (!baseCell || !baseCell.length) {
+            baseCell = $('#' + this.id).find('.ks-grid-table-cell[data-row="0"][data-col="0"]');
+
+            if (!baseCell.length) {
+                return false;
+            }
+
+            this.activeCell = baseCell;
+            this.clearSelection();
+            this.selectedCells.add(baseCell.attr('id'));
+            this.selectionAnchor = baseCell;
+            this.updateSelectionUI();
+            return true;
+        }
+
+        return this.moveSelectionByDelta(delta[0], delta[1], {
+            extend: options.extend,
+            keepAnchor: options.keepAnchor,
+            focusEditor: options.focusEditor,
+            startCell: baseCell
+        });
+    }
+
+    moveSelectionByDelta(deltaRow, deltaCol, options = {}) {
+        const baseCell = options.startCell || this.activeCell;
+
+        if (!baseCell || !baseCell.length) {
+            return false;
+        }
+
+        const targetRow = parseInt(baseCell.data('row')) + deltaRow;
+        const targetCol = parseInt(baseCell.data('col')) + deltaCol;
+        const nextCell = $(`#${this.id} .ks-grid-table-cell[data-row="${targetRow}"][data-col="${targetCol}"]`);
+
+        if (!nextCell.length) {
+            return false;
+        }
+
+        this.activeCell = nextCell;
+
+        if (options.extend) {
+            if (!this.selectionAnchor) {
+                this.selectionAnchor = baseCell;
+            }
+            this.selectRange(this.selectionAnchor, this.activeCell);
+        } else if (options.keepAnchor) {
+            this.selectionAnchor = this.activeCell;
+        } else {
             this.clearSelection();
             this.selectedCells.add(this.activeCell.attr('id'));
             this.selectionAnchor = this.activeCell;
-            this.updateSelectionUI();
+        }
+
+        this.updateSelectionUI();
+        this.activeCell[0].scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'nearest'});
+
+        if (options.focusEditor) {
+            this.focusCellEditor(this.activeCell);
+        }
+
+        return true;
+    }
+
+    focusCellEditor(cell) {
+        if (!cell || !cell.length) {
             return;
         }
 
-        const isCtrlPressed = e.ctrlKey;
-        const isShiftPressed = e.shiftKey;
-        let currentRow = parseInt(this.activeCell.data('row'));
-        let currentCol = parseInt(this.activeCell.data('col'));
+        const editor = cell.find('input:not([readonly]):not(:disabled), textarea:not([readonly]):not(:disabled)').first();
 
-        switch (e.key) {
-            case 'ArrowUp':
-                currentRow--;
-                break;
-            case 'ArrowDown':
-                currentRow++;
-                break;
-            case 'ArrowLeft':
-                currentCol--;
-                break;
-            case 'ArrowRight':
-                currentCol++;
-                break;
-        }
-
-        const nextCell = $(`#${this.id} .ks-grid-table-cell[data-row="${currentRow}"][data-col="${currentCol}"]`);
-
-        if (nextCell.length) {
-            this.activeCell = nextCell;
-
-            if (isShiftPressed) {
-                this.clearSelection();
-                this.selectRange(this.selectionAnchor, this.activeCell);
-            } else if (isCtrlPressed) {
-                this.selectionAnchor = this.activeCell;
-            } else {
-                this.clearSelection();
-                this.selectedCells.add(this.activeCell.attr('id'));
-                this.selectionAnchor = this.activeCell;
-            }
-
-            this.updateSelectionUI();
-            this.activeCell[0].scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'nearest'});
+        if (editor.length) {
+            editor.focus();
         }
     }
 
