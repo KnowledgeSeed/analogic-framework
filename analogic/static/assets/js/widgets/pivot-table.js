@@ -21,6 +21,8 @@ class PivotTableWidget extends Widget {
             resizeMargin: 2,
             resizeMinWidth: 4
         };
+
+        this.decimalPlaces = this._normalizeDecimalOption(this.options.Decimal);
     }
 
     getHtml() {
@@ -51,19 +53,19 @@ class PivotTableWidget extends Widget {
         this.tree = {children: {}};
 
         return `
-<div class="ks-pivot">
+<div class="ks-pivot" data-widget-id="${o.id}">
     <div class="ks-pivot-table-controls-holder" ${o.hideCards ? 'style="display: none;"' : ''}>
         ${this.getControlsHtml()}
         <div class="ks-pivot-table-control-row">
-            <div id="pivotSlicer" class="ks-pivot-table-tag-holder"><a class="ks-pivot-table-add-tag"><span class="icon-plus-circle"></span></a><div class="ks-pivot-table-tag-holder-icon"><span class="icon-filter-circle icon-columns"></span></div></div>
+            <div class="ks-pivot-table-tag-holder pivot-slicer" data-role="pivot-slicer"><a class="ks-pivot-table-add-tag"><span class="icon-plus-circle"></span></a><div class="ks-pivot-table-tag-holder-icon"><span class="icon-filter-circle icon-columns"></span></div></div>
         </div>
         <div class="ks-pivot-table-control-row">
-            <div id="pivotRowSelector" class="ks-pivot-table-tag-holder"><a class="ks-pivot-table-add-tag"><span class="icon-plus-circle"></span></a><div class="ks-pivot-table-tag-holder-icon"><span class="icon-rows"></span></div></div>
+            <div class="ks-pivot-table-tag-holder pivot-row-selector" data-role="pivot-row-selector"><a class="ks-pivot-table-add-tag"><span class="icon-plus-circle"></span></a><div class="ks-pivot-table-tag-holder-icon"><span class="icon-rows"></span></div></div>
             <div class="ks-pivot-table-tag-switch"><span class="icon-arrow-swap"></span></div>
-            <div id="pivotColSelector" class="ks-pivot-table-tag-holder"><a class="ks-pivot-table-add-tag"><span class="icon-plus-circle"></span></a><div class="ks-pivot-table-tag-holder-icon"><span class="icon-columns"></span></div></div>
+            <div class="ks-pivot-table-tag-holder pivot-col-selector" data-role="pivot-col-selector"><a class="ks-pivot-table-add-tag"><span class="icon-plus-circle"></span></a><div class="ks-pivot-table-tag-holder-icon"><span class="icon-columns"></span></div></div>
         </div>
     </div>
-    <table id="pivotTable" class="ks-pivot-table"></table>
+    <table class="ks-pivot-table pivot-table"></table>
 </div>`;
     }
 
@@ -73,17 +75,17 @@ class PivotTableWidget extends Widget {
         <div class="ks-pivot-table-control-row presets-row pivot-btn-row right-align">
             <div class="ks-pivot-table-presets-btn">
                 <span class="icon-ellipsis"></span>
-                <div id="pivotPresetsDropdown" class="ks-pivot-table-presets-dropdown">
-                    <a id="closePanelBtn"><span class="icon-arrow-to-top" style="color: #007BFF;"></span>Close Panel</a>
-                    <a id="resetPivotBtn"><span class="icon-clear" style="color: #dc3545;"></span>Reset</a>
-                    <a id="savePresetBtn"><span class="icon-tray-arrow-down" style="color: #3AA745;"></span>Save as Preset</a>
-                    <a id="loadPresetBtn"><span class="icon-tray-files" style="color: #1d7bff;"></span>Load Preset</a>
+                <div class="ks-pivot-table-presets-dropdown pivot-presets-dropdown">
+                    <a class="close-panel-btn"><span class="icon-arrow-to-top" style="color: #007BFF;"></span>Close Panel</a>
+                    <a class="reset-pivot-btn"><span class="icon-clear" style="color: #dc3545;"></span>Reset</a>
+                    <a class="save-preset-btn"><span class="icon-tray-arrow-down" style="color: #3AA745;"></span>Save as Preset</a>
+                    <a class="load-preset-btn"><span class="icon-tray-files" style="color: #1d7bff;"></span>Load Preset</a>
                     <hr>
                     <a><span class="icon-zero-square-outline" style="color: #80379b;"></span>Suppress Zero</a>
                     <a class="suppressZeroBtn" data-id="${this.options.id}" data-type="nonEmptyColumns"><span class="icon-check" style="color: #1d7bff;"></span>From columns</a>
                     <a class="suppressZeroBtn" data-id="${this.options.id}" data-type="nonEmptyRows"><span class="icon-check" style="color: #1d7bff;"></span>From rows</a>
                     <hr>
-                    <a id="exportBtnInline" data-id="${this.options.id}" data-action="exportPivotTable"><span class="icon-doc-arrow-down" style="color: #3AA745;"></span>Export to Excel</a>
+                    <a class="export-btn-inline" data-id="${this.options.id}" data-action="exportPivotTable"><span class="icon-doc-arrow-down" style="color: #3AA745;"></span>Export to Excel</a>
                 </div>
             </div>
         </div>`;
@@ -97,24 +99,36 @@ class PivotTableWidget extends Widget {
             const currSuppress = suppressLabels[this.suppressZeroMode || 'off'];
             return `
 <div class="ks-pivot-table-control-row presets-row pivot-btn-row left-align">
-    <button id="resetPivotBtn" class="pivot-btn-outline"><span class="icon-arrow-undo"></span> Reset</button>
-    <button id="savePresetBtn" class="pivot-btn-outline"><span class="icon-tray-arrow-down"></span> Save as Preset</button>
-    <button id="loadPresetBtn" class="pivot-btn-outline"><span class="icon-tray-files"></span> Load Preset</button>
+    <button class="pivot-btn-outline reset-pivot-btn"><span class="icon-arrow-undo"></span> Reset</button>
+    <button class="pivot-btn-outline save-preset-btn"><span class="icon-tray-arrow-down"></span> Save as Preset</button>
+    <button class="pivot-btn-outline load-preset-btn"><span class="icon-tray-files"></span> Load Preset</button>
     <span class="pivot-btn-outline-group" style="position:relative;">
       <span class="pivot-btn-outline-label">Supress Zero:</span>
-      <button id="suppressZeroDropdownBtn" class="pivot-btn-outline suppressZeroDropdownBtn" type="button">${currSuppress}</button>
-      <div id="suppressZeroPopup" class="suppress-zero-popup" style="display:none;position:absolute;z-index:999;left:0;top:40px;"></div>
+      <button class="pivot-btn-outline suppress-zero-dropdown-btn" type="button">${currSuppress}</button>
+      <div class="suppress-zero-popup" style="display:none;position:absolute;z-index:999;left:0;top:40px;"></div>
     </span>
     <span class="pivot-btn-outline-label" style="margin-left:24px;">Excel:</span>
-    <button id="exportBtn" class="pivot-btn-outline"><span class="icon-doc-arrow-down"></span></button>
+    <button class="pivot-btn-outline export-pivot-btn"><span class="icon-doc-arrow-down"></span></button>
 </div>`;
         }
     }
 
 
     initEventHandlers() {
-        const o = this.options,
-            section = this.getSection().children().off('click').on('click', () => this.closeDropdowns());
+        const o = this.options;
+
+        this.decimalPlaces = this._normalizeDecimalOption(o.Decimal);
+
+        this.$section = this.getSection();
+        this.$content = this.$section.children('.ks-pivot');
+
+        if (!this.$content.length) {
+            this.$content = this.$section.children().first();
+        }
+
+        const section = this.$content.off('click').on('click', () => this.closeDropdowns());
+
+        this.controlsHolder = section.children('.ks-pivot-table-controls-holder');
 
         this.cubeName = o.cubeName;
         this.presetId = 0;
@@ -146,7 +160,7 @@ class PivotTableWidget extends Widget {
 
         this.initPresetsDropdown();
 
-        this.holders = $('#pivotSlicer,#pivotRowSelector,#pivotColSelector');
+        this.holders = section.find('.pivot-slicer, .pivot-row-selector, .pivot-col-selector');
 
         this.initSortable(this.holders.eq(0));
 
@@ -154,7 +168,7 @@ class PivotTableWidget extends Widget {
 
         this.initSortable(this.holders.eq(2));
 
-        section.children('.ks-pivot-table-controls-holder').off('click')
+        this.controlsHolder.off('click')
             .on('click', '.ks-pivot-table-add-tag', e => this.openSelectorTreeFromHolder(e))
             .on('click', '.ks-pivot-table-tag', e => this.cardClicked(e))
             .on('click', '.icon-x-circle', e => this.deleteCard(e))
@@ -163,7 +177,7 @@ class PivotTableWidget extends Widget {
 
         Doc.off('keydown.pivot').on('keydown.pivot', e => this.keyPressed(e));
 
-        this.table = $('#pivotTable').off('click')
+        this.table = section.find('.pivot-table').off('click')
             .on('click', '.ks-pivot-table-group-sign-start,.ks-pivot-table-group-sign-closed', e => this.expandCollapseButtonClicked(e))
             .on('click', '.icon-chevron-close-horizontal', e => this.squeezeRowColumns(e))
             .on('click', '.icon-chevron-open-horizontal', e => this.pullApartRowColumns(e))
@@ -191,26 +205,32 @@ class PivotTableWidget extends Widget {
     }
 
     initControls() {
-        if (!this.options.controlsInMenu) {
-            $('#resetPivotBtn').off().on('click', () => this.resetPivotTable());
-            $('#loadPresetBtn').off().on('click', () => this.loadPresetBtnClicked());
-            $('#savePresetBtn').off().on('click', () => this.savePreset());
-            $('#exportBtn').off().on('click', e => this.exportPivotTable(e));
+        if (!this.controlsHolder || !this.controlsHolder.length) {
+            return;
+        }
 
-            $('#suppressZeroDropdownBtn').off().on('click', e => {
+        const controls = this.controlsHolder;
+
+        if (!this.options.controlsInMenu) {
+            controls.find('.reset-pivot-btn').off().on('click', () => this.resetPivotTable());
+            controls.find('.load-preset-btn').off().on('click', () => this.loadPresetBtnClicked());
+            controls.find('.save-preset-btn').off().on('click', () => this.savePreset());
+            controls.find('.export-pivot-btn').off().on('click', e => this.exportPivotTable(e));
+
+            controls.find('.suppress-zero-dropdown-btn').off().on('click', e => {
                 e.stopPropagation();
                 this.showSuppressZeroPopup(e.currentTarget);
             });
 
             $(document).off('click.suppressZero').on('click.suppressZero', () => {
-                $('#suppressZeroPopup').hide();
+                controls.find('.suppress-zero-popup').hide();
             });
         } else {
-            $('#resetPivotBtn').off().on('click', () => this.resetPivotTable());
-            $('#loadPresetBtn').off().on('click', () => this.loadPresetBtnClicked());
-            $('#savePresetBtn').off().on('click', () => this.savePreset());
-            $('#exportBtnInline').off().on('click', e => this.exportPivotTable(e));
-            $('.suppressZeroBtn').off().on('click', e => this.suppressZeroBtnClicked(e));
+            controls.find('.reset-pivot-btn').off().on('click', () => this.resetPivotTable());
+            controls.find('.load-preset-btn').off().on('click', () => this.loadPresetBtnClicked());
+            controls.find('.save-preset-btn').off().on('click', () => this.savePreset());
+            controls.find('.export-btn-inline').off().on('click', e => this.exportPivotTable(e));
+            controls.find('.suppressZeroBtn').off().on('click', e => this.suppressZeroBtnClicked(e));
         }
     }
 
@@ -232,14 +252,22 @@ class PivotTableWidget extends Widget {
     }
 
     initPresetsDropdown() {
-        this.pivotPresetsDropdown = $('#pivotPresetsDropdown');
+        if (!this.controlsHolder) {
+            return;
+        }
+
+        this.pivotPresetsDropdown = this.controlsHolder.find('.pivot-presets-dropdown');
+
+        if (!this.pivotPresetsDropdown.length) {
+            return;
+        }
 
         this.pivotPresetsDropdown.parent().off('click')
-            .on('click', '#resetPivotBtn', () => this.resetPivotTable())
-            .on('click', '#loadPresetBtn', () => this.loadPresetBtnClicked())
-            .on('click', '#savePresetBtn', () => this.savePreset())
-            .on('click', '#exportBtn', e => this.exportPivotTable(e))
-            .on('click', '#closePanelBtn', () => this.closePresetsDropdown())
+            .on('click', '.reset-pivot-btn', () => this.resetPivotTable())
+            .on('click', '.load-preset-btn', () => this.loadPresetBtnClicked())
+            .on('click', '.save-preset-btn', () => this.savePreset())
+            .on('click', '.export-btn-inline', e => this.exportPivotTable(e))
+            .on('click', '.close-panel-btn', () => this.closePresetsDropdown())
             .on('click', e => {
                 let b = $(e.target);
 
@@ -254,7 +282,9 @@ class PivotTableWidget extends Widget {
     }
 
     closePresetsDropdown() {
-        this.pivotPresetsDropdown.hide();
+        if (this.pivotPresetsDropdown) {
+            this.pivotPresetsDropdown.hide();
+        }
     }
 
     initSelectorTree(section) {
@@ -266,23 +296,23 @@ class PivotTableWidget extends Widget {
             h += '<div data-name="' + color.name + '" data-hex="' + color.hex + '" class="ks-pivot-tag-color-dropdown-chooser-item" style="background-color: #' + color.hex + ';"></div>';
         }
 
-        h += '</div></div></div><div class="ks-pivot-tag-button-holder"><a id="selectorTreeCancelBtn" class="ks-pivot-btn btn-blue-light"><span class="icon-x-circle"></span>Cancel</a><a id="selectorTreeSaveBtn" class="ks-pivot-btn btn-blue"><span style="color: #fff;" class="icon-check-on"></span>Save</a><a id="selectorTreeViewBtn" class="ks-pivot-btn btn-blue"><span style="color: #fff;" class="icon-glasses"></span>View</a></div></div><div class="ks-pivot-tag-add-holder">';
+        h += '</div></div></div><div class="ks-pivot-tag-button-holder"><a class="ks-pivot-btn btn-blue-light selector-tree-cancel-btn"><span class="icon-x-circle"></span>Cancel</a><a class="ks-pivot-btn btn-blue selector-tree-save-btn"><span style="color: #fff;" class="icon-check-on"></span>Save</a><a class="ks-pivot-btn btn-blue selector-tree-view-btn"><span style="color: #fff;" class="icon-glasses"></span>View</a></div></div><div class="ks-pivot-tag-add-holder">';
 
         h += this.renderNextSelectorTreeLevel(this.tree) + '</div></div>';
 
         this.selectorTree = $(h).prependTo(section)
             .off('click input change')
             .on('click', '.ks-pivot-tag-add-item:not(".title-item")', (e, callback) => this.selectorTreeItemClicked(e, callback))
-            .on('click', '#pivotElementsCheckbox', () => this.getSelectorTreeColumns().eq(2).children('.ks-pivot-tag-add-col-content').children('.ks-on').children().eq(0).trigger('click'))
+            .on('click', '.pivot-elements-checkbox', () => this.getSelectorTreeColumns().eq(2).children('.ks-pivot-tag-add-col-content').children('.ks-on').children().eq(0).trigger('click'))
             .on('click', '.icon-aa', e => this.aliasAttributeNameButtonClicked($(e.target)))
             .on('input change', 'input', e => this.filterSelectorTreeColumn(e));
 
         this.colorDropdown = this.selectorTree.find('.ks-pivot-tag-color-dropdown').on('click', e => this.selectorTreeColorClicked($(e.target)));
 
-        this.selectorTreeSaveBtn = $('#selectorTreeSaveBtn').on('click', () => this.saveCard());
-        this.selectorTreeViewBtn = $('#selectorTreeViewBtn').on('click', () => this.selectorTreeViewBtnClicked());
+        this.selectorTreeSaveBtn = this.selectorTree.find('.selector-tree-save-btn').on('click', () => this.saveCard());
+        this.selectorTreeViewBtn = this.selectorTree.find('.selector-tree-view-btn').on('click', () => this.selectorTreeViewBtnClicked());
 
-        $('#selectorTreeCancelBtn').on('click', () => this.closeSelectorTree());
+        this.selectorTree.find('.selector-tree-cancel-btn').on('click', () => this.closeSelectorTree());
     }
 
     initSortable(div) {
@@ -396,10 +426,12 @@ class PivotTableWidget extends Widget {
         let d, card = $(e.item), dim = card.data('dimension'), hier = card.data('hierarchy'),
             subset = card.data('subset');
 
+        const targetHolder = $(e.to);
+
         this.options.isPrivateSubset = card.data('private') || false;
 
-        if ('pivotSlicer' === e.to.id) {
-            $(e.to).children('[data-dimension="' + dim + '"][data-hierarchy="' + hier + '"]').not(card).remove();
+        if (targetHolder.hasClass('pivot-slicer')) {
+            targetHolder.children('[data-dimension="' + dim + '"][data-hierarchy="' + hier + '"]').not(card).remove();
 
             d = this.tree.children[dim];
 
@@ -422,19 +454,39 @@ class PivotTableWidget extends Widget {
         }
     }
 
-    adjustCardForSlicer(d, dim, hier, subset, card) {
-        d = d.children[hier];
+    adjustCardForSlicer(treeLevel, dim, hier, subset, card) {
+        const hierarchyData = (treeLevel.children || {})[hier];
 
-        let defaultMember = d.defaultMember;
+        if (!hierarchyData) {
+            console.warn(`Hierarchy "${hier}" is missing for dimension "${dim}" in widget ${this.id}.`);
+            return;
+        }
 
-        d = d.children[subset];
+        const defaultMember = hierarchyData.defaultMember;
+        let subsetData = (hierarchyData.children || {})[subset];
 
-        if ($.isEmptyObject(d.children)) {
+        if (!subsetData) {
+            const availableSubsets = Object.keys(hierarchyData.children || {});
+
+            if (availableSubsets.length) {
+                subset = availableSubsets[0];
+                subsetData = hierarchyData.children[subset];
+                card.attr('data-subset', subset).data('subset', subset)
+                    .find('h4').html(subset === this.lastSelectionSubset ? this.lastSelectionDisplayName : subset);
+            } else {
+                console.warn(`No subsets available for dimension "${dim}" hierarchy "${hier}" in widget ${this.id}.`);
+                return;
+            }
+        }
+
+        if ($.isEmptyObject(subsetData.children)) {
             let p = {dimension_name: dim, hierarchy_name: hier, subset_name: subset};
 
-            this.getNextSelectorTreeLevel(p, d).then(resp => this.doAdjustCardForSlicer(card, resp.data.children, defaultMember));
+            this.getNextSelectorTreeLevel(p, subsetData)
+                .then(resp => this.doAdjustCardForSlicer(card, resp.data.children, defaultMember))
+                .catch(() => {});
         } else {
-            this.doAdjustCardForSlicer(card, d.children, defaultMember);
+            this.doAdjustCardForSlicer(card, subsetData.children, defaultMember);
         }
     }
 
@@ -608,7 +660,42 @@ class PivotTableWidget extends Widget {
             }
 
             return resp;
-        });
+        }).catch(error => this.handleMissingSubsetError(error, selectedData, nextLevelData, cols, callback));
+    }
+
+    handleMissingSubsetError(error, selectedData, nextLevelData, cols, callback) {
+        const subsetName = selectedData && selectedData.subset_name;
+        const status = (error || {}).status;
+
+        if (!subsetName || status !== 404) {
+            throw error;
+        }
+
+        const responseText = error.responseText || '';
+        let responseMessage = '';
+        if (error.responseJSON && error.responseJSON.error) {
+            responseMessage = error.responseJSON.error.message || '';
+        } else if (error.responseJSON && error.responseJSON.message) {
+            responseMessage = error.responseJSON.message;
+        }
+
+        const message = responseMessage || responseText;
+
+        if (!/can not be found in collection of type 'Subset'/i.test(message)) {
+            throw error;
+        }
+
+        console.warn(`Subset "${subsetName}" is missing for widget ${this.id}. Falling back to available subsets.`);
+
+        if (nextLevelData && nextLevelData.children && !nextLevelData.children[subsetName]) {
+            nextLevelData.children[subsetName] = {children: {}, checkboxClass: 'icon-check-off'};
+        }
+
+        if (cols) {
+            this.renderNextSelectorTreeLevel(nextLevelData, cols, callback);
+        }
+
+        return {children: [], data: {children: []}};
     }
 
     addToNextLevelChildren(currentLevelData, children, additionalData = {}) {
@@ -626,7 +713,7 @@ class PivotTableWidget extends Widget {
         const aliasAttrName = isElementCol ? this.getSelectedAliasAttributeName(cols.eq(0).data('value'), cols.eq(1).data('value'), cols.eq(2).data('value')) : false;
 
         let el, name, displayName, isSubsetSelected, defaultSubsetItem = '', h = '',
-            g = '<div data-type="' + types[i] + '" class="ks-pivot-tag-add-col ' + (isCheckableCol ? 'checkable-col' : '') + '"><div class="ks-pivot-add-tag-search-holder"><div class="ks-pivot-add-tag-search"><span class="icon-search"></span><input type="text" placeholder="Search..."></div></div><div class="ks-pivot-tag-add-col-content"><div class="ks-pivot-tag-add-item title-item">' + (isElementCol ? ('<span id="pivotElementsCheckbox"></span>') : '') + this.selectorTreeColNames[i] + (isElementCol ? '<span class="icon-aa"><div class="ks-pivot-table-presets-dropdown"></div></span>' : '') + '</div>';
+            g = '<div data-type="' + types[i] + '" class="ks-pivot-tag-add-col ' + (isCheckableCol ? 'checkable-col' : '') + '"><div class="ks-pivot-add-tag-search-holder"><div class="ks-pivot-add-tag-search"><span class="icon-search"></span><input type="text" placeholder="Search..."></div></div><div class="ks-pivot-tag-add-col-content"><div class="ks-pivot-tag-add-item title-item">' + (isElementCol ? ('<span class="pivot-elements-checkbox"></span>') : '') + this.selectorTreeColNames[i] + (isElementCol ? '<span class="icon-aa"><div class="ks-pivot-table-presets-dropdown"></div></span>' : '') + '</div>';
 
         if (isCheckableCol) {
             let check, del, c, chevron = isElementCol ? '' : '<span class="icon-chevron-right"></span>',
@@ -1371,17 +1458,19 @@ class PivotTableWidget extends Widget {
             }).get();
         }
 
-        d[j] = this.expandedCollapsedMembers;
-        d[++j] = this.suppressOptions;
+        d[j] = JSON.parse(JSON.stringify(this.expandedCollapsedMembers));
+        d[++j] = {...this.suppressOptions};
 
-        p[k].data = d;
+        const serializedPresetData = JSON.stringify(d);
+
+        p[k].data = JSON.parse(serializedPresetData);
         p[k].name = presetName;
         p[k].isOwner = 1;
         p[k].type = t;
 
         this.presetId = k;
 
-        let processParams = {pValue: d, pID: p[k].id, pName: presetName, pType: p[k].type, pWidgetID: this.id};
+        let processParams = {pValue: serializedPresetData, pID: p[k].id, pName: presetName, pType: p[k].type, pWidgetID: this.id};
 
         Pivot.call({
             data: {
@@ -1436,13 +1525,15 @@ class PivotTableWidget extends Widget {
             ${opt.mode === currMode ? '<span style="margin-right:6px;">&#10003;</span>' : '<span style="width:18px;display:inline-block;"></span>'}
             ${opt.label}
         </div>`).join('');
-        $('#suppressZeroPopup').html(html).show();
+        const popup = $(btn).siblings('.suppress-zero-popup');
+
+        popup.html(html).show();
 
 
-        $('#suppressZeroPopup .popup-row').off().on('click', e => {
+        popup.find('.popup-row').off().on('click', e => {
             const mode = $(e.currentTarget).data('mode');
             this.setSuppressZeroMode(mode);
-            $('#suppressZeroPopup').hide();
+            popup.hide();
         });
     }
 
@@ -1462,12 +1553,20 @@ class PivotTableWidget extends Widget {
     }
 
     refreshControls() {
-        $('.ks-pivot-table-control-row.pivot-btn-row').replaceWith(this.getControlsHtml());
+        if (!this.controlsHolder) {
+            return;
+        }
+
+        this.controlsHolder.find('.ks-pivot-table-control-row.pivot-btn-row').replaceWith(this.getControlsHtml());
         this.initControls();
+        this.initPresetsDropdown();
     }
 
 
     adjustSuppressZeroButtons() {
+        if (!this.suppressZeroBtns) {
+            return;
+        }
         for (let t in this.suppressOptions) {
             this.suppressZeroBtns.filter('[data-type="' + t + '"]').find('span').toggleClass('off', !this.suppressOptions[t]);
         }
@@ -1475,7 +1574,7 @@ class PivotTableWidget extends Widget {
 
     cardClicked(e) {
         let card = $(Utils.stopEvent(e).currentTarget);
-        if (card.parent('#pivotSlicer').length) {
+        if (card.closest('.pivot-slicer').length) {
             card.children('.ks-pivot-filterbox').length ? this.closeSlicerFilterBox() : this.createSlicerFilterBox(card);
         } else {
             this.openSelectorTreeFromCard(card);
@@ -1722,7 +1821,9 @@ class PivotTableWidget extends Widget {
     }
 
     isTaintedHolderSlicer() {
-        return ('pivotSlicer' === (this.taintedHolder || (this.taintedCard || $()).parent()).attr('id'));
+        const holder = this.taintedHolder ? $(this.taintedHolder) : $(this.taintedCard).parent();
+
+        return holder.hasClass('pivot-slicer');
     }
 
     getPivotTable() {
@@ -2328,7 +2429,8 @@ class PivotTableWidget extends Widget {
         if (p.hasClass('err')) {
             p.html(i.data('value')).removeClass('sel');
         } else if (p.hasClass('ok')) {
-            p.html(i.val().trim()).removeClass('sel');
+            const updatedValue = this._formatNumberForDisplay(i.val().trim());
+            p.html(updatedValue).removeClass('sel');
         } else {
             p.html(i.data('value'));
         }
@@ -2342,6 +2444,42 @@ class PivotTableWidget extends Widget {
         return c.prevAll(s).length + r.children(s).length * r.prevAll(':not([data-i])').length;
     }
 
+    _normalizeDecimalOption(decimalOption) {
+        if (decimalOption === undefined || decimalOption === null) {
+            return null;
+        }
+
+        if (typeof decimalOption === 'string') {
+            decimalOption = decimalOption.trim();
+            if (decimalOption === '') {
+                return null;
+            }
+        }
+
+        const parsed = Number(decimalOption);
+        if (!Number.isFinite(parsed)) {
+            return null;
+        }
+
+        const normalized = Math.trunc(parsed);
+
+        return normalized >= 0 ? normalized : null;
+    }
+
+    _getDecimalPlaces() {
+        return Number.isInteger(this.decimalPlaces) && this.decimalPlaces >= 0 ? this.decimalPlaces : null;
+    }
+
+    _getExportNumberFormat() {
+        const decimalPlaces = this._getDecimalPlaces();
+
+        if (decimalPlaces === null || decimalPlaces === 0) {
+            return '#,##0';
+        }
+
+        return '#,##0.' + '0'.repeat(decimalPlaces);
+    }
+
     _formatNumberForDisplay(value) {
         if (value === null || value === undefined) return value;
 
@@ -2351,8 +2489,20 @@ class PivotTableWidget extends Widget {
         if (raw.includes('%')) return raw;
 
         if (/[,\u00A0\u202F ]/.test(raw)) return raw;
-        const m = raw.match(/^(-?)(\d+)(\.\d+)?$/);
-        if (!m) return raw;
+        const baseMatch = raw.match(/^(-?)(\d+)(\.\d+)?$/);
+        if (!baseMatch) return raw;
+
+        let normalized = raw;
+        const decimalPlaces = this._getDecimalPlaces();
+        if (decimalPlaces !== null) {
+            const numericValue = Number(raw);
+            if (!Number.isNaN(numericValue)) {
+                normalized = Utils.precisionRound(numericValue, decimalPlaces, true);
+            }
+        }
+
+        const m = normalized.match(/^(-?)(\d+)(\.\d+)?$/);
+        if (!m) return normalized;
 
         const sign = m[1] || '';
         const intPart = m[2];
@@ -2378,8 +2528,10 @@ getTableCompatibleObject() {
         return null;
     }
 
-    const numRowDimensions = $('#pivotRowSelector .ks-pivot-table-tag').length;
-    const numColDimensions = $('#pivotColSelector .ks-pivot-table-tag').length;
+    const section = this.$content || this.getSection().children('.ks-pivot');
+
+    const numRowDimensions = section.find('.pivot-row-selector .ks-pivot-table-tag').length;
+    const numColDimensions = section.find('.pivot-col-selector .ks-pivot-table-tag').length;
 
     let htmlRowHeaderColspan = 0;
     const firstDataRowCells = $(dataRowElements[0]).find('td');
@@ -2545,7 +2697,12 @@ const parseAndNestDataRows = (dataRows, numRowDims) => {
 
     const modifiedString = raw.replace(/[\s,]/g, '');
     if (!isNaN(modifiedString) && modifiedString !== '') {
-        return {type: 'number', value: parseFloat(modifiedString)};
+        let numericValue = parseFloat(modifiedString);
+        const decimalPlaces = this._getDecimalPlaces();
+        if (decimalPlaces !== null && !Number.isNaN(numericValue)) {
+            numericValue = Utils.precisionRound(numericValue, decimalPlaces, false);
+        }
+        return {type: 'number', value: numericValue};
     }
 
     return {type: 'string', value: cellValue};
@@ -2582,7 +2739,8 @@ const parseAndNestDataRows = (dataRows, numRowDims) => {
 
     _getSlicerDataForExport() {
         const slicerData = [];
-        $('#pivotSlicer .ks-pivot-table-tag').each(function () {
+        const section = this.$content || this.getSection().children('.ks-pivot');
+        section.find('.pivot-slicer .ks-pivot-table-tag').each(function () {
             const card = $(this);
             slicerData.push({
                 dimension: card.find('h3').text().trim(),
@@ -2696,7 +2854,7 @@ async _generateAndDownloadExcel(gridTableObj, slicerData, config) {
                 }
 
                 if (parsedResult.type === 'number') {
-                    cell.numFmt = '#,##0';
+                    cell.numFmt = this._getExportNumberFormat();
                 } else if (parsedResult.type === 'percent') {
                     cell.numFmt = '0.00%';
                 }

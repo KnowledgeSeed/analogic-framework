@@ -27,16 +27,32 @@ Pivot.call = p => {
                  console.error("Response Text:", jqXHR.responseText);
             }
 
+            let parsedError;
+            try {
+                parsedError = JSON.parse(jqXHR.responseText);
+            } catch (e) {
+                parsedError = null;
+            }
+
+            const parsedMessage = parsedError && parsedError.error ? (parsedError.error.message || parsedError.error) : (parsedError && parsedError.message ? parsedError.message : '');
+            const combinedMessage = parsedMessage || jqXHR.responseText || '';
+
             if (status >= 400 && status < 500 && status !== 401) {
                  let message = `Client Error (${status}). Please check your request.`;
-                 try {
-                    const errorData = JSON.parse(jqXHR.responseText);
-                    if (errorData && errorData.error) {
-                        message = `Error (${status}): ${errorData.error}`;
-                    }
-                 } catch (e) { }
+                 let skipPopup = false;
 
-                 Api.showPopup(message, 400);
+                 if (parsedMessage) {
+                     message = `Error (${status}): ${parsedMessage}`;
+                 }
+
+                 if (status === 404 && /can not be found in collection of type 'Subset'/i.test(combinedMessage)) {
+                     skipPopup = true;
+                     console.warn('Pivot request missing expected subset. Continuing without showing popup.');
+                 }
+
+                 if (!skipPopup) {
+                     Api.showPopup(message, 400);
+                 }
 
             }
             else if (status >= 500 && status < 600) {
