@@ -91,15 +91,20 @@ class ButtonWidget extends Widget {
         this.label = v.label;
         this.loadedData = data;
         this.contextMenuEnabled = v.contextMenuEnabled;
+        this.keyboardShortcuts = v.keyboardShortcuts;
     }
 
     reset() {
+        if (this.options && this.options.id) {
+            $(document).off('keydown.buttonWidget.' + this.options.id);
+        }
         delete this.data;
         delete this.paste;
         delete this.enabled;
         delete this.label;
         delete this.loadedData;
         delete this.contextMenuEnabled;
+        delete this.keyboardShortcuts;
     }
 
     getCssPrefix() {
@@ -192,6 +197,7 @@ class ButtonWidget extends Widget {
             isInfo: this.getRealValue('isInfo', d, false),//-
             label: this.getRealValue('label', d, ''),
             contextMenuEnabled: this.getRealValue('contextMenuEnabled', d, false),
+            keyboardShortcuts: this.getRealValue('keyboardShortcuts', d, false),
             paste: this.getRealValue('paste', d, false),//-
             skin: this.getRealValue('skin', d, 'standard'),
             url: this.getRealValue('url', d, false),//-
@@ -205,6 +211,99 @@ class ButtonWidget extends Widget {
         if (v.enabled === false) {
             return;
         }
+
+        const handleShortcutMatch = (e, shortcut) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const element = $('<div>');
+            element.data({
+                action: shortcut.action,
+                id: v.options.id
+            });
+            
+            Widget.doHandleSystemEvent(element, e);
+            
+            if (this.amIOnAGridTable()) {
+                Widget.doHandleGridTableSystemEvent(element, e);
+            }
+            
+            return true;
+        };
+
+        const checkKeyboardShortcuts = (e) => {
+            if (v.enabled === false) {
+                return false;
+            }
+            
+            if (!this.keyboardShortcuts || !Array.isArray(this.keyboardShortcuts) || this.keyboardShortcuts.length === 0) {
+                return false;
+            }
+            
+            const normalizeKey = (key) => {
+                const keyStr = String(key);
+                if (keyStr.length === 1) {
+                    return keyStr.toUpperCase();
+                }
+                return keyStr.charAt(0).toUpperCase() + keyStr.slice(1).toLowerCase();
+            };
+            
+            for (let shortcut of this.keyboardShortcuts) {
+                if (!shortcut.keys || !Array.isArray(shortcut.keys) || !shortcut.action) {
+                    continue;
+                }
+                
+                const pressedKeys = [];
+                if (e.ctrlKey || e.metaKey) pressedKeys.push('Control');
+                if (e.shiftKey) pressedKeys.push('Shift');
+                if (e.altKey) pressedKeys.push('Alt');
+                
+                const hasClickKey = shortcut.keys.some(k => {
+                    const normalized = normalizeKey(k);
+                    return normalized === 'Click' || normalized === 'Mouseclick' || normalized === 'Leftclick' || normalized === 'Rightclick';
+                });
+                
+                if (hasClickKey && e.type !== 'click' && e.type !== 'contextmenu') {
+                    continue;
+                }
+                
+                if (!hasClickKey && e.type === 'click') {
+                    continue;
+                }
+                
+                if (hasClickKey) {
+                    pressedKeys.push('Click');
+                } else {
+                    let mainKey = e.key;
+                    if (mainKey) {
+                        if (mainKey.length === 1) {
+                            mainKey = mainKey.toUpperCase();
+                        } else {
+                            mainKey = mainKey.charAt(0).toUpperCase() + mainKey.slice(1).toLowerCase();
+                        }
+                        if (!pressedKeys.includes(mainKey)) {
+                            pressedKeys.push(mainKey);
+                        }
+                    }
+                }
+                
+                const normalizedPressed = pressedKeys.map(normalizeKey).sort().join('+');
+                const normalizedShortcut = shortcut.keys.map(k => {
+                    const normalized = normalizeKey(k);
+                    if (normalized === 'Mouseclick' || normalized === 'Leftclick' || normalized === 'Rightclick') {
+                        return 'Click';
+                    }
+                    return normalized;
+                }).sort().join('+');
+                
+                if (normalizedPressed === normalizedShortcut) {
+                    return handleShortcutMatch(e, shortcut);
+                }
+            }
+            
+            return false;
+        };
+
         if (this.contextMenuEnabled) {
             section.off('contextmenu').on('contextmenu', (e) => {
                 e.preventDefault();
@@ -228,6 +327,10 @@ class ButtonWidget extends Widget {
         }
         if (!section.find('a').data('confirmmessage') && !section.find('a').data('confirmmessage2')) {
             return section.find('a').off('click').on('click', (e) => {
+                if (checkKeyboardShortcuts(e)) {
+                    return;
+                }
+                
                 let s = $(e.currentTarget);
                 if (v.paste) {
                     navigator.clipboard.readText().then(text => {
@@ -250,6 +353,10 @@ class ButtonWidget extends Widget {
         let instance = this;
         if (section.find('a').data('confirmmessage2')) {
             return section.find('a').on('click', (e) => {
+                if (checkKeyboardShortcuts(e)) {
+                    return;
+                }
+                
                 let w = $(e.currentTarget), t = [];
                 t.push('<div id="buttonPopup" class="ks-popup ks-popup-holder"><div class="ks-popup-background"></div><div class="ks-popup-content-holder"><div class="ks-popup-content">');
                 t.push(w.data('confirmmessage2'));
@@ -270,8 +377,17 @@ class ButtonWidget extends Widget {
             });
         }
 
+        if (this.keyboardShortcuts && Array.isArray(this.keyboardShortcuts) && this.keyboardShortcuts.length > 0) {
+            $(document).off('keydown.buttonWidget.' + this.options.id).on('keydown.buttonWidget.' + this.options.id, (e) => {
+                checkKeyboardShortcuts(e);
+            });
+        }
+
         //todo van használva valahol?(horizontal table)
         section.find('a').on('click', e => {
+            if (checkKeyboardShortcuts(e)) {
+                return;
+            }
             let w = $(e.currentTarget), p = w.parent().parent(), t = [];
 
             t.push('<div class="row"><div class="col-12"><div class="row"><div class="col-12"><h4 style="margin-top: 20px;margin-bottom: 20px;">', w.data('confirmmessage'), '</h4></div></div></div></div>');
