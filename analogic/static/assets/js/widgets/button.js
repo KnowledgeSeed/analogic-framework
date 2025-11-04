@@ -1,4 +1,4 @@
-/* global app, El, Widget */
+/* global app, El, Widget, Utils */
 
 'use strict';
 
@@ -16,6 +16,7 @@ class ButtonWidget extends Widget {
             iconSpanStyle = this.getHtmlComponentStylesArray('iconSpan', d),
             dividerStyle = this.getHtmlComponentStylesArray('divider', d),
             labelStyle = this.getHtmlComponentStylesArray('label', d),
+            labelTitle = Utils.stripHtml(v.label || '').trim(),
             iconInfo;
 
         /* Override css */
@@ -68,7 +69,7 @@ class ButtonWidget extends Widget {
         <div class="ks-button-content" style="${contentStyle.join('')}">
             <div class="ks-button-icon" style="${iconStyle.join('')}">${v.icon !== false ? iconInfo.html : ''}</div>
             <div class="ks-button-divider" style="${dividerStyle.join('')}"></div>
-            <div class="ks-button-label" title="${Utils.htmlEncode(v.label)}" style="${labelStyle.join('')}">${v.label}</div>
+            <div class="ks-button-label"${labelTitle ? ` title="${Utils.htmlEncode(labelTitle)}"` : ''} style="${labelStyle.join('')}">${v.label}</div>
         </div>
     </div>
 </a>`;
@@ -168,6 +169,9 @@ class ButtonWidget extends Widget {
         }
 
         v.fontColor && labelDiv.css('color', v.fontColor);
+
+        const labelTitle = Utils.stripHtml(v.label || '').trim();
+        labelTitle ? labelDiv.attr('title', Utils.htmlEncode(labelTitle)) : labelDiv.removeAttr('title');
     }
 
     getParameters(d) {

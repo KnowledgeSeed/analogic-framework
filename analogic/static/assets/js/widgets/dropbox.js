@@ -1,4 +1,4 @@
-/* global app, Doc, Widget, Widgets */
+/* global app, Doc, Widget, Widgets, Utils */
 
 'use strict';
 
@@ -84,6 +84,7 @@ class DropBoxWidget extends Widget {
 
     getItems(data, v) {
         return data.items.map(item => {
+            const itemTitle = Utils.stripHtml(item.name || '').trim();
             return `
 <div class="ks-dropbox-panel-item ${item.on ? 'on' : ''}">
     <div class="ks-dropbox-panel-item-inner">
@@ -92,7 +93,7 @@ class DropBoxWidget extends Widget {
             <input class="ks-dropbox-panel-item-checkbox" ${v.multiSelect ? '' : 'style="display:none;"'} ${item.on ? 'checked=checked' : ''} type="checkbox">
         </div>
         <div class="ks-dropbox-panel-item-separator"></div>
-        <div class="ks-dropbox-panel-item-text" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" title="${item.name}">${item.name}</div>
+        <div class="ks-dropbox-panel-item-text" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"${itemTitle ? ` title="${Utils.htmlEncode(itemTitle)}"` : ''}>${item.name}</div>
     </div>
 </div>`;
         }).join('');
