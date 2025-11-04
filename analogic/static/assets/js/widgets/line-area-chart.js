@@ -66,6 +66,7 @@ class LineAreaChartWidget extends Widget {
             xAxisLabel: this.getRealValue('xAxisLabel', d),
             yAxisLabel: this.getRealValue('yAxisLabel', d),
             xAxesDisplay: this.getRealValue('xAxesDisplay', d, true),
+            xAxesPosition: this.getRealValue('xAxesPosition', d, 'bottom'),
             xAxesGridLinesDisplay: this.getRealValue('xAxesGridLinesDisplay', d, true),
             xAxesGridLinesDrawBorder: this.getRealValue('xAxesGridLinesDrawBorder', d, true),
             yAxesDisplay: this.getRealValue('yAxesDisplay', d, true),
@@ -189,7 +190,7 @@ class LineAreaChartWidget extends Widget {
 
             datasets[i].data = data;
         }
-        
+
 
         const yMin = v.yMin ?? Math.min(...yVals), yMax = v.yMax ?? Math.max(...yVals), yTotal = yMax - yMin;
 
@@ -207,6 +208,7 @@ class LineAreaChartWidget extends Widget {
                         id: 'x',
                         type: 'linear',
                         offset: false,
+                        position: v.xAxesPosition,
                         display: v.xAxesDisplay,
                         gridLines: {
                             display: v.xAxesGridLinesDisplay,

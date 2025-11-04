@@ -92,6 +92,7 @@ class StackedColumnChartWidget extends Widget {
             xAxisDisplay: this.getRealValue('xAxisDisplay', d, true),
             xAxisAlignToPixels: this.getRealValue('xAxisAlignToPixels', d, true),
             xAxisStacked: this.getRealValue('xAxisStacked', d, true),
+            xAxisPosition: this.getRealValue('xAxisPosition', d, 'bottom'),
             xAxisBorderColor: this.getRealValue('xAxisBorderColor', d, gridColor),
             xAxisBorderWidth: this.getRealValue('xAxisBorderWidth', d, 1),
             xAxisTicksLabelDisplay: this.getRealValue('xAxisTicksLabelDisplay', d, true),
@@ -486,7 +487,7 @@ class StackedColumnChartWidget extends Widget {
                                 position: 'absolute'
                               });
                             }
-                          }
+                        }
                     }
                 },
                 responsive: true,
@@ -498,6 +499,7 @@ class StackedColumnChartWidget extends Widget {
                         display: v.xAxisDisplay,
                         alignToPixels: v.xAxisAlignToPixels,
                         stacked: v.xAxisStacked,
+                        position: v.xAxisPosition,
                         border: {
                             display: v.xAxisBorderDisplay,
                             width: v.xAxisBorderWidth,
