@@ -320,6 +320,7 @@ class ButtonWidget extends Widget {
                         const captureHandler = (ev) => {
                             ev.preventDefault();
                             ev.stopImmediatePropagation();
+                            shouldBlockNextClick = false;
                             dom.removeEventListener('click', captureHandler, true);
                         };
                         dom.addEventListener('click', captureHandler, true);
