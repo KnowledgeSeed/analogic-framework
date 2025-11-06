@@ -205,14 +205,34 @@ class ButtonWidget extends Widget {
     initEventHandlers() {
         const section = this.getSection();
         let v = this;
+        const captureHandlerKey = `buttonWidgetClickCaptureHandler${this.options.id}`;
         let shouldBlockNextClick = false;
+        let shouldBlockNextContextMenu = false;
 
-        const skipClickIfShortcutHandled = (event) => {
-            if (!shouldBlockNextClick) {
+        const removeClickCaptureHandler = () => {
+            const existingHandler = section.data(captureHandlerKey);
+
+            if (!existingHandler) {
+                return;
+            }
+
+            const dom = section.get(0);
+
+            if (dom) {
+                dom.removeEventListener('click', existingHandler, true);
+            }
+
+            section.removeData(captureHandlerKey);
+        };
+
+        removeClickCaptureHandler();
+
+        const skipEventIfShortcutHandled = (event, shouldBlockGetter, resetShouldBlock) => {
+            if (!shouldBlockGetter()) {
                 return false;
             }
 
-            shouldBlockNextClick = false;
+            resetShouldBlock();
 
             if (event) {
                 event.preventDefault();
@@ -220,6 +240,35 @@ class ButtonWidget extends Widget {
             }
 
             return true;
+        };
+
+        const skipClickIfShortcutHandled = (event) => {
+            const prevented = skipEventIfShortcutHandled(event, () => shouldBlockNextClick, () => { shouldBlockNextClick = false; });
+
+            if (prevented) {
+                removeClickCaptureHandler();
+            }
+
+            return prevented;
+        };
+        const skipContextMenuIfShortcutHandled = (event) => skipEventIfShortcutHandled(event, () => shouldBlockNextContextMenu, () => { shouldBlockNextContextMenu = false; });
+
+        const enableNextClickCapture = () => {
+            const dom = section.get(0);
+
+            if (!dom) {
+                return;
+            }
+
+            removeClickCaptureHandler();
+
+            const captureHandler = (ev) => {
+                skipClickIfShortcutHandled(ev);
+                removeClickCaptureHandler();
+            };
+
+            section.data(captureHandlerKey, captureHandler);
+            dom.addEventListener('click', captureHandler, true);
         };
         if (v.enabled === false) {
             return;
@@ -240,22 +289,57 @@ class ButtonWidget extends Widget {
             }
         };
 
-        if (this.keyboardShortcuts && Array.isArray(this.keyboardShortcuts) && this.keyboardShortcuts.length > 0) {
+        const namespace = `.buttonWidget-${this.options.id}`;
+        const doc = $(document);
+        doc.off(namespace);
+        section.off(namespace);
+
+        const rawShortcuts = Array.isArray(this.keyboardShortcuts) ? this.keyboardShortcuts : [];
+        const keyboardShortcuts = rawShortcuts
+            .filter(shortcut => shortcut && Array.isArray(shortcut.keys) && shortcut.keys.length > 0)
+            .map(shortcut => ({
+                ...shortcut,
+                keys: shortcut.keys.map(key => `${key}`.toLowerCase())
+            }));
+
+        let handleContextMenuShortcut;
+
+        if (keyboardShortcuts.length > 0) {
             let pressedKeys = {};
             shouldBlockNextClick = false;
+            shouldBlockNextContextMenu = false;
 
-            const shortcutIncludesMouseClick = shortcut => shortcut.keys.some(k => ['click', 'mouseclick', 'rightclick'].includes(k));
+            const mouseKeys = ['click', 'mouseclick'];
+            const contextMenuKeys = ['contextmenu', 'rightclick'];
+
             const matchesShortcut = shortcut => shortcut.keys.every(k => pressedKeys[k]);
-            const triggerShortcut = (event, shortcut) => {
-                if (shortcutIncludesMouseClick(shortcut)) {
-                    shouldBlockNextClick = true;
+
+            const evaluateShortcuts = (event) => {
+                for (let shortcut of keyboardShortcuts) {
+                    if (!matchesShortcut(shortcut)) {
+                        continue;
+                    }
+
+                    if (shortcut.keys.some(k => mouseKeys.includes(k))) {
+                        shouldBlockNextClick = true;
+                        enableNextClickCapture();
+                    }
+
+                    if (shortcut.keys.some(k => contextMenuKeys.includes(k))) {
+                        shouldBlockNextContextMenu = true;
+                    }
+
+                    handleShortcutMatch(event, shortcut);
+
+                    mouseKeys.concat(['contextmenu', 'rightclick']).forEach(key => delete pressedKeys[key]);
+
+                    return true;
                 }
 
-                pressedKeys = {};
-                handleShortcutMatch(event, shortcut);
+                return false;
             };
 
-            $(document).off('keydown').on('keydown', (e) => {
+            doc.on(`keydown${namespace}`, (e) => {
                 switch (e.which) {
                     case 16:
                         pressedKeys['shift'] = true;
@@ -274,14 +358,10 @@ class ButtonWidget extends Widget {
                         break;
                 }
 
-                for (let shortcut of this.keyboardShortcuts) {
-                    if (matchesShortcut(shortcut)) {
-                        triggerShortcut(e, shortcut);
-                    }
-                }
+                evaluateShortcuts(e);
             });
 
-            $(document).off('keyup').on('keyup', (e) => {
+            doc.on(`keyup${namespace}`, (e) => {
                 switch (e.which) {
                     case 16:
                         delete pressedKeys['shift'];
@@ -301,7 +381,10 @@ class ButtonWidget extends Widget {
                 }
             });
 
-            section.off('mousedown').on('mousedown', (e) => {
+            section.off(`mousedown${namespace}`).on(`mousedown${namespace}`, (e) => {
+                shouldBlockNextClick = false;
+                removeClickCaptureHandler();
+
                 switch (e.which) {
                     case 1:
                         pressedKeys['click'] = true;
@@ -314,23 +397,10 @@ class ButtonWidget extends Widget {
                         break;
                 }
 
-                for (let shortcut of this.keyboardShortcuts) {
-                    if (matchesShortcut(shortcut)) {
-                        const dom = section.get(0);
-                        const captureHandler = (ev) => {
-                            ev.preventDefault();
-                            ev.stopImmediatePropagation();
-                            shouldBlockNextClick = false;
-                            dom.removeEventListener('click', captureHandler, true);
-                        };
-                        dom.addEventListener('click', captureHandler, true);
-
-                        triggerShortcut(e, shortcut);
-                    }
-                }
+                evaluateShortcuts(e);
             });
 
-            section.off('mouseup').on('mouseup', (e) => {
+            section.off(`mouseup${namespace}`).on(`mouseup${namespace}`, (e) => {
                 switch (e.which) {
                     case 1:
                         delete pressedKeys['click'];
@@ -343,10 +413,30 @@ class ButtonWidget extends Widget {
                         break;
                 }
             });
+
+            handleContextMenuShortcut = (e) => {
+                pressedKeys['contextmenu'] = true;
+                const handled = evaluateShortcuts(e);
+                if (!handled) {
+                    delete pressedKeys['contextmenu'];
+                }
+                return handled;
+            };
         }
 
         if (this.contextMenuEnabled) {
-            section.off('contextmenu').on('contextmenu', (e) => {
+            section.off(`contextmenu${namespace}`).on(`contextmenu${namespace}`, (e) => {
+                const handledByShortcut = handleContextMenuShortcut ? handleContextMenuShortcut(e) : false;
+
+                if (handledByShortcut) {
+                    skipContextMenuIfShortcutHandled(e);
+                    return;
+                }
+
+                if (skipContextMenuIfShortcutHandled(e)) {
+                    return false;
+                }
+
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 contextMenu.show($(e.currentTarget).find('.ks-button-inner'), [{
@@ -364,6 +454,19 @@ class ButtonWidget extends Widget {
                         }
                     }
                 }], true);
+            });
+        } else if (handleContextMenuShortcut) {
+            section.off(`contextmenu${namespace}`).on(`contextmenu${namespace}`, (e) => {
+                const handledByShortcut = handleContextMenuShortcut(e);
+
+                if (handledByShortcut) {
+                    skipContextMenuIfShortcutHandled(e);
+                    return false;
+                }
+
+                if (skipContextMenuIfShortcutHandled(e)) {
+                    return false;
+                }
             });
         }
         if (!section.find('a').data('confirmmessage') && !section.find('a').data('confirmmessage2')) {
