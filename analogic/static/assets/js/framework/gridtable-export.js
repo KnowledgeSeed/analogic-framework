@@ -14,6 +14,7 @@ const GridTableExport = {
     resizeMinWidth: 4,
     defaultSheetName: 'Export Data',
     defaultFileName: 'export.xlsx',
+    defaultStartColumnIndex: 2,
 
     parseValue: (cellValue) => {
         if (cellValue === "" || cellValue === null || cellValue === undefined) {
@@ -189,6 +190,63 @@ const GridTableExport = {
 
         console.warn('[GridTableExport] Unsupported enableEditing configuration. Expected boolean, array, or comma-separated range string.');
         return { mode: 'none', columns: null };
+    },
+
+    normalizeStartColumnIndex: (value, fallback = GridTableExport.defaultStartColumnIndex) => {
+        const defaultValue = Number.isInteger(fallback) && fallback >= 1
+            ? fallback
+            : Math.max(1, GridTableExport.defaultStartColumnIndex);
+
+        if (value === null || value === undefined || value === '') {
+            return defaultValue;
+        }
+
+        const numeric = Number(value);
+        if (!Number.isFinite(numeric)) {
+            console.warn('[GridTableExport] startColumnIndex must be a positive integer. Received:', value);
+            return defaultValue;
+        }
+
+        const integer = Math.trunc(numeric);
+        if (integer < 1) {
+            console.warn('[GridTableExport] startColumnIndex must be a positive integer. Received:', value);
+            return defaultValue;
+        }
+
+        return integer;
+    },
+
+    normalizeEmptyColumnsLeft: (value, fallback = GridTableExport.defaultStartColumnIndex - 1) => {
+        const defaultValue = Number.isInteger(fallback) && fallback >= 0
+            ? fallback
+            : Math.max(0, GridTableExport.defaultStartColumnIndex - 1);
+
+        if (value === null || value === undefined || value === '') {
+            return defaultValue;
+        }
+
+        const numeric = Number(value);
+        if (!Number.isFinite(numeric)) {
+            console.warn('[GridTableExport] emptyColumnsLeft must be a non-negative integer. Received:', value);
+            return defaultValue;
+        }
+
+        const integer = Math.trunc(numeric);
+        if (integer < 0) {
+            console.warn('[GridTableExport] emptyColumnsLeft must be a non-negative integer. Received:', value);
+            return defaultValue;
+        }
+
+        return integer;
+    },
+
+    resolveEmptyColumnsLeft: (startColumnIndex, emptyColumnsLeft) => {
+        if (startColumnIndex !== null && startColumnIndex !== undefined && startColumnIndex !== '') {
+            const normalizedStart = GridTableExport.normalizeStartColumnIndex(startColumnIndex);
+            return Math.max(0, normalizedStart - 1);
+        }
+
+        return GridTableExport.normalizeEmptyColumnsLeft(emptyColumnsLeft);
     },
 
     getTotalColumnCount: (headerArray, tableData) => {
@@ -620,7 +678,11 @@ const GridTableExport = {
         const attributeValues = GridTableExport.parseAttributeValues(config.attributes);
         const attrRowEnabled = attributeValues.length > 0;
 
-        const emptyColsLeft = 1;
+        const emptyColsLeft = GridTableExport.resolveEmptyColumnsLeft(
+            config.startColumnIndex ?? config.startColumn,
+            config.emptyColumnsLeft ?? config.emptyColsLeft
+        );
+        const dataStartColumnIndex = emptyColsLeft + 1;
         const attributeRowIndex = 1;
         const headerRowIndex = 3;
         const repeatingCellsEnabled = GridTableExport.isRepeatingCellsEnabled(config.repeatingCells);
@@ -652,14 +714,14 @@ const GridTableExport = {
         const editingConfig = GridTableExport.normalizeEditingConfig(config.enableEditing, totalColumns);
 
         if (attrRowEnabled) {
-            GridTableExport.populateAttributeRow(worksheet, attributeValues, attributeRowIndex, emptyColsLeft + 1, columnMapping);
+            GridTableExport.populateAttributeRow(worksheet, attributeValues, attributeRowIndex, dataStartColumnIndex, columnMapping);
         }
 
         const headerCanBeRendered = headerRowEnabled && columnMapping.length > 0;
 
         if (headerCanBeRendered) {
             headerRowActualIndex = headerRowIndex;
-            GridTableExport.populateHeaderCells(worksheet, headerTitlesArray, headerRowActualIndex, emptyColsLeft + 1, columnMapping);
+            GridTableExport.populateHeaderCells(worksheet, headerTitlesArray, headerRowActualIndex, dataStartColumnIndex, columnMapping);
             dataStartRowIndex = headerRowActualIndex + 1;
         }
 
@@ -671,7 +733,7 @@ const GridTableExport = {
             worksheet,
             workingTableData,
             dataStartRowIndex,
-            emptyColsLeft + 1,
+            dataStartColumnIndex,
             repeatingCellsEnabled,
             columnMapping,
             editingConfig
@@ -797,7 +859,9 @@ const GridTableExport = {
             excludeColumns: Array.isArray(exportConfig.excludeColumns) || typeof exportConfig.excludeColumns === 'string'
                 ? exportConfig.excludeColumns
                 : [],
-            enableEditing: exportConfig.enableEditing
+            enableEditing: exportConfig.enableEditing,
+            emptyColumnsLeft: exportConfig.emptyColumnsLeft ?? exportConfig.emptyColsLeft,
+            startColumnIndex: exportConfig.startColumnIndex ?? exportConfig.startColumn
         };
 
         try {
