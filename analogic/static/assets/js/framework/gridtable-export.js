@@ -14,7 +14,7 @@ const GridTableExport = {
     resizeMinWidth: 4,
     defaultSheetName: 'Export Data',
     defaultFileName: 'export.xlsx',
-    defaultStartColumnIndex: 2,
+    defaultStartColumnIndex: 1,
 
     parseValue: (cellValue) => {
         if (cellValue === "" || cellValue === null || cellValue === undefined) {
