@@ -22,18 +22,7 @@ jobs:
           VERSION_FILE='analogic/version.config'
           VERSION=$(cat "$VERSION_FILE" | tr -d '\n')
           echo "Version: $VERSION"
-          echo "::set-output name=version::$VERSION" # Sets an output variable
-
-      - name: Set up Docker
-        uses: crazy-max/ghaction-setup-docker@v3
-        with:
-          daemon-config: |
-            {
-              "debug": true,
-              "features": {
-                "containerd-snapshotter": true
-              }
-            }   
+          echo "::set-output name=version::$VERSION" # Sets an output variable 
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
