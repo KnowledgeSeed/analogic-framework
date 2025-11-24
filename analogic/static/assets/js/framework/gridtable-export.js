@@ -286,12 +286,25 @@ const GridTableExport = {
     normalizeTableSources: (tableSource) => {
         const sources = [];
 
+        const looksLikeTabularArray = (candidate) => {
+            if (!Array.isArray(candidate) || candidate.length === 0) {
+                return false;
+            }
+
+            return candidate.every(row => Array.isArray(row) && !row.some(Array.isArray));
+        };
+
         const appendSource = (value) => {
             if (value === null || value === undefined) {
                 return;
             }
 
             if (Array.isArray(value)) {
+                if (looksLikeTabularArray(value)) {
+                    sources.push(value);
+                    return;
+                }
+
                 value.forEach(appendSource);
                 return;
             }
