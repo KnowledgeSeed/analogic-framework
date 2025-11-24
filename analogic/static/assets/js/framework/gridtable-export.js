@@ -249,6 +249,81 @@ const GridTableExport = {
         return GridTableExport.normalizeEmptyColumnsLeft(emptyColumnsLeft);
     },
 
+    normalizeSheetNames: (sheetNameConfig, sheetCount = 1) => {
+        const names = [];
+
+        const appendName = (value) => {
+            if (value === null || value === undefined) {
+                return;
+            }
+            const text = String(value).trim();
+            if (text !== '') {
+                names.push(text);
+            }
+        };
+
+        if (Array.isArray(sheetNameConfig)) {
+            sheetNameConfig.forEach(appendName);
+        } else if (typeof sheetNameConfig === 'string') {
+            sheetNameConfig.split(',').forEach(appendName);
+        } else if (sheetNameConfig !== undefined && sheetNameConfig !== null) {
+            appendName(sheetNameConfig);
+        }
+
+        const defaultName = GridTableExport.defaultSheetName;
+        for (let index = names.length; index < sheetCount; index++) {
+            const suffix = sheetCount > 1 ? ` ${index + 1}` : '';
+            names.push(index === 0 ? defaultName : `${defaultName}${suffix}`);
+        }
+
+        if (names.length > sheetCount) {
+            return names.slice(0, sheetCount);
+        }
+
+        return names;
+    },
+
+    normalizeTableSources: (tableSource) => {
+        const sources = [];
+
+        const looksLikeTabularArray = (candidate) => {
+            if (!Array.isArray(candidate) || candidate.length === 0) {
+                return false;
+            }
+
+            return candidate.every(row => Array.isArray(row) && !row.some(Array.isArray));
+        };
+
+        const appendSource = (value) => {
+            if (value === null || value === undefined) {
+                return;
+            }
+
+            if (Array.isArray(value)) {
+                if (looksLikeTabularArray(value)) {
+                    sources.push(value);
+                    return;
+                }
+
+                value.forEach(appendSource);
+                return;
+            }
+
+            if (typeof value === 'string') {
+                const parts = value.split(',').map(part => part.trim()).filter(Boolean);
+                if (parts.length > 1) {
+                    parts.forEach(appendSource);
+                    return;
+                }
+            }
+
+            sources.push(value);
+        };
+
+        appendSource(tableSource);
+        return sources;
+    },
+
     getTotalColumnCount: (headerArray, tableData) => {
         let maxColumns = 0;
 
@@ -669,7 +744,8 @@ const GridTableExport = {
         });
     },
 
-    createXlsxBuffer: async (
+    addWorksheetFromTable: async (
+        workbook,
         tableObject,
         config = {}
     ) => {
@@ -687,7 +763,6 @@ const GridTableExport = {
         const headerRowIndex = 3;
         const repeatingCellsEnabled = GridTableExport.isRepeatingCellsEnabled(config.repeatingCells);
 
-        const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet(sheetName);
 
         let headerTitlesArray = GridTableExport.getHeaderRowValues(tableObject?.options);
@@ -761,6 +836,17 @@ const GridTableExport = {
             sort: false,
             autoFilter: false
         });
+
+        return worksheet;
+    },
+
+    createXlsxBuffer: async (
+        tableObject,
+        config = {}
+    ) => {
+
+        const workbook = new ExcelJS.Workbook();
+        await GridTableExport.addWorksheetFromTable(workbook, tableObject, config);
         const buffer = await workbook.xlsx.writeBuffer();
         return buffer;
     },
@@ -838,22 +924,32 @@ const GridTableExport = {
     },
 
     triggerExcelExport: async (tableSource, exportConfig = {}) => {
-        const tableObject = await GridTableExport.resolveTableSource(tableSource);
+        const sourceList = GridTableExport.normalizeTableSources(tableSource);
+        const resolvedTables = await Promise.all(sourceList.map(GridTableExport.resolveTableSource));
 
-        if (!tableObject || !Array.isArray(tableObject.cellData)) {
-            const sourceLabel = typeof tableSource === 'string'
-                ? `source "${tableSource}"`
+        const validTables = [];
+        sourceList.forEach((sourceEntry, index) => {
+            const tableObject = resolvedTables[index];
+            if (tableObject && Array.isArray(tableObject.cellData)) {
+                validTables.push({ tableObject, sourceEntry });
+                return;
+            }
+
+            const sourceLabel = typeof sourceEntry === 'string'
+                ? `source "${sourceEntry}"`
                 : 'the provided source';
-            console.error(`[GridTableExport] Failed to resolve table data for export from ${sourceLabel}.`, tableSource);
-            alert(`Error: Could not retrieve data for export from ${sourceLabel}. Terminating.`);
+            console.error(`[GridTableExport] Failed to resolve table data for export from ${sourceLabel}.`, sourceEntry);
+        });
+
+        if (validTables.length === 0) {
+            alert('Error: Could not retrieve data for export. Terminating.');
             return;
         }
 
-        L('[Debug trigger] Table Object for Export:', tableObject);
+        const sheetNames = GridTableExport.normalizeSheetNames(exportConfig.sheetName, validTables.length);
+        const fileName = exportConfig.fileName || GridTableExport.defaultFileName;
 
-        const config = {
-            sheetName: exportConfig.sheetName || GridTableExport.defaultSheetName,
-            fileName: exportConfig.fileName || GridTableExport.defaultFileName,
+        const sharedConfig = {
             attributes: Array.isArray(exportConfig.attributes) ? exportConfig.attributes : [],
             repeatingCells: exportConfig.repeatingCells,
             excludeColumns: Array.isArray(exportConfig.excludeColumns) || typeof exportConfig.excludeColumns === 'string'
@@ -865,14 +961,30 @@ const GridTableExport = {
         };
 
         try {
-            const fileBuffer = await GridTableExport.createXlsxBuffer(
-                tableObject,
-                config
-            );
+            const workbook = new ExcelJS.Workbook();
+            for (let index = 0; index < validTables.length; index++) {
+                const { tableObject } = validTables[index];
+                if (typeof console !== 'undefined') {
+                    console.debug('[GridTableExport] Preparing sheet for export:', tableObject);
+                }
+
+                const perSheetConfig = {
+                    ...sharedConfig,
+                    sheetName: sheetNames[index] || GridTableExport.defaultSheetName
+                };
+
+                await GridTableExport.addWorksheetFromTable(
+                    workbook,
+                    tableObject,
+                    perSheetConfig
+                );
+            }
+
+            const fileBuffer = await workbook.xlsx.writeBuffer();
             if (!fileBuffer || fileBuffer.byteLength < 50) {
                  console.warn('[Debug trigger] Generated buffer seems very small or empty:', fileBuffer?.byteLength);
             }
-            GridTableExport.downloadBuffer(fileBuffer, config.fileName);
+            GridTableExport.downloadBuffer(fileBuffer, fileName);
         } catch (error) {
             console.error('Error during XLSX export process:', error);
             alert('Failed to export data. Please check the console for details.');
