@@ -964,7 +964,9 @@ const GridTableExport = {
             const workbook = new ExcelJS.Workbook();
             for (let index = 0; index < validTables.length; index++) {
                 const { tableObject } = validTables[index];
-                L('[Debug trigger] Table Object for Export:', tableObject);
+                if (typeof console !== 'undefined') {
+                    console.debug('[GridTableExport] Preparing sheet for export:', tableObject);
+                }
 
                 const perSheetConfig = {
                     ...sharedConfig,
