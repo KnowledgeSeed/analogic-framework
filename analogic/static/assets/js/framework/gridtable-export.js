@@ -283,6 +283,34 @@ const GridTableExport = {
         return names;
     },
 
+    normalizeTableSources: (tableSource) => {
+        const sources = [];
+
+        const appendSource = (value) => {
+            if (value === null || value === undefined) {
+                return;
+            }
+
+            if (Array.isArray(value)) {
+                value.forEach(appendSource);
+                return;
+            }
+
+            if (typeof value === 'string') {
+                const parts = value.split(',').map(part => part.trim()).filter(Boolean);
+                if (parts.length > 1) {
+                    parts.forEach(appendSource);
+                    return;
+                }
+            }
+
+            sources.push(value);
+        };
+
+        appendSource(tableSource);
+        return sources;
+    },
+
     getTotalColumnCount: (headerArray, tableData) => {
         let maxColumns = 0;
 
@@ -883,7 +911,7 @@ const GridTableExport = {
     },
 
     triggerExcelExport: async (tableSource, exportConfig = {}) => {
-        const sourceList = Array.isArray(tableSource) ? tableSource : [tableSource];
+        const sourceList = GridTableExport.normalizeTableSources(tableSource);
         const resolvedTables = await Promise.all(sourceList.map(GridTableExport.resolveTableSource));
 
         const validTables = [];
