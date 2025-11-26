@@ -16,12 +16,33 @@ const GridTableExport = {
     defaultFileName: 'export.xlsx',
     defaultStartColumnIndex: 1,
 
+    sanitizeTextValue: (value) => {
+        if (value === null || value === undefined) {
+            return '';
+        }
+
+        const stringValue = String(value);
+        if (!stringValue.includes('<')) {
+            return stringValue;
+        }
+
+        try {
+            const helper = document.createElement('div');
+            helper.innerHTML = stringValue;
+            return helper.textContent || helper.innerText || '';
+        } catch (error) {
+            console.warn('[GridTableExport] Failed to sanitize HTML value, falling back to regex:', error);
+            return stringValue.replace(/<[^>]*>/g, '');
+        }
+    },
+
     parseValue: (cellValue) => {
         if (cellValue === "" || cellValue === null || cellValue === undefined) {
             return { type: 'string', value: "" };
         }
 
-        const stringValue = String(cellValue);
+        const sanitizedValue = GridTableExport.sanitizeTextValue(cellValue);
+        const stringValue = String(sanitizedValue);
         const trimmedValue = stringValue.trim();
 
         if (trimmedValue === '') {
@@ -646,6 +667,54 @@ const GridTableExport = {
         return [];
     },
 
+    normalizeCustomHeaders: (headers) => {
+        if (!Array.isArray(headers) || headers.length === 0) {
+            return [];
+        }
+
+        const cleaned = headers.map((header) => {
+            const sanitized = GridTableExport.sanitizeTextValue(header);
+            return typeof sanitized === 'string' ? sanitized.trim() : String(sanitized || '').trim();
+        });
+
+        const hasNonEmptyValue = cleaned.some((value) => value !== '');
+        if (!hasNonEmptyValue) {
+            // Preserve explicit empty headers (e.g., ['', '']) so the caller can intentionally
+            // blank out detected headers for a sheet while keeping column alignment intact.
+            return cleaned.slice();
+        }
+
+        let lastNonEmptyIndex = cleaned.length - 1;
+        while (lastNonEmptyIndex >= 0 && cleaned[lastNonEmptyIndex] === '') {
+            lastNonEmptyIndex--;
+        }
+
+        return cleaned.slice(0, lastNonEmptyIndex + 1);
+    },
+
+    normalizeHeadersOption: (headersConfig, sheetCount) => {
+        const safeSheetCount = Number.isInteger(sheetCount) && sheetCount > 0 ? sheetCount : 1;
+        const defaultHeaders = Array(safeSheetCount).fill(null);
+
+        if (!Array.isArray(headersConfig) || headersConfig.length === 0) {
+            return defaultHeaders;
+        }
+
+        const isPerSheetList = headersConfig.every(
+            (entry) => Array.isArray(entry) || entry === null || entry === undefined
+        );
+
+        if (isPerSheetList) {
+            return Array.from({ length: safeSheetCount }, (_, index) => {
+                const entry = headersConfig[index];
+                return Array.isArray(entry) ? GridTableExport.normalizeCustomHeaders(entry) : null;
+            });
+        }
+
+        const sharedHeaders = GridTableExport.normalizeCustomHeaders(headersConfig);
+        return Array(safeSheetCount).fill(sharedHeaders.length > 0 ? sharedHeaders : null);
+    },
+
     populateHeaderCells: (worksheet, headerArray, headerRowIndex, startColIndex, columnMapping) => {
         if (!headerArray || headerArray.length === 0) return;
         if (!Array.isArray(columnMapping) || columnMapping.length === 0) return;
@@ -693,7 +762,8 @@ const GridTableExport = {
                 const cellObj = rowData[originalIndex];
                 const hasExportValue = cellObj && Object.prototype.hasOwnProperty.call(cellObj, 'exportValue');
                 const rawExport = hasExportValue ? cellObj.exportValue : (cellObj?.title ?? "");
-                const valueToParse = rawExport !== null && rawExport !== undefined ? String(rawExport) : "";
+                const sanitizedExport = GridTableExport.sanitizeTextValue(rawExport);
+                const valueToParse = sanitizedExport !== null && sanitizedExport !== undefined ? String(sanitizedExport) : "";
                 const baseEditable = cellObj?.editable ?? false;
                 const editingOverride = editingMode === 'all'
                     || (editingMode === 'columns' && editableColumns && editableColumns.has(originalIndex));
@@ -765,10 +835,20 @@ const GridTableExport = {
 
         const worksheet = workbook.addWorksheet(sheetName);
 
+        const rawHeaders = config.headers ?? config.Headers;
+        const customHeaders = Array.isArray(rawHeaders)
+            ? GridTableExport.normalizeCustomHeaders(rawHeaders)
+            : [];
+
         let headerTitlesArray = GridTableExport.getHeaderRowValues(tableObject?.options);
         let headerRowEnabled = headerTitlesArray && headerTitlesArray.length > 0;
         let headerRowActualIndex = 0;
         let dataStartRowIndex = headerRowIndex;
+
+        if (customHeaders.length > 0) {
+            headerTitlesArray = customHeaders;
+            headerRowEnabled = true;
+        }
 
         const tableDataOriginal = Array.isArray(tableObject?.cellData) ? tableObject.cellData : [];
 
@@ -948,6 +1028,10 @@ const GridTableExport = {
 
         const sheetNames = GridTableExport.normalizeSheetNames(exportConfig.sheetName, validTables.length);
         const fileName = exportConfig.fileName || GridTableExport.defaultFileName;
+        const headerOverrides = GridTableExport.normalizeHeadersOption(
+            exportConfig.headers ?? exportConfig.Headers,
+            validTables.length
+        );
 
         const sharedConfig = {
             attributes: Array.isArray(exportConfig.attributes) ? exportConfig.attributes : [],
@@ -970,7 +1054,8 @@ const GridTableExport = {
 
                 const perSheetConfig = {
                     ...sharedConfig,
-                    sheetName: sheetNames[index] || GridTableExport.defaultSheetName
+                    sheetName: sheetNames[index] || GridTableExport.defaultSheetName,
+                    headers: headerOverrides[index]
                 };
 
                 await GridTableExport.addWorksheetFromTable(
