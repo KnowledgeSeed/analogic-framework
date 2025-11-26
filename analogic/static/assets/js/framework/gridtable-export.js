@@ -677,6 +677,13 @@ const GridTableExport = {
             return typeof sanitized === 'string' ? sanitized.trim() : String(sanitized || '').trim();
         });
 
+        const hasNonEmptyValue = cleaned.some((value) => value !== '');
+        if (!hasNonEmptyValue) {
+            // Preserve explicit empty headers (e.g., ['', '']) so the caller can intentionally
+            // blank out detected headers for a sheet while keeping column alignment intact.
+            return cleaned.slice();
+        }
+
         let lastNonEmptyIndex = cleaned.length - 1;
         while (lastNonEmptyIndex >= 0 && cleaned[lastNonEmptyIndex] === '') {
             lastNonEmptyIndex--;
