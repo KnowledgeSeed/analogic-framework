@@ -93,6 +93,36 @@ class GridTableLightWidget extends Widget {
         return text;
     }
 
+    sanitizeDisplayValue(value) {
+        if (value === null || typeof value === 'undefined') {
+            return '';
+        }
+        let text = value;
+        if (typeof text !== 'string') {
+            if (text && typeof text.toString === 'function') {
+                text = text.toString();
+            } else {
+                text = String(text);
+            }
+        }
+        if (text && typeof Utils !== 'undefined' && Utils && typeof Utils.stripHtml === 'function') {
+            return Utils.stripHtml(text);
+        }
+        return text;
+    }
+
+    applyHeaderOverrides(columns, headers) {
+        if (!Array.isArray(columns) || !Array.isArray(headers) || headers.length === 0) {
+            return;
+        }
+        headers.forEach((headerValue, index) => {
+            if (!columns[index]) {
+                return;
+            }
+            columns[index].title = this.sanitizeDisplayValue(headerValue);
+        });
+    }
+
     computeExportHeaderTitles(columns) {
         if (!Array.isArray(columns)) {
             return [];
@@ -212,6 +242,7 @@ class GridTableLightWidget extends Widget {
             allowFullContentUpdated: this.getRealValue('allowFullContentUpdated', data, true),
             columnDefaults: this.getRealValue('columnDefaults', data, {}),
             columns: this.getRealValue('columns', data, []),
+            headers: this.getRealValue('headers', data, []),
             enableExport: this.getRealValue('enableExport', data, false),
             exportIcon: this.getRealValue('exportIcon', data, this.options.exportIcon || 'icon-tray-arrow-down'),
             exportConfig: this.getRealValue('exportConfig', data, {}),
@@ -271,6 +302,8 @@ class GridTableLightWidget extends Widget {
             normalized.style = normalized.style || {};
             return normalized;
         });
+
+        this.applyHeaderOverrides(columns, parameters.headers);
 
         const rows = (payload.content || []).map((row, rowIndex) => this.normalizeRow(row, rowIndex, columns));
         const content = rows.map(row => row.cells);
@@ -340,6 +373,7 @@ class GridTableLightWidget extends Widget {
             if (!hasDisplayValue) {
                 normalized.displayValue = typeof normalized.rawValue !== 'undefined' && normalized.rawValue !== null ? normalized.rawValue : '';
             }
+            normalized.displayValue = this.sanitizeDisplayValue(normalized.displayValue);
         } else {
             normalized.displayValue = hasDisplayValue ? normalized.displayValue : (normalized.title || normalized.value || normalized.rawValue || '');
         }
