@@ -49,8 +49,24 @@ const GridTableExport = {
             return { type: 'string', value: "" };
         }
 
-        const isPercent = trimmedValue.endsWith('%');
-        const numericPortion = (isPercent ? trimmedValue.slice(0, -1) : trimmedValue).replace(/\s+/g, '');
+        let workingValue = trimmedValue;
+        let isParensNegative = false;
+
+        if (workingValue.startsWith('(') && workingValue.endsWith(')')) {
+            isParensNegative = true;
+            workingValue = workingValue.slice(1, -1).trim();
+        }
+
+        const isPercent = workingValue.endsWith('%');
+        const numericPortionWithSign = (isPercent ? workingValue.slice(0, -1) : workingValue).replace(/\s+/g, '');
+
+        let numericPortion = numericPortionWithSign;
+        let signMultiplier = 1;
+
+        if (numericPortion.startsWith('+') || numericPortion.startsWith('-')) {
+            signMultiplier = numericPortion[0] === '-' ? -1 : 1;
+            numericPortion = numericPortion.slice(1);
+        }
 
         const hasComma = numericPortion.includes(',');
         const hasDot = numericPortion.includes('.');
@@ -84,7 +100,7 @@ const GridTableExport = {
         }
 
         if (normalizedNumeric !== '' && !isNaN(normalizedNumeric)) {
-            const parsedNumber = parseFloat(normalizedNumeric);
+            const parsedNumber = parseFloat(normalizedNumeric) * signMultiplier * (isParensNegative ? -1 : 1);
 
             if (isPercent) {
                 return {
