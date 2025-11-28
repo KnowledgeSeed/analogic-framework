@@ -419,11 +419,23 @@ class HorizontalTableWidget extends Widget {
     static addEdit(e) {
         let c = $(e.currentTarget), s = c.closest('section'), vv = c.text();
 
+        const widgetId = s.prop('id'), rowIndex = c.data('row'), colIndex = c.data('col');
+        const cellData = Widgets[widgetId] && Widgets[widgetId].rows && Widgets[widgetId].rows[rowIndex]
+            ? Widgets[widgetId].rows[rowIndex][colIndex]
+            : null;
+
         c.off('click');
         c.addClass('editing');
         c.addClass('cell-selected');
-        c.html(`<input type="text" data-row="${c.data('row')}" data-col="${c.data('col')}" data-id="${s.prop('id')}" data-action="cellEdit" data-ordinal="${c.data('ordinal')}" class="widget-input edit-cell">`).promise().then(() => {
+        c.html(`<input type="text" data-row="${rowIndex}" data-col="${colIndex}" data-id="${widgetId}" data-action="cellEdit" data-ordinal="${c.data('ordinal')}" class="widget-input edit-cell">`).promise().then(() => {
             let r = c.find('.edit-cell');
+
+            if (cellData) {
+                cellData.members && r.data('members', cellData.members);
+                cellData.cube && r.data('cube', cellData.cube);
+                cellData.dimensions && r.data('dimensions', cellData.dimensions);
+            }
+
             r.val(vv).focus().select().on('keydown', f => {
                 if (f.keyCode === 13) {
                     HorizontalTableWidget.addCellPressed(f, c);

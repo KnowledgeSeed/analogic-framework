@@ -1729,11 +1729,18 @@ Repository behaviour
       -  editable
       -  ordinal
 
-- cellEdit query: 
+- cellEdit query:
 
    -  fired every time, once a cell is editable and edited by the user
       {value: r.Cells[x].FormattedValue, editable: false, ordinal: x};
       return {active: true}
+
+- If the TM1 response includes cube metadata on the cells (for example
+  ``members``, ``cube`` or ``dimensions`` fields), those objects are
+  attached to the ``cellEdit`` event payload and can be accessed from
+  repository actions via ``v('<widgetId>.cellEdit.members')`` (or
+  ``.cube`` / ``.dimensions``) when you need the coordinates of the
+  edited cell.
 
 
 ImageUploadWidget
