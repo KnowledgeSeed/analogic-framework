@@ -50,13 +50,41 @@ const GridTableExport = {
         }
 
         const isPercent = trimmedValue.endsWith('%');
-        const numericPortion = isPercent ? trimmedValue.slice(0, -1) : trimmedValue;
-        const normalizedNumeric = numericPortion.replace(/\s+/g, '').replace(',', '.');
+        const numericPortion = (isPercent ? trimmedValue.slice(0, -1) : trimmedValue).replace(/\s+/g, '');
+
+        const hasComma = numericPortion.includes(',');
+        const hasDot = numericPortion.includes('.');
+        let decimalSeparator = null;
+
+        if (hasComma && hasDot) {
+            decimalSeparator = numericPortion.lastIndexOf('.') > numericPortion.lastIndexOf(',') ? '.' : ',';
+        } else if (hasComma) {
+            const parts = numericPortion.split(',');
+            if (parts.length === 2 && parts[1].length > 0 && parts[1].length <= 2) {
+                decimalSeparator = ',';
+            }
+        } else if (hasDot) {
+            const parts = numericPortion.split('.');
+            if (parts.length === 2 && parts[1].length > 0 && parts[1].length <= 2) {
+                decimalSeparator = '.';
+            }
+        }
+
+        let normalizedNumeric = numericPortion;
+        let decimalCount = 0;
+
+        if (decimalSeparator) {
+            const decimalIndex = numericPortion.lastIndexOf(decimalSeparator);
+            const integerPart = numericPortion.slice(0, decimalIndex).replace(/[.,]/g, '');
+            const fractionalPart = numericPortion.slice(decimalIndex + 1);
+            normalizedNumeric = `${integerPart}.${fractionalPart}`;
+            decimalCount = fractionalPart.length;
+        } else {
+            normalizedNumeric = numericPortion.replace(/[.,]/g, '');
+        }
 
         if (normalizedNumeric !== '' && !isNaN(normalizedNumeric)) {
             const parsedNumber = parseFloat(normalizedNumeric);
-            const decimalMatch = normalizedNumeric.match(/\.([0-9]+)$/);
-            const decimalCount = decimalMatch ? decimalMatch[1].length : 0;
 
             if (isPercent) {
                 return {
