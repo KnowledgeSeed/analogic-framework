@@ -14,27 +14,93 @@ const GridTableExport = {
     resizeMinWidth: 4,
     defaultSheetName: 'Export Data',
     defaultFileName: 'export.xlsx',
+    defaultStartColumnIndex: 1,
+
+    sanitizeTextValue: (value) => {
+        if (value === null || value === undefined) {
+            return '';
+        }
+
+        const stringValue = String(value);
+        if (!stringValue.includes('<')) {
+            return stringValue;
+        }
+
+        try {
+            const helper = document.createElement('div');
+            helper.innerHTML = stringValue;
+            return helper.textContent || helper.innerText || '';
+        } catch (error) {
+            console.warn('[GridTableExport] Failed to sanitize HTML value, falling back to regex:', error);
+            return stringValue.replace(/<[^>]*>/g, '');
+        }
+    },
 
     parseValue: (cellValue) => {
         if (cellValue === "" || cellValue === null || cellValue === undefined) {
             return { type: 'string', value: "" };
         }
 
-        const stringValue = String(cellValue);
+        const sanitizedValue = GridTableExport.sanitizeTextValue(cellValue);
+        const stringValue = String(sanitizedValue);
         const trimmedValue = stringValue.trim();
 
         if (trimmedValue === '') {
             return { type: 'string', value: "" };
         }
 
-        const isPercent = trimmedValue.endsWith('%');
-        const numericPortion = isPercent ? trimmedValue.slice(0, -1) : trimmedValue;
-        const normalizedNumeric = numericPortion.replace(/\s+/g, '').replace(',', '.');
+        let workingValue = trimmedValue;
+        let isParensNegative = false;
+
+        if (workingValue.startsWith('(') && workingValue.endsWith(')')) {
+            isParensNegative = true;
+            workingValue = workingValue.slice(1, -1).trim();
+        }
+
+        const isPercent = workingValue.endsWith('%');
+        const numericPortionWithSign = (isPercent ? workingValue.slice(0, -1) : workingValue).replace(/\s+/g, '');
+
+        let numericPortion = numericPortionWithSign;
+        let signMultiplier = 1;
+
+        if (numericPortion.startsWith('+') || numericPortion.startsWith('-')) {
+            signMultiplier = numericPortion[0] === '-' ? -1 : 1;
+            numericPortion = numericPortion.slice(1);
+        }
+
+        const hasComma = numericPortion.includes(',');
+        const hasDot = numericPortion.includes('.');
+        let decimalSeparator = null;
+
+        if (hasComma && hasDot) {
+            decimalSeparator = numericPortion.lastIndexOf('.') > numericPortion.lastIndexOf(',') ? '.' : ',';
+        } else if (hasComma) {
+            const parts = numericPortion.split(',');
+            if (parts.length === 2 && parts[1].length > 0 && parts[1].length <= 2) {
+                decimalSeparator = ',';
+            }
+        } else if (hasDot) {
+            const parts = numericPortion.split('.');
+            if (parts.length === 2 && parts[1].length > 0 && parts[1].length <= 2) {
+                decimalSeparator = '.';
+            }
+        }
+
+        let normalizedNumeric = numericPortion;
+        let decimalCount = 0;
+
+        if (decimalSeparator) {
+            const decimalIndex = numericPortion.lastIndexOf(decimalSeparator);
+            const integerPart = numericPortion.slice(0, decimalIndex).replace(/[.,]/g, '');
+            const fractionalPart = numericPortion.slice(decimalIndex + 1);
+            normalizedNumeric = `${integerPart}.${fractionalPart}`;
+            decimalCount = fractionalPart.length;
+        } else {
+            normalizedNumeric = numericPortion.replace(/[.,]/g, '');
+        }
 
         if (normalizedNumeric !== '' && !isNaN(normalizedNumeric)) {
-            const parsedNumber = parseFloat(normalizedNumeric);
-            const decimalMatch = normalizedNumeric.match(/\.([0-9]+)$/);
-            const decimalCount = decimalMatch ? decimalMatch[1].length : 0;
+            const parsedNumber = parseFloat(normalizedNumeric) * signMultiplier * (isParensNegative ? -1 : 1);
 
             if (isPercent) {
                 return {
@@ -189,6 +255,138 @@ const GridTableExport = {
 
         console.warn('[GridTableExport] Unsupported enableEditing configuration. Expected boolean, array, or comma-separated range string.');
         return { mode: 'none', columns: null };
+    },
+
+    normalizeStartColumnIndex: (value, fallback = GridTableExport.defaultStartColumnIndex) => {
+        const defaultValue = Number.isInteger(fallback) && fallback >= 1
+            ? fallback
+            : Math.max(1, GridTableExport.defaultStartColumnIndex);
+
+        if (value === null || value === undefined || value === '') {
+            return defaultValue;
+        }
+
+        const numeric = Number(value);
+        if (!Number.isFinite(numeric)) {
+            console.warn('[GridTableExport] startColumnIndex must be a positive integer. Received:', value);
+            return defaultValue;
+        }
+
+        const integer = Math.trunc(numeric);
+        if (integer < 1) {
+            console.warn('[GridTableExport] startColumnIndex must be a positive integer. Received:', value);
+            return defaultValue;
+        }
+
+        return integer;
+    },
+
+    normalizeEmptyColumnsLeft: (value, fallback = GridTableExport.defaultStartColumnIndex - 1) => {
+        const defaultValue = Number.isInteger(fallback) && fallback >= 0
+            ? fallback
+            : Math.max(0, GridTableExport.defaultStartColumnIndex - 1);
+
+        if (value === null || value === undefined || value === '') {
+            return defaultValue;
+        }
+
+        const numeric = Number(value);
+        if (!Number.isFinite(numeric)) {
+            console.warn('[GridTableExport] emptyColumnsLeft must be a non-negative integer. Received:', value);
+            return defaultValue;
+        }
+
+        const integer = Math.trunc(numeric);
+        if (integer < 0) {
+            console.warn('[GridTableExport] emptyColumnsLeft must be a non-negative integer. Received:', value);
+            return defaultValue;
+        }
+
+        return integer;
+    },
+
+    resolveEmptyColumnsLeft: (startColumnIndex, emptyColumnsLeft) => {
+        if (startColumnIndex !== null && startColumnIndex !== undefined && startColumnIndex !== '') {
+            const normalizedStart = GridTableExport.normalizeStartColumnIndex(startColumnIndex);
+            return Math.max(0, normalizedStart - 1);
+        }
+
+        return GridTableExport.normalizeEmptyColumnsLeft(emptyColumnsLeft);
+    },
+
+    normalizeSheetNames: (sheetNameConfig, sheetCount = 1) => {
+        const names = [];
+
+        const appendName = (value) => {
+            if (value === null || value === undefined) {
+                return;
+            }
+            const text = String(value).trim();
+            if (text !== '') {
+                names.push(text);
+            }
+        };
+
+        if (Array.isArray(sheetNameConfig)) {
+            sheetNameConfig.forEach(appendName);
+        } else if (typeof sheetNameConfig === 'string') {
+            sheetNameConfig.split(',').forEach(appendName);
+        } else if (sheetNameConfig !== undefined && sheetNameConfig !== null) {
+            appendName(sheetNameConfig);
+        }
+
+        const defaultName = GridTableExport.defaultSheetName;
+        for (let index = names.length; index < sheetCount; index++) {
+            const suffix = sheetCount > 1 ? ` ${index + 1}` : '';
+            names.push(index === 0 ? defaultName : `${defaultName}${suffix}`);
+        }
+
+        if (names.length > sheetCount) {
+            return names.slice(0, sheetCount);
+        }
+
+        return names;
+    },
+
+    normalizeTableSources: (tableSource) => {
+        const sources = [];
+
+        const looksLikeTabularArray = (candidate) => {
+            if (!Array.isArray(candidate) || candidate.length === 0) {
+                return false;
+            }
+
+            return candidate.every(row => Array.isArray(row) && !row.some(Array.isArray));
+        };
+
+        const appendSource = (value) => {
+            if (value === null || value === undefined) {
+                return;
+            }
+
+            if (Array.isArray(value)) {
+                if (looksLikeTabularArray(value)) {
+                    sources.push(value);
+                    return;
+                }
+
+                value.forEach(appendSource);
+                return;
+            }
+
+            if (typeof value === 'string') {
+                const parts = value.split(',').map(part => part.trim()).filter(Boolean);
+                if (parts.length > 1) {
+                    parts.forEach(appendSource);
+                    return;
+                }
+            }
+
+            sources.push(value);
+        };
+
+        appendSource(tableSource);
+        return sources;
     },
 
     getTotalColumnCount: (headerArray, tableData) => {
@@ -362,6 +560,154 @@ const GridTableExport = {
         return `0.${'0'.repeat(clamped)}%`;
     },
 
+    normalizeExcelCellFormat: (format) => {
+        if (typeof format !== 'string') {
+            return null;
+        }
+
+        const normalized = format.trim().toLowerCase();
+
+        if (normalized === '') {
+            return null;
+        }
+
+        switch (normalized) {
+        case 'text':
+        case 'string':
+            return 'text';
+        case 'number':
+        case 'numeric':
+            return 'number';
+        case 'percentage':
+        case 'percent':
+            return 'percentage';
+        case 'date':
+        case 'datetime':
+            return 'date';
+        default:
+            console.warn(`[GridTableExport] Unsupported excelCellFormat value: ${format}`);
+            return null;
+        }
+    },
+
+    applyFormatOverride: (rawValue, parsedValue, excelFormat) => {
+        if (!excelFormat) {
+            return { ...parsedValue, numFmt: null };
+        }
+
+        const trimmedValue = rawValue !== undefined && rawValue !== null
+            ? String(rawValue).trim()
+            : '';
+
+        if (excelFormat === 'text') {
+            return { type: 'string', value: trimmedValue, decimals: 0, numFmt: '@' };
+        }
+
+        if (excelFormat === 'number') {
+            const parsedNumber = GridTableExport.parseValue(trimmedValue);
+            if (parsedNumber.type === 'number') {
+                const decimals = parsedNumber.decimals ?? 0;
+                return {
+                    type: 'number',
+                    value: parsedNumber.value,
+                    decimals,
+                    numFmt: GridTableExport.getNumberFormatPattern(decimals)
+                };
+            }
+
+            return { type: 'string', value: trimmedValue, decimals: 0, numFmt: '@' };
+        }
+
+        if (excelFormat === 'percentage') {
+            const parsedPercent = GridTableExport.parseValue(trimmedValue);
+            if (parsedPercent.type === 'percent') {
+                const decimals = parsedPercent.decimals ?? 0;
+                return {
+                    type: 'percent',
+                    value: parsedPercent.value,
+                    decimals,
+                    numFmt: GridTableExport.getPercentFormatPattern(decimals)
+                };
+            }
+
+            if (parsedPercent.type === 'number') {
+                const decimals = parsedPercent.decimals ?? 0;
+                return {
+                    type: 'percent',
+                    value: parsedPercent.value / 100,
+                    decimals,
+                    numFmt: GridTableExport.getPercentFormatPattern(decimals)
+                };
+            }
+
+            return { type: 'string', value: trimmedValue, decimals: 0, numFmt: '@' };
+        }
+
+        if (excelFormat === 'date') {
+            const trimmed = trimmedValue || '';
+            const value = trimmed.trim();
+
+            if (value === '') {
+                return { type: 'string', value: '', decimals: 0, numFmt: '@' };
+            }
+
+
+            let y, m, d;
+
+
+            let mIso = value.match(/^(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})$/);
+
+            let mEu  = value.match(/^(\d{1,2})[.\-\/](\d{1,2})[.\-\/](\d{4})$/);
+
+            if (mIso) {
+                y = parseInt(mIso[1], 10);
+                m = parseInt(mIso[2], 10);
+                d = parseInt(mIso[3], 10);
+            } else if (mEu) {
+                d = parseInt(mEu[1], 10);
+                m = parseInt(mEu[2], 10);
+                y = parseInt(mEu[3], 10);
+            }
+
+            if (y && m && d) {
+
+                const excelEpoch = Date.UTC(1899, 11, 30);
+                const dateUtc    = Date.UTC(y, m - 1, d);
+                const serial     = Math.round((dateUtc - excelEpoch) / (24 * 60 * 60 * 1000));
+
+                return {
+                    type: 'date',
+                    value: serial,
+                    decimals: 0,
+                    numFmt: 'dd.mm.yyyy'
+                };
+            }
+
+            const native = new Date(value);
+            if (native instanceof Date && !Number.isNaN(native.getTime())) {
+                const excelEpoch = Date.UTC(1899, 11, 30);
+                const dateUtc = Date.UTC(
+                    native.getFullYear(),
+                    native.getMonth(),
+                    native.getDate()
+                );
+                const serial = Math.round((dateUtc - excelEpoch) / (24 * 60 * 60 * 1000));
+
+                return {
+                    type: 'date',
+                    value: serial,
+                    decimals: 0,
+                    numFmt: 'dd.mm.yyyy'
+                };
+            }
+
+
+            return { type: 'string', value, decimals: 0, numFmt: '@' };
+        }
+
+        return { ...parsedValue, numFmt: null };
+    },
+
     buildColumnMapping: (totalColumns, excludedColumnsSet) => {
         if (!totalColumns || totalColumns <= 0) {
             return [];
@@ -513,6 +859,54 @@ const GridTableExport = {
         return [];
     },
 
+    normalizeCustomHeaders: (headers) => {
+        if (!Array.isArray(headers) || headers.length === 0) {
+            return [];
+        }
+
+        const cleaned = headers.map((header) => {
+            const sanitized = GridTableExport.sanitizeTextValue(header);
+            return typeof sanitized === 'string' ? sanitized.trim() : String(sanitized || '').trim();
+        });
+
+        const hasNonEmptyValue = cleaned.some((value) => value !== '');
+        if (!hasNonEmptyValue) {
+            // Preserve explicit empty headers (e.g., ['', '']) so the caller can intentionally
+            // blank out detected headers for a sheet while keeping column alignment intact.
+            return cleaned.slice();
+        }
+
+        let lastNonEmptyIndex = cleaned.length - 1;
+        while (lastNonEmptyIndex >= 0 && cleaned[lastNonEmptyIndex] === '') {
+            lastNonEmptyIndex--;
+        }
+
+        return cleaned.slice(0, lastNonEmptyIndex + 1);
+    },
+
+    normalizeHeadersOption: (headersConfig, sheetCount) => {
+        const safeSheetCount = Number.isInteger(sheetCount) && sheetCount > 0 ? sheetCount : 1;
+        const defaultHeaders = Array(safeSheetCount).fill(null);
+
+        if (!Array.isArray(headersConfig) || headersConfig.length === 0) {
+            return defaultHeaders;
+        }
+
+        const isPerSheetList = headersConfig.every(
+            (entry) => Array.isArray(entry) || entry === null || entry === undefined
+        );
+
+        if (isPerSheetList) {
+            return Array.from({ length: safeSheetCount }, (_, index) => {
+                const entry = headersConfig[index];
+                return Array.isArray(entry) ? GridTableExport.normalizeCustomHeaders(entry) : null;
+            });
+        }
+
+        const sharedHeaders = GridTableExport.normalizeCustomHeaders(headersConfig);
+        return Array(safeSheetCount).fill(sharedHeaders.length > 0 ? sharedHeaders : null);
+    },
+
     populateHeaderCells: (worksheet, headerArray, headerRowIndex, startColIndex, columnMapping) => {
         if (!headerArray || headerArray.length === 0) return;
         if (!Array.isArray(columnMapping) || columnMapping.length === 0) return;
@@ -560,11 +954,14 @@ const GridTableExport = {
                 const cellObj = rowData[originalIndex];
                 const hasExportValue = cellObj && Object.prototype.hasOwnProperty.call(cellObj, 'exportValue');
                 const rawExport = hasExportValue ? cellObj.exportValue : (cellObj?.title ?? "");
-                const valueToParse = rawExport !== null && rawExport !== undefined ? String(rawExport) : "";
+                const sanitizedExport = GridTableExport.sanitizeTextValue(rawExport);
+                const valueToParse = sanitizedExport !== null && sanitizedExport !== undefined ? String(sanitizedExport) : "";
+                const trimmedValue = valueToParse.trim();
                 const baseEditable = cellObj?.editable ?? false;
                 const editingOverride = editingMode === 'all'
                     || (editingMode === 'columns' && editableColumns && editableColumns.has(originalIndex));
                 const isEditable = editingOverride || baseEditable;
+                const excelFormat = GridTableExport.normalizeExcelCellFormat(cellObj?.excelCellFormat);
 
                 const parsedObject = GridTableExport.parseValue(valueToParse);
                 let finalCellValue = parsedObject.value;
@@ -572,7 +969,6 @@ const GridTableExport = {
                 let cellDecimals = parsedObject.decimals ?? 0;
 
                 if (repeatingCells && previousColumnValues) {
-                    const trimmedValue = valueToParse.trim();
                     const columnKey = originalIndex;
                     const hasStoredValue = Object.prototype.hasOwnProperty.call(previousColumnValues, columnKey);
                     const storedEntry = hasStoredValue ? previousColumnValues[columnKey] : undefined;
@@ -581,18 +977,34 @@ const GridTableExport = {
                         finalCellValue = storedEntry.value;
                         cellType = storedEntry.type;
                         cellDecimals = storedEntry.decimals ?? 0;
-                    } else if (trimmedValue !== '') {
-                        previousColumnValues[columnKey] = {
-                            value: finalCellValue,
-                            type: cellType,
-                            decimals: cellDecimals
-                        };
                     }
+                }
+
+                const formattedValue = GridTableExport.applyFormatOverride(
+                    valueToParse,
+                    { value: finalCellValue, type: cellType, decimals: cellDecimals },
+                    excelFormat
+                );
+
+                finalCellValue = formattedValue.value;
+                cellType = formattedValue.type;
+                cellDecimals = formattedValue.decimals ?? 0;
+
+                if (repeatingCells && previousColumnValues && trimmedValue !== '') {
+                    previousColumnValues[originalIndex] = {
+                        value: finalCellValue,
+                        type: cellType,
+                        decimals: cellDecimals
+                    };
                 }
 
                 cell.value = finalCellValue;
 
-                if (cellType === 'number') {
+                const customNumFmt = formattedValue.numFmt;
+
+                if (customNumFmt) {
+                    cell.numFmt = customNumFmt;
+                } else if (cellType === 'number') {
                     cell.numFmt = GridTableExport.getNumberFormatPattern(cellDecimals);
                 } else if (cellType === 'percent') {
                     cell.numFmt = GridTableExport.getPercentFormatPattern(cellDecimals);
@@ -611,7 +1023,8 @@ const GridTableExport = {
         });
     },
 
-    createXlsxBuffer: async (
+    addWorksheetFromTable: async (
+        workbook,
         tableObject,
         config = {}
     ) => {
@@ -620,18 +1033,31 @@ const GridTableExport = {
         const attributeValues = GridTableExport.parseAttributeValues(config.attributes);
         const attrRowEnabled = attributeValues.length > 0;
 
-        const emptyColsLeft = 1;
+        const emptyColsLeft = GridTableExport.resolveEmptyColumnsLeft(
+            config.startColumnIndex ?? config.startColumn,
+            config.emptyColumnsLeft ?? config.emptyColsLeft
+        );
+        const dataStartColumnIndex = emptyColsLeft + 1;
         const attributeRowIndex = 1;
         const headerRowIndex = 3;
         const repeatingCellsEnabled = GridTableExport.isRepeatingCellsEnabled(config.repeatingCells);
 
-        const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet(sheetName);
+
+        const rawHeaders = config.headers ?? config.Headers;
+        const customHeaders = Array.isArray(rawHeaders)
+            ? GridTableExport.normalizeCustomHeaders(rawHeaders)
+            : [];
 
         let headerTitlesArray = GridTableExport.getHeaderRowValues(tableObject?.options);
         let headerRowEnabled = headerTitlesArray && headerTitlesArray.length > 0;
         let headerRowActualIndex = 0;
         let dataStartRowIndex = headerRowIndex;
+
+        if (customHeaders.length > 0) {
+            headerTitlesArray = customHeaders;
+            headerRowEnabled = true;
+        }
 
         const tableDataOriginal = Array.isArray(tableObject?.cellData) ? tableObject.cellData : [];
 
@@ -652,14 +1078,14 @@ const GridTableExport = {
         const editingConfig = GridTableExport.normalizeEditingConfig(config.enableEditing, totalColumns);
 
         if (attrRowEnabled) {
-            GridTableExport.populateAttributeRow(worksheet, attributeValues, attributeRowIndex, emptyColsLeft + 1, columnMapping);
+            GridTableExport.populateAttributeRow(worksheet, attributeValues, attributeRowIndex, dataStartColumnIndex, columnMapping);
         }
 
         const headerCanBeRendered = headerRowEnabled && columnMapping.length > 0;
 
         if (headerCanBeRendered) {
             headerRowActualIndex = headerRowIndex;
-            GridTableExport.populateHeaderCells(worksheet, headerTitlesArray, headerRowActualIndex, emptyColsLeft + 1, columnMapping);
+            GridTableExport.populateHeaderCells(worksheet, headerTitlesArray, headerRowActualIndex, dataStartColumnIndex, columnMapping);
             dataStartRowIndex = headerRowActualIndex + 1;
         }
 
@@ -671,7 +1097,7 @@ const GridTableExport = {
             worksheet,
             workingTableData,
             dataStartRowIndex,
-            emptyColsLeft + 1,
+            dataStartColumnIndex,
             repeatingCellsEnabled,
             columnMapping,
             editingConfig
@@ -699,6 +1125,17 @@ const GridTableExport = {
             sort: false,
             autoFilter: false
         });
+
+        return worksheet;
+    },
+
+    createXlsxBuffer: async (
+        tableObject,
+        config = {}
+    ) => {
+
+        const workbook = new ExcelJS.Workbook();
+        await GridTableExport.addWorksheetFromTable(workbook, tableObject, config);
         const buffer = await workbook.xlsx.writeBuffer();
         return buffer;
     },
@@ -776,39 +1213,72 @@ const GridTableExport = {
     },
 
     triggerExcelExport: async (tableSource, exportConfig = {}) => {
-        const tableObject = await GridTableExport.resolveTableSource(tableSource);
+        const sourceList = GridTableExport.normalizeTableSources(tableSource);
+        const resolvedTables = await Promise.all(sourceList.map(GridTableExport.resolveTableSource));
 
-        if (!tableObject || !Array.isArray(tableObject.cellData)) {
-            const sourceLabel = typeof tableSource === 'string'
-                ? `source "${tableSource}"`
+        const validTables = [];
+        sourceList.forEach((sourceEntry, index) => {
+            const tableObject = resolvedTables[index];
+            if (tableObject && Array.isArray(tableObject.cellData)) {
+                validTables.push({ tableObject, sourceEntry });
+                return;
+            }
+
+            const sourceLabel = typeof sourceEntry === 'string'
+                ? `source "${sourceEntry}"`
                 : 'the provided source';
-            console.error(`[GridTableExport] Failed to resolve table data for export from ${sourceLabel}.`, tableSource);
-            alert(`Error: Could not retrieve data for export from ${sourceLabel}. Terminating.`);
+            console.error(`[GridTableExport] Failed to resolve table data for export from ${sourceLabel}.`, sourceEntry);
+        });
+
+        if (validTables.length === 0) {
+            alert('Error: Could not retrieve data for export. Terminating.');
             return;
         }
 
-        L('[Debug trigger] Table Object for Export:', tableObject);
+        const sheetNames = GridTableExport.normalizeSheetNames(exportConfig.sheetName, validTables.length);
+        const fileName = exportConfig.fileName || GridTableExport.defaultFileName;
+        const headerOverrides = GridTableExport.normalizeHeadersOption(
+            exportConfig.headers ?? exportConfig.Headers,
+            validTables.length
+        );
 
-        const config = {
-            sheetName: exportConfig.sheetName || GridTableExport.defaultSheetName,
-            fileName: exportConfig.fileName || GridTableExport.defaultFileName,
+        const sharedConfig = {
             attributes: Array.isArray(exportConfig.attributes) ? exportConfig.attributes : [],
             repeatingCells: exportConfig.repeatingCells,
             excludeColumns: Array.isArray(exportConfig.excludeColumns) || typeof exportConfig.excludeColumns === 'string'
                 ? exportConfig.excludeColumns
                 : [],
-            enableEditing: exportConfig.enableEditing
+            enableEditing: exportConfig.enableEditing,
+            emptyColumnsLeft: exportConfig.emptyColumnsLeft ?? exportConfig.emptyColsLeft,
+            startColumnIndex: exportConfig.startColumnIndex ?? exportConfig.startColumn
         };
 
         try {
-            const fileBuffer = await GridTableExport.createXlsxBuffer(
-                tableObject,
-                config
-            );
+            const workbook = new ExcelJS.Workbook();
+            for (let index = 0; index < validTables.length; index++) {
+                const { tableObject } = validTables[index];
+                if (typeof console !== 'undefined') {
+                    console.debug('[GridTableExport] Preparing sheet for export:', tableObject);
+                }
+
+                const perSheetConfig = {
+                    ...sharedConfig,
+                    sheetName: sheetNames[index] || GridTableExport.defaultSheetName,
+                    headers: headerOverrides[index]
+                };
+
+                await GridTableExport.addWorksheetFromTable(
+                    workbook,
+                    tableObject,
+                    perSheetConfig
+                );
+            }
+
+            const fileBuffer = await workbook.xlsx.writeBuffer();
             if (!fileBuffer || fileBuffer.byteLength < 50) {
                  console.warn('[Debug trigger] Generated buffer seems very small or empty:', fileBuffer?.byteLength);
             }
-            GridTableExport.downloadBuffer(fileBuffer, config.fileName);
+            GridTableExport.downloadBuffer(fileBuffer, fileName);
         } catch (error) {
             console.error('Error during XLSX export process:', error);
             alert('Failed to export data. Please check the console for details.');
