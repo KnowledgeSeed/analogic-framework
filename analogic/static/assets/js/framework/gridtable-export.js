@@ -644,19 +644,65 @@ const GridTableExport = {
         }
 
         if (excelFormat === 'date') {
-            const dateValue = new Date(trimmedValue);
-            const isValidDate = dateValue instanceof Date && !Number.isNaN(dateValue.getTime());
+            const trimmed = trimmedValue || '';
+            const value = trimmed.trim();
 
-            if (isValidDate) {
+            if (value === '') {
+                return { type: 'string', value: '', decimals: 0, numFmt: '@' };
+            }
+
+
+            let y, m, d;
+
+
+            let mIso = value.match(/^(\d{4})[.\-\/](\d{1,2})[.\-\/](\d{1,2})$/);
+
+            let mEu  = value.match(/^(\d{1,2})[.\-\/](\d{1,2})[.\-\/](\d{4})$/);
+
+            if (mIso) {
+                y = parseInt(mIso[1], 10);
+                m = parseInt(mIso[2], 10);
+                d = parseInt(mIso[3], 10);
+            } else if (mEu) {
+                d = parseInt(mEu[1], 10);
+                m = parseInt(mEu[2], 10);
+                y = parseInt(mEu[3], 10);
+            }
+
+            if (y && m && d) {
+
+                const excelEpoch = Date.UTC(1899, 11, 30);
+                const dateUtc    = Date.UTC(y, m - 1, d);
+                const serial     = Math.round((dateUtc - excelEpoch) / (24 * 60 * 60 * 1000));
+
                 return {
                     type: 'date',
-                    value: dateValue,
+                    value: serial,
                     decimals: 0,
-                    numFmt: 'yyyy-mm-dd'
+                    numFmt: 'dd.mm.yyyy'
                 };
             }
 
-            return { type: 'string', value: trimmedValue, decimals: 0, numFmt: '@' };
+            const native = new Date(value);
+            if (native instanceof Date && !Number.isNaN(native.getTime())) {
+                const excelEpoch = Date.UTC(1899, 11, 30);
+                const dateUtc = Date.UTC(
+                    native.getFullYear(),
+                    native.getMonth(),
+                    native.getDate()
+                );
+                const serial = Math.round((dateUtc - excelEpoch) / (24 * 60 * 60 * 1000));
+
+                return {
+                    type: 'date',
+                    value: serial,
+                    decimals: 0,
+                    numFmt: 'dd.mm.yyyy'
+                };
+            }
+
+
+            return { type: 'string', value, decimals: 0, numFmt: '@' };
         }
 
         return { ...parsedValue, numFmt: null };
