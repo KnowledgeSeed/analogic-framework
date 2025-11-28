@@ -516,6 +516,89 @@ const GridTableExport = {
         return `0.${'0'.repeat(clamped)}%`;
     },
 
+    normalizeExcelCellFormat: (format) => {
+        if (typeof format !== 'string') {
+            return null;
+        }
+
+        const normalized = format.trim().toLowerCase();
+
+        if (normalized === '') {
+            return null;
+        }
+
+        switch (normalized) {
+        case 'text':
+        case 'string':
+            return 'text';
+        case 'number':
+        case 'numeric':
+            return 'number';
+        case 'percentage':
+        case 'percent':
+            return 'percentage';
+        default:
+            console.warn(`[GridTableExport] Unsupported excelCellFormat value: ${format}`);
+            return null;
+        }
+    },
+
+    applyFormatOverride: (rawValue, parsedValue, excelFormat) => {
+        if (!excelFormat) {
+            return { ...parsedValue, numFmt: null };
+        }
+
+        const trimmedValue = rawValue !== undefined && rawValue !== null
+            ? String(rawValue).trim()
+            : '';
+
+        if (excelFormat === 'text') {
+            return { type: 'string', value: trimmedValue, decimals: 0, numFmt: '@' };
+        }
+
+        if (excelFormat === 'number') {
+            const parsedNumber = GridTableExport.parseValue(trimmedValue);
+            if (parsedNumber.type === 'number') {
+                const decimals = parsedNumber.decimals ?? 0;
+                return {
+                    type: 'number',
+                    value: parsedNumber.value,
+                    decimals,
+                    numFmt: GridTableExport.getNumberFormatPattern(decimals)
+                };
+            }
+
+            return { type: 'string', value: trimmedValue, decimals: 0, numFmt: '@' };
+        }
+
+        if (excelFormat === 'percentage') {
+            const parsedPercent = GridTableExport.parseValue(trimmedValue);
+            if (parsedPercent.type === 'percent') {
+                const decimals = parsedPercent.decimals ?? 0;
+                return {
+                    type: 'percent',
+                    value: parsedPercent.value,
+                    decimals,
+                    numFmt: GridTableExport.getPercentFormatPattern(decimals)
+                };
+            }
+
+            if (parsedPercent.type === 'number') {
+                const decimals = parsedPercent.decimals ?? 0;
+                return {
+                    type: 'percent',
+                    value: parsedPercent.value / 100,
+                    decimals,
+                    numFmt: GridTableExport.getPercentFormatPattern(decimals)
+                };
+            }
+
+            return { type: 'string', value: trimmedValue, decimals: 0, numFmt: '@' };
+        }
+
+        return { ...parsedValue, numFmt: null };
+    },
+
     buildColumnMapping: (totalColumns, excludedColumnsSet) => {
         if (!totalColumns || totalColumns <= 0) {
             return [];
@@ -764,10 +847,12 @@ const GridTableExport = {
                 const rawExport = hasExportValue ? cellObj.exportValue : (cellObj?.title ?? "");
                 const sanitizedExport = GridTableExport.sanitizeTextValue(rawExport);
                 const valueToParse = sanitizedExport !== null && sanitizedExport !== undefined ? String(sanitizedExport) : "";
+                const trimmedValue = valueToParse.trim();
                 const baseEditable = cellObj?.editable ?? false;
                 const editingOverride = editingMode === 'all'
                     || (editingMode === 'columns' && editableColumns && editableColumns.has(originalIndex));
                 const isEditable = editingOverride || baseEditable;
+                const excelFormat = GridTableExport.normalizeExcelCellFormat(cellObj?.excelCellFormat);
 
                 const parsedObject = GridTableExport.parseValue(valueToParse);
                 let finalCellValue = parsedObject.value;
@@ -775,7 +860,6 @@ const GridTableExport = {
                 let cellDecimals = parsedObject.decimals ?? 0;
 
                 if (repeatingCells && previousColumnValues) {
-                    const trimmedValue = valueToParse.trim();
                     const columnKey = originalIndex;
                     const hasStoredValue = Object.prototype.hasOwnProperty.call(previousColumnValues, columnKey);
                     const storedEntry = hasStoredValue ? previousColumnValues[columnKey] : undefined;
@@ -784,18 +868,34 @@ const GridTableExport = {
                         finalCellValue = storedEntry.value;
                         cellType = storedEntry.type;
                         cellDecimals = storedEntry.decimals ?? 0;
-                    } else if (trimmedValue !== '') {
-                        previousColumnValues[columnKey] = {
-                            value: finalCellValue,
-                            type: cellType,
-                            decimals: cellDecimals
-                        };
                     }
+                }
+
+                const formattedValue = GridTableExport.applyFormatOverride(
+                    valueToParse,
+                    { value: finalCellValue, type: cellType, decimals: cellDecimals },
+                    excelFormat
+                );
+
+                finalCellValue = formattedValue.value;
+                cellType = formattedValue.type;
+                cellDecimals = formattedValue.decimals ?? 0;
+
+                if (repeatingCells && previousColumnValues && trimmedValue !== '') {
+                    previousColumnValues[originalIndex] = {
+                        value: finalCellValue,
+                        type: cellType,
+                        decimals: cellDecimals
+                    };
                 }
 
                 cell.value = finalCellValue;
 
-                if (cellType === 'number') {
+                const customNumFmt = formattedValue.numFmt;
+
+                if (customNumFmt) {
+                    cell.numFmt = customNumFmt;
+                } else if (cellType === 'number') {
                     cell.numFmt = GridTableExport.getNumberFormatPattern(cellDecimals);
                 } else if (cellType === 'percent') {
                     cell.numFmt = GridTableExport.getPercentFormatPattern(cellDecimals);
