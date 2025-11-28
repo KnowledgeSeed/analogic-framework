@@ -581,6 +581,9 @@ const GridTableExport = {
         case 'percentage':
         case 'percent':
             return 'percentage';
+        case 'date':
+        case 'datetime':
+            return 'date';
         default:
             console.warn(`[GridTableExport] Unsupported excelCellFormat value: ${format}`);
             return null;
@@ -634,6 +637,22 @@ const GridTableExport = {
                     value: parsedPercent.value / 100,
                     decimals,
                     numFmt: GridTableExport.getPercentFormatPattern(decimals)
+                };
+            }
+
+            return { type: 'string', value: trimmedValue, decimals: 0, numFmt: '@' };
+        }
+
+        if (excelFormat === 'date') {
+            const dateValue = new Date(trimmedValue);
+            const isValidDate = dateValue instanceof Date && !Number.isNaN(dateValue.getTime());
+
+            if (isValidDate) {
+                return {
+                    type: 'date',
+                    value: dateValue,
+                    decimals: 0,
+                    numFmt: 'yyyy-mm-dd'
                 };
             }
 
