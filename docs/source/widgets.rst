@@ -1278,6 +1278,74 @@ Notes
 - The widget auto-resizes with its container and will re-render whenever
   the repository updates the column or row payload.
 
+Repository example
+~~~~~~~~~~~~~~~~~~
+
+``GpuTableWidget`` can consume the same MDX responses as
+``GridTableLightWidget`` without paging metadata. The repository entry
+below requests a wide slice of the dataset, converts the MDX response
+with ``Utils.transformMdxResponseToGridTableLight`` and maps the result
+into ``columns``/``rows`` pairs expected by the GPU renderer:
+
+.. code-block:: javascript
+
+   gpuTableServerTable: {
+       init(ctx) {
+           return new RestRequest(this.request);
+       },
+       request: {
+           url: (widgets, ctx) => {
+               const baseUrl = '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))';
+               const result = Utils.buildMdxQueryUrl(baseUrl, {
+                   includeCount: false,
+                   columnCount: 24,
+                   defaultRowCount: 2500,
+                   metadataKey: '__gpuTableServerTable',
+                   returnMetadata: true
+               }, ctx);
+
+               return result && result.url ? result.url : baseUrl;
+           },
+           type: 'POST',
+           server: true,
+           body: () => ({key: 'safariAssetRegister2_mdx'}),
+           parsingControl: {
+               type: 'script',
+               script: (data) => {
+                   const transformed = Utils.transformMdxResponseToGridTableLight(data);
+                   if (!transformed.columns.length && !transformed.content.length) {
+                       return {columns: [], rows: []};
+                   }
+
+                   const columns = transformed.columns.map((column, index) => ({
+                       field: column.key || `col${index + 1}`,
+                       title: column.title || column.key || `Column ${index + 1}`
+                   }));
+
+                   const rows = transformed.content.map((row) => {
+                       const rowObject = {};
+                       const cells = Array.isArray(row && row.cells) ? row.cells : [];
+
+                       for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+                           const columnDefinition = columns[columnIndex];
+                           const cell = cells[columnIndex] || {};
+                           rowObject[columnDefinition.field] = cell.displayValue || cell.rawValue || '';
+                       }
+
+                       return rowObject;
+                   });
+
+                   return {
+                       columns: columns,
+                       rows: rows,
+                       skin: 'contrast',
+                       zebra: true
+                   };
+               }
+           }
+       }
+   }
+
 
 Usage example
 ~~~~~~~~~~~~~
