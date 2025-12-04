@@ -1220,6 +1220,133 @@ The ``gridTableLightDemoTable`` repository entry demonstrates interactive
 cells, paging, export and styling:
 
 
+GpuTableWidget
+--------------
+
+Overview
+~~~~~~~~
+
+``GpuTableWidget`` is a WebGPU-powered table surface inspired by
+``GridTableLightWidget``. Instead of composing DOM nodes for every cell it
+uses GPU pipelines to paint a dense grid directly into a canvas, which
+keeps rendering costs predictable even with many rows or columns. A
+lightweight fallback message is shown automatically when WebGPU is not
+available in the user's browser.
+
+Widget configuration
+~~~~~~~~~~~~~~~~~~~~
+
+- ``id`` (**required**): unique identifier that links the widget to
+  repository events and event map actions.
+- ``type`` (**required**): ``GpuTableWidget``.
+- ``width`` (optional): container width, defaults to ``100%``.
+- ``height`` (optional): container height, defaults to ``320px``.
+- ``skin`` (optional): CSS skin name; ``default`` and ``contrast`` are
+  built-in.
+- ``columns`` (optional): column descriptors with ``field`` keys used to
+  locate values in row objects.
+- ``rows`` (optional): array of row objects or value arrays to render.
+
+Usage example
+~~~~~~~~~~~~~
+
+.. code-block:: javascript
+
+   {
+       id: 'gpuTableDemo',
+       type: GpuTableWidget,
+       width: '100%',
+       height: '360px',
+       skin: 'contrast',
+       columns: [
+           {field: 'name'},
+           {field: 'value'},
+           {field: 'delta'}
+       ],
+       rows: [
+           {name: 'Alpha', value: 0.1, delta: 0.3},
+           {name: 'Beta', value: 0.6, delta: 0.4},
+           {name: 'Gamma', value: 0.9, delta: 0.8}
+       ]
+   }
+
+Notes
+~~~~~
+
+- Cells are colourised on the GPU based on numeric values or hashed
+  string content for quick visual clustering.
+- The widget auto-resizes with its container and will re-render whenever
+  the repository updates the column or row payload.
+
+Repository example
+~~~~~~~~~~~~~~~~~~
+
+``GpuTableWidget`` can consume the same MDX responses as
+``GridTableLightWidget`` without paging metadata. The repository entry
+below requests a wide slice of the dataset, converts the MDX response
+with ``Utils.transformMdxResponseToGridTableLight`` and maps the result
+into ``columns``/``rows`` pairs expected by the GPU renderer:
+
+.. code-block:: javascript
+
+   gpuTableServerTable: {
+       init(ctx) {
+           return new RestRequest(this.request);
+       },
+       request: {
+           url: (widgets, ctx) => {
+               const baseUrl = '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))';
+               const result = Utils.buildMdxQueryUrl(baseUrl, {
+                   includeCount: false,
+                   columnCount: 24,
+                   defaultRowCount: 2500,
+                   metadataKey: '__gpuTableServerTable',
+                   returnMetadata: true
+               }, ctx);
+
+               return result && result.url ? result.url : baseUrl;
+           },
+           type: 'POST',
+           server: true,
+           body: () => ({key: 'safariAssetRegister2_mdx'}),
+           parsingControl: {
+               type: 'script',
+               script: (data) => {
+                   const transformed = Utils.transformMdxResponseToGridTableLight(data);
+                   if (!transformed.columns.length && !transformed.content.length) {
+                       return {columns: [], rows: []};
+                   }
+
+                   const columns = transformed.columns.map((column, index) => ({
+                       field: column.key || `col${index + 1}`,
+                       title: column.title || column.key || `Column ${index + 1}`
+                   }));
+
+                   const rows = transformed.content.map((row) => {
+                       const rowObject = {};
+                       const cells = Array.isArray(row && row.cells) ? row.cells : [];
+
+                       for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+                           const columnDefinition = columns[columnIndex];
+                           const cell = cells[columnIndex] || {};
+                           rowObject[columnDefinition.field] = cell.displayValue || cell.rawValue || '';
+                       }
+
+                       return rowObject;
+                   });
+
+                   return {
+                       columns: columns,
+                       rows: rows,
+                       skin: 'contrast',
+                       zebra: true
+                   };
+               }
+           }
+       }
+   }
+
+
 Usage example
 ~~~~~~~~~~~~~
 
