@@ -1,0 +1,45 @@
+.ks-gpu-table {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    overflow: hidden;
+    border-radius: 6px;
+    background: linear-gradient(180deg, #0f1118 0%, #0b0d12 100%);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.ks-gpu-table_canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.ks-gpu-table_fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #d5d7e0;
+    padding: 16px;
+    text-align: center;
+    background: linear-gradient(180deg, #1b1f2b 0%, #0f1118 100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.ks-gpu-table_fallback.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.ks-gpu-table--skin-default {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ks-gpu-table--skin-contrast {
+    border: 1px solid rgba(0, 200, 255, 0.35);
+    box-shadow: 0 0 0 1px rgba(0, 200, 255, 0.1), 0 16px 40px rgba(0, 200, 255, 0.15);
+}

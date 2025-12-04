@@ -1220,6 +1220,65 @@ The ``gridTableLightDemoTable`` repository entry demonstrates interactive
 cells, paging, export and styling:
 
 
+GpuTableWidget
+--------------
+
+Overview
+~~~~~~~~
+
+``GpuTableWidget`` is a WebGPU-powered table surface inspired by
+``GridTableLightWidget``. Instead of composing DOM nodes for every cell it
+uses GPU pipelines to paint a dense grid directly into a canvas, which
+keeps rendering costs predictable even with many rows or columns. A
+lightweight fallback message is shown automatically when WebGPU is not
+available in the user's browser.
+
+Widget configuration
+~~~~~~~~~~~~~~~~~~~~
+
+- ``id`` (**required**): unique identifier that links the widget to
+  repository events and event map actions.
+- ``type`` (**required**): ``GpuTableWidget``.
+- ``width`` (optional): container width, defaults to ``100%``.
+- ``height`` (optional): container height, defaults to ``320px``.
+- ``skin`` (optional): CSS skin name; ``default`` and ``contrast`` are
+  built-in.
+- ``columns`` (optional): column descriptors with ``field`` keys used to
+  locate values in row objects.
+- ``rows`` (optional): array of row objects or value arrays to render.
+
+Usage example
+~~~~~~~~~~~~~
+
+.. code-block:: javascript
+
+   {
+       id: 'gpuTableDemo',
+       type: GpuTableWidget,
+       width: '100%',
+       height: '360px',
+       skin: 'contrast',
+       columns: [
+           {field: 'name'},
+           {field: 'value'},
+           {field: 'delta'}
+       ],
+       rows: [
+           {name: 'Alpha', value: 0.1, delta: 0.3},
+           {name: 'Beta', value: 0.6, delta: 0.4},
+           {name: 'Gamma', value: 0.9, delta: 0.8}
+       ]
+   }
+
+Notes
+~~~~~
+
+- Cells are colourised on the GPU based on numeric values or hashed
+  string content for quick visual clustering.
+- The widget auto-resizes with its container and will re-render whenever
+  the repository updates the column or row payload.
+
+
 Usage example
 ~~~~~~~~~~~~~
 
