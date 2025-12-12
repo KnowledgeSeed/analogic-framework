@@ -81,7 +81,12 @@ class Cam(AuthenticationProvider, MultiAuthenticationProviderInterface):
     def _get_server_side_mdx(self, force_server_side_query=False):
         mdx = request.data
         if request.args.get('server') is not None or force_server_side_query is True:
-            body = orjson.loads(request.data)
+            if request.method == 'GET':
+                body = request.args
+            elif len(request.form) > 0:
+                body = request.form.to_dict()
+            else:
+                body = orjson.loads(request.data)
             key = body['key']
             if body.get('key_suffix') is not None:
                 key = key + '_' + body['key_suffix']
