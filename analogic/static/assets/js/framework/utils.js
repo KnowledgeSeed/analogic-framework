@@ -606,7 +606,7 @@ const Utils = {
     checkScreenResolution() {
         let disabled = app.disableCheckResolutionWarning === true;
         if (!app.checkScreenResolutionWarningDisplayed && disabled===false && $('body').width() - 100 > window.innerWidth) {
-            Api.showPopup(app.screenResulotionWarningMessage ? app.screenResulotionWarningMessage : 'Your current screen resolution is below the recommended 1920*1080. For optimal user experience please lower your browser zoom to 90% or 80%.');
+            Api.showPopup(app.screenResolutionWarningMessage ? app.screenResolutionWarningMessage : 'Your current screen resolution is below the recommended 1920*1080. For optimal user experience please lower your browser zoom to 90% or 80%.');
             app.checkScreenResolutionWarningDisplayed = true;
         }
     },
