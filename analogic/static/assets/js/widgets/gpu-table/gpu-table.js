@@ -9,7 +9,8 @@ class GpuTableWidget extends Widget {
         this.state = {
             columns: [],
             rows: [],
-            skin: 'default'
+            skin: 'default',
+            zebra: true
         };
         this.dom = {};
         this.gpu = null;
@@ -34,6 +35,7 @@ class GpuTableWidget extends Widget {
         this.state.columns = Array.isArray(parameters.columns) ? parameters.columns.slice() : [];
         this.state.rows = Array.isArray(parameters.rows) ? parameters.rows.slice() : [];
         this.state.skin = parameters.skin || 'default';
+        this.state.zebra = !!parameters.zebra;
 
         const styles = this.getGeneralStyles ? this.getGeneralStyles(d) : [];
         if (parameters.width) {
@@ -48,6 +50,7 @@ class GpuTableWidget extends Widget {
         return `
 <section id="${o.id}" class="${classes.join(' ')}" data-id="${o.id}" data-skin="${this.state.skin}" style="${styles.join('')}">
     <canvas class="ks-gpu-table_canvas" data-id="${o.id}" aria-label="GPU rendered table"></canvas>
+    <canvas class="ks-gpu-table_overlay" data-id="${o.id}" aria-label="GPU rendered table labels"></canvas>
     <div class="ks-gpu-table_fallback" aria-live="polite"></div>
 </section>`;
     }
@@ -57,6 +60,7 @@ class GpuTableWidget extends Widget {
         this.state.columns = Array.isArray(parameters.columns) ? parameters.columns.slice() : [];
         this.state.rows = Array.isArray(parameters.rows) ? parameters.rows.slice() : [];
         this.state.skin = parameters.skin || 'default';
+        this.state.zebra = !!parameters.zebra;
 
         if (this.dom.root) {
             this.dom.root.attr('data-skin', this.state.skin);
@@ -79,6 +83,7 @@ class GpuTableWidget extends Widget {
     initEventHandlers() {
         this.dom.root = $('#' + this.options.id);
         this.dom.canvas = this.dom.root.find('canvas.ks-gpu-table_canvas')[0];
+        this.dom.overlay = this.dom.root.find('canvas.ks-gpu-table_overlay')[0];
         this.dom.fallback = this.dom.root.find('.ks-gpu-table_fallback')[0];
 
         if (!this.dom.canvas) {
@@ -114,6 +119,14 @@ class GpuTableWidget extends Widget {
         if (this.dom.canvas.style) {
             this.dom.canvas.style.width = `${Math.max(1, Math.floor(rect.width))}px`;
             this.dom.canvas.style.height = `${Math.max(1, Math.floor(rect.height))}px`;
+        }
+        if (this.dom.overlay) {
+            this.dom.overlay.width = Math.max(1, Math.floor(rect.width * ratio));
+            this.dom.overlay.height = Math.max(1, Math.floor(rect.height * ratio));
+            if (this.dom.overlay.style) {
+                this.dom.overlay.style.width = `${Math.max(1, Math.floor(rect.width))}px`;
+                this.dom.overlay.style.height = `${Math.max(1, Math.floor(rect.height))}px`;
+            }
         }
         this.refreshGpuScene();
     }
@@ -175,18 +188,23 @@ class GpuTableWidget extends Widget {
 
     buildGeometry() {
         const columns = this.state.columns && this.state.columns.length > 0 ? this.state.columns.length : this.deriveColumnCount();
-        const rows = Array.isArray(this.state.rows) ? this.state.rows.length : 0;
+        const dataRowCount = Array.isArray(this.state.rows) ? this.state.rows.length : 0;
+        const hasHeader = columns > 0;
+        const totalRows = Math.max(dataRowCount + (hasHeader ? 1 : 0), 1);
         const cellWidth = 2 / Math.max(1, columns);
-        const cellHeight = 2 / Math.max(1, rows || 1);
+        const cellHeight = 2 / totalRows;
         const vertices = [];
 
-        for (let rowIndex = 0; rowIndex < Math.max(rows, 1); rowIndex++) {
+        for (let rowIndex = 0; rowIndex < totalRows; rowIndex++) {
             for (let colIndex = 0; colIndex < Math.max(columns, 1); colIndex++) {
                 const x0 = -1 + colIndex * cellWidth;
                 const x1 = x0 + cellWidth;
                 const y0 = 1 - rowIndex * cellHeight;
                 const y1 = y0 - cellHeight;
-                const color = this.resolveCellColor(rowIndex, colIndex);
+                const color = this.resolveCellColor(rowIndex, colIndex, {
+                    isHeader: hasHeader && rowIndex === 0,
+                    dataRowIndex: hasHeader ? rowIndex - 1 : rowIndex
+                });
 
                 vertices.push(
                     x0, y0, color[0], color[1], color[2],
@@ -215,17 +233,58 @@ class GpuTableWidget extends Widget {
         return 1;
     }
 
-    resolveCellColor(rowIndex, colIndex) {
-        const baseValue = this.extractCellValue(rowIndex, colIndex);
+    resolveCellColor(rowIndex, colIndex, {isHeader, dataRowIndex}) {
+        const palette = this.getPalette();
+        if (isHeader) {
+            return palette.header;
+        }
+        const zebraEnabled = this.state.zebra !== false;
+        if (zebraEnabled) {
+            return (dataRowIndex % 2 === 0) ? palette.even : palette.odd;
+        }
+        const baseValue = this.extractCellValue(dataRowIndex, colIndex);
         if (typeof baseValue === 'number' && isFinite(baseValue)) {
             const normalized = Math.max(0, Math.min(1, baseValue));
-            return [0.2 + 0.8 * normalized, 0.4, 0.9 - 0.5 * normalized];
+            const mix = (a, b, t) => a + (b - a) * t;
+            return [
+                mix(palette.even[0], palette.odd[0], normalized),
+                mix(palette.even[1], palette.odd[1], normalized),
+                mix(palette.even[2], palette.odd[2], normalized)
+            ];
         }
-        if (typeof baseValue === 'string') {
-            const hash = this.simpleHash(baseValue + rowIndex + ':' + colIndex);
-            return [((hash >> 16) & 255) / 255, ((hash >> 8) & 255) / 255, (hash & 255) / 255];
-        }
-        return [(colIndex % 2) * 0.25 + 0.35, (rowIndex % 2) * 0.25 + 0.35, 0.65];
+        return palette.even;
+    }
+
+    getPalette() {
+        const skins = {
+            default: {
+                clear: this.hexToRgb('#0f1118'),
+                header: this.hexToRgb('#1f2937'),
+                even: this.hexToRgb('#1b2435'),
+                odd: this.hexToRgb('#111827'),
+                text: '#e5e7eb',
+                grid: '#2d3545'
+            },
+            contrast: {
+                clear: this.hexToRgb('#0b1726'),
+                header: this.hexToRgb('#12314a'),
+                even: this.hexToRgb('#0f2234'),
+                odd: this.hexToRgb('#0b1c2d'),
+                text: '#e0f2ff',
+                grid: '#1f3b57'
+            }
+        };
+        return skins[this.state.skin] || skins.default;
+    }
+
+    hexToRgb(hex) {
+        const parsed = hex.replace('#', '');
+        const bigint = parseInt(parsed, 16);
+        return [
+            ((bigint >> 16) & 255) / 255,
+            ((bigint >> 8) & 255) / 255,
+            (bigint & 255) / 255
+        ];
     }
 
     extractCellValue(rowIndex, colIndex) {
@@ -304,6 +363,7 @@ class GpuTableWidget extends Widget {
             return;
         }
         const {device, context} = this.gpu;
+        const palette = this.getPalette();
         const vertices = this.buildGeometry();
         const vertexBuffer = device.createBuffer({
             size: vertices.byteLength,
@@ -320,7 +380,7 @@ class GpuTableWidget extends Widget {
         const passEncoder = commandEncoder.beginRenderPass({
             colorAttachments: [{
                 view: textureView,
-                clearValue: {r: 0.07, g: 0.07, b: 0.09, a: 1.0},
+                clearValue: {r: palette.clear[0], g: palette.clear[1], b: palette.clear[2], a: 1.0},
                 loadOp: 'clear',
                 storeOp: 'store'
             }]
@@ -331,6 +391,54 @@ class GpuTableWidget extends Widget {
         passEncoder.draw(vertices.length / 5, 1, 0, 0);
         passEncoder.end();
         device.queue.submit([commandEncoder.finish()]);
+        this.drawOverlayText();
+    }
+
+    drawOverlayText() {
+        if (!this.dom.overlay) {
+            return;
+        }
+        const ctx = this.dom.overlay.getContext('2d');
+        if (!ctx) {
+            return;
+        }
+        const ratio = window.devicePixelRatio || 1;
+        ctx.save();
+        ctx.scale(ratio, ratio);
+        ctx.clearRect(0, 0, this.dom.overlay.width, this.dom.overlay.height);
+
+        const columns = this.state.columns && this.state.columns.length > 0 ? this.state.columns.length : this.deriveColumnCount();
+        const dataRowCount = Array.isArray(this.state.rows) ? this.state.rows.length : 0;
+        const hasHeader = columns > 0;
+        const totalRows = Math.max(dataRowCount + (hasHeader ? 1 : 0), 1);
+        const width = Math.max(1, this.dom.overlay.clientWidth || this.dom.overlay.width / ratio);
+        const height = Math.max(1, this.dom.overlay.clientHeight || this.dom.overlay.height / ratio);
+        const cellWidth = width / Math.max(1, columns);
+        const cellHeight = height / totalRows;
+        const palette = this.getPalette();
+
+        ctx.font = `${Math.max(10, Math.floor(cellHeight * 0.4))}px "Inter", "Segoe UI", sans-serif`;
+        ctx.fillStyle = palette.text;
+        ctx.textBaseline = 'middle';
+
+        const padding = 6;
+        for (let rowIndex = 0; rowIndex < totalRows; rowIndex++) {
+            for (let colIndex = 0; colIndex < columns; colIndex++) {
+                const x = colIndex * cellWidth + padding;
+                const y = rowIndex * cellHeight + cellHeight / 2;
+                let value = '';
+                if (hasHeader && rowIndex === 0) {
+                    const column = this.state.columns[colIndex];
+                    value = column ? (column.title || column.field || '') : '';
+                } else {
+                    const dataIndex = hasHeader ? rowIndex - 1 : rowIndex;
+                    const cellValue = this.extractCellValue(dataIndex, colIndex);
+                    value = cellValue !== undefined && cellValue !== null ? String(cellValue) : '';
+                }
+                ctx.fillText(value, x, y);
+            }
+        }
+        ctx.restore();
     }
 }
 
