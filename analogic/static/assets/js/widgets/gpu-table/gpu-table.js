@@ -10,7 +10,10 @@ class GpuTableWidget extends Widget {
             columns: [],
             rows: [],
             skin: 'default',
-            zebra: true
+            zebra: true,
+            page: 1,
+            pageSize: 200,
+            totalCount: 0
         };
         this.dom = {};
         this.gpu = null;
@@ -25,7 +28,10 @@ class GpuTableWidget extends Widget {
             skin: this.getRealValue('skin', d, 'default'),
             columns: this.getRealValue('columns', d, []),
             rows: this.getRealValue('rows', d, []),
-            zebra: this.getRealValue('zebra', d, true)
+            zebra: this.getRealValue('zebra', d, true),
+            page: this.getRealValue('page', d, 1),
+            pageSize: this.getRealValue('pageSize', d, 200),
+            totalCount: this.getRealValue('totalCount', d, undefined)
         };
     }
 
@@ -36,6 +42,9 @@ class GpuTableWidget extends Widget {
         this.state.rows = Array.isArray(parameters.rows) ? parameters.rows.slice() : [];
         this.state.skin = parameters.skin || 'default';
         this.state.zebra = !!parameters.zebra;
+        this.state.page = Math.max(1, parseInt(parameters.page, 10) || 1);
+        this.state.pageSize = Math.max(1, parseInt(parameters.pageSize, 10) || 200);
+        this.state.totalCount = Number.isFinite(parameters.totalCount) ? parameters.totalCount : this.state.rows.length;
 
         const styles = this.getGeneralStyles ? this.getGeneralStyles(d) : [];
         if (parameters.width) {
@@ -51,6 +60,11 @@ class GpuTableWidget extends Widget {
 <section id="${o.id}" class="${classes.join(' ')}" data-id="${o.id}" data-skin="${this.state.skin}" style="${styles.join('')}">
     <canvas class="ks-gpu-table_canvas" data-id="${o.id}" aria-label="GPU rendered table"></canvas>
     <canvas class="ks-gpu-table_overlay" data-id="${o.id}" aria-label="GPU rendered table labels"></canvas>
+    <div class="ks-gpu-table_pager" aria-label="Table pager controls">
+        <button type="button" class="ks-gpu-table_pager-btn ks-gpu-table_pager-btn--prev" data-action="prev" aria-label="Previous page">‹</button>
+        <span class="ks-gpu-table_pager-info">1 / 1</span>
+        <button type="button" class="ks-gpu-table_pager-btn ks-gpu-table_pager-btn--next" data-action="next" aria-label="Next page">›</button>
+    </div>
     <div class="ks-gpu-table_fallback" aria-live="polite"></div>
 </section>`;
     }
@@ -61,6 +75,9 @@ class GpuTableWidget extends Widget {
         this.state.rows = Array.isArray(parameters.rows) ? parameters.rows.slice() : [];
         this.state.skin = parameters.skin || 'default';
         this.state.zebra = !!parameters.zebra;
+        this.state.pageSize = Math.max(1, parseInt(parameters.pageSize, 10) || this.state.pageSize || 200);
+        this.state.totalCount = Number.isFinite(parameters.totalCount) ? parameters.totalCount : this.state.rows.length;
+        this.state.page = Math.max(1, Math.min(this.getTotalPages(), parseInt(parameters.page, 10) || this.state.page || 1));
 
         if (this.dom.root) {
             this.dom.root.attr('data-skin', this.state.skin);
@@ -77,6 +94,7 @@ class GpuTableWidget extends Widget {
             this.dom.root.css('height', parameters.height);
         }
 
+        this.updatePagerUi();
         this.refreshGpuScene();
     }
 
@@ -84,14 +102,32 @@ class GpuTableWidget extends Widget {
         this.dom.root = $('#' + this.options.id);
         this.dom.canvas = this.dom.root.find('canvas.ks-gpu-table_canvas')[0];
         this.dom.overlay = this.dom.root.find('canvas.ks-gpu-table_overlay')[0];
+        this.dom.pager = this.dom.root.find('.ks-gpu-table_pager')[0];
+        this.dom.pagerInfo = this.dom.root.find('.ks-gpu-table_pager-info')[0];
+        this.dom.pagerPrev = this.dom.root.find('.ks-gpu-table_pager-btn--prev')[0];
+        this.dom.pagerNext = this.dom.root.find('.ks-gpu-table_pager-btn--next')[0];
         this.dom.fallback = this.dom.root.find('.ks-gpu-table_fallback')[0];
 
         if (!this.dom.canvas) {
             return;
         }
 
+        this.bindPager();
         this.attachResizeObserver();
         this.refreshGpuScene();
+    }
+
+    bindPager() {
+        if (!this.dom.pager) {
+            return;
+        }
+        if (this.dom.pagerPrev) {
+            this.dom.pagerPrev.addEventListener('click', () => this.goToPage(this.state.page - 1));
+        }
+        if (this.dom.pagerNext) {
+            this.dom.pagerNext.addEventListener('click', () => this.goToPage(this.state.page + 1));
+        }
+        this.updatePagerUi();
     }
 
     attachResizeObserver() {
@@ -129,6 +165,43 @@ class GpuTableWidget extends Widget {
             }
         }
         this.refreshGpuScene();
+    }
+
+    getTotalPages() {
+        const totalRows = Number.isFinite(this.state.totalCount) ? this.state.totalCount : this.state.rows.length;
+        return Math.max(1, Math.ceil(totalRows / Math.max(1, this.state.pageSize)));
+    }
+
+    goToPage(targetPage) {
+        const totalPages = this.getTotalPages();
+        const nextPage = Math.max(1, Math.min(totalPages, targetPage));
+        if (nextPage === this.state.page) {
+            return;
+        }
+        this.state.page = nextPage;
+        this.updatePagerUi();
+        this.refreshGpuScene();
+    }
+
+    getVisibleRows() {
+        const startIndex = (this.state.page - 1) * this.state.pageSize;
+        const endIndex = startIndex + this.state.pageSize;
+        return this.state.rows.slice(startIndex, endIndex);
+    }
+
+    updatePagerUi() {
+        if (!this.dom.pagerInfo) {
+            return;
+        }
+        const totalPages = this.getTotalPages();
+        this.state.page = Math.min(this.state.page, totalPages);
+        this.dom.pagerInfo.textContent = `${this.state.page} / ${totalPages}`;
+        if (this.dom.pagerPrev) {
+            this.dom.pagerPrev.disabled = this.state.page <= 1;
+        }
+        if (this.dom.pagerNext) {
+            this.dom.pagerNext.disabled = this.state.page >= totalPages;
+        }
     }
 
     async refreshGpuScene() {
@@ -188,7 +261,8 @@ class GpuTableWidget extends Widget {
 
     buildGeometry() {
         const columns = this.state.columns && this.state.columns.length > 0 ? this.state.columns.length : this.deriveColumnCount();
-        const dataRowCount = Array.isArray(this.state.rows) ? this.state.rows.length : 0;
+        const dataRows = this.getVisibleRows();
+        const dataRowCount = Array.isArray(dataRows) ? dataRows.length : 0;
         const hasHeader = columns > 0;
         const totalRows = Math.max(dataRowCount + (hasHeader ? 1 : 0), 1);
         const cellWidth = 2 / Math.max(1, columns);
@@ -258,20 +332,20 @@ class GpuTableWidget extends Widget {
     getPalette() {
         const skins = {
             default: {
-                clear: this.hexToRgb('#0f1118'),
-                header: this.hexToRgb('#1f2937'),
-                even: this.hexToRgb('#1b2435'),
-                odd: this.hexToRgb('#111827'),
-                text: '#e5e7eb',
-                grid: '#2d3545'
+                clear: this.hexToRgb('#ffffff'),
+                header: this.hexToRgb('#f5f7fa'),
+                even: this.hexToRgb('#ffffff'),
+                odd: this.hexToRgb('#f0f4f8'),
+                text: '#0b0f1a',
+                grid: '#d8dee9'
             },
             contrast: {
-                clear: this.hexToRgb('#0b1726'),
-                header: this.hexToRgb('#12314a'),
-                even: this.hexToRgb('#0f2234'),
-                odd: this.hexToRgb('#0b1c2d'),
-                text: '#e0f2ff',
-                grid: '#1f3b57'
+                clear: this.hexToRgb('#ffffff'),
+                header: this.hexToRgb('#e9eef5'),
+                even: this.hexToRgb('#ffffff'),
+                odd: this.hexToRgb('#eef2f7'),
+                text: '#0b0f1a',
+                grid: '#c5d3e2'
             }
         };
         return skins[this.state.skin] || skins.default;
@@ -288,7 +362,8 @@ class GpuTableWidget extends Widget {
     }
 
     extractCellValue(rowIndex, colIndex) {
-        const row = this.state.rows[rowIndex];
+        const visibleRows = this.getVisibleRows();
+        const row = visibleRows[rowIndex];
         if (!row) {
             return null;
         }
@@ -408,7 +483,8 @@ class GpuTableWidget extends Widget {
         ctx.clearRect(0, 0, this.dom.overlay.width, this.dom.overlay.height);
 
         const columns = this.state.columns && this.state.columns.length > 0 ? this.state.columns.length : this.deriveColumnCount();
-        const dataRowCount = Array.isArray(this.state.rows) ? this.state.rows.length : 0;
+        const visibleRows = this.getVisibleRows();
+        const dataRowCount = Array.isArray(visibleRows) ? visibleRows.length : 0;
         const hasHeader = columns > 0;
         const totalRows = Math.max(dataRowCount + (hasHeader ? 1 : 0), 1);
         const width = Math.max(1, this.dom.overlay.clientWidth || this.dom.overlay.width / ratio);

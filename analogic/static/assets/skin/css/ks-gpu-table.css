@@ -4,8 +4,8 @@
     height: 320px;
     overflow: hidden;
     border-radius: 6px;
-    background: linear-gradient(180deg, #0f1118 0%, #0b0d12 100%);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    background: #ffffff;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.1);
 }
 
 .ks-gpu-table_canvas {
@@ -20,7 +20,50 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-    mix-blend-mode: lighten;
+    mix-blend-mode: normal;
+}
+
+.ks-gpu-table_pager {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 999px;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+    font-size: 12px;
+    color: #0f172a;
+    z-index: 2;
+}
+
+.ks-gpu-table_pager-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    background: #f8fafc;
+    color: #0f172a;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.ks-gpu-table_pager-btn:hover:not(:disabled) {
+    background: #e2e8f0;
+}
+
+.ks-gpu-table_pager-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.ks-gpu-table_pager-info {
+    font-weight: 600;
 }
 
 .ks-gpu-table_fallback {
@@ -30,10 +73,10 @@
     align-items: center;
     justify-content: center;
     font-size: 14px;
-    color: #d5d7e0;
+    color: #0f172a;
     padding: 16px;
     text-align: center;
-    background: linear-gradient(180deg, #1b1f2b 0%, #0f1118 100%);
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
@@ -45,10 +88,10 @@
 }
 
 .ks-gpu-table--skin-default {
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .ks-gpu-table--skin-contrast {
-    border: 1px solid rgba(0, 200, 255, 0.35);
-    box-shadow: 0 0 0 1px rgba(0, 200, 255, 0.1), 0 16px 40px rgba(0, 200, 255, 0.15);
+    border: 1px solid rgba(37, 99, 235, 0.18);
+    box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.06), 0 14px 30px rgba(37, 99, 235, 0.12);
 }
