@@ -6717,6 +6717,45 @@ WidgetConfig = {
                     ]
                 }
             ]
+        },
+    gpuTableServerDemo:
+        {
+            id: 'gpuTableServerDemo',
+            type: PageWidget,
+            widgets: [
+                {
+                    id: 'gpuTableServerGrid',
+                    type: GridWidget,
+                    marginLeft: '10',
+                    marginRight: '10',
+                    width: '100%',
+                    widgets: [
+                        {
+                            id: 'gpuTableServerTableRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginTop: '24',
+                            widgets: [
+                                {
+                                    id: 'gpuTableServerTableCell',
+                                    type: GridCellWidget,
+                                    alignment: 'top-left',
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'gpuTableServerTable',
+                                            type: GpuTableWidget,
+                                            skin: 'contrast',
+                                            width: '100%',
+                                            height: '520px'
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
 }
 ;
