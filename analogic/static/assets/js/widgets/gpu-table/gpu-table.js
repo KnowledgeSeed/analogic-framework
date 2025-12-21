@@ -12,9 +12,11 @@ class GpuTableWidget extends Widget {
             skin: 'default',
             zebra: true,
             page: 1,
-            pageSize: 200,
+            pageSize: null,
             totalCount: 0,
-            renderMetrics: true
+            renderMetrics: true,
+            rowHeight: 28,
+            autoPageSize: true
         };
         this.dom = {};
         this.gpu = null;
@@ -33,9 +35,10 @@ class GpuTableWidget extends Widget {
             rows: this.getRealValue('rows', d, []),
             zebra: this.getRealValue('zebra', d, true),
             page: this.getRealValue('page', d, 1),
-            pageSize: this.getRealValue('pageSize', d, 200),
+            pageSize: this.getRealValue('pageSize', d, null),
             totalCount: this.getRealValue('totalCount', d, undefined),
-            renderMetrics: this.getRealValue('renderMetrics', d, true)
+            renderMetrics: this.getRealValue('renderMetrics', d, true),
+            rowHeight: this.getRealValue('rowHeight', d, 28)
         };
     }
 
@@ -47,7 +50,9 @@ class GpuTableWidget extends Widget {
         this.state.skin = parameters.skin || 'default';
         this.state.zebra = !!parameters.zebra;
         this.state.page = Math.max(1, parseInt(parameters.page, 10) || 1);
-        this.state.pageSize = Math.max(1, parseInt(parameters.pageSize, 10) || 200);
+        this.state.rowHeight = Math.max(12, parseInt(parameters.rowHeight, 10) || 28);
+        this.state.autoPageSize = parameters.pageSize === null || typeof parameters.pageSize === 'undefined';
+        this.state.pageSize = this.resolvePageSize(parameters.pageSize, parameters.height);
         this.state.totalCount = Number.isFinite(parameters.totalCount) ? parameters.totalCount : this.state.rows.length;
         this.state.renderMetrics = parameters.renderMetrics !== false;
         this.markRenderStart();
@@ -81,7 +86,9 @@ class GpuTableWidget extends Widget {
         this.state.rows = Array.isArray(parameters.rows) ? parameters.rows.slice() : [];
         this.state.skin = parameters.skin || 'default';
         this.state.zebra = !!parameters.zebra;
-        this.state.pageSize = Math.max(1, parseInt(parameters.pageSize, 10) || this.state.pageSize || 200);
+        this.state.rowHeight = Math.max(12, parseInt(parameters.rowHeight, 10) || this.state.rowHeight || 28);
+        this.state.autoPageSize = parameters.pageSize === null || typeof parameters.pageSize === 'undefined';
+        this.state.pageSize = this.resolvePageSize(parameters.pageSize, parameters.height);
         this.state.totalCount = Number.isFinite(parameters.totalCount) ? parameters.totalCount : this.state.rows.length;
         this.state.page = Math.max(1, Math.min(this.getTotalPages(), parseInt(parameters.page, 10) || this.state.page || 1));
         this.state.renderMetrics = parameters.renderMetrics !== false;
@@ -121,6 +128,7 @@ class GpuTableWidget extends Widget {
         }
 
         this.bindPager();
+        this.bindScrollPaging();
         this.attachResizeObserver();
         this.refreshGpuScene();
     }
@@ -136,6 +144,23 @@ class GpuTableWidget extends Widget {
             this.dom.pagerNext.addEventListener('click', () => this.goToPage(this.state.page + 1));
         }
         this.updatePagerUi();
+    }
+
+    bindScrollPaging() {
+        if (!this.dom.root) {
+            return;
+        }
+        this.dom.root[0].addEventListener('wheel', (event) => {
+            if (!event) {
+                return;
+            }
+            if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
+                return;
+            }
+            event.preventDefault();
+            const direction = event.deltaY > 0 ? 1 : -1;
+            this.goToPage(this.state.page + direction);
+        }, {passive: false});
     }
 
     attachResizeObserver() {
@@ -172,7 +197,38 @@ class GpuTableWidget extends Widget {
                 this.dom.overlay.style.height = `${Math.max(1, Math.floor(rect.height))}px`;
             }
         }
+        if (this.state.autoPageSize) {
+            this.state.pageSize = this.computeAutoPageSize(rect.height);
+            this.updatePagerUi();
+        }
         this.refreshGpuScene();
+    }
+
+    resolvePageSize(requestedPageSize, requestedHeight) {
+        const parsed = parseInt(requestedPageSize, 10);
+        if (Number.isFinite(parsed) && parsed > 0) {
+            return parsed;
+        }
+        const height = this.parseHeightToPx(requestedHeight);
+        return this.computeAutoPageSize(height);
+    }
+
+    computeAutoPageSize(height) {
+        const heightPx = Number.isFinite(height) ? height : (this.dom && this.dom.root ? this.dom.root[0].getBoundingClientRect().height : 0);
+        const usable = Math.max(0, heightPx - this.state.rowHeight); // reserve header space
+        const rowsFit = Math.floor(usable / this.state.rowHeight);
+        return Math.max(5, rowsFit || 10);
+    }
+
+    parseHeightToPx(heightValue) {
+        if (typeof heightValue === 'number' && isFinite(heightValue)) {
+            return heightValue;
+        }
+        if (typeof heightValue === 'string' && heightValue.endsWith('px')) {
+            const parsed = parseFloat(heightValue.replace('px', ''));
+            return isFinite(parsed) ? parsed : undefined;
+        }
+        return undefined;
     }
 
     getTotalPages() {
