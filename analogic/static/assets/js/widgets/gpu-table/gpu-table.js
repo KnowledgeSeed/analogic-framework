@@ -13,11 +13,14 @@ class GpuTableWidget extends Widget {
             zebra: true,
             page: 1,
             pageSize: 200,
-            totalCount: 0
+            totalCount: 0,
+            renderMetrics: true
         };
         this.dom = {};
         this.gpu = null;
         this.resizeObserver = null;
+        this.renderCounter = 0;
+        this.pendingRenderVersion = null;
         Widgets[options.id] = this;
     }
 
@@ -31,7 +34,8 @@ class GpuTableWidget extends Widget {
             zebra: this.getRealValue('zebra', d, true),
             page: this.getRealValue('page', d, 1),
             pageSize: this.getRealValue('pageSize', d, 200),
-            totalCount: this.getRealValue('totalCount', d, undefined)
+            totalCount: this.getRealValue('totalCount', d, undefined),
+            renderMetrics: this.getRealValue('renderMetrics', d, true)
         };
     }
 
@@ -45,6 +49,8 @@ class GpuTableWidget extends Widget {
         this.state.page = Math.max(1, parseInt(parameters.page, 10) || 1);
         this.state.pageSize = Math.max(1, parseInt(parameters.pageSize, 10) || 200);
         this.state.totalCount = Number.isFinite(parameters.totalCount) ? parameters.totalCount : this.state.rows.length;
+        this.state.renderMetrics = parameters.renderMetrics !== false;
+        this.markRenderStart();
 
         const styles = this.getGeneralStyles ? this.getGeneralStyles(d) : [];
         if (parameters.width) {
@@ -78,6 +84,8 @@ class GpuTableWidget extends Widget {
         this.state.pageSize = Math.max(1, parseInt(parameters.pageSize, 10) || this.state.pageSize || 200);
         this.state.totalCount = Number.isFinite(parameters.totalCount) ? parameters.totalCount : this.state.rows.length;
         this.state.page = Math.max(1, Math.min(this.getTotalPages(), parseInt(parameters.page, 10) || this.state.page || 1));
+        this.state.renderMetrics = parameters.renderMetrics !== false;
+        this.markRenderStart();
 
         if (this.dom.root) {
             this.dom.root.attr('data-skin', this.state.skin);
@@ -467,6 +475,7 @@ class GpuTableWidget extends Widget {
         passEncoder.end();
         device.queue.submit([commandEncoder.finish()]);
         this.drawOverlayText();
+        this.finishRenderMeasure();
     }
 
     drawOverlayText() {
@@ -515,6 +524,27 @@ class GpuTableWidget extends Widget {
             }
         }
         ctx.restore();
+    }
+
+    markRenderStart() {
+        if (!this.state.renderMetrics) {
+            this.pendingRenderVersion = null;
+            return;
+        }
+        this.renderCounter += 1;
+        this.pendingRenderVersion = this.renderCounter;
+        this.renderStartTime = (performance && performance.now) ? performance.now() : Date.now();
+    }
+
+    finishRenderMeasure() {
+        if (!this.state.renderMetrics || !this.pendingRenderVersion || !this.renderStartTime) {
+            return;
+        }
+        const end = (performance && performance.now) ? performance.now() : Date.now();
+        const durationMs = Math.max(0, end - this.renderStartTime);
+        console.log(`GpuTableWidget render ${this.pendingRenderVersion}: ${durationMs.toFixed(2)} ms`);
+        this.pendingRenderVersion = null;
+        this.renderStartTime = null;
     }
 }
 
