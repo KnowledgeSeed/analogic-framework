@@ -206,6 +206,7 @@ class StackedColumnChartWidget extends Widget {
             openPopupOnLabelClick: this.getRealValue('openPopupOnLabelClick', d, false),
             openendPopupOffsetLeft: this.getRealValue('openendPopupOffsetLeft', d, 0),
             openendPopupOffsetTop: this.getRealValue('openendPopupOffsetTop', d, 0),
+            isBarClickable: this.getRealValue('isBarClickable', d, false),
         };
 
         this.value = v;
@@ -343,6 +344,13 @@ class StackedColumnChartWidget extends Widget {
                 animation: v.animationEnabled,
                 normalized: true,
                 parsing: true,
+                onClick: (e, element, context) => {
+                    if (v.isBarClickable && element && element.length > 0) {
+                        let el = $('<div>').data({id: this.id, action: 'bar_click', lineIndex: element[0].datasetIndex, pointIndex: element[0].index});
+
+                        Widget.doHandleSystemEvent(el, e);
+                      }
+                },
                 plugins: {
                     title: {
                         display: false,
@@ -662,7 +670,7 @@ class StackedColumnChartWidget extends Widget {
                         categoryPercentage: v.barCategoryPercentage,
                         barThickness: v.barThickness ?? undefined,
                         maxBarThickness: v.barMaxThickness ?? undefined,
-                        minBarLength: v.barMinLength,
+                        minBarLength: v.barMinLength
                     }
                 },
                 interaction: {
