@@ -194,12 +194,19 @@ const GridTableExport = {
         if (!attributeValues || attributeValues.length === 0) return;
 
         const hasColumnMapping = Array.isArray(columnMapping) && columnMapping.length > 0;
-        const limit = hasColumnMapping
-            ? Math.min(attributeValues.length, columnMapping.length)
-            : attributeValues.length;
+        const lastMappedIndex = hasColumnMapping
+        ? columnMapping.reduce((maxIndex, current) => Math.max(maxIndex, current), -1)
+        : -1;
 
-        for (let index = 0; index < limit; index++) {
-            const excelCol = startColIndex + index;
+    for (let index = 0; index < attributeValues.length; index++) {
+        let excelCol = startColIndex + index;
+
+        if (hasColumnMapping && index < columnMapping.length) {
+            excelCol = startColIndex + columnMapping[index];
+        } else if (hasColumnMapping) {
+            const extraOffset = index - columnMapping.length;
+            excelCol = startColIndex + lastMappedIndex + 1 + extraOffset;
+        }
             const cell = worksheet.getCell(rowIndex, excelCol);
             const value = attributeValues[index];
             cell.value = value !== undefined && value !== null ? String(value) : '';
@@ -1112,7 +1119,10 @@ const GridTableExport = {
            console.log("[Debug createXlsxBuffer] Skipping auto-resize (no relevant rows found).");
         }
 
-        await worksheet.protect('ASDXYZ123789', {
+          const isLocked = config.locked !== false;
+
+        if (isLocked) {
+          await worksheet.protect('ASDXYZ123789', {
             selectLockedCells: true,
             selectUnlockedCells: true,
             formatColumns: true,
@@ -1124,7 +1134,8 @@ const GridTableExport = {
             deleteRows: false,
             sort: false,
             autoFilter: false
-        });
+           });
+        }
 
         return worksheet;
     },
@@ -1250,7 +1261,8 @@ const GridTableExport = {
                 : [],
             enableEditing: exportConfig.enableEditing,
             emptyColumnsLeft: exportConfig.emptyColumnsLeft ?? exportConfig.emptyColsLeft,
-            startColumnIndex: exportConfig.startColumnIndex ?? exportConfig.startColumn
+             startColumnIndex: exportConfig.startColumnIndex ?? exportConfig.startColumn,
+            locked: exportConfig.locked
         };
 
         try {
