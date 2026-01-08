@@ -1119,7 +1119,10 @@ const GridTableExport = {
            console.log("[Debug createXlsxBuffer] Skipping auto-resize (no relevant rows found).");
         }
 
-        await worksheet.protect('ASDXYZ123789', {
+          const isLocked = config.locked !== false;
+
+        if (isLocked) {
+          await worksheet.protect('ASDXYZ123789', {
             selectLockedCells: true,
             selectUnlockedCells: true,
             formatColumns: true,
@@ -1131,7 +1134,8 @@ const GridTableExport = {
             deleteRows: false,
             sort: false,
             autoFilter: false
-        });
+           });
+        }
 
         return worksheet;
     },
@@ -1257,7 +1261,8 @@ const GridTableExport = {
                 : [],
             enableEditing: exportConfig.enableEditing,
             emptyColumnsLeft: exportConfig.emptyColumnsLeft ?? exportConfig.emptyColsLeft,
-            startColumnIndex: exportConfig.startColumnIndex ?? exportConfig.startColumn
+             startColumnIndex: exportConfig.startColumnIndex ?? exportConfig.startColumn,
+            locked: exportConfig.locked
         };
 
         try {
