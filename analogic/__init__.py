@@ -11,7 +11,7 @@ from .multi_authentication_provider import get_multi_authentication_provider
 from .cam import Cam
 from .endpoint import AnalogicEndpoint
 from .loader import ClassLoader
-from .email import EmailManager
+from .analogic_email import EmailManager
 from .setting import SettingManager
 from .setting import get_properties_file_value
 from .setting import hash_password
