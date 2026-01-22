@@ -16,7 +16,7 @@ from analogic import authentication_provider
 def call(tm1: TM1Service, username, cube_name=None, dimension_name=None, hierarchy_name=None, subset_name=None,
          element_names=None, subset_name_to_remove=None, selected_cards=None, options=None, export_data=None):
     data = {}
-    username = username.replace('\\', '').replace('/', '')
+    username = re.sub(r'[^A-Za-z0-9_]', '', username.replace('\\', '').replace('/', ''))
     children = []
 
     parsed_options = {}
