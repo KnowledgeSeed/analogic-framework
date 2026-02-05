@@ -188,15 +188,22 @@ FROM [zSYS Analogic Pivot Presets]"""
 
 
 def get_public_and_private_subsets(tm1: TM1Service, dimension_name, hierarchy_name, username, options):
-    public_subsets = get_filtered_subsets(tm1.subsets.get_all_names(dimension_name, hierarchy_name), options)
-    private_subsets = get_filtered_subsets(tm1.subsets.get_all_names(dimension_name, hierarchy_name, True), options,
-                                           username + '_')
+    public_filter_term = options.get('filter', False)
+    private_filter_term = options.get('filterPrivate', False)
+
+    public_subsets = get_filtered_subsets(
+        tm1.subsets.get_all_names(dimension_name, hierarchy_name),
+        filter_term=public_filter_term)
+    private_subsets = get_filtered_subsets(
+        tm1.subsets.get_all_names(dimension_name, hierarchy_name, True),
+        username + '_',
+        private_filter_term)
     children = sorted(private_subsets + public_subsets)
 
     return children, private_subsets
 
 
-def get_filtered_subsets(subsets, options, username_prefix=None):
+def get_filtered_subsets(subsets, username_prefix=None, filter_term=False):
     filtered_subsets = subsets
 
     if username_prefix:
@@ -204,8 +211,6 @@ def get_filtered_subsets(subsets, options, username_prefix=None):
         for s in subsets:
             if s.startswith(username_prefix):
                 filtered_subsets.append(s.removeprefix(username_prefix))
-
-    filter_term = options.get('filter', False)
 
     if filter_term:
         filtered_subsets = list(filter(re.compile(filter_term).match, filtered_subsets))
