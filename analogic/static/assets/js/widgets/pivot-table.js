@@ -1137,10 +1137,32 @@ class PivotTableWidget extends Widget {
     reloadSubsetsInSelectorTree(cols, selectedData, subsetData) {
         const dimName = selectedData.dimension_name;
         const hierName = selectedData.hierarchy_name;
+        const previousHierarchy = this.tree.children[dimName].children[hierName] || {children: {}};
+        const selectedAliasBySubset = {};
+        const selectedSubsetName = cols.eq(2).data('value');
+        const selectedAliasAttributeName = selectedSubsetName ? this.getSelectedAliasAttributeName(dimName, hierName, selectedSubsetName) : '';
+
+        for (let subsetName in previousHierarchy.children) {
+            const subsetMeta = previousHierarchy.children[subsetName];
+            if (subsetMeta.selectedAliasAttributeName) {
+                selectedAliasBySubset[subsetName] = subsetMeta.selectedAliasAttributeName;
+            }
+        }
 
         this.tree.children[dimName].children[hierName] = {children: {}};
 
         this.addToNextLevelChildren(this.tree.children[dimName].children[hierName], subsetData.children, subsetData.data);
+
+        for (let subsetName in selectedAliasBySubset) {
+            if (this.tree.children[dimName].children[hierName].children[subsetName]) {
+                this.tree.children[dimName].children[hierName].children[subsetName].selectedAliasAttributeName = selectedAliasBySubset[subsetName];
+            }
+        }
+
+        if (this.subsetMergeSaveStatus === 1 && this.newSubsetName && selectedAliasAttributeName && this.tree.children[dimName].children[hierName].children[this.newSubsetName]) {
+            this.tree.children[dimName].children[hierName].children[this.newSubsetName].selectedAliasAttributeName = selectedAliasAttributeName;
+        }
+
 
         cols.slice(2).remove();
 
