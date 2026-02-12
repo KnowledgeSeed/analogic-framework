@@ -408,19 +408,81 @@ def get_adjusted_slicer_preset_data_according_to_selected_indexes(tm1, preset_da
         index = c.get('index', 0)
         is_private_subset = c['private']
         subset_name = (username + '_' if is_private_subset else '') + str(c['subset'])
+        alias_name = c.get('alias_attr_name', 'Name')
+
+        selected_element = get_element_name_and_alias_by_name(
+            tm1,
+            c['dimension'],
+            c['hierarchy'],
+            subset_name,
+            is_private_subset,
+            c.get('element'),
+            alias_name,
+        )
+
+        if selected_element:
+            c['element'] = selected_element[0]
+            c['title'] = selected_element[1]
+            continue
+
         v = get_elements_name_and_alias(tm1, c['dimension'], c['hierarchy'], subset_name, is_private_subset,
-                                        c['alias_attr_name'], index + 1)
+                                        alias_name, index + 1)
         n = len(v) - 1
 
         if n < 0:
             continue
 
-        e = v[n] if index == n else v[0]
+        selected_index = min(index, n)
+
+        e = v[selected_index]
 
         c['element'] = e[0]
         c['title'] = e[1]
 
     return preset_data
+
+
+def escape_odata_literal(value: str):
+    return value.replace("'", "''")
+
+
+def get_element_name_and_alias_by_name(tm1: TM1Service, dimension_name: str, hierarchy_name: str, subset_name: str,
+                                       is_private_subset: bool, element_name: str, alias: str, **kwargs):
+    if not element_name:
+        return None
+
+    subsets = "PrivateSubsets" if is_private_subset else "Subsets"
+
+    if not alias:
+        alias = 'Name'
+
+    attribute_alias = alias.replace(' ', '')
+    select = 'Name'
+
+    if alias != 'Name':
+        attribute_alias = 'Attributes/' + attribute_alias
+        select += ',' + attribute_alias
+
+    escaped_element_name = escape_odata_literal(element_name)
+    url = format_url(
+        "/api/v1/Dimensions('{}')/Hierarchies('{}')/{}('{}')/Elements?$select={}&$filter=Name eq '{}'&$top=1",
+        dimension_name,
+        hierarchy_name,
+        subsets,
+        subset_name,
+        select,
+        escaped_element_name)
+
+    response = tm1._tm1_rest.GET(url, **kwargs).json()['value']
+
+    if not response:
+        return None
+
+    matched_element = response[0]
+    if alias == 'Name':
+        return [matched_element['Name'], matched_element['Name']]
+
+    return [matched_element['Name'], matched_element['Attributes'].get(alias, matched_element['Name'])]
 
 
 def get_elements_name_and_alias(tm1: TM1Service, dimension_name: str, hierarchy_name: str, subset_name: str,
