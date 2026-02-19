@@ -190,8 +190,21 @@ const GridTableExport = {
         return values;
     },
 
-    populateAttributeRow: (worksheet, attributeValues, rowIndex, startColIndex, columnMapping) => {
+    populateAttributeRow: (worksheet, attributeValues, rowIndex, startColIndex, columnMapping, options = {}) => {
         if (!attributeValues || attributeValues.length === 0) return;
+
+        const keepExcludedColumns = options.keepExcludedColumns !== false;
+
+        if (keepExcludedColumns) {
+            for (let index = 0; index < attributeValues.length; index++) {
+                const excelCol = startColIndex + index;
+                const cell = worksheet.getCell(rowIndex, excelCol);
+                const value = attributeValues[index];
+                cell.value = value !== undefined && value !== null ? String(value) : '';
+                cell.protection = { locked: true };
+            }
+            return;
+        }
 
         const hasColumnMapping = Array.isArray(columnMapping) && columnMapping.length > 0;
         const lastMappedIndex = hasColumnMapping
@@ -1085,7 +1098,14 @@ const GridTableExport = {
         const editingConfig = GridTableExport.normalizeEditingConfig(config.enableEditing, totalColumns);
 
         if (attrRowEnabled) {
-            GridTableExport.populateAttributeRow(worksheet, attributeValues, attributeRowIndex, dataStartColumnIndex, columnMapping);
+            GridTableExport.populateAttributeRow(
+                worksheet,
+                attributeValues,
+                attributeRowIndex,
+                dataStartColumnIndex,
+                columnMapping,
+                { keepExcludedColumns: true }
+            );
         }
 
         const headerCanBeRendered = headerRowEnabled && columnMapping.length > 0;
