@@ -30,7 +30,7 @@ setup(
         'json_logging==1.3.0',
         'flask_talisman==1.1.0',
         'Flask-APScheduler==1.12.4',
-        'orjson==3.9.15',
+        'orjson==3.11.6',
         'rich==13.3.5',
         'jproperties==2.1.1',
         'cryptography>=37.0.4,<43.0.0'
