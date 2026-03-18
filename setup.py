@@ -16,7 +16,7 @@ setup(
     include_package_data=True,
     package_data={'': ['version.config']},
     install_requires=[
-        'Flask==2.3.2',
+        'Flask==3.1.3',
         'TM1py==2.1',
         'PyJWT==2.12.0',
         'requests==2.32.3',
@@ -29,7 +29,7 @@ setup(
         'openpyxl==3.1.5',
         'json_logging==1.3.0',
         'flask_talisman==1.1.0',
-        'Flask-APScheduler==1.12.4',
+        'Flask-APScheduler==1.13.1',
         'orjson==3.11.6',
         'rich==13.3.5',
         'jproperties==2.1.1',

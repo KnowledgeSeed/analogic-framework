@@ -1,7 +1,11 @@
 from flask import Blueprint
 import typing as t
 import os
-from flask.scaffold import _sentinel
+
+try:
+    from flask.blueprints import _sentinel
+except ImportError:
+    from flask.scaffold import _sentinel
 
 
 class AnalogicEndpoint(Blueprint):
