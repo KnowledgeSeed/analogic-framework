@@ -18,7 +18,7 @@ setup(
     install_requires=[
         'Flask==2.3.2',
         'TM1py==2.1',
-        'PyJWT==2.4.0',
+        'PyJWT==2.12.0',
         'requests==2.32.3',
         'numpy==2.2.3',
         'pandas==2.2.3',
