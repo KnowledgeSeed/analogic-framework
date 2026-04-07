@@ -25,7 +25,7 @@ install and hook up with a TM1 server.
 
 ## Requirements
 
-The framework requires 3.11 > Python >= 3.9.
+The framework requires Python >= 3.10.
 
 ## Configuring the secret key
 
@@ -60,7 +60,7 @@ the `SECRET_KEY` value) so a fresh key will be generated on the next launch.
 
 ### Running from code
 
-To launch the framework including the sample web-applications from code, Python >= 3.9 must be available. Then the repository needs to be cloned to a local development environment, a virtualenv created, some environment variables set and the main entry point `run.py` executed:
+To launch the framework including the sample web-applications from code, Python >= 3.10 must be available. Then the repository needs to be cloned to a local development environment, a virtualenv created, some environment variables set and the main entry point `run.py` executed:
 
 1. Clone repository:
 ```

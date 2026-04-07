@@ -9,7 +9,7 @@ setup(
     name='analogic-framework',
     version=version,
     author='',
-    python_requires='>=3.9',
+    python_requires='>=3.10',
     packages=[
         'analogic'
     ],
@@ -19,7 +19,7 @@ setup(
         'Flask==3.1.3',
         'TM1py==2.1',
         'PyJWT==2.12.0',
-        'requests==2.32.5',
+        'requests==2.33.1',
         'numpy==2.2.3',
         'pandas==2.2.3',
         'XlsxWriter==1.3.7',

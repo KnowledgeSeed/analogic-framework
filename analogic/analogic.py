@@ -82,6 +82,8 @@ class Analogic(Flask):
         self.replace_str_in_file(os.path.join(target, 'app.json'), '$authenticationMode', authentication_mode)
         self.replace_str_in_file(os.path.join(target, 'static', 'assets', 'js', 'configs', 'widget-config.js'),
                                  '$projectId', name)
+        os.makedirs(os.path.join(target, 'server', 'email_templates'), exist_ok=True)
+        os.makedirs(os.path.join(target, 'templates'), exist_ok=True)
 
         self.trigger_change_monitor_for_restart()
 
