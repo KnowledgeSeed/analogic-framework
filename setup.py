@@ -15,6 +15,8 @@ setup(
     ],
     include_package_data=True,
     package_data={'': ['version.config']},
+    # Keep only direct runtime dependencies here.
+    # Platform-specific transitive locks are maintained in requirements*.lock.
     install_requires=[
         'Flask==3.1.3',
         'TM1py==2.1',

@@ -27,6 +27,9 @@ install and hook up with a TM1 server.
 
 The framework requires Python >= 3.10.
 
+Locked dependency install and lock regeneration are documented in
+[`docs/source/dependency_locking.rst`](docs/source/dependency_locking.rst).
+
 ## Configuring the secret key
 
 Analogic relies on Flask session cookies and therefore requires a secret key. Provide it either as an environment variable or by
@@ -79,9 +82,17 @@ source venv/Scripts/activate
 venv\Scripts\activate.bat 
 ```
 
-3. Install requirements:
+3. Install the locked runtime environment:
 ```
-pip install -r requirements.txt
+# Windows
+py -3.10 -m pip install --upgrade pip
+py -3.10 -m pip install --require-hashes -r requirements.windows.lock
+py -3.10 -m pip install --no-deps -e .
+
+# Linux / CI
+python3.10 -m pip install --upgrade pip
+python3.10 -m pip install --require-hashes -r requirements.linux.lock
+python3.10 -m pip install --no-deps -e .
 ```
 
 4. Set up the following env variable for loading sample apps:

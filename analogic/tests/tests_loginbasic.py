@@ -7,7 +7,6 @@ import analogic.loginbasic
 from analogic.analogic import create_app
 from unittest.mock import patch
 import requests
-from requests_ntlm import HttpNtlmAuth
 import orjson
 import gzip
 
