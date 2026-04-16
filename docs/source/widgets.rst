@@ -2389,15 +2389,54 @@ PivotTableWidget
 Overview
 ~~~~~~~~
 
+The ``PivotTableWidget`` renders an interactive TM1-backed pivot table.
+Users can place dimensions into slicer, row, and column areas, expand or
+collapse members, suppress zero rows or columns, save presets, and export
+the current result to Excel.
+
 Configuration
 ~~~~~~~~~~~~~
 
-- ``id``: Widget Id which used for reference in framework
-- ``selectorTreeColNames``: ['Dimensions', 'Hierarchies', 'Subsets', 'Elements']
-- ``colors``:
-- ``data``:
-- ``presetData``:
-- ``tree``:
+*Primary parameters:*
+
+- ``id``: Unique widget identifier. The framework and repository use this
+  id to reference the widget instance and its hooks.
+- ``type``: Must be ``PivotTableWidget``.
+- ``cubeName``: TM1 cube name used as the data source of the pivot.
+  This is the only required Pivot-specific data parameter.
+
+*Optional Pivot-specific parameters:*
+
+- ``controlsInMenu``: Controls how the widget actions are rendered.
+  If ``true`` (default), reset, preset, suppress-zero, and export actions
+  are shown in a dropdown menu. If ``false``, the same actions are shown
+  as inline buttons above the pivot.
+- ``hideCards``: If ``true``, the card areas above the table are hidden.
+  This hides the slicer, row, and column selector panels from the UI.
+- ``cellLimit``: Maximum allowed cell count for rendering. If the returned
+  pivot contains more cells than this value, the widget stops rendering and
+  shows a limit exceeded message instead of the table.
+
+*Inherited common widget parameters:*
+
+- ``title``: Widget title text.
+- ``titleVisible``: Shows or hides the widget title.
+- ``visible``: Controls whether the widget is rendered.
+- ``width``: Widget width in the layout.
+- ``height``: Widget height in the layout.
+- ``skin``: Optional skin / styling class used by the framework layout.
+
+*Internal runtime fields:*
+
+- ``selectorTreeColNames``: Internal column titles used by the selector
+  popup. Default value is ``['Dimensions', 'Hierarchies', 'Subsets',
+  'Elements']``.
+- ``colors``: Internal preset color palette for row, column, and slicer
+  cards.
+- ``tree``: Internal selector tree cache built from server responses.
+
+The runtime fields above are initialized by the widget itself and should
+normally not be configured manually in ``widget-config.js``.
 
 TM1 integration
 ~~~~~~~~~~~~~~~
@@ -2407,7 +2446,45 @@ TM1 integration
 Repository behaviour
 ~~~~~~~~~~~~~~~~~~~~
 
-- No repository specifics documented.
+- Optional hook: ``Repository[widgetId].getPivotPresetParams(context)``
+
+  If this function exists, the widget calls it during initialization and
+  sends its return value to the server as ``presetParams``. This can be
+  used to influence which preset should be loaded or how preset data should
+  be prepared before the first render.
+
+Usage example
+~~~~~~~~~~~~~
+
+.. code-block:: javascript
+
+   {
+       id: 'salesPivot',
+       type: PivotTableWidget,
+       cubeName: 'Sales',
+       title: 'Sales analysis',
+       titleVisible: true,
+       visible: true,
+       width: '12',
+       height: '700',
+       controlsInMenu: true,
+       hideCards: false,
+       cellLimit: 10000
+   }
+
+Repository example
+~~~~~~~~~~~~~~~~~~
+
+.. code-block:: javascript
+
+   salesPivot: {
+       getPivotPresetParams(ctx) {
+           return {
+               page: ctx.page?.id,
+               userDefaultPreset: true
+           };
+       }
+   }
 RadarChartWidget
 ------------------
 
