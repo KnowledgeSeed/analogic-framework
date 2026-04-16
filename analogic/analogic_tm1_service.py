@@ -257,7 +257,9 @@ class HTTPAdapter(BaseHTTPAdapter):
         """
 
         try:
-            conn = self.get_connection(request.url, proxies)
+            conn = self.get_connection_with_tls_context(
+                request, verify, proxies=proxies, cert=cert
+            )
         except LocationValueError as e:
             raise InvalidURL(e, request=request)
 

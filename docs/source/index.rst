@@ -18,6 +18,7 @@ Contents
 .. toctree::
 
    usage
+   dependency_locking
    widgets
    extensions
    Developer_doc

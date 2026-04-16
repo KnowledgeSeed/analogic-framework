@@ -34,7 +34,7 @@ The framework consists of two main parts
 Requirements
 ------------
 
-3.11 > Python >= 3.9
+Python >= 3.10
 
 Getting Started
 ---------------
@@ -66,11 +66,21 @@ Running from code
    #command line
    venv\Scripts\activate.bat
 
-4. Install requirements
+4. Install the locked runtime environment
 
 ::
 
-   pip install -r requirements.txt
+   # Windows
+   py -3.10 -m pip install --upgrade pip
+   py -3.10 -m pip install --require-hashes -r requirements.windows.lock
+   py -3.10 -m pip install --no-deps -e .
+
+   # Linux / CI
+   python3.10 -m pip install --upgrade pip
+   python3.10 -m pip install --require-hashes -r requirements.linux.lock
+   python3.10 -m pip install --no-deps -e .
+
+See :doc:`dependency_locking` for test environment installs and lock regeneration.
 
 5. Set up the following env variable for loading sample apps
 

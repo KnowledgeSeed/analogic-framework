@@ -25,7 +25,10 @@ install and hook up with a TM1 server.
 
 ## Requirements
 
-The framework requires 3.11 > Python >= 3.9.
+The framework requires Python >= 3.10.
+
+Locked dependency install and lock regeneration are documented in
+[`docs/source/dependency_locking.rst`](docs/source/dependency_locking.rst).
 
 ## Configuring the secret key
 
@@ -60,7 +63,7 @@ the `SECRET_KEY` value) so a fresh key will be generated on the next launch.
 
 ### Running from code
 
-To launch the framework including the sample web-applications from code, Python >= 3.9 must be available. Then the repository needs to be cloned to a local development environment, a virtualenv created, some environment variables set and the main entry point `run.py` executed:
+To launch the framework including the sample web-applications from code, Python >= 3.10 must be available. Then the repository needs to be cloned to a local development environment, a virtualenv created, some environment variables set and the main entry point `run.py` executed:
 
 1. Clone repository:
 ```
@@ -79,9 +82,17 @@ source venv/Scripts/activate
 venv\Scripts\activate.bat 
 ```
 
-3. Install requirements:
+3. Install the locked runtime environment:
 ```
-pip install -r requirements.txt
+# Windows
+py -3.10 -m pip install --upgrade pip
+py -3.10 -m pip install --require-hashes -r requirements.windows.lock
+py -3.10 -m pip install --no-deps -e .
+
+# Linux / CI
+python3.10 -m pip install --upgrade pip
+python3.10 -m pip install --require-hashes -r requirements.linux.lock
+python3.10 -m pip install --no-deps -e .
 ```
 
 4. Set up the following env variable for loading sample apps:
