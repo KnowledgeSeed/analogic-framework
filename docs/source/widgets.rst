@@ -2416,7 +2416,16 @@ Configuration
 - ``cellLimit``: Maximum allowed cell count for rendering. If the returned
   pivot contains more cells than this value, the widget stops rendering and
   shows a limit exceeded message instead of the table.
-
+- ``filter``: Regex filter for the public subset list. This affects which
+  public subsets appear in the selector tree under a hierarchy.
+- ``filterPrivate``: Regex filter for the private subset list. This affects
+  which user private subsets appear in the selector tree under a hierarchy.
+- ``nonEmptyRows``: Initial TM1 ``NON EMPTY`` behavior for rows. If ``true``,
+  empty rows are suppressed in the generated MDX. The widget can later
+  override this from the UI suppress-zero controls.
+- ``nonEmptyColumns``: Initial TM1 ``NON EMPTY`` behavior for columns. If
+  ``true``, empty columns are suppressed in the generated MDX. The widget can
+  later override this from the UI suppress-zero controls.
 *Inherited common widget parameters:*
 
 - ``title``: Widget title text.
@@ -2437,6 +2446,11 @@ Configuration
 
 The runtime fields above are initialized by the widget itself and should
 normally not be configured manually in ``widget-config.js``.
+
+
+In the current implementation there is built-in filtering for subset lists
+(``filter`` and ``filterPrivate``), but no separate widget option was found
+for filtering the dimension list or the hierarchy list themselves.
 
 TM1 integration
 ~~~~~~~~~~~~~~~
