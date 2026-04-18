@@ -155,7 +155,7 @@ class GridTableWidget extends Widget {
     updateContent(data = false, loadFunction = QB.loadData) {
         const o = this.options, instance = this;
         let widgetOptions, processedData, widgets = [],
-            rowNum, colNum, i, j, rendered = [], w, previousLength = v(o.id + '.cellData.length'), dd;
+            rowNum, colNum, i, j, rendered = [], w, previousLength = v(o.id + '.cellData.length');
 
         return loadFunction(o.id, instance.name).then(function (d) {
             processedData = instance.processData(d);
@@ -180,6 +180,7 @@ class GridTableWidget extends Widget {
             instance.state['rows'] = rowNum;
 
             instance.updateHtml(d);
+            let cellRenders = [];
             for (i = 0; i < rowNum; ++i) {
                 j = 0;
                 for (w of widgets) {
@@ -188,28 +189,41 @@ class GridTableWidget extends Widget {
                     processedData[i][j].originalId = instance.cellData[i][j].originalId;
 
                     if (vv.allowFullContentUpdated && i >= previousLength) {
-                        Widgets[dd.cellId] = new w.type(w);
-                        rendered.push(Widgets[dd.cellId].render(false, processedData[i][j]));
+                        Widgets[processedData[i][j].cellId] = new w.type(w);
+                        rendered.push(Widgets[processedData[i][j].cellId].render(false, processedData[i][j]));
                     } else {
                         if (false === vv.allowChangedDataUpdate || processedData[i][j].manipulated ||
                             !GridTableWidget.deepEqual(instance.cellData[i][j], processedData[i][j])) {
                             if (processedData[i][j].manipulated) {
                                 delete processedData[i][j].manipulated;
                             }
-                            Widgets[processedData[i][j].cellId].updateContent(processedData[i][j]);
-                            instance.cellData[i][j] = processedData[i][j];
+                            const cellData = processedData[i][j];
+                            const rowIndex = i, colIndex = j;
+                            if (!Widgets[cellData.cellId]) {
+                                Widgets[cellData.cellId] = new w.type(w);
+                            }
+                            cellRenders.push(
+                                $.when(Widgets[cellData.cellId].render(false, cellData)).then(function(html) {
+                                    $('#' + cellData.cellId).replaceWith(html);
+                                    const newCell = $('#' + cellData.cellId);
+                                    newCell.attr('data-row', rowIndex);
+                                    newCell.attr('data-col', colIndex);
+                                    Widgets[cellData.cellId].initEvents(false, cellData.id);
+                                })
+                            );
                         }
+                        instance.cellData[i][j] = processedData[i][j];
                     }
                     ++j;
                 }
             }
 
-            return new Promise(function (resolve) {
+            return $.when.apply($, cellRenders).then(function () {
                 if (vv.allowFullContentUpdated && rowNum > previousLength) {
                     let rowsToAppend = instance.renderRowForUpdateContent(rendered, vv);
                     $('#' + o.id).find('.ks-grid-table-content').append(rowsToAppend);
                 }
-                return resolve('update');
+                return 'update';
             });
         });
     }
