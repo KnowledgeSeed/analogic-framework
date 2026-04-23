@@ -155,7 +155,7 @@ class GridTableWidget extends Widget {
     updateContent(data = false, loadFunction = QB.loadData) {
         const o = this.options, instance = this;
         let widgetOptions, processedData, widgets = [],
-            rowNum, colNum, i, j, rendered = [], w, previousLength = v(o.id + '.cellData.length'), dd;
+            rowNum, colNum, i, j, rendered = [], w, previousLength = v(o.id + '.cellData.length');
 
         return loadFunction(o.id, instance.name).then(function (d) {
             processedData = instance.processData(d);
@@ -188,8 +188,8 @@ class GridTableWidget extends Widget {
                     processedData[i][j].originalId = instance.cellData[i][j].originalId;
 
                     if (vv.allowFullContentUpdated && i >= previousLength) {
-                        Widgets[dd.cellId] = new w.type(w);
-                        rendered.push(Widgets[dd.cellId].render(false, processedData[i][j]));
+                         Widgets[processedData[i][j].cellId] = new w.type(w);
+                        rendered.push(Widgets[processedData[i][j].cellId].render(false, processedData[i][j]));
                     } else {
                         if (false === vv.allowChangedDataUpdate || processedData[i][j].manipulated ||
                             !GridTableWidget.deepEqual(instance.cellData[i][j], processedData[i][j])) {
