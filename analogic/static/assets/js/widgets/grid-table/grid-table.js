@@ -155,8 +155,7 @@ class GridTableWidget extends Widget {
     updateContent(data = false, loadFunction = QB.loadData) {
         const o = this.options, instance = this;
         let widgetOptions, processedData, widgets = [],
-            rowNum, colNum, i, j, rendered = [], w, previousLength = v(o.id + '.cellData.length'), rowRenders = [];
-
+            rowNum, colNum, i, j, rendered = [], w, previousLength = v(o.id + '.cellData.length');
         return loadFunction(o.id, instance.name).then(function (d) {
             processedData = instance.processData(d);
             const vv = instance.getParameters(d);
