@@ -156,6 +156,7 @@ class GridTableWidget extends Widget {
         const o = this.options, instance = this;
         let widgetOptions, processedData, widgets = [],
             rowNum, colNum, i, j, rendered = [], w, previousLength = v(o.id + '.cellData.length');
+
         return loadFunction(o.id, instance.name).then(function (d) {
             processedData = instance.processData(d);
             const vv = instance.getParameters(d);
@@ -180,7 +181,6 @@ class GridTableWidget extends Widget {
 
             instance.updateHtml(d);
             for (i = 0; i < rowNum; ++i) {
-                let rowChanged = false;
                 j = 0;
                 for (w of widgets) {
                     processedData[i][j].id = o.id + '_' + i + '_' + j;
@@ -188,64 +188,30 @@ class GridTableWidget extends Widget {
                     processedData[i][j].originalId = instance.cellData[i][j].originalId;
 
                     if (vv.allowFullContentUpdated && i >= previousLength) {
-                        Widgets[processedData[i][j].cellId] = new w.type(w);
+                         Widgets[processedData[i][j].cellId] = new w.type(w);
                         rendered.push(Widgets[processedData[i][j].cellId].render(false, processedData[i][j]));
                     } else {
                         if (false === vv.allowChangedDataUpdate || processedData[i][j].manipulated ||
                             !GridTableWidget.deepEqual(instance.cellData[i][j], processedData[i][j])) {
-                            rowChanged = true;
                             if (processedData[i][j].manipulated) {
                                 delete processedData[i][j].manipulated;
                             }
+                            Widgets[processedData[i][j].cellId].updateContent(processedData[i][j]);
+                            instance.cellData[i][j] = processedData[i][j];
                         }
-                        instance.cellData[i][j] = processedData[i][j];
                     }
                     ++j;
                 }
-
-                if (!(vv.allowFullContentUpdated && i >= previousLength) && rowChanged) {
-                    rowRenders.push(instance.replaceUpdatedRow(i, widgets, processedData[i], vv));
-                }
             }
 
-            return $.when.apply($, rowRenders).then(function () {
+            return new Promise(function (resolve) {
                 if (vv.allowFullContentUpdated && rowNum > previousLength) {
                     let rowsToAppend = instance.renderRowForUpdateContent(rendered, vv);
                     $('#' + o.id).find('.ks-grid-table-content').append(rowsToAppend);
                 }
-                return 'update';
+                return resolve('update');
             });
         });
-    }
-
-    replaceUpdatedRow(rowIndex, widgets, rowData, parameters) {
-        const o = this.options;
-        let j = 0, renderedCells = [], w;
-
-        for (w of widgets) {
-            const cellData = rowData[j];
-            if (!Widgets[cellData.cellId]) {
-                Widgets[cellData.cellId] = new w.type(w);
-            }
-            renderedCells.push(Widgets[cellData.cellId].render(false, cellData));
-            ++j;
-        }
-
-        return $.when.apply($, renderedCells).then(function () {
-            const htmlParts = renderedCells.length === 1 ? [arguments[0]] : Array.from(arguments);
-            const renderedRow = $(this.buildTableRowHtml(htmlParts.join(''), parameters.rowHeight, parameters.borderBottom));
-            renderedRow.attr('data-row', rowIndex);
-
-            const currentRow = $('#' + o.id).find('.ks-grid-table-content .ks-grid-table-row[data-row="' + rowIndex + '"]');
-            currentRow.replaceWith(renderedRow);
-
-            for (let colIndex = 0; colIndex < rowData.length; ++colIndex) {
-                const cellElement = $('#' + o.id + 'Cell' + rowIndex + '-' + colIndex);
-                cellElement.attr('data-row', rowIndex);
-                cellElement.attr('data-col', colIndex);
-                Widgets[o.id + 'Cell' + rowIndex + '-' + colIndex].initEvents(false, o.id + '_' + rowIndex + '_' + colIndex);
-            }
-        }.bind(this));
     }
 
     updateHtml(data) {
