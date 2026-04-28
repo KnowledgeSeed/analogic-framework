@@ -60,6 +60,7 @@ class TextWidget extends Widget {
         this.editable = v.editable;
         this.performable = v.performable;
         this.pasteDataByServerSide = v.pasteDataByServerSide;
+        this.enableRightClick = v.enableRightClick;
     }
 
     reset() {
@@ -67,13 +68,14 @@ class TextWidget extends Widget {
         delete this.editable;
         delete this.performable;
         delete this.pasteDataByServerSide;
+        delete this.enableRightClick;
     }
 
-    changeEvents(title, section, editable, performable) {
+    changeEvents(title, section, editable, performable, enableRightClick) {
         title.unbind('contextmenu');
         title.off('click');
         if (editable || performable) {
-            TextWidget.addEdit(section, this.options, this.amIOnAGridTable(), this.pasteDataByServerSide);
+            TextWidget.addEdit(section, this.options, this.amIOnAGridTable(), this.pasteDataByServerSide, enableRightClick);
         }
     }
 
@@ -83,7 +85,7 @@ class TextWidget extends Widget {
             mainDiv = section.children(), icon = section.find('.ks-text-icon span'),
             inner = section.find('.ks-text-inner');
 
-        this.changeEvents(title, section, v.editable, v.performable);
+        this.changeEvents(title, section, v.editable, v.performable, v.enableRightClick);
         title.data('editable', v.editable ? '1' : '0');
         title.data('performable', v.performable ? '1' : '0');
 
@@ -162,6 +164,7 @@ class TextWidget extends Widget {
             innerHeight: this.getRealValue('innerHeight', d, false),
             innerWidth: this.getRealValue('innerWidth', d, false),
             innerCursor: this.getRealValue('innerCursor', d, false),
+            enableRightClick: this.getRealValue('enableRightClick', d, false),
             pasteDataByServerSide: this.getRealValue('pasteDataByServerSide', d, false),
             performable: this.getRealValue('performable', d, false),
             skin: this.getRealValue('skin', d, 'template1'),
@@ -184,7 +187,7 @@ class TextWidget extends Widget {
         const section = this.getSection(), o = this.options;
 
         if (this.editable || this.performable) {
-            TextWidget.addEdit(section, o, this.amIOnAGridTable(), this.pasteDataByServerSide);
+            TextWidget.addEdit(section, o, this.amIOnAGridTable(), this.pasteDataByServerSide, this.enableRightClick);
         }
 
         section.find('.ks-text-inner').on('click', (e) => {
@@ -433,13 +436,15 @@ class TextWidget extends Widget {
         return j;
     }
 
-    static addEdit(section, o, amIOnGridTable, pasteDataByServerSide) {
+    static addEdit(section, o, amIOnGridTable, pasteDataByServerSide, enableRightClick = false) {
         let textTitle = section.find('.ks-text-title');
-        if (amIOnGridTable === true) {
+        if (amIOnGridTable === true || enableRightClick === true) {
             textTitle.bind('contextmenu', e => {
                 let r = textTitle.data('id', section.attr('id')).data('action', 'rightclick');
                 Widget.doHandleSystemEvent(textTitle, e);
-                Widget.doHandleGridTableSystemEvent(textTitle, e);
+                if (amIOnGridTable) {
+                    Widget.doHandleGridTableSystemEvent(textTitle, e);
+                }
                 return false;
             });
         }
@@ -475,7 +480,7 @@ class TextWidget extends Widget {
 
                     c.html(r.val());
                     ksText.removeClass('ks-on');
-                    TextWidget.addEdit(section, o, amIOnGridTable, pasteDataByServerSide);
+                    TextWidget.addEdit(section, o, amIOnGridTable, pasteDataByServerSide, enableRightClick);
                 });
                 if (amIOnGridTable === true) {
                     let gridId = r.data('id').split('_')[0];
@@ -493,7 +498,7 @@ class TextWidget extends Widget {
                             }
                             c.html(r.val());
                             ksText.removeClass('ks-on');
-                            TextWidget.addEdit(section, o, amIOnGridTable, pasteDataByServerSide);
+                            TextWidget.addEdit(section, o, amIOnGridTable, pasteDataByServerSide, enableRightClick);
                         }
                         if (f.keyCode === 39 || f.keyCode === 37) {
                             let editables = TextWidget.getEditables(gridId),
@@ -532,7 +537,7 @@ class TextWidget extends Widget {
                                 }).catch(err => L('Read from clipboard failed: ', err));
                                 c.html('pasting..');
                                 ksText.removeClass('ks-on');
-                                TextWidget.addEdit(section, o, amIOnGridTable, pasteDataByServerSide);
+                                TextWidget.addEdit(section, o, amIOnGridTable, pasteDataByServerSide, enableRightClick);
                                 return false;
                             }
                             let editables = TextWidget.getEditables(gridId),
