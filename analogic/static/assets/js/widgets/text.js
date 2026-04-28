@@ -74,7 +74,8 @@ class TextWidget extends Widget {
     changeEvents(title, section, editable, performable, enableRightClick) {
         title.unbind('contextmenu');
         title.off('click');
-        if (editable || performable) {
+        section.find('.ks-text-body').unbind('contextmenu');
+        if (editable || performable || enableRightClick) {
             TextWidget.addEdit(section, this.options, this.amIOnAGridTable(), this.pasteDataByServerSide, enableRightClick);
         }
     }
@@ -186,7 +187,7 @@ class TextWidget extends Widget {
     initEventHandlers() {
         const section = this.getSection(), o = this.options;
 
-        if (this.editable || this.performable) {
+        if (this.editable || this.performable || this.enableRightClick) {
             TextWidget.addEdit(section, o, this.amIOnAGridTable(), this.pasteDataByServerSide, this.enableRightClick);
         }
 
@@ -437,13 +438,16 @@ class TextWidget extends Widget {
     }
 
     static addEdit(section, o, amIOnGridTable, pasteDataByServerSide, enableRightClick = false) {
-        let textTitle = section.find('.ks-text-title');
+        let textTitle = section.find('.ks-text-title'),
+            textBody = section.find('.ks-text-body'),
+            rightClickTargets = textTitle.add(textBody);
         if (amIOnGridTable === true || enableRightClick === true) {
-            textTitle.bind('contextmenu', e => {
-                let r = textTitle.data('id', section.attr('id')).data('action', 'rightclick');
-                Widget.doHandleSystemEvent(textTitle, e);
+            rightClickTargets.bind('contextmenu', e => {
+                let target = $(e.currentTarget);
+                target.data('id', section.attr('id')).data('action', 'rightclick');
+                Widget.doHandleSystemEvent(target, e);
                 if (amIOnGridTable) {
-                    Widget.doHandleGridTableSystemEvent(textTitle, e);
+                    Widget.doHandleGridTableSystemEvent(target, e);
                 }
                 return false;
             });
