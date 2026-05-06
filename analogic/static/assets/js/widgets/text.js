@@ -72,9 +72,9 @@ class TextWidget extends Widget {
     }
 
     changeEvents(title, section, editable, performable, enableRightClick) {
-        title.unbind('contextmenu');
-        title.off('click');
-        section.find('.ks-text-body').unbind('contextmenu');
+        title.off('contextmenu.ksTextEdit');
+        title.off('click.ksTextEdit');
+        section.find('.ks-text-body').off('contextmenu.ksTextEdit');
         if (editable || performable || enableRightClick) {
             TextWidget.addEdit(section, this.options, this.amIOnAGridTable(), this.pasteDataByServerSide, enableRightClick);
         }
@@ -438,11 +438,9 @@ class TextWidget extends Widget {
     }
 
     static addEdit(section, o, amIOnGridTable, pasteDataByServerSide, enableRightClick = false) {
-        let textTitle = section.find('.ks-text-title'),
-            textBody = section.find('.ks-text-body'),
-            rightClickTargets = textTitle.add(textBody);
+        let textTitle = section.find('.ks-text-title');
         if (amIOnGridTable === true || enableRightClick === true) {
-            rightClickTargets.bind('contextmenu', e => {
+            textTitle.off('contextmenu.ksTextEdit').on('contextmenu.ksTextEdit', e => {
                 let target = $(e.currentTarget);
                 target.data('id', section.attr('id')).data('action', 'rightclick');
                 Widget.doHandleSystemEvent(target, e);
@@ -453,10 +451,10 @@ class TextWidget extends Widget {
             });
         }
         if (textTitle.data('editable') == 1 || textTitle.data('performable') == 1) {
-            textTitle.on('click', e => {
+            textTitle.off('click.ksTextEdit').on('click.ksTextEdit', e => {
                 let c = $(e.currentTarget), ksText = section.find('.ks-text'), editable = textTitle.data('editable') == 1,
                     originalValue = c.text();
-                c.off('click');
+                c.off('click.ksTextEdit');
                 ksText.addClass('ks-on').addClass('ks-perform-edit');
                 c.html(`<input class="ks-text-title-input" data-id="${o.id}" data-action="write" data-ordinal="${c.data('ordinal')}" type="text" value="${originalValue}"/>`).promise().then(() => {
                     let r = c.find('.ks-text-title-input').focus().select().on('focusout', f => {
