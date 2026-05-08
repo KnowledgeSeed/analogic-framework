@@ -60,6 +60,7 @@ class TextWidget extends Widget {
         this.editable = v.editable;
         this.performable = v.performable;
         this.pasteDataByServerSide = v.pasteDataByServerSide;
+        this.enableRightClick = v.enableRightClick;
     }
 
     reset() {
@@ -67,13 +68,18 @@ class TextWidget extends Widget {
         delete this.editable;
         delete this.performable;
         delete this.pasteDataByServerSide;
+        delete this.enableRightClick;
     }
 
-    changeEvents(title, section, editable, performable) {
-        title.unbind('contextmenu');
+    changeEvents(title, section, editable, performable, enableRightClick) {
+        title.off('contextmenu');
         title.off('click');
+        const amIOnGridTable = this.amIOnAGridTable();
         if (editable || performable) {
-            TextWidget.addEdit(section, this.options, this.amIOnAGridTable(), this.pasteDataByServerSide);
+            TextWidget.addEdit(section, this.options, amIOnGridTable, this.pasteDataByServerSide);
+        }
+        if (enableRightClick && !(amIOnGridTable && (editable || performable))) {
+            TextWidget.addRightClick(section, amIOnGridTable);
         }
     }
 
@@ -83,7 +89,7 @@ class TextWidget extends Widget {
             mainDiv = section.children(), icon = section.find('.ks-text-icon span'),
             inner = section.find('.ks-text-inner');
 
-        this.changeEvents(title, section, v.editable, v.performable);
+        this.changeEvents(title, section, v.editable, v.performable, v.enableRightClick);
         title.data('editable', v.editable ? '1' : '0');
         title.data('performable', v.performable ? '1' : '0');
 
@@ -152,6 +158,7 @@ class TextWidget extends Widget {
             bodyFontSize: this.getRealValue('bodyFontSize', d, false),
             bodyFontWeight: this.getRealValue('bodyFontWeight', d, false),
             bodyAlignment: this.getRealValue('bodyAlignment', d, false),
+            enableRightClick: this.getRealValue('enableRightClick', d, false),
             editable: this.getRealValue('editable', d, false),
             icon: this.getRealValue('icon', d, false),
             iconColor: this.getRealValue('iconColor', d, false),
@@ -182,9 +189,14 @@ class TextWidget extends Widget {
 
     initEventHandlers() {
         const section = this.getSection(), o = this.options;
+        const amIOnGridTable = this.amIOnAGridTable();
 
         if (this.editable || this.performable) {
-            TextWidget.addEdit(section, o, this.amIOnAGridTable(), this.pasteDataByServerSide);
+            TextWidget.addEdit(section, o, amIOnGridTable, this.pasteDataByServerSide);
+        }
+
+        if (this.enableRightClick && !(amIOnGridTable && (this.editable || this.performable))) {
+            TextWidget.addRightClick(section, amIOnGridTable);
         }
 
         section.find('.ks-text-inner').on('click', (e) => {
@@ -431,6 +443,18 @@ class TextWidget extends Widget {
             j = -1;
         }
         return j;
+    }
+
+    static addRightClick(section, amIOnGridTable) {
+        const sectionId = section.attr('id');
+        section.find('.ks-text-title').off('contextmenu').on('contextmenu', e => {
+            const target = $(e.currentTarget).data('id', sectionId).data('action', 'rightclick');
+            Widget.doHandleSystemEvent(target, e);
+            if (amIOnGridTable) {
+                Widget.doHandleGridTableSystemEvent(target, e);
+            }
+            return false;
+        });
     }
 
     static addEdit(section, o, amIOnGridTable, pasteDataByServerSide) {
