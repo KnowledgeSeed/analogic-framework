@@ -1,0 +1,7 @@
+# Top-level test pins.
+# Install from the platform-specific requirements-test.*.lock files for reproducible test environments.
+-r requirements.txt
+pytest
+pytest-mock
+pytest-cov
+requests_ntlm==1.3.0

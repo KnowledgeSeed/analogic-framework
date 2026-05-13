@@ -214,6 +214,13 @@ ${v.backdrop ? `<div style="${backdropStyle.join('')}" class="ks-container-backd
             pos.left += w.scrollLeft();
             pos.top += w.scrollTop();
         }
+        const minLeft = 10;
+        const maxLeft = winWidth - popupWidth - 10;
+        pos.left = Math.max(minLeft, Math.min(pos.left, maxLeft));
+
+        const minTop = 10;
+        const maxTop = winHeight - popupHeight - 10;
+        pos.top = Math.max(minTop, Math.min(pos.top, maxTop));
 
         return pos;
     }

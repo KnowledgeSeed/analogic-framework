@@ -118,6 +118,11 @@ class TextBoxWidget extends Widget {
             let w = $(e.currentTarget), id = section.prop('id');
 
             if (!w.hasClass('readonly')) {
+                if (this._ignoreNextFocusOut) {
+                    delete this._ignoreNextFocusOut;
+                    return;
+                }
+
                 let value = Utils.escapeText(w.val());
 
                 Widgets[id].value = value;
@@ -148,6 +153,15 @@ class TextBoxWidget extends Widget {
 
                 if (this.amIOnAGridTable()) {
                     Widget.doHandleGridTableSystemEvent(element, e);
+                }
+
+                if (e.key === 'Enter' || e.keyCode === 13 || e.which === 13) {
+                    this._ignoreNextFocusOut = true;
+                    Widget.doHandleSystemEvent(w, e);
+
+                    if (this.amIOnAGridTable()) {
+                        Widget.doHandleGridTableSystemEvent(w, e);
+                    }
                 }
             }
         });

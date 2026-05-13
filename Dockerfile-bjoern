@@ -1,7 +1,7 @@
-FROM python:3.9.13-buster
+FROM python:3.10.16-slim-bookworm
 
 RUN apt-get update
-RUN apt-get install -y python3-dev libev-dev
+RUN apt-get install -y python3-dev libev-dev gcc
 RUN pip install bjoern
 
 WORKDIR /analogic

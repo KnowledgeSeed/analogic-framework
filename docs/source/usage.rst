@@ -11,7 +11,7 @@ The framework consists of two main parts
       :name: js-frontend-framework
 
    The frontend framework is in essence a collection of JavaScript
-   elements called “widgets”. Widgets are the main building blocks of
+   elements called "widgets". Widgets are the main building blocks of
    the applications built using the Analogic Framework. Every element in
    the final application UI is always an instance of a widget. Some
    widgets are very simple both in appearance and function (eg. a Button
@@ -34,7 +34,7 @@ The framework consists of two main parts
 Requirements
 ------------
 
-3.11 > Python >= 3.9
+Python >= 3.10
 
 Getting Started
 ---------------
@@ -66,11 +66,21 @@ Running from code
    #command line
    venv\Scripts\activate.bat
 
-4. Install requirements
+4. Install the locked runtime environment
 
 ::
 
-   pip install -r requirements.txt
+   # Windows
+   py -3.10 -m pip install --upgrade pip
+   py -3.10 -m pip install --require-hashes -r requirements.windows.lock
+   py -3.10 -m pip install --no-deps -e .
+
+   # Linux / CI
+   python3.10 -m pip install --upgrade pip
+   python3.10 -m pip install --require-hashes -r requirements.linux.lock
+   python3.10 -m pip install --no-deps -e .
+
+See :doc:`dependency_locking` for test environment installs and lock regeneration.
 
 5. Set up the following env variable for loading sample apps
 
@@ -94,7 +104,7 @@ Running from code
 Using pip
 ~~~~~~~~~
 
-1. Create a folder where analogic’s root will be. e.g:
+1. Create a folder where analogic's root will be. e.g:
 
    yourpath/analogicroot
 
@@ -142,10 +152,10 @@ Using pip
    .. rubric:: Hello world app
       :name: hello-world-app
 
-   -  create a “default” folder in apps folder.
+   -  create a "default" folder in apps folder.
    -  download and unzip
       `this <https://github.com/KnowledgeSeed/analogic/blob/main/app_structure.zip>`__
-      into “default” folder
+      into "default" folder
 
    or
 
@@ -203,7 +213,7 @@ framework. This application indents to demonstrate the Web UI features
 without needing to install and hook up with a TM1 server.
 
 There are some sample ``docker-compose`` recipes provided in this
-repository to begin with. It’s important to note that these are
+repository to begin with. It's important to note that these are
 considered samples and patterns. Your deployment setup might require
 further customizations or extensions.
 

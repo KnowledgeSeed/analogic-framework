@@ -1013,3 +1013,91 @@
 .nav {
     border: 3px solid #1d7bff;
 }
+.ks-pivot-table-control-row.left-align {
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+}
+
+.pivot-btn-outline {
+    background-color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #007AFF;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.pivot-btn-outline:hover {
+    background-color: #F2F2F2;
+}
+
+.pivot-btn-outline span[class^="icon-"] {
+    color: #007AFF;
+    font-size: 16px;
+}
+
+#exportBtn.pivot-btn-outline {
+    padding: 8px 12px;
+}
+
+.pivot-btn-outline-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    align-self: center;
+}
+
+.pivot-btn-outline-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.suppress-zero-popup {
+    background-color: #FFFFFF;
+    border: none;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 8px;
+    min-width: 180px;
+}
+
+.suppress-zero-popup .popup-row {
+    color: #000;
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.suppress-zero-popup .popup-row span {
+    width: 24px;
+    display: inline-block;
+    font-weight: 600;
+    text-align: left;
+}
+
+.suppress-zero-popup .popup-row:hover {
+    background-color: #f5f5f7;
+}
+
+.suppress-zero-popup .popup-row.active {
+    font-weight: normal;
+    color: #000;
+}
+
+.suppress-zero-popup .popup-row.active span {
+    color: #007AFF;
+}

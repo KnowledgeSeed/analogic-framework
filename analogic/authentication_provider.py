@@ -1,8 +1,8 @@
-from flask import session, current_app, send_file, request, jsonify, Response, redirect, make_response
+from flask import session, current_app, send_file, request, jsonify, Response, redirect, make_response, g
 from analogic.loader import ClassLoader
 import analogic.pivot as PivotApi
 from analogic.exceptions import AnalogicProxyException, AnalogicAccessDeniedException, AnalogicException, \
-    AnalogicAcceptedException
+    AnalogicAcceptedException, AnalogicTM1ServiceException
 from analogic.session_handler import SessionHandler
 from analogic.request_logger import RequestLogger
 from analogic.setting import SettingManager
@@ -77,6 +77,9 @@ class AuthenticationProvider(ABC):
                'Accept-Encoding': 'gzip, deflate, br',
                'TM1-SessionContext': 'Analogic'}
 
+    CUSTOM_OBJECT_ADD_PAGE_META_DATA_INFO = 'analogic_add_page_meta_data_info'
+    CUSTOM_OBJECT_GENERATE_SITEMAP = 'analogic_generate_sitemap'
+
     def __init__(self, setting):
         self.setting = setting
         self.logged_in_user_session_name = '_logged_in_user_name'
@@ -86,6 +89,7 @@ class AuthenticationProvider(ABC):
         self.user_subscriptions = {}
         self.is_in_maintenance = False
         self.maintenance_message = ''
+        self.reserved_custom_object_keys = [self.CUSTOM_OBJECT_ADD_PAGE_META_DATA_INFO]
 
     def initialize(self):
         self.setting.initialize()
@@ -128,12 +132,47 @@ class AuthenticationProvider(ABC):
 
         self.session_handler.set('navigation_parameters', base64.b64encode(orjson.dumps(result)).decode('utf-8'))
 
+        self.add_page_meta_data_info(result)
+
         response = self.index()
 
         return make_response(response)
 
     def clear_navigation_parameters(self):
         self.session_handler.delete('navigation_parameters')
+
+    def add_page_meta_data_info(self, navigation_parameters = None):
+        page_meta_data_info_description = self.setting.get_custom_object_description(self.CUSTOM_OBJECT_ADD_PAGE_META_DATA_INFO)
+        if page_meta_data_info_description is not None:
+            try:
+                result = ClassLoader().call(page_meta_data_info_description, request, self.get_tm1_service(), self.setting,
+                                              self, navigation_parameters=navigation_parameters)
+                if isinstance(result, list):
+                    g.page_meta_data_info = result
+            except Exception as e:
+                self.getLogger().error(e, exc_info=True)
+
+    def generate_sitemap(self):
+        generate_sitemap_description = self.setting.get_custom_object_description(
+            self.CUSTOM_OBJECT_GENERATE_SITEMAP)
+        if generate_sitemap_description is not None:
+            try:
+                urls = ClassLoader().call(generate_sitemap_description, request, self.get_tm1_service(),
+                                            self.setting, self)
+                if isinstance(urls, list):
+                    return self._generate_sitemap(urls)
+            except Exception as e:
+                self.getLogger().error(e, exc_info=True)
+        return self._generate_sitemap([])
+
+    def _generate_sitemap(self, urls):
+        sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n'
+        sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        for url in urls:
+            sitemap += f'  <url>\n    <loc>{url}</loc>\n'
+            sitemap += f'    <lastmod>{pd.Timestamp.now().strftime("%Y-%m-%d")}</lastmod>\n</url>\n'
+        sitemap += '</urlset>'
+        return sitemap
 
     @login_required
     def pivot(self):
@@ -159,7 +198,7 @@ class AuthenticationProvider(ABC):
         file_name = request.args.get('file_name', default='export.xlsx')
         export_key = request.args.get('export_key')
 
-        if export_key is None:
+        if export_key is None or export_key in self.reserved_custom_object_keys:
             return self.get_not_found_response()
 
         export_description = self.setting.get_custom_object_description(export_key)
@@ -169,9 +208,16 @@ class AuthenticationProvider(ABC):
 
         try:
             response = ClassLoader().call(export_description, request, self.get_tm1_service(), self.setting, self)
-        except Exception as e:  # Todo 500, 401
+        except AnalogicAccessDeniedException as e:
             self.getLogger().error(e, exc_info=True)
-            return {'message': str(e)}, 404, {'Content-type': 'application/json'}
+            return {'message': str(e)}, 403, {'Content-Type': 'application/json'}
+        except AnalogicTM1ServiceException as e:
+            self.getLogger().error(e, exc_info=True)
+            return {'message': str(e)}, 400, {'Content-Type': 'application/json'}
+        except Exception as e:
+            self.getLogger().error(e, exc_info=True)
+            error_payload = {'message': 'Internal server error', 'details': str(e)}
+            return error_payload, 500, {'Content-Type': 'application/json'}
 
         return send_file(response,
                          download_name=file_name,
@@ -183,7 +229,7 @@ class AuthenticationProvider(ABC):
     def middleware(self):
         key = request.args.get('object_key')
 
-        if key is None:
+        if key is None or key in self.reserved_custom_object_keys:
             return self.get_not_found_response()
 
         description = self.setting.get_custom_object_description(key)
@@ -192,9 +238,16 @@ class AuthenticationProvider(ABC):
             return self.get_not_found_response()
         try:
             return ClassLoader().call(description, request, self.get_tm1_service(), self.setting, self)
-        except Exception as e:  # Todo 500, 401
+        except AnalogicAccessDeniedException as e:
             self.getLogger().error(e, exc_info=True)
-            return {'message': str(e)}, 404, {'Content-type': 'application/json'}
+            return {'message': str(e)}, 403, {'Content-Type': 'application/json'}
+        except AnalogicTM1ServiceException as e:
+            self.getLogger().error(e, exc_info=True)
+            return {'message': str(e)}, 400, {'Content-Type': 'application/json'}
+        except Exception as e:
+            self.getLogger().error(e, exc_info=True)
+            error_payload = {'message': 'Internal server error', 'details': str(e)}
+            return error_payload, 500, {'Content-Type': 'application/json'}
 
     def upload_image(self):
         try:
@@ -425,11 +478,23 @@ class AuthenticationProvider(ABC):
 
     def _add_authenticated_cookies(self, response, max_age=None):
         m = max_age
+        cnf = self.setting.get_config()
         if max_age is None:
-            cnf = self.setting.get_config()
             m = cnf['sessionExpiresInMinutes'] * 60
-        # TODO secure, httpOnly!!!
-        response.set_cookie('authenticated', 'authenticated', max_age=m)
+
+        secure_cookie = bool(cnf.get('secureCookies', False))
+        same_site = cnf.get('cookieSameSite', 'Lax')
+        if same_site not in ('Lax', 'Strict'):
+            same_site = 'Lax'
+
+        response.set_cookie(
+            'authenticated',
+            'authenticated',
+            max_age=m,
+            httponly=True,
+            secure=secure_cookie,
+            samesite=same_site,
+        )
         return response
 
     def _set_custom_mdx_data(self, mdx):

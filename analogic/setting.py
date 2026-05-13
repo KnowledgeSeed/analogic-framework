@@ -158,6 +158,14 @@ class SettingManager:
         if setting.get('ssl_verify') is None:
             setting['ssl_verify'] = True
 
+        if setting.get('secureCookies') is None:
+            setting['secureCookies'] = False
+
+        allowed_same_site_values = {'Lax', 'Strict'}
+        same_site = setting.get('cookieSameSite')
+        if same_site is None or same_site not in allowed_same_site_values:
+            setting['cookieSameSite'] = 'Lax'
+
         return setting
 
     def save_config_js(self, exclude=[]):

@@ -1,5 +1,6 @@
 import os
-from flask import Flask, Blueprint, request, send_file, session, render_template, current_app
+import secrets
+from flask import Flask, Blueprint, request, send_file, session, render_template, current_app, g
 import typing as t
 
 from analogic.endpoint import AnalogicEndpoint
@@ -30,6 +31,7 @@ EXTENSIONS_DIR = 'extensions'
 EXTENSIONS_DIR_EXTRA = os.environ.get('EXTENSIONS_DIR_EXTRA', '')
 EXTENSIONS_EXTRA = [] if not os.environ.get('EXTENSIONS_EXTRA') else os.environ.get('EXTENSIONS_EXTRA').split(',')
 ALLOWED_EXTENSION_PREFIX = 'analogic_'
+ALLOWED_EXTENSION_DIR_PREFIX = os.environ.get('ALLOWED_EXTENSION_DIR_PREFIX', 'analogic-ext-')
 
 def create_view_func(original_func, named_route):
     def my_wrapped_function(**kwargs):
@@ -80,6 +82,8 @@ class Analogic(Flask):
         self.replace_str_in_file(os.path.join(target, 'app.json'), '$authenticationMode', authentication_mode)
         self.replace_str_in_file(os.path.join(target, 'static', 'assets', 'js', 'configs', 'widget-config.js'),
                                  '$projectId', name)
+        os.makedirs(os.path.join(target, 'server', 'email_templates'), exist_ok=True)
+        os.makedirs(os.path.join(target, 'templates'), exist_ok=True)
 
         self.trigger_change_monitor_for_restart()
 
@@ -288,7 +292,29 @@ def create_app(instance_path, start_scheduler=True, initialize_auth_providers=Tr
     app = Analogic(__name__, instance_path=instance_path)
     app.initialize_auth_providers = initialize_auth_providers
 
-    app.secret_key = b'\x18m\x18\\]\xec\xcf\xbd\xf2\x89\xb9\xa3\x06N\x07\xfd'
+    app.config.from_pyfile('config.py', silent=True)
+
+    secret_key = os.environ.get('ANALOGIC_SECRET_KEY')
+    if not secret_key:
+        secret_key = app.config.get('SECRET_KEY')
+
+    if not secret_key:
+        secret_key = secrets.token_hex(32)
+
+        os.makedirs(app.instance_path, exist_ok=True)
+        config_path = os.path.join(app.instance_path, 'config.py')
+
+        secret_line = f"SECRET_KEY = {secret_key!r}\n"
+        if os.path.exists(config_path):
+            with open(config_path, 'a', encoding='utf-8') as config_file:
+                config_file.write('\n' + secret_line)
+        else:
+            with open(config_path, 'w', encoding='utf-8') as config_file:
+                config_file.write(secret_line)
+
+        app.config['SECRET_KEY'] = secret_key
+
+    app.secret_key = secret_key
 
     _load_logging(app)  # Todo overwrite
 
@@ -328,7 +354,12 @@ def create_app(instance_path, start_scheduler=True, initialize_auth_providers=Tr
     def inject_current_app():
         return {'current_app': current_app}
 
+    def inject_page_meta_data_info():
+        return dict(page_meta_data_info=getattr(g, 'page_meta_data_info', []))
+
     app.context_processor(inject_current_app)
+
+    app.context_processor(inject_page_meta_data_info)
 
     with app.app_context():
         app.evaluate_signal_receivers()
@@ -373,7 +404,13 @@ def _load_analogic_extensions(app, extensions_dir):
 def _append_extension_dir_to_path(app, modules_dir_name):
     modules_dir = os.path.join(app.instance_path, modules_dir_name)
     if modules_dir not in sys.path and os.path.exists(modules_dir) and len(os.listdir(modules_dir)) != 0:
-        sys.path.append(modules_dir)
+        if modules_dir == EXTENSIONS_DIR_EXTRA:
+            for extension_dir_name in os.listdir(modules_dir):
+                if extension_dir_name.startswith(ALLOWED_EXTENSION_DIR_PREFIX):
+                    extension_dir = os.path.join(modules_dir, extension_dir_name)
+                    sys.path.append(extension_dir)
+        else:
+            sys.path.append(modules_dir)
 
 
 def _register_extension(app, extension_dir, extension_dir_name, modules):

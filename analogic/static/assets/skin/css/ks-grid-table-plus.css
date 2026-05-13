@@ -1,0 +1,64 @@
+.ks-grid-table-plus {
+    width: 100%;
+    display: block;
+}
+
+.ks-grid-table-plus .ks-grid-table-plus-inner {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.ks-grid-table-plus h3 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.ks-grid-table-plus .tabulator {
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #111827;
+}
+
+.ks-grid-table-plus .tabulator .tabulator-header {
+    border-bottom: 1px solid #d1d5db;
+    background-color: transparent;
+}
+
+.ks-grid-table-plus .tabulator .tabulator-header .tabulator-col {
+    background-color: #f3f4f6;
+    color: #111827;
+    border-right: 1px solid #e5e7eb;
+    font-weight: 600;
+}
+
+.ks-grid-table-plus .tabulator .tabulator-header .tabulator-col:last-child {
+    border-right: none;
+}
+
+.ks-grid-table-plus .tabulator .tabulator-tableholder {
+    overflow-x: auto;
+}
+
+.ks-grid-table-plus .tabulator .tabulator-tableholder .tabulator-table {
+    background-color: #ffffff;
+}
+
+.ks-grid-table-plus .tabulator .tabulator-row {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.ks-grid-table-plus .tabulator .tabulator-row:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+.ks-grid-table-plus .tabulator .tabulator-row .tabulator-cell {
+    border-right: 1px solid #e5e7eb;
+}
+
+.ks-grid-table-plus .tabulator .tabulator-row .tabulator-cell:last-child {
+    border-right: none;
+}

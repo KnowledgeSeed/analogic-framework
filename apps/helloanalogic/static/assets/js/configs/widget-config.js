@@ -372,7 +372,19 @@ WidgetConfig = {
                                     alignment: 'top-right',
                                     width: '23%',
                                     skin: '',
-                                    widgets: []
+                                    widgets: [
+                                        {
+                                            id: 'analogicDemoMainRow3Cell7Button',
+                                            type: ButtonWidget,
+                                            label: 'Tabulator Demo',
+                                            action: '',
+                                            width: '145',
+                                            icon: 'icon-grid',
+                                            fontColor: 'white',
+                                            skin: 'analogicDemomain_blue',
+                                            height: '145'
+                                        }
+                                    ]
                                 }
                             ]
                         },
@@ -1181,8 +1193,8 @@ WidgetConfig = {
                             id: 'analogicDemoAddCloneContractRow2',
                             type: GridRowWidget,
                             marginTop: '2%',
-                            marginBottom: '0%',
                             width: '100%',
+                            marginBottom: '24',
                             height: '10%',
                             widgets: [
                                 {
@@ -6370,6 +6382,338 @@ WidgetConfig = {
                                 }
                             ]
                         }
+                    ]
+                }
+            ]
+        },
+
+    analogicTableDemo:
+        {
+            id: 'analogicTableDemo',
+            type: PageWidget,
+            widgets: [
+                {
+                    id: 'analogicTableDemoGrid',
+                    type: GridWidget,
+                    marginLeft: '40',
+                    marginRight: '40',
+                    marginTop: '20',
+                    widgets: [
+                        {
+                            id: 'analogicTableDemoHeaderRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginBottom: '20',
+                            widgets: [
+                                {
+                                    id: 'analogicTableDemoHeaderBackCell',
+                                    type: GridCellWidget,
+                                    width: '18%',
+                                    alignment: 'center-left',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoHeaderBack',
+                                            type: ButtonWidget,
+                                            label: 'Back to Dashboard',
+                                            icon: 'icon-arrow-left',
+                                            width: '220',
+                                            skin: 'material_analogicDemo'
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'analogicTableDemoHeaderTitleCell',
+                                    type: GridCellWidget,
+                                    width: '62%',
+                                    alignment: 'center-left',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoHeaderTitle',
+                                            type: TextWidget,
+                                            title: 'Analogic Tabulator Showcase',
+                                            body: 'Explore selection, grouping, inline edits and custom renderers.',
+                                            skin: 'review_gd_header',
+                                            titleFontSize: 26,
+                                            bodyFontColor: '#6B6C6E'
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'analogicTableDemoHeaderInfoCell',
+                                    type: GridCellWidget,
+                                    width: '20%',
+                                    alignment: 'center-right',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoHeaderInfo',
+                                            type: TextWidget,
+                                            title: 'Tabulator v6 Demo',
+                                            body: 'Live inside GridTablePlusWidget',
+                                            skin: 'menu',
+                                            titleFontSize: 16,
+                                            bodyFontColor: '#4F5B66'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'analogicTableDemoContentRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            widgets: [
+                                {
+                                    id: 'analogicTableDemoContentCell',
+                                    type: GridCellWidget,
+                                    width: '100%',
+                                    alignment: 'top-left',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoTable',
+                                            type: GridTablePlusWidget,
+                                            title: 'Project Portfolio Overview',
+                                            minWidth: 960,
+                                            hideIfNoData: false,
+                                            tabulatorOptions: {
+                                                height: '520px',
+                                                layout: 'fitDataStretch',
+                                                movableColumns: true,
+                                                resizableColumnFit: true,
+                                                selectable: true,
+                                                selectableRangeMode: 'drag',
+                                                tooltipGenerationMode: 'hover'
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'analogicTableDemoSimpleInfoRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginTop: '24',
+                            marginBottom: '8',
+                            widgets: [
+                                {
+                                    id: 'analogicTableDemoSimpleInfoCell',
+                                    type: GridCellWidget,
+                                    width: '100%',
+                                    alignment: 'top-left',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoSimpleInfoText',
+                                            type: TextWidget,
+                                            title: 'Editable Ordinal Matrix',
+                                            body: 'Simple 10×30 grid with inline editing, filtering and ordinal tracking for each cell.',
+                                            titleFontSize: 18,
+                                            titleFontWeight: 600,
+                                            bodyFontColor: '#475569'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'analogicTableDemoSimpleTableRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginBottom: '24',
+                            widgets: [
+                                {
+                                    id: 'analogicTableDemoSimpleTableCell',
+                                    type: GridCellWidget,
+                                    width: '100%',
+                                    alignment: 'top-left',
+                                    widgets: [
+                                        {
+                                            id: 'analogicTableDemoSimpleTable',
+                                            type: GridTablePlusWidget,
+                                            title: 'Editable Data Grid',
+                                            minWidth: 960,
+                                            hideIfNoData: false,
+                                            tabulatorOptions: {
+                                                height: '460px',
+                                                layout: 'fitDataStretch',
+                                                selectable: false,
+                                                resizableColumnFit: true
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+    gridTableLightDemo:
+        {
+            id: 'gridTableLightDemo',
+            type: PageWidget,
+            widgets: [
+                {
+                    id: 'gridTableLightDemoGrid',
+                    type: GridWidget,
+                    marginLeft: '10',
+                    marginRight: '10',
+                    width: '100%',
+                    widgets: [
+                        {
+                            id: 'gridTableLightDemoInfoRow',
+                            type: GridRowWidget,
+                            marginTop: '2%',
+                            marginBottom: '16',
+                            width: '100%',
+                            widgets: [
+                                {
+                                    id: 'gridTableLightDemoInfoCell',
+                                    type: GridCellWidget,
+                                    alignment: 'top-left',
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'gridTableLightDemoInfoText',
+                                            type: TextWidget,
+                                            title: 'GridTableLight demo',
+                                            body: 'Use the Details buttons or Owner dropdowns to trigger repository events.',
+                                            titleFontSize: 16,
+                                            titleFontWeight: 600,
+                                            bodyFontColor: '#4B5563'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'gridTableLightDemoColumnSelectorRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginBottom: '16',
+                            widgets: [
+                                {
+                                    id: 'gridTableLightDemoColumnSelectorCell',
+                                    type: GridCellWidget,
+                                    alignment: 'center-left',
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'gridTableLightColumnCountSelector',
+                                            type: DropBoxWidget,
+                                            width: 220,
+                                            skin: 'edit',
+                                            title: 'Columns'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'gridTableLightDemoMainTableRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginBottom: '24',
+                            widgets: [
+                                {
+                                    id: 'gridTableLightDemoMainTableCell',
+                                    type: GridCellWidget,
+                                    alignment: 'top-left',
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'gridTableLightDemoTable',
+                                            type: GridTableLightWidget,
+                                            skin: 'gridTableLightDemo'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'gridTableLightDemoCompactTableRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            widgets: [
+                                {
+                                    id: 'gridTableLightDemoCompactTableCell',
+                                    type: GridCellWidget,
+                                    alignment: 'top-left',
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'gridTableLightCompactTable',
+                                            type: GridTableLightWidget,
+                                            skin: 'gridTableLightCompact'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: 'gridTableLightDemoTextTableRow',
+                            type: GridRowWidget,
+                            width: '100%',
+                            marginTop: '24',
+                            widgets: [
+                                {
+                                    id: 'gridTableLightDemoTextTableCell',
+                                    type: GridCellWidget,
+                                    alignment: 'top-left',
+                                    width: '100%',
+                                    widgets: [
+                                        {
+                                            id: 'gridTableLightTextTable',
+                                            type: GridTableLightWidget,
+                                            skin: 'gridTableLightText'
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        // {
+                        //     id: 'gridTableLightDemoServerTableRow',
+                        //     type: GridRowWidget,
+                        //     width: '100%',
+                        //     marginTop: '24',
+                        //     widgets: [
+                        //         {
+                        //             id: 'gridTableLightDemoServerTableCell',
+                        //             type: GridCellWidget,
+                        //             alignment: 'top-left',
+                        //             width: '100%',
+                        //             widgets: [
+                        //                 {
+                        //                     id: 'gridTableLightServerTable',
+                        //                     type: GridTableLightWidget,
+                        //                     skin: 'gridTableLightDemo'
+                        //                 }
+                        //             ]
+                        //         }
+                        //     ]
+                        // },
+                        // {
+                        //     id: 'gridTableLightDemoServerTable2Row',
+                        //     type: GridRowWidget,
+                        //     width: '100%',
+                        //     marginTop: '24',
+                        //     widgets: [
+                        //         {
+                        //             id: 'gridTableLightDemoServerTable2Cell',
+                        //             type: GridCellWidget,
+                        //             alignment: 'top-left',
+                        //             width: '100%',
+                        //             widgets: [
+                        //                 {
+                        //                     id: 'gridTableLightServerTable2',
+                        //                     type: GridTableLightWidget,
+                        //                     skin: 'gridTableLightDemo',
+                        //                     pageSize: 20
+                        //                 }
+                        //             ]
+                        //         }
+                        //     ]
+                        //
+                        // }
                     ]
                 }
             ]

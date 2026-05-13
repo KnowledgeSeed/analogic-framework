@@ -1,8 +1,8 @@
 # Analogic Framework
 
-|CI Build & Tests|PyPI stable version| Codecov | Cypress e2e tests | License|
-|:---:|:---:|:---:|:---:|:---:|
-|[![CI Build](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml/badge.svg)](https://github.com/KnowledgeSeed/analogic/actions/workflows/main.yml?query=branch%3Amain++) | [![PyPI version](https://badge.fury.io/py/analogic-framework.svg)](https://badge.fury.io/py/analogic-framework) | [![codecov](https://codecov.io/gh/KnowledgeSeed/analogic-framework/branch/main/graph/badge.svg?token=NQWFP5QD5X)](https://codecov.io/gh/KnowledgeSeed/analogic-framework) | [![analogic-framework](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/simple/i4hkps&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/i4hkps/runs) | [![License](https://img.shields.io/:license-Apache%202-blue.svg)](https://github.com/KnowledgeSeed/Analogic/blob/opensource/LICENSE) |
+|PyPI stable version| Codecov | License|
+|:---:|:---:|:---:|
+| [![PyPI version](https://badge.fury.io/py/analogic-framework.svg)](https://badge.fury.io/py/analogic-framework) | [![codecov](https://codecov.io/gh/KnowledgeSeed/analogic-framework/branch/main/graph/badge.svg?token=NQWFP5QD5X)](https://codecov.io/gh/KnowledgeSeed/analogic-framework) |  [![License](https://img.shields.io/:license-Apache%202-blue.svg)](https://github.com/KnowledgeSeed/Analogic/blob/opensource/LICENSE) |
 
 
 The Analogic Framework is a software development framework for building advanced financial planning and business simulation applications using the IBM Planning Analytics Engine as a database. 
@@ -11,7 +11,7 @@ The framework consists of the following main parts:
 
 1. #### JS Frontend framework
 
-The frontend framework is in essence a collection of JavaScript elements called “widgets”.  [Widgets](https://analogic-framework.readthedocs.io/en/latest/widgets) are the main building blocks of the applications built using the Analogic Framework. Every element in the final application UI is always an instance of a widget. Some widgets are very simple both in appearance and function (eg. a Button widget or a Text widget) some can be complex and can contain other widgets (e.g. a GridTable widget). The widgets usually communicate directly with the Planning Analytics database using REST API calls sending MDX queries as requests and getting JSONs as responses.
+The frontend framework is in essence a collection of JavaScript elements called "widgets".  [Widgets](https://analogic-framework.readthedocs.io/en/latest/widgets) are the main building blocks of the applications built using the Analogic Framework. Every element in the final application UI is always an instance of a widget. Some widgets are very simple both in appearance and function (eg. a Button widget or a Text widget) some can be complex and can contain other widgets (e.g. a GridTable widget). The widgets usually communicate directly with the Planning Analytics database using REST API calls sending MDX queries as requests and getting JSONs as responses.
 
 2. #### Python middleware
 
@@ -25,13 +25,45 @@ install and hook up with a TM1 server.
 
 ## Requirements
 
-The framework requires 3.11 > Python >= 3.9.
+The framework requires Python >= 3.10.
+
+Locked dependency install and lock regeneration are documented in
+[`docs/source/dependency_locking.rst`](docs/source/dependency_locking.rst).
+
+## Configuring the secret key
+
+Analogic relies on Flask session cookies and therefore requires a secret key. Provide it either as an environment variable or by
+creating an instance configuration file so that the key can be rotated without code changes.
+
+If no `ANALOGIC_SECRET_KEY` environment variable is present when the application starts, Analogic automatically generates a new
+secret key and writes it to `instance/config.py` (the `instance` directory is the path passed to `create_app`). The generated key
+is reused on subsequent starts until you replace it.
+
+Generate a key and export it as an environment variable before launching the application:
+
+```
+# git bash
+export ANALOGIC_SECRET_KEY=$(python -c "import secrets; print(secrets.token_hex(32))")
+
+# command line
+set ANALOGIC_SECRET_KEY=<your-secret-key>
+```
+
+Alternatively, create or edit the `instance/config.py` file with the following content:
+
+```
+SECRET_KEY = "<your-secret-key>"
+```
+
+To rotate the secret key simply generate a new value and update the environment variable or the `config.py` file before
+restarting Analogic. When relying on the automatically generated configuration, delete the existing `config.py` file (or replace
+the `SECRET_KEY` value) so a fresh key will be generated on the next launch.
 
 ## Getting Started
 
 ### Running from code
 
-To launch the framework including the sample web-applications from code, Python >= 3.9 must be available. Then the repository needs to be cloned to a local development environment, a virtualenv created, some environment variables set and the main entry point `run.py` executed:
+To launch the framework including the sample web-applications from code, Python >= 3.10 must be available. Then the repository needs to be cloned to a local development environment, a virtualenv created, some environment variables set and the main entry point `run.py` executed:
 
 1. Clone repository:
 ```
@@ -50,9 +82,17 @@ source venv/Scripts/activate
 venv\Scripts\activate.bat 
 ```
 
-3. Install requirements:
+3. Install the locked runtime environment:
 ```
-pip install -r requirements.txt
+# Windows
+py -3.10 -m pip install --upgrade pip
+py -3.10 -m pip install --require-hashes -r requirements.windows.lock
+py -3.10 -m pip install --no-deps -e .
+
+# Linux / CI
+python3.10 -m pip install --upgrade pip
+python3.10 -m pip install --require-hashes -r requirements.linux.lock
+python3.10 -m pip install --no-deps -e .
 ```
 
 4. Set up the following env variable for loading sample apps:

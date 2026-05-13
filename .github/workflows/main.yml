@@ -26,7 +26,8 @@ jobs:
       - name: Install dependencies
         run: |
          python -m pip install --upgrade pip
-         pip install -r requirements.txt pytest-cov
+         pip install --require-hashes -r requirements-test.linux.lock
+         pip install --no-deps -e .
         
       - name: Run unit tests and collect coverage
         run: PYTHONPATH=. pytest --cov .

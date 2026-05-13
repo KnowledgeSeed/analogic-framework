@@ -162,26 +162,23 @@ class Widget {
             this.renderError();
         }
         this.isRendering = true;
-
         const o = this.options, holder = this.getHolder(o.id), instance = this;
-
         this.renderStartLoader(withLoader);
-
         Listeners.length = 0;
-
+        const usercentrics = holder.find('#usercentrics-cmp-ui');
+        if (usercentrics.length > 0) {
+            usercentrics.detach();
+        }
         return holder.empty().off().promise().then(() => {
-
             instance.holderStartLoader();
-
             return instance.render(withState, false, false, QB.loadData, previouslyLoadedData).then(html => {
                 let h = $(html), i;
-
                 return holder.html(h.html()).promise().then(() => {
-
+                    if (usercentrics.length > 0) {
+                        holder.append(usercentrics);
+                    }
                     instance.removeLoaderHtml(withState);
-
                     instance.initEvents(false);
-
                     for (i of Listeners) {
                         El.body.on(i.eventName, {
                             options: i.options,
@@ -193,11 +190,8 @@ class Widget {
                     if (!withState) {
                         instance.initFinished();
                     }
-
                     Api.showToolTipsChanged();
-
                     instance.renderLoaderStop(withLoader);
-
                     return 'rendered';
                 });
             });

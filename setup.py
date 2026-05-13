@@ -9,17 +9,19 @@ setup(
     name='analogic-framework',
     version=version,
     author='',
-    python_requires='>=3.9',
+    python_requires='>=3.10',
     packages=[
         'analogic'
     ],
     include_package_data=True,
     package_data={'': ['version.config']},
+    # Keep only direct runtime dependencies here.
+    # Platform-specific transitive locks are maintained in requirements*.lock.
     install_requires=[
-        'Flask==2.3.2',
+        'Flask==3.1.3',
         'TM1py==2.1',
-        'PyJWT==2.4.0',
-        'requests==2.32.3',
+        'PyJWT==2.12.0',
+        'requests==2.33.1',
         'numpy==2.2.3',
         'pandas==2.2.3',
         'XlsxWriter==1.3.7',
@@ -29,11 +31,11 @@ setup(
         'openpyxl==3.1.5',
         'json_logging==1.3.0',
         'flask_talisman==1.1.0',
-        'Flask-APScheduler==1.12.4',
-        'orjson==3.9.15',
+        'Flask-APScheduler==1.13.1',
+        'orjson==3.11.6',
         'rich==13.3.5',
         'jproperties==2.1.1',
-        'cryptography>=37.0.4,<43.0.0'
+        'cryptography==46.0.7'
     ],
     entry_points={
         'console_scripts': ['analogic=analogic.__cli__:main'],
