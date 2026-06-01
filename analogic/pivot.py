@@ -16,6 +16,7 @@ from analogic import authentication_provider
 def call(tm1: TM1Service, username, cube_name=None, dimension_name=None, hierarchy_name=None, subset_name=None,
          element_names=None, subset_name_to_remove=None, selected_cards=None, options=None, export_data=None):
     data = {}
+    raw_username = username
     username = re.sub(r'[^A-Za-z0-9_]', '', username.replace('\\', '').replace('/', ''))
     children = []
 
@@ -80,7 +81,7 @@ def call(tm1: TM1Service, username, cube_name=None, dimension_name=None, hierarc
 
     elif parsed_options and 'process' in parsed_options:
         p = parsed_options['processParams']
-        p['pUser'] = username
+        p['pUser'] = raw_username
         if not isinstance(p.get('pValue'), str):
             p['pValue'] = json.dumps(p.get('pValue', {}))
         r = tm1.processes.execute_with_return(parsed_options['process'], **p)
