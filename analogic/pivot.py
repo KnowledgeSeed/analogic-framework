@@ -16,6 +16,7 @@ from analogic import authentication_provider
 def call(tm1: TM1Service, username, cube_name=None, dimension_name=None, hierarchy_name=None, subset_name=None,
          element_names=None, subset_name_to_remove=None, selected_cards=None, options=None, export_data=None):
     data = {}
+    raw_username = username
     username = re.sub(r'[^A-Za-z0-9_]', '', username.replace('\\', '').replace('/', ''))
     children = []
 
@@ -80,7 +81,7 @@ def call(tm1: TM1Service, username, cube_name=None, dimension_name=None, hierarc
 
     elif parsed_options and 'process' in parsed_options:
         p = parsed_options['processParams']
-        p['pUser'] = username
+        p['pUser'] = raw_username
         if not isinstance(p.get('pValue'), str):
             p['pValue'] = json.dumps(p.get('pValue', {}))
         r = tm1.processes.execute_with_return(parsed_options['process'], **p)
@@ -332,9 +333,10 @@ def get_pivot_data(tm1, mdx, selected_cards_data, for_excel_export):
 
         for d in selected_cards_data[type]:
             alias_attr_name = d['alias_attr_name']
+            alias_attribute_names_by_axis_and_member_ids[i].append(alias_attr_name or None)
+
             if alias_attr_name:
-                alias_attribute_names_by_axis_and_member_ids[i].append(alias_attr_name)
-                alias_attribute_names[alias_attr_name.replace(' ', '')] = 1
+                alias_attribute_names[alias_attr_name] = 1
 
     if not alias_attribute_names:
         alias_attribute_names = {'Caption': True}
@@ -383,15 +385,18 @@ def get_pivot_header_data(tuples, alias_attribute_names_by_member_ids):
 
     data = []
     last_names = [0] * len(tuples[0]['Members'])
-    alias_attribute_names_len = len(alias_attribute_names_by_member_ids)
-
     for t in tuples:
         d = []
         names = []
         i = 0
         for m in t['Members']:
             name = m['Name']
-            alias = m['Attributes'][alias_attribute_names_by_member_ids[i]] if i < alias_attribute_names_len else name
+            alias_attr_name = alias_attribute_names_by_member_ids[i] if i < len(alias_attribute_names_by_member_ids) else None
+            alias = name
+
+            if alias_attr_name:
+                alias = (m.get('Attributes') or {}).get(alias_attr_name, name)
+
             if last_names[i] != name:
                 if 'Consolidated' == m['Element']['Type']:
                     d.append([alias, name, list(map(lambda c: c['Name'], m['Element']['Components']))])

@@ -1332,7 +1332,7 @@ class PivotTableWidget extends Widget {
     }
 
     savePreset() {
-        let id = this.presetId, d = this.presets[id] || {}, isPublic = 'Public' === d.type;
+        let id = this.presetId, d = this.presets[id] || {}, isPublic = false;
 
         this.popup = $('<div class="ks-pivot ks-pivot-tag-add-popup"><h3>Please set the Preset name a visibility</h3><div class="ks-pivot-add-tag-search"><input value="' + (d.name || '') + '" type="text" placeholder="The Preset name..."></div><div class="ks-pivot-popup-check-holder"><span class="icon-check' + (isPublic ? '' : ' off') + '" style="color: #1d7bff;"></span>The Preset is Public</div><div class="ks-pivot-tag-add-popup-button-holder"><a class="ks-pivot-btn btn-blue-light">Cancel</a><a class="ks-pivot-btn btn-blue">Save</a></div></div>');
 
