@@ -89,7 +89,7 @@ def call(tm1: TM1Service, username, cube_name=None, dimension_name=None, hierarc
 
     elif dimension_name is None:
         children = tm1.cubes.get_dimension_names(cube_name)
-        data = get_presets_data(tm1, username, parsed_options.get('widgetId', ''),
+        data = get_presets_data(tm1, raw_username, parsed_options.get('widgetId', ''),
                                 parsed_options.get('presetParams', {}))
 
     elif hierarchy_name is None:
@@ -153,6 +153,7 @@ def get_presets_data(tm1, username, widget_id, presetParams):
 
 
 def get_default_presets_data_mdx(username, widget_id):
+    username = username.replace("'", "''")
     mdx = """WITH
 MEMBER [Measures zSYS Analogic Pivot Presets].[Measures zSYS Analogic Pivot Presets].[sType]
 AS [zSYS Analogic Pivot Presets].[zSYS Analogic Pivot Presets].CurrentMember.Properties('Type')
@@ -226,7 +227,7 @@ def get_elements_with_aliases(tm1: TM1Service, subset: Subset, is_private_subset
     if not alias_attribute_names:
         alias_attribute_names = ['Caption']
 
-    alias_attributes = 'Attributes/' + ',Attributes/'.join(alias_attribute_names)
+    alias_attributes = 'Attributes/' + ',Attributes/'.join(n.replace(' ', '') for n in alias_attribute_names)
 
     if subset.is_static:
         elements = subset.elements
@@ -336,7 +337,7 @@ def get_pivot_data(tm1, mdx, selected_cards_data, for_excel_export):
             alias_attribute_names_by_axis_and_member_ids[i].append(alias_attr_name or None)
 
             if alias_attr_name:
-                alias_attribute_names[alias_attr_name] = 1
+                alias_attribute_names[alias_attr_name.replace(' ', '')] = 1
 
     if not alias_attribute_names:
         alias_attribute_names = {'Caption': True}
