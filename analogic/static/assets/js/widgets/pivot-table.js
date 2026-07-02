@@ -116,6 +116,18 @@ class PivotTableWidget extends Widget {
         const o = this.options,
             section = this.getSection().children().off('click').on('click', () => this.closeDropdowns());
 
+        const paramsFn = (Repository[this.id] || {}).getParams;
+        if (paramsFn) {
+            const repoParams = paramsFn(LoadExecutorFactory.createContext(this.id, 'PivotTableWidget'));
+            Object.assign(this.options, repoParams);
+        }
+        if (typeof this.options.allowCreatePublicView === 'undefined') {
+            this.options.allowCreatePublicView = true;
+        }
+        if (typeof this.options.allowCreatePublicSubset === 'undefined') {
+            this.options.allowCreatePublicSubset = true;
+        }
+
         this.cubeName = o.cubeName;
         this.presetId = 0;
         this.expandedCollapsedMembers = [{}, {}];
@@ -968,9 +980,10 @@ class PivotTableWidget extends Widget {
                 <h3>Save as New Subset</h3>
                 <label>Subset Title</label>
                 <input type="text">
+                ${this.options.allowCreatePublicSubset ? `
                 <div class="ks-pivot-popup-check-holder">
                     <span class="icon-check off" style="color: #1d7bff;"></span>This Subset is Public
-                </div>
+                </div>` : ''}
                 <div class="ks-pivot-tag-add-popup-button-holder">
                     <a class="ks-pivot-btn btn-blue-light">Cancel</a>
                     <a data-action="save" class="ks-pivot-btn btn-blue">Save</a>
@@ -985,7 +998,7 @@ class PivotTableWidget extends Widget {
                 const input = this.popup.find('input');
                 const newSubsetName = input.val().trim();
                 const isPublicCheckbox = this.popup.find('.ks-pivot-popup-check-holder .icon-check');
-                const isPublic = !isPublicCheckbox.hasClass('off');
+                const isPublic = isPublicCheckbox.length ? !isPublicCheckbox.hasClass('off') : false;
 
                 input.toggleClass('error', !newSubsetName);
 
@@ -1334,7 +1347,11 @@ class PivotTableWidget extends Widget {
     savePreset() {
         let id = this.presetId, d = this.presets[id] || {}, isPublic = false;
 
-        this.popup = $('<div class="ks-pivot ks-pivot-tag-add-popup"><h3>Please set the Preset name a visibility</h3><div class="ks-pivot-add-tag-search"><input value="' + (d.name || '') + '" type="text" placeholder="The Preset name..."></div><div class="ks-pivot-popup-check-holder"><span class="icon-check' + (isPublic ? '' : ' off') + '" style="color: #1d7bff;"></span>The Preset is Public</div><div class="ks-pivot-tag-add-popup-button-holder"><a class="ks-pivot-btn btn-blue-light">Cancel</a><a class="ks-pivot-btn btn-blue">Save</a></div></div>');
+        const publicCheckboxHtml = this.options.allowCreatePublicView
+            ? '<div class="ks-pivot-popup-check-holder"><span class="icon-check' + (isPublic ? '' : ' off') + '" style="color: #1d7bff;"></span>The Preset is Public</div>'
+            : '';
+
+        this.popup = $('<div class="ks-pivot ks-pivot-tag-add-popup"><h3>Please set the Preset name and visibility</h3><div class="ks-pivot-add-tag-search"><input value="' + (d.name || '') + '" type="text" placeholder="The Preset name..."></div>' + publicCheckboxHtml + '<div class="ks-pivot-tag-add-popup-button-holder"><a class="ks-pivot-btn btn-blue-light">Cancel</a><a class="ks-pivot-btn btn-blue">Save</a></div></div>');
 
         let n = this.popup.find('input'), c = this.popup.find('.icon-check');
 
@@ -1342,8 +1359,11 @@ class PivotTableWidget extends Widget {
 
         this.popup.on('click', 'a', e => {
             if ($(e.currentTarget).hasClass('btn-blue')) {
-                this.doSavePreset(n.val().trim(), !c.hasClass('off'));
+                const presetName = n.val().trim(), isPublic = c.length ? !c.hasClass('off') : false;
+
                 this.closePopup();
+
+                this.doSavePreset(presetName, isPublic);
             } else {
                 this.closePopup();
             }
@@ -1358,6 +1378,14 @@ class PivotTableWidget extends Widget {
         if (!presetName) {
             app.popup.show('Please give a Preset name to save.', 300);
             return;
+        }
+
+        if (isPublic) {
+            const privateSubsetCards = this.getPrivateSubsetCards();
+            if (privateSubsetCards.length) {
+                this.confirmSavePublicPresetWithPrivateSubset(presetName, privateSubsetCards);
+                return;
+            }
         }
 
         for (i = 0; i < p.length; ++i) {
@@ -1419,6 +1447,52 @@ class PivotTableWidget extends Widget {
                 app.popup.show('Error communicating with server to save preset.', 400);
                 console.error("Error saving preset:", err);
             });
+    }
+
+    getPrivateSubsetCards() {
+        const cards = [];
+
+        this.holders.children('.ks-pivot-table-tag').each((idx, el) => {
+            const card = $(el), dim = card.data('dimension'), hier = card.data('hierarchy'),
+                subset = card.data('subset');
+            const dimData = this.tree.children[dim],
+                hierData = dimData && dimData.children ? dimData.children[hier] : undefined;
+            let isPrivate;
+
+            if (hierData && hierData.privateSubsets) {
+                // subset was navigated via the selector tree this session - the tree data is authoritative
+                isPrivate = hierData.privateSubsets.includes(subset);
+            } else {
+                // card came from a loaded preset and was never opened in the selector tree -
+                // fall back to the flag that was saved with the preset
+                const flag = card.data('private');
+                isPrivate = flag === true || flag === 'true';
+            }
+
+            if (isPrivate) {
+                cards.push({dimension: dim, subset: card.find('h4').text()});
+            }
+        });
+
+        return cards;
+    }
+
+    confirmSavePublicPresetWithPrivateSubset(presetName, privateSubsetCards) {
+        const list = privateSubsetCards.map(c => '"' + Utils.htmlEncode(c.dimension) + ': ' + Utils.htmlEncode(c.subset) + '"').join(', ');
+
+        this.popup = $('<div class="ks-pivot ks-pivot-tag-add-popup"><h3>This view contains a private subset (' + list + ').<br>A public view cannot reference a private subset, so it will be saved as <b>Private</b> instead.</h3><div class="ks-pivot-tag-add-popup-button-holder"><a class="ks-pivot-btn btn-blue-light">Cancel</a><a data-action="save-private" class="ks-pivot-btn btn-blue">Save as Private</a></div></div>');
+
+        this.popup.on('click', 'a', e => {
+            const action = $(e.currentTarget).data('action');
+
+            this.closePopup();
+
+            if ('save-private' === action) {
+                this.doSavePreset(presetName, false);
+            }
+        });
+
+        this.showPopup();
     }
 
     saveOrDeletePresetFinished(r) {
