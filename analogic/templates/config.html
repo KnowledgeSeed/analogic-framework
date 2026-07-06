@@ -2,6 +2,7 @@ let app = {};
 app = {id: 0, isMobile: null, isTouched: false, url: {}};
 app.assetsUrl = '{{ url_for('static', filename='assets') }}';
 app.applicationAssetsUrl = '{{ url_for(cnf.blueprint_static, filename='assets') }}';
+app.applicationBaseUrl = {{ ((request.script_root.rstrip('/') if request.script_root else '') ~ ('' if cnf.instance == 'default' else '/' ~ cnf.instance)) | tojson }};
 app.tm1CellsetId = (cellsetId) => `Cellsets('${cellsetId}')?`;
 app.handled401 = false;
 app.pingTime = new Date().getTime();
