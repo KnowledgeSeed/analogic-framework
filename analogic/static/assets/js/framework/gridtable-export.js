@@ -132,6 +132,19 @@ const GridTableExport = {
         window.URL.revokeObjectURL(url);
     },
 
+    applyAutoFilterToSheet: (worksheet, filterStartRowIndex, filterStartColIndex) => {
+        if (!worksheet || !worksheet.columns || !worksheet.lastRow ) return;
+
+        const filterEndRowIndex = worksheet.lastRow?.number ?? filterStartRowIndex;
+        const filterEndColIndex = worksheet.lastColumn?.number ?? filterStartColIndex;
+
+        worksheet.autoFilter = {
+            from: {row: filterStartRowIndex, column: filterStartColIndex},
+            to: {row: filterEndRowIndex, column: filterEndColIndex}
+        }
+
+    },
+
     autoResizeColumnsFromRow: (worksheet, startRow)=> {
         if (!worksheet || !worksheet.columns) return;
         worksheet.columns.forEach((column) => {
@@ -1139,22 +1152,28 @@ const GridTableExport = {
            console.log("[Debug createXlsxBuffer] Skipping auto-resize (no relevant rows found).");
         }
 
-          const isLocked = config.locked !== false;
+        const applyAutoFilter = !!config.filter;
+
+        if (applyAutoFilter) {
+            GridTableExport.applyAutoFilterToSheet(worksheet, (headerCanBeRendered ? headerRowActualIndex : dataStartRowIndex), dataStartColumnIndex);
+        }
+
+        const isLocked = config.locked !== false;
 
         if (isLocked) {
-          await worksheet.protect('ASDXYZ123789', {
-            selectLockedCells: true,
-            selectUnlockedCells: true,
-            formatColumns: true,
-            formatRows: true,
-            insertColumns: false,
-            insertRows: false,
-            insertHyperlinks: false,
-            deleteColumns: false,
-            deleteRows: false,
-            sort: false,
-            autoFilter: false
-           });
+            await worksheet.protect('ASDXYZ123789', {
+                selectLockedCells: true,
+                selectUnlockedCells: true,
+                formatColumns: true,
+                formatRows: true,
+                insertColumns: false,
+                insertRows: false,
+                insertHyperlinks: false,
+                deleteColumns: false,
+                deleteRows: false,
+                sort: false,
+                autoFilter: applyAutoFilter
+            });
         }
 
         return worksheet;
@@ -1281,8 +1300,9 @@ const GridTableExport = {
                 : [],
             enableEditing: exportConfig.enableEditing,
             emptyColumnsLeft: exportConfig.emptyColumnsLeft ?? exportConfig.emptyColsLeft,
-             startColumnIndex: exportConfig.startColumnIndex ?? exportConfig.startColumn,
-            locked: exportConfig.locked
+            startColumnIndex: exportConfig.startColumnIndex ?? exportConfig.startColumn,
+            locked: exportConfig.locked,
+            filter: exportConfig.filter
         };
 
         try {
