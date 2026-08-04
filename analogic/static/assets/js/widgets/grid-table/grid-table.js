@@ -7,6 +7,11 @@ class GridTableWidget extends Widget {
 
     getHtml(widgets, headerRowWidgetHtml, data) {
         const o = this.options;
+
+        if (o.errorMessage) {
+            return `<div><h3 style="color:red;">${o.errorMessage}</h3></div>`;
+        }
+
         let d = Array.isArray(data) ? data : data.content;
         const v = this.getParameters(data);
         this.allowCopyToClipBoard = v.allowCopyToClipBoard;
@@ -18,10 +23,6 @@ class GridTableWidget extends Widget {
 
         let r = [], c = [], tb, th, j = 0,
             col = o.widgets.filter(e => e.type.name !== 'GridTableHeaderRowWidget').length, hw = '';
-
-        if (o.errorMessage !== '') {
-            return `<div><h3 style="color:red;">${o.errorMessage}</h3></div>`;
-        }
 
         this.state['col'] = col;
 
@@ -312,6 +313,12 @@ class GridTableWidget extends Widget {
 
         return QB.loadData(o.id, instance.name).then(function (data) {
             return afterLoad(data);
+        }).catch(function (error) {
+            console.error('Error rendering grid table widget "' + o.id + '":', error);
+            o.errorMessage = 'Error! Grid table failed to load.';
+            instance.state = {rows: 0};
+            instance.cellData = [];
+            return `<section title="${o.title || ''}" id="${o.id}">${instance.getHtml([], false, undefined)}</section>`;
         });
     }
 
@@ -328,17 +335,29 @@ class GridTableWidget extends Widget {
                 const cellElement = $('#' + o.id + 'Cell' + i + '-' + j);
                 cellElement.attr('data-row', i);
                 cellElement.attr('data-col', j);
-                Widgets[o.id + 'Cell' + i + '-' + j].initEvents(withState, o.id + '_' + i + '_' + j);
+                try {
+                    Widgets[o.id + 'Cell' + i + '-' + j].initEvents(withState, o.id + '_' + i + '_' + j);
+                } catch (e) {
+                    console.error('Error initializing events for grid table cell "' + o.id + 'Cell' + i + '-' + j + '":', e);
+                }
             }
         }
 
         let headerRowWidget = o.widgets.filter(e => e.type.name === 'GridTableHeaderRowWidget');
 
         for (w of headerRowWidget) {
-            Widgets[w.id].initEvents(withState);
+            try {
+                Widgets[w.id].initEvents(withState);
+            } catch (e) {
+                console.error('Error initializing events for grid table header row "' + w.id + '":', e);
+            }
         }
 
-        this.initEventHandlers(withState);
+        try {
+            this.initEventHandlers(withState);
+        } catch (e) {
+            console.error('Error initializing event handlers for grid table "' + o.id + '":', e);
+        }
         this.isRendering = false;
     }
 

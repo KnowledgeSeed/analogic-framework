@@ -270,7 +270,7 @@ class Widget {
         let afterLoad = (data) => {
             let deferred = [], w;
             for (w of widgets) {
-                deferred.push(w.render(withState, refresh, useDefaultDataForChildren));
+                deferred.push(w.render(withState, refresh, useDefaultDataForChildren).catch(err => w.getWidgetErrorHtml(err)));
             }
 
             return $.when.apply($, deferred).then(function (...results) {
@@ -291,7 +291,23 @@ class Widget {
 
         return loadFunction(o.id, instance.name, useDefaultDataForChildren).then(function (data) {
             return afterLoad(data);
+        }).catch(function (error) {
+            return instance.getWidgetErrorHtml(error);
         });
+    }
+
+    // Fallback markup shown in place of this widget when its own or an ancestor's
+    // repository loader function throws or the render pipeline otherwise fails.
+    // Keeps one widget's failure from rejecting the $.when.apply batch that the
+    // rest of the page's rendering is aggregated through.
+    getWidgetErrorHtml(error) {
+        console.error('Error rendering widget "' + (this.options ? this.options.id : '?') + '":', error);
+        const id = this.options && this.options.id ? this.options.id : Utils.getRandomId();
+        return `<section id="${id}">${Widget.getWidgetErrorMessageHtml()}</section>`;
+    }
+
+    static getWidgetErrorMessageHtml(message = 'Error! Widget failed to load.') {
+        return `<div><h3 style="color:red;">${message}</h3></div>`;
     }
 
     getMainHtmlElement(o, data, visible, widgetHtmls, withState) {
@@ -452,10 +468,18 @@ class Widget {
         }
 
         for (w of widgets) {
-            w.initEvents(withState);
+            try {
+                w.initEvents(withState);
+            } catch (e) {
+                console.error('Error initializing events for widget "' + (w.options ? w.options.id : '?') + '":', e);
+            }
         }
 
-        this.initEventHandlers(withState);
+        try {
+            this.initEventHandlers(withState);
+        } catch (e) {
+            console.error('Error initializing event handlers for widget "' + (this.options ? this.options.id : '?') + '":', e);
+        }
 
         this.isRendering = false;
     }
@@ -537,7 +561,11 @@ class Widget {
 
         if (actions && writeResponse !== false) {
             for (a of actions) {
-                a.action(a.argument, event, element);
+                try {
+                    a.action(a.argument, event, element);
+                } catch (e) {
+                    console.error('Error executing event map action for "' + eventMapId + '":', e);
+                }
             }
         }
     }

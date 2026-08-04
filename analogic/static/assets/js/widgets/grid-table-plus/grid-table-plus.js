@@ -477,7 +477,9 @@ class GridTablePlusWidget extends Widget {
                 this.executeRestRequest(response, context);
             }
         } catch (error) {
-            app.handleJsError(error, this.id, handlerName, `Error while executing Tabulator handler "${handlerName}"`);
+            console.error(`Error while executing Tabulator handler "${handlerName}" for widget "${this.id}":`, error);
+            Loader.stop(true);
+            Api.showPopup(`Error while executing action for widget "${this.id}". See browser console for details.`, 800);
         }
     }
 

@@ -4,14 +4,16 @@
 const QB = {};
 
 QB.loadData = (widgetId, widgetTypeName, useDefaultData = false, loaderFunctionPath = 'init', extraParams = {}) => {
-    const executor = LoadExecutorFactory.createExecutor(widgetId, widgetTypeName, useDefaultData, loaderFunctionPath, extraParams);
+    let executor;
 
     try {
+        executor = LoadExecutorFactory.createExecutor(widgetId, widgetTypeName, useDefaultData, loaderFunctionPath, extraParams);
         return executor.execute();
     } catch (e) {
-        const widgetId = executor.context ? executor.context.getWidgetId() : false,
-            functionName = executor.context ? executor.context.getLoaderFunctionName() : false;
-        app.handleJsError(e, widgetId, functionName, 'Error in loading data');
+        const failedWidgetId = executor && executor.context ? executor.context.getWidgetId() : widgetId,
+            functionName = executor && executor.context ? executor.context.getLoaderFunctionName() : loaderFunctionPath;
+        console.error('Error in loading data for widget "' + failedWidgetId + '" (function: ' + functionName + '):', e);
+        return $.Deferred().reject({widgetId: failedWidgetId, functionName: functionName, error: e}).promise();
     }
 };
 
@@ -49,17 +51,21 @@ QB.parsingControlFinished = (repositoryId) => {
 };
 
 QB.writeData = (eventMapId, jqueryEvent, jqueryElement, resent = false) => {
-    const executor = WriteExecutorFactory.createExecutor(eventMapId, jqueryEvent, jqueryElement);
-    if (Utils.isRequestLoggerEnabled()) {
-        Utils.generateRequestLoggerGroupId();
-    }
+    let executor;
 
     try {
+        executor = WriteExecutorFactory.createExecutor(eventMapId, jqueryEvent, jqueryElement);
+        if (Utils.isRequestLoggerEnabled()) {
+            Utils.generateRequestLoggerGroupId();
+        }
         return executor.execute();
     } catch (e) {
-        const widgetId = executor.context ? executor.context.getWidgetId() : false,
-            functionName = executor.context ? executor.context.getEventName() : false;
-        app.handleJsError(e, widgetId, functionName, 'Error in writing data');
+        const widgetId = executor && executor.context ? executor.context.getWidgetId() : false,
+            functionName = executor && executor.context ? executor.context.getEventName() : false;
+        console.error('Error in writing data for widget "' + widgetId + '" (function: ' + functionName + '):', e);
+        Loader.stop(true);
+        Api.showPopup('Error while executing action' + (widgetId ? ' for widget "' + widgetId + '"' : '') + '. See browser console for details.', 800);
+        return false;
     }
 };
 
@@ -74,7 +80,11 @@ QB.executeEventMapAction = (eventMapId, context, response) => {
     let actions = EventMap[eventMapId], a;
     if (actions) {
         for (a of actions) {
-            a.action(a.argument, context.getJQueryEvent(), context.getJQueryElement(), response);
+            try {
+                a.action(a.argument, context.getJQueryEvent(), context.getJQueryElement(), response);
+            } catch (e) {
+                console.error('Error executing event map action for "' + eventMapId + '":', e);
+            }
         }
     }
 };

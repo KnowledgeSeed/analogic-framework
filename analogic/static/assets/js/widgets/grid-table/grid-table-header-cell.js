@@ -58,6 +58,8 @@ class GridTableHeaderCellWidget extends Widget {
 
                 return `${instance.getHtml(widgetHtmls, instance.processData(d.cellVisible === false ? {...data, ...{cellVisible: d.cellVisible}} : data), withState)}`;
             });
+        }).catch(function (error) {
+            return instance.getWidgetErrorHtml(error);
         });
     }
 
