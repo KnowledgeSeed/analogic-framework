@@ -1,6 +1,8 @@
+import mimetypes
 import os
 import secrets
-from flask import Flask, Blueprint, request, send_file, session, render_template, current_app, g
+import re
+from flask import Flask, Blueprint, request, send_file, session, render_template, current_app, g, make_response, url_for
 import typing as t
 
 from analogic.endpoint import AnalogicEndpoint
@@ -23,6 +25,7 @@ from analogic.default_signal_receiver import DefaultSignalReceiver
 import shutil
 from time import time
 from os import utime, stat
+from analogic.csrf import SEEDER_STUDIO_CSRF_HEADER, get_or_create_seeder_studio_csrf_token
 
 APPLICATIONS_DIR = 'apps'
 APPLICATIONS_DIR_EXTRA = os.environ.get('APPLICATIONS_DIR_EXTRA', '')
@@ -32,6 +35,16 @@ EXTENSIONS_DIR_EXTRA = os.environ.get('EXTENSIONS_DIR_EXTRA', '')
 EXTENSIONS_EXTRA = [] if not os.environ.get('EXTENSIONS_EXTRA') else os.environ.get('EXTENSIONS_EXTRA').split(',')
 ALLOWED_EXTENSION_PREFIX = 'analogic_'
 ALLOWED_EXTENSION_DIR_PREFIX = os.environ.get('ALLOWED_EXTENSION_DIR_PREFIX', 'analogic-ext-')
+EXTENSION_AUTO_ASSET_EXTENSIONS = ['.css', '.js']
+EXTENSION_DEPENDENCY_ASSET_EXTENSIONS = ['.woff', '.woff2', '.ttf', '.eot', '.svg', '.png', '.jpg', '.jpeg', '.gif', '.webp']
+EXTENSION_ASSET_EXTENSIONS = EXTENSION_AUTO_ASSET_EXTENSIONS + EXTENSION_DEPENDENCY_ASSET_EXTENSIONS
+
+mimetypes.add_type('font/woff', '.woff')
+mimetypes.add_type('font/woff2', '.woff2')
+mimetypes.add_type('font/ttf', '.ttf')
+mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
+mimetypes.add_type('image/svg+xml', '.svg')
+
 
 def create_view_func(original_func, named_route):
     def my_wrapped_function(**kwargs):
@@ -55,6 +68,8 @@ class Analogic(Flask):
         }
         self.signal_receivers = {}
         self.extension_assets = {}
+        self.extension_asset_auto_include_names = []
+        self.extension_css_rewrite_asset_names = set()
         self.add_url_rule('/extension_asset', methods=['GET'], view_func=self.extension_asset)
         self.analogic_applications = {}
         self.initialize_auth_providers = True
@@ -212,13 +227,24 @@ class Analogic(Flask):
                 raise Exception('Default application not found')
             return self.analogic_applications['default']
 
-    def register_extension_assets(self, assets):
+    def register_extension_assets(self, assets, auto_include_asset_names=None, css_rewrite_asset_names=None):
         self.extension_assets.update(assets)
+        if auto_include_asset_names is None:
+            auto_include_asset_names = assets.keys()
+        for asset_name in auto_include_asset_names:
+            if asset_name not in self.extension_asset_auto_include_names:
+                self.extension_asset_auto_include_names.append(asset_name)
+        if css_rewrite_asset_names:
+            self.extension_css_rewrite_asset_names.update(css_rewrite_asset_names)
 
     def extension_asset(self):
         asset_name = request.args.get('asset_name')
         if asset_name in self.extension_assets:
-            return send_file(self.extension_assets[asset_name])
+            asset_path = self.extension_assets[asset_name]
+            if asset_name in self.extension_css_rewrite_asset_names:
+                return self._send_extension_css_asset(asset_path)
+            mimetype = mimetypes.guess_type(asset_path)[0]
+            return send_file(asset_path, mimetype=mimetype)
         return 'not found', 404
 
     def get_extension_css_asset_names(self):
@@ -228,7 +254,71 @@ class Analogic(Flask):
         return self._get_asset_by_ext('.js')
 
     def _get_asset_by_ext(self, ext):
-        return list(filter(lambda x: x.endswith(ext), list(self.extension_assets.keys())))
+        return list(filter(lambda x: x.endswith(ext), list(self.extension_asset_auto_include_names)))
+
+    def _send_extension_css_asset(self, asset_path):
+        with open(asset_path, encoding='utf-8') as css_file:
+            css = css_file.read()
+        response = make_response(self._rewrite_extension_css_urls(css, asset_path))
+        response.headers['Content-Type'] = 'text/css; charset=utf-8'
+        return response
+
+    def _rewrite_extension_css_urls(self, css, css_asset_path):
+        css_dir = os.path.dirname(os.path.abspath(css_asset_path))
+
+        def replace_url(match):
+            raw_url = match.group(1).strip()
+            quote = ''
+            if len(raw_url) >= 2 and raw_url[0] == raw_url[-1] and raw_url[0] in ('"', "'"):
+                quote = raw_url[0]
+                raw_url = raw_url[1:-1]
+
+            rewritten = self._resolve_extension_css_url(raw_url, css_dir)
+            if rewritten == raw_url:
+                return match.group(0)
+            return 'url(' + quote + rewritten + quote + ')'
+
+        return re.sub(r'url\(([^)]+)\)', replace_url, css)
+
+    def _resolve_extension_css_url(self, raw_url, css_dir):
+        if not raw_url or raw_url.startswith(('/', '#', 'data:', 'http://', 'https://', 'blob:')):
+            return raw_url
+
+        path_part, suffix = self._split_css_url_suffix(raw_url)
+        target_path = os.path.abspath(os.path.normpath(os.path.join(css_dir, path_part)))
+        asset_name = self._get_extension_asset_name_by_path(target_path)
+        if not asset_name:
+            return raw_url
+
+        asset_url = url_for('extension_asset', asset_name=asset_name)
+        return asset_url + suffix
+
+    def _split_css_url_suffix(self, raw_url):
+        path_part = raw_url
+        suffix = ''
+        query_index = path_part.find('?')
+        fragment_index = path_part.find('#')
+        split_indexes = [i for i in (query_index, fragment_index) if i != -1]
+        if split_indexes:
+            first_suffix_index = min(split_indexes)
+            suffix = path_part[first_suffix_index:]
+            path_part = path_part[:first_suffix_index]
+            if suffix.startswith('?'):
+                fragment_index = suffix.find('#')
+                query = suffix[1:] if fragment_index == -1 else suffix[1:fragment_index]
+                fragment = '' if fragment_index == -1 else suffix[fragment_index:]
+                suffix = ('&' + query if query else '') + fragment
+        return path_part, suffix
+
+    def _get_extension_asset_name_by_path(self, target_path):
+        normalized_target_path = os.path.normcase(os.path.abspath(target_path))
+        for asset_name, asset_path in self.extension_assets.items():
+            if ('/' in asset_name or os.path.sep in asset_name) and os.path.normcase(os.path.abspath(asset_path)) == normalized_target_path:
+                return asset_name
+        for asset_name, asset_path in self.extension_assets.items():
+            if os.path.normcase(os.path.abspath(asset_path)) == normalized_target_path:
+                return asset_name
+        return ''
 
     def is_multi_authentication_provider(self):
         authentication_provider = self.get_analogic_application()
@@ -357,9 +447,17 @@ def create_app(instance_path, start_scheduler=True, initialize_auth_providers=Tr
     def inject_page_meta_data_info():
         return dict(page_meta_data_info=getattr(g, 'page_meta_data_info', []))
 
+    def inject_seeder_studio_csrf():
+        return {
+            'seeder_studio_csrf_header': SEEDER_STUDIO_CSRF_HEADER,
+            'seeder_studio_csrf_token': get_or_create_seeder_studio_csrf_token()
+        }
+
     app.context_processor(inject_current_app)
 
     app.context_processor(inject_page_meta_data_info)
+
+    app.context_processor(inject_seeder_studio_csrf)
 
     with app.app_context():
         app.evaluate_signal_receivers()
@@ -419,8 +517,15 @@ def _register_extension(app, extension_dir, extension_dir_name, modules):
 
 
 def _register_extension_assets(app, extension_dir):
-    assets = _fast_scan_dir(extension_dir, ['.css', '.js'])[1]
-    app.register_extension_assets(assets)
+    asset_paths = _scan_extension_asset_paths(extension_dir, EXTENSION_ASSET_EXTENSIONS)
+    extension_assets = _build_extension_asset_registry(extension_dir, asset_paths)
+    auto_include_asset_names = [
+        os.path.basename(asset_path)
+        for asset_path in asset_paths
+        if os.path.splitext(asset_path)[1].lower() in EXTENSION_AUTO_ASSET_EXTENSIONS
+    ]
+    css_rewrite_asset_names = _get_extension_css_rewrite_asset_names(extension_assets)
+    app.register_extension_assets(extension_assets, auto_include_asset_names, css_rewrite_asset_names)
 
 
 def _register_extension_components(app, extension_name, files):
@@ -521,3 +626,34 @@ def _fast_scan_dir(directory, ext):
         sub_folders.extend(sf)
         files.update(f)
     return sub_folders, files
+
+
+def _scan_extension_asset_paths(directory, extensions):
+    asset_paths = []
+    if '.git' in directory or 'tests' in directory:
+        return asset_paths
+
+    for f in os.scandir(directory):
+        if f.is_dir():
+            asset_paths.extend(_scan_extension_asset_paths(f.path, extensions))
+        elif f.is_file() and os.path.splitext(f.name)[1].lower() in extensions:
+            asset_paths.append(f.path)
+    return asset_paths
+
+
+def _build_extension_asset_registry(extension_dir, asset_paths):
+    assets = {}
+    extension_name = os.path.basename(os.path.normpath(extension_dir))
+    for asset_path in asset_paths:
+        assets[os.path.basename(asset_path)] = asset_path
+        relative_path = os.path.relpath(asset_path, extension_dir).replace(os.path.sep, '/')
+        assets[extension_name + '/' + relative_path] = asset_path
+    return assets
+
+
+def _get_extension_css_rewrite_asset_names(extension_assets):
+    return [
+        asset_name
+        for asset_name in extension_assets.keys()
+        if asset_name.endswith('.css')
+    ]

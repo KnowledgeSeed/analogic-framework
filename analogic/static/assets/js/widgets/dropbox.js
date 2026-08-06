@@ -4,6 +4,11 @@
 
 class DropBoxWidget extends Widget {
 
+    getWidgetErrorHtml(error) {
+        console.error('Error rendering dropdown widget "' + this.options.id + '":', error);
+        return `<section id="${this.options.id}"><div class="ks-dropbox ks-dropbox-error"><h3 style="color:red;">Error! Dropdown failed to load.</h3></div></section>`;
+    }
+
     getHtml(widgets, d) {
         const o = this.options;
 

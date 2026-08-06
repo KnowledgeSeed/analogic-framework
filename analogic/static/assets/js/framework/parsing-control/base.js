@@ -15,7 +15,8 @@ class ParsingControl {
             }
             return response;
         } catch (e) {
-            app.handleJsError(e, this.context.getWidgetId(), this.context.getLoaderFunctionName(), 'Error in parsing');
+            console.error('Error in parsing for widget "' + this.context.getWidgetId() + '" (function: ' + this.context.getLoaderFunctionName() + '):', e);
+            throw e;
         }
     }
 

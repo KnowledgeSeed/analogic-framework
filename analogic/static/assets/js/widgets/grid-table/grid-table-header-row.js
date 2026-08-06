@@ -45,6 +45,8 @@ class GridTableHeaderRowWidget extends Widget {
 
                 return `${instance.getHtml(widgetHtmls, instance.processData(data), withState)}`;
             });
+        }).catch(function (error) {
+            return instance.getWidgetErrorHtml(error);
         });
     }
 }
