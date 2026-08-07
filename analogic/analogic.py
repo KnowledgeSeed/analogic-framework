@@ -25,7 +25,6 @@ from analogic.default_signal_receiver import DefaultSignalReceiver
 import shutil
 from time import time
 from os import utime, stat
-from analogic.csrf import SEEDER_STUDIO_CSRF_HEADER, get_or_create_seeder_studio_csrf_token
 
 APPLICATIONS_DIR = 'apps'
 APPLICATIONS_DIR_EXTRA = os.environ.get('APPLICATIONS_DIR_EXTRA', '')
@@ -447,17 +446,9 @@ def create_app(instance_path, start_scheduler=True, initialize_auth_providers=Tr
     def inject_page_meta_data_info():
         return dict(page_meta_data_info=getattr(g, 'page_meta_data_info', []))
 
-    def inject_seeder_studio_csrf():
-        return {
-            'seeder_studio_csrf_header': SEEDER_STUDIO_CSRF_HEADER,
-            'seeder_studio_csrf_token': get_or_create_seeder_studio_csrf_token()
-        }
-
     app.context_processor(inject_current_app)
 
     app.context_processor(inject_page_meta_data_info)
-
-    app.context_processor(inject_seeder_studio_csrf)
 
     with app.app_context():
         app.evaluate_signal_receivers()
