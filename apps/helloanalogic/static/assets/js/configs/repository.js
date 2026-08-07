@@ -5,6 +5,9 @@
 const GRID_TABLE_LIGHT_SERVER_TABLE2_METADATA_KEY = '__gridTableLightServerTable2';
 const GRID_TABLE_LIGHT_SERVER_TABLE2_DEFAULT_ROW_COUNT = 20;
 const GRID_TABLE_LIGHT_SERVER_TABLE2_COLUMN_COUNT = 18;
+const GPU_TABLE_SERVER_TABLE_METADATA_KEY = '__gpuTableServerTable';
+const GPU_TABLE_SERVER_TABLE_DEFAULT_ROW_COUNT = 2500;
+const GPU_TABLE_SERVER_TABLE_COLUMN_COUNT = 24;
 
 Repository = {
     gridTableLightDemoTable: {
@@ -222,6 +225,64 @@ Repository = {
                 body: recordLabel ? `${recordLabel} assigned to ${newValue}` : `${rowText} assigned to ${newValue}`
             });
             Api.updateContent('gridTableLightDemoInfoText');
+        }
+    },
+    gpuTableServerTable: {
+        init(ctx) {
+            return new RestRequest(this.request);
+        },
+        request: {
+            url: (widgets, ctx) => {
+                const baseUrl = '/api/v1/ExecuteMDX?$expand=Cells($select=Ordinal,FormattedValue;$expand=Members($select=Name, Attributes/Editable))';
+                const result = Utils.buildMdxQueryUrl(baseUrl, {
+                    includeCount: false,
+                    columnCount: GPU_TABLE_SERVER_TABLE_COLUMN_COUNT,
+                    defaultRowCount: GPU_TABLE_SERVER_TABLE_DEFAULT_ROW_COUNT,
+                    metadataKey: GPU_TABLE_SERVER_TABLE_METADATA_KEY,
+                    returnMetadata: true
+                }, ctx);
+
+                return result && result.url ? result.url : baseUrl;
+            },
+            type: 'POST',
+            server: true,
+            body: () => ({key: 'safariAssetRegister2_mdx'}),
+            parsingControl: {
+                type: 'script',
+                script: (data) => {
+                    const transformed = Utils.transformMdxResponseToGridTableLight(data);
+
+                    if (0 === transformed.columns.length && 0 === transformed.content.length) {
+                        console.error('gpuTableServerTable: the MDX response could not be transformed into table data.');
+                        return {columns: [], rows: []};
+                    }
+
+                    const columns = transformed.columns.map((column, index) => ({
+                        field: column.key || `col${index + 1}`,
+                        title: column.title || column.key || `Column ${index + 1}`
+                    }));
+
+                    const rows = transformed.content.map((row) => {
+                        const rowObject = {};
+                        const cells = Array.isArray(row && row.cells) ? row.cells : [];
+
+                        for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+                            const columnDefinition = columns[columnIndex];
+                            const cell = cells[columnIndex] || {};
+                            rowObject[columnDefinition.field] = cell.displayValue || cell.rawValue || '';
+                        }
+
+                        return rowObject;
+                    });
+
+                    return {
+                        columns: columns,
+                        rows: rows,
+                        skin: 'contrast',
+                        zebra: true
+                    };
+                }
+            }
         }
     },
     // gridTableLightServerTable: {
