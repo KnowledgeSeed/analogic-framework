@@ -28,3 +28,4 @@ long_running_tasks
 analogic.properties
 node_modules/
 /apps/*/seeder_studio_trust.json
+/config.py

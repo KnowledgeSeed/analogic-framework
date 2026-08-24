@@ -381,7 +381,11 @@ def create_app(instance_path, start_scheduler=True, initialize_auth_providers=Tr
     app = Analogic(__name__, instance_path=instance_path)
     app.initialize_auth_providers = initialize_auth_providers
 
-    app.config.from_pyfile('config.py', silent=True)
+    # Must match the path config_path below writes to (app.instance_path) -
+    # from_pyfile('config.py') alone resolves relative to app.root_path (the
+    # analogic package directory), a different location, so it always missed
+    # the generated key and a fresh one was appended on every single startup.
+    app.config.from_pyfile(os.path.join(app.instance_path, 'config.py'), silent=True)
 
     secret_key = os.environ.get('ANALOGIC_SECRET_KEY')
     if not secret_key:
@@ -404,6 +408,10 @@ def create_app(instance_path, start_scheduler=True, initialize_auth_providers=Tr
         app.config['SECRET_KEY'] = secret_key
 
     app.secret_key = secret_key
+
+    session_cookie_name = os.environ.get('ANALOGIC_SESSION_COOKIE_NAME')
+    if session_cookie_name:
+        app.config['SESSION_COOKIE_NAME'] = session_cookie_name
 
     _load_logging(app)  # Todo overwrite
 
