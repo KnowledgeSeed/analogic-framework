@@ -574,6 +574,43 @@ const GridTableExport = {
     normalizeExcludedColumns: (columns, totalColumns) => {
         return GridTableExport.normalizeColumnSelection(columns, totalColumns, 'excludeColumns');
     },
+    // Columns the grid table skipped via `hideEmptyColumns` are not rendered, so they
+    // must not appear in the export either. The widget publishes the resolved set as
+    // `hiddenCols`, but a source passed as a bare `<id>.cellData` array loses it - in
+    // that case the same set is derived from the `hideCell` flags the cells carry.
+    resolveHiddenColumns: (tableObject, tableData, totalColumns) => {
+        const hidden = new Set();
+
+        if (tableObject && tableObject.hiddenCols instanceof Set) {
+            tableObject.hiddenCols.forEach((columnIndex) => {
+                if (Number.isInteger(columnIndex) && columnIndex >= 0 && columnIndex < totalColumns) {
+                    hidden.add(columnIndex);
+                }
+            });
+            return hidden;
+        }
+
+        if (!Array.isArray(tableData) || tableData.length === 0 || !totalColumns) {
+            return hidden;
+        }
+
+        for (let columnIndex = 0; columnIndex < totalColumns; columnIndex++) {
+            let used = false;
+            for (let rowIndex = 0; rowIndex < tableData.length; rowIndex++) {
+                const row = tableData[rowIndex];
+                const cell = Array.isArray(row) ? row[columnIndex] : null;
+                if (!cell || !cell.hideCell) {
+                    used = true;
+                    break;
+                }
+            }
+            if (!used) {
+                hidden.add(columnIndex);
+            }
+        }
+
+        return hidden;
+    },
 
     getNumberFormatPattern: (decimalCount = 0) => {
         if (!Number.isInteger(decimalCount) || decimalCount <= 0) {
@@ -1106,6 +1143,9 @@ const GridTableExport = {
 
         const totalColumns = GridTableExport.getTotalColumnCount(headerTitlesArray, workingTableData);
         const excludedColumnsSet = GridTableExport.normalizeExcludedColumns(config.excludeColumns, totalColumns);
+
+        GridTableExport.resolveHiddenColumns(tableObject, workingTableData, totalColumns)
+            .forEach((columnIndex) => excludedColumnsSet.add(columnIndex));
 
         const columnMapping = GridTableExport.buildColumnMapping(totalColumns, excludedColumnsSet);
         const editingConfig = GridTableExport.normalizeEditingConfig(config.enableEditing, totalColumns);

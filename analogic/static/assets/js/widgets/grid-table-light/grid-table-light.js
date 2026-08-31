@@ -93,6 +93,69 @@ class GridTableLightWidget extends Widget {
         return text;
     }
 
+    // `hideCell` as the raw payload carries it, read the same way normalizeRow and
+    // normalizeCell locate a cell, so the hidden set can be resolved before the rows
+    // are normalized - the frozen flags depend on it.
+    static rawCellHideFlag(row, colIndex, column) {
+        const cells = Array.isArray(row)
+            ? row
+            : (Array.isArray(row && row.cells)
+                ? row.cells
+                : (Array.isArray(row && row.content) ? row.content : []));
+        const cell = cells[colIndex];
+
+        if (cell && typeof cell === 'object' && !Array.isArray(cell) && typeof cell.hideCell !== 'undefined') {
+            return !!cell.hideCell;
+        }
+
+        const defaults = column && column.cellDefaults ? column.cellDefaults : null;
+
+        return !!(defaults && defaults.hideCell);
+    }
+
+    // Columns whose every cell carries `hideCell` are dropped from the rendered markup
+    // when `hideEmptyColumns` is on. `columns`, `cellData` and `exportHeaderTitles` keep
+    // their full width, so `cellData[row][col]` and every `data-col` lookup keeps
+    // addressing the original column indexes.
+    static computeHiddenColumns(rawRows, columns, enabled) {
+        const hidden = new Set();
+
+        if (enabled !== true || !Array.isArray(rawRows) || rawRows.length === 0) {
+            return hidden;
+        }
+
+        for (let c = 0; c < columns.length; ++c) {
+            let used = false;
+            for (let r = 0; r < rawRows.length; ++r) {
+                if (!GridTableLightWidget.rawCellHideFlag(rawRows[r], c, columns[c])) {
+                    used = true;
+                    break;
+                }
+            }
+            if (!used) {
+                hidden.add(c);
+            }
+        }
+
+        return hidden;
+    }
+
+    getHiddenColumns() {
+        return this.hiddenCols instanceof Set ? this.hiddenCols : new Set();
+    }
+
+    // Next rendered column index in `direction` (+1/-1), or false at the edge.
+    getNextVisibleColumn(fromCol, direction, colCount) {
+        const hiddenCols = this.getHiddenColumns();
+        let next = fromCol + direction;
+
+        while (next >= 0 && next < colCount && hiddenCols.has(next)) {
+            next = next + direction;
+        }
+
+        return next >= 0 && next < colCount ? next : false;
+    }
+
     computeExportHeaderTitles(columns) {
         if (!Array.isArray(columns)) {
             return [];
@@ -219,6 +282,7 @@ class GridTableLightWidget extends Widget {
             exportButtonStyle: this.getRealValue('exportButtonStyle', data, ''),
             freezeFirstColumns: parseInt(this.getRealValue('freezeFirstColumns', data, 0), 10) || 0,
             freezeHeader: this.getRealValue('freezeHeader', data, true),
+            hideEmptyColumns: this.getRealValue('hideEmptyColumns', data, false),
             hideIfNoData: this.getRealValue('hideIfNoData', data, false),
             rootClasses: this.getRealValue('rootClasses', data, ''),
             rootStyle: this.getRealValue('rootStyle', data, ''),
@@ -272,8 +336,34 @@ class GridTableLightWidget extends Widget {
             return normalized;
         });
 
+        // Resolved before the rows are normalized, because a hidden column shifts what
+        // "the first N frozen columns" means: freezing counts rendered columns, so a
+        // hidden one must not consume a freeze slot.
+        const hiddenColumns = GridTableLightWidget.computeHiddenColumns(
+            payload.content, columns, parameters.hideEmptyColumns
+        );
+
+        if (hiddenColumns.size > 0) {
+            let visiblePosition = 0;
+            columns.forEach((column) => {
+                column.hidden = hiddenColumns.has(column.index);
+                if (column.hidden) {
+                    column.frozen = false;
+                    return;
+                }
+                column.frozen = parameters.freezeFirstColumns > visiblePosition;
+                ++visiblePosition;
+            });
+        }
+
         const rows = (payload.content || []).map((row, rowIndex) => this.normalizeRow(row, rowIndex, columns));
         const content = rows.map(row => row.cells);
+
+        if (hiddenColumns.size > 0) {
+            rows.forEach(row => row.cells.forEach((cell) => {
+                cell.hidden = hiddenColumns.has(cell.columnIndex);
+            }));
+        }
 
         const totalCount = typeof payload.totalCount === 'number' ? payload.totalCount : content.length;
         const page = payload.page || parameters.page || 1;
@@ -283,6 +373,7 @@ class GridTableLightWidget extends Widget {
         return {
             parameters,
             columns,
+            hiddenColumns,
             rows,
             content,
             totalCount,
@@ -409,7 +500,10 @@ class GridTableLightWidget extends Widget {
     }
 
     buildHeaderHtml(columns, parameters) {
-        const cells = columns.map((column, index) => {
+        const cells = columns.filter(column => !(column && column.hidden)).map((column) => {
+            // `column.index`, not the map position: after filtering they diverge, and
+            // `data-col` has to keep naming the original column.
+            const index = typeof column.index === 'number' ? column.index : columns.indexOf(column);
             const baseClasses = [GRID_TABLE_LIGHT_CLASSES.cell, `ks-pos-${column.alignment || 'center-left'}`];
             const className = this.getClassName(baseClasses, column.headerClasses || column.classes);
             const widthStyles = [];
@@ -431,7 +525,7 @@ class GridTableLightWidget extends Widget {
             if (parameters.rowHeight) {
                 rowStyles.push(`height:${Widget.getPercentOrPixel(parameters.rowHeight)};`);
             }
-            const cells = (row.cells || []).map((cell) => this.buildCellHtml(cell));
+            const cells = (row.cells || []).filter(cell => !(cell && cell.hidden)).map((cell) => this.buildCellHtml(cell));
             const className = this.getClassName([GRID_TABLE_LIGHT_CLASSES.row], row.rowClasses);
             const styleAttr = this.getStyleAttribute(rowStyles.join(''), row.rowStyle);
             return `<div class="${className}" data-row="${row.index}"${styleAttr}>${cells.join('')}</div>`;
@@ -570,6 +664,8 @@ class GridTableLightWidget extends Widget {
 
     afterProcess(processed) {
         this.state.columns = processed.columns;
+        // Published on the instance so GridTableExport can drop the same columns.
+        this.hiddenCols = processed.hiddenColumns instanceof Set ? processed.hiddenColumns : new Set();
         this.state.page = processed.page;
         this.state.pageSize = processed.pageSize;
         this.state.totalCount = processed.totalCount;
@@ -1146,8 +1242,14 @@ class GridTableLightWidget extends Widget {
         const minCol = Math.min(start.col, end.col);
         const maxCol = Math.max(start.col, end.col);
         const selected = new Set();
+        const hiddenCols = this.getHiddenColumns();
         for (let r = minRow; r <= maxRow; r++) {
             for (let c = minCol; c <= maxCol; c++) {
+                // A hidden column has no cell element, so its id would sit in the
+                // selection without ever resolving to anything.
+                if (hiddenCols.has(c)) {
+                    continue;
+                }
                 selected.add(`${this.options.id}Cell${r}-${c}`);
             }
         }
@@ -1296,11 +1398,17 @@ class GridTableLightWidget extends Widget {
                 currentPosition.row = Math.min(rowCount - 1, currentPosition.row + 1);
                 break;
             case 'ArrowLeft':
-                currentPosition.col = Math.max(0, currentPosition.col - 1);
+            case 'ArrowRight': {
+                // Hidden columns leave gaps in the rendered indexes, so stepping by one
+                // would land on a column that has no cell element and stop navigation.
+                const step = event.key === 'ArrowLeft' ? -1 : 1;
+                const nextCol = this.getNextVisibleColumn(currentPosition.col, step, colCount);
+                if (nextCol === false) {
+                    return;
+                }
+                currentPosition.col = nextCol;
                 break;
-            case 'ArrowRight':
-                currentPosition.col = Math.min(colCount - 1, currentPosition.col + 1);
-                break;
+            }
         }
         const nextId = this.buildCellId(currentPosition.row, currentPosition.col);
         const nextCell = document.getElementById(nextId);
@@ -1484,7 +1592,17 @@ class GridTableLightWidget extends Widget {
             const measurementCell = bodyCell || headerCell;
             const rect = measurementCell ? measurementCell.getBoundingClientRect() : null;
             const width = rect && rect.width ? rect.width : measurementCell ? measurementCell.offsetWidth : 0;
-            frozenMetrics.push({index, width: Math.max(width, 0)});
+            // `index` is the position among rendered cells; `columnIndex` is the original
+            // column. Hidden columns make the two diverge, and body cells are matched by
+            // their `data-col`, which carries the original index.
+            const renderedColumnIndex = parseInt(
+                (bodyCell || headerCell || {getAttribute: () => null}).getAttribute('data-col'), 10
+            );
+            frozenMetrics.push({
+                index,
+                columnIndex: Number.isFinite(renderedColumnIndex) ? renderedColumnIndex : index,
+                width: Math.max(width, 0)
+            });
         }
 
         if (!frozenMetrics.length) {
@@ -1573,7 +1691,7 @@ class GridTableLightWidget extends Widget {
                 if (!Number.isFinite(colIndex)) {
                     return;
                 }
-                const metric = frozenMetrics.find(item => item.index === colIndex);
+                const metric = frozenMetrics.find(item => item.columnIndex === colIndex);
                 if (metric) {
                     applyFrozenStyles(cell, metric, false);
                 }
