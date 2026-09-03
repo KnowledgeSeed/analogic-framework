@@ -24,6 +24,15 @@ class GridTableWidget extends Widget {
         let r = [], c = [], tb, th, j = 0,
             col = o.widgets.filter(e => e.type.name !== 'GridTableHeaderRowWidget').length, hw = '';
 
+        // Columns resolved as hidden are not present in `widgets` at all, so the row
+        // slicing width has to shrink with them or every row would wrap incorrectly.
+        const hiddenCols = this.getHiddenColumns();
+
+        col = col - hiddenCols.size;
+        if (col < 1) {
+            col = 1;
+        }
+
         this.state['col'] = col;
 
         if (v.maxRows) {
@@ -50,7 +59,11 @@ class GridTableWidget extends Widget {
         if (headerRowWidgetHtml) {
             th = this.buildTableHeadHtml(headerRowWidgetHtml);
         } else {
+            let headerColIndex = 0;
             for (let w of o.widgets.filter(e => e.type.name !== 'GridTableHeaderRowWidget')) {
+                if (hiddenCols.has(headerColIndex++)) {
+                    continue;
+                }
                 hw = '';
                 if (w.title) {
                     hw = w.title.split('|').map(e => '<div>' + e + '</div>').join('');
@@ -70,6 +83,7 @@ class GridTableWidget extends Widget {
             borderBottom: this.getRealValue('borderBottom', data, true),
             borderTop: this.getRealValue('borderTop', data, true),
             disableRefreshGridCell: this.getRealValue('disableRefreshGridCell', data, false),
+            hideEmptyColumns: this.getRealValue('hideEmptyColumns', data, false),
             hideIfNoData: this.getRealValue('hideIfNoData', data, false),
             maxRows: this.getRealValue('maxRows', data, false),
             minWidth: this.getRealValue('minWidth', data, false),
@@ -81,6 +95,71 @@ class GridTableWidget extends Widget {
 
     getWidgetHtml(innerHtml, title, mainDivStyle) {
         return `<div style="${mainDivStyle.join('')}"><h3>${title}</h3>${innerHtml}</div>`;
+    }
+
+    // Columns whose every cell carries `hideCell` are skipped entirely when the
+    // `hideEmptyColumns` parameter is on: no cell widget instance is constructed, no
+    // HTML is produced and no DOM node is created for them. Hiding is resolved at
+    // column granularity even though the marking arrives per cell, because rows are
+    // assembled with `widgets.slice(j, j + col)` - a per-cell skip would desynchronize
+    // the rows. `cellData` deliberately keeps its full width, so `cellData[row][col]`
+    // lookups (getFillPatchRequest, clipboard, export) keep addressing the original
+    // column indexes.
+    static computeHiddenColumns(processedData, rows, colNum, enabled) {
+        const hidden = new Set();
+
+        // With no rows there is nothing to decide from, and "every cell is flagged"
+        // would vacuously hold for every column.
+        if (enabled !== true || !rows) {
+            return hidden;
+        }
+
+        for (let c = 0; c < colNum; ++c) {
+            let used = false;
+            for (let r = 0; r < rows; ++r) {
+                const cell = processedData[r] ? processedData[r][c] : null;
+                // A missing cell counts as "in use" so a ragged dataset never hides a
+                // column that may still carry data.
+                if (!cell || !cell.hideCell) {
+                    used = true;
+                    break;
+                }
+            }
+            if (!used) {
+                hidden.add(c);
+            }
+        }
+
+        return hidden;
+    }
+
+    static hiddenColumnsDiffer(a, b) {
+        if (a.size !== b.size) {
+            return true;
+        }
+        for (const c of a) {
+            if (!b.has(c)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getHiddenColumns() {
+        return this.hiddenCols instanceof Set ? this.hiddenCols : new Set();
+    }
+
+    // Next visible column index in `direction` (+1/-1) starting from `fromCol`,
+    // or false when the grid has no rendered column left that way.
+    getNextVisibleColumn(fromCol, direction, colNum) {
+        const hiddenCols = this.getHiddenColumns();
+        let next = fromCol + direction;
+
+        while (next >= 0 && next < colNum && hiddenCols.has(next)) {
+            next = next + direction;
+        }
+
+        return next >= 0 && next < colNum ? next : false;
     }
 
     buildTableHtml(innerHtml, skin = 'template1') {
@@ -178,6 +257,18 @@ class GridTableWidget extends Widget {
             }
             rowNum = processedData.length;
             colNum = processedData[0] ? processedData[0].length : 0;
+
+            // A column can gain or lose data between refreshes. The set of rendered
+            // columns is structure, not content, so a change in it has to escalate to a
+            // full re-render - with the data already in hand, so no second round-trip.
+            const hiddenCols = GridTableWidget.computeHiddenColumns(
+                processedData, rowNum, colNum, vv.hideEmptyColumns
+            );
+
+            if (GridTableWidget.hiddenColumnsDiffer(hiddenCols, instance.getHiddenColumns())) {
+                return instance.reRenderWidget(false, false, d);
+            }
+
             instance.state['rows'] = rowNum;
 
             instance.updateHtml(d);
@@ -187,6 +278,14 @@ class GridTableWidget extends Widget {
                     processedData[i][j].id = o.id + '_' + i + '_' + j;
                     processedData[i][j].cellId = o.id + 'Cell' + i + '-' + j;
                     processedData[i][j].originalId = instance.cellData[i][j].originalId;
+
+                    // Hidden columns have no widget instance to update, but cellData
+                    // still tracks them so the column indexes stay stable.
+                    if (hiddenCols.has(j)) {
+                        instance.cellData[i][j] = processedData[i][j];
+                        ++j;
+                        continue;
+                    }
 
                     if (vv.allowFullContentUpdated && i >= previousLength) {
                          Widgets[processedData[i][j].cellId] = new w.type(w);
@@ -261,11 +360,18 @@ class GridTableWidget extends Widget {
                 o.errorMessage = 'Error! Grid widgets number ' + widgetColNum + ' is not equal to repository query number ' + colNum + '!';
             }
 
+            const hiddenCols = GridTableWidget.computeHiddenColumns(
+                processedData, rows, colNum, instance.getParameters(data).hideEmptyColumns
+            );
+            instance.hiddenCols = hiddenCols;
+
             instance.state = {rows: rows};
             instance.cellData = [];
 
             if (headerRowWidget !== false) {
-                deferred.push(headerRowWidget.render(withState, processedData.length > 0 ? processedData[0] : []));
+                deferred.push(headerRowWidget.render(
+                    withState, processedData.length > 0 ? processedData[0] : [], QB.loadData, hiddenCols
+                ));
             }
 
             for (i = 0; i < rows; ++i) {
@@ -275,9 +381,11 @@ class GridTableWidget extends Widget {
                     processedData[i][j].id = o.id + '_' + i + '_' + j;
                     processedData[i][j].cellId = o.id + 'Cell' + i + '-' + j;
 
-                    cw = new w.type(w);
-                    Widgets[processedData[i][j].cellId] = cw;
-                    widgetHtmls.push(cw.render(withState, processedData[i][j]));
+                    if (!hiddenCols.has(j)) {
+                        cw = new w.type(w);
+                        Widgets[processedData[i][j].cellId] = cw;
+                        widgetHtmls.push(cw.render(withState, processedData[i][j]));
+                    }
 
                     instance.cellData[i].push(processedData[i][j]);
                     ++j;
@@ -330,8 +438,13 @@ class GridTableWidget extends Widget {
 
         let w, i, j, colNum = (o.widgets.filter(e => e.type.name !== 'GridTableHeaderRowWidget') || []).length;
 
+        const hiddenCols = this.getHiddenColumns();
+
         for (i = 0; i < this.state.rows; ++i) {
             for (j = 0; j < colNum; ++j) {
+                if (hiddenCols.has(j)) {
+                    continue;
+                }
                 const cellElement = $('#' + o.id + 'Cell' + i + '-' + j);
                 cellElement.attr('data-row', i);
                 cellElement.attr('data-col', j);
@@ -423,6 +536,7 @@ class GridTableWidget extends Widget {
         delete this.activeCell;
         delete this.selectionAnchor;
         delete this.lastHoveredCell;
+        delete this.hiddenCols;
     }
 
     handleMouseDown(e) {
@@ -604,7 +718,19 @@ class GridTableWidget extends Widget {
         }
 
         const targetRow = parseInt(baseCell.data('row')) + deltaRow;
-        const targetCol = parseInt(baseCell.data('col')) + deltaCol;
+
+        // Hidden columns leave gaps in the rendered column indexes, so a plain +/-1 step
+        // would land on a column that has no DOM node and navigation would stop there.
+        let targetCol = parseInt(baseCell.data('col'));
+        if (deltaCol !== 0) {
+            const colNum = (this.options.widgets.filter(e => e.type.name !== 'GridTableHeaderRowWidget') || []).length;
+            const nextCol = this.getNextVisibleColumn(targetCol, deltaCol, colNum);
+            if (nextCol === false) {
+                return false;
+            }
+            targetCol = nextCol;
+        }
+
         const nextCell = $(`#${this.id} .ks-grid-table-cell[data-row="${targetRow}"][data-col="${targetCol}"]`);
 
         if (!nextCell.length) {
@@ -661,8 +787,15 @@ class GridTableWidget extends Widget {
 
         this.clearSelection();
 
+        const hiddenCols = this.getHiddenColumns();
+
         for (let r = minRow; r <= maxRow; r++) {
             for (let c = minCol; c <= maxCol; c++) {
+                // A hidden column has no cell element; selecting its id would put a cell
+                // into the selection that no lookup can resolve later.
+                if (hiddenCols.has(c)) {
+                    continue;
+                }
                 const cellId = `${this.options.id}Cell${r}-${c}`;
                 this.selectedCells.add(cellId);
             }
@@ -695,6 +828,9 @@ class GridTableWidget extends Widget {
 
         this.selectedCells.forEach(cellId => {
             const cell = $('#' + cellId);
+            if (!cell.length) {
+                return;
+            }
             const row = parseInt(cell.data('row'));
             const col = parseInt(cell.data('col'));
             const text = cell.find('.ks-text-title').text().trim();
@@ -800,6 +936,7 @@ class GridTableWidget extends Widget {
         const cellData = v(this.options.id + '.cellData'), h = Listeners.handle;
         if (cellData && cellData.length > 0) {
             let widgetOptions, cells = [], rowNum = cellData.length, i, j, cw;
+            const hiddenCols = this.getHiddenColumns();
             for (widgetOptions of this.options.widgets || []) {
                 if ('GridTableHeaderRowWidget' !== widgetOptions.type.name) {
                     cells.push(widgetOptions);
@@ -807,6 +944,11 @@ class GridTableWidget extends Widget {
             }
             for (i = 0; i < rowNum; ++i) {
                 for (j = 0; j < cells.length; ++j) {
+                    // Hidden columns have no DOM node, so binding their listeners would
+                    // attach handlers that can never fire.
+                    if (hiddenCols.has(j)) {
+                        continue;
+                    }
                     cw = cells[j].widgets[0];
                     const o = {...cw, ...{id: this.options.id + '_' + i + '_' + j}};
                     if (o.listen) {
