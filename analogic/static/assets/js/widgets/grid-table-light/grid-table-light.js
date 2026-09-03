@@ -343,27 +343,27 @@ class GridTableLightWidget extends Widget {
             payload.content, columns, parameters.hideEmptyColumns
         );
 
-        if (hiddenColumns.size > 0) {
-            let visiblePosition = 0;
-            columns.forEach((column) => {
-                column.hidden = hiddenColumns.has(column.index);
-                if (column.hidden) {
-                    column.frozen = false;
-                    return;
-                }
-                column.frozen = parameters.freezeFirstColumns > visiblePosition;
-                ++visiblePosition;
-            });
-        }
+        // Named `hideEmptyColumn`, not `hidden` - a column/cell config coming from the
+        // app can legitimately already carry a `hidden` field of its own, and a plain
+        // deep merge would let that survive into this same object. Namespacing this
+        // flag keeps it from colliding with - or being mistaken for - app data.
+        let visiblePosition = 0;
+        columns.forEach((column) => {
+            column.hideEmptyColumn = hiddenColumns.has(column.index);
+            if (column.hideEmptyColumn) {
+                column.frozen = false;
+                return;
+            }
+            column.frozen = parameters.freezeFirstColumns > visiblePosition;
+            ++visiblePosition;
+        });
 
         const rows = (payload.content || []).map((row, rowIndex) => this.normalizeRow(row, rowIndex, columns));
         const content = rows.map(row => row.cells);
 
-        if (hiddenColumns.size > 0) {
-            rows.forEach(row => row.cells.forEach((cell) => {
-                cell.hidden = hiddenColumns.has(cell.columnIndex);
-            }));
-        }
+        rows.forEach(row => row.cells.forEach((cell) => {
+            cell.hideEmptyColumn = hiddenColumns.has(cell.columnIndex);
+        }));
 
         const totalCount = typeof payload.totalCount === 'number' ? payload.totalCount : content.length;
         const page = payload.page || parameters.page || 1;
@@ -500,7 +500,7 @@ class GridTableLightWidget extends Widget {
     }
 
     buildHeaderHtml(columns, parameters) {
-        const cells = columns.filter(column => !(column && column.hidden)).map((column) => {
+        const cells = columns.filter(column => !(column && column.hideEmptyColumn)).map((column) => {
             // `column.index`, not the map position: after filtering they diverge, and
             // `data-col` has to keep naming the original column.
             const index = typeof column.index === 'number' ? column.index : columns.indexOf(column);
@@ -525,7 +525,7 @@ class GridTableLightWidget extends Widget {
             if (parameters.rowHeight) {
                 rowStyles.push(`height:${Widget.getPercentOrPixel(parameters.rowHeight)};`);
             }
-            const cells = (row.cells || []).filter(cell => !(cell && cell.hidden)).map((cell) => this.buildCellHtml(cell));
+            const cells = (row.cells || []).filter(cell => !(cell && cell.hideEmptyColumn)).map((cell) => this.buildCellHtml(cell));
             const className = this.getClassName([GRID_TABLE_LIGHT_CLASSES.row], row.rowClasses);
             const styleAttr = this.getStyleAttribute(rowStyles.join(''), row.rowStyle);
             return `<div class="${className}" data-row="${row.index}"${styleAttr}>${cells.join('')}</div>`;
@@ -1061,6 +1061,7 @@ class GridTableLightWidget extends Widget {
             pageSize: this.state.pageSize,
             totalCount: this.state.totalCount,
             parameters: this.parameters,
+            hiddenCols: this.hiddenCols,
             exportHeaderTitles: Array.isArray(this.exportHeaderTitles) ? this.exportHeaderTitles.slice() : (Array.isArray(this.options.exportHeaderTitles) ? this.options.exportHeaderTitles.slice() : [])
         };
         const restoreState = () => {
@@ -1070,10 +1071,12 @@ class GridTableLightWidget extends Widget {
             this.state.pageSize = previousState.pageSize;
             this.state.totalCount = previousState.totalCount;
             this.parameters = previousState.parameters;
+            this.hiddenCols = previousState.hiddenCols;
             this.exportHeaderTitles = Array.isArray(previousState.exportHeaderTitles) ? previousState.exportHeaderTitles.slice() : [];
             this.options.exportHeaderTitles = Array.isArray(previousState.exportHeaderTitles) ? previousState.exportHeaderTitles.slice() : [];
             if (Widgets && Widgets[this.options.id]) {
                 Widgets[this.options.id].cellData = this.cellData;
+                Widgets[this.options.id].hiddenCols = this.hiddenCols;
             }
         };
         const executeExport = (payload) => {
@@ -1082,10 +1085,16 @@ class GridTableLightWidget extends Widget {
                 this.cellData = processed.content;
                 this.state.columns = processed.columns;
                 this.parameters = processed.parameters;
+                // processData was just run again on the export-all payload (the whole
+                // dataset, not the current page), so the hidden-column set has to be
+                // refreshed too - otherwise the export would exclude columns based on
+                // what happened to be empty on the page the user was looking at.
+                this.hiddenCols = processed.hiddenColumns instanceof Set ? processed.hiddenColumns : new Set();
                 this.exportHeaderTitles = this.computeExportHeaderTitles(processed.columns);
                 this.options.exportHeaderTitles = Array.isArray(this.exportHeaderTitles) ? this.exportHeaderTitles.slice() : [];
                 if (Widgets && Widgets[this.options.id]) {
                     Widgets[this.options.id].cellData = this.cellData;
+                    Widgets[this.options.id].hiddenCols = this.hiddenCols;
                 }
                 GridTableExport.triggerExcelExport(this.options.id, this.parameters && this.parameters.exportConfig ? this.parameters.exportConfig : {});
             } catch (error) {
@@ -1401,12 +1410,12 @@ class GridTableLightWidget extends Widget {
             case 'ArrowRight': {
                 // Hidden columns leave gaps in the rendered indexes, so stepping by one
                 // would land on a column that has no cell element and stop navigation.
+                // At the edge (or with nothing hidden) there is no next visible column -
+                // same as ArrowUp/ArrowDown at their edges, stay put and fall through to
+                // the re-select/scroll below instead of exiting early.
                 const step = event.key === 'ArrowLeft' ? -1 : 1;
                 const nextCol = this.getNextVisibleColumn(currentPosition.col, step, colCount);
-                if (nextCol === false) {
-                    return;
-                }
-                currentPosition.col = nextCol;
+                currentPosition.col = nextCol === false ? currentPosition.col : nextCol;
                 break;
             }
         }

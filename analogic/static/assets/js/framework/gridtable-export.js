@@ -576,8 +576,15 @@ const GridTableExport = {
     },
     // Columns the grid table skipped via `hideEmptyColumns` are not rendered, so they
     // must not appear in the export either. The widget publishes the resolved set as
-    // `hiddenCols`, but a source passed as a bare `<id>.cellData` array loses it - in
-    // that case the same set is derived from the `hideCell` flags the cells carry.
+    // `hiddenCols`, but a source passed as a bare `<id>.cellData` array loses it.
+    //
+    // For that case the same set can be derived from the `hideCell` flags the cells
+    // carry - but only when the caller says so explicitly (`hideEmptyColumns: true`
+    // alongside the array, e.g. `{cellData: v('id.cellData'), hideEmptyColumns: true}`).
+    // `hideCell` alone is not enough of a signal: a table that never opted into
+    // hideEmptyColumns could still happen to carry a `hideCell`-named field in its own
+    // data, and without this guard that would silently drop the column from a raw-array
+    // export even though hideEmptyColumns was never turned on for that table.
     resolveHiddenColumns: (tableObject, tableData, totalColumns) => {
         const hidden = new Set();
 
@@ -587,6 +594,10 @@ const GridTableExport = {
                     hidden.add(columnIndex);
                 }
             });
+            return hidden;
+        }
+
+        if (!tableObject || tableObject.hideEmptyColumns !== true) {
             return hidden;
         }
 
