@@ -688,7 +688,12 @@ class GridTableWidget extends Widget {
         let baseCell = options.startCell || this.activeCell;
 
         if (!baseCell || !baseCell.length) {
-            baseCell = $('#' + this.id).find('.ks-grid-table-cell[data-row="0"][data-col="0"]');
+            // Column 0 may be hidden by hideEmptyColumns and have no DOM node at all -
+            // defaulting to it would find nothing and silently no-op the first
+            // keypress. Start from the first actually rendered column instead.
+            const colNum = (this.options.widgets.filter(e => e.type.name !== 'GridTableHeaderRowWidget') || []).length;
+            const initialCol = this.getNextVisibleColumn(-1, 1, colNum);
+            baseCell = $('#' + this.id).find(`.ks-grid-table-cell[data-row="0"][data-col="${initialCol === false ? 0 : initialCol}"]`);
 
             if (!baseCell.length) {
                 return false;

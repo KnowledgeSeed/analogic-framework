@@ -1391,7 +1391,12 @@ class GridTableLightWidget extends Widget {
         event.preventDefault();
         let activeId = this.selection.activeCellId;
         if (!activeId || !document.getElementById(activeId)) {
-            activeId = this.buildCellId(0, 0);
+            // Column 0 may be hidden by hideEmptyColumns, in which case it has no
+            // DOM element - defaulting to it would select a nonexistent cell and
+            // getElementById(nextId) below would return null forever, freezing
+            // keyboard navigation. Start from the first actually visible column.
+            const initialCol = this.getNextVisibleColumn(-1, 1, colCount);
+            activeId = this.buildCellId(0, initialCol === false ? 0 : initialCol);
             this.selection.selectedIds = new Set([activeId]);
             this.selection.anchorCellId = activeId;
         }
