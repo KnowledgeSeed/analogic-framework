@@ -9,7 +9,7 @@ class ComboChartWidget extends Widget {
 <div class="ks-chart-holder" style="${this.getGeneralStyles(v.data, {width: 425, height: 400}).join('')}">
     <div class="ks-chart-widget ks-combo-chart-title"><h3>${o.title}</h3></div>
     <div class="ks-chart-widget">
-        <canvas ${v.canvasWidth ? `width="${v.canvasWidth}"` : ''} ${v.canvasHeight ? `height="${v.canvasHeight}"` : ''} id="${o.id}Canvas"></canvas>
+        <canvas ${v.canvasWidth ? `width="${v.canvasWidth}"` : ''} ${v.canvasHeight ? `height="${v.canvasHeight}"` : ''} id="${o.id}Canvas" data-ks-no-morph="true"></canvas>
     </div>
     <div class="ks-legend ks-legend-${v.skin}"></div>
 </div>`;

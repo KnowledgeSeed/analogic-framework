@@ -64,25 +64,16 @@ class GridTableCellWidget extends Widget {
 
     updateHtml(data) {
         delete data['skin'];
-        const o = this.options, p = this.getParameters(data), mainDiv = $('#' + p.cellId), content = mainDiv.find('.ks-grid-table-cell-content');
-        p.cellVisible === false ? mainDiv.css('display', 'none') : mainDiv.css('display', 'block');
-        p.cellWidth && mainDiv.css('width', Widget.getPercentOrPixel(p.cellWidth));
-        let paddingRight, paddingLeft;
+        const p = this.getParameters(data);
 
-        Widget.setOrRemoveStyle(mainDiv, 'background-color', p.cellBackgroundColor);
-
-        paddingRight = p.cellPaddingRight !== false ? p.cellPaddingRight : o.paddingRight ? o.paddingRight : false;
-        Widget.setOrRemoveMeasure(mainDiv, 'padding-right', paddingRight);
-
-        paddingLeft = p.cellPaddingLeft !== false ? p.cellPaddingLeft : o.paddingLeft ? o.paddingLeft : false;
-        Widget.setOrRemoveMeasure(mainDiv, 'padding-left', paddingLeft);
-
-        Widget.setSkin(mainDiv, 'ks-grid-table-cell-', p.cellSkin ? p.cellSkin : p.skin);
-
-        Widget.addOrRemoveClass(mainDiv, 'border-right', p.borderRight);
-        Widget.addOrRemoveClass(mainDiv, 'border-left', p.borderLeft);
-
-        Widget.addOrRemoveClass(content, 'ks-pos-' + p.alignment, true);
+        // Everything getHtml() can produce on the cell wrapper and its structural
+        // `-content` div (background, width, padding, skin, border classes, alignment)
+        // is applied by diffing against a fresh render. `widgets: []` is safe here even
+        // though the cell's actual child widget lives inside `.ks-grid-table-cell-
+        // content` - morphChildren never removes a node it recognizes as another
+        // widget's own root (checked via `Widgets[id]`), and that child already updated
+        // itself in place via updateContent's own loop before this method runs.
+        this.morphHtml($('#' + p.cellId), this.getHtml([], data));
     }
 
     render(withState, childrenData) {

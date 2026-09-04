@@ -35,14 +35,17 @@ class ImageWidget extends Widget {
     }
 
     updateHtml(data) {
-        const o = this.options, p = this.getParameters(data), section = $('#' + o.id),
-            icon = section.find('.ks-image span');
+        const section = this.getSection(), p = this.getParameters(data);
 
-        if (icon.length) {
-            icon.attr('class', p.icon ? 'icon-' + p.icon : '');
-        } else {
-            const file = section.find('img');
-            file.attr('src', app.applicationAssetsUrl + '/skin/images/' + p.fileName + '?v=' + this.generateRandomString(10));
+        this.morphHtml(section.children(), this.getHtml([], data));
+
+        if (!p.icon) {
+            // getHtml() deliberately has no cache-busting query string on the <img> src
+            // (one would make it always "different" from the diff's point of view and
+            // default to the non-parameter-driven behavior) - it is appended here, after
+            // the morph, so the browser still refetches the file even when its name is
+            // unchanged (the image itself may have been replaced server-side).
+            section.find('img').attr('src', app.applicationAssetsUrl + '/skin/images/' + p.fileName + '?v=' + this.generateRandomString(10));
         }
     }
 

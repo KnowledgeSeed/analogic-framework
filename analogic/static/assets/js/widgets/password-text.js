@@ -18,8 +18,8 @@ class PasswordTextWidget extends Widget {
         return `
 <div class="ks-password-text ${mainDivClass.join(' ')} ks-password-text-${v.skin}" style="${mainDivStyle.join('')}">
     <div class="ks-password-text-inner" style="${innerStyles.join('')}">
-        <input type="password" class="ks-password-text-input" data-id="${o.id}" data-action="savePassword" style="${inputStyles.join('')}"/>
-        <i class="ks-password-text-icon icon-eye" style="${iconStyles.join('')}"></i>
+        <input type="password" data-ks-no-morph="true" class="ks-password-text-input" data-id="${o.id}" data-action="savePassword" style="${inputStyles.join('')}"/>
+        <i class="ks-password-text-icon icon-eye" data-ks-no-morph="true" style="${iconStyles.join('')}"></i>
     </div>
 </div>`;
     }
@@ -29,6 +29,11 @@ class PasswordTextWidget extends Widget {
         delete this.savePassword;
     }
 
+    // Deliberately NOT converted to morphHtml: a password field must be cleared on
+    // every refresh regardless of focus, the opposite of morphHtml's live-value
+    // preservation for focused fields - and its `type` (password/text) and eye icon
+    // are user-toggled UI state with no data-driven equivalent in getHtml() at all
+    // (see the `data-ks-no-morph` markers there), so there is nothing safe to diff.
     updateHtml(data) {
         this.reset();
         this.getSection().find('.ks-password-text-input').val('');

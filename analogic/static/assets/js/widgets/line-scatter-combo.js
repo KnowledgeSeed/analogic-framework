@@ -9,7 +9,7 @@ class LineScatterComboWidget extends Widget {
 
         return `
 <div class="ks-chart-holder" style="${this.getGeneralStyles(d).join('')}">
-    <div class="ks-chart-widget" style="width: 100%; height: 100%;"><canvas id="${o.id}Canvas"></canvas></div>
+    <div class="ks-chart-widget" style="width: 100%; height: 100%;"><canvas id="${o.id}Canvas" data-ks-no-morph="true"></canvas></div>
     <div>${this.createLegendHtml()}</div>
 </div>`;
     }

@@ -9,7 +9,7 @@ class StackedColumnChartWidget extends Widget {
 
         return `
 <div class="ks-chart-holder" style="${this.getGeneralStyles(d).join('')}">
-    <canvas id="${o.id}Canvas" aria-label="${o.id}" role="img"></canvas>
+    <canvas id="${o.id}Canvas" data-ks-no-morph="true" aria-label="${o.id}" role="img"></canvas>
 </div>`;
     }
 

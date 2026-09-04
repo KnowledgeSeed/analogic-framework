@@ -95,6 +95,14 @@ class Widget {
         Listeners.length = 0;
 
         let holderHeight = holder.actual('height');
+        // `holder.empty()` below drops any scroll position the user built up (e.g. a
+        // horizontally scrolled grid table) - the DOM nodes carrying it are destroyed
+        // and rebuilt from scratch, so the browser has nothing left to remember it by.
+        // The scrollable pane is usually not `holder` itself but a known inner wrapper
+        // (grid tables scroll their `_inner`/`_body` div, not the outer section) - a
+        // class-name lookup is used instead of walking the whole subtree so this stays
+        // cheap even for a grid table with tens of thousands of cells.
+        let scrollState = Widget.captureScrollState(holder);
 
         return holder.empty().off().promise().then(() => {
 
@@ -109,7 +117,6 @@ class Widget {
                 }
 
                 return holder.html(h.html()).promise().then(() => {
-
                     instance.removeLoaderHtml(withState);
 
                     if (!holder.hasClass('forcedByEventMap')) {
@@ -119,6 +126,12 @@ class Widget {
                     if (isHeightUpdated) {
                         holder.css('opacity', 1);
                     }
+
+                    // Restored only now: `holder.css('display', ...)` above can itself
+                    // reset a scroll offset held directly on `holder` (changing `display`
+                    // establishes a new box), so restoring before it would just be
+                    // undone by it.
+                    Widget.restoreScrollState(holder, scrollState);
 
                     instance.initEvents(withState);
 
@@ -169,11 +182,16 @@ class Widget {
         if (usercentrics.length > 0) {
             usercentrics.detach();
         }
+        // See the matching comment in reRenderWidget: renderWidget is also used to force
+        // a full rebuild of an already-visible widget (e.g. an event-map "refresh"
+        // action), which would otherwise silently drop the user's scroll position.
+        let scrollState = Widget.captureScrollState(holder);
         return holder.empty().off().promise().then(() => {
             instance.holderStartLoader();
             return instance.render(withState, false, false, QB.loadData, previouslyLoadedData).then(html => {
                 let h = $(html), i;
                 return holder.html(h.html()).promise().then(() => {
+                    Widget.restoreScrollState(holder, scrollState);
                     if (usercentrics.length > 0) {
                         holder.append(usercentrics);
                     }
@@ -771,5 +789,187 @@ class Widget {
 
     static addOrRemoveClass(element, className, add) {
         add ? !element.hasClass(className) && element.addClass(className) : element.removeClass(className);
+    }
+
+    // Known scrollable-pane wrapper classes used across widgets (grid tables scroll an
+    // inner `_inner`/`_body`/`-body` div, not their outer section). Checked by class
+    // name via jQuery (native getElementsByClassName under the hood) rather than
+    // walking the subtree, so this stays cheap even for a grid table with tens of
+    // thousands of cells.
+    static SCROLLABLE_PANE_SELECTOR = '.ks-grid-table-inner, .ks-grid-table-body, .ks-grid-table-light_inner, .ks-grid-table-light_body, .ks-grid-table-light_head';
+
+    static captureScrollState(holder) {
+        const state = [];
+        const record = (element, className) => {
+            const left = element.scrollLeft(), top = element.scrollTop();
+            if (left || top) {
+                state.push({className, left, top});
+            }
+        };
+        record(holder, null);
+        holder.find(Widget.SCROLLABLE_PANE_SELECTOR).each(function () {
+            record($(this), this.className);
+        });
+        return state;
+    }
+
+    static restoreScrollState(holder, state) {
+        (state || []).forEach(({className, left, top}) => {
+            const element = className === null ? holder : holder.find(className.trim().split(/\s+/).map(c => '.' + $.escapeSelector(c)).join(''));
+            if (element.length) {
+                element.scrollLeft(left);
+                element.scrollTop(top);
+            }
+        });
+    }
+
+    // A subtree owned by something other than getHtml()'s own markup - an external
+    // library's DOM (a chart canvas, a Tabulator table), or a nested child widget's own
+    // root (already updated by its own updateContent/updateHtml, called separately by
+    // the base updateContent loop) - must never be diffed or rewritten from here.
+    static shouldSkipMorph(element, ownWidgetId) {
+        if (element.hasAttribute('data-ks-no-morph')) {
+            return true;
+        }
+        if (element.id && element.id !== ownWidgetId && typeof Widgets !== 'undefined' && Widgets[element.id]) {
+            return true;
+        }
+        return false;
+    }
+
+    // Patches `oldEl` in place to match `newEl`: attributes are diffed and set/removed
+    // (this single generic pass is what replaces the whole family of hand-written
+    // setOrRemoveStyle/addOrRemoveClass/setSkin call sites in each widget's updateHtml -
+    // any class/style/data-* attribute a parsing-control script computes is picked up
+    // automatically instead of needing its own enumerated patch), then children are
+    // diffed positionally. `ownWidgetId` is the id of the widget currently updating,
+    // so its own root element isn't mistaken for a "nested child widget" and skipped.
+    static morphAttributes(oldEl, newEl) {
+        const newAttrs = newEl.attributes;
+        for (let i = 0; i < newAttrs.length; ++i) {
+            const attr = newAttrs[i];
+            if (oldEl.getAttribute(attr.name) !== attr.value) {
+                oldEl.setAttribute(attr.name, attr.value);
+            }
+        }
+        const oldAttrs = oldEl.attributes;
+        for (let i = oldAttrs.length - 1; i >= 0; --i) {
+            const name = oldAttrs[i].name;
+            if (!newEl.hasAttribute(name)) {
+                oldEl.removeAttribute(name);
+            }
+        }
+    }
+
+    static morphElement(oldEl, newEl, ownWidgetId = null) {
+        if (!oldEl || !newEl) {
+            return;
+        }
+
+        Widget.morphAttributes(oldEl, newEl);
+
+        // `value`/`checked` are live DOM properties that diverge from their initial
+        // attribute once a user interacts with the field - the attribute diff above
+        // does not touch them. Never overwrite them while the field is focused, or an
+        // in-progress edit would be clobbered mid-keystroke by the next refresh.
+        const tag = oldEl.tagName;
+        if (document.activeElement !== oldEl && (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT')) {
+            if (tag === 'INPUT' && (oldEl.type === 'checkbox' || oldEl.type === 'radio')) {
+                const newChecked = newEl.hasAttribute('checked');
+                if (oldEl.checked !== newChecked) {
+                    oldEl.checked = newChecked;
+                }
+            } else if (oldEl.value !== newEl.value) {
+                oldEl.value = newEl.value;
+            }
+        }
+
+        Widget.morphChildren(oldEl, newEl, ownWidgetId);
+    }
+
+    static morphChildren(oldParent, newParent, ownWidgetId) {
+        const newChildren = Array.from(newParent.childNodes);
+
+        for (let i = 0; i < Math.max(oldParent.childNodes.length, newChildren.length); ++i) {
+            const oldChild = oldParent.childNodes[i];
+            const newChild = newChildren[i];
+
+            // Checked first, before any removal/replacement/recursion decision below:
+            // a protected subtree must never be touched, even if the fresh markup this
+            // is diffed against does not line up with it positionally (e.g. a caller
+            // that reconstructs the parent's own markup without re-rendering already-
+            // independently-updated nested child widgets).
+            if (oldChild && oldChild.nodeType === Node.ELEMENT_NODE && Widget.shouldSkipMorph(oldChild, ownWidgetId)) {
+                continue;
+            }
+
+            if (!newChild) {
+                if (oldChild) {
+                    oldParent.removeChild(oldChild);
+                    --i;
+                }
+                continue;
+            }
+
+            if (!oldChild) {
+                oldParent.appendChild(newChild.cloneNode(true));
+                continue;
+            }
+
+            if (oldChild.nodeType !== newChild.nodeType ||
+                (oldChild.nodeType === Node.ELEMENT_NODE && oldChild.tagName !== newChild.tagName)) {
+                oldParent.replaceChild(newChild.cloneNode(true), oldChild);
+                continue;
+            }
+
+            if (oldChild.nodeType === Node.TEXT_NODE) {
+                if (oldChild.textContent !== newChild.textContent) {
+                    oldChild.textContent = newChild.textContent;
+                }
+                continue;
+            }
+
+            if (oldChild.nodeType !== Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            Widget.morphElement(oldChild, newChild, ownWidgetId);
+        }
+    }
+
+    // Instance helper: re-runs getHtml()'s output through morphElement against an
+    // already-rendered element, instead of a widget's updateHtml hand-listing which
+    // fields to patch. `targetEl` may be a plain element or a jQuery-wrapped one.
+    morphHtml(targetEl, newHtmlString) {
+        const target = targetEl && targetEl.jquery ? targetEl[0] : targetEl;
+        if (!target || !newHtmlString) {
+            return;
+        }
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = newHtmlString;
+        const newRoot = wrapper.firstElementChild;
+        if (!newRoot || Widget.shouldSkipMorph(target, this.options.id)) {
+            return;
+        }
+        Widget.morphElement(target, newRoot, this.options.id);
+    }
+
+    // Like morphHtml, but never touches children - for a wrapper element (e.g. a grid
+    // cell) whose content is a nested child widget that already updated its own DOM in
+    // place; recursing into it here would either fight that update or need this method
+    // to reconstruct child markup it doesn't have. Only the wrapper's own attributes are
+    // diffed.
+    morphAttributesOnly(targetEl, newHtmlString) {
+        const target = targetEl && targetEl.jquery ? targetEl[0] : targetEl;
+        if (!target || !newHtmlString) {
+            return;
+        }
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = newHtmlString;
+        const newRoot = wrapper.firstElementChild;
+        if (!newRoot) {
+            return;
+        }
+        Widget.morphAttributes(target, newRoot);
     }
 }

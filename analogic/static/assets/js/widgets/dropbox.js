@@ -46,7 +46,7 @@ class DropBoxWidget extends Widget {
             </div>
         </div>
     </div>
-    <div class="ks-dropbox-panel" style="${panelStyles.join('')}">
+    <div class="ks-dropbox-panel" data-ks-no-morph="true" style="${panelStyles.join('')}">
         ${v.backdrop ? '<div class="ks-dropbox-backdrop"><\/div>' : ''}
         <div class="ks-dropbox-panel-inner">${this.getItems(pi.data, v)}</div>
     </div>
@@ -130,7 +130,10 @@ class DropBoxWidget extends Widget {
 
     updateHtml(data) {
         const p = this.getParameters(data), section = this.getSection(),
-            inner = section.find('.ks-dropbox-panel-inner'), input = section.find('.ks-dropbox-input');
+            inner = section.find('.ks-dropbox-panel-inner'), input = section.find('.ks-dropbox-input'),
+            main = section.children(), titleDiv = section.find('.ks-dropbox-title'),
+            title = section.find('.ks-dropbox-title-primary');
+
         if (this.state.serverSideFilter) {
             let previouslySelected = this.items.filter(e => e.on === true),
                 previouslySelectedName = previouslySelected.map(e => e.name);
@@ -141,6 +144,22 @@ class DropBoxWidget extends Widget {
             inner.html(this.getItems(pi.data, p));
             input.attr('placeholder', pi.selectedItems !== '' ? pi.selectedItems : p.placeHolder);
         }
+
+        // Title, main-div skin, and the input's own styling are simple, side-effect-
+        // free fields getHtml() also computes - patched explicitly here rather than via
+        // morphHtml/getHtml(), because getHtml() calls processItems(), which mutates
+        // this.items/this.value/this.state as a side effect and would race with the
+        // item-list reconciliation above if invoked again just to diff. The dropdown
+        // panel's open/closed state is pure runtime UI state (slideDown/slideUp) with
+        // no equivalent in getHtml() at all, so it is never touched here either.
+        title.html(p.titleVisible ? p.title : '');
+        Widget.setOrRemoveStyle(titleDiv, 'color', p.titleFontColor);
+        Widget.setOrRemoveStyle(titleDiv, 'font-size', p.titleFontSize ? p.titleFontSize + 'px' : false);
+        Widget.setSkin(main, 'ks-dropbox-', p.skin);
+        Widget.addOrRemoveClass(section.find('.ks-dropbox-field'), 'readonly', p.editable === false);
+        input.prop('readonly', p.editable === false || p.disableSearch === true);
+        Widget.setOrRemoveStyle(input, 'color', p.textFontColor);
+        Widget.setOrRemoveStyle(input, 'font-size', p.textFontSize ? p.textFontSize + 'px' : false);
     }
 
     initEventHandlers() {

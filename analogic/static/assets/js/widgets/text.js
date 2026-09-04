@@ -85,66 +85,30 @@ class TextWidget extends Widget {
 
     updateHtml(data) {
         const v = this.getParameters(data), section = this.getSection(),
-            title = section.find('.ks-text-title'), body = section.find('.ks-text-body'),
-            mainDiv = section.children(), icon = section.find('.ks-text-icon span'),
-            inner = section.find('.ks-text-inner');
+            title = section.find('.ks-text-title');
 
         this.changeEvents(title, section, v.editable, v.performable, v.enableRightClick);
+        // jQuery's `.data()` cache is only synced automatically on its OWN reads/writes -
+        // morphHtml below sets the underlying `data-*` attributes via the raw DOM API, so
+        // anything read elsewhere through `.data(...)` (TextWidget.getEditables reads
+        // `data-ordinal` this way) needs its cache refreshed explicitly here or it can
+        // keep returning the value from before this update.
         title.data('editable', v.editable ? '1' : '0');
         title.data('performable', v.performable ? '1' : '0');
+        title.data('ordinal', v.ordinal);
 
         this.setValues(v);
 
-        this.updateHtmlComponent('main', data, mainDiv);
-        this.updateHtmlComponent('inner', data, inner);
-        this.updateHtmlComponent('title', data, title);
-        this.updateHtmlComponent('body', data, body);
-        this.updateHtmlComponent('icon', data, icon);
+        // Everything getHtml() can produce - classes, inline styles, icon, title/body
+        // content, skin - is applied by diffing against a fresh render, instead of this
+        // method having to separately enumerate every field getHtml() knows about.
+        this.morphHtml(section.children(), this.getHtml([], data));
 
         //section
         if (v.applyMeasuresToSection) {
             Widget.setOrRemoveStyle(section, 'width', v.width ? Widget.getPercentOrPixel(v.width) : false);
             Widget.setOrRemoveStyle(section, 'height', v.height ? Widget.getPercentOrPixel(v.height) : false);
         }
-
-        //main
-        if (v.backgroundColor !== false) {
-            mainDiv.css('background-color', v.backgroundColor);
-        }
-        if (v.skin) {
-            Widget.setSkin(mainDiv, 'ks-text-', v.skin);
-        }
-        Widget.setOrRemoveStyle(mainDiv, 'width', v.width ? Widget.getPercentOrPixel(v.width) : false);
-        Widget.setOrRemoveStyle(mainDiv, 'height', v.height ? Widget.getPercentOrPixel(v.height) : false);
-        Widget.setOrRemoveStyle(mainDiv, 'margin-top', v.marginTop ? Widget.getPercentOrPixel(v.marginTop) : false);
-
-        //inner
-        Widget.setOrRemoveStyle(inner, 'cursor', v.innerCursor);
-        Widget.setOrRemoveStyle(inner, 'width', v.innerWidth ? Widget.getPercentOrPixel(v.innerWidth) : false);
-        Widget.setOrRemoveStyle(inner, 'height', v.innerHeight ? Widget.getPercentOrPixel(v.innerHeight) : false);
-
-        //title
-        title.html(v.title !== false ? v.title : '');
-        title.attr('title', v.title ? Utils.htmlEncode(Utils.stripHtml(v.title)) : '');
-        if (v.title !== false) {
-            mainDiv.addClass('has-title');
-        }
-        Widget.setOrRemoveStyle(title, 'color', v.titleFontColor);
-        Widget.setOrRemoveStyle(title, 'cursor', v.titleCursor);
-
-        //body
-        body.html(v.body !== false ? v.body : '');
-        if (v.body !== false) {
-            mainDiv.addClass('has-body');
-        }
-        Widget.setOrRemoveStyle(body, 'color', v.bodyFontColor);
-
-        //icon
-        icon.attr('class', v.icon ? v.icon : '');
-        if (v.iconColor) {
-            icon.css('color', v.iconColor);
-        }
-
     }
 
     getParameters(d) {

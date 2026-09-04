@@ -360,7 +360,7 @@ class GridTablePlusWidget extends Widget {
         return `<div class="${classes.join(' ')}" style="${styles.join('')}">
     ${this.options.title ? `<h3>${this.options.title}</h3>` : ''}
     <div class="ks-grid-table-plus-inner">
-        <div class="analogic-tabulator" id="${containerId}"></div>
+        <div class="analogic-tabulator" id="${containerId}" data-ks-no-morph="true"></div>
     </div>
 </div>`;
     }

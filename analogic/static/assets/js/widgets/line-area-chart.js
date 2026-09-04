@@ -11,7 +11,7 @@ class LineAreaChartWidget extends Widget {
 <div class="ks-line-area-chart ks-line-area-chart-${v.skin}" style="${this.getGeneralStyles(d.options, {width: 450, height: 450}).join('')}">
     ${verticalLineBoxWidget.join('')}
     <div class="ks-line-area-chart-widget">
-        <canvas id="${this.options.id}Canvas"></canvas>
+        <canvas id="${this.options.id}Canvas" data-ks-no-morph="true"></canvas>
     </div>
     <div class="ks-legend ks-legend-${v.legendSkin}"></div>
 </div>`;

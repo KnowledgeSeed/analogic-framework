@@ -109,25 +109,13 @@ class ButtonWidget extends Widget {
     }
 
     updateHtml(data) {
-        const o = this.options, v = this.getParameters(data), section = this.getSection(),
-            main = section.children(),
-            innerDiv = section.find('.ks-button-inner'),
-            iconDiv = section.find('.ks-button-icon'),
-            labelDiv = section.find('.ks-button-label'),
-            generalStyles = this.getGeneralStyles(data),
-            iconStyle = this.getHtmlComponentStylesArray('icon', data),
-            iconSpanStyle = this.getHtmlComponentStylesArray('iconSpan', data);
-        let iconInfo;
+        const v = this.getParameters(data), section = this.getSection();
 
-        this.setValues(data, v);
-
-        this.updateHtmlComponent('main', data, main);
-        this.updateHtmlComponent('inner', data, innerDiv);
-        this.updateHtmlComponent('content', data, null, section);
-        this.updateHtmlComponent('divider', data, null, section);
-        this.updateHtmlComponent('icon', data, iconDiv);
-        this.updateHtmlComponent('label', data, labelDiv);
-
+        // Everything getHtml() can produce - classes (has-icon/has-label/skin/...),
+        // inline styles, confirm-message attributes, href/target, icon/label/divider
+        // content - is applied by diffing against a fresh render, instead of this
+        // method separately enumerating each field getHtml() knows about.
+        this.morphHtml(section.children(), this.getHtml([], data));
 
         //section
         if (v.applyMeasuresToSection) {
@@ -136,40 +124,6 @@ class ButtonWidget extends Widget {
         }
 
         v.visible ? section.show() : section.hide();
-
-        //main
-        this.updateMeasures(main, generalStyles);
-        v.borderColor && main.css('border-color', v.borderColor);
-        if (v.skin) {
-            Widget.setSkin(main, 'ks-button-', v.skin);
-        }
-
-        //inner
-        v.backgroundColor && innerDiv.css('background-color', v.backgroundColor);
-        v.borderWidth && innerDiv.css('border-width', v.borderWidth);
-        v.dividerWidth && innerDiv.css('divider-width', v.dividerWidth);
-
-        //icon
-
-        if (v.icon !== false) {
-            iconInfo = this.getIcon(v, iconSpanStyle);
-            iconDiv.attr('style', iconStyle.join(''));
-            iconDiv.html(iconInfo.html);
-        } else {
-            iconDiv.html('');
-        }
-
-        //label
-
-        if (v.label !== '') {
-            labelDiv.html(v.label);
-            !main.hasClass('has-label') && main.addClass('has-label');
-        } else {
-            labelDiv.html('');
-            main.hasClass('has-label') && main.removeClass('has-label');
-        }
-
-        v.fontColor && labelDiv.css('color', v.fontColor);
     }
 
     getParameters(d) {

@@ -47,28 +47,19 @@ class ToggleWidget extends Widget {
 
     updateHtml(data) {
         const p = this.getParameters(data), section = this.getSection(),
-            main = section.find('.ks-toggle'),
-            titleOn = section.find('.ks-toggle-label-on'),
-            titleOff = section.find('.ks-toggle-label-off'),
-            iconOn = section.find('.ks-toggle-icon-on'),
-            iconOff = section.find('.ks-toggle-icon-off'),
-            b = 1 === parseInt(p.value);
+            main = section.find('.ks-toggle');
 
-        if (b) {
-            !main.hasClass('ks-on') && main.addClass('ks-on');
-        } else {
-            main.removeClass('ks-on');
-        }
+        // jQuery's `.data()` cache only refreshes on jQuery's own reads/writes -
+        // morphHtml below sets `data-value`/`data-ordinal` via the raw DOM API, and both
+        // are read elsewhere through `.data(...)` (the click handler and the grouped-
+        // toggle bookkeeping in getHtml), so their cache needs syncing explicitly here.
+        main.data('value', p.value);
+        main.data('ordinal', data.ordinal);
 
-        titleOn.html(p.titleOn);
-        Widget.setOrRemoveStyle(titleOn, 'color', p.titleFontColor);
-
-        Widget.setOrRemoveStyle(iconOn, 'color', p.iconFontColor);
-
-        titleOff.html(p.titleOff);
-        Widget.setOrRemoveStyle(titleOff, 'color', p.titleFontColor);
-
-        Widget.setOrRemoveStyle(iconOff, 'color', p.iconFontColor);
+        // Everything getHtml() can produce (ks-on, the expander/group classes, icon and
+        // label content/colors) is applied by diffing against a fresh render, instead of
+        // this method separately enumerating each field getHtml() knows about.
+        this.morphHtml(main, this.getHtml([], data));
     }
 
     getParameters(d) {

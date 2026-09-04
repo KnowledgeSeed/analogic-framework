@@ -64,10 +64,9 @@ class GridTableHeaderCellWidget extends Widget {
     }
 
     updateHtml(data) {
-        const o = this.options, p = this.getParameters(data), mainDiv = $('#' + o.id);
-        Widget.setSkin(mainDiv, 'ks-grid-table-head-cell-', p.cellHeaderSkin);
-        p.cellVisible === false ? mainDiv.css('display', 'none') : mainDiv.css('display', 'block');
-        p.width && mainDiv.css('width', Widget.getPercentOrPixel(p.width));
+        // Same reasoning as GridTableCellWidget.updateHtml: `widgets: []` is safe since
+        // morphChildren never removes a node it recognizes as another widget's own root.
+        this.morphHtml($('#' + this.options.id), this.getHtml([], data));
     }
 }
 ;
