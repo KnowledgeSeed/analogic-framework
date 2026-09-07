@@ -14,7 +14,10 @@ class GridTableHeaderRowWidget extends Widget {
         return `<div class="ks-grid-table-row ${v.alignment !== false ? `ks-row-pos-${v.alignment}` : ''} ${v.borderBottom ? 'border-bottom' : ''} ${v.borderTop ? 'border-top' : ''}">${widgets.join('')}</div>`;
     }
 
-    render(withState, d, loadFunction = QB.loadData) {
+    // `hiddenColumns` comes from the owning GridTableWidget when `hideEmptyColumns` is
+    // on. The header cells have to drop the same column indexes as the body, otherwise
+    // the header stays full width and the two get out of alignment.
+    render(withState, d, loadFunction = QB.loadData, hiddenColumns = false) {
         this.isRendering = true;
         const o = this.options, instance = this;
 
@@ -28,10 +31,16 @@ class GridTableHeaderRowWidget extends Widget {
 
         this.addDependents();
 
+        const hiddenCols = hiddenColumns instanceof Set ? hiddenColumns : new Set();
+
         return loadFunction(o.id, instance.name).then(function (data) {
             let deferred = [], w, k = 0;
 
             for (w of widgets) {
+                if (hiddenCols.has(k)) {
+                    ++k;
+                    continue;
+                }
                 deferred.push(w.render(withState, d.length > k ? d[k] : {}));
                 ++k;
             }
