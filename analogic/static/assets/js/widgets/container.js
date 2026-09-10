@@ -72,8 +72,11 @@ class ContainerWidget {
         this.c.addListeners();
     }
 
-    updateContent(event, data = false, loadFunction = QB.loadData) {
-        return this.c.updateContent(event, data, loadFunction);
+    updateContent(data = false, loadFunction = QB.loadData, legacyLoadFunction = QB.loadData) {
+        // Also accept the old event, data, loader argument layout used by some
+        // applications, while matching every other widget's data, loader API.
+        if (typeof loadFunction !== 'function') return this.c.updateContent(loadFunction, legacyLoadFunction);
+        return this.c.updateContent(data, loadFunction);
     }
 
     updateHtml(data) {

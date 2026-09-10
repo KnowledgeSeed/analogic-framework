@@ -357,8 +357,9 @@ class GridTablePlusWidget extends Widget {
             styles.push(`width:${Widget.getPercentOrPixel(definition.parameters.width)};`);
         }
         const containerId = `${this.id}__tabulator`;
+        const title = this.getRealValue('title', processedData, '');
         return `<div class="${classes.join(' ')}" style="${styles.join('')}">
-    ${this.options.title ? `<h3>${this.options.title}</h3>` : ''}
+    ${title ? `<h3>${title}</h3>` : ''}
     <div class="ks-grid-table-plus-inner">
         <div class="analogic-tabulator" id="${containerId}" data-ks-no-morph="true"></div>
     </div>
@@ -389,6 +390,7 @@ class GridTablePlusWidget extends Widget {
         const definition = this.tabulatorDefinition || this.prepareTabulatorSetup(this.lastProcessedData || {});
         const options = {...definition.options, columns: definition.columns, data: definition.data};
         this.table = new Tabulator(container, options);
+        this.tableReady = new Promise(resolve => this.table.on('tableBuilt', resolve));
         this.registerTabulatorEventHandlers(definition.events || {});
     }
 
@@ -779,62 +781,50 @@ class GridTablePlusWidget extends Widget {
     }
 
     updateContent(data = false, loadFunction = QB.loadData) {
-        const o = this.options, instance = this;
-        if (data !== false) {
-            const processed = instance.processData(data);
-            instance.prepareTabulatorSetup(processed);
-            instance.updateHtml(processed);
-            instance.refreshTabulator();
-            return $.Deferred().resolve('update');
-        }
-        return loadFunction(o.id, instance.name).then(function (d) {
-            const processed = instance.processData(d);
-            instance.prepareTabulatorSetup(processed);
-            instance.updateHtml(processed);
-            instance.refreshTabulator();
+        return Promise.resolve(data !== false ? data : loadFunction(this.id, this.name)).then(async raw => {
+            const processed = this.processData(raw);
+            this.updateSectionAttributes(processed);
+            await this.updateHtml(processed);
             return 'update';
         });
     }
 
-    refreshTabulator() {
-        if (!this.table) {
-            this.initializeTabulatorInstance();
-            return;
+    async refreshTabulator() {
+        if (!this.table) this.initializeTabulatorInstance();
+        if (!this.table) return;
+        await this.tableReady;
+        const table = this.table, definition = this.tabulatorDefinition || {};
+        const holder = table.element.querySelector('.tabulator-tableholder');
+        const scroll = holder ? [holder.scrollLeft, holder.scrollTop] : null;
+        const selected = table.getSelectedData ? table.getSelectedData().map(row => row[table.options.index || 'id']).filter(id => id !== undefined) : [];
+        const sorters = table.getSorters ? table.getSorters().map(s => ({column: s.field, dir: s.dir})) : [];
+        const columns = JSON.stringify(definition.columns, (_, value) => typeof value === 'function' ? value.toString() : value);
+        if (columns !== this._columnsSignature && table.setColumns) {
+            table.setColumns(definition.columns || []);
+            this._columnsSignature = columns;
         }
-        const definition = this.tabulatorDefinition || {};
-        if (typeof this.table.setColumns === 'function') {
-            this.table.setColumns(definition.columns || []);
-        }
-        if (typeof this.table.replaceData === 'function') {
-            this.table.replaceData(definition.data || []);
-        } else if (typeof this.table.setData === 'function') {
-            this.table.setData(definition.data || []);
-        }
-        if (typeof this.table.setOptions === 'function' && definition.options) {
-            this.table.setOptions(definition.options);
-        }
+        if (table.replaceData) await table.replaceData(definition.data || []);
+        else if (table.setData) await table.setData(definition.data || []);
+        if (sorters.length && table.setSort) table.setSort(sorters);
+        if (table.setOptions && definition.options) table.setOptions(definition.options);
         this.registerTabulatorEventHandlers(definition.events || {});
-        if (typeof this.table.redraw === 'function') {
-            this.table.redraw(true);
-        }
+        if (table.redraw) table.redraw(true);
+        if (selected.length && table.selectRow) table.selectRow(selected);
+        if (holder && scroll) { holder.scrollLeft = scroll[0]; holder.scrollTop = scroll[1]; }
     }
 
     updateHtml(data) {
-        const definition = this.tabulatorDefinition || this.prepareTabulatorSetup(data || {});
-        const section = $('#' + this.id);
-        const main = section.find('.ks-grid-table-plus').first();
-        if (!main.length) {
+        const tableElement = this.table && this.table.element;
+        if (tableElement && tableElement.contains(document.activeElement) && document.activeElement.matches('input,textarea,select,[contenteditable]')) {
+            // Read fresh data after editing rather than reapplying a stale payload.
+            $(tableElement).off('focusout.widgetContent').one('focusout.widgetContent', () => {
+                setTimeout(() => this.updateContent().catch(error => console.error(error)), 0);
+            });
             return;
         }
-        if (definition.parameters.hideIfNoData) {
-            main.css('display', definition.data.length > 0 ? 'block' : 'none');
-        }
-        if (definition.parameters.minWidth) {
-            main.css('min-width', Widget.getPercentOrPixel(definition.parameters.minWidth));
-        }
-        if (definition.parameters.width) {
-            main.css('width', Widget.getPercentOrPixel(definition.parameters.width));
-        }
+        this.updateRenderedHtml(this.getHtml([], data || {}), false);
+        return this.refreshTabulator();
     }
+
 }
 ;

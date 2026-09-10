@@ -77,6 +77,7 @@ class TextBoxWidget extends Widget {
         // field is focused, so an in-progress edit is never clobbered by a refresh
         // (the old code called input.val(data.value) unconditionally here).
         this.morphHtml(section.children(), this.getHtml([], data));
+        this.bindContentEvents(true);
     }
 
     addDynamicData(data, parameters) {

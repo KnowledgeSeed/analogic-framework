@@ -116,6 +116,7 @@ class ButtonWidget extends Widget {
         // content - is applied by diffing against a fresh render, instead of this
         // method separately enumerating each field getHtml() knows about.
         this.morphHtml(section.children(), this.getHtml([], data));
+        this.bindContentEvents(true);
 
         //section
         if (v.applyMeasuresToSection) {
@@ -424,7 +425,7 @@ class ButtonWidget extends Widget {
             });
         }
         if (!section.find('a').data('confirmmessage') && !section.find('a').data('confirmmessage2')) {
-            return section.find('a').off('click').on('click', (e) => {
+            return section.find('a').off(`click${namespace}`).on(`click${namespace}`, (e) => {
                 if (skipClickIfShortcutHandled(e)) {
                     return false;
                 }

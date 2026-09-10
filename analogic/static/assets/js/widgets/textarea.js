@@ -105,6 +105,7 @@ class TextAreaWidget extends Widget {
         // focused, so an in-progress edit is never clobbered by a refresh (the old code
         // called textarea.val(d.value) unconditionally here).
         this.morphHtml(section.children(), this.getHtml([], d));
+        this.bindContentEvents(true);
     }
 
     reset() {

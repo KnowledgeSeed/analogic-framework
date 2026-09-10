@@ -3,6 +3,12 @@
 'use strict';
 class GridTableHeaderRowWidget extends Widget {
 
+    updateHtml(data) {
+        const childHtml = this.getChildHtml();
+        if (!Widget.hasRenderedChildren(childHtml)) return;
+        this.morphHtml(this.getSection(), this.getHtml(childHtml, data, true));
+    }
+
     getHtml(widgets, d, withState) {
         const v = {
             alignment: this.getRealValue('alignment', d, false),
@@ -11,7 +17,7 @@ class GridTableHeaderRowWidget extends Widget {
             height: this.getRealValue('height', d, false)
         };
 
-        return `<div class="ks-grid-table-row ${v.alignment !== false ? `ks-row-pos-${v.alignment}` : ''} ${v.borderBottom ? 'border-bottom' : ''} ${v.borderTop ? 'border-top' : ''}">${widgets.join('')}</div>`;
+        return `<div id="${this.id}" style="${v.height ? 'height:' + Widget.getPercentOrPixel(v.height) + ';' : ''}" class="ks-grid-table-row ${v.alignment !== false ? `ks-row-pos-${v.alignment}` : ''} ${v.borderBottom ? 'border-bottom' : ''} ${v.borderTop ? 'border-top' : ''}">${widgets.join('')}</div>`;
     }
 
     // `hiddenColumns` comes from the owning GridTableWidget when `hideEmptyColumns` is

@@ -15,15 +15,7 @@ class LineScatterComboWidget extends Widget {
     }
 
     updateHtml(data) {
-        this.getParameters(data);
-
-        let c = this.getChartConfig();
-
-        this.chart.data = c.data;
-        this.chart.options = c.options;
-
-        this.chart.update();
-
+        this.updateChartContent(data, () => this.getChartConfig());
         $(this.chart.canvas).parent().next().html(this.createLegendHtml());
     }
 

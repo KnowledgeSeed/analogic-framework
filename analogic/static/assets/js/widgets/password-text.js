@@ -6,6 +6,7 @@ class PasswordTextWidget extends Widget {
 
     getHtml(widgets, d) {
         const o = this.options;
+        const v = {skin: this.getRealValue('skin', d, 'standard')};
 
         this.reset();
 
@@ -36,7 +37,9 @@ class PasswordTextWidget extends Widget {
     // (see the `data-ks-no-morph` markers there), so there is nothing safe to diff.
     updateHtml(data) {
         this.reset();
-        this.getSection().find('.ks-password-text-input').val('');
+        this.updateRenderedHtml(this.getHtml([], data), false);
+        this.getSection().find('.ks-password-text-input').val('').attr('style', this.getHtmlComponentStylesArray('input', data).join(''));
+        this.getSection().find('.ks-password-text-icon').attr('style', this.getHtmlComponentStylesArray('icon', data).join(''));
     }
 
     initEventHandlers() {

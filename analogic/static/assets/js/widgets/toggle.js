@@ -60,6 +60,7 @@ class ToggleWidget extends Widget {
         // label content/colors) is applied by diffing against a fresh render, instead of
         // this method separately enumerating each field getHtml() knows about.
         this.morphHtml(main, this.getHtml([], data));
+        this.bindContentEvents(true);
     }
 
     getParameters(d) {
@@ -84,14 +85,13 @@ class ToggleWidget extends Widget {
     initEventHandlers() {
         const section = this.getSection();
 
-        if (section.find('.ks-toggle-inner').hasClass('readonly')) {
-            return;
-        }
-
         const o = this.options;
 
         let isGridTableHierarchyExpander = this.isGridTableHierarchyExpander;
         section.find('.ks-toggle').on('click', e => {
+            if (section.find('.ks-toggle-inner').hasClass('readonly')) {
+                return;
+            }
             const s = $(e.currentTarget), isActive = !s.hasClass('ks-on');
 
             if (o.groupId) {

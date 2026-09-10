@@ -86,6 +86,12 @@ class TextWidget extends Widget {
     updateHtml(data) {
         const v = this.getParameters(data), section = this.getSection(),
             title = section.find('.ks-text-title');
+        const editor = title.find('.ks-text-title-input')[0];
+        // The editor is inserted by addEdit(), not by getHtml(). Refreshing its
+        // title would remove the focused input and run its blur/write handler.
+        const editing = editor && document.activeElement === editor;
+        const protectedTitle = title.is('[data-ks-no-morph]');
+        const editClasses = ['ks-on', 'ks-perform-edit'].filter(c => section.children().hasClass(c));
 
         this.changeEvents(title, section, v.editable, v.performable, v.enableRightClick);
         // jQuery's `.data()` cache is only synced automatically on its OWN reads/writes -
@@ -102,7 +108,15 @@ class TextWidget extends Widget {
         // Everything getHtml() can produce - classes, inline styles, icon, title/body
         // content, skin - is applied by diffing against a fresh render, instead of this
         // method having to separately enumerate every field getHtml() knows about.
-        this.morphHtml(section.children(), this.getHtml([], data));
+        if (editing) title.attr('data-ks-no-morph', 'true');
+        try {
+            this.morphHtml(section.children(), this.getHtml([], data));
+        } finally {
+            if (editing) {
+                if (!protectedTitle) title.removeAttr('data-ks-no-morph');
+                section.children().addClass(editClasses.join(' '));
+            }
+        }
 
         //section
         if (v.applyMeasuresToSection) {

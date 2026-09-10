@@ -3,6 +3,19 @@
 'use strict';
 class SwipeWidget extends Widget {
 
+    updateHtml(data) {
+        const childHtml = this.getChildHtml();
+        if (!Widget.hasRenderedChildren(childHtml)) return;
+        const open = this.isSwiped || this.isSwipingIn;
+        this.container?.stop(true, true);
+        this.updateRenderedHtml(this.getHtml(childHtml, data));
+        if (open) {
+            this.container.css(this.value.position, 0);
+            this.backdrop.show();
+        }
+        this.isSwiped = !!open;
+    }
+
     getHtml(widgets, d) {
         d = d || {};
 

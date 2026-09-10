@@ -7,7 +7,7 @@ class ComboChartWidget extends Widget {
 
         return `
 <div class="ks-chart-holder" style="${this.getGeneralStyles(v.data, {width: 425, height: 400}).join('')}">
-    <div class="ks-chart-widget ks-combo-chart-title"><h3>${o.title}</h3></div>
+    <div class="ks-chart-widget ks-combo-chart-title"><h3>${this.getRealValue('title', d, '')}</h3></div>
     <div class="ks-chart-widget">
         <canvas ${v.canvasWidth ? `width="${v.canvasWidth}"` : ''} ${v.canvasHeight ? `height="${v.canvasHeight}"` : ''} id="${o.id}Canvas" data-ks-no-morph="true"></canvas>
     </div>
@@ -170,12 +170,7 @@ class ComboChartWidget extends Widget {
     }
 
     updateHtml(data) {
-        this.getParameters(data);
-        let c = ComboChartWidget.getChartConfig(this.value);
-        this.chart.data = c.data;
-        this.chart.options = c.options;
-
-        this.chart.update();
+        this.updateChartContent(data, () => ComboChartWidget.getChartConfig(this.value));
     }
 
     initEventHandlers() {
@@ -541,6 +536,8 @@ class ComboChartWidget extends Widget {
     }
 
     processData(data) {
+        if (data && !Array.isArray(data) && Array.isArray(data.data)) return data;
+        data = data || [];
         let d = {data: []}, i, len = data.length;
 
         for (i = 0; i < len; ++i) {

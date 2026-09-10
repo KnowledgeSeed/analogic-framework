@@ -235,9 +235,10 @@ class GridTableWidget extends Widget {
     updateContent(data = false, loadFunction = QB.loadData) {
         const o = this.options, instance = this;
         let widgetOptions, processedData, widgets = [],
-            rowNum, colNum, i, j, rendered = [], w, previousLength = v(o.id + '.cellData.length');
+            rowNum, colNum, i, j, w;
 
-        return loadFunction(o.id, instance.name).then(function (d) {
+        return Promise.resolve(data !== false ? data : loadFunction(o.id, instance.name)).then(async function (d) {
+            const pending = [];
             processedData = instance.processData(d);
             const vv = instance.getParameters(d);
             instance.dynamicTooltip = (processedData || {}).tooltip;
@@ -246,7 +247,10 @@ class GridTableWidget extends Widget {
                 processedData = processedData.content;
             }
 
-            if (!vv.allowFullContentUpdated && !instance.isContentUpdatable(processedData)) {
+            // Row topology also owns paging, widget registration and row events.
+            // Rebuild this table only when it changes, including removals; the old
+            // allowFullContentUpdated append path left stale rows and unbound cells.
+            if (!instance.isContentUpdatable(processedData)) {
                 return instance.reRenderWidget(false, false, d);
             }
 
@@ -270,6 +274,7 @@ class GridTableWidget extends Widget {
             }
 
             instance.state['rows'] = rowNum;
+            await Promise.all(o.widgets.filter(w => w.type.name === 'GridTableHeaderRowWidget').map(w => instance.getWidget(w).updateContent()));
 
             instance.updateHtml(d);
             for (i = 0; i < rowNum; ++i) {
@@ -277,7 +282,7 @@ class GridTableWidget extends Widget {
                 for (w of widgets) {
                     processedData[i][j].id = o.id + '_' + i + '_' + j;
                     processedData[i][j].cellId = o.id + 'Cell' + i + '-' + j;
-                    processedData[i][j].originalId = instance.cellData[i][j].originalId;
+                    processedData[i][j].originalId = instance.cellData[i]?.[j]?.originalId;
 
                     // Hidden columns have no widget instance to update, but cellData
                     // still tracks them so the column indexes stay stable.
@@ -287,36 +292,36 @@ class GridTableWidget extends Widget {
                         continue;
                     }
 
-                    if (vv.allowFullContentUpdated && i >= previousLength) {
-                         Widgets[processedData[i][j].cellId] = new w.type(w);
-                        rendered.push(Widgets[processedData[i][j].cellId].render(false, processedData[i][j]));
-                    } else {
-                        if (false === vv.allowChangedDataUpdate || processedData[i][j].manipulated ||
-                            !GridTableWidget.deepEqual(instance.cellData[i][j], processedData[i][j])) {
-                            if (processedData[i][j].manipulated) {
-                                delete processedData[i][j].manipulated;
-                            }
-                            Widgets[processedData[i][j].cellId].updateContent(processedData[i][j]);
-                            instance.cellData[i][j] = processedData[i][j];
+                    if (false === vv.allowChangedDataUpdate || processedData[i][j].manipulated ||
+                        !GridTableWidget.deepEqual(instance.cellData[i][j], processedData[i][j])) {
+                        if (processedData[i][j].manipulated) {
+                            delete processedData[i][j].manipulated;
                         }
+                        pending.push(Widgets[processedData[i][j].cellId].updateContent(processedData[i][j]));
+                        instance.cellData[i][j] = processedData[i][j];
                     }
                     ++j;
                 }
             }
 
-            return new Promise(function (resolve) {
-                if (vv.allowFullContentUpdated && rowNum > previousLength) {
-                    let rowsToAppend = instance.renderRowForUpdateContent(rendered, vv);
-                    $('#' + o.id).find('.ks-grid-table-content').append(rowsToAppend);
-                }
-                return resolve('update');
-            });
+            await Promise.all(pending);
+            return 'update';
         });
     }
 
     updateHtml(data) {
         const o = this.options, v = this.getParameters(data), section = $('#' + o.id),
             mainDiv = section.children();
+        this.updateSectionAttributes(data);
+        const styles = this.getGeneralStyles(data);
+        const content = Array.isArray(data) ? data : data.content;
+        if (v.hideIfNoData && !content?.length) styles.push('display:none;');
+        this.morphAttributesOnly(mainDiv, this.getWidgetHtml('', '', styles));
+        mainDiv.children('h3').html(this.getRealValue('title', data, ''));
+        Widget.setSkin(mainDiv.find('.ks-grid-table').first(), 'ks-grid-table-', v.skin);
+        const rows = mainDiv.find('.ks-grid-table-row');
+        Widget.setOrRemoveMeasure(rows, 'height', v.rowHeight);
+        rows.toggleClass('border-bottom', !!v.borderBottom);
         v.minWidth && mainDiv.css('min-width', Widget.getPercentOrPixel(v.minWidth));
         v.width && mainDiv.css('width', Widget.getPercentOrPixel(v.width));
         if (data.content && !section.hasClass('forcedByEventMap')) {

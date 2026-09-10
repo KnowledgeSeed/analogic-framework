@@ -18,14 +18,7 @@ class LineAreaChartWidget extends Widget {
     }
 
     updateHtml(data) {
-        this.getParameters(data);
-
-        let c = this.getChartConfig();
-
-        this.chart.data = c.data;
-        this.chart.options = c.options;
-
-        this.chart.update();
+        this.updateChartContent(data, () => this.getChartConfig());
     }
 
     getParameters(d) {
@@ -469,6 +462,8 @@ class LineAreaChartWidget extends Widget {
     }
 
     processData(data) {
+        if (data && !Array.isArray(data) && Array.isArray(data.data)) return {options: {}, datasets: [], ...data};
+        data = data || [];
         return {
             data: [data[0] || [], data[1] || []],
             datasets: data[2] || [],

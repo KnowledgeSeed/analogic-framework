@@ -50,19 +50,28 @@ class GridTableCellWidget extends Widget {
     }
 
     updateContent(data = false, loadFunction = QB.loadData) {
+        if (data === false) {
+            if (!this._cellData) return Promise.resolve('update');
+            const loader = loadFunction === QB.loadData ? QB.refreshGridCellData : loadFunction;
+            return Promise.resolve(loader(this._cellData.id, this.name)).then(next => this.updateContent({...this._cellData, ...next}));
+        }
+        this._cellData = {...data};
         const o = this.options;
-        let widgetOptions, childrenData;
+        let widgetOptions, childrenData = data, pending = [];
 
         for (widgetOptions of o.widgets || []) {
             childrenData = {...widgetOptions, ...data};
             childrenData['originalId'] = widgetOptions['id'];
-            Widgets[childrenData['id']].updateHtml(childrenData);
+            const child = Widgets[childrenData.id];
+            child.updateSectionAttributes(childrenData);
+            pending.push(child.updateHtml(childrenData));
         }
         this.dynamicTooltip = (childrenData || {}).tooltip;
-        this.updateHtml(childrenData);
+        return Promise.all(pending).then(() => { this.updateHtml(childrenData); return 'update'; });
     }
 
     updateHtml(data) {
+        data = {...data};
         delete data['skin'];
         const p = this.getParameters(data);
 
@@ -73,10 +82,19 @@ class GridTableCellWidget extends Widget {
         // content` - morphChildren never removes a node it recognizes as another
         // widget's own root (checked via `Widgets[id]`), and that child already updated
         // itself in place via updateContent's own loop before this method runs.
-        this.morphHtml($('#' + p.cellId), this.getHtml([], data));
+        const cell = $('#' + p.cellId);
+        // Selection and keyboard navigation metadata belong to GridTable's event
+        // handlers, not to this cell's render template.
+        const runtimeClasses = ['selected', 'active-cell'].filter(c => cell.hasClass(c));
+        const row = cell.attr('data-row'), col = cell.attr('data-col');
+        this.morphHtml(cell, this.getHtml([], data));
+        cell.addClass(runtimeClasses.join(' '));
+        if (row !== undefined) cell.attr('data-row', row);
+        if (col !== undefined) cell.attr('data-col', col);
     }
 
     render(withState, childrenData) {
+        this._cellData = {...childrenData};
         this.isRendering = true;
         const o = {...this.options, ...childrenData}, instance = this;
 

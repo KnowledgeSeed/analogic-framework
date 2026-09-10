@@ -4,11 +4,43 @@
 
 class RichTextWidget extends Widget {
 
+    getEditorElement() {
+        return this.getSection().find('.richText-editor').first();
+    }
+
+    updateHtml(data) {
+        const editor = this.getEditorElement();
+        const focused = editor[0] && editor[0].contains(document.activeElement);
+        if (focused) {
+            // Toolbar reconstruction is deferred until the user leaves the editor.
+            // Keep the draft even if the server returns an older value meanwhile.
+            this._pendingEditorData = data;
+            editor.off('focusout.widgetContent').one('focusout.widgetContent', () => {
+                const pending = {...this._pendingEditorData, value: editor.html()};
+                setTimeout(() => this.updateHtml(pending), 0);
+            });
+            return;
+        }
+        const previous = JSON.stringify(this.getConfig());
+        this.getParameters(data);
+        const content = this.getRealValue('value', data, this.value.placeholder);
+        if (!editor.length || previous !== JSON.stringify(this.getConfig())) {
+            const source = this.getSection().find('.richText-initial');
+            editor.trigger('destroy');
+            // destroy unwraps the original source. Reuse the widget ID for the
+            // new plugin root so existing #widget.richText / direct-child CSS
+            // and application selectors keep their original structure.
+            source.attr('id', this.id);
+            this.initEventHandlers();
+        }
+        this.getEditorElement().trigger('setContent', content);
+    }
+
     getHtml(widgets, d) {
 
         this.getParameters(d);
 
-        return ``;
+        return '';
     }
 
     getParameters(d) {
@@ -50,11 +82,14 @@ class RichTextWidget extends Widget {
     }
 
     initEventHandlers() {
-        const c = $('#' + this.id), config = this.getConfig();
+        const c = this.getSection(), config = this.getConfig();
 
         this.editor = c.richText(config);
+        // The plugin copies its source attributes into a hidden textarea. Its
+        // outer wrapper is the public widget root; avoid a duplicate widget ID.
+        this.getSection().find('.richText-initial').removeAttr('id');
 
-        $('.richText-editor').trigger('setContent', this.value.placeholder);
+        this.getEditorElement().trigger('setContent', this.value.placeholder);
 
     }
 

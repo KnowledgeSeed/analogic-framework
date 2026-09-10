@@ -5,7 +5,7 @@
 class ImageWidget extends Widget {
 
     getHtml(widgets, d) {
-        const o = this.options, s = this.getGeneralStyles();
+        const o = this.options, s = this.getGeneralStyles(d);
 
         const v = this.getParameters(d);
 
@@ -14,7 +14,7 @@ class ImageWidget extends Widget {
         }
         let html = [];
         html.push(`<div class="ks-image ks-image-${v.skin}" data-action="imageClicked" data-id="${o.id}">`);
-        if (o.icon) {
+        if (v.icon) {
             html.push(`<span class="icon-${v.icon}" style="display: inline-block;${s.join('')}"><\/span>`);
         } else {
             html.push('<img src="' + app.applicationAssetsUrl + '/skin/images/' + v.fileName + '" alt="' + v.title + '" style="' + s.join('') + '">');

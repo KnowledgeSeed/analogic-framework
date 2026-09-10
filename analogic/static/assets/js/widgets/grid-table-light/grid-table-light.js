@@ -656,9 +656,17 @@ class GridTableLightWidget extends Widget {
         }
         const container = section[0];
         const parts = this.buildRenderParts(processed);
-        container.innerHTML = this.composeOuterHtml(parts, processed.parameters);
+        const selection = this.selection;
+        const fresh = document.createElement('div');
+        fresh.innerHTML = this.composeOuterHtml(parts, processed.parameters);
+        this.detachEvents();
+        Widget.morphChildren(container, fresh, this.id);
         this.bindDom(container);
         this.attachEvents();
+        if (selection && this.parameters.allowCopyToClipBoard) {
+            selection.selectedIds = new Set([...selection.selectedIds].filter(id => document.getElementById(id)));
+            this.selection = selection;
+        }
         this.scheduleStickyUpdate();
     }
 
@@ -1789,6 +1797,7 @@ class GridTableLightWidget extends Widget {
             this.isRendering = false;
             return;
         }
+        Widget.rememberMorphTree(section[0], this.id);
         this.bindDom(section[0]);
         this.attachEvents();
         this.scheduleStickyUpdate();

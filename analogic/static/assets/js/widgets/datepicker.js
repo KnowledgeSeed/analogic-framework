@@ -4,6 +4,13 @@
 
 class DatePickerWidget extends Widget {
 
+    updateHtml(data) {
+        const panel = this.getSection().find('.ks-datepicker-panel'), open = panel.is(':visible');
+        const html = this.getHtml([], open ? {...data, datePicked: this.value} : data);
+        this.updateRenderedHtml(html);
+        if (open) this.getSection().find('.ks-datepicker-panel').show();
+    }
+
     getHtml(widgets, d) {
         let mainDivStyle = this.getGeneralStyles(d),
             titleStyles = this.getHtmlComponentStylesArray('title', d),
@@ -269,7 +276,8 @@ class DatePickerWidget extends Widget {
             }
         };
 
-        const catcher = Doc.not(datePicker).on('click touch', e => {
+        if (this._outsidePickerHandler) Doc.off('click touch', this._outsidePickerHandler);
+        this._outsidePickerHandler = e => {
             if (pickerHolder.is(':visible') && !_this.panelFixed) {
                 if (!_this.closeAfterSelectingTheDate) {
                     let element = $('<div>'), value =  $('#' + id + ' .ks-datepicker-input').val();
@@ -283,7 +291,8 @@ class DatePickerWidget extends Widget {
                 }
                 pickerHolder.slideUp(50);
             }
-        });
+        };
+        Doc.on('click touch', this._outsidePickerHandler);
 
         if (!_this.panelFixed) {
             pickerHolder.hide();
