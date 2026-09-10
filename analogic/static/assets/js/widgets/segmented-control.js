@@ -4,13 +4,38 @@
 
 class SegmentedControlWidget extends Widget {
 
+    updateContent(data = false, loadFunction = QB.loadData) {
+        const loaded = data === false ? loadFunction(this.id, this.name) : Promise.resolve(data);
+        return Promise.resolve(loaded).then(raw => {
+            this.updateSectionAttributes(raw);
+            this.updateHtml(this.processData(raw));
+            return 'update';
+        });
+    }
+
+    updateHtml(data) {
+        const values = Array.isArray(data) ? data : (data?.data || []);
+        const section = this.getSection(), items = section.find('.ks-segment');
+        const html = (this.options.widgets || []).map((o, i) => {
+            const child = this.getWidget(o), itemData = {id: this.id, position: i, ...values[i]};
+            const itemHtml = child.getHtml([], itemData);
+            // Items are rendered from the parent's dataset, not separate queries.
+            if (items[i]) child.morphHtml(items[i], itemHtml);
+            return itemHtml;
+        });
+        const fresh = $(this.getHtml(html, data));
+        this.morphAttributesOnly(section.children(), fresh[0].outerHTML);
+        if (!items.length && html.length) section.children().find('.ks-segmented-inner').html(html.join(''));
+        this.bindContentEvents(true);
+    }
+
     getHtml(widgets, d) {
         const v = {
             skin: this.getRealValue('skin', d, 'standard')
         };
         const o = this.options;
 
-        let vv = d ? d : o.widgets.map(e => {
+        let vv = Array.isArray(d) ? d : d?.data || o.widgets.map(e => {
             return {value: e.value, selected: e.selected, label: e.label}
         });
 

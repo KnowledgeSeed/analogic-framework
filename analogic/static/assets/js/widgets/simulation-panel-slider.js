@@ -4,8 +4,13 @@
 
 class SimulationPanelSliderWidget extends Widget {
 
+    updateHtml(data) {
+        Object.assign(this.options, data);
+        this.updateRenderedHtml(this.getHtml());
+    }
+
     getHtml() {
-        const o = this.options, unit = o.unit || '', id = Utils.getRandomId();
+        const o = this.options, unit = o.unit || '', id = o.id ? o.id + 'Slider' : (o.parentWidgetId || 'simulation') + 'Slider' + o.ordinal;
         const min = null === o.minValue ? 0 : o.minValue;
         const max = null === o.maxValue ? 0 : o.maxValue;
         const delta = null === o.currentValue ? 0 : o.currentValue;
@@ -25,6 +30,10 @@ class SimulationPanelSliderWidget extends Widget {
     static createSlider(sliderHolder) {
         const id = sliderHolder.prop('id'), parentWidgetId = sliderHolder.data('parent_id') || null, ordinal = sliderHolder.data('ordinal');
         const delta = sliderHolder.data('delta'), unit = sliderHolder.data('unit'), min = sliderHolder.data('min'), max = sliderHolder.data('max');
+
+        if (sliderHolder[0].noUiSlider) {
+            sliderHolder[0].noUiSlider.destroy();
+        }
 
         const slider = noUiSlider.create(sliderHolder[0], {
             step: 1,

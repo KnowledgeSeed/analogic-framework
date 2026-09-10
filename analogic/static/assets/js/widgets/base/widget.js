@@ -95,6 +95,14 @@ class Widget {
         Listeners.length = 0;
 
         let holderHeight = holder.actual('height');
+        // `holder.empty()` below drops any scroll position the user built up (e.g. a
+        // horizontally scrolled grid table) - the DOM nodes carrying it are destroyed
+        // and rebuilt from scratch, so the browser has nothing left to remember it by.
+        // The scrollable pane is usually not `holder` itself but a known inner wrapper
+        // (grid tables scroll their `_inner`/`_body` div, not the outer section) - a
+        // selector lookup is used instead of walking the whole subtree so this stays
+        // cheap even for a grid table with tens of thousands of cells.
+        let scrollState = Widget.captureScrollState(holder);
 
         return holder.empty().off().promise().then(() => {
 
@@ -109,7 +117,6 @@ class Widget {
                 }
 
                 return holder.html(h.html()).promise().then(() => {
-
                     instance.removeLoaderHtml(withState);
 
                     if (!holder.hasClass('forcedByEventMap')) {
@@ -120,7 +127,12 @@ class Widget {
                         holder.css('opacity', 1);
                     }
 
+                    // Restored only now: `holder.css('display', ...)` above can itself
+                    // reset a scroll offset held directly on `holder` (changing `display`
+                    // establishes a new box), so restoring before it would just be
+                    // undone by it.
                     instance.initEvents(withState);
+                    Widget.restoreScrollState(holder, scrollState);
 
                     if (o.disableRefreshGridCell !== true) {
                         for (i of Listeners.filter(e => e.method === 'refreshGridCell' && e.options.id.includes(holder.attr('id')))) {
@@ -169,6 +181,10 @@ class Widget {
         if (usercentrics.length > 0) {
             usercentrics.detach();
         }
+        // See the matching comment in reRenderWidget: renderWidget is also used to force
+        // a full rebuild of an already-visible widget (e.g. an event-map "refresh"
+        // action), which would otherwise silently drop the user's scroll position.
+        let scrollState = Widget.captureScrollState(holder);
         return holder.empty().off().promise().then(() => {
             instance.holderStartLoader();
             return instance.render(withState, false, false, QB.loadData, previouslyLoadedData).then(html => {
@@ -179,6 +195,7 @@ class Widget {
                     }
                     instance.removeLoaderHtml(withState);
                     instance.initEvents(false);
+                    Widget.restoreScrollState(holder, scrollState);
                     for (i of Listeners) {
                         El.body.on(i.eventName, {
                             options: i.options,
@@ -201,12 +218,11 @@ class Widget {
     updateWidgetContent(withLoader = true) {
         withLoader && Loader.start(true);
         let instance = this;
-        return this.updateContent().then((r) => {
+        return $.when(Promise.resolve().then(() => this.updateContent()).then((r) => {
             if ('update' === r) {
                 instance.updateContentFinished();
             }
-            withLoader && Loader.stop(true);
-        });
+        }).finally(() => { withLoader && Loader.stop(true); }));
     }
 
     getWidget(widgetOptions) {
@@ -233,7 +249,8 @@ class Widget {
             return $.when.apply($, deferred).then(function () {
                 processedData = instance.processData(data);
                 instance.dynamicTooltip = (processedData || {}).tooltip;
-                instance.updateHtml(processedData);
+                instance.updateSectionAttributes(processedData);
+                return Promise.resolve(instance.updateHtml(processedData)).then(() => 'update');
             });
         }
 
@@ -241,14 +258,120 @@ class Widget {
             return $.when.apply($, deferred).then(function () {
                 processedData = instance.processData(d);
                 instance.dynamicTooltip = (processedData || {}).tooltip;
-                instance.updateHtml(processedData);
-                return 'update';
+                instance.updateSectionAttributes(processedData);
+                return Promise.resolve(instance.updateHtml(processedData)).then(() => 'update');
             });
         });
     }
 
     updateHtml(data) {
+        if (!this.getSection().length) return;
+        const childHtml = this.getChildHtml();
+        // A child not yet in the DOM (e.g. still behind visible:false +
+        // notLoadIfHidden, or a slow-loading sibling) must not be silently
+        // rendered as blank - getHtml() would bake an empty slot into this
+        // widget's own markup, and the morph would apply that emptiness for
+        // real. Skip this update cycle instead; the child gets its correct
+        // content from its own eventual initial render, and this widget will
+        // pick up the current state on the next updateContent().
+        if (!Widget.hasRenderedChildren(childHtml)) return;
+        return this.updateRenderedHtml(this.getHtml(childHtml, data, true));
+    }
 
+    getChildHtml() {
+        return (this.options.widgets || []).map(o => {
+            const child = this.getWidget(o);
+            const element = child && document.getElementById(child.id || child.c?.id);
+            return element ? element.outerHTML : null;
+        });
+    }
+
+    static hasRenderedChildren(childHtml) {
+        return !childHtml.includes(null);
+    }
+
+    updateSectionAttributes(data = {}) {
+        data = data || {};
+        const section = this.getSection();
+        if (!section.length) return;
+        const o = this.options, visible = this.getRealValue('visible', data, undefined);
+        // Explicit visibility is data; an imperatively opened/closed popup is state.
+        if (data.visible !== undefined) section.toggle(visible !== false);
+        if (o.applyMeasuresToSection) {
+            for (const key of ['width', 'height', 'minWidth', 'minHeight']) {
+                Widget.setOrRemoveMeasure(section, key, this.getRealValue(key, data, false));
+            }
+        }
+        if (['GridWidget', 'GridRowWidget', 'GridCellWidget'].includes(this.name)) {
+            const styles = document.createElement('div').style;
+            styles.cssText = this.getWidthForSection(data).join('');
+            for (const key of ['width', 'min-width', 'min-height']) {
+                section[0].style.setProperty(key, styles.getPropertyValue(key));
+            }
+        }
+        if (data.write !== undefined) section.attr('data-write', data.write).data('write', data.write);
+    }
+
+    updateRenderedHtml(html, bindEvents = true) {
+        const section = this.getSection();
+        if (!section.length) return;
+        const fresh = document.createElement('div');
+        fresh.innerHTML = html;
+        Widget.morphChildren(section[0], fresh, this.id);
+        if (bindEvents) this.bindContentEvents(true);
+    }
+
+    updateChartContent(data, getConfig) {
+        const childHtml = this.getChildHtml();
+        if (!Widget.hasRenderedChildren(childHtml)) return;
+        const chart = this.chart;
+        const hidden = chart ? chart.data.datasets.map((_, i) => chart.getDatasetMeta(i).hidden) : [];
+        const pointHidden = chart && ['pie', 'doughnut', 'polarArea'].includes(chart.config.type)
+            ? chart.getDatasetMeta(0).data.map(point => point.hidden) : null;
+        this.updateRenderedHtml(this.getHtml(childHtml, data, true), false);
+        if (!chart) { this.bindContentEvents(); return; }
+        const config = getConfig();
+        chart.data = config.data;
+        chart.options = config.options;
+        hidden.forEach((value, i) => { if (chart.data.datasets[i]) chart.getDatasetMeta(i).hidden = value; });
+        chart.update();
+        if (pointHidden) {
+            pointHidden.forEach((value, i) => {
+                const point = chart.getDatasetMeta(0).data[i];
+                if (point) point.hidden = value;
+            });
+            chart.update();
+        }
+        const legend = $(chart.canvas).parent().next('.ks-legend, .ks-radar');
+        if (legend.length && chart.generateLegend) {
+            legend.html(chart.generateLegend());
+            legend.find('.ks-legend-item').each(function () {
+                const i = $(this).data('id');
+                $(this).toggleClass('off', pointHidden ? !!pointHidden[i] : !!(chart.data.datasets[i] && chart.getDatasetMeta(i).hidden));
+            });
+        }
+    }
+
+    // Rebind only handlers installed by this widget, retaining application handlers
+    // and independently managed child widgets. This also binds newly inserted nodes.
+    bindContentEvents(withState = false) {
+        for (const {element, event} of this._contentEvents || []) {
+            $(element).off(event.origType + (event.namespace ? '.' + event.namespace : ''), event.selector, event.handler);
+        }
+        const section = this.getSection();
+        if (section[0]) Widget.rememberMorphTree(section[0], this.id);
+        const snapshot = () => {
+            const records = [];
+            section.find('*').addBack().each(function () {
+                for (const events of Object.values($._data(this, 'events') || {})) {
+                    for (const event of events) records.push({element: this, event});
+                }
+            });
+            return records;
+        };
+        const previous = new Set(snapshot().map(r => r.event));
+        this.initEventHandlers(withState);
+        this._contentEvents = snapshot().filter(r => !previous.has(r.event));
     }
 
     render(withState, refresh, useDefaultData = false, loadFunction = QB.loadData, previouslyLoadedData = false) {
@@ -476,7 +599,7 @@ class Widget {
         }
 
         try {
-            this.initEventHandlers(withState);
+            this.bindContentEvents(withState);
         } catch (e) {
             console.error('Error initializing event handlers for widget "' + (this.options ? this.options.id : '?') + '":', e);
         }
@@ -744,16 +867,12 @@ class Widget {
     }
 
     static setSkin(element, skinPrefix, newSkin) {
-        if (!element.hasClass(skinPrefix + newSkin)) {
-            if (element.attr('class')) {
-                let result, classWithoutSkin, originalClass = element.attr('class'),
-                    s = originalClass.indexOf(skinPrefix);
-                classWithoutSkin = s !== -1 ? originalClass.substring(0, s - 1) : originalClass;
-                result = classWithoutSkin.split(' ');
-                result.push(skinPrefix + newSkin);
-                element.attr('class', result.join(' '));
+        element.each(function () {
+            for (const name of Array.from(this.classList)) {
+                if (name.startsWith(skinPrefix)) this.classList.remove(name);
             }
-        }
+            this.classList.add(skinPrefix + newSkin);
+        });
     }
 
     static removeStyle(element, styleName) {
@@ -771,5 +890,260 @@ class Widget {
 
     static addOrRemoveClass(element, className, add) {
         add ? !element.hasClass(className) && element.addClass(className) : element.removeClass(className);
+    }
+
+    // Known scrollable-pane wrapper classes used across widgets (grid tables scroll an
+    // inner `_inner`/`_body`/`-body` div, not their outer section). Checked by class
+    // name via jQuery (native getElementsByClassName under the hood) rather than
+    // walking the subtree, so this stays cheap even for a grid table with tens of
+    // thousands of cells.
+    static SCROLLABLE_PANE_SELECTOR = '.ks-grid-table-inner, .ks-grid-table-body, .ks-grid-table-light_inner, .ks-grid-table-light_body, .ks-grid-table-light_head';
+
+    static captureScrollState(holder) {
+        const state = [];
+        const record = (element, className, index = 0) => {
+            const left = element.scrollLeft(), top = element.scrollTop();
+            if (left || top) {
+                state.push({className, index, left, top});
+            }
+        };
+        record(holder, null);
+        holder.find(Widget.SCROLLABLE_PANE_SELECTOR).each(function (index) {
+            record($(this), this.className, index);
+        });
+        return state;
+    }
+
+    static restoreScrollState(holder, state) {
+        const panes = holder.find(Widget.SCROLLABLE_PANE_SELECTOR);
+        (state || []).forEach(({className, index, left, top}) => {
+            const element = className === null ? holder : panes.eq(index);
+            if (element.length) {
+                element.scrollLeft(left);
+                element.scrollTop(top);
+            }
+        });
+    }
+
+    // A subtree owned by something other than getHtml()'s own markup - an external
+    // library's DOM (a chart canvas, a Tabulator table), or a nested child widget's own
+    // root (already updated by its own updateContent/updateHtml, called separately by
+    // the base updateContent loop) - must never be diffed or rewritten from here.
+    static shouldSkipMorph(element, ownWidgetId) {
+        if (element.tagName === 'CANVAS' || element.classList.contains('chartjs-size-monitor')) return true;
+        if (element.hasAttribute('data-ks-no-morph')) {
+            return true;
+        }
+        if (element.id && element.id !== ownWidgetId && typeof Widgets !== 'undefined' && Widgets[element.id]) {
+            return true;
+        }
+        return false;
+    }
+
+    // Patches `oldEl` in place to match `newEl`: attributes are diffed and set/removed
+    // (this single generic pass is what replaces the whole family of hand-written
+    // setOrRemoveStyle/addOrRemoveClass/setSkin call sites in each widget's updateHtml -
+    // any class/style/data-* attribute a parsing-control script computes is picked up
+    // automatically instead of needing its own enumerated patch), then children are
+    // diffed positionally. `ownWidgetId` is the id of the widget currently updating,
+    // so its own root element isn't mistaken for a "nested child widget" and skipped.
+    static morphAttributes(oldEl, newEl) {
+        const template = newEl.cloneNode(false);
+        const previous = Widget.morphTemplates.get(oldEl);
+        // Only remove renderer-owned classes/styles. Runtime additions (selection,
+        // popup coordinates, plugin measurements) are not part of the template.
+        if (previous) {
+            const classes = new Set((previous.getAttribute('class') || '').split(/\s+/).filter(Boolean));
+            const extra = Array.from(oldEl.classList).filter(value => !classes.has(value) && !newEl.classList.contains(value));
+            if (extra.length) newEl.setAttribute('class', (newEl.getAttribute('class') || '') + ' ' + extra.join(' '));
+            for (const property of oldEl.style) {
+                if (!previous.style.getPropertyValue(property) && !newEl.style.getPropertyValue(property)) {
+                    newEl.style.setProperty(property, oldEl.style.getPropertyValue(property), oldEl.style.getPropertyPriority(property));
+                }
+            }
+        }
+        const newAttrs = newEl.attributes;
+        for (let i = 0; i < newAttrs.length; ++i) {
+            const attr = newAttrs[i];
+            if (oldEl.getAttribute(attr.name) !== attr.value) {
+                oldEl.setAttribute(attr.name, attr.value);
+                // Event handlers use jQuery.data(), whose cache otherwise retains
+                // the previous attribute even after a successful DOM update.
+                if (attr.name.startsWith('data-')) {
+                    $(oldEl).removeData(attr.name.slice(5));
+                    $(oldEl).data(attr.name.slice(5));
+                }
+            }
+        }
+        const oldAttrs = oldEl.attributes;
+        for (let i = oldAttrs.length - 1; i >= 0; --i) {
+            const name = oldAttrs[i].name;
+            if (!newEl.hasAttribute(name) && (!previous || previous.hasAttribute(name))) {
+                oldEl.removeAttribute(name);
+                if (name.startsWith('data-')) {
+                    $(oldEl).removeData(name.slice(5));
+                }
+            }
+        }
+        Widget.morphTemplates.set(oldEl, template);
+    }
+
+    static morphTemplates = new WeakMap();
+
+    static rememberMorphTree(element, ownId) {
+        if (Widget.shouldSkipMorph(element, ownId)) return;
+        if (!Widget.morphTemplates.has(element)) Widget.morphTemplates.set(element, element.cloneNode(false));
+        for (const child of element.children) Widget.rememberMorphTree(child, ownId);
+    }
+
+    static morphElement(oldEl, newEl, ownWidgetId = null) {
+        if (!oldEl || !newEl || Widget.shouldSkipMorph(oldEl, ownWidgetId)) {
+            return;
+        }
+        if (oldEl.noUiSlider) {
+            Widget.morphAttributes(oldEl, newEl);
+            return;
+        }
+
+        const focused = document.activeElement === oldEl;
+        const tag = oldEl.tagName;
+        const field = (tag === 'INPUT' && oldEl.type !== 'file') || tag === 'TEXTAREA' || tag === 'SELECT';
+        const value = focused && field ? oldEl.value : null;
+        const selection = focused && (tag === 'INPUT' || tag === 'TEXTAREA') && oldEl.selectionStart !== null ?
+            [oldEl.selectionStart, oldEl.selectionEnd, oldEl.selectionDirection] : null;
+        const checked = focused && tag === 'INPUT' ? oldEl.checked : null;
+        const selected = focused && tag === 'SELECT' ? Array.from(oldEl.selectedOptions, o => o.value) : null;
+        Widget.morphAttributes(oldEl, newEl);
+        Widget.morphChildren(oldEl, newEl, ownWidgetId);
+        // Attributes can change pristine input values; option/textarea children can
+        // change live values too. Restore focused state AFTER both passes.
+        if (focused && field) {
+            if (selected) {
+                Array.from(oldEl.options).forEach(o => { o.selected = selected.includes(o.value); });
+            } else if (oldEl.value !== value) {
+                oldEl.value = value;
+            }
+            if (tag === 'INPUT') oldEl.checked = checked;
+            if (selection && oldEl.selectionStart !== null) oldEl.setSelectionRange(...selection);
+        } else if (field) {
+            if (tag === 'INPUT' && (oldEl.type === 'checkbox' || oldEl.type === 'radio')) {
+                const newChecked = newEl.hasAttribute('checked');
+                if (oldEl.checked !== newChecked) {
+                    oldEl.checked = newChecked;
+                }
+            } else if (oldEl.value !== newEl.value) {
+                oldEl.value = newEl.value;
+            }
+        }
+    }
+
+    static morphChildren(oldParent, newParent, ownWidgetId) {
+        if (oldParent.isContentEditable && oldParent.contains(document.activeElement)) return;
+        const active = document.activeElement;
+        if (active && active !== oldParent && oldParent.contains(active) &&
+            active.matches('input, textarea, select, [contenteditable]') &&
+            !newParent.querySelector('input, textarea, select, [contenteditable]')) return;
+        const newChildren = Array.from(newParent.childNodes);
+        let cursor = oldParent.firstChild;
+        const protectedTree = node => node.nodeType === Node.ELEMENT_NODE &&
+            (node.noUiSlider || Widget.shouldSkipMorph(node, ownWidgetId) ||
+                Array.from(node.querySelectorAll('[id], [data-ks-no-morph], canvas, .noUi-target')).some(el => el.noUiSlider || Widget.shouldSkipMorph(el, ownWidgetId)) ||
+                node.contains(document.activeElement));
+        const sameNode = (a, b) => a.nodeType === b.nodeType &&
+            (a.nodeType !== Node.ELEMENT_NODE || (a.tagName === b.tagName && a.id === b.id));
+
+        for (const [newIndex, newChild] of newChildren.entries()) {
+            // Match stable IDs before positional matching. Plugins may insert
+            // resize monitors before a canvas; replacing that monitor with a clone
+            // would otherwise create a duplicate canvas and orphan the live chart.
+            if (newChild.nodeType === Node.ELEMENT_NODE && newChild.id) {
+                const match = Array.from(oldParent.children).find(child => child.id === newChild.id);
+                if (match && match !== cursor) {
+                    oldParent.insertBefore(match, cursor);
+                    cursor = match;
+                }
+            }
+            // A protected child omitted from fresh parent markup does not consume
+            // the next new sibling. Never remove its ancestor either.
+            while (cursor && protectedTree(cursor) && !sameNode(cursor, newChild)) {
+                // This protected subtree is still present later in the template.
+                // Insert the new preceding sibling here rather than skipping the
+                // subtree and cloning it when we reach its template counterpart.
+                if (newChildren.slice(newIndex + 1).some(child => sameNode(cursor, child))) break;
+                cursor = cursor.nextSibling;
+            }
+            if (cursor && protectedTree(cursor) && !sameNode(cursor, newChild)) {
+                oldParent.insertBefore(newChild.cloneNode(true), cursor);
+                continue;
+            }
+            if (!cursor) {
+                oldParent.appendChild(newChild.cloneNode(true));
+                continue;
+            }
+            const oldChild = cursor;
+            cursor = oldChild.nextSibling;
+            if (oldChild.nodeType === Node.ELEMENT_NODE && Widget.shouldSkipMorph(oldChild, ownWidgetId)) {
+                continue;
+            }
+            if (!sameNode(oldChild, newChild)) {
+                oldParent.replaceChild(newChild.cloneNode(true), oldChild);
+                continue;
+            }
+
+            if (oldChild.nodeType === Node.TEXT_NODE) {
+                if (oldChild.textContent !== newChild.textContent) {
+                    oldChild.textContent = newChild.textContent;
+                }
+                continue;
+            }
+
+            if (oldChild.nodeType !== Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            Widget.morphElement(oldChild, newChild, ownWidgetId);
+        }
+        while (cursor) {
+            const next = cursor.nextSibling;
+            if (!protectedTree(cursor)) oldParent.removeChild(cursor);
+            cursor = next;
+        }
+    }
+
+    // Instance helper: re-runs getHtml()'s output through morphElement against an
+    // already-rendered element, instead of a widget's updateHtml hand-listing which
+    // fields to patch. `targetEl` may be a plain element or a jQuery-wrapped one.
+    morphHtml(targetEl, newHtmlString) {
+        const target = targetEl && targetEl.jquery ? targetEl[0] : targetEl;
+        if (!target || !newHtmlString) {
+            return;
+        }
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = newHtmlString;
+        const newRoot = wrapper.firstElementChild;
+        const ownId = target.id && typeof Widgets !== 'undefined' && Widgets[target.id] === this ? target.id : this.options.id;
+        if (!newRoot || Widget.shouldSkipMorph(target, ownId)) {
+            return;
+        }
+        Widget.morphElement(target, newRoot, ownId);
+    }
+
+    // Like morphHtml, but never touches children - for a wrapper element (e.g. a grid
+    // cell) whose content is a nested child widget that already updated its own DOM in
+    // place; recursing into it here would either fight that update or need this method
+    // to reconstruct child markup it doesn't have. Only the wrapper's own attributes are
+    // diffed.
+    morphAttributesOnly(targetEl, newHtmlString) {
+        const target = targetEl && targetEl.jquery ? targetEl[0] : targetEl;
+        if (!target || !newHtmlString) {
+            return;
+        }
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = newHtmlString;
+        const newRoot = wrapper.firstElementChild;
+        if (!newRoot) {
+            return;
+        }
+        Widget.morphAttributes(target, newRoot);
     }
 }

@@ -3,6 +3,12 @@
 'use strict';
 class GridTableHeaderRowWidget extends Widget {
 
+    updateHtml(data) {
+        const childHtml = this.getChildHtml();
+        if (!Widget.hasRenderedChildren(childHtml)) return;
+        this.morphHtml(this.getSection(), this.getHtml(childHtml, data, true));
+    }
+
     getHtml(widgets, d, withState) {
         const v = {
             alignment: this.getRealValue('alignment', d, false),
@@ -11,10 +17,13 @@ class GridTableHeaderRowWidget extends Widget {
             height: this.getRealValue('height', d, false)
         };
 
-        return `<div class="ks-grid-table-row ${v.alignment !== false ? `ks-row-pos-${v.alignment}` : ''} ${v.borderBottom ? 'border-bottom' : ''} ${v.borderTop ? 'border-top' : ''}">${widgets.join('')}</div>`;
+        return `<div id="${this.id}" style="${v.height ? 'height:' + Widget.getPercentOrPixel(v.height) + ';' : ''}" class="ks-grid-table-row ${v.alignment !== false ? `ks-row-pos-${v.alignment}` : ''} ${v.borderBottom ? 'border-bottom' : ''} ${v.borderTop ? 'border-top' : ''}">${widgets.join('')}</div>`;
     }
 
-    render(withState, d, loadFunction = QB.loadData) {
+    // `hiddenColumns` comes from the owning GridTableWidget when `hideEmptyColumns` is
+    // on. The header cells have to drop the same column indexes as the body, otherwise
+    // the header stays full width and the two get out of alignment.
+    render(withState, d, loadFunction = QB.loadData, hiddenColumns = false) {
         this.isRendering = true;
         const o = this.options, instance = this;
 
@@ -28,10 +37,16 @@ class GridTableHeaderRowWidget extends Widget {
 
         this.addDependents();
 
+        const hiddenCols = hiddenColumns instanceof Set ? hiddenColumns : new Set();
+
         return loadFunction(o.id, instance.name).then(function (data) {
             let deferred = [], w, k = 0;
 
             for (w of widgets) {
+                if (hiddenCols.has(k)) {
+                    ++k;
+                    continue;
+                }
                 deferred.push(w.render(withState, d.length > k ? d[k] : {}));
                 ++k;
             }

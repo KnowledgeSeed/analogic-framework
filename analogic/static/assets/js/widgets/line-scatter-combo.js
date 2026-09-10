@@ -9,21 +9,13 @@ class LineScatterComboWidget extends Widget {
 
         return `
 <div class="ks-chart-holder" style="${this.getGeneralStyles(d).join('')}">
-    <div class="ks-chart-widget" style="width: 100%; height: 100%;"><canvas id="${o.id}Canvas"></canvas></div>
+    <div class="ks-chart-widget" style="width: 100%; height: 100%;"><canvas id="${o.id}Canvas" data-ks-no-morph="true"></canvas></div>
     <div>${this.createLegendHtml()}</div>
 </div>`;
     }
 
     updateHtml(data) {
-        this.getParameters(data);
-
-        let c = this.getChartConfig();
-
-        this.chart.data = c.data;
-        this.chart.options = c.options;
-
-        this.chart.update();
-
+        this.updateChartContent(data, () => this.getChartConfig());
         $(this.chart.canvas).parent().next().html(this.createLegendHtml());
     }
 

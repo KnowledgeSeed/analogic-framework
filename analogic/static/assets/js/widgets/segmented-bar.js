@@ -55,7 +55,7 @@ class SegmentedBarWidget extends Widget {
     }
 
     processData(data) {
-        return data ? {dataset: data} : data;
+        return Array.isArray(data) ? {dataset: data} : data;
     }
 }
 ;

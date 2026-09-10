@@ -3,6 +3,29 @@
 'use strict';
 class SliderWidget extends Widget {
 
+    updateHtml(data) {
+        const section = this.getSection(), focused = section[0]?.contains(document.activeElement);
+        if (section.find('.noUi-active').length) {
+            this._pendingSliderData = data;
+            this.slider.off('end.widgetContent');
+            this.slider.on('end.widgetContent', () => {
+                const pending = {...this._pendingSliderData, value: this.slider.get(true)};
+                this.slider.off('end.widgetContent');
+                // Let noUiSlider finish its pointer cleanup before rebuilding it.
+                setTimeout(() => { if (section[0].isConnected) this.updateHtml(pending); }, 0);
+            });
+            return;
+        }
+        // Keep a draft in the options popup and the current handle while dragging.
+        const editing = focused || section.find('.noUi-active').length > 0;
+        const current = this.slider && this.slider.get(true);
+        const html = this.getHtml([], editing && current !== undefined ? {...data, value: current} : data);
+        this.updateRenderedHtml(html, false);
+        // createSlider destroys only its own noUiSlider instance and rebinds the
+        // closures for the new parameters; the widget and input nodes remain live.
+        this.bindContentEvents(true);
+    }
+
     getHtml(widgets, d) {
         SliderWidget.slidersByIds = SliderWidget.slidersByIds || {};
 
@@ -134,6 +157,7 @@ class SliderWidget extends Widget {
 
     initEventHandlers() {
         const section = this.getSection(), id = this.id, w = this.value, isTouchMode = app.isTouched;
+        if (this._linkedInput) this._linkedInput.off('change', this._linkedInputHandler);
 
         this.createSlider(section, id);
 
@@ -225,7 +249,8 @@ class SliderWidget extends Widget {
         if (v('updateableWidgetId', w)) {
             let updateableInput = $('#' + w.updateableWidgetId).find('input');
 
-            updateableInput.off('change').on('change', () => {
+            this._linkedInput = updateableInput;
+            this._linkedInputHandler = () => {
                 let updateableInputValue = Utils.parseNumber(Utils.replaceDecimal(updateableInput.val()));
 
                 v(id).value.changedByInput = true;
@@ -235,7 +260,8 @@ class SliderWidget extends Widget {
                 } else {
                     this.slider.set(updateableInputValue);
                 }
-            });
+            };
+            updateableInput.on('change', this._linkedInputHandler);
         }
     }
 

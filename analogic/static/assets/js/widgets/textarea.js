@@ -94,13 +94,18 @@ class TextAreaWidget extends Widget {
         if (!d.value) {
             d.value = '';
         }
-        const p = this.getParameters(d), section = this.getSection(),
-        textarea = section.find('textarea');
+        const p = this.getParameters(d), section = this.getSection();
 
         this.editable = p.editable;
         this.value = Utils.escapeText(d.value);
 
-        textarea.val(d.value);
+        // Everything getHtml() can produce (title, icon, highlight, skin, styles,
+        // disabled/placeholder, value) is applied by diffing against a fresh render -
+        // morphElement itself skips syncing the live `.value` while the textarea is
+        // focused, so an in-progress edit is never clobbered by a refresh (the old code
+        // called textarea.val(d.value) unconditionally here).
+        this.morphHtml(section.children(), this.getHtml([], d));
+        this.bindContentEvents(true);
     }
 
     reset() {
