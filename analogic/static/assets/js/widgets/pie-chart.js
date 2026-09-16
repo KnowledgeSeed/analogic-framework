@@ -41,8 +41,8 @@ class PieChartWidget extends Widget {
         this.value = v;
 
         return `
-<div class="ks-pie-chart ks-pie-chart-${v.skin}" style="${this.getGeneralStyles(v.data, {width: 450, height: 450}).join('')}">
-    <div class="ks-pie-chart-title"><h3>${o.title}</h3></div>
+<div class="ks-pie-chart ks-pie-chart-${v.skin}" style="${this.getGeneralStyles(d, {width: 450, height: 450}).join('')}">
+    <div class="ks-pie-chart-title"><h3>${this.getRealValue('title', d, '')}</h3></div>
     <div class="ks-pie-chart-widget">
         <canvas ${v.canvasWidth ? `width="${v.canvasWidth}"` : ''} ${v.canvasHeight ? `height="${v.canvasHeight}"` : ''} id="${o.id}Canvas"></canvas>
     </div>
@@ -50,8 +50,13 @@ class PieChartWidget extends Widget {
 </div>`;
     }
 
+    updateHtml(data) {
+        this.updateChartContent(data, () => PieChartWidget.getChartConfig(this.value));
+    }
+
     initEventHandlers() {
         const canvas = $('#' + this.options.id + 'Canvas'), ctx = canvas[0].getContext('2d'), c = new Chart(ctx, PieChartWidget.getChartConfig(this.value));
+        this.chart = c;
 
         canvas.parent().next().html(c.generateLegend()).on('click', '.ks-legend-item', e => {
             let legend = $(e.target).closest('.ks-legend-item').toggleClass('off'), id = legend.data('id');

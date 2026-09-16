@@ -50,42 +50,51 @@ class GridTableCellWidget extends Widget {
     }
 
     updateContent(data = false, loadFunction = QB.loadData) {
+        if (data === false) {
+            if (!this._cellData) return Promise.resolve('update');
+            const loader = loadFunction === QB.loadData ? QB.refreshGridCellData : loadFunction;
+            return Promise.resolve(loader(this._cellData.id, this.name)).then(next => this.updateContent({...this._cellData, ...next}));
+        }
+        this._cellData = {...data};
         const o = this.options;
-        let widgetOptions, childrenData;
+        let widgetOptions, childrenData = data, pending = [];
 
         for (widgetOptions of o.widgets || []) {
             childrenData = {...widgetOptions, ...data};
             childrenData['originalId'] = widgetOptions['id'];
-            Widgets[childrenData['id']].updateHtml(childrenData);
+            const child = Widgets[childrenData.id];
+            child.updateSectionAttributes(childrenData);
+            pending.push(child.updateHtml(childrenData));
         }
         this.dynamicTooltip = (childrenData || {}).tooltip;
-        this.updateHtml(childrenData);
+        return Promise.all(pending).then(() => { this.updateHtml(childrenData); return 'update'; });
     }
 
     updateHtml(data) {
+        data = {...data};
         delete data['skin'];
-        const o = this.options, p = this.getParameters(data), mainDiv = $('#' + p.cellId), content = mainDiv.find('.ks-grid-table-cell-content');
-        p.cellVisible === false ? mainDiv.css('display', 'none') : mainDiv.css('display', 'block');
-        p.cellWidth && mainDiv.css('width', Widget.getPercentOrPixel(p.cellWidth));
-        let paddingRight, paddingLeft;
+        const p = this.getParameters(data);
 
-        Widget.setOrRemoveStyle(mainDiv, 'background-color', p.cellBackgroundColor);
-
-        paddingRight = p.cellPaddingRight !== false ? p.cellPaddingRight : o.paddingRight ? o.paddingRight : false;
-        Widget.setOrRemoveMeasure(mainDiv, 'padding-right', paddingRight);
-
-        paddingLeft = p.cellPaddingLeft !== false ? p.cellPaddingLeft : o.paddingLeft ? o.paddingLeft : false;
-        Widget.setOrRemoveMeasure(mainDiv, 'padding-left', paddingLeft);
-
-        Widget.setSkin(mainDiv, 'ks-grid-table-cell-', p.cellSkin ? p.cellSkin : p.skin);
-
-        Widget.addOrRemoveClass(mainDiv, 'border-right', p.borderRight);
-        Widget.addOrRemoveClass(mainDiv, 'border-left', p.borderLeft);
-
-        Widget.addOrRemoveClass(content, 'ks-pos-' + p.alignment, true);
+        // Everything getHtml() can produce on the cell wrapper and its structural
+        // `-content` div (background, width, padding, skin, border classes, alignment)
+        // is applied by diffing against a fresh render. `widgets: []` is safe here even
+        // though the cell's actual child widget lives inside `.ks-grid-table-cell-
+        // content` - morphChildren never removes a node it recognizes as another
+        // widget's own root (checked via `Widgets[id]`), and that child already updated
+        // itself in place via updateContent's own loop before this method runs.
+        const cell = $('#' + p.cellId);
+        // Selection and keyboard navigation metadata belong to GridTable's event
+        // handlers, not to this cell's render template.
+        const runtimeClasses = ['selected', 'active-cell'].filter(c => cell.hasClass(c));
+        const row = cell.attr('data-row'), col = cell.attr('data-col');
+        this.morphHtml(cell, this.getHtml([], data));
+        cell.addClass(runtimeClasses.join(' '));
+        if (row !== undefined) cell.attr('data-row', row);
+        if (col !== undefined) cell.attr('data-col', col);
     }
 
     render(withState, childrenData) {
+        this._cellData = {...childrenData};
         this.isRendering = true;
         const o = {...this.options, ...childrenData}, instance = this;
 

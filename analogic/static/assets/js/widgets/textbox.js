@@ -59,9 +59,6 @@ class TextBoxWidget extends Widget {
     }
 
     updateHtml(data) {
-        const o = this.options, p = this.getParameters(data), section = $('#' + o.id),
-            input = section.find('input');
-
         data = data || {value: ''};
 
         if (!data.value && data.value !== 0) {
@@ -70,12 +67,17 @@ class TextBoxWidget extends Widget {
 
         this.value = data.value;
 
+        const p = this.getParameters(data), section = this.getSection();
+
         this.addDynamicData(data, p);
 
-        input.attr('placeholder', p.defaultText === false ? '' : p.defaultText);
-        input.attr('value', Utils.htmlEncode(data.value));
-        input.val(data.value);
-
+        // Everything getHtml() can produce (title, icon, highlight, skin, text/title
+        // styles, readonly state, placeholder, value) is applied by diffing against a
+        // fresh render - morphElement itself skips syncing the live `value` while the
+        // field is focused, so an in-progress edit is never clobbered by a refresh
+        // (the old code called input.val(data.value) unconditionally here).
+        this.morphHtml(section.children(), this.getHtml([], data));
+        this.bindContentEvents(true);
     }
 
     addDynamicData(data, parameters) {

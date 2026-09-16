@@ -24,7 +24,7 @@ class SimulationPanelWidget extends Widget {
     }
 
     initEventHandlers() {
-        const section = this.getSection(), sliderHolders = section.find('.sps').empty(), o = this.options;
+        const section = this.getSection(), sliderHolders = section.find('.sps'), o = this.options;
 
         for (let i = 0; i < sliderHolders.length; ++i) {
             SimulationPanelSliderWidget.createSlider(sliderHolders.eq(i));

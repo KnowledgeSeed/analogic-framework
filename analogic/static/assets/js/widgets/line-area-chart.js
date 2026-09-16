@@ -11,21 +11,14 @@ class LineAreaChartWidget extends Widget {
 <div class="ks-line-area-chart ks-line-area-chart-${v.skin}" style="${this.getGeneralStyles(d.options, {width: 450, height: 450}).join('')}">
     ${verticalLineBoxWidget.join('')}
     <div class="ks-line-area-chart-widget">
-        <canvas id="${this.options.id}Canvas"></canvas>
+        <canvas id="${this.options.id}Canvas" data-ks-no-morph="true"></canvas>
     </div>
     <div class="ks-legend ks-legend-${v.legendSkin}"></div>
 </div>`;
     }
 
     updateHtml(data) {
-        this.getParameters(data);
-
-        let c = this.getChartConfig();
-
-        this.chart.data = c.data;
-        this.chart.options = c.options;
-
-        this.chart.update();
+        this.updateChartContent(data, () => this.getChartConfig());
     }
 
     getParameters(d) {
@@ -469,6 +462,8 @@ class LineAreaChartWidget extends Widget {
     }
 
     processData(data) {
+        if (data && !Array.isArray(data) && Array.isArray(data.data)) return {options: {}, datasets: [], ...data};
+        data = data || [];
         return {
             data: [data[0] || [], data[1] || []],
             datasets: data[2] || [],

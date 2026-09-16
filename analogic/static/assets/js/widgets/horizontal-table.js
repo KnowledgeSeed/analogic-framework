@@ -4,6 +4,18 @@
 
 class HorizontalTableWidget extends Widget {
 
+    updateHtml(data) {
+        const childHtml = this.getChildHtml();
+        if (!Widget.hasRenderedChildren(childHtml)) return;
+        const children = (this.options.widgets || []).map(o => this.getWidget(o));
+        const rows = children.filter(w => w.name.includes('RowWidget'));
+        const sort = items => items.sort((a, b) => (a.options.position || 0) - (b.options.position || 0));
+        this.rows = data.cells;
+        this.updateRenderedHtml(this.getHtml(childHtml, data, true,
+            sort(rows.filter(w => w.options.align === 'left')),
+            sort(rows.filter(w => w.options.align !== 'left'))));
+    }
+
     getHtml(widgets, data, withState, leftRowWidgets, rightRowWidgets) {
         const o = this.options;
         let mainDivStyle = this.getGeneralStyles(data), s = [], h, d, i, actionWidth = false;
@@ -11,8 +23,8 @@ class HorizontalTableWidget extends Widget {
         const v = {
             columnTypes: this.getRealValue('columnTypes', data, false),
             fadeOutNum: this.getRealValue('fadeOutNum', data, 10),
-            hideIfNoData: this.getRealValue('hideIfNoData', d, false),
-            multiSelect: this.getRealValue('multiSelect', d, false),
+            hideIfNoData: this.getRealValue('hideIfNoData', data, false),
+            multiSelect: this.getRealValue('multiSelect', data, false),
             searchField: this.getRealValue('searchField', data, false),
             selectFirst: this.getRealValue('selectFirst', data, false),
             selectedRowBackgroundColor: this.getRealValue('selectedRowBackgroundColor', data, '#bfd9f2'),
@@ -20,6 +32,8 @@ class HorizontalTableWidget extends Widget {
         };
 
         let fadeOutHeight = 45 * (v.fadeOutNum);
+        this.multiSelect = v.multiSelect;
+        this.selectedRowBackgroundColor = v.selectedRowBackgroundColor;
 
         if (!withState) {
             this.state = {};

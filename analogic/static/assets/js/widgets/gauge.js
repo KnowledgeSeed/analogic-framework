@@ -59,9 +59,14 @@ class GaugeWidget extends Widget {
 </div>`;
     }
 
+    updateHtml(data) {
+        this.updateChartContent(data, () => this.getGaugeConfig());
+    }
+
     initEventHandlers() {
         const v = this.value, canvas = $('#' + v.canvasId), ctx = canvas[0].getContext('2d'),
             c = new Chart(ctx, this.getGaugeConfig());
+        this.chart = c;
 
         this.initShowInFullScreenEventHandler(v);
     }
@@ -92,7 +97,7 @@ class GaugeWidget extends Widget {
 
     getGaugeConfig() {
         const d = this.value, min = d.minRange, max = d.maxRange, values = d.values, datasets = [],
-            colors = this.options.colors, len = max.toString().length;
+            colors = d.colors, len = max.toString().length;
 
         let i, v, p;
 

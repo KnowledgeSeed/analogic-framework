@@ -1,5 +1,16 @@
 class PivotTableWidget extends Widget {
 
+    updateHtml(data = {}) {
+        const section = this.getSection();
+        // Cards, expanded members, presets and the editor are runtime state. Never
+        // call getHtml()/initEventHandlers() again: both reset that state.
+        section.find('.ks-pivot').attr('style', this.getGeneralStyles(data).join(''));
+        section.find('.ks-pivot-table-controls-holder').toggle(!this.getRealValue('hideCards', data, false));
+        if (!this.holders || !this.table) return;
+        if (this.table[0]?.contains(document.activeElement)) return;
+        return this.getPivotTable();
+    }
+
 
     constructor(options) {
         super(options);
@@ -139,7 +150,7 @@ class PivotTableWidget extends Widget {
             presetParams = fn(LoadExecutorFactory.createContext(this.id, 'PivotTableWidget'));
         }
 
-        Pivot.call({
+        this._pivotReady = Pivot.call({
             data: {
                 cube_name: o.cubeName,
                 options: JSON.stringify({widgetId: this.id, presetParams: presetParams})
@@ -1830,7 +1841,7 @@ class PivotTableWidget extends Widget {
             return;
         }
 
-        Pivot.call({data: d}).then(r => this.renderPivotTable(r, d.colors));
+        return Pivot.call({data: d}).then(r => this.renderPivotTable(r, d.colors));
     }
 
     getSelectedCardsData() {

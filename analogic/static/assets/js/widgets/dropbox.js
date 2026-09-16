@@ -129,18 +129,22 @@ class DropBoxWidget extends Widget {
     }
 
     updateHtml(data) {
-        const p = this.getParameters(data), section = this.getSection(),
-            inner = section.find('.ks-dropbox-panel-inner'), input = section.find('.ks-dropbox-input');
+        const section = this.getSection(), panel = section.find('.ks-dropbox-panel');
+        const display = panel[0]?.style.display, scroll = panel.scrollTop();
+        const input = section.find('input'), query = input.val();
+        let next = data;
         if (this.state.serverSideFilter) {
-            let previouslySelected = this.items.filter(e => e.on === true),
-                previouslySelectedName = previouslySelected.map(e => e.name);
-            this.items = previouslySelected.concat(data.items.filter(e => !previouslySelectedName.includes(e.name)));
-            inner.html(this.getItems({items: this.items}, p));
-        } else {
-            const pi = this.processItems(data, this.options, p);
-            inner.html(this.getItems(pi.data, p));
-            input.attr('placeholder', pi.selectedItems !== '' ? pi.selectedItems : p.placeHolder);
+            const selected = this.items.filter(item => item.on);
+            const names = new Set(selected.map(item => item.name));
+            next = {...data, items: selected.concat((data.items || []).filter(item => !names.has(item.name)))};
         }
+        // getHtml reconciles items once. Morph refreshes all styles and structure,
+        // while the dropdown's open state and typed search remain runtime state.
+        this.updateRenderedHtml(this.getHtml([], next));
+        const updatedPanel = section.find('.ks-dropbox-panel');
+        if (display !== undefined) updatedPanel[0].style.display = display;
+        updatedPanel.scrollTop(scroll);
+        section.find('input').val(query);
     }
 
     initEventHandlers() {
@@ -196,12 +200,14 @@ class DropBoxWidget extends Widget {
             DropBoxWidget.handleClick(state, w, e, itemHolder, section, id, clickedItem, $(e.target).hasClass('ks-dropbox-panel-item-checkbox'), amIOnGridtable);
         });
 
-        const catcher = Doc.not(dropbox).on('touch click', e => {
+        if (this._outsideDropboxHandler) Doc.off('touch click', this._outsideDropboxHandler);
+        this._outsideDropboxHandler = e => {
             itemHolder.is(':visible') ? itemHolder.slideUp(50) : false;
             if (itemHolder.is(':visible') && state.serverSideFilter) {
                 section.find('input[type="text"]').val('');
             }
-        });
+        };
+        Doc.on('touch click', this._outsideDropboxHandler);
 
         itemHolder.hide();
     }

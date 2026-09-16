@@ -60,7 +60,17 @@ ${v.backdrop ? `<div style="${backdropStyle.join('')}" class="ks-container-backd
     }
 
     updateHtml(data) {
-
+        const childHtml = this.getChildHtml();
+        if (!Widget.hasRenderedChildren(childHtml)) return;
+        const section = this.getSection(), container = section.find('.ks-container').first();
+        const anchor = this.value?.anchor;
+        const position = {};
+        if (this.value && (this.value.anchor || this.value.anchorOnClick)) {
+            for (const key of ['top', 'left', 'right', 'bottom']) position[key] = container[0]?.style[key] || '';
+        }
+        this.updateRenderedHtml(this.getHtml(childHtml, data));
+        if (anchor && data?.anchor === undefined && this.value.anchorOnClick) this.value.anchor = anchor;
+        container.css(position);
     }
 
     getParameters(d) {
@@ -93,7 +103,7 @@ ${v.backdrop ? `<div style="${backdropStyle.join('')}" class="ks-container-backd
         return p;
     }
 
-    initEventHandlers() {
+    initEventHandlers(withState = false) {
         const v = this.value, a = v.anchor;
 
         this.section = this.getSection();
@@ -121,7 +131,7 @@ ${v.backdrop ? `<div style="${backdropStyle.join('')}" class="ks-container-backd
             }
         }
 
-        if (v.visible) {
+        if (v.visible && !withState) {
             this.open();
         }
 

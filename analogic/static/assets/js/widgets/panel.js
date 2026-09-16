@@ -7,7 +7,7 @@ class PanelWidget extends Widget {
             skin: this.getRealValue('skin', d, 'standard')
         };
 
-        return `<div class="ks-panel  ks-panel-${v.skin}" style="${this.getGeneralStyles({}).join('')}">${widgets.join('')}</div>`;
+        return `<div class="ks-panel  ks-panel-${v.skin}" style="${this.getGeneralStyles(d).join('')}">${widgets.join('')}</div>`;
     }
 }
 ;

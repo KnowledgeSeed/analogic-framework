@@ -66,19 +66,24 @@ class RadarChartWidget extends Widget {
         this.value = v;
 
         return `
-<div class="ks-radar-chart ks-radar-chart-${v.skin}" style="${this.getGeneralStyles(v.data, {
+<div class="ks-radar-chart ks-radar-chart-${v.skin}" style="${this.getGeneralStyles(d, {
             width: 450,
             height: 450
         }).join('')}">
-    <div class="ks-radar-chart-title"><h3>${o.title}</h3></div>
+    <div class="ks-radar-chart-title"><h3>${this.getRealValue('title', d, '')}</h3></div>
     <div class="ks-radar-chart-widget" style="${v.canvasWidth ? `width:${Utils.getSize(v.canvasWidth, true)}` : ''} ${v.canvasHeight ? `height:${Utils.getSize(v.canvasHeight, true)}` : ''}"><canvas id="${o.id}Canvas"></canvas></div>
     ${v.legendVisible ? `<div class="ks-radar ks-radar-${v.legendSkin}"></div>` : ''}
 </div>`;
     }
 
+    updateHtml(data) {
+        this.updateChartContent(data, () => this.getChartConfig());
+    }
+
     initEventHandlers() {
         const canvas = document.getElementById(this.options.id + 'Canvas'), ctx = canvas.getContext('2d'),
             c = new Chart(ctx, this.getChartConfig());
+        this.chart = c;
 
         $(canvas.parentElement.nextElementSibling).html(c.generateLegend()).on('click', '.ks-legend-item', e => {
             let legend = $(e.target).closest('.ks-legend-item').toggleClass('off'), id = legend.data('id');

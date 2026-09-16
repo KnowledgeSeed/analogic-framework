@@ -2,6 +2,12 @@
 
 class PageWidget extends Widget {
 
+    updateHtml(data) {
+        this.getHtml([], data);
+        if (this.title) Utils.changePageTitle(this.title);
+        if (this.favicon) Utils.changePageFavicon(this.favicon);
+    }
+
     getHtml(widgets, d) {
         const params = this.getParameters(d);
         this.title = params.title;

@@ -74,6 +74,10 @@ class HistogramComboChartWidget extends Widget {
 </div>`;
     }
 
+    updateHtml(data) {
+        this.updateChartContent(data, () => this.getChartConfig());
+    }
+
     initEventHandlers() {
         const o = this.options, canvas = $('#' + o.id + 'Canvas'), ctx = canvas[0].getContext('2d');
 
@@ -370,7 +374,7 @@ class HistogramComboChartWidget extends Widget {
     }
 
     processData(data) {
-        return data ? {datasets: data} : data;
+        return Array.isArray(data) ? {datasets: data} : data;
     }
 }
 ;
