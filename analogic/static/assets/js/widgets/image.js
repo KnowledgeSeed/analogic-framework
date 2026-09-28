@@ -5,23 +5,42 @@
 class ImageWidget extends Widget {
 
     getHtml(widgets, d) {
-        const o = this.options, s = this.getGeneralStyles();
+        const o = this.options;
 
         const v = this.getParameters(d);
 
-        if (o.fontSize) {
-            s.push('font-size:', o.fontSize, 'px;');
-        }
+        // The model is what this render is made of; updateHtml() diffs against it later.
+        const m = this._vm = this.buildModel(d, v);
+
         let html = [];
-        html.push(`<div class="ks-image ks-image-${v.skin}" data-action="imageClicked" data-id="${o.id}">`);
-        if (o.icon) {
-            html.push(`<span class="icon-${v.icon}" style="display: inline-block;${s.join('')}"><\/span>`);
+        html.push(`<div class="${m.mainClass}" data-action="imageClicked" data-id="${o.id}">`);
+        if (m.isIcon) {
+            html.push(`<span class="${m.iconClass}" style="${m.iconStyle}"><\/span>`);
         } else {
-            html.push('<img src="' + app.applicationAssetsUrl + '/skin/images/' + v.fileName + '" alt="' + v.title + '" style="' + s.join('') + '">');
+            html.push('<img src="' + m.imgSrc + '" alt="' + m.imgAlt + '" style="' + m.imgStyle + '">');
         }
         html.push('</div>');
 
         return html.join('');
+    }
+
+    // Pure: everything getHtml() renders, as plain values.
+    buildModel(d, v = this.getParameters(d)) {
+        const o = this.options, s = this.getGeneralStyles();
+
+        if (o.fontSize) {
+            s.push('font-size:', o.fontSize, 'px;');
+        }
+
+        return {
+            mainClass: Widget.intern(`ks-image ks-image-${v.skin}`),
+            isIcon: !!o.icon,
+            iconClass: `icon-${v.icon}`,
+            iconStyle: Widget.intern(`display: inline-block;${s.join('')}`),
+            imgSrc: app.applicationAssetsUrl + '/skin/images/' + v.fileName,
+            imgAlt: v.title,
+            imgStyle: Widget.intern(s.join(''))
+        };
     }
 
     generateRandomString(length) {
@@ -34,7 +53,37 @@ class ImageWidget extends Widget {
         return result;
     }
 
+    // Model based update: only what differs from the model applied last is touched, so classes,
+    // styles and other state added to the elements at runtime survive.
     updateHtml(data) {
+        const previous = this._vm;
+        // Nothing to diff against, or a subclass renders its own markup: keep the old behavior.
+        if (!previous || this.getHtml !== ImageWidget.prototype.getHtml) {
+            return this.updateHtmlLegacy(data);
+        }
+
+        const section = this.getSection(), next = this.buildModel(data), main = section.children()[0];
+
+        Widget.applyClassDiff(main, previous.mainClass, next.mainClass);
+
+        const icon = section.find('.ks-image span')[0], img = section.find('img')[0];
+        if (icon) {
+            Widget.applyClassDiff(icon, previous.iconClass, next.iconClass);
+            Widget.applyStyleDiff(icon, previous.iconStyle, next.iconStyle);
+        } else if (img) {
+            // The file may have been replaced on the server under the same name, so the browser
+            // has to fetch it again: the random query string is what did that before as well.
+            img.setAttribute('src', next.imgSrc + '?v=' + this.generateRandomString(10));
+            Widget.setAttributeIfChanged(img, 'alt', next.imgAlt);
+            Widget.applyStyleDiff(img, previous.imgStyle, next.imgStyle);
+        }
+
+        this._vm = next;
+    }
+
+    // Previous field by field update, used when there is no model to diff against or a
+    // subclass renders its own markup.
+    updateHtmlLegacy(data) {
         const o = this.options, p = this.getParameters(data), section = $('#' + o.id),
             icon = section.find('.ks-image span');
 

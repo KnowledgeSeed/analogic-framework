@@ -17,6 +17,29 @@ class TextAreaWidget extends Widget {
         this.editable = v.editable;
         this.value = Utils.escapeText(d.value);
 
+        // The model is what this render is made of; updateHtml() diffs against it later.
+        const m = this._vm = this.buildModel(d, v, hide);
+
+        return `
+<div class="${m.mainClass}"  style="${m.mainStyle}">
+    <div class="ks-textarea-inner">
+        <div class="ks-textarea-title" style="${m.titleStyle}">
+            <span class="ks-textarea-title-primary">${m.titleHtml}</span>
+            <span class="ks-textarea-title-secondary"></span>
+        </div>
+        <div class="ks-textarea-field">
+            <div class="ks-textarea-field-inner">
+                <div class="ks-textarea-icon">${m.iconHtml}</div>
+                <div class="ks-textarea-divider"></div>
+                <textarea ${m.disabled ? 'disabled' : ''} ${m.placeholder !== null ? `placeholder="${m.placeholder}"` : ''} style="${m.textStyle}" data-action="save" data-ordinal="${m.ordinal}" data-id="${o.id}" class="ks-textarea-input" >${m.value}</textarea>
+            </div>
+        </div>
+    </div>
+</div>`;
+    }
+
+    // Pure: everything getHtml() renders, as plain values.
+    buildModel(d, v = this.getParameters(d), hide = false) {
         let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d),
             titleStyles = this.getHtmlComponentStylesArray('title', d),
             iconStyles = this.getHtmlComponentStylesArray('icon', d),
@@ -36,37 +59,37 @@ class TextAreaWidget extends Widget {
 
         hide && mainDivStyle.push('display:none;');
 
-        return `
-<div class="ks-textarea ${mainDivClass.join(' ')} ks-textarea-${v.skin}"  style="${mainDivStyle.join('')}">
-    <div class="ks-textarea-inner">
-        <div class="ks-textarea-title" style="${titleStyles.join('')}">
-            <span class="ks-textarea-title-primary">${v.title ? v.title : ''}</span>
-            <span class="ks-textarea-title-secondary"></span>
-        </div>
-        <div class="ks-textarea-field">
-            <div class="ks-textarea-field-inner">
-                <div class="ks-textarea-icon">${v.icon !== false ? `<img style="${iconStyles.join('')}" src="${app.applicationAssetsUrl}/skin/images/${v.icon}">` : ''}</div>
-                <div class="ks-textarea-divider"></div>
-                <textarea ${v.editable ? '' : 'disabled'} ${v.placeholder !== false ? `placeholder="${v.placeholder}"` : ''} style="${textStyles.join('')}" data-action="save" data-ordinal="${d.ordinal}" data-id="${o.id}" class="ks-textarea-input" >${d.value || ''}</textarea>
-            </div>
-        </div>
-    </div>
-</div>`;
+        return {
+            mainClass: Widget.intern(`ks-textarea ${mainDivClass.join(' ')} ks-textarea-${v.skin}`),
+            mainStyle: Widget.intern(mainDivStyle.join('')),
+            titleStyle: Widget.intern(titleStyles.join('')),
+            titleHtml: v.title ? v.title : '',
+            iconHtml: v.icon !== false ? `<img style="${iconStyles.join('')}" src="${app.applicationAssetsUrl}/skin/images/${v.icon}">` : '',
+            disabled: !v.editable,
+            placeholder: v.placeholder !== false ? v.placeholder : null,
+            textStyle: Widget.intern(textStyles.join('')),
+            ordinal: d.ordinal,
+            value: d.value || ''
+        };
     }
 
     initEventHandlers() {
         const o = this.options, section = this.getSection();
 
-        if (!this.editable) {
-            return;
-        }
-
+        // The editable state can change with the data (updateContent), so it is checked when the
+        // event happens, not only when the handler is bound.
         if (o.icon) {
             section.find('.ks-textarea-icon').on('click', e => {
+                if (!this.editable) {
+                    return;
+                }
                 TextAreaWidget.doSaveEvent(section, section.find('.ks-textarea-input'), e);
             });
         } else {
             section.find('.ks-textarea-input').on('focusout', e => {
+                if (!this.editable) {
+                    return;
+                }
                 TextAreaWidget.doSaveEvent(section, $(e.currentTarget), e);
             });
         }
@@ -89,7 +112,59 @@ class TextAreaWidget extends Widget {
         };
     }
 
+    // Model based update: only what differs from the model applied last is touched, so classes,
+    // styles and other state added to the elements at runtime survive.
     updateHtml(data) {
+        const previous = this._vm;
+        // Nothing to diff against, or a subclass renders its own markup: keep the old behavior.
+        if (!previous || this.getHtml !== TextAreaWidget.prototype.getHtml) {
+            return this.updateHtmlLegacy(data);
+        }
+
+        let d = data || {value: ''};
+        if (!d.value) {
+            d.value = '';
+        }
+        const o = this.options, p = this.getParameters(d), section = this.getSection();
+
+        this.editable = p.editable;
+        this.value = Utils.escapeText(d.value);
+
+        const next = this.buildModel(d, p, o.hideIfNoData === true && d.value === ''),
+            main = section.children()[0], title = section.find('.ks-textarea-title')[0],
+            titleText = section.find('.ks-textarea-title-primary')[0], icon = section.find('.ks-textarea-icon')[0],
+            textarea = section.find('textarea')[0];
+
+        //main
+        Widget.applyClassDiff(main, previous.mainClass, next.mainClass);
+        Widget.applyStyleDiff(main, previous.mainStyle, next.mainStyle);
+
+        //title and icon
+        Widget.applyStyleDiff(title, previous.titleStyle, next.titleStyle);
+        Widget.setContentIfChanged(titleText, next.titleHtml);
+        Widget.setContentIfChanged(icon, next.iconHtml);
+
+        //textarea
+        if (textarea) {
+            next.disabled ? textarea.setAttribute('disabled', '') : textarea.removeAttribute('disabled');
+            next.placeholder !== null ? Widget.setAttributeIfChanged(textarea, 'placeholder', next.placeholder) : textarea.removeAttribute('placeholder');
+            Widget.applyStyleDiff(textarea, previous.textStyle, next.textStyle);
+            Widget.setAttributeIfChanged(textarea, 'data-ordinal', next.ordinal);
+            if (textarea.defaultValue !== String(next.value)) {
+                textarea.defaultValue = next.value;
+            }
+            // What the user is typing right now is not replaced by a refresh.
+            if (document.activeElement !== textarea && textarea.value !== String(next.value)) {
+                textarea.value = next.value;
+            }
+        }
+
+        this._vm = next;
+    }
+
+    // Previous field by field update, used when there is no model to diff against or a
+    // subclass renders its own markup.
+    updateHtmlLegacy(data) {
         let d = data || {value: ''};
         if (!d.value) {
             d.value = '';

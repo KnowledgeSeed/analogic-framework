@@ -16,6 +16,35 @@ class DropBoxWidget extends Widget {
 
         let hide = o.hideIfNoData === true && d.length === 0;
 
+        // The model is what this render is made of, apart from the items and the placeholder
+        // (they come from processItems() and are updated by updateHtmlLegacy()); updateHtml()
+        // diffs against it later.
+        const m = this._vm = this.buildModel(d, v, hide);
+
+        return `
+<div class="${m.mainClass}" style="${m.mainStyle}">
+    <div class="ks-dropbox-inner">
+        <div class="ks-dropbox-title" style="${m.titleStyle}">
+            <span class="ks-dropbox-title-primary">${m.titleHtml}</span>
+            <span class="ks-dropbox-title-secondary"></span>
+        </div>
+        <div class="ks-dropbox-field ${v.editable === false ? 'readonly' : ''}">
+            <div class="ks-dropbox-field-inner">
+                <input ${v.editable === false || v.disableSearch === true  ? 'readonly' : ''} style="${m.inputStyle}" type="text" class="ks-dropbox-input search-text" placeholder="${pi.selectedItems !== '' ? pi.selectedItems : v.placeHolder}">
+                <div class="ks-dropbox-icon"></div>
+            </div>
+        </div>
+    </div>
+    <div class="ks-dropbox-panel" style="${m.panelStyle}">
+        ${v.backdrop ? '<div class="ks-dropbox-backdrop"><\/div>' : ''}
+        <div class="ks-dropbox-panel-inner">${this.getItems(pi.data, v)}</div>
+    </div>
+</div>`;
+    }
+
+    // Pure: the look of the dropdown as plain strings. The readonly state is not part of it: the
+    // handlers are bound once, so the state has to stay what it was rendered as.
+    buildModel(d, v = this.getParameters(d), hide = false) {
         let mainDivStyle = this.getGeneralStyles(d), titleStyles = [], textStyles = [], panelStyles = [];
 
         v.titleTextAlignment && titleStyles.push(`display: flex;padding-left: 0px;justify-content: ${v.titleTextAlignment === 'start' || v.titleTextAlignment === 'end' ? `flex-${v.titleTextAlignment}` : v.titleTextAlignment};`);
@@ -31,26 +60,14 @@ class DropBoxWidget extends Widget {
 
         hide && mainDivStyle.push('display:none;');
 
-
-        return `
-<div class="ks-dropbox ks-dropbox-${v.skin}" style="${mainDivStyle.join('')}">
-    <div class="ks-dropbox-inner">
-        <div class="ks-dropbox-title" style="${titleStyles.join('')}">
-            <span class="ks-dropbox-title-primary">${v.titleVisible ? v.title : ''}</span>
-            <span class="ks-dropbox-title-secondary"></span>
-        </div>
-        <div class="ks-dropbox-field ${v.editable === false ? 'readonly' : ''}">
-            <div class="ks-dropbox-field-inner">
-                <input ${v.editable === false || v.disableSearch === true  ? 'readonly' : ''} style="${textStyles.join('')}" type="text" class="ks-dropbox-input search-text" placeholder="${pi.selectedItems !== '' ? pi.selectedItems : v.placeHolder}">
-                <div class="ks-dropbox-icon"></div>
-            </div>
-        </div>
-    </div>
-    <div class="ks-dropbox-panel" style="${panelStyles.join('')}">
-        ${v.backdrop ? '<div class="ks-dropbox-backdrop"><\/div>' : ''}
-        <div class="ks-dropbox-panel-inner">${this.getItems(pi.data, v)}</div>
-    </div>
-</div>`;
+        return {
+            mainClass: Widget.intern(`ks-dropbox ks-dropbox-${v.skin}`),
+            mainStyle: Widget.intern(mainDivStyle.join('')),
+            titleStyle: Widget.intern(titleStyles.join('')),
+            titleHtml: v.titleVisible ? v.title : '',
+            inputStyle: Widget.intern(textStyles.join('')),
+            panelStyle: Widget.intern(panelStyles.join(''))
+        };
     }
 
     processItems(d, o, v) {
@@ -128,7 +145,37 @@ class DropBoxWidget extends Widget {
         };
     }
 
+    // Model based update of the look (skin, styles, title, panel width). The items and the
+    // placeholder are updated as before, and the state of the panel (open or closed) is never
+    // touched: its display is runtime state that is not part of what changes with the data.
     updateHtml(data) {
+        const previous = this._vm;
+        // Nothing to diff against, or a subclass renders its own markup: keep the old behavior.
+        if (!previous || this.getHtml !== DropBoxWidget.prototype.getHtml) {
+            return this.updateHtmlLegacy(data);
+        }
+
+        this.updateHtmlLegacy(data);
+
+        const p = this.getParameters(data), section = this.getSection(),
+            next = this.buildModel(data, p, this.options.hideIfNoData === true && !!data && data.length === 0),
+            main = section.children()[0], title = section.find('.ks-dropbox-title')[0],
+            titleText = section.find('.ks-dropbox-title-primary')[0], input = section.find('.ks-dropbox-input')[0],
+            panel = section.find('.ks-dropbox-panel')[0];
+
+        Widget.applyClassDiff(main, previous.mainClass, next.mainClass);
+        Widget.applyStyleDiff(main, previous.mainStyle, next.mainStyle);
+        Widget.applyStyleDiff(title, previous.titleStyle, next.titleStyle);
+        Widget.setContentIfChanged(titleText, next.titleHtml);
+        Widget.applyStyleDiff(input, previous.inputStyle, next.inputStyle);
+        Widget.applyStyleDiff(panel, previous.panelStyle, next.panelStyle);
+
+        this._vm = next;
+    }
+
+    // Previous field by field update, used when there is no model to diff against or a
+    // subclass renders its own markup.
+    updateHtmlLegacy(data) {
         const p = this.getParameters(data), section = this.getSection(),
             inner = section.find('.ks-dropbox-panel-inner'), input = section.find('.ks-dropbox-input');
         if (this.state.serverSideFilter) {

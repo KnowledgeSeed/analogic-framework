@@ -4,8 +4,16 @@
 class GridTableHeaderCellWidget extends Widget {
 
     getHtml(widgets, d, withState) {
-        const v = this.getParameters(d), o = this.options;
+        const o = this.options;
 
+        // The model is what this render is made of; updateHtml() diffs against it later.
+        const m = this._vm = this.buildModel(d);
+
+        return `<div id="${o.id}" class="${m.mainClass}" style="${m.mainStyle}"><div class="ks-grid-table-head-cell-border-left"></div><div class="${m.contentClass}">${widgets.join('')}</div></div>`;
+    }
+
+    // Pure: everything getHtml() renders, as plain strings.
+    buildModel(d, v = this.getParameters(d)) {
         let mainDivStyle = [];
 
         v.width && mainDivStyle.push(`width:${v.width}${isNaN(v.width) ? ';' : 'px;'}`);
@@ -14,7 +22,11 @@ class GridTableHeaderCellWidget extends Widget {
             mainDivStyle.push('display:none;');
         }
 
-        return `<div id="${o.id}" class="${v.cellHeaderSkin ? 'ks-grid-table-head-cell-' + v.cellHeaderSkin : ''}  ks-grid-table-cell ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}" style="${mainDivStyle.join('')}"><div class="ks-grid-table-head-cell-border-left"></div><div class="ks-pos-${v.alignment} ks-grid-table-cell-content">${widgets.join('')}</div></div>`;
+        return {
+            mainClass: Widget.intern(`${v.cellHeaderSkin ? 'ks-grid-table-head-cell-' + v.cellHeaderSkin : ''}  ks-grid-table-cell ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}`),
+            mainStyle: Widget.intern(mainDivStyle.join('')),
+            contentClass: Widget.intern(`ks-pos-${v.alignment} ks-grid-table-cell-content`)
+        };
     }
 
     getParameters(d){
@@ -63,7 +75,29 @@ class GridTableHeaderCellWidget extends Widget {
         });
     }
 
+    // Model based update of the header cell frame: only what differs from the model applied last
+    // is touched, so classes, styles and other state added at runtime survive.
     updateHtml(data) {
+        const previous = this._vm;
+        // Nothing to diff against, or a subclass renders its own markup: keep the old behavior.
+        if (!previous || this.getHtml !== GridTableHeaderCellWidget.prototype.getHtml) {
+            return this.updateHtmlLegacy(data);
+        }
+
+        const next = this.buildModel(data || {}), mainDiv = document.getElementById(this.options.id);
+
+        if (mainDiv) {
+            Widget.applyClassDiff(mainDiv, previous.mainClass, next.mainClass);
+            Widget.applyStyleDiff(mainDiv, previous.mainStyle, next.mainStyle);
+            Widget.applyClassDiff(mainDiv.querySelector('.ks-grid-table-cell-content'), previous.contentClass, next.contentClass);
+        }
+
+        this._vm = next;
+    }
+
+    // Previous field by field update, used when there is no model to diff against or a
+    // subclass renders its own markup.
+    updateHtmlLegacy(data) {
         const o = this.options, p = this.getParameters(data), mainDiv = $('#' + o.id);
         Widget.setSkin(mainDiv, 'ks-grid-table-head-cell-', p.cellHeaderSkin);
         p.cellVisible === false ? mainDiv.css('display', 'none') : mainDiv.css('display', 'block');
