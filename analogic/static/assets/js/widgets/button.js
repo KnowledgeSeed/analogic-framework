@@ -8,6 +8,27 @@ class ButtonWidget extends Widget {
 
         const v = this.getParameters(d);
 
+        // The model is what this render is made of; updateHtml() diffs against it later.
+        const m = this._vm = this.buildModel(d, v);
+
+        this.setValues(d, v);
+
+        return `
+<a style="${m.aStyle}" ${o.confirmMessage2 ? `data-confirmmessage2="${o.confirmMessage2}" ` : ''} ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''} ${v.url ? `target="_blank" href="${v.url}" data-id="${o.id}" data-action="${m.action}" ` : `data-id="${o.id}" data-action="${m.action}"`} class="${m.aClass}">
+    <div class="ks-button-inner" style="${m.innerStyle}">
+        <div class="ks-button-content" style="${m.contentStyle}">
+            <div class="ks-button-icon" style="${m.iconStyle}">${m.iconHtml}</div>
+            <div class="ks-button-divider" style="${m.dividerStyle}"></div>
+            <div class="ks-button-label" title="${Utils.htmlEncode(m.label)}" style="${m.labelStyle}">${m.label}</div>
+        </div>
+    </div>
+</a>`;
+    }
+
+    // Pure: everything getHtml() renders, as plain values.
+    buildModel(d, v = this.getParameters(d)) {
+        const o = this.options;
+
         let aClass = [],
             aStyle = this.getGeneralStyles(d).concat(this.getHtmlComponentStylesArray('main', d)),
             innerStyle = this.getHtmlComponentStylesArray('inner', d),
@@ -60,18 +81,23 @@ class ButtonWidget extends Widget {
         v.dividerWidth && dividerStyle.push('width:', v.dividerWidth, 'px;');
         iconInfo = this.getIcon(v, iconSpanStyle);
 
-        this.setValues(d, v);
-
-        return `
-<a style="${aStyle.join('')}" ${o.confirmMessage2 ? `data-confirmmessage2="${o.confirmMessage2}" ` : ''} ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''} ${v.url ? `target="_blank" href="${v.url}" data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}" ` : `data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}"`} class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
-    <div class="ks-button-inner" style="${innerStyle.join('')}">
-        <div class="ks-button-content" style="${contentStyle.join('')}">
-            <div class="ks-button-icon" style="${iconStyle.join('')}">${v.icon !== false ? iconInfo.html : ''}</div>
-            <div class="ks-button-divider" style="${dividerStyle.join('')}"></div>
-            <div class="ks-button-label" title="${Utils.htmlEncode(v.label)}" style="${labelStyle.join('')}">${v.label}</div>
-        </div>
-    </div>
-</a>`;
+        return {
+            aClass: Widget.intern(`ks-button ${aClass.join(' ')} ks-button-${v.skin} `),
+            aStyle: Widget.intern(aStyle.join('')),
+            action: v.paste ? 'launchpaste' : 'launch',
+            url: v.url,
+            confirm: o.confirmMessage,
+            confirm2: o.confirmMessage2,
+            innerStyle: Widget.intern(innerStyle.join('')),
+            contentStyle: Widget.intern(contentStyle.join('')),
+            iconStyle: Widget.intern(iconStyle.join('')),
+            iconClass: v.icon !== false ? `${v.icon}` : null,
+            iconSpanStyle: Widget.intern(iconInfo.style),
+            iconHtml: v.icon !== false ? iconInfo.html : '',
+            dividerStyle: Widget.intern(dividerStyle.join('')),
+            labelStyle: Widget.intern(labelStyle.join('')),
+            label: v.label
+        };
     }
 
     getIcon(v, imgStyle = []) {
@@ -108,7 +134,83 @@ class ButtonWidget extends Widget {
         return 'ks-button';
     }
 
+    // Model based update: only what differs from the model applied last is touched, so classes,
+    // styles and other state added to the elements at runtime survive.
     updateHtml(data) {
+        const previous = this._vm;
+        // Nothing to diff against, or a subclass renders its own markup: keep the old behavior.
+        if (!previous || this.getHtml !== ButtonWidget.prototype.getHtml) {
+            return this.updateHtmlLegacy(data);
+        }
+
+        const v = this.getParameters(data), section = this.getSection(),
+            next = this.buildModel(data, v),
+            main = section.children()[0], inner = section.find('.ks-button-inner')[0],
+            content = section.find('.ks-button-content')[0], iconDiv = section.find('.ks-button-icon')[0],
+            divider = section.find('.ks-button-divider')[0], labelDiv = section.find('.ks-button-label')[0];
+
+        this.setValues(data, v);
+
+        //main (the anchor)
+        Widget.applyClassDiff(main, previous.aClass, next.aClass);
+        Widget.applyStyleDiff(main, previous.aStyle, next.aStyle);
+        if (main) {
+            Widget.setAttributeIfChanged(main, 'data-action', next.action);
+            if (next.url) {
+                Widget.setAttributeIfChanged(main, 'target', '_blank');
+                Widget.setAttributeIfChanged(main, 'href', next.url);
+            } else {
+                main.removeAttribute('target');
+                main.removeAttribute('href');
+            }
+            next.confirm ? Widget.setAttributeIfChanged(main, 'data-confirmmessage', next.confirm) : main.removeAttribute('data-confirmmessage');
+            next.confirm2 ? Widget.setAttributeIfChanged(main, 'data-confirmmessage2', next.confirm2) : main.removeAttribute('data-confirmmessage2');
+        }
+
+        //inner, content, divider
+        Widget.applyStyleDiff(inner, previous.innerStyle, next.innerStyle);
+        Widget.applyStyleDiff(content, previous.contentStyle, next.contentStyle);
+        Widget.applyStyleDiff(divider, previous.dividerStyle, next.dividerStyle);
+
+        //icon
+        if (iconDiv) {
+            Widget.applyStyleDiff(iconDiv, previous.iconStyle, next.iconStyle);
+            let span = iconDiv.querySelector('span');
+            if (next.iconClass !== null) {
+                // A span that did not exist before starts from nothing, whatever the previous model says.
+                const created = !span;
+                if (created) {
+                    span = document.createElement('span');
+                    iconDiv.appendChild(span);
+                }
+                Widget.applyClassDiff(span, created ? '' : previous.iconClass || '', next.iconClass);
+                Widget.applyStyleDiff(span, created ? '' : previous.iconSpanStyle, next.iconSpanStyle);
+            } else if (span) {
+                $(iconDiv).empty();
+            }
+        }
+
+        //label
+        if (labelDiv) {
+            Widget.applyStyleDiff(labelDiv, previous.labelStyle, next.labelStyle);
+            Widget.setAttributeIfChanged(labelDiv, 'title', next.label);
+            Widget.setContentIfChanged(labelDiv, next.label);
+        }
+
+        //section
+        if (v.applyMeasuresToSection) {
+            Widget.setOrRemoveStyle(section, 'width', v.width ? Widget.getPercentOrPixel(v.width) : false);
+            Widget.setOrRemoveStyle(section, 'height', v.height ? Widget.getPercentOrPixel(v.height) : false);
+        }
+
+        v.visible ? section.show() : section.hide();
+
+        this._vm = next;
+    }
+
+    // Previous field by field update, used when there is no model to diff against or a
+    // subclass renders its own markup.
+    updateHtmlLegacy(data) {
         const o = this.options, v = this.getParameters(data), section = this.getSection(),
             main = section.children(),
             innerDiv = section.find('.ks-button-inner'),

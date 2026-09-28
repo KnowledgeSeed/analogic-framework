@@ -6,6 +6,15 @@ class GridTableCellWidget extends Widget {
 
     getHtml(widgets, data, withState) {
         const v = this.getParameters(data);
+
+        // The model is what this render is made of; updateHtml() diffs against it later.
+        const m = this._vm = this.buildModel(data, v);
+
+        return `<div id="${v.cellId}" class="${m.mainClass}" style="${m.mainStyle}"><div class="ks-grid-table-cell-border-left"></div><div class="${m.contentClass}">${widgets.join('')}</div></div>`;
+    }
+
+    // Pure: everything getHtml() renders for the cell frame, as plain strings.
+    buildModel(data, v = this.getParameters(data)) {
         let defaults = {};
         if (v.cellWidth !== false) {
             defaults['width'] = v.cellWidth;
@@ -21,7 +30,12 @@ class GridTableCellWidget extends Widget {
         v.cellPaddingRight && mainDivStyle.push('padding-right:', Widget.getPercentOrPixel(v.cellPaddingRight), ';');
         v.cellPaddingLeft && mainDivStyle.push('padding-left:', Widget.getPercentOrPixel(v.cellPaddingLeft), ';');
 
-        return `<div id="${v.cellId}" class="ks-grid-table-cell ${v.cellSkin !== false ? 'ks-grid-table-cell-' + v.cellSkin : ''} ${v.cellSkin === false ? 'ks-grid-table-cell-' + v.skin : ''} ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}" style="${mainDivStyle.join('')}"><div class="ks-grid-table-cell-border-left"></div><div class="ks-pos-${v.alignment} ks-grid-table-cell-content">${widgets.join('')}</div></div>`;
+        return {
+            cellId: v.cellId,
+            mainClass: Widget.intern(`ks-grid-table-cell ${v.cellSkin !== false ? 'ks-grid-table-cell-' + v.cellSkin : ''} ${v.cellSkin === false ? 'ks-grid-table-cell-' + v.skin : ''} ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}`),
+            mainStyle: Widget.intern(mainDivStyle.join('')),
+            contentClass: Widget.intern(`ks-pos-${v.alignment} ks-grid-table-cell-content`)
+        };
     }
 
     getParameters(data) {
@@ -59,10 +73,35 @@ class GridTableCellWidget extends Widget {
             Widgets[childrenData['id']].updateHtml(childrenData);
         }
         this.dynamicTooltip = (childrenData || {}).tooltip;
-        this.updateHtml(childrenData);
+        // The cell frame is rendered from the cell data only (see render()), the options of the
+        // child widget that childrenData is merged with must not leak into it.
+        this.updateHtml(this._vm && this.getHtml === GridTableCellWidget.prototype.getHtml ? (data || {}) : childrenData);
     }
 
+    // Model based update of the cell frame. Runtime state kept on the cell (selected, active-cell,
+    // data-row / data-col, classes and styles added by the application) is not part of the model
+    // and is left alone.
     updateHtml(data) {
+        const previous = this._vm;
+        // Nothing to diff against, or a subclass renders its own markup: keep the old behavior.
+        if (!previous || this.getHtml !== GridTableCellWidget.prototype.getHtml) {
+            return this.updateHtmlLegacy(data);
+        }
+
+        const next = this.buildModel(data || {}), mainDiv = next.cellId ? document.getElementById(next.cellId) : null;
+
+        if (mainDiv) {
+            Widget.applyClassDiff(mainDiv, previous.mainClass, next.mainClass);
+            Widget.applyStyleDiff(mainDiv, previous.mainStyle, next.mainStyle);
+            Widget.applyClassDiff(mainDiv.querySelector('.ks-grid-table-cell-content'), previous.contentClass, next.contentClass);
+        }
+
+        this._vm = next;
+    }
+
+    // Previous field by field update, used when there is no model to diff against or a
+    // subclass renders its own markup.
+    updateHtmlLegacy(data) {
         delete data['skin'];
         const o = this.options, p = this.getParameters(data), mainDiv = $('#' + p.cellId), content = mainDiv.find('.ks-grid-table-cell-content');
         p.cellVisible === false ? mainDiv.css('display', 'none') : mainDiv.css('display', 'block');

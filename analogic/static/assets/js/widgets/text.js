@@ -10,6 +10,21 @@ class TextWidget extends Widget {
 
         this.setValues(v);
 
+        // The model is what this render is made of; updateHtml() diffs against it later.
+        const m = this._vm = this.buildModel(d, v);
+
+        return `
+<div class="${m.mainClass}" style="${m.mainStyle}">
+    <div class="ks-text-inner" style="${m.innerStyle}" data-id="${o.id}" data-action="text_click" data-ordinal="${m.ordinal}">
+        <div class="ks-text-icon" data-id="${o.id}" data-action="${m.iconAction}" data-ordinal="${m.ordinal}"><span style="${m.iconSpanStyle}" class="${m.iconSpanClass}"></span></div>
+        <div class="ks-text-title" data-performable="${m.titlePerformable}" data-editable="${m.titleEditable}" title="${Utils.htmlEncode(m.titleTooltip)}" data-ordinal="${m.ordinal}" style="${m.titleStyle}">${m.titleHtml}</div>
+        <div class="ks-text-body" style="${m.bodyStyle}">${m.bodyHtml}</div>
+    </div>
+</div>`;
+    }
+
+    // Pure: everything getHtml() renders, per element role, as plain strings.
+    buildModel(d, v = this.getParameters(d)) {
         let mainDivClass = [],
             mainDivStyle = this.getGeneralStyles(d).concat(this.getHtmlComponentStylesArray('main', d)),
             titleStyles = this.getHtmlComponentStylesArray('title', d),
@@ -45,14 +60,23 @@ class TextWidget extends Widget {
         v.innerHeight && innerStyles.push('height:', Widget.getPercentOrPixel(v.innerHeight), ';');
         v.innerCursor && innerStyles.push(`cursor:${v.innerCursor};`);
 
-        return `
-<div class="ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}" style="${mainDivStyle.join('')}">
-    <div class="ks-text-inner" style="${innerStyles.join('')}" data-id="${o.id}" data-action="text_click" data-ordinal="${v.ordinal}">
-        <div class="ks-text-icon" data-id="${o.id}" data-action="${v.iconCustomEventName ? v.iconCustomEventName : 'perform'}" data-ordinal="${v.ordinal}"><span style="${iconStyles.join('')}" class="${v.icon}"></span></div>
-        <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title && !v.tooltip ? Utils.htmlEncode(Utils.stripHtml(v.title)) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title !== false ? v.title : ''}</div>
-        <div class="ks-text-body" style="${bodyStyles.join('')}">${v.body !== false ? v.body : ''}</div>
-    </div>
-</div>`;
+        return {
+            mainClass: Widget.intern(`ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}`),
+            mainStyle: Widget.intern(mainDivStyle.join('')),
+            innerStyle: Widget.intern(innerStyles.join('')),
+            iconAction: v.iconCustomEventName ? v.iconCustomEventName : 'perform',
+            iconSpanClass: Widget.intern(`${v.icon}`),
+            iconSpanStyle: Widget.intern(iconStyles.join('')),
+            titlePerformable: v.performable ? '1' : '0',
+            titleEditable: v.editable ? '1' : '0',
+            // raw text: getHtml() HTML-encodes it for the template, updateHtml() sets it as is
+            titleTooltip: v.title && !v.tooltip ? Utils.stripHtml(v.title) : '',
+            titleStyle: Widget.intern(titleStyles.join('')),
+            titleHtml: v.title !== false ? v.title : '',
+            bodyStyle: Widget.intern(bodyStyles.join('')),
+            bodyHtml: v.body !== false ? v.body : '',
+            ordinal: v.ordinal
+        };
     }
 
     setValues(v) {
@@ -83,7 +107,65 @@ class TextWidget extends Widget {
         }
     }
 
+    // Model based update: only what differs from the model applied last is touched, so classes,
+    // styles and other state added to the elements at runtime survive.
     updateHtml(data) {
+        const previous = this._vm;
+        // Nothing to diff against, or a subclass renders its own markup: keep the old behavior.
+        if (!previous || this.getHtml !== TextWidget.prototype.getHtml) {
+            return this.updateHtmlLegacy(data);
+        }
+
+        const v = this.getParameters(data), section = this.getSection(),
+            title = section.find('.ks-text-title'), body = section.find('.ks-text-body'),
+            mainDiv = section.children(), iconSpan = section.find('.ks-text-icon span'),
+            icon = section.find('.ks-text-icon'), inner = section.find('.ks-text-inner'),
+            next = this.buildModel(data, v);
+
+        this.changeEvents(title, section, v.editable, v.performable, v.enableRightClick);
+
+        this.setValues(v);
+
+        //main
+        Widget.applyClassDiff(mainDiv[0], previous.mainClass, next.mainClass);
+        Widget.applyStyleDiff(mainDiv[0], previous.mainStyle, next.mainStyle);
+
+        //inner
+        Widget.applyStyleDiff(inner[0], previous.innerStyle, next.innerStyle);
+        Widget.setAttributeIfChanged(inner[0], 'data-ordinal', next.ordinal);
+
+        //icon
+        Widget.setAttributeIfChanged(icon[0], 'data-action', next.iconAction);
+        Widget.setAttributeIfChanged(icon[0], 'data-ordinal', next.ordinal);
+        Widget.applyClassDiff(iconSpan[0], previous.iconSpanClass, next.iconSpanClass);
+        Widget.applyStyleDiff(iconSpan[0], previous.iconSpanStyle, next.iconSpanStyle);
+
+        //title
+        Widget.setAttributeIfChanged(title[0], 'data-performable', next.titlePerformable);
+        Widget.setAttributeIfChanged(title[0], 'data-editable', next.titleEditable);
+        Widget.setAttributeIfChanged(title[0], 'title', next.titleTooltip);
+        Widget.setAttributeIfChanged(title[0], 'data-ordinal', next.ordinal);
+        Widget.applyStyleDiff(title[0], previous.titleStyle, next.titleStyle);
+        // While the user is typing into the cell the editor lives in the title, leave it alone.
+        if (!title.find('.ks-text-title-input').length) {
+            Widget.setContentIfChanged(title[0], next.titleHtml);
+        }
+
+        //body
+        Widget.applyStyleDiff(body[0], previous.bodyStyle, next.bodyStyle);
+        Widget.setContentIfChanged(body[0], next.bodyHtml);
+
+        //section
+        if (v.applyMeasuresToSection) {
+            Widget.setOrRemoveStyle(section, 'width', v.width ? Widget.getPercentOrPixel(v.width) : false);
+            Widget.setOrRemoveStyle(section, 'height', v.height ? Widget.getPercentOrPixel(v.height) : false);
+        }
+
+        this._vm = next;
+    }
+
+    // Previous field by field update, used when there is no model to diff against.
+    updateHtmlLegacy(data) {
         const v = this.getParameters(data), section = this.getSection(),
             title = section.find('.ks-text-title'), body = section.find('.ks-text-body'),
             mainDiv = section.children(), icon = section.find('.ks-text-icon span'),

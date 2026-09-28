@@ -772,4 +772,122 @@ class Widget {
     static addOrRemoveClass(element, className, add) {
         add ? !element.hasClass(className) && element.addClass(className) : element.removeClass(className);
     }
+
+    /*
+     * View-model helpers.
+     *
+     * A widget that opts in builds a plain "view model" from its data (class/style strings,
+     * attribute values and content per element role) in a pure buildModel() method, renders
+     * getHtml() from it and remembers the model it last applied (this._vm). updateHtml() then
+     * builds the model for the new data and only touches what differs from the previously
+     * applied model, so anything added at runtime (application classes/styles, selection,
+     * focus, plugin state) is left alone. Nothing is tracked in the DOM and no work is added
+     * to the first render beyond keeping a reference to the model.
+     */
+
+    // Class and style strings repeat across the (many) instances of a widget, sharing one
+    // string object keeps the retained models small. The pool is capped so that unique
+    // dynamic strings cannot grow it without bounds.
+    static intern(value) {
+        if (typeof value !== 'string' || value === '') {
+            return value;
+        }
+        const pool = Widget._internPool || (Widget._internPool = new Map());
+        const known = pool.get(value);
+        if (known !== undefined) {
+            return known;
+        }
+        if (pool.size < 5000) {
+            pool.set(value, value);
+        }
+        return value;
+    }
+
+    // Parses an inline style string with the browser's own CSS parser (handles ';' inside
+    // url(...), shorthands and !important) into longhand name -> [value, priority].
+    static parseStyleText(css) {
+        const result = new Map();
+        if (!css) {
+            return result;
+        }
+        const probe = Widget._styleProbe || (Widget._styleProbe = document.createElement('div'));
+        const style = probe.style;
+        style.cssText = css;
+        for (let i = 0; i < style.length; ++i) {
+            const name = style[i];
+            result.set(name, [style.getPropertyValue(name), style.getPropertyPriority(name)]);
+        }
+        style.cssText = '';
+        return result;
+    }
+
+    // Applies the difference between two inline style strings to an element: properties that
+    // disappeared are removed, changed or new ones are set, everything else (including
+    // properties that were added to the element at runtime) stays as it is.
+    static applyStyleDiff(element, previousCss, nextCss) {
+        if (!element || previousCss === nextCss) {
+            return;
+        }
+        const previous = Widget.parseStyleText(previousCss), next = Widget.parseStyleText(nextCss);
+        for (const name of previous.keys()) {
+            if (!next.has(name)) {
+                element.style.removeProperty(name);
+            }
+        }
+        for (const [name, [value, priority]] of next) {
+            const before = previous.get(name);
+            if (!before || before[0] !== value || before[1] !== priority) {
+                element.style.setProperty(name, value, priority);
+            }
+        }
+    }
+
+    // Same for class strings: only classes that left / entered the rendered set are touched.
+    static applyClassDiff(element, previousClasses, nextClasses) {
+        if (!element || previousClasses === nextClasses) {
+            return;
+        }
+        const previous = new Set(String(previousClasses || '').split(/\s+/).filter(Boolean)),
+            next = String(nextClasses || '').split(/\s+/).filter(Boolean), nextSet = new Set(next);
+        for (const name of previous) {
+            if (!nextSet.has(name)) {
+                element.classList.remove(name);
+            }
+        }
+        for (const name of next) {
+            if (!previous.has(name)) {
+                element.classList.add(name);
+            }
+        }
+    }
+
+    // Attributes are framework owned, so they are compared with the DOM itself. The jQuery
+    // data() cache is dropped for data-* attributes, otherwise it would keep returning the
+    // value from before the change.
+    static setAttributeIfChanged(element, name, value) {
+        if (!element) {
+            return;
+        }
+        const text = String(value);
+        if (element.getAttribute(name) !== text) {
+            element.setAttribute(name, text);
+        }
+        // Also when the attribute did not change: an event handler may have written a newer
+        // value into the cache (e.g. a toggle click) that the data no longer confirms.
+        if (name.startsWith('data-')) {
+            $(element).removeData(name.slice(5));
+        }
+    }
+
+    // Content always follows the data (what a user typed into a cell is replaced by what the
+    // server returned), so it is compared with the DOM, not with the previous model.
+    static setContentIfChanged(element, html) {
+        if (!element) {
+            return;
+        }
+        const text = String(html);
+        if (element.innerHTML !== text) {
+            $(element).html(text);
+        }
+    }
 }

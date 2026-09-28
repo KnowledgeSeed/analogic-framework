@@ -11,6 +11,26 @@ class ToggleWidget extends Widget {
 
         this.isGridTableHierarchyExpander = v.isGridTableHierarchyExpander;
 
+        // The model is what this render is made of; updateHtml() diffs against it later.
+        const m = this._vm = this.buildModel(d, v);
+
+        if (v.groupId && m.on) {
+            Widgets[v.groupId] = {ordinal: d.ordinal, value: v.titleOn};
+        }
+
+        return `
+<div class="${m.mainClass}" style="${m.mainStyle}" data-ordinal="${m.ordinal}" data-value="${m.value}" data-id="${o.id}" data-action="switch">
+    <div class="${m.innerClass}">
+        <div style="${m.iconStyle}" class="ks-toggle-icon ks-toggle-icon-on">${m.iconOnHtml}</div>
+        <div style="${m.iconStyle}" class="ks-toggle-icon ks-toggle-icon-off">${m.iconOffHtml}</div>
+        <div style="${m.titleStyle}" class="ks-toggle-label ks-toggle-label-on">${m.titleOn}</div>
+        <div style="${m.titleStyle}" class="ks-toggle-label ks-toggle-label-off">${m.titleOff}</div>
+    </div>
+</div>`;
+    }
+
+    // Pure: everything getHtml() renders, as plain strings.
+    buildModel(d, v = this.getParameters(d)) {
         let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d),
             titleStyles = this.getHtmlComponentStylesArray('title', d),
             b = 1 === parseInt(v.value),
@@ -27,25 +47,66 @@ class ToggleWidget extends Widget {
         v.iconFontColor && iconStyles.push(`color:${v.iconFontColor};`);
         v.iconFontSize && iconStyles.push(`font-size:${v.iconFontSize}px;`);
 
-        titleStyles = titleStyles.join('');
-        iconStyles = iconStyles.join('');
-
-        if (v.groupId && b) {
-            Widgets[v.groupId] = {ordinal: d.ordinal, value: v.titleOn};
-        }
-
-        return `
-<div class="ks-toggle ${mainDivClass.join(' ')} ${v.groupId ? `ks-toggle-${v.groupId}` : ''} ${v.isGridTableHierarchyExpander ? 'ks-toggle-expander' : ''}" style="${mainDivStyle.join('')}" data-ordinal="${d.ordinal}" data-value="${v.value}" data-id="${o.id}" data-action="switch">
-    <div class="ks-toggle-inner ${v.editable === false ? 'readonly' : ''}">
-        <div style="${iconStyles}" class="ks-toggle-icon ks-toggle-icon-on">${v.icon ? `<span class="${v.icon}"></span>` : ''}</div>
-        <div style="${iconStyles}" class="ks-toggle-icon ks-toggle-icon-off">${v.iconOff ? `<span class="${v.iconOff}"></span>` : ''}</div>
-        <div style="${titleStyles}" class="ks-toggle-label ks-toggle-label-on">${v.titleOn}</div>
-        <div style="${titleStyles}" class="ks-toggle-label ks-toggle-label-off">${v.titleOff}</div>
-    </div>
-</div>`;
+        return {
+            on: b,
+            mainClass: Widget.intern(`ks-toggle ${mainDivClass.join(' ')} ${v.groupId ? `ks-toggle-${v.groupId}` : ''} ${v.isGridTableHierarchyExpander ? 'ks-toggle-expander' : ''}`),
+            mainStyle: Widget.intern(mainDivStyle.join('')),
+            ordinal: d.ordinal,
+            value: v.value,
+            innerClass: `ks-toggle-inner ${v.editable === false ? 'readonly' : ''}`,
+            iconStyle: Widget.intern(iconStyles.join('')),
+            iconOnHtml: v.icon ? `<span class="${v.icon}"></span>` : '',
+            iconOffHtml: v.iconOff ? `<span class="${v.iconOff}"></span>` : '',
+            titleStyle: Widget.intern(titleStyles.join('')),
+            titleOn: v.titleOn,
+            titleOff: v.titleOff
+        };
     }
 
+    // Model based update: only what differs from the model applied last is touched, so classes,
+    // styles and other state added to the elements at runtime survive.
     updateHtml(data) {
+        const previous = this._vm;
+        // Nothing to diff against, or a subclass renders its own markup: keep the old behavior.
+        if (!previous || this.getHtml !== ToggleWidget.prototype.getHtml) {
+            return this.updateHtmlLegacy(data);
+        }
+
+        const p = this.getParameters(data), section = this.getSection(),
+            main = section.find('.ks-toggle')[0], inner = section.find('.ks-toggle-inner')[0],
+            iconOn = section.find('.ks-toggle-icon-on')[0], iconOff = section.find('.ks-toggle-icon-off')[0],
+            titleOn = section.find('.ks-toggle-label-on')[0], titleOff = section.find('.ks-toggle-label-off')[0],
+            next = this.buildModel(data, p);
+
+        //main
+        Widget.applyClassDiff(main, previous.mainClass, next.mainClass);
+        Widget.applyStyleDiff(main, previous.mainStyle, next.mainStyle);
+        // The on state is data: a click the server did not confirm must not stay on screen.
+        main && main.classList.toggle('ks-on', next.on);
+        Widget.setAttributeIfChanged(main, 'data-ordinal', next.ordinal);
+        Widget.setAttributeIfChanged(main, 'data-value', next.value);
+
+        //inner (carries the readonly state)
+        Widget.applyClassDiff(inner, previous.innerClass, next.innerClass);
+
+        //icons
+        Widget.applyStyleDiff(iconOn, previous.iconStyle, next.iconStyle);
+        Widget.applyStyleDiff(iconOff, previous.iconStyle, next.iconStyle);
+        Widget.setContentIfChanged(iconOn, next.iconOnHtml);
+        Widget.setContentIfChanged(iconOff, next.iconOffHtml);
+
+        //labels
+        Widget.applyStyleDiff(titleOn, previous.titleStyle, next.titleStyle);
+        Widget.applyStyleDiff(titleOff, previous.titleStyle, next.titleStyle);
+        Widget.setContentIfChanged(titleOn, next.titleOn);
+        Widget.setContentIfChanged(titleOff, next.titleOff);
+
+        this._vm = next;
+    }
+
+    // Previous field by field update, used when there is no model to diff against or a
+    // subclass renders its own markup.
+    updateHtmlLegacy(data) {
         const p = this.getParameters(data), section = this.getSection(),
             main = section.find('.ks-toggle'),
             titleOn = section.find('.ks-toggle-label-on'),
@@ -93,14 +154,18 @@ class ToggleWidget extends Widget {
     initEventHandlers() {
         const section = this.getSection();
 
-        if (section.find('.ks-toggle-inner').hasClass('readonly')) {
-            return;
-        }
+        // The readonly state can change with the data (updateContent), so it is checked when the
+        // toggle is clicked, not only when the handler is bound.
+        const isReadonly = () => section.find('.ks-toggle-inner').hasClass('readonly');
 
         const o = this.options;
 
         let isGridTableHierarchyExpander = this.isGridTableHierarchyExpander;
         section.find('.ks-toggle').on('click', e => {
+            if (isReadonly()) {
+                return;
+            }
+
             const s = $(e.currentTarget), isActive = !s.hasClass('ks-on');
 
             if (o.groupId) {
@@ -133,7 +198,7 @@ class ToggleWidget extends Widget {
             }
         });
 
-        if (isGridTableHierarchyExpander) {
+        if (isGridTableHierarchyExpander && !isReadonly()) {
             let s = section.find('.ks-toggle');
             ToggleWidget.doExpand(s, !s.hasClass('ks-on'), ToggleWidget.getToggleIndex(s), false);
         }
