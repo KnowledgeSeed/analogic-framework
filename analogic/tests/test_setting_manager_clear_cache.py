@@ -5,48 +5,49 @@ import tempfile
 import types
 import unittest
 from pathlib import Path
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from flask import Flask
 
-jproperties_stub = types.ModuleType('jproperties')
+with patch.dict(sys.modules):
+    jproperties_stub = types.ModuleType('jproperties')
 
 
-class DummyProperties:
-    def load(self, *_args, **_kwargs):
-        return None
+    class DummyProperties:
+        def load(self, *_args, **_kwargs):
+            return None
 
-    def get(self, _key):
-        return None
-
-
-jproperties_stub.Properties = DummyProperties
-sys.modules['jproperties'] = jproperties_stub
-
-cryptography_stub = types.ModuleType('cryptography')
-fernet_stub = types.ModuleType('cryptography.fernet')
+        def get(self, _key):
+            return None
 
 
-class DummyFernet:
-    def __init__(self, *_args, **_kwargs):
-        pass
+    jproperties_stub.Properties = DummyProperties
+    sys.modules['jproperties'] = jproperties_stub
 
-    def encrypt(self, value):
-        return value
-
-    def decrypt(self, value):
-        return value
+    cryptography_stub = types.ModuleType('cryptography')
+    fernet_stub = types.ModuleType('cryptography.fernet')
 
 
-fernet_stub.Fernet = DummyFernet
-cryptography_stub.fernet = fernet_stub
-sys.modules['cryptography'] = cryptography_stub
-sys.modules['cryptography.fernet'] = fernet_stub
+    class DummyFernet:
+        def __init__(self, *_args, **_kwargs):
+            pass
 
-MODULE_PATH = Path(__file__).resolve().parents[1] / 'setting.py'
-MODULE_SPEC = importlib.util.spec_from_file_location('analogic_setting_test', MODULE_PATH)
-setting_module = importlib.util.module_from_spec(MODULE_SPEC)
-MODULE_SPEC.loader.exec_module(setting_module)
+        def encrypt(self, value):
+            return value
+
+        def decrypt(self, value):
+            return value
+
+
+    fernet_stub.Fernet = DummyFernet
+    cryptography_stub.fernet = fernet_stub
+    sys.modules['cryptography'] = cryptography_stub
+    sys.modules['cryptography.fernet'] = fernet_stub
+
+    MODULE_PATH = Path(__file__).resolve().parents[1] / 'setting.py'
+    MODULE_SPEC = importlib.util.spec_from_file_location('analogic_setting_test', MODULE_PATH)
+    setting_module = importlib.util.module_from_spec(MODULE_SPEC)
+    MODULE_SPEC.loader.exec_module(setting_module)
 SettingManager = setting_module.SettingManager
 
 

@@ -30,7 +30,8 @@ if __name__ == "__main__":
         http_server.serve_forever()
     elif os.environ.get('ANALOGIC_WSGI_SERVER') == 'waitress':
         from waitress import serve
-        serve(app, host='0.0.0.0', port=5000, threads=threads)
+        # ProxyFix above owns the existing forwarded-header policy.
+        serve(app, host='0.0.0.0', port=5000, threads=threads, clear_untrusted_proxy_headers=False)
     elif os.environ.get('ANALOGIC_WSGI_SERVER') == 'gunicorn':
         import subprocess
         subprocess.run(['gunicorn', '-w', str(workers), '--threads', str(threads), '-b', '0.0.0.0:5000', 'run:app'])

@@ -1,5 +1,7 @@
 
 services:
   analogic:
+    environment:
+      - ANALOGIC_WSGI_SERVER=flask
     volumes:
       - ./:/analogic

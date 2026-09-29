@@ -4,7 +4,7 @@ services:
   analogic:
     build: .
     environment:
-      - ANALOGIC_WSGI_SERVER=bjoern
+      - ANALOGIC_WSGI_SERVER=waitress
       - ANALOGIC_LOAD_SAMPLE_APPS=True
 
   apache:
