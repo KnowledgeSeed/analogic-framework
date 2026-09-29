@@ -1,0 +1,16 @@
+-r requirements-test.in
+-e .
+-e extensions/analogic-ext-airflow-api-connector
+-e extensions/analogic-ext-analogic-pool
+-e extensions/analogic-ext-file-upload
+-e extensions/analogic-ext-graphql
+-e extensions/analogic-ext-iis-pool
+-e extensions/analogic-ext-ldap-pool
+-e extensions/analogic-ext-long-running-task
+-e extensions/analogic-ext-mssql
+-e extensions/analogic-ext-mysql
+-e extensions/analogic-ext-saml
+-e extensions/analogic-ext-seeder
+-e extensions/analogic-ext-sharepoint
+-e extensions/analogic-ext-sql
+-e extensions/analogic-ext-tm1-error-reporting
