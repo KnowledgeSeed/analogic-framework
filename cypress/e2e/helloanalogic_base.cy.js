@@ -1,9 +1,11 @@
 describe('Hello Analogic', () => {
-  it('Main', () => {
+  beforeEach(() => {
     cy
         .viewport(1920,1080)
         .visit('http://localhost:5000/helloanalogic/')
+  })
 
+  it('Main', () => {
     cy.get('#analogicDemoMainRow3Cell2Button').should('exist');
     cy.get('#analogicDemoMainRow3Cell3Button').should('exist');
     cy.get('#analogicDemoMainRow3Cell4Button').should('exist');
