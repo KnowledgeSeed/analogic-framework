@@ -1,6 +1,6 @@
 'use strict';
 
-class GridTableWidget extends Widget {
+class LegacyGridTableWidget extends Widget {
 
     static activeInstance = null;
     static areGlobalListenersAttached = false;
@@ -16,8 +16,10 @@ class GridTableWidget extends Widget {
         const v = this.getParameters(data);
         this.allowCopyToClipBoard = v.allowCopyToClipBoard;
 
-        // The model is what the frame of this render is made of; updateHtml() diffs against it later.
-        const m = this._vm = this.buildModel(data, v);
+        let mainDivStyle = this.getGeneralStyles(data);
+        if (v.hideIfNoData === true && (!d || d.length === 0)) {
+            mainDivStyle.push('display:none;');
+        }
 
         let r = [], c = [], tb, th, j = 0,
             col = o.widgets.filter(e => e.type.name !== 'GridTableHeaderRowWidget').length, hw = '';
@@ -70,26 +72,7 @@ class GridTableWidget extends Widget {
             }
             th = this.buildTableHeadHtml(this.buildTableHeaderRowHtml(c.join(''), v.rowHeight, v.borderTop, v.borderBottom));
         }
-        return this.getWidgetHtml(this.buildTableHtml([th, tb].join(''), v.skin), m.title, [m.mainStyle]);
-    }
-
-    // Pure: the look of the table frame (everything but the rows and the cells) as plain values.
-    buildModel(data, v = this.getParameters(data)) {
-        const o = this.options, d = Array.isArray(data) ? data : data.content;
-
-        let mainDivStyle = this.getGeneralStyles(data);
-        if (v.hideIfNoData === true && (!d || d.length === 0)) {
-            mainDivStyle.push('display:none;');
-        }
-
-        return {
-            mainStyle: Widget.intern(mainDivStyle.join('')),
-            title: o.title || '',
-            tableClass: Widget.intern(`ks-grid-table ks-grid-table-${v.skin === undefined ? 'template1' : v.skin}`),
-            rowHeight: Widget.intern(v.rowHeight ? `height:${v.rowHeight}px;` : ''),
-            borderBottom: !!v.borderBottom,
-            borderTop: !!v.borderTop
-        };
+        return this.getWidgetHtml(this.buildTableHtml([th, tb].join(''), v.skin), o.title || '', mainDivStyle);
     }
 
     getParameters(data) {
@@ -289,13 +272,6 @@ class GridTableWidget extends Widget {
             instance.state['rows'] = rowNum;
 
             instance.updateHtml(d);
-
-            // The header row widgets (and through them the header cells) follow their data too.
-            const headerUpdates = (o.widgets || []).filter(e => e.type.name === 'GridTableHeaderRowWidget').map(e => {
-                const headerRow = instance.getWidget(e);
-                return headerRow ? Promise.resolve(headerRow.updateContent()).catch(error => console.error('Error updating header row "' + e.id + '":', error)) : null;
-            });
-
             for (i = 0; i < rowNum; ++i) {
                 j = 0;
                 for (w of widgets) {
@@ -328,72 +304,17 @@ class GridTableWidget extends Widget {
                 }
             }
 
-            return Promise.all(headerUpdates).then(() => new Promise(function (resolve) {
+            return new Promise(function (resolve) {
                 if (vv.allowFullContentUpdated && rowNum > previousLength) {
                     let rowsToAppend = instance.renderRowForUpdateContent(rendered, vv);
                     $('#' + o.id).find('.ks-grid-table-content').append(rowsToAppend);
                 }
                 return resolve('update');
-            }));
+            });
         });
     }
 
-    // Model based update of the table frame (style, title, skin, row height and borders): only
-    // what differs from the model applied last is touched, so classes, styles and other state
-    // added to the elements at runtime (hidden rows, sticky columns, selection) survive. The
-    // rows and the cells are updated by updateContent().
     updateHtml(data) {
-        const previous = this._vm;
-        // Nothing to diff against, or a subclass renders its own markup: keep the old behavior.
-        if (!previous || this.getHtml !== GridTableWidget.prototype.getHtml) {
-            return this.updateHtmlLegacy(data);
-        }
-
-        const o = this.options, v = this.getParameters(data), section = $('#' + o.id),
-            next = this.buildModel(data, v), main = section.children()[0];
-
-        if (main) {
-            Widget.applyStyleDiff(main, previous.mainStyle, next.mainStyle);
-            Widget.setContentIfChanged(main.querySelector(':scope > h3'), next.title);
-            Widget.applyClassDiff(main.querySelector('.ks-grid-table'), previous.tableClass, next.tableClass);
-
-            if (previous.rowHeight !== next.rowHeight || previous.borderBottom !== next.borderBottom || previous.borderTop !== next.borderTop) {
-                this.updateRowLook(main, previous, next);
-            }
-        }
-
-        // hideIfNoData also works on the section (as before)
-        if (data.content && !section.hasClass('forcedByEventMap')) {
-            v.hideIfNoData && section.css('display', data.content.length > 0 ? 'unset' : 'none');
-        }
-
-        this._vm = next;
-
-        return 'update';
-    }
-
-    // Height and borders of the rows the table itself renders.
-    updateRowLook(main, previous, next) {
-        const bottom = model => model.borderBottom ? 'border-bottom' : '';
-
-        for (const row of main.querySelectorAll('.ks-grid-table-content > .ks-grid-table-row')) {
-            Widget.applyStyleDiff(row, previous.rowHeight, next.rowHeight);
-            Widget.applyClassDiff(row, bottom(previous), bottom(next));
-        }
-
-        // A header row widget owns its look, only a header row rendered by the table follows these.
-        if (!(this.options.widgets || []).some(w => w.type.name === 'GridTableHeaderRowWidget')) {
-            const head = main.querySelector('.ks-grid-table-head > .ks-grid-table-row');
-            if (head) {
-                Widget.applyStyleDiff(head, previous.rowHeight, next.rowHeight);
-                Widget.applyClassDiff(head, `${bottom(previous)} ${previous.borderTop ? 'border-top' : ''}`, `${bottom(next)} ${next.borderTop ? 'border-top' : ''}`);
-            }
-        }
-    }
-
-    // Previous update of the frame, used when there is no model to diff against or a subclass
-    // renders its own markup.
-    updateHtmlLegacy(data) {
         const o = this.options, v = this.getParameters(data), section = $('#' + o.id),
             mainDiv = section.children();
         v.minWidth && mainDiv.css('min-width', Widget.getPercentOrPixel(v.minWidth));

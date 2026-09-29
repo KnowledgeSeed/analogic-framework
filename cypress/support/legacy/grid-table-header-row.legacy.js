@@ -1,17 +1,9 @@
 /* global app, Listeners, PageState, QB, Widget */
 
 'use strict';
-class GridTableHeaderRowWidget extends Widget {
+class LegacyGridTableHeaderRowWidget extends Widget {
 
     getHtml(widgets, d, withState) {
-        // The model is what this render is made of; updateHtml() diffs against it later.
-        const m = this._vm = this.buildModel(d);
-
-        return `<div class="${m.mainClass}">${widgets.join('')}</div>`;
-    }
-
-    // Pure: everything getHtml() renders, as plain strings.
-    buildModel(d) {
         const v = {
             alignment: this.getRealValue('alignment', d, false),
             borderBottom: this.getRealValue('borderBottom', d, true),
@@ -19,37 +11,7 @@ class GridTableHeaderRowWidget extends Widget {
             height: this.getRealValue('height', d, false)
         };
 
-        return {
-            mainClass: Widget.intern(`ks-grid-table-row ${v.alignment !== false ? `ks-row-pos-${v.alignment}` : ''} ${v.borderBottom ? 'border-bottom' : ''} ${v.borderTop ? 'border-top' : ''}`)
-        };
-    }
-
-    // Model based update: only what differs from the model applied last is touched, so classes and
-    // other state added to the row at runtime survive.
-    updateHtml(data) {
-        const previous = this._vm;
-        // Nothing to diff against, or a subclass renders its own markup: nothing to update (as before).
-        if (!previous || this.getHtml !== GridTableHeaderRowWidget.prototype.getHtml) {
-            return;
-        }
-
-        const next = this.buildModel(data);
-
-        Widget.applyClassDiff(this.getRowElement(), previous.mainClass, next.mainClass);
-
-        this._vm = next;
-    }
-
-    // The row is rendered without an id (and without a section), it is found through its header cells.
-    getRowElement() {
-        for (const widgetOptions of this.options.widgets || []) {
-            const child = this.getWidget(widgetOptions), element = child ? document.getElementById(child.options.id) : null;
-            if (element) {
-                return element.parentElement;
-            }
-        }
-
-        return null;
+        return `<div class="ks-grid-table-row ${v.alignment !== false ? `ks-row-pos-${v.alignment}` : ''} ${v.borderBottom ? 'border-bottom' : ''} ${v.borderTop ? 'border-top' : ''}">${widgets.join('')}</div>`;
     }
 
     // `hiddenColumns` comes from the owning GridTableWidget when `hideEmptyColumns` is

@@ -28,6 +28,11 @@ class PageWidget extends Widget {
         return El.body;
     }
 
+    // The page renders into the body and shows its own loader: it empties first, as always.
+    keepsContentWhileRefreshing() {
+        return false;
+    }
+
     afterRendered() {
         if (this.title) {
             Utils.changePageTitle(this.title);

@@ -46,7 +46,79 @@ class Widget {
         return $('#' + id);
     }
 
+    // Whether a refresh keeps the current content on screen until the new content is ready and
+    // then swaps it in one step (no blank widget while the data is loading). The Page renders
+    // into the body and shows its own loader, it empties first.
+    keepsContentWhileRefreshing() {
+        return true;
+    }
+
+    // Elements inside the holder that keep a scroll position which a refresh would lose. The
+    // holder itself is always included. A widget can extend the list for its own markup.
+    getScrollableSelectors() {
+        return [
+            '.ks-grid-table', '.ks-grid-table-inner', '.ks-grid-table-content',
+            '.ks-grid-table-light_inner', '.ks-grid-table-light_head', '.ks-grid-table-light_body',
+            '.ks-grid-table-plus-inner', '.tabulator-tableholder'
+        ];
+    }
+
+    static captureScrollState(holder, selectors) {
+        const state = [], record = (element, selector, index) => {
+            const left = element.scrollLeft(), top = element.scrollTop();
+            if (left || top) {
+                state.push({selector, index, left, top});
+            }
+        };
+
+        record(holder, null, 0);
+        (selectors || []).forEach(selector => holder.find(selector).each(function (index) {
+            record($(this), selector, index);
+        }));
+
+        return state;
+    }
+
+    static restoreScrollState(holder, state) {
+        (state || []).forEach(({selector, index, left, top}) => {
+            const element = selector === null ? holder : holder.find(selector).eq(index);
+            if (element.length) {
+                element.scrollLeft(left);
+                element.scrollTop(top);
+            }
+        });
+    }
+
     refreshGridCell() {
+        if (!this.keepsContentWhileRefreshing()) {
+            return this.refreshGridCellEmptyFirst();
+        }
+
+        Listeners.length = 0;
+
+        const o = this.options, widget = this, holder = this.getHolder(o.id);
+
+        // The current content stays until the new one is ready, then it is swapped in one step.
+        return widget.render(false, true, false, QB.refreshGridCellData).then(html => {
+            const scrollState = Widget.captureScrollState(holder, widget.getScrollableSelectors());
+
+            holder.empty().off();
+            holder.html($(html).html());
+
+            widget.initEvents(false);
+
+            Widget.restoreScrollState(holder, scrollState);
+
+            El.body.trigger('rendered.' + o.id);
+
+            Api.showToolTipsChanged();
+
+            return 'refreshGridCell';
+        });
+    }
+
+    // Previous version: the holder is emptied first, the new content is loaded after that.
+    refreshGridCellEmptyFirst() {
 
         Listeners.length = 0;
 
@@ -83,6 +155,76 @@ class Widget {
     }
 
     reRenderWidget(withState = false, withLoader = true, previouslyLoadedData = false) {
+        if (!this.keepsContentWhileRefreshing()) {
+            return this.reRenderWidgetEmptyFirst(withState, withLoader, previouslyLoadedData);
+        }
+
+        if (this.isRendering) {
+            this.renderError();
+        }
+        this.isRendering = true;
+
+        const o = this.options, holder = this.getHolder(o.id), instance = this;
+
+        this.renderStartLoader(withLoader);
+
+        Listeners.length = 0;
+
+        // The current content stays visible (and usable) while the data is being loaded. The new
+        // content is swapped in below in one step, so there is no blank widget in between and the
+        // browser has no chance to clamp the scroll position of a scrolled container.
+        return instance.render(withState, true, false, QB.loadData, previouslyLoadedData).then(html => {
+            const scrollState = Widget.captureScrollState(holder, instance.getScrollableSelectors());
+            let h = $(html), i;
+
+            holder.empty().off();
+            holder.html(h.html());
+
+            instance.removeLoaderHtml(withState);
+
+            if (!holder.hasClass('forcedByEventMap')) {
+                holder.css('display', h.css('display') !== '' ? h.css('display') : 'unset');
+            }
+
+            instance.initEvents(withState);
+
+            Widget.restoreScrollState(holder, scrollState);
+
+            if (o.disableRefreshGridCell !== true) {
+                for (i of Listeners.filter(e => e.method === 'refreshGridCell' && e.options.id.includes(holder.attr('id')))) {
+                    const event = i.eventName.split('.')[0];
+                    if ($._data(El.body[0], "events") &&
+                        $._data(El.body[0], "events")[event] &&
+                        $._data(El.body[0], "events")[event].filter(e => e.data.method === 'refreshGridCell' &&
+                            e.data.options.id === i.options.id).length === 0) {
+                        El.body.on(i.eventName, {
+                            options: i.options,
+                            method: i.method,
+                            parameters: i.parameters
+                        }, i.handler);
+                    }
+                }
+            }
+            if (!withState) {
+                El.body.trigger('rendered.' + o.id);
+                instance.refreshFinished();
+            }
+
+            Api.showToolTipsChanged();
+
+            instance.renderLoaderStop(withLoader);
+
+            return 'rerendered';
+        }, error => {
+            // The old content is still there. Nothing is left half done.
+            instance.isRendering = false;
+            instance.renderLoaderStop(withLoader);
+            throw error;
+        });
+    }
+
+    // Previous version: the holder is emptied first, the new content is loaded after that.
+    reRenderWidgetEmptyFirst(withState = false, withLoader = true, previouslyLoadedData = false) {
         if (this.isRendering) {
             this.renderError();
         }
