@@ -1,9 +1,9 @@
 name: CI Build
 on:
   push:
-    branches: [main]
+    branches: [main, studio]
   pull_request:
-    branches: [main]
+    branches: [main, studio]
   workflow_dispatch:
     inputs:
       include_extensions:
