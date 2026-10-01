@@ -264,6 +264,8 @@ class HorizontalTableWidget extends Widget {
 
                 return `<section ${o.margin ? 'class="wrapper"' : ''} title="${o.title || ''}" style="${gs.join('')}" id="${o.id}">${instance.getHtml(widgetHtmls, processedData, withState, leftRowWidgets, rightRowWidgets)}</section>`;
             });
+        }).catch(function (error) {
+            return instance.getWidgetErrorHtml(error);
         });
     }
 
