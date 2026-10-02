@@ -319,4 +319,31 @@ analogicTablePlusRichDemo:{
         return new RestRequest(Repository.analogicTablePlusRichDemo.MdxRequest);
     }
 },
+analogicNewPageNineRichSegmented: {
+    switch() {
+        Api.updateContent('analogicTablePlusRichDemo');
+    }
+},
+analogicTablePlusRichDemoDetailsPopupTitle:{
+    init() {
+        const row = v('analogicTablePlusRichDemoSelectedRow');
+        return {title: row ? row.label : ''};
+    }
+},
+analogicTablePlusRichDemoDetailsPopupFields:{
+    init() {
+        const row = v('analogicTablePlusRichDemoSelectedRow') || {};
+        const fmt = (n) => typeof n === 'number' ? n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '-';
+        const lines = [
+            `Override: ${fmt(row.m_override)}`,
+            `Corrected Value: ${fmt(row.m_corrected_value)}`,
+            `Value: ${fmt(row.m_value)}`,
+            `Input: ${fmt(row.m_input)}`,
+            `Delta: ${fmt(row.m_delta)}`,
+            `Correction: ${fmt(row.m_correction)}`,
+            `Reviewed: ${row.reviewed ? 'Yes' : 'No'}`
+        ];
+        return {body: lines.join('<br>')};
+    }
+},
 };

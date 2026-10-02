@@ -103,7 +103,73 @@ WidgetConfig = {
                                     }
                                 }
                             ]
-                        }
+                        },
+                        {
+                            "id": "analogicTablePlusRichDemoDetailsPopup",
+                            "type": ContainerWidget,
+                            "visible": false,
+                            "backdrop": true,
+                            "closeBtn": true,
+                            "position": "center",
+                            "width": 360,
+                            "widgets": [
+                                {
+                                    "id": "analogicTablePlusRichDemoDetailsPopupGrid",
+                                    "type": GridWidget,
+                                    "width": "100%",
+                                    "marginLeft": "16",
+                                    "marginRight": "16",
+                                    "marginTop": "16",
+                                    "marginBottom": "16",
+                                    "widgets": [
+                                        {
+                                            "id": "analogicTablePlusRichDemoDetailsPopupTitleRow",
+                                            "type": GridRowWidget,
+                                            "marginBottom": "12",
+                                            "width": "100%",
+                                            "widgets": [
+                                                {
+                                                    "id": "analogicTablePlusRichDemoDetailsPopupTitleCell",
+                                                    "type": GridCellWidget,
+                                                    "width": "100%",
+                                                    "alignment": "top-left",
+                                                    "widgets": [
+                                                        {
+                                                            "id": "analogicTablePlusRichDemoDetailsPopupTitle",
+                                                            "type": TextWidget,
+                                                            "titleFontSize": 18,
+                                                            "titleFontWeight": 700
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "id": "analogicTablePlusRichDemoDetailsPopupFieldsRow",
+                                            "type": GridRowWidget,
+                                            "width": "100%",
+                                            "widgets": [
+                                                {
+                                                    "id": "analogicTablePlusRichDemoDetailsPopupFieldsCell",
+                                                    "type": GridCellWidget,
+                                                    "width": "100%",
+                                                    "alignment": "top-left",
+                                                    "widgets": [
+                                                        {
+                                                            "id": "analogicTablePlusRichDemoDetailsPopupFields",
+                                                            "type": TextWidget,
+                                                            "icon": false,
+                                                            "bodyFontColor": "#334155"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                                ]
+                                }
+
                     ]
                 },
 
