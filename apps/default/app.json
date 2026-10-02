@@ -1,13 +1,6 @@
 {
   "projectName": "Analogic",
   "projectId": "analogic",
-  "authenticationMode": "LoginBasic",
-  "mainPage": "analogicMain",
-  "camNamespace": "knowledgeseed",
-  "proxy": {
-    "target": "https://dev.knowledgeseed.ch:5125/ksacademyapi"
-  },
-  "analogicApiAuthenticationMode": "unsecured",
-  "connectedSeederUrl": "http://localhost:5001",
-  "connectedSeederApplicationVersion": "analogic_main1"
+  "authenticationMode": "NoLogin",
+  "mainPage": "analogicMain"
 }

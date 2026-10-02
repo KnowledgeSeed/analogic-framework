@@ -1,6 +1,3 @@
-/* global app */
-'use strict';
-Repository = {
 analogicTablePlusRichDemo:{
     // Same big MDX/dataset as the two tables above, but parsed the way adminLocal.txt's
     // sawLocalAdminGridTable does it: a layered column-default helper (mirrors LAClasses /
@@ -43,51 +40,6 @@ analogicTablePlusRichDemo:{
 
     "__reviewed": {}, // client-only mock "reviewed" flag storage, keyed by leaf row id - no server write
 
-    // Row count text for the render-time log: parent (total) rows + leaf rows of the tree.
-    "__rowSummary": (data) => {
-        const leaves = data.reduce((n, parent) => n + (parent._children ? parent._children.length : 0), 0);
-        return `${data.length + leaves} rows (${data.length} parents + ${leaves} leaves)`;
-    },
-
-    // Shared render-time logger for this table and the classic-GridTable comparison page, so both
-    // are measured the same way: start = the widget's init (data load) begins, end = the table has
-    // finished rendering, diff = end - start (with the data part split out).
-    "__renderTimer": {
-        pending: {},
-        clock() {
-            const d = new Date();
-            return d.toTimeString().slice(0, 8) + '.' + String(d.getMilliseconds()).padStart(3, '0');
-        },
-        start(label) {
-            this.pending[label] = {t0: performance.now(), dataAt: null};
-            console.log(`[${label}] render start: ${this.clock()}`);
-        },
-        // rows: optional text describing the row count, appended to the "render time" line
-        dataReady(label, rows = '') {
-            if (this.pending[label]) {
-                this.pending[label].dataAt = performance.now();
-                this.pending[label].rows = rows;
-            }
-        },
-        mark(label, what) {
-            const p = this.pending[label];
-            if (p) {
-                console.log(`[${label}] ${what}: ${this.clock()} (+${Math.round(performance.now() - p.t0)} ms)`);
-            }
-        },
-        end(label) {
-            const p = this.pending[label];
-            if (!p) {
-                return;
-            }
-            delete this.pending[label];
-            const t1 = performance.now();
-            const parts = p.dataAt === null ? '' : ` (data ${Math.round(p.dataAt - p.t0)} ms + render ${Math.round(t1 - p.dataAt)} ms)`;
-            console.log(`[${label}] render end:   ${this.clock()}`);
-            console.log(`[${label}] render time:  ${Math.round(t1 - p.t0)} ms${parts}${p.rows ? ', ' + p.rows : ''}`);
-        }
-    },
-
     "__moneyFormatter": (cell) => {
         const raw = cell.getValue();
         const n = typeof raw === 'number' ? raw : parseFloat(raw) || 0;
@@ -121,43 +73,30 @@ analogicTablePlusRichDemo:{
             }
         }
 
-        // group raw cells into primary -> leaf rows {measure: value}. Nothing is summed across the
-        // Org Unit / Lineitem dimensions (the raw cells don't carry them any more): a leaf is
-        // identified by (secondary, n), n counting how often that (primary, secondary, measure)
-        // was already seen, so every Org Unit / Lineitem block stays its own row - the same
-        // 63,125 leaf rows the classic GridTable comparison page (analogicCompareGridTable) shows.
-        // Only the parent rows are totals.
+        // group raw cells into primary -> secondary -> {measure: sum}
         const groups = {};
         const order = [];
-        const occurrences = new Map();
         for (let i = 0; i < raw.length; i++) {
             const r = raw[i];
             const p = r[primary] || '(blank)';
             const s = r[secondary] || '(blank)';
             if (!groups[p]) {
-                groups[p] = new Map();
+                groups[p] = {};
                 order.push(p);
             }
-            const occurrenceKey = p + '\u0001' + s + '\u0001' + r.measure;
-            const n = occurrences.get(occurrenceKey) || 0;
-            occurrences.set(occurrenceKey, n + 1);
-
-            const leafKey = s + '\u0001' + n;
-            let leaf = groups[p].get(leafKey);
-            if (!leaf) {
-                leaf = {secondary: s, n: n, measures: {}};
-                groups[p].set(leafKey, leaf);
+            if (!groups[p][s]) {
+                groups[p][s] = {};
             }
-            leaf.measures[r.measure] = (leaf.measures[r.measure] || 0) + r.value;
+            groups[p][s][r.measure] = (groups[p][s][r.measure] || 0) + r.value;
         }
 
         const data = order.map(p => {
-            const children = Array.from(groups[p].values()).map(leaf => {
-                const measures = leaf.measures;
-                const rowId = `${p}::${leaf.secondary}::${leaf.n}`;
+            const children = Object.keys(groups[p]).map(s => {
+                const measures = groups[p][s];
+                const rowId = `${p}::${s}`;
                 const hasValue = measureNames.some(m => (measures[m] || 0) !== 0);
                 const row = {
-                    label: `${leaf.secondary} #${leaf.n + 1}`,
+                    label: s,
                     rowId: rowId,
                     reviewed: !!R.__reviewed[rowId],
                     hasValue: hasValue
@@ -292,16 +231,9 @@ analogicTablePlusRichDemo:{
                 dataTreeStartExpanded: false
             },
             events: {
-                cellClick: 'cellClicked',
-                renderComplete: 'renderCompleted'
+                cellClick: 'cellClicked'
             }
         };
-    },
-
-    // Tabulator's renderComplete - ends the render-time measurement started in init (only the
-    // first one after a start counts; later ones, e.g. from scrolling, are ignored).
-    renderCompleted() {
-        Repository.analogicTablePlusRichDemo.__renderTimer.end('analogicTablePlusRichDemo');
     },
 
     "__cache": null,
@@ -374,168 +306,13 @@ analogicTablePlusRichDemo:{
         }
     },
 
-    // Offline demo: the raw array that MdxRequest's parsingControl produces (employee/position/
-    // measure/value per cell) was saved once to analogicTablePlusRichDemo.raw.json next to this
-    // file, so the table loads from it instead of calling ExecuteMDX. A plain init() can't return
-    // an async result (the load executor wraps it in an already-resolved Deferred, which doesn't
-    // adopt promises), so init is a LoadExecutor subclass (the factory instantiates it with the
-    // context) whose execute() returns the ajax Deferred. The
-    // MdxRequest above is kept to switch back to the live MDX source.
-    "__rawJsonUrl": (() => {
-        const script = document.currentScript
-            || Array.from(document.scripts).find(s => /configs\/repository\.js/.test(s.src));
-        const base = script && script.src ? script.src.replace(/[^/?]*(\?.*)?$/, '') : 'apps/default/static/assets/js/configs/';
-        return base + 'analogicTablePlusRichDemo.raw.json';
-    })(),
-
-    init: class extends LoadExecutor {
-        execute() {
-            const R = Repository.analogicTablePlusRichDemo;
-            const widgetId = this.context.getWidgetId();
-            const control = v('analogicNewPageNineRichSegmented');
-            const segment = control ? control.value : 'employee';
-            R.__renderTimer.start(widgetId);
-
-            if (R.__cache) {
-                this.parsingControlFinished(widgetId);
-                const result = R.__build(R.__cache, segment);
-                R.__renderTimer.dataReady(widgetId, R.__rowSummary(result.data));
-                return $.Deferred().resolve(result);
-            }
-
-            return $.ajax({url: R.__rawJsonUrl, dataType: 'json', cache: true}).then(raw => {
-                R.__cache = raw;
-                const result = R.__build(raw, segment);
-                R.__renderTimer.dataReady(widgetId, R.__rowSummary(result.data));
-                this.parsingControlFinished(widgetId);
-                return result;
-            });
-        }
-    },
-},
-analogicCompareGridTable: {
-    // Render-time comparison for the classic GridTableWidget: the same saved dataset as
-    // analogicTablePlusRichDemo (shares its __cache / raw.json). Both tables show the same
-    // un-aggregated leaf rows: every Employee x Position x (Org Unit, Lineitem) combination is
-    // its own row with one column per measure (63,125 rows x 8 columns = 505,000 cells), here as
-    // real TextWidget cells. Expect a slow render on the full data.
-
-    "__rowLimit": 2000, // 0 = all rows; set e.g. 2000 in the console before opening the page to try a lighter run
-
-    "__measures": ['Override', 'Corrected Value', 'Value', 'Input', 'Delta', 'Correction'],
-
-    // raw: [{employee, position, measure, value}] in MDX order. A row is identified by
-    // (employee, position, n) where n counts how often that (employee, position, measure) was
-    // already seen - repeated Org Unit / Lineitem blocks therefore become separate rows.
-    "__build": (raw) => {
-        const R = Repository.analogicCompareGridTable;
-        const measureIndex = {};
-        R.__measures.forEach((m, i) => {
-            measureIndex[m] = i;
-        });
-        const fmt = new Intl.NumberFormat('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format;
-        const occurrences = new Map();
-        const rowIndex = new Map();
-        const rows = [];
-
-        for (let i = 0; i < raw.length; i++) {
-            const r = raw[i];
-            const mi = measureIndex[r.measure];
-            if (mi === undefined) {
-                continue;
-            }
-            const cellKey = r.employee + '\u0001' + r.position + '\u0001' + r.measure;
-            const n = occurrences.get(cellKey) || 0;
-            occurrences.set(cellKey, n + 1);
-
-            const rowKey = r.employee + '\u0001' + r.position + '\u0001' + n;
-            let row = rowIndex.get(rowKey);
-            if (!row) {
-                row = [{title: r.employee}, {title: r.position}];
-                for (let k = 0; k < R.__measures.length; k++) {
-                    row.push({title: fmt(0)});
-                }
-                rowIndex.set(rowKey, row);
-                rows.push(row);
-            }
-            row[2 + mi] = {title: fmt(r.value)};
-        }
-
-        return R.__rowLimit > 0 ? rows.slice(0, R.__rowLimit) : rows;
-    },
-
-    init: class extends LoadExecutor {
-        execute() {
-            const R = Repository.analogicCompareGridTable;
-            const P = Repository.analogicTablePlusRichDemo;
-            const widgetId = this.context.getWidgetId();
-            const timer = P.__renderTimer;
-            const previous = Widgets[widgetId] && Widgets[widgetId].cellData;
-
-            timer.start(widgetId);
-            // The table sets isRendering = false at the end of its initEvents, i.e. when every cell
-            // widget is built and in the DOM. Nothing signals that to the repository, so poll for it.
-            // The main thread is blocked while rendering, so the first tick after it is the finish.
-            // On a big table the DOM insert and the following initEvents (one call per cell) are
-            // two long blocking steps, so the moment the table content shows up is logged too.
-            let domLogged = false;
-            const poll = () => {
-                const w = Widgets[widgetId];
-                if (!domLogged && w && w.cellData !== previous && document.querySelector('#' + widgetId + ' .ks-grid-table-content')) {
-                    domLogged = true;
-                    timer.mark(widgetId, 'table DOM inserted');
-                }
-                if (w && w.cellData && w.cellData !== previous && w.isRendering === false) {
-                    timer.end(widgetId);
-                } else if (timer.pending[widgetId] && performance.now() - timer.pending[widgetId].t0 < 3600000) {
-                    setTimeout(poll, 20);
-                }
-            };
-            setTimeout(poll, 20);
-
-            const finish = (raw) => {
-                const rows = R.__build(raw);
-                timer.dataReady(widgetId, `${rows.length} rows x ${R.__measures.length + 2} columns = ${rows.length * (R.__measures.length + 2)} cells`);
-                this.parsingControlFinished(widgetId);
-                return rows;
-            };
-
-            if (P.__cache) {
-                return $.Deferred().resolve(finish(P.__cache));
-            }
-
-            return $.ajax({url: P.__rawJsonUrl, dataType: 'json', cache: true}).then(raw => {
-                P.__cache = raw;
-                return finish(raw);
-            });
-        }
-    }
-},
-analogicNewPageNineRichSegmented: {
-    switch() {
-        Api.updateContent('analogicTablePlusRichDemo');
-    }
-},
-analogicTablePlusRichDemoDetailsPopupTitle:{
     init() {
-        const row = v('analogicTablePlusRichDemoSelectedRow');
-        return {title: row ? row.label : ''};
+        const control = v('analogicNewPageNineRichSegmented');
+        const segment = control ? control.value : 'employee';
+        const cache = Repository.analogicTablePlusRichDemo.__cache;
+        if (cache) {
+            return Repository.analogicTablePlusRichDemo.__build(cache, segment);
+        }
+        return new RestRequest(Repository.analogicTablePlusRichDemo.MdxRequest);
     }
 },
-analogicTablePlusRichDemoDetailsPopupFields:{
-    init() {
-        const row = v('analogicTablePlusRichDemoSelectedRow') || {};
-        const fmt = (n) => typeof n === 'number' ? n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '-';
-        const lines = [
-            `Override: ${fmt(row.m_override)}`,
-            `Corrected Value: ${fmt(row.m_corrected_value)}`,
-            `Value: ${fmt(row.m_value)}`,
-            `Input: ${fmt(row.m_input)}`,
-            `Delta: ${fmt(row.m_delta)}`,
-            `Correction: ${fmt(row.m_correction)}`,
-            `Reviewed: ${row.reviewed ? 'Yes' : 'No'}`
-        ];
-        return {body: lines.join('<br>')};
-    }
-},
-};
