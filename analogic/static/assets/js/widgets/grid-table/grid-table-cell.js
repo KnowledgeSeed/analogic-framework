@@ -4,8 +4,9 @@
 
 class GridTableCellWidget extends Widget {
 
-    getHtml(widgets, data, withState) {
-        const v = this.getParameters(data);
+    // Single source of truth for the cell's root-div inline style, shared by getHtml
+    // and updateHtml so the two cannot drift apart.
+    getMainDivStyle(data, v) {
         let defaults = {};
         if (v.cellWidth !== false) {
             defaults['width'] = v.cellWidth;
@@ -21,7 +22,13 @@ class GridTableCellWidget extends Widget {
         v.cellPaddingRight && mainDivStyle.push('padding-right:', Widget.getPercentOrPixel(v.cellPaddingRight), ';');
         v.cellPaddingLeft && mainDivStyle.push('padding-left:', Widget.getPercentOrPixel(v.cellPaddingLeft), ';');
 
-        return `<div id="${v.cellId}" class="ks-grid-table-cell ${v.cellSkin !== false ? 'ks-grid-table-cell-' + v.cellSkin : ''} ${v.cellSkin === false ? 'ks-grid-table-cell-' + v.skin : ''} ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}" style="${mainDivStyle.join('')}"><div class="ks-grid-table-cell-border-left"></div><div class="ks-pos-${v.alignment} ks-grid-table-cell-content">${widgets.join('')}</div></div>`;
+        return mainDivStyle.join('');
+    }
+
+    getHtml(widgets, data, withState) {
+        const v = this.getParameters(data);
+
+        return `<div id="${v.cellId}" class="ks-grid-table-cell ${v.cellSkin !== false ? 'ks-grid-table-cell-' + v.cellSkin : ''} ${v.cellSkin === false ? 'ks-grid-table-cell-' + v.skin : ''} ${v.borderRight ? 'border-right' : ''} ${v.borderLeft ? 'border-left' : ''}" style="${this.getMainDivStyle(data, v)}"><div class="ks-grid-table-cell-border-left"></div><div class="ks-pos-${v.alignment} ks-grid-table-cell-content">${widgets.join('')}</div></div>`;
     }
 
     getParameters(data) {
@@ -56,6 +63,10 @@ class GridTableCellWidget extends Widget {
         for (widgetOptions of o.widgets || []) {
             childrenData = {...widgetOptions, ...data};
             childrenData['originalId'] = widgetOptions['id'];
+            // The child was created in render() with the first row data folded into its
+            // options. Rebuild them from the new data, as a fresh render would, otherwise a
+            // key that disappears from the data is still read back from the stale options.
+            Widgets[childrenData['id']].options = {...childrenData};
             Widgets[childrenData['id']].updateHtml(childrenData);
         }
         this.dynamicTooltip = (childrenData || {}).tooltip;
@@ -63,26 +74,25 @@ class GridTableCellWidget extends Widget {
     }
 
     updateHtml(data) {
+        // The child widget's own options are merged into `data`, so its skin must not
+        // be mistaken for the cell's. Work on a copy instead of mutating the caller's data.
+        data = {...data};
         delete data['skin'];
-        const o = this.options, p = this.getParameters(data), mainDiv = $('#' + p.cellId), content = mainDiv.find('.ks-grid-table-cell-content');
-        p.cellVisible === false ? mainDiv.css('display', 'none') : mainDiv.css('display', 'block');
-        p.cellWidth && mainDiv.css('width', Widget.getPercentOrPixel(p.cellWidth));
-        let paddingRight, paddingLeft;
+        const p = this.getParameters(data), mainDiv = $('#' + p.cellId), content = mainDiv.find('.ks-grid-table-cell-content');
 
-        Widget.setOrRemoveStyle(mainDiv, 'background-color', p.cellBackgroundColor);
-
-        paddingRight = p.cellPaddingRight !== false ? p.cellPaddingRight : o.paddingRight ? o.paddingRight : false;
-        Widget.setOrRemoveMeasure(mainDiv, 'padding-right', paddingRight);
-
-        paddingLeft = p.cellPaddingLeft !== false ? p.cellPaddingLeft : o.paddingLeft ? o.paddingLeft : false;
-        Widget.setOrRemoveMeasure(mainDiv, 'padding-left', paddingLeft);
+        // The inline style is derived purely from the parameters (same as getHtml), so it
+        // is rewritten wholesale: this also clears measures/margins that were dropped.
+        mainDiv.attr('style', this.getMainDivStyle(data, p));
 
         Widget.setSkin(mainDiv, 'ks-grid-table-cell-', p.cellSkin ? p.cellSkin : p.skin);
 
         Widget.addOrRemoveClass(mainDiv, 'border-right', p.borderRight);
         Widget.addOrRemoveClass(mainDiv, 'border-left', p.borderLeft);
 
-        Widget.addOrRemoveClass(content, 'ks-pos-' + p.alignment, true);
+        // Drop the previous alignment before applying the new one, otherwise the
+        // classes pile up and the stale one can win.
+        content.removeClass((i, c) => (c.match(/(^|\s)ks-pos-\S+/g) || []).join(' '));
+        content.addClass('ks-pos-' + p.alignment);
     }
 
     render(withState, childrenData) {
