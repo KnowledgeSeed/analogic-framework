@@ -70,14 +70,13 @@ class GridTableCellWidget extends Widget {
             Widgets[childrenData['id']].updateHtml(childrenData);
         }
         this.dynamicTooltip = (childrenData || {}).tooltip;
-        this.updateHtml(childrenData);
+        // The cell frame is rendered from the row data only (see render()), the options of the
+        // child widget merged into childrenData must not reach it: they are not the cell's.
+        this.updateHtml(data || {});
     }
 
     updateHtml(data) {
-        // The child widget's own options are merged into `data`, so its skin must not
-        // be mistaken for the cell's. Work on a copy instead of mutating the caller's data.
-        data = {...data};
-        delete data['skin'];
+        data = data || {};
         const p = this.getParameters(data), mainDiv = $('#' + p.cellId), content = mainDiv.find('.ks-grid-table-cell-content');
 
         // The inline style is derived purely from the parameters (same as getHtml), so it
