@@ -22,6 +22,7 @@ class GridTablePlusWidget extends Widget {
         this.tabulatorDefinition = null;
         this.tabulatorEvents = {};
         this.lastProcessedData = {};
+        this.lastColumnsSignature = null;
         super.reset();
     }
 
@@ -154,7 +155,11 @@ class GridTablePlusWidget extends Widget {
 
         rawRows.forEach((rawRow, rowIndex) => {
             const row = rawRow && typeof rawRow === 'object' ? rawRow : {};
-            const rowData = {__analogicRowIndex: rowIndex};
+            // Start from a copy of the raw row instead of an empty object, so fields that
+            // aren't backed by a column definition (e.g. a dataTree row's own _children, or any
+            // other repository-side metadata) survive onto the row Tabulator actually receives,
+            // instead of being silently dropped.
+            const rowData = {...row, __analogicRowIndex: rowIndex};
             const cellRow = [];
             columns.forEach((column, columnIndex) => {
                 const field = column.field;
@@ -389,6 +394,12 @@ class GridTablePlusWidget extends Widget {
         const definition = this.tabulatorDefinition || this.prepareTabulatorSetup(this.lastProcessedData || {});
         const options = {...definition.options, columns: definition.columns, data: definition.data};
         this.table = new Tabulator(container, options);
+        // Record what columns the table was actually built with, so the *first* refreshTabulator()
+        // call can correctly detect "columns unchanged" instead of always seeing a change (this.
+        // lastColumnsSignature would otherwise still be null here) and forcing an unnecessary full
+        // rebuild - which is what collapsed a freshly-expanded dataTree branch on someone's very
+        // first interaction after page load, even though nothing about the columns had changed.
+        this.lastColumnsSignature = this.buildColumnsSignature(definition.columns || []);
         this.registerTabulatorEventHandlers(definition.events || {});
     }
 
@@ -802,20 +813,111 @@ class GridTablePlusWidget extends Widget {
             return;
         }
         const definition = this.tabulatorDefinition || {};
-        if (typeof this.table.setColumns === 'function') {
+
+        // Only rebuild the column set when it actually changed shape (e.g. a segmented-view
+        // switch) - setColumns() is a structural rebuild, calling it on every refresh is what
+        // used to force a full column recreation even for a same-shape data-only update.
+        const nextColumnsSignature = this.buildColumnsSignature(definition.columns || []);
+        const columnsChanged = nextColumnsSignature !== this.lastColumnsSignature;
+        if (columnsChanged && typeof this.table.setColumns === 'function') {
             this.table.setColumns(definition.columns || []);
         }
-        if (typeof this.table.replaceData === 'function') {
-            this.table.replaceData(definition.data || []);
-        } else if (typeof this.table.setData === 'function') {
-            this.table.setData(definition.data || []);
-        }
+        this.lastColumnsSignature = nextColumnsSignature;
+
+        // A column-shape change (e.g. switching the segmented view's grouping) usually means
+        // the dataTree hierarchy itself is being rebuilt too - a parent row's _children can go
+        // from a handful of entries to a completely different set. Tabulator's tree module
+        // doesn't reconcile that safely through updateOrAddData()/deleteRow() (it throws deep
+        // inside its own row styling code, e.g. "Cannot read properties of undefined (reading
+        // 'add')" on the next redraw), so treat it as a full replace instead. The incremental
+        // path is only safe for a same-shape, values-only refresh (e.g. a checkbox toggle).
+        this.reconcileTabulatorData(definition.data || [], columnsChanged);
+
         if (typeof this.table.setOptions === 'function' && definition.options) {
             this.table.setOptions(definition.options);
         }
         this.registerTabulatorEventHandlers(definition.events || {});
         if (typeof this.table.redraw === 'function') {
-            this.table.redraw(true);
+            try {
+                // redraw(true) is a *forced* redraw: internally it calls
+                // rowManager.resetScroll(), which unconditionally sets both scrollTop and
+                // scrollLeft back to 0 - that's what was wiping the user's scroll position on
+                // every refresh. Only force it when the columns actually changed (a real view
+                // switch, where jumping back to the top is expected); a same-shape,
+                // incrementally-patched refresh should redraw without touching scroll/tree state.
+                this.table.redraw(columnsChanged);
+            } catch (error) {
+                console.warn('GridTablePlusWidget: redraw failed after refresh', error);
+            }
+        }
+    }
+
+    buildColumnsSignature(columns) {
+        try {
+            return JSON.stringify((columns || []).map(c => ({field: c.field, title: c.title, visible: c.visible !== false})));
+        } catch (error) {
+            return null;
+        }
+    }
+
+    // replaceData() tears down and rebuilds every row component from scratch, which is why a
+    // plain data refresh used to reset dataTree expansion, selection and scroll position even
+    // though the Tabulator instance itself survives. updateOrAddData() patches existing row
+    // components in place by index instead, so per-row UI state is preserved; rows that no
+    // longer exist in the new data are deleted individually first.
+    reconcileTabulatorData(nextData, forceFullReplace = false) {
+        const canReconcile = !forceFullReplace
+            && typeof this.table.updateOrAddData === 'function'
+            && typeof this.table.getData === 'function'
+            && typeof this.table.deleteRow === 'function';
+
+        if (!canReconcile) {
+            if (typeof this.table.replaceData === 'function') {
+                this.table.replaceData(nextData);
+            } else if (typeof this.table.setData === 'function') {
+                this.table.setData(nextData);
+            }
+            return;
+        }
+
+        const indexField = (this.tabulatorDefinition && this.tabulatorDefinition.options && this.tabulatorDefinition.options.index) || '__analogicRowIndex';
+
+        const nextIndexes = new Set();
+        (nextData || []).forEach(row => {
+            if (row && typeof row[indexField] !== 'undefined') {
+                nextIndexes.add(row[indexField]);
+            }
+        });
+
+        let currentIndexes = [];
+        try {
+            currentIndexes = this.table.getData()
+                .map(row => row[indexField])
+                .filter(value => typeof value !== 'undefined');
+        } catch (error) {
+            console.warn('GridTablePlusWidget: unable to read current table data during incremental refresh, falling back to a full replace', error);
+            if (typeof this.table.replaceData === 'function') {
+                this.table.replaceData(nextData);
+            }
+            return;
+        }
+
+        const staleIndexes = currentIndexes.filter(index => !nextIndexes.has(index));
+        staleIndexes.forEach(index => {
+            try {
+                this.table.deleteRow(index);
+            } catch (error) {
+                console.warn(`GridTablePlusWidget: unable to remove stale row "${index}" during incremental refresh`, error);
+            }
+        });
+
+        try {
+            this.table.updateOrAddData(nextData || []);
+        } catch (error) {
+            console.warn('GridTablePlusWidget: updateOrAddData failed during incremental refresh, falling back to a full replace', error);
+            if (typeof this.table.replaceData === 'function') {
+                this.table.replaceData(nextData);
+            }
         }
     }
 

@@ -4,12 +4,9 @@
 
 class TextWidget extends Widget {
 
-    getHtml(widgets, d) {
-        const o = this.options;
-        const v = this.getParameters(d);
-
-        this.setValues(v);
-
+    // Single source of truth for everything getHtml renders as classes/styles/attributes,
+    // shared with updateHtml so the two cannot drift apart.
+    buildParts(d, v) {
         let mainDivClass = [],
             mainDivStyle = this.getGeneralStyles(d).concat(this.getHtmlComponentStylesArray('main', d)),
             titleStyles = this.getHtmlComponentStylesArray('title', d),
@@ -45,12 +42,32 @@ class TextWidget extends Widget {
         v.innerHeight && innerStyles.push('height:', Widget.getPercentOrPixel(v.innerHeight), ';');
         v.innerCursor && innerStyles.push(`cursor:${v.innerCursor};`);
 
+        return {
+            mainDivClass: mainDivClass,
+            mainDivStyle: mainDivStyle.join(''),
+            titleStyles: titleStyles.join(''),
+            bodyStyles: bodyStyles.join(''),
+            innerStyles: innerStyles.join(''),
+            iconStyles: iconStyles.join(''),
+            iconAction: v.iconCustomEventName ? v.iconCustomEventName : 'perform',
+            titleAttr: v.title && !v.tooltip ? Utils.htmlEncode(Utils.stripHtml(v.title)) : ''
+        };
+    }
+
+    getHtml(widgets, d) {
+        const o = this.options;
+        const v = this.getParameters(d);
+
+        this.setValues(v);
+
+        const p = this.buildParts(d, v);
+
         return `
-<div class="ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}" style="${mainDivStyle.join('')}">
-    <div class="ks-text-inner" style="${innerStyles.join('')}" data-id="${o.id}" data-action="text_click" data-ordinal="${v.ordinal}">
-        <div class="ks-text-icon" data-id="${o.id}" data-action="${v.iconCustomEventName ? v.iconCustomEventName : 'perform'}" data-ordinal="${v.ordinal}"><span style="${iconStyles.join('')}" class="${v.icon}"></span></div>
-        <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title && !v.tooltip ? Utils.htmlEncode(Utils.stripHtml(v.title)) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title !== false ? v.title : ''}</div>
-        <div class="ks-text-body" style="${bodyStyles.join('')}">${v.body !== false ? v.body : ''}</div>
+<div class="ks-text ${p.mainDivClass.join(' ')} ks-text-${v.skin}" style="${p.mainDivStyle}">
+    <div class="ks-text-inner" style="${p.innerStyles}" data-id="${o.id}" data-action="text_click" data-ordinal="${v.ordinal}">
+        <div class="ks-text-icon" data-id="${o.id}" data-action="${p.iconAction}" data-ordinal="${v.ordinal}"><span style="${p.iconStyles}" class="${v.icon}"></span></div>
+        <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${p.titleAttr}" data-ordinal="${v.ordinal}" style="${p.titleStyles}">${v.title !== false ? v.title : ''}</div>
+        <div class="ks-text-body" style="${p.bodyStyles}">${v.body !== false ? v.body : ''}</div>
     </div>
 </div>`;
     }
@@ -87,19 +104,13 @@ class TextWidget extends Widget {
         const v = this.getParameters(data), section = this.getSection(),
             title = section.find('.ks-text-title'), body = section.find('.ks-text-body'),
             mainDiv = section.children(), icon = section.find('.ks-text-icon span'),
-            inner = section.find('.ks-text-inner');
+            iconDiv = section.find('.ks-text-icon'), inner = section.find('.ks-text-inner');
 
         this.changeEvents(title, section, v.editable, v.performable, v.enableRightClick);
-        title.data('editable', v.editable ? '1' : '0');
-        title.data('performable', v.performable ? '1' : '0');
 
         this.setValues(v);
 
-        this.updateHtmlComponent('main', data, mainDiv);
-        this.updateHtmlComponent('inner', data, inner);
-        this.updateHtmlComponent('title', data, title);
-        this.updateHtmlComponent('body', data, body);
-        this.updateHtmlComponent('icon', data, icon);
+        const p = this.buildParts(data, v);
 
         //section
         if (v.applyMeasuresToSection) {
@@ -107,44 +118,35 @@ class TextWidget extends Widget {
             Widget.setOrRemoveStyle(section, 'height', v.height ? Widget.getPercentOrPixel(v.height) : false);
         }
 
-        //main
-        if (v.backgroundColor !== false) {
-            mainDiv.css('background-color', v.backgroundColor);
+        //main: style is derived purely from the parameters, so it is rewritten wholesale.
+        //Classes are managed one by one, runtime ones (ks-on, ks-perform-edit) must survive.
+        mainDiv.attr('style', p.mainDivStyle);
+        mainDiv.removeClass((i, c) => (c.match(/(^|\s)ks-text-\S+/g) || []).join(' '));
+        mainDiv.addClass('ks-text-' + v.skin);
+        for (const c of ['has-title', 'has-body', 'pos-icon-left', 'pos-icon-right']) {
+            Widget.addOrRemoveClass(mainDiv, c, p.mainDivClass.includes(c));
         }
-        if (v.skin) {
-            Widget.setSkin(mainDiv, 'ks-text-', v.skin);
-        }
-        Widget.setOrRemoveStyle(mainDiv, 'width', v.width ? Widget.getPercentOrPixel(v.width) : false);
-        Widget.setOrRemoveStyle(mainDiv, 'height', v.height ? Widget.getPercentOrPixel(v.height) : false);
-        Widget.setOrRemoveStyle(mainDiv, 'margin-top', v.marginTop ? Widget.getPercentOrPixel(v.marginTop) : false);
 
         //inner
-        Widget.setOrRemoveStyle(inner, 'cursor', v.innerCursor);
-        Widget.setOrRemoveStyle(inner, 'width', v.innerWidth ? Widget.getPercentOrPixel(v.innerWidth) : false);
-        Widget.setOrRemoveStyle(inner, 'height', v.innerHeight ? Widget.getPercentOrPixel(v.innerHeight) : false);
+        inner.attr('style', p.innerStyles);
+        inner.attr('data-ordinal', v.ordinal).data('ordinal', v.ordinal);
+
+        //icon (attributes are mirrored into jQuery's data cache, which the event handlers read)
+        iconDiv.attr('data-action', p.iconAction).data('action', p.iconAction);
+        iconDiv.attr('data-ordinal', v.ordinal).data('ordinal', v.ordinal);
+        icon.attr('class', v.icon).attr('style', p.iconStyles);
 
         //title
+        title.attr('style', p.titleStyles);
+        title.attr('data-editable', v.editable ? '1' : '0').data('editable', v.editable ? '1' : '0');
+        title.attr('data-performable', v.performable ? '1' : '0').data('performable', v.performable ? '1' : '0');
+        title.attr('data-ordinal', v.ordinal).data('ordinal', v.ordinal);
         title.html(v.title !== false ? v.title : '');
-        title.attr('title', v.title ? Utils.htmlEncode(Utils.stripHtml(v.title)) : '');
-        if (v.title !== false) {
-            mainDiv.addClass('has-title');
-        }
-        Widget.setOrRemoveStyle(title, 'color', v.titleFontColor);
-        Widget.setOrRemoveStyle(title, 'cursor', v.titleCursor);
+        title.attr('title', p.titleAttr);
 
         //body
+        body.attr('style', p.bodyStyles);
         body.html(v.body !== false ? v.body : '');
-        if (v.body !== false) {
-            mainDiv.addClass('has-body');
-        }
-        Widget.setOrRemoveStyle(body, 'color', v.bodyFontColor);
-
-        //icon
-        icon.attr('class', v.icon ? v.icon : '');
-        if (v.iconColor) {
-            icon.css('color', v.iconColor);
-        }
-
     }
 
     getParameters(d) {

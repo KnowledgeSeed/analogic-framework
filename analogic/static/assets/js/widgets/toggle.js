@@ -4,13 +4,9 @@
 
 class ToggleWidget extends Widget {
 
-    getHtml(widgets, d) {
-        const o = this.options;
-
-        const v = this.getParameters(d);
-
-        this.isGridTableHierarchyExpander = v.isGridTableHierarchyExpander;
-
+    // Single source of truth for the classes/styles/content getHtml renders, shared with
+    // updateHtml so the two cannot drift apart.
+    buildParts(d, v) {
         let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d),
             titleStyles = this.getHtmlComponentStylesArray('title', d),
             b = 1 === parseInt(v.value),
@@ -20,6 +16,8 @@ class ToggleWidget extends Widget {
         v.backgroundColor && mainDivStyle.push(`background-color:${v.backgroundColor};`);
         b && mainDivClass.push('ks-on');
         mainDivClass.push(`ks-toggle-${v.skin}`);
+        v.groupId && mainDivClass.push(`ks-toggle-${v.groupId}`);
+        v.isGridTableHierarchyExpander && mainDivClass.push('ks-toggle-expander');
 
         v.titleFontColor && titleStyles.push(`color:${v.titleFontColor};`);
         v.titleFontSize && titleStyles.push(`font-size:${v.titleFontSize}px;`);
@@ -27,48 +25,80 @@ class ToggleWidget extends Widget {
         v.iconFontColor && iconStyles.push(`color:${v.iconFontColor};`);
         v.iconFontSize && iconStyles.push(`font-size:${v.iconFontSize}px;`);
 
-        titleStyles = titleStyles.join('');
-        iconStyles = iconStyles.join('');
+        return {
+            b: b,
+            mainDivClass: mainDivClass,
+            mainDivStyle: mainDivStyle.join(''),
+            titleStyles: titleStyles.join(''),
+            iconStyles: iconStyles.join(''),
+            iconOnHtml: v.icon ? `<span class="${v.icon}"></span>` : '',
+            iconOffHtml: v.iconOff ? `<span class="${v.iconOff}"></span>` : ''
+        };
+    }
 
-        if (v.groupId && b) {
+    getHtml(widgets, d) {
+        const o = this.options;
+
+        const v = this.getParameters(d);
+
+        this.isGridTableHierarchyExpander = v.isGridTableHierarchyExpander;
+
+        const p = this.buildParts(d, v);
+
+        if (v.groupId && p.b) {
             Widgets[v.groupId] = {ordinal: d.ordinal, value: v.titleOn};
         }
 
         return `
-<div class="ks-toggle ${mainDivClass.join(' ')} ${v.groupId ? `ks-toggle-${v.groupId}` : ''} ${v.isGridTableHierarchyExpander ? 'ks-toggle-expander' : ''}" style="${mainDivStyle.join('')}" data-ordinal="${d.ordinal}" data-value="${v.value}" data-id="${o.id}" data-action="switch">
+<div class="ks-toggle ${p.mainDivClass.join(' ')}" style="${p.mainDivStyle}" data-ordinal="${d.ordinal}" data-value="${v.value}" data-id="${o.id}" data-action="switch">
     <div class="ks-toggle-inner ${v.editable === false ? 'readonly' : ''}">
-        <div style="${iconStyles}" class="ks-toggle-icon ks-toggle-icon-on">${v.icon ? `<span class="${v.icon}"></span>` : ''}</div>
-        <div style="${iconStyles}" class="ks-toggle-icon ks-toggle-icon-off">${v.iconOff ? `<span class="${v.iconOff}"></span>` : ''}</div>
-        <div style="${titleStyles}" class="ks-toggle-label ks-toggle-label-on">${v.titleOn}</div>
-        <div style="${titleStyles}" class="ks-toggle-label ks-toggle-label-off">${v.titleOff}</div>
+        <div style="${p.iconStyles}" class="ks-toggle-icon ks-toggle-icon-on">${p.iconOnHtml}</div>
+        <div style="${p.iconStyles}" class="ks-toggle-icon ks-toggle-icon-off">${p.iconOffHtml}</div>
+        <div style="${p.titleStyles}" class="ks-toggle-label ks-toggle-label-on">${v.titleOn}</div>
+        <div style="${p.titleStyles}" class="ks-toggle-label ks-toggle-label-off">${v.titleOff}</div>
     </div>
 </div>`;
     }
 
     updateHtml(data) {
-        const p = this.getParameters(data), section = this.getSection(),
+        const v = this.getParameters(data), section = this.getSection(),
             main = section.find('.ks-toggle'),
+            inner = section.find('.ks-toggle-inner'),
+            titles = section.find('.ks-toggle-label'),
             titleOn = section.find('.ks-toggle-label-on'),
             titleOff = section.find('.ks-toggle-label-off'),
+            icons = section.find('.ks-toggle-icon'),
             iconOn = section.find('.ks-toggle-icon-on'),
             iconOff = section.find('.ks-toggle-icon-off'),
-            b = 1 === parseInt(p.value);
+            p = this.buildParts(data, v);
 
-        if (b) {
-            !main.hasClass('ks-on') && main.addClass('ks-on');
-        } else {
-            main.removeClass('ks-on');
+        // style is derived purely from the parameters, so it is rewritten wholesale
+        main.attr('style', p.mainDivStyle);
+
+        // Every class getHtml derives from the parameters is dropped and re-applied; the
+        // base `ks-toggle` class is kept. `ks-toggle-<skin|groupId|expander>` all share the
+        // prefix, so they have to be handled together.
+        main.removeClass((i, c) => (c.match(/(^|\s)(ks-toggle-\S+|has-label|ks-on)/g) || []).join(' '));
+        main.addClass(p.mainDivClass.join(' '));
+
+        // The attribute is what the markup carries, the data cache is what the click handler
+        // and doHandleSystemEvent read, so both are kept in sync.
+        main.attr('data-value', v.value).data('value', v.value);
+        main.attr('data-ordinal', data.ordinal).data('ordinal', data.ordinal);
+
+        if (v.groupId && p.b) {
+            Widgets[v.groupId] = {ordinal: data.ordinal, value: v.titleOn};
         }
 
-        titleOn.html(p.titleOn);
-        Widget.setOrRemoveStyle(titleOn, 'color', p.titleFontColor);
+        inner.toggleClass('readonly', v.editable === false);
 
-        Widget.setOrRemoveStyle(iconOn, 'color', p.iconFontColor);
+        icons.attr('style', p.iconStyles);
+        iconOn.html(p.iconOnHtml);
+        iconOff.html(p.iconOffHtml);
 
-        titleOff.html(p.titleOff);
-        Widget.setOrRemoveStyle(titleOff, 'color', p.titleFontColor);
-
-        Widget.setOrRemoveStyle(iconOff, 'color', p.iconFontColor);
+        titles.attr('style', p.titleStyles);
+        titleOn.html(v.titleOn);
+        titleOff.html(v.titleOff);
     }
 
     getParameters(d) {

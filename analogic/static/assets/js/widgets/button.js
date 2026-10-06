@@ -3,11 +3,9 @@
 'use strict';
 
 class ButtonWidget extends Widget {
-    getHtml(widgets, d) {
-        const o = this.options;
-
-        const v = this.getParameters(d);
-
+    // Single source of truth for the classes/styles/content getHtml renders, shared with
+    // updateHtml so the two cannot drift apart.
+    buildParts(d, v) {
         let aClass = [],
             aStyle = this.getGeneralStyles(d).concat(this.getHtmlComponentStylesArray('main', d)),
             innerStyle = this.getHtmlComponentStylesArray('inner', d),
@@ -17,8 +15,6 @@ class ButtonWidget extends Widget {
             dividerStyle = this.getHtmlComponentStylesArray('divider', d),
             labelStyle = this.getHtmlComponentStylesArray('label', d),
             iconInfo;
-
-        /* Override css */
 
         /* Add defined css class */
         v.icon !== false && aClass.push('has-icon');
@@ -60,15 +56,35 @@ class ButtonWidget extends Widget {
         v.dividerWidth && dividerStyle.push('width:', v.dividerWidth, 'px;');
         iconInfo = this.getIcon(v, iconSpanStyle);
 
+        return {
+            aClass: aClass,
+            aStyle: aStyle.join(''),
+            innerStyle: innerStyle.join(''),
+            contentStyle: contentStyle.join(''),
+            iconStyle: iconStyle.join(''),
+            dividerStyle: dividerStyle.join(''),
+            labelStyle: labelStyle.join(''),
+            iconHtml: v.icon !== false ? iconInfo.html : '',
+            action: v.paste ? 'launchpaste' : 'launch'
+        };
+    }
+
+    getHtml(widgets, d) {
+        const o = this.options;
+
+        const v = this.getParameters(d);
+
+        const p = this.buildParts(d, v);
+
         this.setValues(d, v);
 
         return `
-<a style="${aStyle.join('')}" ${o.confirmMessage2 ? `data-confirmmessage2="${o.confirmMessage2}" ` : ''} ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''} ${v.url ? `target="_blank" href="${v.url}" data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}" ` : `data-id="${o.id}" data-action="${v.paste ? "launchpaste" : "launch"}"`} class="ks-button ${aClass.join(' ')} ks-button-${v.skin} ">
-    <div class="ks-button-inner" style="${innerStyle.join('')}">
-        <div class="ks-button-content" style="${contentStyle.join('')}">
-            <div class="ks-button-icon" style="${iconStyle.join('')}">${v.icon !== false ? iconInfo.html : ''}</div>
-            <div class="ks-button-divider" style="${dividerStyle.join('')}"></div>
-            <div class="ks-button-label" title="${Utils.htmlEncode(v.label)}" style="${labelStyle.join('')}">${v.label}</div>
+<a style="${p.aStyle}" ${o.confirmMessage2 ? `data-confirmmessage2="${o.confirmMessage2}" ` : ''} ${o.confirmMessage ? `data-confirmmessage="${o.confirmMessage}" ` : ''} ${v.url ? `target="_blank" href="${v.url}" data-id="${o.id}" data-action="${p.action}" ` : `data-id="${o.id}" data-action="${p.action}"`} class="ks-button ${p.aClass.join(' ')} ks-button-${v.skin} ">
+    <div class="ks-button-inner" style="${p.innerStyle}">
+        <div class="ks-button-content" style="${p.contentStyle}">
+            <div class="ks-button-icon" style="${p.iconStyle}">${p.iconHtml}</div>
+            <div class="ks-button-divider" style="${p.dividerStyle}"></div>
+            <div class="ks-button-label" title="${Utils.htmlEncode(v.label)}" style="${p.labelStyle}">${v.label}</div>
         </div>
     </div>
 </a>`;
@@ -109,25 +125,17 @@ class ButtonWidget extends Widget {
     }
 
     updateHtml(data) {
-        const o = this.options, v = this.getParameters(data), section = this.getSection(),
+        const v = this.getParameters(data), section = this.getSection(),
             main = section.children(),
             innerDiv = section.find('.ks-button-inner'),
+            contentDiv = section.find('.ks-button-content'),
             iconDiv = section.find('.ks-button-icon'),
-            labelDiv = section.find('.ks-button-label'),
-            generalStyles = this.getGeneralStyles(data),
-            iconStyle = this.getHtmlComponentStylesArray('icon', data),
-            iconSpanStyle = this.getHtmlComponentStylesArray('iconSpan', data);
-        let iconInfo;
+            dividerDiv = section.find('.ks-button-divider'),
+            labelDiv = section.find('.ks-button-label');
 
         this.setValues(data, v);
 
-        this.updateHtmlComponent('main', data, main);
-        this.updateHtmlComponent('inner', data, innerDiv);
-        this.updateHtmlComponent('content', data, null, section);
-        this.updateHtmlComponent('divider', data, null, section);
-        this.updateHtmlComponent('icon', data, iconDiv);
-        this.updateHtmlComponent('label', data, labelDiv);
-
+        const p = this.buildParts(data, v);
 
         //section
         if (v.applyMeasuresToSection) {
@@ -137,39 +145,40 @@ class ButtonWidget extends Widget {
 
         v.visible ? section.show() : section.hide();
 
-        //main
-        this.updateMeasures(main, generalStyles);
-        v.borderColor && main.css('border-color', v.borderColor);
-        if (v.skin) {
-            Widget.setSkin(main, 'ks-button-', v.skin);
+        //main: style is derived purely from the parameters, so it is rewritten wholesale, except
+        //for the display that framework/api.js toggles on info buttons at runtime.
+        const infoDisplay = main[0] && main[0].style.display;
+        main.attr('style', p.aStyle);
+        if (v.isInfo !== false && infoDisplay) {
+            main.css('display', infoDisplay);
         }
 
-        //inner
-        v.backgroundColor && innerDiv.css('background-color', v.backgroundColor);
-        v.borderWidth && innerDiv.css('border-width', v.borderWidth);
-        v.dividerWidth && innerDiv.css('divider-width', v.dividerWidth);
+        // Every class getHtml derives from the parameters (state classes and the skin) is
+        // dropped and re-applied, the base `ks-button` class is kept.
+        main.removeClass((i, c) => (c.match(/(^|\s)(has-icon|has-label|has-box-shadow|pos-icon-\S+|ks-button-\S+)/g) || []).join(' '));
+        main.addClass(p.aClass.join(' ')).addClass('ks-button-' + v.skin);
+
+        // The attribute is what the markup carries, the data cache is what the event
+        // handlers read, so both are kept in sync.
+        main.attr('data-action', p.action).data('action', p.action);
+        if (v.url) {
+            main.attr({target: '_blank', href: v.url});
+        } else {
+            main.removeAttr('target').removeAttr('href');
+        }
+
+        innerDiv.attr('style', p.innerStyle);
+        contentDiv.attr('style', p.contentStyle);
+        dividerDiv.attr('style', p.dividerStyle);
 
         //icon
-
-        if (v.icon !== false) {
-            iconInfo = this.getIcon(v, iconSpanStyle);
-            iconDiv.attr('style', iconStyle.join(''));
-            iconDiv.html(iconInfo.html);
-        } else {
-            iconDiv.html('');
-        }
+        iconDiv.attr('style', p.iconStyle);
+        iconDiv.html(p.iconHtml);
 
         //label
-
-        if (v.label !== '') {
-            labelDiv.html(v.label);
-            !main.hasClass('has-label') && main.addClass('has-label');
-        } else {
-            labelDiv.html('');
-            main.hasClass('has-label') && main.removeClass('has-label');
-        }
-
-        v.fontColor && labelDiv.css('color', v.fontColor);
+        labelDiv.attr('style', p.labelStyle);
+        labelDiv.attr('title', Utils.htmlEncode(v.label));
+        labelDiv.html(v.label);
     }
 
     getParameters(d) {
