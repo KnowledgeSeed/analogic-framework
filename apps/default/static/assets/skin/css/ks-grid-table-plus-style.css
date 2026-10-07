@@ -1,0 +1,164 @@
+/*
+ * "reporting" skin: a client/activity-style financial grid (period columns + a total column,
+ * a 2-level dataTree, zebra-striped groups, and a visual distinction between editable and
+ * read-only cells). Apply with `skin: 'reporting'` on the widget, and use the class hooks below
+ * from your column formatters / rowFormatter:
+ *   - column: `cssClass: 'ks-gtp-report-cell--editable'` / `'ks-gtp-report-cell--readonly'`
+ *   - rowFormatter: `row.getElement().classList.add('ks-gtp-report-row--even'|'--odd')`
+ *   - label formatter: prefix the text with `<span class="ks-gtp-report-dot ks-gtp-report-dot--parent|--child"></span>`
+ *   - a bottomCalc row is used as-is for the summary row (styled below)
+ */
+ #analogicTablePlusRichDemo {
+    width: 100%;
+}
+
+.ks-grid-table-plus-reporting {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px 16px 16px;
+    background: #ffffff;
+}
+
+.ks-grid-table-plus-reporting .tabulator {
+    font-size: 13px;
+    color: #1e293b;
+}
+
+.ks-grid-table-plus-reporting .tabulator .tabulator-header {
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.ks-grid-table-plus-reporting .tabulator .tabulator-header .tabulator-col {
+    background: #ffffff;
+    color: #64748b;
+    font-weight: 600;
+    border-right: none;
+    align-items: center;
+}
+
+.ks-grid-table-plus-reporting .tabulator .tabulator-header .tabulator-col-content {
+    text-align: right;
+}
+
+.ks-grid-table-plus-reporting .tabulator .tabulator-row {
+    border-bottom: 1px solid #f1f5f9;
+    background: #ffffff;
+    background-color: #ffffff !important;
+    min-height: 34px;
+    display: flex;
+}
+
+.ks-grid-table-plus-reporting .tabulator .tabulator-row.ks-gtp-report-row--even {
+    background: #f8fafc;
+}
+
+.ks-grid-table-plus-reporting .tabulator .tabulator-row .tabulator-cell {
+    border-right: none;
+}
+
+.ks-grid-table-plus-reporting .tabulator .tabulator-row .tabulator-cell .tabulator-data-tree-branch {
+    display: none;
+}
+
+.ks-grid-table-plus-reporting .tabulator .tabulator-row.tabulator-tree-level-0 .tabulator-cell:first-child {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+
+/* tree toggle icon: recolour Tabulator's default triangle to the report's accent blue */
+.ks-grid-table-plus-reporting .tabulator-data-tree-control {
+    border-color: #2563eb;
+    background: transparent;
+}
+
+.ks-grid-table-plus-reporting .tabulator-data-tree-control:hover {
+    background: #eff6ff;
+}
+
+.ks-grid-table-plus-reporting .tabulator-data-tree-control-collapse,
+.ks-grid-table-plus-reporting .tabulator-data-tree-control-expand {
+    border-color: #2563eb;
+}
+
+/* level-0 (parent/group) rows read slightly heavier than level-1 (leaf) rows */
+.ks-grid-table-plus-reporting .tabulator-tree-level-0 {
+    font-weight: 600;
+}
+
+.ks-grid-table-plus-reporting .tabulator-tree-level-1 {
+    font-weight: 400;
+    color: #334155;
+}
+
+/* status dot rendered by the label column's formatter, see the doc comment above */
+.ks-gtp-report-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.ks-gtp-report-dot--parent {
+    background: #2563eb;
+}
+
+.ks-gtp-report-dot--child {
+    background: #93c5fd;
+    margin-left: 15px;
+}
+
+/* editable vs read-only cells - the main visual ask: editable cells look like a live input
+   (white, inset border), read-only cells look flat/disabled (light grey fill, no border) */
+.ks-grid-table-plus-reporting .ks-gtp-report-cell--editable {
+    background: #ffffff;
+    cursor: text;
+}
+
+.ks-grid-table-plus-reporting .ks-gtp-report-cell--editable:hover {
+    box-shadow: inset 0 0 0 1px #93c5fd;
+}
+
+.ks-grid-table-plus-reporting .ks-gtp-report-cell--readonly {
+    background: #f1f5f9;
+    color: #64748b;
+    cursor: not-allowed;
+}
+
+/* a column meant to read as a running/period total: subtly separated with a divider + tint */
+.ks-grid-table-plus-reporting .ks-gtp-report-col-total {
+    border-left: 2px solid #bfdbfe !important;
+    background: #f8fafc;
+    font-weight: 700;
+}
+
+/* bottomCalc summary row (e.g. bottomCalc: 'sum'). Tabulator's own base theme renders the
+   bottom calc row inside `.tabulator-footer .tabulator-calcs-holder` and sets its background
+   with `!important` there (`.tabulator .tabulator-footer .tabulator-calcs-holder .tabulator-row
+   {background:#f3f3f3!important}`) - 4 chained classes. This needs an equally deep selector
+   (plus !important) to actually win the cascade; a shorter !important rule alone is not enough. */
+.ks-grid-table-plus-reporting .tabulator .tabulator-footer .tabulator-calcs-holder .tabulator-row.tabulator-calcs-bottom {
+    border-top: 2px solid #cbd5e1;
+    background: #eff6ff !important;
+    font-weight: 700;
+}
+
+/* small trailing icon column, e.g. a per-row note/comment indicator */
+.ks-gtp-report-note-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    color: #94a3b8;
+    background: #f1f5f9;
+    font-size: 12px;
+}
+
+.ks-gtp-report-note-icon--active {
+    color: #ffffff;
+    background: #2563eb;
+}

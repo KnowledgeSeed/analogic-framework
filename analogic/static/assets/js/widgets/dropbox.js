@@ -9,14 +9,15 @@ class DropBoxWidget extends Widget {
         return `<section id="${this.options.id}"><div class="ks-dropbox ks-dropbox-error"><h3 style="color:red;">Error! Dropdown failed to load.</h3></div></section>`;
     }
 
-    getHtml(widgets, d) {
+    // Single source of truth for the styles/classes/title getHtml renders around the item
+    // list, shared with updateHtml so the two cannot drift apart. The item list and the
+    // placeholder are not part of it: they depend on processItems(), which has side effects.
+    buildParts(d, v) {
         const o = this.options;
-
-        const v = this.getParameters(d), pi = this.processItems(d, o, v);
 
         let hide = o.hideIfNoData === true && d.length === 0;
 
-        let mainDivStyle = this.getGeneralStyles(d), titleStyles = [], textStyles = [], panelStyles = [];
+        let mainDivStyle = this.getGeneralStyles(d), titleStyles = [], textStyles = [];
 
         v.titleTextAlignment && titleStyles.push(`display: flex;padding-left: 0px;justify-content: ${v.titleTextAlignment === 'start' || v.titleTextAlignment === 'end' ? `flex-${v.titleTextAlignment}` : v.titleTextAlignment};`);
         v.titleFontColor && titleStyles.push(`color:${v.titleFontColor};`);
@@ -26,27 +27,42 @@ class DropBoxWidget extends Widget {
         v.textFontColor && textStyles.push(`color:${v.textFontColor};`);
         v.textFontSize && textStyles.push(`font-size:${v.textFontSize}px;`);
 
-        panelStyles.push('display:none;');
-        v.panelWidth && panelStyles.push(`width:${v.panelWidth}px;`);
-
         hide && mainDivStyle.push('display:none;');
 
+        return {
+            mainDivStyle: mainDivStyle.join(''),
+            titleStyles: titleStyles.join(''),
+            textStyles: textStyles.join(''),
+            titleHtml: v.titleVisible ? v.title : '',
+            readonly: v.editable === false,
+            inputReadonly: v.editable === false || v.disableSearch === true,
+            panelWidthStyle: v.panelWidth ? `width:${v.panelWidth}px;` : ''
+        };
+    }
+
+    getHtml(widgets, d) {
+        const v = this.getParameters(d), pi = this.processItems(d, this.options, v);
+
+        const p = this.buildParts(d, v);
+
+        // the panel starts closed, opening/closing is runtime state
+        const panelStyles = 'display:none;' + p.panelWidthStyle;
 
         return `
-<div class="ks-dropbox ks-dropbox-${v.skin}" style="${mainDivStyle.join('')}">
+<div class="ks-dropbox ks-dropbox-${v.skin}" style="${p.mainDivStyle}">
     <div class="ks-dropbox-inner">
-        <div class="ks-dropbox-title" style="${titleStyles.join('')}">
-            <span class="ks-dropbox-title-primary">${v.titleVisible ? v.title : ''}</span>
+        <div class="ks-dropbox-title" style="${p.titleStyles}">
+            <span class="ks-dropbox-title-primary">${p.titleHtml}</span>
             <span class="ks-dropbox-title-secondary"></span>
         </div>
-        <div class="ks-dropbox-field ${v.editable === false ? 'readonly' : ''}">
+        <div class="ks-dropbox-field ${p.readonly ? 'readonly' : ''}">
             <div class="ks-dropbox-field-inner">
-                <input ${v.editable === false || v.disableSearch === true  ? 'readonly' : ''} style="${textStyles.join('')}" type="text" class="ks-dropbox-input search-text" placeholder="${pi.selectedItems !== '' ? pi.selectedItems : v.placeHolder}">
+                <input ${p.inputReadonly ? 'readonly' : ''} style="${p.textStyles}" type="text" class="ks-dropbox-input search-text" placeholder="${pi.selectedItems !== '' ? pi.selectedItems : v.placeHolder}">
                 <div class="ks-dropbox-icon"></div>
             </div>
         </div>
     </div>
-    <div class="ks-dropbox-panel" style="${panelStyles.join('')}">
+    <div class="ks-dropbox-panel" style="${panelStyles}">
         ${v.backdrop ? '<div class="ks-dropbox-backdrop"><\/div>' : ''}
         <div class="ks-dropbox-panel-inner">${this.getItems(pi.data, v)}</div>
     </div>
@@ -130,7 +146,26 @@ class DropBoxWidget extends Widget {
 
     updateHtml(data) {
         const p = this.getParameters(data), section = this.getSection(),
-            inner = section.find('.ks-dropbox-panel-inner'), input = section.find('.ks-dropbox-input');
+            main = section.find('.ks-dropbox').first(),
+            panel = section.find('.ks-dropbox-panel'),
+            inner = section.find('.ks-dropbox-panel-inner'), input = section.find('.ks-dropbox-input'),
+            parts = this.buildParts(data, p);
+
+        // style is derived purely from the parameters, so it is rewritten wholesale
+        main.attr('style', parts.mainDivStyle);
+        main.removeClass((i, c) => (c.match(/(^|\s)ks-dropbox-\S+/g) || []).join(' '));
+        main.addClass('ks-dropbox-' + p.skin);
+
+        section.find('.ks-dropbox-title').attr('style', parts.titleStyles);
+        section.find('.ks-dropbox-title-primary').html(parts.titleHtml);
+
+        section.find('.ks-dropbox-field').toggleClass('readonly', parts.readonly);
+        input.prop('readOnly', parts.inputReadonly);
+        input.attr('style', parts.textStyles);
+
+        // only the width: the panel's display is runtime state (open/closed)
+        Widget.setOrRemoveStyle(panel, 'width', p.panelWidth ? p.panelWidth + 'px' : false);
+
         if (this.state.serverSideFilter) {
             let previouslySelected = this.items.filter(e => e.on === true),
                 previouslySelectedName = previouslySelected.map(e => e.name);

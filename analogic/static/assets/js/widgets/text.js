@@ -4,12 +4,9 @@
 
 class TextWidget extends Widget {
 
-    getHtml(widgets, d) {
-        const o = this.options;
-        const v = this.getParameters(d);
-
-        this.setValues(v);
-
+    // Single source of truth for everything getHtml renders as classes/styles/attributes,
+    // shared with updateHtml so the two cannot drift apart.
+    buildParts(d, v) {
         let mainDivClass = [],
             mainDivStyle = this.getGeneralStyles(d).concat(this.getHtmlComponentStylesArray('main', d)),
             titleStyles = this.getHtmlComponentStylesArray('title', d),
@@ -45,48 +42,67 @@ class TextWidget extends Widget {
         v.innerHeight && innerStyles.push('height:', Widget.getPercentOrPixel(v.innerHeight), ';');
         v.innerCursor && innerStyles.push(`cursor:${v.innerCursor};`);
 
-        const hasIcon = !v.compactHtml || v.icon,
+        return {
+            mainDivClass: mainDivClass,
+            mainDivStyle: mainDivStyle.join(''),
+            titleStyles: titleStyles.join(''),
+            bodyStyles: bodyStyles.join(''),
+            innerStyles: innerStyles.join(''),
+            iconStyles: iconStyles.join(''),
+            iconAction: v.iconCustomEventName ? v.iconCustomEventName : 'perform',
+            titleAttr: v.title && !v.tooltip ? Utils.htmlEncode(Utils.stripHtml(v.title)) : ''
+        };
+    }
+
+    getHtml(widgets, d) {
+        const o = this.options;
+        const v = this.getParameters(d);
+
+        this.setValues(v);
+
+        const p = this.buildParts(d, v),
+            hasIcon = !v.compactHtml || v.icon,
             hasTitle = !v.compactHtml || v.title !== false || v.editable,
             hasBody = !v.compactHtml || v.body;
 
         return `
-<div class="ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}" style="${mainDivStyle.join('')}">
-    <div class="ks-text-inner" style="${innerStyles.join('')}" data-id="${o.id}" data-action="text_click" data-ordinal="${v.ordinal}">
-        ${hasIcon ? this.getIconHtml(v, iconStyles) : ''}
-        ${hasTitle ? this.getTitleHtml(v, titleStyles) : ''}
-        ${hasBody ? this.getBodyHtml(v, bodyStyles) : ''}
+<div class="ks-text ${p.mainDivClass.join(' ')} ks-text-${v.skin}" style="${p.mainDivStyle}">
+    <div class="ks-text-inner" style="${p.innerStyles}" data-id="${o.id}" data-action="text_click" data-ordinal="${v.ordinal}">
+        ${hasIcon ? this.getIconHtml(v, p) : ''}
+        ${hasTitle ? this.getTitleHtml(v, p) : ''}
+        ${hasBody ? this.getBodyHtml(v, p) : ''}
     </div>
 </div>`;
     }
 
-    getIconHtml(v, iconStyles = []) {
-        return `<div class="ks-text-icon" data-id="${this.options.id}" data-action="${v.iconCustomEventName ? v.iconCustomEventName : 'perform'}" data-ordinal="${v.ordinal}"><span style="${iconStyles.join('')}" class="${v.icon}"></span></div>`;
+    getIconHtml(v, p) {
+        return `<div class="ks-text-icon" data-id="${this.options.id}" data-action="${p.iconAction}" data-ordinal="${v.ordinal}"><span style="${p.iconStyles}" class="${v.icon}"></span></div>`;
     }
 
-    getTitleHtml(v, titleStyles = []) {
-        return `<div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title && !v.tooltip ? Utils.htmlEncode(Utils.stripHtml(v.title)) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title !== false ? v.title : ''}</div>`;
+    getTitleHtml(v, p) {
+        return `<div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${p.titleAttr}" data-ordinal="${v.ordinal}" style="${p.titleStyles}">${v.title !== false ? v.title : ''}</div>`;
     }
 
-    getBodyHtml(v, bodyStyles = []) {
-        return `<div class="ks-text-body" style="${bodyStyles.join('')}">${v.body !== false ? v.body : ''}</div>`;
+    getBodyHtml(v, p) {
+        return `<div class="ks-text-body" style="${p.bodyStyles}">${v.body !== false ? v.body : ''}</div>`;
     }
 
     // With compactHtml the icon, title and body elements are only rendered when they have
     // something to show, so a later content update may need one that is not in the DOM yet.
-    addMissingCompactElements(inner, v) {
+    addMissingCompactElements(inner, v, p) {
         if (v.icon && !inner.children('.ks-text-icon').length) {
-            inner.prepend(this.getIconHtml(v));
+            inner.prepend(this.getIconHtml(v, p));
         }
 
         const body = inner.children('.ks-text-body');
 
         if ((v.title !== false || v.editable) && !inner.children('.ks-text-title').length) {
-            const titleHtml = this.getTitleHtml(v);
+            const titleHtml = this.getTitleHtml(v, p);
             body.length ? body.before(titleHtml) : inner.append(titleHtml);
         }
 
         if (v.body && !body.length) {
-            inner.append(this.getBodyHtml(v));
+            inner.append(this.getBodyHtml(v, p));
         }
     }
 
@@ -111,22 +127,16 @@ class TextWidget extends Widget {
             find = selector => $(sectionElement ? sectionElement.querySelector(selector) : null),
             mainDiv = section.children(), inner = find('.ks-text-inner');
 
-        if (v.compactHtml) {
-            this.addMissingCompactElements(inner, v);
-        }
-
-        const title = find('.ks-text-title'), body = find('.ks-text-body'), icon = find('.ks-text-icon span');
-
-        title.data('editable', v.editable ? '1' : '0').attr('data-editable', v.editable ? '1' : '0');
-        title.data('performable', v.performable ? '1' : '0').attr('data-performable', v.performable ? '1' : '0');
-
         this.setValues(v);
 
-        this.updateHtmlComponent('main', data, mainDiv);
-        this.updateHtmlComponent('inner', data, inner);
-        this.updateHtmlComponent('title', data, title);
-        this.updateHtmlComponent('body', data, body);
-        this.updateHtmlComponent('icon', data, icon);
+        const p = this.buildParts(data, v);
+
+        if (v.compactHtml) {
+            this.addMissingCompactElements(inner, v, p);
+        }
+
+        const title = find('.ks-text-title'), body = find('.ks-text-body'), iconDiv = find('.ks-text-icon'),
+            icon = find('.ks-text-icon span');
 
         //section
         if (v.applyMeasuresToSection) {
@@ -134,44 +144,35 @@ class TextWidget extends Widget {
             Widget.setOrRemoveStyle(section, 'height', v.height ? Widget.getPercentOrPixel(v.height) : false);
         }
 
-        //main
-        if (v.backgroundColor !== false) {
-            mainDiv.css('background-color', v.backgroundColor);
+        //main: style is derived purely from the parameters, so it is rewritten wholesale.
+        //Classes are managed one by one, runtime ones (ks-on, ks-perform-edit) must survive.
+        mainDiv.attr('style', p.mainDivStyle);
+        mainDiv.removeClass((i, c) => (c.match(/(^|\s)ks-text-\S+/g) || []).join(' '));
+        mainDiv.addClass('ks-text-' + v.skin);
+        for (const c of ['has-title', 'has-body', 'pos-icon-left', 'pos-icon-right']) {
+            Widget.addOrRemoveClass(mainDiv, c, p.mainDivClass.includes(c));
         }
-        if (v.skin) {
-            Widget.setSkin(mainDiv, 'ks-text-', v.skin);
-        }
-        Widget.setOrRemoveStyle(mainDiv, 'width', v.width ? Widget.getPercentOrPixel(v.width) : false);
-        Widget.setOrRemoveStyle(mainDiv, 'height', v.height ? Widget.getPercentOrPixel(v.height) : false);
-        Widget.setOrRemoveStyle(mainDiv, 'margin-top', v.marginTop ? Widget.getPercentOrPixel(v.marginTop) : false);
 
         //inner
-        Widget.setOrRemoveStyle(inner, 'cursor', v.innerCursor);
-        Widget.setOrRemoveStyle(inner, 'width', v.innerWidth ? Widget.getPercentOrPixel(v.innerWidth) : false);
-        Widget.setOrRemoveStyle(inner, 'height', v.innerHeight ? Widget.getPercentOrPixel(v.innerHeight) : false);
+        inner.attr('style', p.innerStyles);
+        inner.attr('data-ordinal', v.ordinal).data('ordinal', v.ordinal);
+
+        //icon (attributes are mirrored into jQuery's data cache, which the event handlers read)
+        iconDiv.attr('data-action', p.iconAction).data('action', p.iconAction);
+        iconDiv.attr('data-ordinal', v.ordinal).data('ordinal', v.ordinal);
+        icon.attr('class', v.icon).attr('style', p.iconStyles);
 
         //title
+        title.attr('style', p.titleStyles);
+        title.attr('data-editable', v.editable ? '1' : '0').data('editable', v.editable ? '1' : '0');
+        title.attr('data-performable', v.performable ? '1' : '0').data('performable', v.performable ? '1' : '0');
+        title.attr('data-ordinal', v.ordinal).data('ordinal', v.ordinal);
         TextWidget.setContent(title, v.title !== false ? v.title : '');
-        title.attr('title', v.title ? Utils.htmlEncode(Utils.stripHtml(v.title)) : '');
-        if (v.title !== false) {
-            mainDiv.addClass('has-title');
-        }
-        Widget.setOrRemoveStyle(title, 'color', v.titleFontColor);
-        Widget.setOrRemoveStyle(title, 'cursor', v.titleCursor);
+        title.attr('title', p.titleAttr);
 
         //body
+        body.attr('style', p.bodyStyles);
         TextWidget.setContent(body, v.body !== false ? v.body : '');
-        if (v.body !== false) {
-            mainDiv.addClass('has-body');
-        }
-        Widget.setOrRemoveStyle(body, 'color', v.bodyFontColor);
-
-        //icon
-        icon.attr('class', v.icon ? v.icon : '');
-        if (v.iconColor) {
-            icon.css('color', v.iconColor);
-        }
-
     }
 
     // jQuery's html() is only needed for content with inline scripts, which innerHTML would not run.
@@ -228,7 +229,7 @@ class TextWidget extends Widget {
     // enableRightClick state when the event fires. So they survive content updates that
     // add or replace the inner elements, and don't have to be rebound when the state changes.
     initEventHandlers() {
-        const section = this.getSection(), o = this.options;
+        const section = this.getSection();
         const amIOnGridTable = this.amIOnAGridTable();
 
         section.off('.textwidget');
@@ -237,7 +238,9 @@ class TextWidget extends Widget {
             const c = $(e.currentTarget);
             // A click inside the input of a title that is already being edited must not restart the edit.
             if ((this.editable || this.performable) && !c.find('.ks-text-title-input').length) {
-                TextWidget.startEdit(c, section, o, amIOnGridTable, this.pasteDataByServerSide);
+                // The options are read here, not at bind time: a grid table cell replaces
+                // them on every content update.
+                TextWidget.startEdit(c, section, this.options, amIOnGridTable, this.pasteDataByServerSide);
             }
         });
 

@@ -4,18 +4,13 @@
 
 class TextAreaWidget extends Widget {
 
-    getHtml(widgets, d) {
+    // Single source of truth for the classes/styles/content getHtml renders, shared with
+    // updateHtml so the two cannot drift apart. `d` has to be normalized already (see
+    // normalizeData).
+    buildParts(d, v) {
         const o = this.options;
-        d = d || {value: ''};
-        if (!d.value) {
-            d.value = '';
-        }
 
         let hide = o.hideIfNoData === true && d.value === '';
-
-        const v = this.getParameters(d);
-        this.editable = v.editable;
-        this.value = Utils.escapeText(d.value);
 
         let mainDivClass = [], mainDivStyle = this.getGeneralStyles(d),
             titleStyles = this.getHtmlComponentStylesArray('title', d),
@@ -36,18 +31,48 @@ class TextAreaWidget extends Widget {
 
         hide && mainDivStyle.push('display:none;');
 
+        return {
+            mainDivClass: mainDivClass,
+            mainDivStyle: mainDivStyle.join(''),
+            titleStyles: titleStyles.join(''),
+            textStyles: textStyles.join(''),
+            iconHtml: v.icon !== false ? `<img style="${iconStyles.join('')}" src="${app.applicationAssetsUrl}/skin/images/${v.icon}">` : ''
+        };
+    }
+
+    normalizeData(d) {
+        d = d || {value: ''};
+
+        if (!d.value) {
+            d.value = '';
+        }
+
+        return d;
+    }
+
+    getHtml(widgets, d) {
+        const o = this.options;
+
+        d = this.normalizeData(d);
+
+        const v = this.getParameters(d);
+        this.editable = v.editable;
+        this.value = Utils.escapeText(d.value);
+
+        const p = this.buildParts(d, v);
+
         return `
-<div class="ks-textarea ${mainDivClass.join(' ')} ks-textarea-${v.skin}"  style="${mainDivStyle.join('')}">
+<div class="ks-textarea ${p.mainDivClass.join(' ')} ks-textarea-${v.skin}"  style="${p.mainDivStyle}">
     <div class="ks-textarea-inner">
-        <div class="ks-textarea-title" style="${titleStyles.join('')}">
+        <div class="ks-textarea-title" style="${p.titleStyles}">
             <span class="ks-textarea-title-primary">${v.title ? v.title : ''}</span>
             <span class="ks-textarea-title-secondary"></span>
         </div>
         <div class="ks-textarea-field">
             <div class="ks-textarea-field-inner">
-                <div class="ks-textarea-icon">${v.icon !== false ? `<img style="${iconStyles.join('')}" src="${app.applicationAssetsUrl}/skin/images/${v.icon}">` : ''}</div>
+                <div class="ks-textarea-icon">${p.iconHtml}</div>
                 <div class="ks-textarea-divider"></div>
-                <textarea ${v.editable ? '' : 'disabled'} ${v.placeholder !== false ? `placeholder="${v.placeholder}"` : ''} style="${textStyles.join('')}" data-action="save" data-ordinal="${d.ordinal}" data-id="${o.id}" class="ks-textarea-input" >${d.value || ''}</textarea>
+                <textarea ${v.editable ? '' : 'disabled'} ${v.placeholder !== false ? `placeholder="${v.placeholder}"` : ''} style="${p.textStyles}" data-action="save" data-ordinal="${d.ordinal}" data-id="${o.id}" class="ks-textarea-input" >${d.value || ''}</textarea>
             </div>
         </div>
     </div>
@@ -90,16 +115,41 @@ class TextAreaWidget extends Widget {
     }
 
     updateHtml(data) {
-        let d = data || {value: ''};
-        if (!d.value) {
-            d.value = '';
-        }
-        const p = this.getParameters(d), section = this.getSection(),
-        textarea = section.find('textarea');
+        const section = this.getSection(),
+            main = section.find('.ks-textarea').first(),
+            titleDiv = section.find('.ks-textarea-title'),
+            titlePrimary = section.find('.ks-textarea-title-primary'),
+            iconDiv = section.find('.ks-textarea-icon'),
+            textarea = section.find('textarea');
 
-        this.editable = p.editable;
+        const d = this.normalizeData(data), v = this.getParameters(d);
+
+        this.editable = v.editable;
         this.value = Utils.escapeText(d.value);
 
+        const p = this.buildParts(d, v);
+
+        // style is derived purely from the parameters, so it is rewritten wholesale
+        main.attr('style', p.mainDivStyle);
+
+        // Every class getHtml derives from the parameters (state classes and the skin) is
+        // dropped and re-applied, the base `ks-textarea` class is kept.
+        main.removeClass((i, c) => (c.match(/(^|\s)(has-title|has-icon|has-highlight|ks-textarea-\S+)/g) || []).join(' '));
+        main.addClass(p.mainDivClass.join(' ')).addClass('ks-textarea-' + v.skin);
+
+        titleDiv.attr('style', p.titleStyles);
+        titlePrimary.html(v.title ? v.title : '');
+
+        iconDiv.html(p.iconHtml);
+
+        textarea.attr('style', p.textStyles);
+        textarea.prop('disabled', !v.editable);
+        if (v.placeholder !== false) {
+            textarea.attr('placeholder', v.placeholder);
+        } else {
+            textarea.removeAttr('placeholder');
+        }
+        textarea.attr('data-ordinal', d.ordinal).data('ordinal', d.ordinal);
         textarea.val(d.value);
     }
 
