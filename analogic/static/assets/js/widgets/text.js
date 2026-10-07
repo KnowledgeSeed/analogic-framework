@@ -45,14 +45,49 @@ class TextWidget extends Widget {
         v.innerHeight && innerStyles.push('height:', Widget.getPercentOrPixel(v.innerHeight), ';');
         v.innerCursor && innerStyles.push(`cursor:${v.innerCursor};`);
 
+        const hasIcon = !v.compactHtml || v.icon,
+            hasTitle = !v.compactHtml || v.title !== false || v.editable,
+            hasBody = !v.compactHtml || v.body;
+
         return `
 <div class="ks-text ${mainDivClass.join(' ')} ks-text-${v.skin}" style="${mainDivStyle.join('')}">
     <div class="ks-text-inner" style="${innerStyles.join('')}" data-id="${o.id}" data-action="text_click" data-ordinal="${v.ordinal}">
-        <div class="ks-text-icon" data-id="${o.id}" data-action="${v.iconCustomEventName ? v.iconCustomEventName : 'perform'}" data-ordinal="${v.ordinal}"><span style="${iconStyles.join('')}" class="${v.icon}"></span></div>
-        <div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title && !v.tooltip ? Utils.htmlEncode(Utils.stripHtml(v.title)) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title !== false ? v.title : ''}</div>
-        <div class="ks-text-body" style="${bodyStyles.join('')}">${v.body !== false ? v.body : ''}</div>
+        ${hasIcon ? this.getIconHtml(v, iconStyles) : ''}
+        ${hasTitle ? this.getTitleHtml(v, titleStyles) : ''}
+        ${hasBody ? this.getBodyHtml(v, bodyStyles) : ''}
     </div>
 </div>`;
+    }
+
+    getIconHtml(v, iconStyles = []) {
+        return `<div class="ks-text-icon" data-id="${this.options.id}" data-action="${v.iconCustomEventName ? v.iconCustomEventName : 'perform'}" data-ordinal="${v.ordinal}"><span style="${iconStyles.join('')}" class="${v.icon}"></span></div>`;
+    }
+
+    getTitleHtml(v, titleStyles = []) {
+        return `<div class="ks-text-title" data-performable="${v.performable ? '1' : '0'}" data-editable="${v.editable ? '1' : '0'}" title="${v.title && !v.tooltip ? Utils.htmlEncode(Utils.stripHtml(v.title)) : ''}" data-ordinal="${v.ordinal}" style="${titleStyles.join('')}">${v.title !== false ? v.title : ''}</div>`;
+    }
+
+    getBodyHtml(v, bodyStyles = []) {
+        return `<div class="ks-text-body" style="${bodyStyles.join('')}">${v.body !== false ? v.body : ''}</div>`;
+    }
+
+    // With compactHtml the icon, title and body elements are only rendered when they have
+    // something to show, so a later content update may need one that is not in the DOM yet.
+    addMissingCompactElements(inner, v) {
+        if (v.icon && !inner.children('.ks-text-icon').length) {
+            inner.prepend(this.getIconHtml(v));
+        }
+
+        const body = inner.children('.ks-text-body');
+
+        if ((v.title !== false || v.editable) && !inner.children('.ks-text-title').length) {
+            const titleHtml = this.getTitleHtml(v);
+            body.length ? body.before(titleHtml) : inner.append(titleHtml);
+        }
+
+        if (v.body && !body.length) {
+            inner.append(this.getBodyHtml(v));
+        }
     }
 
     setValues(v) {
@@ -71,27 +106,19 @@ class TextWidget extends Widget {
         delete this.enableRightClick;
     }
 
-    changeEvents(title, section, editable, performable, enableRightClick) {
-        title.off('contextmenu');
-        title.off('click');
-        const amIOnGridTable = this.amIOnAGridTable();
-        if (editable || performable) {
-            TextWidget.addEdit(section, this.options, amIOnGridTable, this.pasteDataByServerSide);
-        }
-        if (enableRightClick && !(amIOnGridTable && (editable || performable))) {
-            TextWidget.addRightClick(section, amIOnGridTable);
-        }
-    }
-
     updateHtml(data) {
-        const v = this.getParameters(data), section = this.getSection(),
-            title = section.find('.ks-text-title'), body = section.find('.ks-text-body'),
-            mainDiv = section.children(), icon = section.find('.ks-text-icon span'),
-            inner = section.find('.ks-text-inner');
+        const v = this.getParameters(data), section = this.getSection(), sectionElement = section[0],
+            find = selector => $(sectionElement ? sectionElement.querySelector(selector) : null),
+            mainDiv = section.children(), inner = find('.ks-text-inner');
 
-        this.changeEvents(title, section, v.editable, v.performable, v.enableRightClick);
-        title.data('editable', v.editable ? '1' : '0');
-        title.data('performable', v.performable ? '1' : '0');
+        if (v.compactHtml) {
+            this.addMissingCompactElements(inner, v);
+        }
+
+        const title = find('.ks-text-title'), body = find('.ks-text-body'), icon = find('.ks-text-icon span');
+
+        title.data('editable', v.editable ? '1' : '0').attr('data-editable', v.editable ? '1' : '0');
+        title.data('performable', v.performable ? '1' : '0').attr('data-performable', v.performable ? '1' : '0');
 
         this.setValues(v);
 
@@ -124,7 +151,7 @@ class TextWidget extends Widget {
         Widget.setOrRemoveStyle(inner, 'height', v.innerHeight ? Widget.getPercentOrPixel(v.innerHeight) : false);
 
         //title
-        title.html(v.title !== false ? v.title : '');
+        TextWidget.setContent(title, v.title !== false ? v.title : '');
         title.attr('title', v.title ? Utils.htmlEncode(Utils.stripHtml(v.title)) : '');
         if (v.title !== false) {
             mainDiv.addClass('has-title');
@@ -133,7 +160,7 @@ class TextWidget extends Widget {
         Widget.setOrRemoveStyle(title, 'cursor', v.titleCursor);
 
         //body
-        body.html(v.body !== false ? v.body : '');
+        TextWidget.setContent(body, v.body !== false ? v.body : '');
         if (v.body !== false) {
             mainDiv.addClass('has-body');
         }
@@ -147,6 +174,15 @@ class TextWidget extends Widget {
 
     }
 
+    // jQuery's html() is only needed for content with inline scripts, which innerHTML would not run.
+    static setContent(element, content) {
+        if (element[0] && !/<script/i.test(content)) {
+            element[0].innerHTML = content;
+        } else {
+            element.html(content);
+        }
+    }
+
     getParameters(d) {
         return {
             applyMeasuresToSection: this.getRealValue('applyMeasuresToSection', d, false),
@@ -158,6 +194,7 @@ class TextWidget extends Widget {
             bodyFontSize: this.getRealValue('bodyFontSize', d, false),
             bodyFontWeight: this.getRealValue('bodyFontWeight', d, false),
             bodyAlignment: this.getRealValue('bodyAlignment', d, false),
+            compactHtml: this.getRealValue('compactHtml', d, app.textWidgetCompactHtml === true),
             enableRightClick: this.getRealValue('enableRightClick', d, false),
             editable: this.getRealValue('editable', d, false),
             icon: this.getRealValue('icon', d, false),
@@ -187,32 +224,50 @@ class TextWidget extends Widget {
         };
     }
 
+    // The handlers are delegated from the section and read the editable / performable /
+    // enableRightClick state when the event fires. So they survive content updates that
+    // add or replace the inner elements, and don't have to be rebound when the state changes.
     initEventHandlers() {
         const section = this.getSection(), o = this.options;
         const amIOnGridTable = this.amIOnAGridTable();
 
-        if (this.editable || this.performable) {
-            TextWidget.addEdit(section, o, amIOnGridTable, this.pasteDataByServerSide);
-        }
+        section.off('.textwidget');
 
-        if (this.enableRightClick && !(amIOnGridTable && (this.editable || this.performable))) {
-            TextWidget.addRightClick(section, amIOnGridTable);
-        }
+        section.on('click.textwidget', '.ks-text-title', (e) => {
+            const c = $(e.currentTarget);
+            // A click inside the input of a title that is already being edited must not restart the edit.
+            if ((this.editable || this.performable) && !c.find('.ks-text-title-input').length) {
+                TextWidget.startEdit(c, section, o, amIOnGridTable, this.pasteDataByServerSide);
+            }
+        });
 
-        section.find('.ks-text-inner').on('click', (e) => {
+        section.on('contextmenu.textwidget', '.ks-text-title', (e) => {
+            const onEditableGridTableCell = amIOnGridTable && (this.editable || this.performable);
+            if (!onEditableGridTableCell && !this.enableRightClick) {
+                return;
+            }
+            const target = $(e.currentTarget).data('id', section.attr('id')).data('action', 'rightclick');
+            Widget.doHandleSystemEvent(target, e);
+            if (amIOnGridTable) {
+                Widget.doHandleGridTableSystemEvent(target, e);
+            }
+            return false;
+        });
+
+        section.on('click.textwidget', '.ks-text-inner', (e) => {
             let s = $(e.currentTarget);
             Widget.doHandleSystemEvent(s, e);
-            if (this.amIOnAGridTable()) {
+            if (amIOnGridTable) {
                 Widget.doHandleGridTableSystemEvent(s, e);
             }
         });
 
-        section.find('.ks-text-icon').on('click', (e) => {
+        section.on('click.textwidget', '.ks-text-icon', (e) => {
             let s = $(e.currentTarget), pDiv = s.closest('.ks-text');
             s.data('on', pDiv.hasClass('ks-perform-edit'));
             Widget.doHandleSystemEvent(s, e);
 
-            if (this.amIOnAGridTable()) {
+            if (amIOnGridTable) {
                 Widget.doHandleGridTableSystemEvent(s, e);
             }
             pDiv.removeClass('ks-perform-edit');
@@ -298,7 +353,7 @@ class TextWidget extends Widget {
                 Widgets[s].value = v;
                 r = $('<div>').data('id', s).data('action', lastCell ? 'pastelast' : 'paste').data('ordinal', e.data('ordinal')).data('value', v);
                 let ic = sc.find('.ks-text-icon');
-                if (ic.find('span').attr('class') !== 'false') {
+                if (ic.length && ic.find('span').attr('class') !== 'false') {
                     Widget.doHandleSystemEvent(ic, f);
                     Widget.doHandleGridTableSystemEvent(ic, f);
                 }
@@ -309,7 +364,6 @@ class TextWidget extends Widget {
         }
 
         section.find('.ks-text').removeClass('ks-on');
-        TextWidget.addEdit(section, o, true, false);
     }
 
     static createEditableRows(editables, currentIndex) {
@@ -445,130 +499,115 @@ class TextWidget extends Widget {
         return j;
     }
 
-    static addRightClick(section, amIOnGridTable) {
-        const sectionId = section.attr('id');
-        section.find('.ks-text-title').off('contextmenu').on('contextmenu', e => {
-            const target = $(e.currentTarget).data('id', sectionId).data('action', 'rightclick');
-            Widget.doHandleSystemEvent(target, e);
-            if (amIOnGridTable) {
-                Widget.doHandleGridTableSystemEvent(target, e);
-            }
-            return false;
-        });
+    // Kept for application code that still calls them. The delegated handlers bound in
+    // initEventHandlers follow the editable / performable / enableRightClick state on their own,
+    // so there is nothing left to bind or rebind here.
+    static addEdit(section, o, amIOnGridTable, pasteDataByServerSide) {
     }
 
-    static addEdit(section, o, amIOnGridTable, pasteDataByServerSide) {
-        let textTitle = section.find('.ks-text-title');
-        if (amIOnGridTable === true) {
-            textTitle.bind('contextmenu', e => {
-                let r = textTitle.data('id', section.attr('id')).data('action', 'rightclick');
-                Widget.doHandleSystemEvent(textTitle, e);
-                Widget.doHandleGridTableSystemEvent(textTitle, e);
-                return false;
-            });
-        }
-        textTitle.on('click', e => {
-            let c = $(e.currentTarget), ksText = section.find('.ks-text'), editable = textTitle.data('editable') == 1,
-                originalValue = c.text();
-            c.off('click');
-            ksText.addClass('ks-on').addClass('ks-perform-edit');
-            c.html(`<input class="ks-text-title-input" data-id="${o.id}" data-action="write" data-ordinal="${c.data('ordinal')}" type="text" value="${originalValue}"/>`).promise().then(() => {
-                let r = c.find('.ks-text-title-input').focus().select().on('focusout', f => {
-                    let val = Utils.escapeText(r.val());
-                    r.off('focusout').data('value', val);
+    static addRightClick(section, amIOnGridTable) {
+    }
 
-                    Widgets[r.data('id')].value = val;
-                    let ic = section.find('.ks-text-icon');
-                    if (ic.find('span').attr('class') !== 'false' && originalValue !== val) {
-                        ic.data('value', val);
-                        let pDiv = ic.closest('.ks-text');
-                        ic.data('on', pDiv.hasClass('ks-perform-edit'));
-                        Widget.doHandleSystemEvent(ic, f);
+    changeEvents(title, section, editable, performable, enableRightClick) {
+    }
 
-                        if (amIOnGridTable) {
-                            Widget.doHandleGridTableSystemEvent(ic, f);
-                        }
+    static startEdit(c, section, o, amIOnGridTable, pasteDataByServerSide) {
+        let ksText = section.find('.ks-text'), editable = c.data('editable') == 1,
+            originalValue = c.text();
+        ksText.addClass('ks-on').addClass('ks-perform-edit');
+        c.html(`<input class="ks-text-title-input" data-id="${o.id}" data-action="write" data-ordinal="${c.data('ordinal')}" type="text"/>`).promise().then(() => {
+            let r = c.find('.ks-text-title-input').val(originalValue).focus().select().on('focusout', f => {
+                let val = Utils.escapeText(r.val());
+                r.off('focusout').data('value', val);
+
+                Widgets[r.data('id')].value = val;
+                let ic = section.find('.ks-text-icon');
+                if (ic.length && ic.find('span').attr('class') !== 'false' && originalValue !== val) {
+                    ic.data('value', val);
+                    let pDiv = ic.closest('.ks-text');
+                    ic.data('on', pDiv.hasClass('ks-perform-edit'));
+                    Widget.doHandleSystemEvent(ic, f);
+
+                    if (amIOnGridTable) {
+                        Widget.doHandleGridTableSystemEvent(ic, f);
                     }
-                    if (editable && originalValue !== val) {
-                        if (amIOnGridTable) {
-                            Widget.doHandleGridTableSystemEvent(r, f);
-                        }
-
-                        Widget.doHandleSystemEvent(r, f);
+                }
+                if (editable && originalValue !== val) {
+                    if (amIOnGridTable) {
+                        Widget.doHandleGridTableSystemEvent(r, f);
                     }
 
-                    c.html(r.val());
-                    ksText.removeClass('ks-on');
-                    TextWidget.addEdit(section, o, amIOnGridTable, pasteDataByServerSide);
-                });
-                if (amIOnGridTable === true) {
-                    let gridId = r.data('id').split('_')[0];
-                    r.on('keydown', f => {
-                        if (f.keyCode === 13) {
-                            let val = Utils.escapeText(r.val());
-                            r.off('focusout').data('value', val);
-                            Widgets[r.data('id')].value = val;
-                            if (editable && originalValue !== val) {
-                                if (amIOnGridTable) {
-                                    Widget.doHandleGridTableSystemEvent(r, f);
-                                }
-
-                                Widget.doHandleSystemEvent(r, f);
-                            }
-                            c.html(r.val());
-                            ksText.removeClass('ks-on');
-                            TextWidget.addEdit(section, o, amIOnGridTable, pasteDataByServerSide);
-                        }
-                        if (f.keyCode === 39 || f.keyCode === 37) {
-                            let editables = TextWidget.getEditables(gridId),
-                                j = TextWidget.getCurrentIndex(editables, c), k = 0;
-
-                            k = f.keyCode === 39 ? j + 1 : j === -1 ? editables.length - 1 : j - 1;
-
-                            $(editables[k]).click();
-                        }
-
-                        if (f.keyCode === 38 || f.keyCode === 40) {
-                            let sgi = r.data('id').split('_'), gridId = sgi[0], actRow = parseInt(sgi[1]),
-                                row = f.keyCode === 38 ? actRow === 0 ? -1 : actRow - 1 : actRow + 1, column = sgi[2],
-                                t;
-                            if (row === -1) {
-                                return;
-                            }
-                            let nextElement = $('#' + gridId + '_' + row + '_' + column);
-                            if (nextElement.length && nextElement.is(':visible')) {
-                                t = nextElement.find('.ks-text-title');
-                                if (t.data('editable') == 1) {
-                                    t.click();
-                                }
-                            }
-                        }
-
-                        if (f.ctrlKey && f.keyCode === 86) {
-                            if (pasteDataByServerSide) {
-                                navigator.clipboard.readText().then(text => {
-                                    let ppId = section.attr('id'), pp = $('<div>').data('id', ppId).data('action', 'pasteDataByServerSide').data('value', text);
-                                    if (amIOnGridTable) {
-                                        Widget.doHandleGridTableSystemEvent(pp, f);
-                                    }
-
-                                    Widget.doHandleSystemEvent(pp, f);
-                                }).catch(err => L('Read from clipboard failed: ', err));
-                                c.html('pasting..');
-                                ksText.removeClass('ks-on');
-                                TextWidget.addEdit(section, o, amIOnGridTable, pasteDataByServerSide);
-                                return false;
-                            }
-                            let editables = TextWidget.getEditables(gridId),
-                                j = TextWidget.getCurrentIndex(editables, c);
-                            if (j >= 0 && editables.length > 0) {
-                                navigator.clipboard.readText().then(text => TextWidget.pasteData(text, editables, j, f, o, section)).catch(err => L('Read from clipboard failed: ', err));
-                            }
-                        }
-                    });
+                    Widget.doHandleSystemEvent(r, f);
                 }
 
+                c.html(r.val());
+                ksText.removeClass('ks-on');
             });
+            if (amIOnGridTable === true) {
+                let gridId = r.data('id').split('_')[0];
+                r.on('keydown', f => {
+                    if (f.keyCode === 13) {
+                        let val = Utils.escapeText(r.val());
+                        r.off('focusout').data('value', val);
+                        Widgets[r.data('id')].value = val;
+                        if (editable && originalValue !== val) {
+                            if (amIOnGridTable) {
+                                Widget.doHandleGridTableSystemEvent(r, f);
+                            }
+
+                            Widget.doHandleSystemEvent(r, f);
+                        }
+                        c.html(r.val());
+                        ksText.removeClass('ks-on');
+                    }
+                    if (f.keyCode === 39 || f.keyCode === 37) {
+                        let editables = TextWidget.getEditables(gridId),
+                            j = TextWidget.getCurrentIndex(editables, c), k = 0;
+
+                        k = f.keyCode === 39 ? j + 1 : j === -1 ? editables.length - 1 : j - 1;
+
+                        $(editables[k]).click();
+                    }
+
+                    if (f.keyCode === 38 || f.keyCode === 40) {
+                        let sgi = r.data('id').split('_'), gridId = sgi[0], actRow = parseInt(sgi[1]),
+                            row = f.keyCode === 38 ? actRow === 0 ? -1 : actRow - 1 : actRow + 1, column = sgi[2],
+                            t;
+                        if (row === -1) {
+                            return;
+                        }
+                        let nextElement = $('#' + gridId + '_' + row + '_' + column);
+                        if (nextElement.length && nextElement.is(':visible')) {
+                            t = nextElement.find('.ks-text-title');
+                            if (t.data('editable') == 1) {
+                                t.click();
+                            }
+                        }
+                    }
+
+                    if (f.ctrlKey && f.keyCode === 86) {
+                        if (pasteDataByServerSide) {
+                            navigator.clipboard.readText().then(text => {
+                                let ppId = section.attr('id'), pp = $('<div>').data('id', ppId).data('action', 'pasteDataByServerSide').data('value', text);
+                                if (amIOnGridTable) {
+                                    Widget.doHandleGridTableSystemEvent(pp, f);
+                                }
+
+                                Widget.doHandleSystemEvent(pp, f);
+                            }).catch(err => L('Read from clipboard failed: ', err));
+                            c.html('pasting..');
+                            ksText.removeClass('ks-on');
+                            return false;
+                        }
+                        let editables = TextWidget.getEditables(gridId),
+                            j = TextWidget.getCurrentIndex(editables, c);
+                        if (j >= 0 && editables.length > 0) {
+                            navigator.clipboard.readText().then(text => TextWidget.pasteData(text, editables, j, f, o, section)).catch(err => L('Read from clipboard failed: ', err));
+                        }
+                    }
+                });
+            }
+
         });
     }
 }

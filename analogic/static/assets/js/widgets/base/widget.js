@@ -46,6 +46,65 @@ class Widget {
         return $('#' + id);
     }
 
+    // Replaces the content of the holder with the children of the root element of the rendered
+    // html, and returns that root element. The html is parsed only once and its nodes are moved
+    // into the holder, instead of being parsed, serialized and parsed again.
+    static setHolderContent(holder, html) {
+        // Unlike moved nodes, jQuery's html() runs the inline scripts of the content.
+        if (!holder[0] || typeof html !== 'string' || /<script/i.test(html)) {
+            const h = $(html);
+            holder.html(h.html());
+            return h;
+        }
+
+        const template = document.createElement('template'), fragment = document.createDocumentFragment();
+        template.innerHTML = html;
+        const root = template.content.firstElementChild;
+
+        while (root && root.firstChild) {
+            fragment.appendChild(root.firstChild);
+        }
+
+        holder.empty()[0].appendChild(fragment);
+
+        return $(root);
+    }
+
+    // Binds the refreshGridCell listeners collected during the render which are not on the body yet.
+    bindRefreshGridCellListeners(holder) {
+        const holderId = holder.attr('id'), events = $._data(El.body[0], 'events') || {}, boundIds = {};
+        let i, event;
+
+        for (i of Listeners) {
+            if (i.method !== 'refreshGridCell' || !i.options.id.includes(holderId)) {
+                continue;
+            }
+
+            event = i.eventName.split('.')[0];
+
+            if (!events[event]) {
+                continue;
+            }
+
+            // Collected once per event type: looking every listener up in the handler list of
+            // the body is quadratic, which takes seconds on a grid table of a few thousand cells.
+            if (!boundIds[event]) {
+                boundIds[event] = new Set(events[event]
+                    .filter(e => e.data && e.data.method === 'refreshGridCell' && e.data.options)
+                    .map(e => e.data.options.id));
+            }
+
+            if (!boundIds[event].has(i.options.id)) {
+                El.body.on(i.eventName, {
+                    options: i.options,
+                    method: i.method,
+                    parameters: i.parameters
+                }, i.handler);
+                boundIds[event].add(i.options.id);
+            }
+        }
+    }
+
     refreshGridCell() {
 
         Listeners.length = 0;
@@ -65,7 +124,9 @@ class Widget {
                     holder.css({opacity: 0, 'min-height': holderHeight});
                 }
 
-                holder.html($(html).html()).promise().then(() => {
+                Widget.setHolderContent(holder, html);
+
+                holder.promise().then(() => {
                     if (isHeightUpdated) {
                         holder.css('opacity', 1);
                     }
@@ -101,14 +162,16 @@ class Widget {
             instance.holderStartLoader();
 
             return instance.render(withState, true, false, QB.loadData, previouslyLoadedData).then(html => {
-                let isHeightUpdated = false, h = $(html), i;
+                let isHeightUpdated = false;
 
                 if (holderHeight > 0) {
                     isHeightUpdated = true;
                     holder.css({opacity: 0, 'min-height': holderHeight});
                 }
 
-                return holder.html(h.html()).promise().then(() => {
+                const h = Widget.setHolderContent(holder, html);
+
+                return holder.promise().then(() => {
 
                     instance.removeLoaderHtml(withState);
 
@@ -123,19 +186,7 @@ class Widget {
                     instance.initEvents(withState);
 
                     if (o.disableRefreshGridCell !== true) {
-                        for (i of Listeners.filter(e => e.method === 'refreshGridCell' && e.options.id.includes(holder.attr('id')))) {
-                            const event = i.eventName.split('.')[0];
-                            if ($._data(El.body[0], "events") &&
-                                $._data(El.body[0], "events")[event] &&
-                                $._data(El.body[0], "events")[event].filter(e => e.data.method === 'refreshGridCell' &&
-                                    e.data.options.id === i.options.id).length === 0) {
-                                El.body.on(i.eventName, {
-                                    options: i.options,
-                                    method: i.method,
-                                    parameters: i.parameters
-                                }, i.handler);
-                            }
-                        }
+                        instance.bindRefreshGridCellListeners(holder);
                     }
                     if (!withState) {
                         El.body.trigger('rendered.' + o.id);
@@ -172,8 +223,9 @@ class Widget {
         return holder.empty().off().promise().then(() => {
             instance.holderStartLoader();
             return instance.render(withState, false, false, QB.loadData, previouslyLoadedData).then(html => {
-                let h = $(html), i;
-                return holder.html(h.html()).promise().then(() => {
+                let i;
+                Widget.setHolderContent(holder, html);
+                return holder.promise().then(() => {
                     if (usercentrics.length > 0) {
                         holder.append(usercentrics);
                     }
@@ -757,7 +809,7 @@ class Widget {
     }
 
     static removeStyle(element, styleName) {
-        let s = element.prop('style');
+        let s = element[0] && element[0].style;
         s && s.removeProperty(styleName);
     }
 
