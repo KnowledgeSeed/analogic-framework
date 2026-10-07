@@ -1,0 +1,7 @@
+{
+  "projectName": "Text Widget Perf Test",
+  "projectId": "textperf",
+  "authenticationMode": "NoLogin",
+  "mainPage": "textperfMain",
+  "analogicApiAuthenticationMode": "unsecured"
+}

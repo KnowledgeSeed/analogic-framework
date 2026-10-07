@@ -1,0 +1,206 @@
+.ks-slider-touch {
+    background-color: #fff;
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.25), 0px 12px 24px rgba(0, 0, 0, 0.25);
+    border-radius: 3px;
+    left: 50%;
+    top: 50%;
+    width: 260px;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.ks-slider-touch:before {
+    border-bottom: 15px solid #fff;
+    border-right: 15px solid transparent;
+    border-left: 15px solid transparent;
+    content: "";
+    left: 50%;
+    margin-left: -15px;
+    position: absolute;
+    top: -15px;
+}
+
+.ks-slider-touch .ks-slider-touch-value {
+    color: #007aff;
+    font-size: 18px;
+    font-weight: 500;
+    padding-top: 15px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.ks-slider-touch .ks-slider-touch-track {
+    border: 1px solid #007aff;
+    border-radius: 1px;
+    margin: 0 15px 15px;
+}
+
+.ks-slider-touch .ks-slider-touch-track:before {
+    border-top: 8px solid #007aff;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    content: "";
+    left: 50%;
+    margin-left: -8px;
+    position: absolute;
+    top: 0;
+}
+
+.ks-slider-touch .ks-tick {
+    margin: 0 1px;
+    width: 1px;
+}
+
+.ks-slider-touch .ks-tick.ks-small {
+    background-color: #dcdee0;
+    height: 20px;
+    margin-top: 28px;
+}
+
+.ks-slider-touch .ks-tick.ks-medium {
+    background-color: #b9bdc2;
+    height: 25px;
+    margin-top: 23px;
+}
+
+.ks-slider-touch .ks-tick.ks-big {
+    background-color: #b9bdc2;
+    height: 35px;
+    margin-top: 13px;
+}
+
+.ks-slider-touch .ks-tick.ks-big span {
+    color: #7d848d;
+    font-size: 10px;
+    font-weight: bold;
+    left: 3px;
+    top: 0;
+}
+
+.ks-slider-touch-steppers {
+    margin: 0 15px;
+}
+
+.ks-slider-touch-stepper {
+    background-color: #eff1f3;
+    color: #747b85;
+    cursor: pointer;
+    font-family: 'tele-groteskultregular';
+    font-size: 14px;
+    height: 40px;
+    line-height: 40px;
+    margin: 0 6px;
+    position: relative;
+    text-align: center;
+    text-shadow: 0px 1px 0px #fff;
+    width: 37px;
+}
+
+.ks-slider-touch-stepper-options {
+    background-color: transparent;
+    color: #dee1e5;
+    font-size: 20px;
+    width: 30px;
+}
+
+.ks-slider-touch-stepper-big-left,
+.ks-slider-touch-stepper-small-left {
+    border-left: 2px solid #dee1e5;
+}
+
+.ks-slider-touch-stepper-big-left:before,
+.ks-slider-touch-stepper-small-left:before {
+    border-top: 20px solid transparent;
+    border-right: 7px solid #dee1e5;
+    border-bottom: 20px solid transparent;
+    content: "";
+    left: -9px;
+    position: absolute;
+    top: 0;
+}
+
+.ks-slider-touch-stepper-big-left:after,
+.ks-slider-touch-stepper-small-left:after {
+    border-top: 20px solid transparent;
+    border-right: 7px solid #eff1f3;
+    border-bottom: 20px solid transparent;
+    content: "";
+    left: -7px;
+    position: absolute;
+    top: 0;
+}
+
+.ks-slider-touch-stepper-big-right,
+.ks-slider-touch-stepper-small-right {
+    border-right: 2px solid #dee1e5;
+}
+
+.ks-slider-touch-stepper-big-right:before,
+.ks-slider-touch-stepper-small-right:before {
+    border-top: 20px solid transparent;
+    border-left: 7px solid #dee1e5;
+    border-bottom: 20px solid transparent;
+    content: "";
+    position: absolute;
+    right: -9px;
+    top: 0;
+}
+
+.ks-slider-touch-stepper-big-right:after,
+.ks-slider-touch-stepper-small-right:after {
+    border-top: 20px solid transparent;
+    border-left: 7px solid #eff1f3;
+    border-bottom: 20px solid transparent;
+    content: "";
+    position: absolute;
+    right: -7px;
+    top: 0;
+}
+
+.ks-slider-touch-options-button {
+    font-family: 'tele-groteskfetregular';
+    font-size: 18px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    width: 50%;
+    margin:0;
+}
+
+.ks-slider-touch-options-buttons {
+    margin-top: 20px;
+}
+
+.ks-slider-touch-options-button.ks-button-cancel {
+    background-color: #d9dde1;
+    border-bottom-left-radius: 3px;
+    color: #747b85;
+}
+
+.ks-slider-touch-options-button.ks-button-update {
+    background-color: #0070f8;
+    border-bottom-right-radius: 3px;
+    color: #fff;
+}
+
+@media screen and (max-width: 767px) {
+    .ks-slider-touch {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: auto;
+        width: 100%;
+        -webkit-transform: none;
+        -moz-transform: none;
+        -o-transform: none;
+        -ms-transform: none;
+        transform: none;
+    }
+
+    .ks-slider-touch:before {
+        display: none;
+    }
+}
