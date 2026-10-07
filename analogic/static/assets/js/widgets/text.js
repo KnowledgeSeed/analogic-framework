@@ -299,14 +299,16 @@ class TextWidget extends Widget {
 
         const rowIndexes = Array.from(rows).sort((a, b) => a - b),
             columnIndexes = Array.from(columns).sort((a, b) => a - b);
-        let i, k, section, title;
+        let i, k, section, title, value;
 
         for (i = 0; i < clipboardRows.length && i < rowIndexes.length; ++i) {
             for (k = 0; k < clipboardRows[i].length && k < columnIndexes.length; ++k) {
                 section = $('#' + gridId + '_' + rowIndexes[i] + '_' + columnIndexes[k]);
                 title = section.find('.ks-text-title[data-editable=1]').filter(':visible').first();
                 if (title.length) {
-                    targets.push({section: section, title: title, value: clipboardRows[i][k]});
+                    // Empty cells of the pasted block are written as zeros.
+                    value = clipboardRows[i][k].trim() === '' ? '0' : clipboardRows[i][k];
+                    targets.push({section: section, title: title, value: value});
                 }
             }
         }
