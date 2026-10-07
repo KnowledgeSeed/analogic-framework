@@ -4,24 +4,29 @@
 
 class ImageWidget extends Widget {
 
-    getHtml(widgets, d) {
+    // Single source of truth for the markup getHtml renders, shared with updateHtml.
+    // `bustCache` re-requests the image file, used on updates where the file behind an
+    // unchanged name may have been replaced.
+    buildInnerHtml(v, bustCache = false) {
         const o = this.options, s = this.getGeneralStyles();
-
-        const v = this.getParameters(d);
 
         if (o.fontSize) {
             s.push('font-size:', o.fontSize, 'px;');
         }
-        let html = [];
-        html.push(`<div class="ks-image ks-image-${v.skin}" data-action="imageClicked" data-id="${o.id}">`);
-        if (o.icon) {
-            html.push(`<span class="icon-${v.icon}" style="display: inline-block;${s.join('')}"><\/span>`);
-        } else {
-            html.push('<img src="' + app.applicationAssetsUrl + '/skin/images/' + v.fileName + '" alt="' + v.title + '" style="' + s.join('') + '">');
-        }
-        html.push('</div>');
 
-        return html.join('');
+        if (o.icon) {
+            return `<span class="icon-${v.icon}" style="display: inline-block;${s.join('')}"><\/span>`;
+        }
+
+        return '<img src="' + app.applicationAssetsUrl + '/skin/images/' + v.fileName + (bustCache ? '?v=' + this.generateRandomString(10) : '') + '" alt="' + v.title + '" style="' + s.join('') + '">';
+    }
+
+    getHtml(widgets, d) {
+        const o = this.options;
+
+        const v = this.getParameters(d);
+
+        return `<div class="ks-image ks-image-${v.skin}" data-action="imageClicked" data-id="${o.id}">${this.buildInnerHtml(v)}</div>`;
     }
 
     generateRandomString(length) {
@@ -35,15 +40,12 @@ class ImageWidget extends Widget {
     }
 
     updateHtml(data) {
-        const o = this.options, p = this.getParameters(data), section = $('#' + o.id),
-            icon = section.find('.ks-image span');
+        const p = this.getParameters(data), main = this.getSection().find('.ks-image');
 
-        if (icon.length) {
-            icon.attr('class', p.icon ? 'icon-' + p.icon : '');
-        } else {
-            const file = section.find('img');
-            file.attr('src', app.applicationAssetsUrl + '/skin/images/' + p.fileName + '?v=' + this.generateRandomString(10));
-        }
+        // the click handler is bound to the wrapper, so only its content is replaced
+        main.removeClass((i, c) => (c.match(/(^|\s)ks-image-\S+/g) || []).join(' '));
+        main.addClass('ks-image-' + p.skin);
+        main.html(this.buildInnerHtml(p, true));
     }
 
     initEventHandlers() {

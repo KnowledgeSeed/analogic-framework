@@ -1,0 +1,18 @@
+"analogicDemoMainRow2NewGridTableTest6_init": >
+  {"MDX":"
+        SELECT
+            {[Period].[Period].[All Periods]}
+        ON COLUMNS,
+            HEAD(
+                {[Organization Unit].[Organization Unit].Members}
+                * [Lineitem HeadCount].[Lineitem HeadCount].Members
+                * {[Employee].[Employee].Members}
+                * [Measures Headcount].[Measures Headcount].Members
+                * {[Position].[Position].Members},
+                $step
+            )
+            ON ROWS
+        FROM [Headcount]
+        WHERE (
+            [Version].[Version].[Actual] )
+        "}
