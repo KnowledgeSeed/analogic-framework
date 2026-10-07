@@ -1,0 +1,6 @@
+{
+  "projectName": "Bulk Paste Test",
+  "projectId": "bulkpaste",
+  "authenticationMode": "NoLogin",
+  "mainPage": "bulkpasteMain"
+}

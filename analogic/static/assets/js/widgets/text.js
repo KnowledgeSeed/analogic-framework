@@ -229,208 +229,89 @@ class TextWidget extends Widget {
     }
 
     static paste(r, f) {
-        let c = r.find('.ks-text-title'), gridId = r.attr('id').split('_')[0];
-        let editables = TextWidget.getEditables(gridId),
-            j = TextWidget.getCurrentIndex(editables, c);
-        if (j >= 0 && editables.length > 0) {
-            navigator.clipboard.readText().then(text => TextWidget.pasteData2(text, editables, j, f)).catch(err => L('Read from clipboard failed: ', err));
+        navigator.clipboard.readText().then(text => TextWidget.pasteData2(text, r, f)).catch(err => L('Read from clipboard failed: ', err));
+    }
+
+    static pasteData2(text, section, f) {
+        let t, s, r;
+        for (t of TextWidget.getPasteTargets(section, TextWidget.parseClipboard(text))) {
+            s = t.section.attr('id');
+            Widgets[s].value = Utils.escapeText(t.value);
+            r = $('<div>').data('id', s).data('action', 'write').data('ordinal', t.title.data('ordinal'));
+            Widget.doHandleSystemEvent(r, f);
+            t.title.html(t.value);
         }
     }
 
-    static pasteData2(text, editables, j, f) {
-        let e, rows = text.trim().split('\n'), cells = [], i, k, s, r;
-        if (rows.length === 0) {
-            return;
-        }
+    static pasteData(text, f, o, section) {
+        const targets = TextWidget.getPasteTargets(section, TextWidget.parseClipboard(text));
+        let i, t, s, r, v, ic;
 
-        let editableRows = TextWidget.createEditableRows(editables, j);
-        for (i = 0; i < editableRows.length; ++i) {
-            if (rows.length <= i) {
-                break;
+        for (i = 0; i < targets.length; ++i) {
+            t = targets[i];
+            s = t.section.attr('id');
+            v = Utils.escapeText(t.value);
+            Widgets[s].value = v;
+            // pastelast goes to the last cell that is really written, so it is fired whenever anything was pasted.
+            r = $('<div>').data('id', s).data('action', i === targets.length - 1 ? 'pastelast' : 'paste').data('ordinal', t.title.data('ordinal')).data('value', v);
+            ic = t.section.find('.ks-text-icon');
+            if (ic.find('span').attr('class') !== 'false') {
+                Widget.doHandleSystemEvent(ic, f);
+                Widget.doHandleGridTableSystemEvent(ic, f);
             }
-            cells = rows[i].split('\t');
-            let editableRow = editableRows[i], limit = Math.min(editableRow.length, cells.length);
-            for (k = 0; k < limit; ++k) {
-                if (!editableRow[k]) {
-                    continue;
-                }
-                e = $(editableRow[k]);
-                s = e.closest('section').attr('id');
-                Widgets[s].value = Utils.escapeText(cells[k]);
-                r = $('<div>').data('id', s).data('action', 'write').data('ordinal', e.data('ordinal'));
-                Widget.doHandleSystemEvent(r, f);
-                e.html(cells[k]);
-            }
-        }
-    }
-
-    static pasteData(text, editables, j, f, o, section) {
-        let e, rows = text.trim().split('\n'), cells = [], i, k, s, r, sc, v, lastRow = false, lastCell = false;
-        if (rows.length === 0) {
-            return;
-        }
-
-        let editableRows = TextWidget.createEditableRows(editables, j);
-        for (i = 0; i < editableRows.length; ++i) {
-            lastRow = (rows.length - 1) === i;
-            if (rows.length <= i) {
-                break;
-            }
-            cells = rows[i].split('\t');
-            lastCell = false;
-            let editableRow = editableRows[i], limit = Math.min(editableRow.length, cells.length), lastEditableIndex = -1;
-            if (lastRow) {
-                for (let idx = limit - 1; idx >= 0 && lastEditableIndex === -1; --idx) {
-                    if (editableRow[idx]) {
-                        lastEditableIndex = idx;
-                    }
-                }
-            }
-            for (k = 0; k < limit; ++k) {
-                if (!editableRow[k]) {
-                    continue;
-                }
-                if (lastRow) {
-                    lastCell = k === lastEditableIndex;
-                }
-                e = $(editableRow[k]);
-                sc = e.closest('section');
-                s = sc.attr('id');
-                v = Utils.escapeText(cells[k]).replace('\\r', '');
-                Widgets[s].value = v;
-                r = $('<div>').data('id', s).data('action', lastCell ? 'pastelast' : 'paste').data('ordinal', e.data('ordinal')).data('value', v);
-                let ic = sc.find('.ks-text-icon');
-                if (ic.find('span').attr('class') !== 'false') {
-                    Widget.doHandleSystemEvent(ic, f);
-                    Widget.doHandleGridTableSystemEvent(ic, f);
-                }
-                Widget.doHandleSystemEvent(r, f);
-                Widget.doHandleGridTableSystemEvent(r, f);
-                e.html(cells[k]);
-            }
+            Widget.doHandleSystemEvent(r, f);
+            Widget.doHandleGridTableSystemEvent(r, f);
+            t.title.html(t.value);
         }
 
         section.find('.ks-text').removeClass('ks-on');
         TextWidget.addEdit(section, o, true, false);
     }
 
-    static createEditableRows(editables, currentIndex) {
-        if (!editables || !editables.length) {
+    // Only the closing line break is dropped: leading or inner empty cells have to keep their position.
+    static parseClipboard(text) {
+        if (typeof text !== 'string' || text === '') {
             return [];
         }
+        return text.replace(/\r\n?/g, '\n').replace(/\n$/, '').split('\n').map(row => row.split('\t'));
+    }
 
-        let j = currentIndex;
-        if (j < 0) {
-            j = editables.length - 1;
-        }
-        if (j >= editables.length) {
-            return [];
-        }
+    // Maps the clipboard block onto the grid by position, starting from the cell in `startSection`:
+    // clipboard cell (i, k) belongs to the i. visible row and k. visible column counted from the start cell.
+    // Values that land on a non-editable cell (or outside of the table) are skipped, they never shift.
+    static getPasteTargets(startSection, clipboardRows) {
+        const idParts = (startSection.attr('id') || '').split('_'), gridId = idParts[0],
+            startRow = parseInt(idParts[1], 10), startColumn = parseInt(idParts[2], 10),
+            rows = new Set(), columns = new Set(), targets = [];
 
-        const currentElement = editables.get(j);
-        if (!currentElement) {
-            return [];
-        }
-
-        const currentSectionId = $(currentElement).closest('section').attr('id');
-        if (!currentSectionId) {
-            return [];
+        if (idParts.length !== 3 || Number.isNaN(startRow) || Number.isNaN(startColumn) || !clipboardRows.length) {
+            return targets;
         }
 
-        const currentSectionParts = currentSectionId.split('_');
-        if (currentSectionParts.length < 3) {
-            return [];
-        }
-
-        const currentRowIndex = parseInt(currentSectionParts[1], 10);
-        const currentColumnIndex = parseInt(currentSectionParts[2], 10);
-
-        if (Number.isNaN(currentRowIndex) || Number.isNaN(currentColumnIndex)) {
-            return [];
-        }
-
-        const rows = new Map();
-        const orderedRowIndexes = [];
-
-        editables.each((index, element) => {
-            const section = $(element).closest('section');
-            if (!section.length) {
+        $('#' + gridId).find(`section[id^="${gridId}_"]`).filter(':visible').each((index, element) => {
+            const parts = element.id.split('_'), row = parseInt(parts[1], 10), column = parseInt(parts[2], 10);
+            if (parts.length !== 3 || parts[0] !== gridId || Number.isNaN(row) || Number.isNaN(column)) {
                 return;
             }
-            const sectionId = section.attr('id');
-            if (!sectionId) {
-                return;
-            }
-
-            const parts = sectionId.split('_');
-            if (parts.length < 3) {
-                return;
-            }
-
-            const rowIndex = parseInt(parts[1], 10);
-            const columnIndex = parseInt(parts[2], 10);
-
-            if (Number.isNaN(rowIndex) || Number.isNaN(columnIndex)) {
-                return;
-            }
-
-            if (!rows.has(rowIndex)) {
-                rows.set(rowIndex, new Map());
-                orderedRowIndexes.push(rowIndex);
-            }
-
-            rows.get(rowIndex).set(columnIndex, element);
+            row >= startRow && rows.add(row);
+            column >= startColumn && columns.add(column);
         });
 
-        orderedRowIndexes.sort((a, b) => a - b);
+        const rowIndexes = Array.from(rows).sort((a, b) => a - b),
+            columnIndexes = Array.from(columns).sort((a, b) => a - b);
+        let i, k, section, title;
 
-        const currentRowCells = rows.get(currentRowIndex);
-        if (!currentRowCells) {
-            return [];
-        }
-
-        let targetColumns = Array.from(currentRowCells.keys())
-            .filter(columnIndex => columnIndex >= currentColumnIndex)
-            .sort((a, b) => a - b);
-
-        if (!targetColumns.length) {
-            return [];
-        }
-
-        const expandedColumns = [];
-        let lastColumn = null;
-
-        targetColumns.forEach(columnIndex => {
-            if (lastColumn !== null) {
-                for (let gap = lastColumn + 1; gap < columnIndex; ++gap) {
-                    expandedColumns.push(gap);
+        for (i = 0; i < clipboardRows.length && i < rowIndexes.length; ++i) {
+            for (k = 0; k < clipboardRows[i].length && k < columnIndexes.length; ++k) {
+                section = $('#' + gridId + '_' + rowIndexes[i] + '_' + columnIndexes[k]);
+                title = section.find('.ks-text-title[data-editable=1]').filter(':visible').first();
+                if (title.length) {
+                    targets.push({section: section, title: title, value: clipboardRows[i][k]});
                 }
             }
+        }
 
-            expandedColumns.push(columnIndex);
-            lastColumn = columnIndex;
-        });
-
-        targetColumns = expandedColumns;
-
-        const result = [];
-
-        orderedRowIndexes.forEach(rowIndex => {
-            if (rowIndex < currentRowIndex) {
-                return;
-            }
-
-            const rowCells = rows.get(rowIndex);
-            if (!rowCells) {
-                return;
-            }
-
-            // Preserve column alignment: include null placeholders when the target column isn't editable in this row.
-            const row = targetColumns.map(columnIndex => rowCells.has(columnIndex) ? rowCells.get(columnIndex) : null);
-            result.push(row);
-        });
-
-        return result;
+        return targets;
     }
 
     static getCurrentIndex(editables, c) {
@@ -561,11 +442,7 @@ class TextWidget extends Widget {
                                 TextWidget.addEdit(section, o, amIOnGridTable, pasteDataByServerSide);
                                 return false;
                             }
-                            let editables = TextWidget.getEditables(gridId),
-                                j = TextWidget.getCurrentIndex(editables, c);
-                            if (j >= 0 && editables.length > 0) {
-                                navigator.clipboard.readText().then(text => TextWidget.pasteData(text, editables, j, f, o, section)).catch(err => L('Read from clipboard failed: ', err));
-                            }
+                            navigator.clipboard.readText().then(text => TextWidget.pasteData(text, f, o, section)).catch(err => L('Read from clipboard failed: ', err));
                         }
                     });
                 }

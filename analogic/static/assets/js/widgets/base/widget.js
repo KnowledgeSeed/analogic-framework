@@ -609,8 +609,10 @@ class Widget {
         let a = element.data('action'), i = element.data('id'), idParts = i.split('_'),
             section = element.closest('section');
 
-        const eventMapId = a + '.' + idParts[0] + '_row_' + idParts[2],
-            columnEventMapId = a + '.' + idParts[0] + '_' + idParts[1] + '_' + idParts[2] + '_' + section.data('originalid');
+        // Synthetic elements (e.g. bulk paste) are not in the DOM, the original id then comes from the cell's own section.
+        const originalId = section.length ? section.data('originalid') : $('#' + i).data('originalid'),
+            eventMapId = a + '.' + idParts[0] + '_row_' + idParts[2],
+            columnEventMapId = a + '.' + idParts[0] + '_' + idParts[1] + '_' + idParts[2] + '_' + originalId;
 
         El.body.triggerHandler(eventMapId + '.started');
         El.body.triggerHandler(columnEventMapId + '.started');
