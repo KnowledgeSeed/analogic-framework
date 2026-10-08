@@ -178,6 +178,10 @@ class TextWidget extends Widget {
     // jQuery's html() is only needed for content with inline scripts, which innerHTML would not run.
     static setContent(element, content) {
         if (element[0] && !/<script/i.test(content)) {
+            // Child elements (e.g. the edit input) may carry jQuery handlers: empty() removes them
+            // first, otherwise their focusout fires while the node is being removed and rewrites
+            // the element in the middle of the replacement (NotFoundError).
+            element[0].firstElementChild && element.empty();
             element[0].innerHTML = content;
         } else {
             element.html(content);
