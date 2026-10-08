@@ -27,5 +27,8 @@ analogic/tests/apps/logincam/app.json
 long_running_tasks
 analogic.properties
 node_modules/
+config.py
+.claude/
+apps/default/seeder_studio_trust.json
 /apps/*/seeder_studio_trust.json
 /config.py

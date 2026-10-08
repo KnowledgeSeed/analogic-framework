@@ -46,6 +46,74 @@ class Widget {
         return $('#' + id);
     }
 
+    // A refresh empties the holder and fills it again, so the browser clamps the scroll position
+    // of every scrolled container whose content shrinks in between and the user is thrown back
+    // to the start of the table. The holder keeps its size while it is empty (lockHolderSize) and
+    // the scroll positions that live inside the holder, which is replaced, are restored afterwards.
+    getScrollableSelectors() {
+        return [
+            '.ks-grid-table', '.ks-grid-table-inner', '.ks-grid-table-content',
+            '.ks-grid-table-light_inner', '.ks-grid-table-light_head', '.ks-grid-table-light_body',
+            '.ks-grid-table-plus-inner', '.tabulator-tableholder'
+        ];
+    }
+
+    // The extent includes what overflows the holder (scrollWidth/scrollHeight): when the holder is
+    // the content of a scrolled ancestor, that overflow is what keeps the ancestor scrollable.
+    // Returns the plain height, the caller sets it as the min-height once the new content is in.
+    static lockHolderSize(holder) {
+        const height = holder.actual('height'), width = holder.actual('width'), element = holder[0];
+
+        height > 0 && holder.css('min-height', Math.max(height, element ? element.scrollHeight : 0));
+        width > 0 && holder.css('min-width', Math.max(width, element ? element.scrollWidth : 0));
+
+        return height;
+    }
+
+    static unlockHolderWidth(holder) {
+        holder.css('min-width', '');
+    }
+
+    // The holder itself and the elements that match the selectors inside it are recorded by
+    // selector and position, as they are replaced. The ancestors stay in the DOM, so they are
+    // recorded by reference, just in case something still shrank them.
+    static captureScrollState(holder, selectors) {
+        const state = {inside: [], ancestors: []}, record = (target, element, selector, index) => {
+            const left = element.scrollLeft(), top = element.scrollTop();
+            if (left || top) {
+                target.push({element, selector, index, left, top});
+            }
+        };
+
+        record(state.inside, holder, null, 0);
+        (selectors || []).forEach(selector => holder.find(selector).each(function (index) {
+            record(state.inside, $(this), selector, index);
+        }));
+        holder.parents().each(function () {
+            record(state.ancestors, $(this), null, 0);
+        });
+
+        return state;
+    }
+
+    static restoreScrollState(holder, state) {
+        if (!state) {
+            return;
+        }
+
+        state.inside.forEach(({selector, index, left, top}) => {
+            const element = selector === null ? holder : holder.find(selector).eq(index);
+            if (element.length) {
+                element.scrollLeft(left);
+                element.scrollTop(top);
+            }
+        });
+        state.ancestors.forEach(({element, left, top}) => {
+            element.scrollLeft(left);
+            element.scrollTop(top);
+        });
+    }
+
     refreshGridCell() {
 
         Listeners.length = 0;
@@ -54,7 +122,8 @@ class Widget {
 
         let holderHeight = 0;
 
-        holderHeight = holder.actual('height');
+        holderHeight = Widget.lockHolderSize(holder);
+        const scrollState = Widget.captureScrollState(holder, widget.getScrollableSelectors());
 
         return holder.empty().off().promise().then(() => {
             return widget.render(false, true, false, QB.refreshGridCellData).then(html => {
@@ -71,6 +140,9 @@ class Widget {
                     }
 
                     widget.initEvents(false);
+
+                    Widget.unlockHolderWidth(holder);
+                    Widget.restoreScrollState(holder, scrollState);
 
                     El.body.trigger('rendered.' + o.id);
 
@@ -94,7 +166,8 @@ class Widget {
 
         Listeners.length = 0;
 
-        let holderHeight = holder.actual('height');
+        let holderHeight = Widget.lockHolderSize(holder);
+        const scrollState = Widget.captureScrollState(holder, instance.getScrollableSelectors());
 
         return holder.empty().off().promise().then(() => {
 
@@ -121,6 +194,9 @@ class Widget {
                     }
 
                     instance.initEvents(withState);
+
+                    Widget.unlockHolderWidth(holder);
+                    Widget.restoreScrollState(holder, scrollState);
 
                     if (o.disableRefreshGridCell !== true) {
                         for (i of Listeners.filter(e => e.method === 'refreshGridCell' && e.options.id.includes(holder.attr('id')))) {

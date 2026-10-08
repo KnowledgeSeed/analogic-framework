@@ -2,6 +2,5 @@
   "projectName": "Analogic",
   "projectId": "analogic",
   "authenticationMode": "NoLogin",
-  "mainPage": "analogicMain",
-  "analogicApiAuthenticationMode": "unsecured"
+  "mainPage": "analogicMain"
 }
