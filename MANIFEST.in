@@ -4,3 +4,4 @@ graft analogic/static
 graft analogic/new_app_structure
 include analogic/logging.json
 global-exclude *.pyc
+include requirements.txt

@@ -1,0 +1,14 @@
+.git
+**/.git
+venv
+.venv
+local
+**/__pycache__
+**/*.pyc
+**/*.egg-info
+build
+dist
+.pytest_cache
+.env
+.env.*
+extensions/analogic-ext-*

@@ -6,15 +6,19 @@ on:
   workflow_dispatch:
 
 jobs:
+  compatibility:
+    uses: ./.github/workflows/main.yml
+    secrets: inherit
 
   build:
+    needs: compatibility
 
     runs-on: ubuntu-latest
 
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get version
         id: set_version
@@ -22,7 +26,7 @@ jobs:
           VERSION_FILE='analogic/version.config'
           VERSION=$(cat "$VERSION_FILE" | tr -d '\n')
           echo "Version: $VERSION"
-          echo "::set-output name=version::$VERSION" # Sets an output variable 
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Check if version exists on PyPI
         id: check_pypi
@@ -53,7 +57,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
       - name: Set up Python 3.10
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -71,7 +75,7 @@ jobs:
 
       - name: Skip PyPI upload (version exists)
         if: steps.check_pypi.outputs.exists == 'true'
-        run: echo "Version ${{ steps.set_version.outputs.version }} already exists on PyPI – skipping upload."
+        run: echo "Version ${{ steps.set_version.outputs.version }} already exists on PyPI â€“ skipping upload."
 
       - name: Docker Build and push to Dockerhub
         uses: docker/build-push-action@v6

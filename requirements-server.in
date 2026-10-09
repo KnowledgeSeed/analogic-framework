@@ -1,0 +1,2 @@
+-r requirements.in
+waitress==3.0.2
