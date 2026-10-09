@@ -1,8 +1,8 @@
 Python Compatibility
 ====================
 
-The supported baseline is Python 3.10. Release validation covers standard,
-64-bit CPython 3.10-3.14 on Windows and Linux. Future Python minors, PyPy,
+The supported baseline is Python 3.10. Source compatibility validation covers
+standard, 64-bit CPython 3.10-3.14 on Windows and Linux. Future Python minors, PyPy,
 free-threaded builds and additional architectures need their own validation
 before being advertised as supported. ``Requires-Python: >=3.10`` declares
 a minimum version, not a guarantee about future interpreters.
@@ -60,17 +60,17 @@ Release gates
    can also invoke this check using ``include_extensions`` and
    ``extensions_ref``. This allows validation of coordinated feature branches
    before the new workflow has reached the default branch.
-4. For protected Pool distributions, run the protected-wheel workflows with
-   a PyArmor 9-compatible registration valid for the selected CI runners and
-   BCC protection. Merely having a ``PYARMOR_LIC`` secret does not prove that
-   the license is valid for PyArmor 9 or GitHub-hosted runners. PyArmor 9.2.7 generates and imports a
-   separate wheel for each Python minor and OS. Protected wheels have
-   CPython/ABI/platform tags; plaintext source wheels remain ``py3-none-any``.
+4. The release owner manages Pool obfuscation, PyArmor tooling and registration,
+   protected build targets and publication. Python compatibility work does not
+   prescribe a PyArmor version or switch to readable code at Python 3.13.
+   PyArmor remains a tool in the pre-existing manual Pool release workflows,
+   not an installation dependency of the framework or extensions.
+5. Validate each actual protected Pool artifact on its target Python and OS
+   before deployment. Native wheels have CPython/ABI/platform tags; source
+   wheels remain ``py3-none-any``. Source compatibility checks do not prove
+   native runtime compatibility or availability of a protected release.
    Never rename a protected cp310 wheel to install it on another interpreter.
-5. Production configuration is inserted before obfuscation. The build rejects
-   unexpected plaintext Python and produces no unprotected fallback on
-   failure. Keep protected and plaintext distribution channels separate when
-   source protection is required.
+   Keep development artifacts separate from protected release indexes.
 
 These checks do not replace live integration tests against TM1, LDAP/AD, IIS,
 SAML, databases, SharePoint or Airflow. Protected release validation requires
