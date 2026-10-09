@@ -1,0 +1,16 @@
+{
+  "analogic-ext-airflow-api-connector": "analogic_airflow_api_connector",
+  "analogic-ext-analogic-pool": "analogic_pool",
+  "analogic-ext-file-upload": "analogic_file_upload",
+  "analogic-ext-graphql": "analogic_graphql",
+  "analogic-ext-iis-pool": "analogic_iis_pool",
+  "analogic-ext-ldap-pool": "analogic_ldap_pool",
+  "analogic-ext-long-running-task": "analogic_long_running_task",
+  "analogic-ext-mssql": "analogic_mssql",
+  "analogic-ext-mysql": "analogic_mysql",
+  "analogic-ext-saml": "analogic_saml",
+  "analogic-ext-seeder": "analogic_seeder",
+  "analogic-ext-sharepoint": "analogic_sharepoint",
+  "analogic-ext-sql": "analogic_sql",
+  "analogic-ext-tm1-error-reporting": "analogic_tm1_error_reporting"
+}

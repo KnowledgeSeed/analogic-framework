@@ -25,7 +25,9 @@ install and hook up with a TM1 server.
 
 ## Requirements
 
-The framework requires Python >= 3.10.
+The framework requires Python >= 3.10. CPython 3.10-3.14 is tested on Windows and Linux.
+The installer and protected-wheel release contract is documented in
+[Python compatibility](docs/source/python_compatibility.rst).
 
 Locked dependency install and lock regeneration are documented in
 [`docs/source/dependency_locking.rst`](docs/source/dependency_locking.rst).
@@ -85,14 +87,14 @@ venv\Scripts\activate.bat
 3. Install the locked runtime environment:
 ```
 # Windows
-py -3.10 -m pip install --upgrade pip
-py -3.10 -m pip install --require-hashes -r requirements.windows.lock
-py -3.10 -m pip install --no-deps -e .
+python -m pip install --upgrade pip
+python -m pip install --require-hashes -r requirements.windows.lock
+python -m pip install --no-deps -e .
 
 # Linux / CI
-python3.10 -m pip install --upgrade pip
-python3.10 -m pip install --require-hashes -r requirements.linux.lock
-python3.10 -m pip install --no-deps -e .
+python -m pip install --upgrade pip
+python -m pip install --require-hashes -r requirements.linux.lock
+python -m pip install --no-deps -e .
 ```
 
 4. Set up the following env variable for loading sample apps:
@@ -105,7 +107,7 @@ set ANALOGIC_LOAD_SAMPLE_APPS=True
 ```
 5. Launch analogic:
 ```
-py run.py
+python run.py
  ``` 
 6. Open the following url in browser: http://localhost:5000/helloanalogic
 
@@ -168,7 +170,7 @@ set ANALOGIC_LOAD_SAMPLE_APPS=True
 ```
 6. Launch analogic:
 ```
-py run.py
+python run.py
  ``` 
 7. Open the following url in browser: http://localhost:5000/helloanalogic
 

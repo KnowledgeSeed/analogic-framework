@@ -1,61 +1,93 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI Build
-
 on:
   push:
-    branches: [ "main" ]
+    branches: [main, studio]
   pull_request:
-    branches: [ "main" ]
-
+    branches: [main, studio]
   workflow_dispatch:
-
+    inputs:
+      include_extensions:
+        description: Also test all private extensions (requires EXTENSIONS_READ_TOKEN)
+        type: boolean
+        default: false
+      extensions_ref:
+        description: Branch, tag or commit to build in every extension repository
+        type: string
+        default: main
+  workflow_call:
+permissions:
+  contents: read
 jobs:
-
-  build:
-
-    runs-on: ubuntu-latest
-
+  extensions:
+    if: github.event_name == 'workflow_dispatch' && inputs.include_extensions
+    uses: ./.github/workflows/extensions.yml
+    with:
+      extensions-ref: ${{ inputs.extensions_ref }}
+    secrets:
+      EXTENSIONS_READ_TOKEN: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+  python:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.10', '3.11', '3.12', '3.13', '3.14']
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
-
-      - name: Install dependencies
+          python-version: ${{ matrix.python }}
+      - name: Install hashed test dependencies
+        run: python -m pip install --require-hashes -r requirements-test.lock
+      - name: Build and install the distributable
         run: |
-         python -m pip install --upgrade pip
-         pip install --require-hashes -r requirements-test.linux.lock
-         pip install --no-deps -e .
-        
-      - name: Run unit tests and collect coverage
-        run: PYTHONPATH=. pytest --cov .
-        
-      - name: Upload coverage reports to Codecov Dashboard
+          python -m build
+          python -m pip install dist/*.whl
+          python -m pip check
+      - name: Unit tests and installed runtime
         run: |
-          # Replace `linux` below with the appropriate OS
-          # Options are `alpine`, `linux`, `macos`, `windows`
-          curl -Os https://uploader.codecov.io/latest/linux/codecov
-          chmod +x codecov
-          ./codecov
-
+          python -m pytest analogic/tests --cov=analogic --cov-report=xml
+          python scripts/check_runtime.py
+      - uses: codecov/codecov-action@v5
+        if: matrix.os == 'ubuntu-latest' && matrix.python == '3.12'
+        with:
+          files: coverage.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+  docker:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.10', '3.11', '3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and verify the container runtime
+        env:
+          PYTHON_VERSION: ${{ matrix.python }}
+        run: |
+          docker build --build-arg PYTHON_VERSION="$PYTHON_VERSION" -t analogic-compat .
+          docker run --rm --entrypoint python analogic-compat scripts/check_container_http.py
+  e2e:
+    needs: [python, docker]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: Start containers
-        run: docker-compose -f docker-compose-flask.yml up -d --build
-        
-      - name: Run Cypress e2e tests and upload results to Cypress Dashboard
-        uses: cypress-io/github-action@v4
+        run: docker compose -f docker-compose-flask.yml up -d --build
+      - uses: cypress-io/github-action@v4
         with:
           working-directory: cypress
           spec: e2e/helloanalogic_base.cy.js
-          wait-on: "http://localhost:5000"
+          wait-on: http://localhost:5000
           browser: chrome
           record: true
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Stop containers
         if: always()
-        run: docker-compose -f docker-compose-flask.yml down
+        run: docker compose -f docker-compose-flask.yml down
 
