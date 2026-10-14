@@ -29,8 +29,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install build twine
 
+      # Before anything is published: a masterdata error must not leave a released version behind.
+      - name: Build and validate masterdata package
+        run: python tools/masterdata/build_masterdata.py --out dist-masterdata
+
       - name: Python Build
         run: python -m build
 
       - name: Publish to PyPI
         run: python -m twine upload dist/* -u__token__ -p${{ secrets.PYPI_TOKEN }} --verbose
+
+      - name: Register framework release on Seeder Portal (draft)
+        env:
+          PORTAL_FRAMEWORK_RELEASE_API_KEY: ${{ secrets.PORTAL_FRAMEWORK_RELEASE_API_KEY }}
+        run: bash .github/scripts/register_framework_release.sh "${{ steps.set_version.outputs.version }}" dist-masterdata/masterdata.zip

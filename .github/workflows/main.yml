@@ -29,6 +29,9 @@ jobs:
          pip install --require-hashes -r requirements-test.linux.lock
          pip install --no-deps -e .
         
+      - name: Validate widget masterdata
+        run: python tools/masterdata/build_masterdata.py --check
+
       - name: Run unit tests and collect coverage
         run: PYTHONPATH=. pytest --cov .
         

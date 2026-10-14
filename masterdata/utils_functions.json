@@ -1,0 +1,559 @@
+{
+  "functions": [
+    {
+      "name": "Utils.sleep",
+      "arguments": "100",
+      "description": "Returns a Promise that resolves after the given number of milliseconds, for delaying subsequent actions."
+    },
+    {
+      "name": "Utils.cleanStr",
+      "arguments": "''",
+      "description": "Strips Hungarian accented characters from a string, replacing them with their unaccented ASCII equivalents."
+    },
+    {
+      "name": "Utils.clone",
+      "arguments": "",
+      "description": "Returns a shallow or deep copy of an object/array."
+    },
+    {
+      "name": "Utils.replaceAll",
+      "arguments": "",
+      "description": "Case-insensitively replaces every key of a {find: replace} map inside a string."
+    },
+    {
+      "name": "Utils.scrollTop",
+      "arguments": "",
+      "description": "Smoothly scrolls the whole page back to the top."
+    },
+    {
+      "name": "Utils.getRandomId",
+      "arguments": "",
+      "description": "Returns a cryptographically random 32-bit integer, useful as a unique id."
+    },
+    {
+      "name": "Utils.toTitleCase",
+      "arguments": "''",
+      "description": "Converts a string to Title Case (capitalizes the first letter of each word)."
+    },
+    {
+      "name": "Utils.convertValueToPost",
+      "arguments": "''",
+      "description": "Parses a locale-formatted numeric string (handling a trailing '%') into a plain number ready to post to the server."
+    },
+    {
+      "name": "Utils.getToday",
+      "arguments": "",
+      "description": "Returns today's date formatted as Year{delimiter}Month{delimiter}Day."
+    },
+    {
+      "name": "Utils.rewindTime",
+      "arguments": "",
+      "description": "Mutates a Date to midnight (00:00:00.000) of the same day."
+    },
+    {
+      "name": "Utils.forwardTime",
+      "arguments": "",
+      "description": "Mutates a Date to the last moment (23:59:59.999) of the same day."
+    },
+    {
+      "name": "Utils.escapeText",
+      "arguments": "''",
+      "description": "JSON-escapes a string's special characters (quotes, backslashes) without the surrounding quotes."
+    },
+    {
+      "name": "Utils.formatIntForChart",
+      "arguments": "",
+      "description": "Formats an integer with thin-space thousands separators, for chart axis/label display."
+    },
+    {
+      "name": "Utils.addLeadingZero",
+      "arguments": "",
+      "description": "Pads a single-digit number with a leading zero (e.g. 5 -> \"05\")."
+    },
+    {
+      "name": "Utils.scrollTo",
+      "arguments": "",
+      "description": "Smoothly scrolls to a widget (by id or jQuery object), firing a 'refresh.<id>' event first."
+    },
+    {
+      "name": "Utils.parseNumber",
+      "arguments": "''",
+      "description": "Parses a locale-formatted number string (negative parentheses, thousands separators, exponents) into a JS number."
+    },
+    {
+      "name": "Utils.replaceDecimal",
+      "arguments": "",
+      "description": "Formats a number's decimal separator ('.') to the given locale's own decimal character."
+    },
+    {
+      "name": "Utils.getTimestamp",
+      "arguments": "''",
+      "description": "Returns an ISO-like timestamp for a date string, rounded to the start (or end, if forwardTime) of that day."
+    },
+    {
+      "name": "Utils.getFormattedDate",
+      "arguments": "",
+      "description": "Formats a Date as Year{delimiter}Month{delimiter}Day, optionally appending HH:MM:SS."
+    },
+    {
+      "name": "Utils.precisionRound",
+      "arguments": "",
+      "description": "Rounds a number to the given decimal precision, optionally returned as a fixed-format string."
+    },
+    {
+      "name": "Utils.getGridTableId",
+      "arguments": "''",
+      "description": "Extracts the GridTable widget id from a composite cell id string (\"tableId,row,col\")."
+    },
+    {
+      "name": "Utils.getGridTableCurrentCell",
+      "arguments": "''",
+      "description": "Returns the cell data object at a GridTable's currently selected row/column."
+    },
+    {
+      "name": "Utils.getGridTableCurrentRow",
+      "arguments": "''",
+      "description": "Returns the full row of cell data at a GridTable's currently selected row."
+    },
+    {
+      "name": "Utils.getGridTableCell",
+      "arguments": "'', 0",
+      "description": "Returns one cell from a GridTable's currently selected row, by column index."
+    },
+    {
+      "name": "Utils.getGridTableCellByRowAndColumn",
+      "arguments": "'', 0, 0",
+      "description": "Returns a specific GridTable cell (or one of its properties) by explicit row/column."
+    },
+    {
+      "name": "Utils.getCheckedGridTableCellByRowAndColumn",
+      "arguments": "'', 0",
+      "description": "Same as getGridTableCellByRowAndColumn but returns false if the row/column/property is out of bounds or missing."
+    },
+    {
+      "name": "Utils.setAndGetGridTableSystemValueByCurrentRow",
+      "arguments": "'',0,'',''",
+      "description": "Copies one property of the current row's cell into a systemValue and returns it."
+    },
+    {
+      "name": "Utils.getDropBoxSelectedItem",
+      "arguments": "''",
+      "description": "Returns the full item object currently selected in a DropBox widget."
+    },
+    {
+      "name": "Utils.selectDropBoxNextItem",
+      "arguments": "''",
+      "description": "Selects the next item in a DropBox's list, if one exists."
+    },
+    {
+      "name": "Utils.selectDropBoxPreviousItem",
+      "arguments": "''",
+      "description": "Selects the previous item in a DropBox's list, if one exists."
+    },
+    {
+      "name": "Utils.getDropBoxSelectedItemAttribute",
+      "arguments": "'', 'key'",
+      "description": "Returns one named attribute of a DropBox's currently selected item."
+    },
+    {
+      "name": "Utils.getCellsFromClipboard",
+      "arguments": "''",
+      "description": "Parses a widget's pasted clipboard text into a 2D array of rows/columns (tab/newline separated)."
+    },
+    {
+      "name": "Utils.getArrayWithValues",
+      "arguments": "",
+      "description": "Builds an array of the given length, every element set to the same value."
+    },
+    {
+      "name": "Utils.getOrdinalValuePairs",
+      "arguments": "",
+      "description": "Builds a TM1-style {Ordinal, Value} JSON pair list from parallel ordinal and value arrays."
+    },
+    {
+      "name": "Utils.getOrdinalValuePairsAndEmptyFilledValues",
+      "arguments": "",
+      "description": "Same as getOrdinalValuePairs but pads missing trailing values with empty strings using existingValues' ordinals."
+    },
+    {
+      "name": "Utils.isGridTableLoaded",
+      "arguments": "''",
+      "description": "Returns true if a GridTable widget currently has cell data loaded."
+    },
+    {
+      "name": "Utils.getCellsByColumnsFromClipboard",
+      "arguments": "'', 0",
+      "description": "Extracts one column's values from a widget's pasted clipboard data."
+    },
+    {
+      "name": "Utils.getGridTableActualAndLastPage",
+      "arguments": "''",
+      "description": "Returns {actualPage, maxPage} for a paged GridTable."
+    },
+    {
+      "name": "Utils.getGridTablePagerText",
+      "arguments": "''",
+      "description": "Returns a \"current/total\" page label string for a paged GridTable."
+    },
+    {
+      "name": "Utils.isGridTablePagerPreviousButtonVisible",
+      "arguments": "''",
+      "description": "Returns true if a paged GridTable is not on its first page."
+    },
+    {
+      "name": "Utils.isGridTablePagerNextButtonVisible",
+      "arguments": "''",
+      "description": "Returns true if a paged GridTable is not on its last page."
+    },
+    {
+      "name": "Utils.isValueExistingAndNotEmpty",
+      "arguments": "''",
+      "description": "Returns true if a widget's given value field exists and is non-empty."
+    },
+    {
+      "name": "Utils.setWidgetValueIfNotExist",
+      "arguments": "",
+      "description": "Sets a systemValue only if it doesn't already exist."
+    },
+    {
+      "name": "Utils.setWidgetValueIfNotExistByOther",
+      "arguments": "'', ''",
+      "description": "Copies one systemValue's value into another only if the target doesn't already exist."
+    },
+    {
+      "name": "Utils.setWidgetValue",
+      "arguments": "'', ''",
+      "description": "Sets a systemValue/widget entry directly (resets it if the value is falsy and it's a live Widget instance)."
+    },
+    {
+      "name": "Utils.setWidgetValueByOther",
+      "arguments": "'', ''",
+      "description": "Copies one systemValue's current value into another."
+    },
+    {
+      "name": "Utils.getPropertyOrFunctionValue",
+      "arguments": "",
+      "description": "Returns object[property], calling it first if it is itself a function."
+    },
+    {
+      "name": "Utils.getDecimalFromPercentString",
+      "arguments": "''",
+      "description": "Converts a percentage string (e.g. \"42%\") into a 0-1 decimal, optionally locale-formatted."
+    },
+    {
+      "name": "Utils.filterUnique",
+      "arguments": "",
+      "description": "Returns an array with duplicate values removed, preserving order."
+    },
+    {
+      "name": "Utils.getEvenElements",
+      "arguments": "",
+      "description": "Returns every array element at an even index (0, 2, 4, ...)."
+    },
+    {
+      "name": "Utils.getOddElements",
+      "arguments": "",
+      "description": "Returns every array element at an odd index (1, 3, 5, ...)."
+    },
+    {
+      "name": "Utils.getArrayElements",
+      "arguments": "",
+      "description": "Returns every array element whose index modulo `modulo` equals `tailings`."
+    },
+    {
+      "name": "Utils.modifyFileName",
+      "arguments": "",
+      "description": "Renames the file currently attached to a FileUpload widget, keeping its original extension."
+    },
+    {
+      "name": "Utils.buildProcessParameters",
+      "arguments": "",
+      "description": "Builds a TM1 process-parameters JSON body from an array of {name, value} pairs."
+    },
+    {
+      "name": "Utils.buildProcessParametersFromObject",
+      "arguments": "",
+      "description": "Same as buildProcessParameters but built from a plain {name: value} object."
+    },
+    {
+      "name": "Utils.getProcessNameValuePair",
+      "arguments": "",
+      "description": "Builds one {name, value} pair object for use with buildProcessParameters."
+    },
+    {
+      "name": "Utils.getHorizontalTableHiddenValue",
+      "arguments": "",
+      "description": "Reads a hidden value from a horizontal table's currently active row/column."
+    },
+    {
+      "name": "Utils.getGridTableRowCol",
+      "arguments": "",
+      "description": "Splits a composite GridTable cell id (\"table_row_col\") into its {row, column, id} parts."
+    },
+    {
+      "name": "Utils.openPopup",
+      "arguments": "'', ctx",
+      "description": "Opens a popup, resolving the triggering event/element from the behavior context (ctx). This is the real Studio convention for opening a popup from a widget event - not Api.openPopup."
+    },
+    {
+      "name": "Utils.togglePopup",
+      "arguments": "'', ctx",
+      "description": "Toggles a popup open/closed, resolving event/element from ctx. This is the real Studio convention for toggling a popup from a widget event - not Api.togglePopup."
+    },
+    {
+      "name": "Utils.closePopup",
+      "arguments": "'', ctx",
+      "description": "Closes a popup, resolving event/element from ctx. This is the real Studio convention for closing a popup from a widget event - not Api.closePopup."
+    },
+    {
+      "name": "Utils.closePopups",
+      "arguments": "[]",
+      "description": "Closes multiple popups by id."
+    },
+    {
+      "name": "Utils.getMatrixFromArray",
+      "arguments": "",
+      "description": "Splits a flat array into a 2D matrix with a fixed number of columns per row."
+    },
+    {
+      "name": "Utils.getGridtableMatrix",
+      "arguments": "",
+      "description": "Same as getMatrixFromArray, then maps every cell through a given function."
+    },
+    {
+      "name": "Utils.focus",
+      "arguments": "",
+      "description": "Focuses an input (by id or jQuery object), optionally moving the cursor to the end of its text."
+    },
+    {
+      "name": "Utils.separatesThousands",
+      "arguments": "",
+      "description": "Formats a number's integer part with thousands separators, preserving any decimal part."
+    },
+    {
+      "name": "Utils.saveGridTableToggles",
+      "arguments": "'', 0",
+      "description": "Snapshots one column's toggle/value state across every row of a GridTable into a systemValue."
+    },
+    {
+      "name": "Utils.getGridTableToggleValue",
+      "arguments": "'', 0",
+      "description": "Reads back one row's saved toggle value from saveGridTableToggles' systemValue."
+    },
+    {
+      "name": "Utils.hexToRgb",
+      "arguments": "''",
+      "description": "Converts a hex color string to an rgb()/rgba() CSS string, or an {r,g,b,a} object."
+    },
+    {
+      "name": "Utils.getActiveUserString",
+      "arguments": "''",
+      "description": "Normalizes a username string (leaves CAM IDs as-is, converts backslashes to forward slashes otherwise)."
+    },
+    {
+      "name": "Utils.undefinedOrFalse",
+      "arguments": "",
+      "description": "Returns true if a value is undefined or exactly false."
+    },
+    {
+      "name": "Utils.getNavigationUrl",
+      "arguments": "",
+      "description": "Builds the current page's URL with an optional base64-encoded parameters query string."
+    },
+    {
+      "name": "Utils.enableRequestLogger",
+      "arguments": "",
+      "description": "Turns on the framework's request logger."
+    },
+    {
+      "name": "Utils.disableRequestLogger",
+      "arguments": "",
+      "description": "Turns off the framework's request logger."
+    },
+    {
+      "name": "Utils.isRequestLoggerEnabled",
+      "arguments": "",
+      "description": "Returns true if the request logger is currently enabled."
+    },
+    {
+      "name": "Utils.setRequestLoggerJourneyId",
+      "arguments": "",
+      "description": "Sets the current request-logger journey id."
+    },
+    {
+      "name": "Utils.generateRequestLoggerJourneyId",
+      "arguments": "",
+      "description": "Generates and sets a new random request-logger journey id."
+    },
+    {
+      "name": "Utils.getRequestLoggerJourneyId",
+      "arguments": "",
+      "description": "Returns the current request-logger journey id."
+    },
+    {
+      "name": "Utils.setRequestLoggerGroupId",
+      "arguments": "",
+      "description": "Sets the current request-logger group id."
+    },
+    {
+      "name": "Utils.generateRequestLoggerGroupId",
+      "arguments": "",
+      "description": "Generates and sets a new random request-logger group id."
+    },
+    {
+      "name": "Utils.getRequestLoggerGroupId",
+      "arguments": "",
+      "description": "Returns the current request-logger group id."
+    },
+    {
+      "name": "Utils.enableToolTips",
+      "arguments": "",
+      "description": "Enables hover tooltips for widgets/segments that declare one."
+    },
+    {
+      "name": "Utils.disableToolTips",
+      "arguments": "",
+      "description": "Disables hover tooltips (must have been enabled first)."
+    },
+    {
+      "name": "Utils.reloadApp",
+      "arguments": "",
+      "description": "Reloads the current browser page/app from scratch."
+    },
+    {
+      "name": "Utils.getAppSubPathArray",
+      "arguments": "",
+      "description": "Returns the URL path segments up to and including the app's own instance name."
+    },
+    {
+      "name": "Utils.getAppSubPath",
+      "arguments": "",
+      "description": "Returns the app's sub-path (getAppSubPathArray joined with '/')."
+    },
+    {
+      "name": "Utils.getFullUrlForAjax",
+      "arguments": "",
+      "description": "Resolves a relative URL into a full instance-aware URL when the app is running under URL-based navigation."
+    },
+    {
+      "name": "Utils.getInstanceUrl",
+      "arguments": "",
+      "description": "Builds a full URL for the given sub-path under the app's own instance origin."
+    },
+    {
+      "name": "Utils.isUrlNavigation",
+      "arguments": "",
+      "description": "Returns true if the app is running in URL-path-based navigation mode (vs. the default single-path mode)."
+    },
+    {
+      "name": "Utils.getAppProviderBasedUrl",
+      "arguments": "",
+      "description": "Prefixes a URL with the current auth provider's sub-path when in URL-navigation mode."
+    },
+    {
+      "name": "Utils.changeUrlState",
+      "arguments": "",
+      "description": "Updates the browser URL/history to reflect a new page (and any extra path segments as navigation parameters) without a full reload."
+    },
+    {
+      "name": "Utils.changePageTitleAndFavicon",
+      "arguments": "",
+      "description": "Sets both the browser tab title and favicon in one call."
+    },
+    {
+      "name": "Utils.changePageFavicon",
+      "arguments": "",
+      "description": "Sets the browser tab's favicon image."
+    },
+    {
+      "name": "Utils.changePageTitle",
+      "arguments": "",
+      "description": "Sets the browser tab's title text."
+    },
+    {
+      "name": "Utils.parseJSONScript",
+      "arguments": "",
+      "description": "Parses the JSON text content of a <script> element by id into an object (returns {} on error)."
+    },
+    {
+      "name": "Utils.setAutoPosition",
+      "arguments": "",
+      "description": "Positions a floating element (e.g. a dropdown/popup) next to an anchor element, auto-picking the side with the most free screen space."
+    },
+    {
+      "name": "Utils.adjustHeightsToMax",
+      "arguments": "",
+      "description": "Sets every element in a jQuery collection to the height of the tallest one among them."
+    },
+    {
+      "name": "Utils.buildMdxQueryUrl",
+      "arguments": "",
+      "description": "Appends OData-style $top/$skip/$count paging parameters to an MDX Cells/Tuples query URL, computed from pagination options and the event context's extra params."
+    },
+    {
+      "name": "Utils.calculateMargin",
+      "arguments": "",
+      "description": "Resolves a margin that may be a percentage string, a 0-1 fraction, or an absolute number, into an absolute value relative to a total."
+    },
+    {
+      "name": "Utils.checkScreenResolution",
+      "arguments": "",
+      "description": "Shows a one-time warning popup if the browser window is narrower than the app's actual content width."
+    },
+    {
+      "name": "Utils.create_UUID",
+      "arguments": "",
+      "description": "Generates a random RFC-4122-style UUID string."
+    },
+    {
+      "name": "Utils.extCall",
+      "arguments": "",
+      "description": "Calls a named custom extension function registered under ExtensionFunctions."
+    },
+    {
+      "name": "Utils.getSize",
+      "arguments": "",
+      "description": "Formats a numeric or percentage size value as a CSS length string (px or %), optionally converting % to px."
+    },
+    {
+      "name": "Utils.htmlEncode",
+      "arguments": "''",
+      "description": "HTML-escapes a string's quote characters (\" and ') for safe embedding in an HTML attribute (a numeric input is returned unchanged)."
+    },
+    {
+      "name": "Utils.isInViewport",
+      "arguments": "",
+      "description": "Returns true if a DOM element is fully visible within the current browser viewport."
+    },
+    {
+      "name": "Utils.isMobile",
+      "arguments": "",
+      "description": "Returns true if the current browser's user agent looks like a mobile device (cached after the first check)."
+    },
+    {
+      "name": "Utils.nl2br",
+      "arguments": "''",
+      "description": "Converts newline characters in a string to '<br>' tags."
+    },
+    {
+      "name": "Utils.parseFormatStringToCSSClasses",
+      "arguments": "''",
+      "description": "Converts a dash-separated format string into space-separated positional CSS classes ('c-0-x c-1-y ...')."
+    },
+    {
+      "name": "Utils.stopEvent",
+      "arguments": "",
+      "description": "Prevents an event's default action and stops it propagating further; returns the event."
+    },
+    {
+      "name": "Utils.stripHtml",
+      "arguments": "''",
+      "description": "Removes HTML tags from a string (a numeric input is returned unchanged)."
+    },
+    {
+      "name": "Utils.transformMdxResponseToGridTableLight",
+      "arguments": "",
+      "description": "Reshapes a raw MDX Cells response into a GridTable-ready {columns, content} row/column structure, auto-detecting which member dimension represents columns."
+    }
+  ]
+}
