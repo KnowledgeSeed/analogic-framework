@@ -1,0 +1,141 @@
+name: All extensions compatibility
+on:
+  workflow_dispatch:
+    inputs:
+      extensions-ref:
+        description: Branch, tag or commit to build in every extension repository
+        type: string
+        default: main
+  workflow_call:
+    inputs:
+      extensions-ref:
+        type: string
+        default: main
+    secrets:
+      EXTENSIONS_READ_TOKEN:
+        required: true
+permissions:
+  contents: read
+jobs:
+  access:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate private repository access
+        env:
+          READ_TOKEN: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+        run: |
+          if [ -z "$READ_TOKEN" ]; then
+            echo "::error::EXTENSIONS_READ_TOKEN with read access to all extension repositories is required."
+            exit 1
+          fi
+  compatibility:
+    needs: access
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.10', '3.11', '3.12', '3.13', '3.14']
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: KnowledgeSeed/analogic-ext-airflow-api-connector
+          ref: ${{ inputs.extensions-ref }}
+          path: extensions/analogic-ext-airflow-api-connector
+          token: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: KnowledgeSeed/analogic-ext-analogic-pool
+          ref: ${{ inputs.extensions-ref }}
+          path: extensions/analogic-ext-analogic-pool
+          token: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: KnowledgeSeed/analogic-ext-file-upload
+          ref: ${{ inputs.extensions-ref }}
+          path: extensions/analogic-ext-file-upload
+          token: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: KnowledgeSeed/analogic-ext-graphql
+          ref: ${{ inputs.extensions-ref }}
+          path: extensions/analogic-ext-graphql
+          token: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: KnowledgeSeed/analogic-ext-iis-pool
+          ref: ${{ inputs.extensions-ref }}
+          path: extensions/analogic-ext-iis-pool
+          token: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: KnowledgeSeed/analogic-ext-ldap-pool
+          ref: ${{ inputs.extensions-ref }}
+          path: extensions/analogic-ext-ldap-pool
+          token: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: KnowledgeSeed/analogic-ext-long-running-task
+          ref: ${{ inputs.extensions-ref }}
+          path: extensions/analogic-ext-long-running-task
+          token: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: KnowledgeSeed/analogic-ext-mssql
+          ref: ${{ inputs.extensions-ref }}
+          path: extensions/analogic-ext-mssql
+          token: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: KnowledgeSeed/analogic-ext-mysql
+          ref: ${{ inputs.extensions-ref }}
+          path: extensions/analogic-ext-mysql
+          token: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: KnowledgeSeed/analogic-ext-saml
+          ref: ${{ inputs.extensions-ref }}
+          path: extensions/analogic-ext-saml
+          token: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: KnowledgeSeed/analogic-ext-seeder
+          ref: ${{ inputs.extensions-ref }}
+          path: extensions/analogic-ext-seeder
+          token: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: KnowledgeSeed/analogic-ext-sharepoint
+          ref: ${{ inputs.extensions-ref }}
+          path: extensions/analogic-ext-sharepoint
+          token: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: KnowledgeSeed/analogic-ext-sql
+          ref: ${{ inputs.extensions-ref }}
+          path: extensions/analogic-ext-sql
+          token: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/checkout@v4
+        with:
+          repository: KnowledgeSeed/analogic-ext-tm1-error-reporting
+          ref: ${{ inputs.extensions-ref }}
+          path: extensions/analogic-ext-tm1-error-reporting
+          token: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Linux ODBC runtime
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libodbc2
+      - name: Build, install and test the complete extension set
+        run: |
+          python -m pip install --require-hashes -r requirements-extensions.lock
+          python scripts/build_wheels.py --extensions
+          python -m pip install --no-index dist/*.whl
+          python -m pip check
+          python scripts/run_tests.py --extensions
+          python scripts/check_runtime.py --extensions

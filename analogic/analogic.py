@@ -573,7 +573,7 @@ def _load_module(app, check_prefix, module_dir_name, modules_dir, register_func)
         if module_dir_name == modules_dir.rsplit('/', 1)[-1]:  # or module_dir_name == modules_dir.rsplit('\\', 1)[-1]:
             module_dir_name = module_dir_name + '.' + module_dir_name
 
-        files = resources.contents(module_dir_name)
+        files = (entry.name for entry in resources.files(module_dir_name).iterdir())
 
         modules = [f[:-3] for f in files if f.endswith(".py") and f[0] != "_" and 'setup' not in f]
         register_func(app, module_dir, module_dir_name, modules)
