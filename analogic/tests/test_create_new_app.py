@@ -98,6 +98,27 @@ class TestCreateNewApp(unittest.TestCase):
             self.assertTrue((target_root / 'server' / 'email_templates').is_dir())
             self.assertTrue((target_root / 'templates').is_dir())
 
+    def test_leftover_folder_is_reported_instead_of_a_bare_copy_error(self):
+        analogic_root = Path(__file__).resolve().parents[1]
+
+        with tempfile.TemporaryDirectory() as temp_instance_path:
+            leftover = Path(temp_instance_path) / 'apps' / 'routeapp5'
+            (leftover / 'static').mkdir(parents=True)
+            (leftover / 'seeder_studio_trust.json').write_text('{}', encoding='utf-8')
+            app = Analogic(__name__, instance_path=temp_instance_path)
+            app.root_path = str(analogic_root)
+
+            with patch.object(app, 'trigger_change_monitor_for_restart'):
+                with self.assertRaises(Exception) as raised:
+                    app.create_new_app('routeapp5', 'main')
+
+            message = str(raised.exception)
+            self.assertIn("apps/routeapp5", message)
+            self.assertIn('without an app.json', message)
+            self.assertIn('Move or delete it', message)
+            # nothing was copied over the leftovers
+            self.assertFalse((leftover / 'app.json').exists())
+
 
 if __name__ == '__main__':
     unittest.main()

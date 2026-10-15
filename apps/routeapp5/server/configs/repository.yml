@@ -1,0 +1,19 @@
+
+
+
+
+
+
+
+
+
+
+
+
+"genericTestQuery": >
+  {"MDX":"
+      SELECT {[Measures].[Value]}
+      ON COLUMNS, {[Dim1].[Dim1].Members} ON ROWS
+      FROM [TestCube]
+  "}
+

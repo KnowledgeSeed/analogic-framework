@@ -1,0 +1,3693 @@
+/* blue menu button on the main page */
+.ks-button-studio_main_page_button_blue.ks-button {
+    height: 145px;
+    background-color: #007AFA;
+    border-radius: 30px;
+}
+
+.ks-button-studio_main_page_button_blue .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-studio_main_page_button_blue .ks-button-content {
+    height: 110%
+}
+
+.ks-button-studio_main_page_button_blue:active {
+    background-color: #007AFA;
+}
+
+/* Main purple */
+.ks-button-studio_main_page_button_purple.ks-button {
+    height: 145px;
+    background-color: #AF52DE;
+    border-radius: 30px;
+}
+
+.ks-button-studio_main_page_button_purple .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-studio_main_page_button_purple .ks-button-content {
+    height: 110%
+}
+
+.ks-button-studio_main_page_button_purple:active {
+    background-color: #AF52DE;
+}
+
+/* Main green */
+.ks-button-studio_main_page_button_green.ks-button {
+    height: 145px;
+    background-color: #34C759;
+    border-radius: 30px;
+}
+
+.ks-button-studio_main_page_button_green .ks-button-icon {
+    color: white;
+    font-size: 70px;
+}
+
+.ks-button-studio_main_page_button_green .ks-button-content {
+    height: 110%
+}
+
+.ks-button-studio_main_page_button_green:active {
+    background-color: #34C759;
+}
+
+.ks-button-studio_global_header_user_panel_button.ks-button {
+    height: 30px;
+    padding: 1px;
+    border-radius: 6px;
+    background-color: #F2F2F2;
+}
+
+.ks-button-studio_global_header_user_panel_button .ks-button-inner {
+    background-color: #F2F2F2;
+    border-radius: 6px;
+    padding: 0 10px 0 10px;
+}
+
+.ks-button-studio_global_header_user_panel_button .ks-button-icon,
+.ks-button-studio_global_header_user_panel_button .ks-button-icon img {
+    float: left;
+    font-size: 40px;
+    margin-left: -10px;
+    margin-top: -10px;
+    color: #585959;
+}
+
+.ks-button-studio_global_header_user_panel_button .ks-button-label {
+    color: #585959;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* Copied byte-for-byte from widget-clusters/studio-global-header-style.css.
+   A page preset cannot source a widget-gallery stylesheet, so it reuses the
+   skin NAME and the same rules - one class set whichever gallery pulls it in. */
+.ks-button-studio_page_header_icon.ks-button {
+    background-color: transparent;
+    border: 1px solid #007AFF;
+    border-radius: 6px;
+    flex: 0 0 auto;
+    height: 32px;
+    width: 32px;
+}
+
+.ks-button-studio_page_header_icon .ks-button-icon {
+    color: #007AFF;
+    font-size: 18px;
+}
+
+.ks-button-studio_page_header_icon .ks-button-label {
+    display: none;
+}
+
+.ks-button-studio_button_blue_wo_icon.ks-button {
+    background-color: #007AFF;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.ks-button-studio_button_blue_wo_icon .ks-button-label {
+    color: #ffffff;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.ks-button-studio_button_blue_wo_icon .ks-button-icon {
+    font-size: 40px;
+    color: #ffffff;
+}
+
+.ks-button-studio_button_blue_with_icon.ks-button {
+    background-color: #007AFF;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.ks-button-studio_button_blue_with_icon .ks-button-label {
+    color: #ffffff;
+    font-size: 14px;
+    white-space: nowrap;
+    margin-left: 5px;
+}
+
+.ks-button-studio_button_blue_with_icon .ks-button-icon {
+    font-size: 40px;
+    color: #ffffff;
+}
+
+/* <analogic-generated-skin name="ks-button-main_gradient_panda"> */
+.ks-button-main_gradient_panda.ks-button {
+    height: 145px;
+    background: linear-gradient(15deg, #0b41cd, #0090ff) no-repeat;
+    border-radius: 30px;
+}
+
+.ks-button-main_gradient_panda .ks-button-icon {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 70px;
+}
+
+.ks-button-main_gradient_panda .ks-button-content {
+    height: 100%;
+}
+/* </analogic-generated-skin> */
+
+/* <analogic-generated-skin name="ks-button-main_gradient_pandafidelity"> */
+.ks-button-main_gradient_pandafidelity.ks-button {
+    height: 145px;
+    background: linear-gradient(15deg, #0b41cd, #0090ff) no-repeat;
+    border-radius: 30px;
+}
+
+.ks-button-main_gradient_pandafidelity .ks-button-icon {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 70px;
+}
+
+.ks-button-main_gradient_pandafidelity .ks-button-content {
+    height: 100%;
+}
+/* </analogic-generated-skin> */
+
+/* <seeder-figma-exact name="routeapp5MainPandaExact"> */
+.ks-button-fx_20af744bdc.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_20af744bdc .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpandaexact-47-1433.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_20af744bdc .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_20af744bdc .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_20af744bdc .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_33e567bcf5.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_33e567bcf5 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpandaexact-4-1414.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_33e567bcf5 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_33e567bcf5 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_33e567bcf5 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_a80ad1a842.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 129px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_a80ad1a842 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_a80ad1a842 .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_a80ad1a842 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_a80ad1a842 .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 41px !important;
+    top: 12px !important;
+    width: 76px !important;
+    text-align: center !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_a80ad1a842 .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 12px !important;
+    top: 11px !important;
+    width: 19px !important;
+    height: 19px !important;
+    background: url(../images/routeapp5mainpandaexact-i4-1415-221-236.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_74daa76256.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 145px !important;
+    width: 145px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_74daa76256 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpandaexact-i4-1418-205-162.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_74daa76256 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_74daa76256 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_74daa76256 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_c4738e2d82.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 145px !important;
+    width: 145px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_c4738e2d82 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpandaexact-i4-1419-205-162.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_c4738e2d82 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_c4738e2d82 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_c4738e2d82 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_480f11d2f0.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 145px !important;
+    width: 145px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_480f11d2f0 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpandaexact-i4-1420-205-162.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_480f11d2f0 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_480f11d2f0 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_480f11d2f0 .ks-button-divider {
+    display: none !important;
+}
+/* </seeder-figma-exact name="routeapp5MainPandaExact"> */
+
+/* <seeder-figma-exact name="routeapp5MainPdOverviewExact"> */
+.ks-button-fx_2baf751828.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 60px !important;
+    width: 60px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_2baf751828 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-38-1916.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_2baf751828 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_2baf751828 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_2baf751828 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_bc25d12a39.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_bc25d12a39 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-47-1428.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_bc25d12a39 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_bc25d12a39 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_bc25d12a39 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_7686993d1b.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_7686993d1b .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-38-1919.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_7686993d1b .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_7686993d1b .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_7686993d1b .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_c17442c9e4.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 129px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_c17442c9e4 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_c17442c9e4 .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_c17442c9e4 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_c17442c9e4 .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 41px !important;
+    top: 12px !important;
+    width: 76px !important;
+    text-align: center !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_c17442c9e4 .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 12px !important;
+    top: 11px !important;
+    width: 19px !important;
+    height: 19px !important;
+    background: url(../images/routeapp5mainpdoverviewexact-i119-3372-221-236.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_9662c8a4e7.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 182px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_9662c8a4e7 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #0011ff !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_9662c8a4e7 .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_9662c8a4e7 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_9662c8a4e7 .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 40px !important;
+    top: 12px !important;
+    width: 130px !important;
+    text-align: center !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_9662c8a4e7 .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 12px !important;
+    top: 11px !important;
+    width: 18px !important;
+    height: 19px !important;
+    background: url(../images/routeapp5mainpdoverviewexact-i47-1398-85-93.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_8235b52ef3.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_8235b52ef3 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-45-1341.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_8235b52ef3 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_8235b52ef3 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_8235b52ef3 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_9c2bf25745.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_9c2bf25745 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_9c2bf25745 .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_9c2bf25745 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_9c2bf25745 .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 12px !important;
+    top: 12px !important;
+    width: 16px !important;
+    text-align: center !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_9c2bf25745 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_aa5f11ec07.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 51px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_aa5f11ec07 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_aa5f11ec07 .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_aa5f11ec07 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_aa5f11ec07 .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 12px !important;
+    top: 12px !important;
+    width: 27px !important;
+    text-align: center !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_aa5f11ec07 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_5ebc9d54e4.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_5ebc9d54e4 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-47-1402.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_5ebc9d54e4 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_5ebc9d54e4 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_5ebc9d54e4 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_bfda5dcf92.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_bfda5dcf92 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-47-1424.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_bfda5dcf92 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_bfda5dcf92 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_bfda5dcf92 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_4844903bed.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_4844903bed .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-47-1426.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_4844903bed .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_4844903bed .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_4844903bed .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_84f7eb39a2.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_84f7eb39a2 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-47-1404.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_84f7eb39a2 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_84f7eb39a2 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_84f7eb39a2 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_18e22385ed.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_18e22385ed .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-47-1406.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_18e22385ed .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_18e22385ed .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_18e22385ed .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_95a1509de9.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_95a1509de9 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-47-1408.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_95a1509de9 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_95a1509de9 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_95a1509de9 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_b688506588.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_b688506588 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-47-1410.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_b688506588 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_b688506588 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_b688506588 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_9aeff4df46.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_9aeff4df46 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-1182-11608.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_9aeff4df46 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_9aeff4df46 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_9aeff4df46 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_88efccd2ac.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_88efccd2ac .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-1182-11611.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_88efccd2ac .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_88efccd2ac .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_88efccd2ac .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_627ea684a0.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_627ea684a0 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-1182-11613.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_627ea684a0 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_627ea684a0 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_627ea684a0 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_2b8c1797ae.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_2b8c1797ae .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-1182-11615.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_2b8c1797ae .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_2b8c1797ae .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_2b8c1797ae .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_74caa141c8.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_74caa141c8 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-1182-11617.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_74caa141c8 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_74caa141c8 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_74caa141c8 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_4e43218ef0.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_4e43218ef0 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-1182-11619.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_4e43218ef0 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_4e43218ef0 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_4e43218ef0 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_112cf21a41.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_112cf21a41 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-1182-11621.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_112cf21a41 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_112cf21a41 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_112cf21a41 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_c367274a45.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_c367274a45 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-1182-11623.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_c367274a45 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_c367274a45 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_c367274a45 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_e6618ec277.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_e6618ec277 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-1182-11625.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_e6618ec277 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_e6618ec277 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_e6618ec277 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_7c0e174300.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_7c0e174300 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewexact-1182-11627.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_7c0e174300 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_7c0e174300 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_7c0e174300 .ks-button-divider {
+    display: none !important;
+}
+/* </seeder-figma-exact name="routeapp5MainPdOverviewExact"> */
+
+/* <seeder-figma-exact name="routeapp5MainBcProjectInfoExact"> */
+.ks-button-fx_6ba3d412a0.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 60px !important;
+    width: 60px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_6ba3d412a0 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainbcprojectinfoexact-908-6790.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_6ba3d412a0 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_6ba3d412a0 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_6ba3d412a0 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_c4243b0267.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_c4243b0267 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainbcprojectinfoexact-908-6793.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_c4243b0267 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_c4243b0267 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_c4243b0267 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_25bd97bb93.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_25bd97bb93 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainbcprojectinfoexact-908-6794.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_25bd97bb93 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_25bd97bb93 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_25bd97bb93 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_b2158375cf.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 129px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_b2158375cf .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_b2158375cf .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_b2158375cf .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_b2158375cf .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 41px !important;
+    top: 12px !important;
+    width: 76px !important;
+    text-align: center !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_b2158375cf .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 12px !important;
+    top: 11px !important;
+    width: 19px !important;
+    height: 19px !important;
+    background: url(../images/routeapp5mainbcprojectinfoexact-i908-6795-221-236.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_b4a1b100cf.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 19px !important;
+    width: 19px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_b4a1b100cf .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainbcprojectinfoexact-i908-6802-85-163.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_b4a1b100cf .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_b4a1b100cf .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_b4a1b100cf .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_e81efb5bfa.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 80px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_e81efb5bfa .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainbcprojectinfoexact-908-6810.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_e81efb5bfa .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_e81efb5bfa .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_e81efb5bfa .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_54a1bc8482.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_54a1bc8482 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainbcprojectinfoexact-1176-11645.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_54a1bc8482 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_54a1bc8482 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_54a1bc8482 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_7d6a05abb6.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 138px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_7d6a05abb6 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #0011ff !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_7d6a05abb6 .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_7d6a05abb6 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_7d6a05abb6 .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 31px !important;
+    top: 12px !important;
+    width: 77px !important;
+    text-align: left !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_7d6a05abb6 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_09a48580d2.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 139px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_09a48580d2 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_09a48580d2 .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_09a48580d2 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_09a48580d2 .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 6px !important;
+    top: 12px !important;
+    width: 128px !important;
+    text-align: left !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_09a48580d2 .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 0px !important;
+    top: 0px !important;
+    width: 138px !important;
+    height: 40px !important;
+    background: url(../images/routeapp5mainbcprojectinfoexact-i1017-11896-151-3189.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_7741622908.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 138px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_7741622908 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_7741622908 .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_7741622908 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_7741622908 .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 20px !important;
+    top: 12px !important;
+    width: 97px !important;
+    text-align: left !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_7741622908 .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 0px !important;
+    top: 0px !important;
+    width: 138px !important;
+    height: 40px !important;
+    background: url(../images/routeapp5mainbcprojectinfoexact-i1017-11896-151-3192.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_fbd6a4606a.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 138px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_fbd6a4606a .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_fbd6a4606a .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_fbd6a4606a .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_fbd6a4606a .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 20px !important;
+    top: 12px !important;
+    width: 99px !important;
+    text-align: left !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_fbd6a4606a .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 0px !important;
+    top: 0px !important;
+    width: 138px !important;
+    height: 40px !important;
+    background: url(../images/routeapp5mainbcprojectinfoexact-i1017-11896-151-3195.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_90f20a1b47.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 139px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_90f20a1b47 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_90f20a1b47 .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_90f20a1b47 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_90f20a1b47 .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 26px !important;
+    top: 12px !important;
+    width: 88px !important;
+    text-align: left !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_90f20a1b47 .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 0px !important;
+    top: 0px !important;
+    width: 138px !important;
+    height: 40px !important;
+    background: url(../images/routeapp5mainbcprojectinfoexact-i1017-11896-151-3198.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_431c5bbd3d.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 138px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_431c5bbd3d .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_431c5bbd3d .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_431c5bbd3d .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_431c5bbd3d .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 11px !important;
+    top: 12px !important;
+    width: 115px !important;
+    text-align: left !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_431c5bbd3d .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 0px !important;
+    top: 0px !important;
+    width: 138px !important;
+    height: 40px !important;
+    background: url(../images/routeapp5mainbcprojectinfoexact-i1017-11896-151-3201.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_791df1ceb5.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 85px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_791df1ceb5 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #0011ff !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_791df1ceb5 .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_791df1ceb5 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_791df1ceb5 .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 40px !important;
+    top: 12px !important;
+    width: 33px !important;
+    text-align: center !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_791df1ceb5 .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 12px !important;
+    top: 11px !important;
+    width: 18px !important;
+    height: 19px !important;
+    background: url(../images/routeapp5mainbcprojectinfoexact-i1125-10106-85-93.png) center / 100% 100% no-repeat !important;
+}
+/* </seeder-figma-exact name="routeapp5MainBcProjectInfoExact"> */
+
+/* <seeder-figma-exact name="routeapp5MainPdMainKpisExact"> */
+.ks-button-fx_b9acac138f.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 60px !important;
+    width: 60px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_b9acac138f .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-96-2473.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_b9acac138f .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_b9acac138f .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_b9acac138f .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_3b9f37fa8d.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_3b9f37fa8d .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-96-2476.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_3b9f37fa8d .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_3b9f37fa8d .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_3b9f37fa8d .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_564f68c0af.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_564f68c0af .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-96-2477.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_564f68c0af .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_564f68c0af .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_564f68c0af .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_877fcdae77.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 129px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_877fcdae77 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_877fcdae77 .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_877fcdae77 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_877fcdae77 .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 41px !important;
+    top: 12px !important;
+    width: 76px !important;
+    text-align: center !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_877fcdae77 .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 12px !important;
+    top: 11px !important;
+    width: 19px !important;
+    height: 19px !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-i119-3387-221-236.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_c37df0b020.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 19px !important;
+    width: 19px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_c37df0b020 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-i96-2485-85-163.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_c37df0b020 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_c37df0b020 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_c37df0b020 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_eebc4912f3.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 80px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_eebc4912f3 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-96-2496.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_eebc4912f3 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_eebc4912f3 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_eebc4912f3 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_08cec9203b.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_08cec9203b .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-1176-11741.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_08cec9203b .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_08cec9203b .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_08cec9203b .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_91a95c2aa7.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 138px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_91a95c2aa7 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_91a95c2aa7 .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_91a95c2aa7 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_91a95c2aa7 .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 26px !important;
+    top: 12px !important;
+    width: 87px !important;
+    text-align: left !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_91a95c2aa7 .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 0px !important;
+    top: 0px !important;
+    width: 138px !important;
+    height: 40px !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-i96-2490-151-3229.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_c2937e3606.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 139px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_c2937e3606 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_c2937e3606 .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_c2937e3606 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_c2937e3606 .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 31px !important;
+    top: 12px !important;
+    width: 77px !important;
+    text-align: left !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_c2937e3606 .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 0px !important;
+    top: 0px !important;
+    width: 138px !important;
+    height: 40px !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-i96-2490-151-3232.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_f11f731eed.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 138px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_f11f731eed .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #0011ff !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_f11f731eed .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_f11f731eed .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_f11f731eed .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 35px !important;
+    top: 12px !important;
+    width: 67px !important;
+    text-align: left !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_f11f731eed .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_2251a9a6f6.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 138px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_2251a9a6f6 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_2251a9a6f6 .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_2251a9a6f6 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_2251a9a6f6 .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 31px !important;
+    top: 12px !important;
+    width: 76px !important;
+    text-align: left !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_2251a9a6f6 .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 0px !important;
+    top: 0px !important;
+    width: 138px !important;
+    height: 40px !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-i96-2490-151-3237.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_1dba41f482.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 139px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_1dba41f482 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_1dba41f482 .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_1dba41f482 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_1dba41f482 .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 33px !important;
+    top: 12px !important;
+    width: 74px !important;
+    text-align: left !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_1dba41f482 .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 0px !important;
+    top: 0px !important;
+    width: 138px !important;
+    height: 40px !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-i96-2490-151-3240.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_58400d126e.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 138px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_58400d126e .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_58400d126e .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_58400d126e .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_58400d126e .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", sans-serif !important;
+    position: absolute !important;
+    left: 17px !important;
+    top: 12px !important;
+    width: 103px !important;
+    text-align: left !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_58400d126e .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 0px !important;
+    top: 0px !important;
+    width: 138px !important;
+    height: 40px !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-i96-2490-151-3243.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_a1505ac619.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_a1505ac619 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-109-2920.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_a1505ac619 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_a1505ac619 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_a1505ac619 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_811e5365e0.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 1px !important;
+    width: 240px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_811e5365e0 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-124-2985.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_811e5365e0 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_811e5365e0 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_811e5365e0 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_652fd39dce.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 19px !important;
+    width: 16px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_652fd39dce .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-i124-2988-85-165.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_652fd39dce .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_652fd39dce .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_652fd39dce .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_dbde13e79b.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_dbde13e79b .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-1422-10954.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_dbde13e79b .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_dbde13e79b .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_dbde13e79b .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_f52c1d8eae.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_f52c1d8eae .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-1422-10955.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_f52c1d8eae .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_f52c1d8eae .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_f52c1d8eae .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_ab84018270.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_ab84018270 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdmainkpisexact-1422-10956.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_ab84018270 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_ab84018270 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_ab84018270 .ks-button-divider {
+    display: none !important;
+}
+/* </seeder-figma-exact name="routeapp5MainPdMainKpisExact"> */
+
+/* <seeder-figma-exact name="routeapp5MainPandaHex"> */
+.ks-button-fx_91935ed21b.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_91935ed21b .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpandahex-47-1433.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_91935ed21b .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_91935ed21b .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_91935ed21b .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_84f2afc81c.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_84f2afc81c .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpandahex-4-1414.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_84f2afc81c .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_84f2afc81c .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_84f2afc81c .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_fca2d9c337.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 129px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_fca2d9c337 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_fca2d9c337 .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_fca2d9c337 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_fca2d9c337 .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", inherit !important;
+    position: absolute !important;
+    left: 41px !important;
+    top: 12px !important;
+    width: 76px !important;
+    text-align: center !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_fca2d9c337 .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 12px !important;
+    top: 11px !important;
+    width: 19px !important;
+    height: 19px !important;
+    background: url(../images/routeapp5mainpandahex-i4-1415-221-236.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_d84097acdc.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 145px !important;
+    width: 145px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_d84097acdc .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpandahex-i4-1418-205-162.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_d84097acdc .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_d84097acdc .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_d84097acdc .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_86f51c9313.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 145px !important;
+    width: 145px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_86f51c9313 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpandahex-i4-1419-205-162.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_86f51c9313 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_86f51c9313 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_86f51c9313 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_b87d556cdd.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 145px !important;
+    width: 145px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_b87d556cdd .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpandahex-i4-1420-205-162.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_b87d556cdd .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_b87d556cdd .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_b87d556cdd .ks-button-divider {
+    display: none !important;
+}
+/* </seeder-figma-exact name="routeapp5MainPandaHex"> */
+
+/* <seeder-figma-exact name="routeapp5MainPdOverviewTeszt"> */
+.ks-button-fx_71acdbf84a.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 60px !important;
+    width: 60px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_71acdbf84a .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-38-1916.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_71acdbf84a .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_71acdbf84a .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_71acdbf84a .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_52205e1776.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_52205e1776 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-47-1428.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_52205e1776 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_52205e1776 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_52205e1776 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_7a8de0b070.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_7a8de0b070 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-38-1919.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_7a8de0b070 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_7a8de0b070 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_7a8de0b070 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_1ee97a017c.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 129px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_1ee97a017c .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_1ee97a017c .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_1ee97a017c .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_1ee97a017c .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", inherit !important;
+    position: absolute !important;
+    left: 41px !important;
+    top: 12px !important;
+    width: 76px !important;
+    text-align: center !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_1ee97a017c .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 12px !important;
+    top: 11px !important;
+    width: 19px !important;
+    height: 19px !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-i119-3372-221-236.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_529f2ea72f.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 182px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_529f2ea72f .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #0011ff !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_529f2ea72f .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_529f2ea72f .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_529f2ea72f .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", inherit !important;
+    position: absolute !important;
+    left: 40px !important;
+    top: 12px !important;
+    width: 130px !important;
+    text-align: center !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_529f2ea72f .ks-button-icon {
+    display: block !important;
+    position: absolute !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 12px !important;
+    top: 11px !important;
+    width: 18px !important;
+    height: 19px !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-i47-1398-85-93.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_8510fc05cc.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_8510fc05cc .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-45-1341.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_8510fc05cc .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_8510fc05cc .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_8510fc05cc .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_b1314b900f.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_b1314b900f .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_b1314b900f .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_b1314b900f .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_b1314b900f .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", inherit !important;
+    position: absolute !important;
+    left: 12px !important;
+    top: 12px !important;
+    width: 16px !important;
+    text-align: center !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_b1314b900f .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_dfc724caad.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 51px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_dfc724caad .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: #f2f2f7 !important;
+    border-radius: 8px !important;
+}
+
+.ks-button-fx_dfc724caad .ks-button-content {
+    position: relative !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+}
+
+.ks-button-fx_dfc724caad .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_dfc724caad .ks-button-label {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    line-height: 17px !important;
+    font-family: "Inter Variable", inherit !important;
+    position: absolute !important;
+    left: 12px !important;
+    top: 12px !important;
+    width: 27px !important;
+    text-align: center !important;
+    overflow: visible !important;
+}
+
+.ks-button-fx_dfc724caad .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_8f48db832d.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_8f48db832d .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-47-1402.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_8f48db832d .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_8f48db832d .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_8f48db832d .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_88293a06dd.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_88293a06dd .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-47-1424.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_88293a06dd .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_88293a06dd .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_88293a06dd .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_dd93a35cf9.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_dd93a35cf9 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-47-1426.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_dd93a35cf9 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_dd93a35cf9 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_dd93a35cf9 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_0d4181dac3.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_0d4181dac3 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-47-1404.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_0d4181dac3 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_0d4181dac3 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_0d4181dac3 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_af74007412.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_af74007412 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-47-1406.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_af74007412 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_af74007412 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_af74007412 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_227f00f5e5.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_227f00f5e5 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-47-1408.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_227f00f5e5 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_227f00f5e5 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_227f00f5e5 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_4c9219869f.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_4c9219869f .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-47-1410.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_4c9219869f .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_4c9219869f .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_4c9219869f .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_909d91229b.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_909d91229b .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-1182-11608.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_909d91229b .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_909d91229b .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_909d91229b .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_74c939c377.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_74c939c377 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-1182-11611.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_74c939c377 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_74c939c377 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_74c939c377 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_3b79ba2a07.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_3b79ba2a07 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-1182-11613.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_3b79ba2a07 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_3b79ba2a07 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_3b79ba2a07 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_ac05dfeb1e.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_ac05dfeb1e .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-1182-11615.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_ac05dfeb1e .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_ac05dfeb1e .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_ac05dfeb1e .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_126b302492.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_126b302492 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-1182-11617.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_126b302492 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_126b302492 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_126b302492 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_a1fbe7c32b.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_a1fbe7c32b .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-1182-11619.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_a1fbe7c32b .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_a1fbe7c32b .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_a1fbe7c32b .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_d9aae317ef.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_d9aae317ef .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-1182-11621.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_d9aae317ef .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_d9aae317ef .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_d9aae317ef .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_b7a73ad905.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_b7a73ad905 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-1182-11623.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_b7a73ad905 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_b7a73ad905 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_b7a73ad905 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_25742fed86.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_25742fed86 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-1182-11625.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_25742fed86 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_25742fed86 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_25742fed86 .ks-button-divider {
+    display: none !important;
+}
+
+.ks-button-fx_8787a32f24.ks-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 40px !important;
+    width: 40px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+}
+
+.ks-button-fx_8787a32f24 .ks-button-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    background: url(../images/routeapp5mainpdoverviewteszt-1182-11627.png) center / 100% 100% no-repeat !important;
+}
+
+.ks-button-fx_8787a32f24 .ks-button-content {
+    height: 100% !important;
+}
+
+.ks-button-fx_8787a32f24 .ks-button-icon {
+    display: none !important;
+}
+
+.ks-button-fx_8787a32f24 .ks-button-divider {
+    display: none !important;
+}
+/* </seeder-figma-exact name="routeapp5MainPdOverviewTeszt"> */

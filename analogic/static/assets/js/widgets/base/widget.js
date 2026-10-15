@@ -540,6 +540,15 @@ class Widget {
 
         for (widgetOptions of o.widgets || []) {
             ww = this.getWidget(widgetOptions);
+            if (!ww) {
+                // A child listed in the config without a runtime instance
+                // (removed or not yet created by a live edit) must not take
+                // the whole page down: the catch below used to dereference
+                // the same undefined value and throw again.
+                console.warn('Widget "' + o.id + '" lists a child without a runtime instance: "'
+                    + (widgetOptions && (widgetOptions.id || widgetOptions.import) || '?') + '"');
+                continue;
+            }
             widgets.push(ww);
         }
 

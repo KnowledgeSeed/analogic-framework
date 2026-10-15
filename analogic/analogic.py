@@ -81,6 +81,16 @@ class Analogic(Flask):
 
         target = os.path.join(self.instance_path, APPLICATIONS_DIR, name)
 
+        if os.path.exists(target):
+            # Typically leftovers of an app that was never registered here -
+            # e.g. ignored files kept after a branch switch removed app.json.
+            # copytree would fail with a bare "file exists"; say what to do.
+            reason = 'without an app.json' if not os.path.isfile(os.path.join(target, 'app.json')) else 'already'
+            raise Exception(
+                f"Folder 'apps/{name}' exists {reason} but is not a loaded application. "
+                f"Move or delete it on the framework server, then create the app again."
+            )
+
         source = os.path.join(self.root_path, 'new_app_structure')
 
         shutil.copytree(source, target)
