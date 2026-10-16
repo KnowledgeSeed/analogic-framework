@@ -27,7 +27,7 @@ Fejlesztő          Senior              GitHub CI               Portál (superad
 
 - Elindítja a **Publish To PyPI and Dockerhub** vagy a **Publish To PyPI** workflow-t.
 - A workflow sorrendben ezt csinálja:
-  1. **először validálja a masterdatát**, hibánál megáll, semmi nem kerül ki,
+  1. **először lefuttatja a CI Build-et és validálja a masterdatát**, hibánál megáll, semmi nem kerül ki,
   2. felépíti és publikálja a PyPI-ra (és a Docker image-et),
   3. feltölti a masterdata csomagot a portálra, ahol aláírják,
   4. **draftként** regisztrálja az új verziót.

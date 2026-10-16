@@ -1,14 +1,28 @@
 import tempfile
 import unittest
 from pathlib import Path
+import sys
+from unittest.mock import Mock, patch
 
 from analogic.analogic import Analogic
 from analogic.analogic import _build_extension_asset_registry
 from analogic.analogic import _get_extension_css_rewrite_asset_names
 from analogic.analogic import _register_extension_assets
+from analogic.analogic import _load_module
 
 
 class TestExtensionAssets(unittest.TestCase):
+
+    def test_loader_discovers_package_modules_using_resource_files(self):
+        name = 'analogic_extension_probe'
+        package = Path(self.tempdir.name) / name
+        package.mkdir()
+        for filename in ('__init__.py', 'provider.py', '_private.py', 'setup_helper.py'):
+            (package / filename).write_text('', encoding='utf-8')
+        register = Mock()
+        with patch.object(sys, 'path', [self.tempdir.name, *sys.path]), patch.dict(sys.modules):
+            _load_module(self.app, True, name, self.tempdir.name, register)
+        register.assert_called_once_with(self.app, str(package), name, ['provider'])
 
     def setUp(self):
         self.tempdir = tempfile.TemporaryDirectory()

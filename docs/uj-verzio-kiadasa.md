@@ -43,7 +43,7 @@ Válaszd a megszokott workflow-t:
 - **Publish To PyPI and Dockerhub** (PyPI + Docker image), vagy
 - **Publish To PyPI**.
 
-Mindkettő ebben a sorrendben fut, és a masterdata hibája **még a publikálás előtt** megállítja:
+Mindkettő először lefuttatja a **CI Build**-et (a `compatibility` job: tesztek, Python verziók, Docker, masterdata ellenőrzés), és csak ha az zöld, indul a kiadás. Utána ebben a sorrendben fut, és a masterdata hibája **még a publikálás előtt** megállítja:
 
 1. verzió beolvasása a `version.config`-ból;
 2. **masterdata validálás és csomag építés** (`build_masterdata.py --out dist-masterdata`), hibánál a kiadás megáll, semmi nem publikálódik;
