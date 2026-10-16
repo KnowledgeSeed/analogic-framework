@@ -47,6 +47,8 @@ jobs:
           python -m build
           python -m pip install dist/*.whl
           python -m pip check
+      - name: Validate widget masterdata
+        run: python tools/masterdata/build_masterdata.py --check
       - name: Unit tests and installed runtime
         run: |
           python -m pytest analogic/tests --cov=analogic --cov-report=xml
