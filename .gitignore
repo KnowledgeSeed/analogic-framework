@@ -10,6 +10,11 @@ minified*.*
 logs
 pool.db
 dist
+build/
+*.egg-info/
+.pytest_cache/
+.coverage
+coverage.xml
 analogic.egg-info
 analogic_pool.egg-info
 analogic_file_upload.egg-info
