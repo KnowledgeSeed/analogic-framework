@@ -27,9 +27,14 @@ jobs:
         env:
           INPUT_VERSION: ${{ inputs.version }}
         run: |
-          VERSION="$INPUT_VERSION"
-          if [ -z "$VERSION" ]; then
-            VERSION=$(cat analogic/version.config | tr -d '\n')
+          CONFIG_VERSION=$(cat analogic/version.config | tr -d '\r\n')
+          VERSION="${INPUT_VERSION:-$CONFIG_VERSION}"
+          # The masterdata package is built from the source checked out here, so the version it is registered
+          # for must be the version of this source. To register an older version, run the workflow on the
+          # branch / tag / commit of that version ("Use workflow from"), not on the latest one.
+          if [ "$VERSION" != "$CONFIG_VERSION" ]; then
+            echo "::error::Version $VERSION was requested, but this source is version $CONFIG_VERSION (analogic/version.config). Run the workflow on the branch, tag or commit of $VERSION."
+            exit 1
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 

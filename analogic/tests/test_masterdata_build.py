@@ -94,3 +94,18 @@ def test_package_is_deterministic_and_contains_a_matching_manifest(files):
         assert manifest['revision'] == build_masterdata.compute_revision(files)
         for name in build_masterdata.PACKAGE_FILES:
             assert archive.read(name) == files[name]
+
+
+def test_update_baseline_keeps_the_hand_maintained_keys(tmp_path, baseline):
+    """--update-baseline rewrites the drift part only: externalWidgets and events survive."""
+    for name in build_masterdata.PACKAGE_FILES:
+        (tmp_path / name).write_bytes((build_masterdata.MASTERDATA_DIR / name).read_bytes())
+    (tmp_path / build_masterdata.BASELINE_FILE).write_text(json.dumps(baseline), encoding='utf-8')
+
+    assert build_masterdata.main(['--masterdata-dir', str(tmp_path), '--update-baseline']) == 0
+
+    updated = json.loads((tmp_path / build_masterdata.BASELINE_FILE).read_text(encoding='utf-8'))
+    assert updated.get('externalWidgets') == baseline.get('externalWidgets')
+    assert updated.get('events') == baseline.get('events')
+    assert baseline.get('externalWidgets') or baseline.get('events')  # the fixture really has something to lose
+    assert set(updated) >= {'widgets', 'undocumentedWidgets'}

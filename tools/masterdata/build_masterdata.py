@@ -303,7 +303,9 @@ def main(argv=None) -> int:
     if args.update_baseline:
         widgets = json.loads(files['widgets.json'])
         drifted, undocumented, _ = compute_drift(widgets, _read_sources(WIDGET_SOURCE_DIRS))
-        baseline_path.write_text(json.dumps(baseline_from_drift(drifted, undocumented), indent=2) + '\n',
+        # The hand maintained keys (externalWidgets, events) are carried over from the existing baseline.
+        previous = json.loads(baseline_path.read_text(encoding='utf-8')) if baseline_path.is_file() else None
+        baseline_path.write_text(json.dumps(baseline_from_drift(drifted, undocumented, previous), indent=2) + '\n',
                                  encoding='utf-8')
         print(f'{baseline_path} updated: {sum(len(o) for o in drifted.values())} option(s) in '
               f'{len(drifted)} widget(s), {len(undocumented)} undocumented widget(s)')

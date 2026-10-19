@@ -52,7 +52,7 @@ Mindkettő először lefuttatja a **CI Build**-et (a `compatibility` job: teszte
 
 A workflow-k a `PORTAL_FRAMEWORK_RELEASE_API_KEY` GitHub secretet használják (ugyanaz az érték, mint a portál `FRAMEWORK_RELEASE_API_KEY`-e). A `Publish To TestPyPI` workflow-ra ez nem vonatkozik, az nem regisztrál a portálon.
 
-Ha a regisztráló lépés elbukott (a PyPI-ra már kikerült a verzió), **ne publikáld újra** a csomagot: indítsd el a **Register Framework Release** workflow-t (üres verzióval a `version.config` verzióját használja). Ugyanez a pótlás útja, ha később szeretnél egy korábbi verziót felvenni.
+Ha a regisztráló lépés elbukott (a PyPI-ra már kikerült a verzió), **ne publikáld újra** a csomagot: indítsd el a **Register Framework Release** workflow-t (üres verzióval a `version.config` verzióját használja). Egy **korábbi verzió** pótlásához a workflow-t annak a verziónak az ágán, taján vagy commitján kell indítani ("Use workflow from"), mert a csomag mindig az ott kiválasztott forrásból készül. Ha a megadott verzió nem egyezik a kiválasztott forrás `version.config` fájljával, a workflow megáll, hogy ne kerüljön újabb masterdata a régi verzió mellé.
 
 ## 4. Jóváhagyás a portálon (superadmin)
 
