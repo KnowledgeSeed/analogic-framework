@@ -1,0 +1,156 @@
+{
+  "Widget": [
+    "init",
+    "rendered",
+    "refresh",
+    "updateContent"
+  ],
+  "ActionButtonRowWidget": [
+    "action"
+  ],
+  "ButtonWidget": [
+    "launch",
+    "contextMenuAction",
+    "launchpaste"
+  ],
+  "ComboChartWidget": [
+    "moved"
+  ],
+  "ContainerWidget": [],
+  "DatePickerWidget": [
+    "pick"
+  ],
+  "DeleteButtonRowWidget": [
+    "delete"
+  ],
+  "DropBoxWidget": [
+    "choose",
+    "filter"
+  ],
+  "FileUploadWidget": [
+    "upload"
+  ],
+  "GaugeWidget": [],
+  "GridCellWidget": [],
+  "GridRowWidget": [],
+  "GridTableCellWidget": [
+    "text_click"
+  ],
+  "GridTableHeaderCellWidget": [
+    "text_click"
+  ],
+  "GridTableHeaderRowWidget": [],
+  "GridTableWidget": [
+    "choose",
+    "launch",
+    "pick",
+    "text_click",
+    "switch",
+    "writeEnd",
+    "save",
+    "write",
+    "slide",
+    "perform",
+    "paste",
+    "pasteLast",
+    "rightclick",
+    "upload",
+    "contextMenuAction",
+    "writeKey"
+  ],
+  "GridTableLightWidget": [
+    "launch",
+    "change",
+    "text_change",
+    "text_click",
+    "rightclick",
+    "export",
+    "first",
+    "last",
+    "next",
+    "prev"
+  ],
+  "GridTablePlusWidget": [
+    "tableBuilt",
+    "cellClicked",
+    "selectionChanged",
+    "cellEdited"
+  ],
+  "GridWidget": [],
+  "HistogramComboChartWidget": [],
+  "HorizontalTableWidget": [
+    "cellEdit"
+  ],
+  "ImageWidget": [
+    "imageClicked"
+  ],
+  "ImageUploadWidget": [
+    "uploadImage"
+  ],
+  "LineAreaChartWidget": [],
+  "LineScatterComboWidget": [
+    "moved"
+  ],
+  "PageWidget": [],
+  "PanelWidget": [],
+  "PasswordTextWidget": [
+    "savePassword"
+  ],
+  "PieChartWidget": [],
+  "PivotTableWidget": [
+    "exportPivotTable",
+    "save",
+    "yes"
+  ],
+  "PopupWidget": [],
+  "RadioButtonRowWidget": [
+    "launch"
+  ],
+  "ScrollTableWidget": [
+    "cellEdit",
+    "commentEdit",
+    "commentShow",
+    "pasteCells"
+  ],
+  "SegmentedBarWidget": [],
+  "SegmentedControlItemWidget": [
+    "switch"
+  ],
+  "SegmentedControlWidget": [
+    "switch"
+  ],
+  "ShadowWidget": [],
+  "SimulationPanelWidget": [
+    "add"
+  ],
+  "SimulationPanelSliderWidget": [
+    "slide"
+  ],
+  "SliderWidget": [
+    "slide"
+  ],
+  "SwipeWidget": [],
+  "TextAreaWidget": [
+    "save"
+  ],
+  "TextBoxWidget": [
+    "writeEnd",
+    "writeKey"
+  ],
+  "TextWidget": [
+    "text_click",
+    "write",
+    "perform",
+    "paste",
+    "pasteLast",
+    "rightclick",
+    "pasteDataByServerSide"
+  ],
+  "ToggleWidget": [
+    "switch"
+  ],
+  "TornadoChartWidget": [],
+  "VerticalLineBoxWidget": [],
+  "WaterFallWidget": [],
+  "RichTextWidget": []
+}
