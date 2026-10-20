@@ -4890,6 +4890,12 @@
                 "name": "enableRightClick",
                 "required": false,
                 "type": "boolean"
+            },
+            {
+                "comment": "Renders the icon, title and body elements only when they have something to show (default: the app's textWidgetCompactHtml setting, otherwise false)",
+                "name": "compactHtml",
+                "required": false,
+                "type": "boolean"
             }
         ]
     },

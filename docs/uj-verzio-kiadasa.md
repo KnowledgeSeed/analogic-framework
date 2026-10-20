@@ -91,4 +91,4 @@ Seeder Portal → **Admin → Framework Releases**:
 
 - A Seeder repóban a `masterdata/` fájlokat **kézzel ne szerkeszd** (generált másolat, a teszt elbukik); a forrás itt, a framework repóban van.
 - Az aláíró kulcsot és a portál beállításait nem érinted: a kiadáshoz csak a GitHub secret kell.
-- A régi (4.1.70 alatti) verziókhoz nincs teendő; a backfill egyszeri volt.
+- A régi verziókhoz (a 4.1.70-től a 4.1.111-ig) nincs teendő: ezeket egyszeri backfill vette fel `legacy` verzióként, a Seeder a vele szállított masterdatát használja hozzájuk. Az első, csomagos kiadás a 4.1.112 (vagy a következő verzió), ahol a CI már feltölti a masterdatát.
