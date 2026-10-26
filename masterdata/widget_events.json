@@ -152,5 +152,7 @@
   "TornadoChartWidget": [],
   "VerticalLineBoxWidget": [],
   "WaterFallWidget": [],
-  "RichTextWidget": []
+  "RichTextWidget": [],
+  "HorizontalBarChartWidget": [],
+  "RadarChartWidget": []
 }

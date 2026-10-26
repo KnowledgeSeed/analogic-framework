@@ -46,6 +46,7 @@
   "TornadoChartWidget": {"subWidgets": "0"},
   "VerticalLineBoxWidget": {"subWidgets": "0"},
   "WaterFallWidget": {"subWidgets": "0"},
-  "RichTextWidget": {"subWidgets": "0"}
+  "RichTextWidget": {"subWidgets": "0"},
+  "HorizontalBarChartWidget": {"subWidgets": "0"},
+  "RadarChartWidget": {"subWidgets": "0"}
 }
-
