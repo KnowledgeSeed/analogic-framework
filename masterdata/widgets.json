@@ -5952,6 +5952,20 @@
                 "type": "boolean"
             },
             {
+                "comment": "Thousands separator character used when yAxisSeparatesThousands is true (y axis ticks, tooltips, data point labels), e.g. ',' or '.'. Default: ' '",
+                "deprecated": false,
+                "name": "yAxisThousandsSeparator",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Decimal separator character (y axis ticks, tooltips, data point labels), e.g. ','. Default: '.'",
+                "deprecated": false,
+                "name": "yAxisDecimalSeparator",
+                "required": false,
+                "type": "string"
+            },
+            {
                 "comment": "",
                 "deprecated": true,
                 "name": "yAxisTicksPrecisionFixed",
