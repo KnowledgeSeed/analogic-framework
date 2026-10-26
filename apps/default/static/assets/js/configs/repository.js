@@ -304,7 +304,6 @@ analogicTablePlusRichDemo:{
         Repository.analogicTablePlusRichDemo.__renderTimer.end('analogicTablePlusRichDemo');
     },
 
-    "__cache": null,
 
     cellClicked(ctx) {
         // Mirrors adminLocal.txt's text_click structure (inspect the clicked cell, branch on

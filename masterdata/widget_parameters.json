@@ -1,0 +1,598 @@
+{
+  "visible": [
+    "true",
+    "false"
+  ],
+  "titleAlignment": [
+    "none",
+    "center",
+    "center-right",
+    "center-center",
+    "center-left",
+    "left",
+    "right"
+  ],
+  "titleTextAlignment": [
+    "none",
+    "center",
+    "center-right",
+    "center-center",
+    "center-left",
+    "left",
+    "right"
+  ],
+  "bodyAlignment": [
+    "none",
+    "center",
+    "center-right",
+    "center-center",
+    "center-left",
+    "left",
+    "right"
+  ],
+  "textAlignment": [
+    "none",
+    "center",
+    "center-right",
+    "center-center",
+    "center-left",
+    "left",
+    "right"
+  ],
+  "position": [
+    "none",
+    "center",
+    "center-right",
+    "center-center",
+    "center-left",
+    "left",
+    "right"
+  ],
+  "alignment": [
+    "none",
+    "center",
+    "bottom-center",
+    "bottom-left",
+    "bottom-right",
+    "bottom-space-between",
+    "center-center",
+    "center-left",
+    "center-right",
+    "center-space-between",
+    "top-center",
+    "top-left",
+    "top-right",
+    "top-space-between",
+    "left",
+    "right"
+  ],
+  "align": [
+    "none",
+    "center",
+    "center-right",
+    "center-center",
+    "center-left",
+    "left",
+    "right"
+  ],
+  "iconPosition": [
+    "none",
+    "center",
+    "center-right",
+    "center-center",
+    "center-left",
+    "left",
+    "right"
+  ],
+  "labelAlign": [
+    "none",
+    "center",
+    "center-right",
+    "center-center",
+    "center-left",
+    "left",
+    "right"
+  ],
+  "labelTextAlign": [
+    "none",
+    "center",
+    "center-right",
+    "center-center",
+    "center-left",
+    "left",
+    "right"
+  ],
+  "applyMeasuresToSection": [
+    "true",
+    "false"
+  ],
+  "type": [
+    "Widgets"
+  ],
+  "editable": [
+    "true",
+    "false"
+  ],
+  "titlevisible": [
+    "true",
+    "false"
+  ],
+  "multiselect": [
+    "true",
+    "false"
+  ],
+  "backdrop": [
+    "true",
+    "false"
+  ],
+  "selectFirst": [
+    "true",
+    "false"
+  ],
+  "notLoadIfHidden": [
+    "true",
+    "false"
+  ],
+  "selected": [
+    "true",
+    "false"
+  ],
+  "isGridTableHierarchyExpander": [
+    "true",
+    "false"
+  ],
+  "legendVisible": [
+    "true",
+    "false"
+  ],
+  "write": [
+    "true",
+    "false"
+  ],
+  "enabled": [
+    "true",
+    "false"
+  ],
+  "tooltipsEnabled": [
+    "true",
+    "false"
+  ],
+  "xAxesDisplay": [
+    "true",
+    "false"
+  ],
+  "xAxesGridLinesDisplay": [
+    "true",
+    "false"
+  ],
+  "xAxesGridLinesDrawBorder": [
+    "true",
+    "false"
+  ],
+  "xAxesLabelDisplay": [
+    "true",
+    "false"
+  ],
+  "hideIfNoData": [
+    "true",
+    "false"
+  ],
+  "fontBold": [
+    "true",
+    "false"
+  ],
+  "yAxesStacked": [
+    "true",
+    "false"
+  ],
+  "xAxesStacked": [
+    "true",
+    "false"
+  ],
+  "xAxesTicksBegintAtZero": [
+    "true",
+    "false"
+  ],
+  "xAxesOffsetGridLines": [
+    "true",
+    "false"
+  ],
+  "xAxesZeroLineColor": [
+    "true",
+    "false"
+  ],
+  "rightYAxesTicksBegintAtZero": [
+    "true",
+    "false"
+  ],
+  "rightYAxesBorderDash": [
+    "true",
+    "false"
+  ],
+  "rightYAxesTicksDisplay": [
+    "true",
+    "false"
+  ],
+  "rightYAxesGridLinesDisplay": [
+    "true",
+    "false"
+  ],
+  "rightYAxesLabelDisplay": [
+    "true",
+    "false"
+  ],
+  "rightYAxesStacked": [
+    "true",
+    "false"
+  ],
+  "rightYAxesDisplay": [
+    "true",
+    "false"
+  ],
+  "rightYAxesGridLinesDrawBorder": [
+    "true",
+    "false"
+  ],
+  "leftYAxesBorderDash": [
+    "true",
+    "false"
+  ],
+  "leftYAxesTicksBegintAtZero": [
+    "true",
+    "false"
+  ],
+  "leftYAxesTicksDisplay": [
+    "true",
+    "false"
+  ],
+  "leftYAxesGridLinesDisplay": [
+    "true",
+    "false"
+  ],
+  "leftYAxesGridLinesDrawOnChartArea": [
+    "true",
+    "false"
+  ],
+  "leftYAxesGridLinesDrawTicks": [
+    "true",
+    "false"
+  ],
+  "leftYAxesLabelDisplay": [
+    "true",
+    "false"
+  ],
+  "leftYAxesStacked": [
+    "true",
+    "false"
+  ],
+  "leftYAxesDisplay": [
+    "true",
+    "false"
+  ],
+  "leftYAxesGridLinesDrawBorder": [
+    "true",
+    "false"
+  ],
+  "leftYAxesTicksOffset": [
+    "true",
+    "false"
+  ],
+  "leftYAxesLabelConcat": [
+    "true",
+    "false"
+  ],
+  "draggable": [
+    "true",
+    "false"
+  ],
+  "responsive": [
+    "true",
+    "false"
+  ],
+  "bezierCurve": [
+    "true",
+    "false"
+  ],
+  "showLinearXAxes": [
+    "true",
+    "false"
+  ],
+  "anchorVisible": [
+    "true",
+    "false"
+  ],
+  "anchorOnClick": [
+    "true",
+    "false"
+  ],
+  "bgScrollable": [
+    "true",
+    "false"
+  ],
+  "closeBtn": [
+    "true",
+    "false"
+  ],
+  "fixed": [
+    "true",
+    "false"
+  ],
+  "heightFixed": [
+    "true",
+    "false"
+  ],
+  "monthPicker": [
+    "true",
+    "false"
+  ],
+  "ordinal": [
+    "true",
+    "false"
+  ],
+  "panelFixed": [
+    "true",
+    "false"
+  ],
+  "closeAfterSelectingTheDate": [
+    "true",
+    "false"
+  ],
+  "fullYearButtonVisible": [
+    "true",
+    "false"
+  ],
+  "cellVisible": [
+    "true",
+    "false"
+  ],
+  "yAxesGridLinesDisplay": [
+    "true",
+    "false"
+  ],
+  "yAxesGridLinesDrawBorder": [
+    "true",
+    "false"
+  ],
+  "yAxesLabelDisplay": [
+    "true",
+    "false"
+  ],
+  "yAxesDisplay": [
+    "true",
+    "false"
+  ],
+  "xAxesTicksDisplay": [
+    "true",
+    "false"
+  ],
+  "yAxesTicksDisplay": [
+    "true",
+    "false"
+  ],
+  "xAxesTicksLabelDisplay": [
+    "true",
+    "false"
+  ],
+  "yAxesTicksLabelDisplay": [
+    "true",
+    "false"
+  ],
+  "yAxesSeparatesThousands": [
+    "true",
+    "false"
+  ],
+  "yAxesTicksPrecisionFixed": [
+    "true",
+    "false"
+  ],
+  "tooltipsMode": [
+    "true",
+    "false"
+  ],
+  "tooltipsIntersect": [
+    "true",
+    "false"
+  ],
+  "xAxisGridLinesDisplay": [
+    "true",
+    "false"
+  ],
+  "xAxisGridLinesDrawOnChartArea": [
+    "true",
+    "false"
+  ],
+  "xAxisTicksDisplay": [
+    "true",
+    "false"
+  ],
+  "xAxisTicksLabelDisplay": [
+    "true",
+    "false"
+  ],
+  "yAxisGridLinesDisplay": [
+    "true",
+    "false"
+  ],
+  "yAxisGridLinesDrawOnChartArea": [
+    "true",
+    "false"
+  ],
+  "yAxisTicksDisplay": [
+    "true",
+    "false"
+  ],
+  "yAxisTicksLabelDisplay": [
+    "true",
+    "false"
+  ],
+  "yAxisTicksPrecisionFixed": [
+    "true",
+    "false"
+  ],
+  "rightBorderVisible": [
+    "true",
+    "false"
+  ],
+  "topBorderVisible": [
+    "true",
+    "false"
+  ],
+  "labelDisplay": [
+    "true",
+    "false"
+  ],
+  "closeOnClickBackdrop": [
+    "true",
+    "false"
+  ],
+  "buttonsVisible": [
+    "true",
+    "false"
+  ],
+  "updateCallBack": [
+    "true",
+    "false"
+  ],
+  "changedByInput": [
+    "true",
+    "false"
+  ],
+  "disabled": [
+    "true",
+    "false"
+  ],
+  "queryFillColor": [
+    "true",
+    "false"
+  ],
+  "highlight": [
+    "true",
+    "false"
+  ],
+  "allowLastColumnToZero": [
+    "true",
+    "false"
+  ],
+  "xAxisGridDisplay": [
+    "true",
+    "false"
+  ],
+  "yAxisGridDisplay": [
+    "true",
+    "false"
+  ],
+  "animationEnabled": [
+    "true",
+    "false"
+  ],
+  "interactionIsIntersect": [
+    "true",
+    "false"
+  ],
+  "xAxisBorderDisplay": [
+    "true",
+    "false"
+  ],
+  "xAxisDisplay": [
+    "true",
+    "false"
+  ],
+  "xAxisAlignToPixels": [
+    "true",
+    "false"
+  ],
+  "xAxisStacked": [
+    "true",
+    "false"
+  ],
+  "xAxisGridDrawOnChartArea": [
+    "true",
+    "false"
+  ],
+  "yAxisDisplay": [
+    "true",
+    "false"
+  ],
+  "yAxisAlignToPixels": [
+    "true",
+    "false"
+  ],
+  "yAxisStacked": [
+    "true",
+    "false"
+  ],
+  "yAxisBorderDisplay": [
+    "true",
+    "false"
+  ],
+  "yAxisShowOnlyZeroLine": [
+    "true",
+    "false"
+  ],
+  "yAxisSeparatesThousands": [
+    "true",
+    "false"
+  ],
+  "labelClamp": [
+    "true",
+    "false"
+  ],
+  "labelClip": [
+    "true",
+    "false"
+  ],
+  "arrowEnabled": [
+    "true",
+    "false"
+  ],
+  "arrowLabelVisible": [
+    "true",
+    "false"
+  ],
+  "arrowLabelClamp": [
+    "true",
+    "false"
+  ],
+  "arrowLabelClip": [
+    "true",
+    "false"
+  ],
+  "skipStoppingTheLoaderAfterSuccessUpload": [
+    "true",
+    "false"
+  ],
+  "skin": [
+    "skins"
+  ],
+  "fontFamily": [
+    "fontFamily"
+  ],
+  "contextMenuEnabled": [
+    "true",
+    "false"
+  ],
+  "controlsInMenu": [
+    "true",
+    "false"
+  ],
+  "hideCards": [
+    "true",
+    "false"
+  ],
+  "isPrivateSubset": [
+    "true",
+    "false"
+  ],
+  "nonEmptyColumns": [
+    "true",
+    "false"
+  ],
+  "nonEmptyRows": [
+    "true",
+    "false"
+  ],
+  "enableRightClick": [
+    "true",
+    "false"
+  ]
+}

@@ -19,6 +19,7 @@ Contents
 
    usage
    dependency_locking
+   python_compatibility
    widgets
    extensions
    Developer_doc

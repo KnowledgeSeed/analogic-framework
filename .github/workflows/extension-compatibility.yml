@@ -1,0 +1,95 @@
+name: Extension Python compatibility
+on:
+  workflow_call:
+    inputs:
+      repository:
+        required: true
+        type: string
+      ref:
+        required: true
+        type: string
+      module:
+        required: true
+        type: string
+      framework-ref:
+        required: true
+        type: string
+      dependency-ref:
+        default: main
+        type: string
+    secrets:
+      EXTENSIONS_READ_TOKEN:
+        required: false
+permissions:
+  contents: read
+jobs:
+  access:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate private dependency access
+        env:
+          EXTENSION_MODULE: ${{ inputs.module }}
+          EXTENSION_REPOSITORY: ${{ inputs.repository }}
+          READ_TOKEN: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+        run: |
+          case "$EXTENSION_MODULE" in
+            analogic_ldap_pool|analogic_iis_pool|analogic_mssql|analogic_mysql) needs_token=true ;;
+            *) needs_token=false ;;
+          esac
+          if { [ "$needs_token" = true ] || [ "$EXTENSION_REPOSITORY" != "$GITHUB_REPOSITORY" ]; } && [ -z "$READ_TOKEN" ]; then
+            echo "::error::EXTENSIONS_READ_TOKEN with read access to the private dependency repositories is required."
+            exit 1
+          fi
+  compatibility:
+    needs: access
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.10', '3.11', '3.12', '3.13', '3.14']
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: KnowledgeSeed/analogic-framework
+          ref: ${{ inputs.framework-ref }}
+          path: framework
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repository }}
+          ref: ${{ inputs.ref }}
+          path: extension
+          token: ${{ inputs.repository == github.repository && github.token || secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/checkout@v4
+        if: inputs.module == 'analogic_ldap_pool' || inputs.module == 'analogic_iis_pool'
+        with:
+          repository: KnowledgeSeed/analogic-ext-analogic-pool
+          ref: ${{ inputs.dependency-ref }}
+          path: framework/extensions/analogic-ext-analogic-pool
+          token: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/checkout@v4
+        if: inputs.module == 'analogic_mssql' || inputs.module == 'analogic_mysql'
+        with:
+          repository: KnowledgeSeed/analogic-ext-sql
+          ref: ${{ inputs.dependency-ref }}
+          path: framework/extensions/analogic-ext-sql
+          token: ${{ secrets.EXTENSIONS_READ_TOKEN }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Linux ODBC runtime
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libodbc2
+      - name: Install, build and check
+        env:
+          EXTENSION_MODULE: ${{ inputs.module }}
+        run: |
+          python -m pip install --require-hashes -r framework/requirements-extensions.lock
+          python framework/scripts/build_wheels.py --repository extension --available-extensions
+          python -m pip install --no-index dist/*.whl
+          python -m pip check
+          python framework/scripts/run_tests.py --repository extension
+          python framework/scripts/check_runtime.py --package "$EXTENSION_MODULE"

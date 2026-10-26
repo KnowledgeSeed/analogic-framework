@@ -1,0 +1,47 @@
+name: Register Framework Release
+
+# Manual (re-)registration of a framework version as a draft on the Seeder Portal,
+# e.g. when the registration step of a publish workflow failed or for backfilling versions.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Framework version (empty: analogic/version.config)"
+        required: false
+        type: string
+
+jobs:
+  register:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      - name: Get version
+        id: set_version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          CONFIG_VERSION=$(cat analogic/version.config | tr -d '\r\n')
+          VERSION="${INPUT_VERSION:-$CONFIG_VERSION}"
+          # The masterdata package is built from the source checked out here, so the version it is registered
+          # for must be the version of this source. To register an older version, run the workflow on the
+          # branch / tag / commit of that version ("Use workflow from"), not on the latest one.
+          if [ "$VERSION" != "$CONFIG_VERSION" ]; then
+            echo "::error::Version $VERSION was requested, but this source is version $CONFIG_VERSION (analogic/version.config). Run the workflow on the branch, tag or commit of $VERSION."
+            exit 1
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Build and validate masterdata package
+        run: python tools/masterdata/build_masterdata.py --out dist-masterdata
+
+      - name: Register framework release on Seeder Portal (draft)
+        env:
+          PORTAL_FRAMEWORK_RELEASE_API_KEY: ${{ secrets.PORTAL_FRAMEWORK_RELEASE_API_KEY }}
+        run: bash .github/scripts/register_framework_release.sh "${{ steps.set_version.outputs.version }}" dist-masterdata/masterdata.zip

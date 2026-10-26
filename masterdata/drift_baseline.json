@@ -1,0 +1,126 @@
+{
+  "widgets": {
+    "ButtonWidget": [
+      "keyboardShortcuts"
+    ],
+    "ComboChartWidget": [
+      "leftYAxesLabelSeparatesThousands"
+    ],
+    "DatePickerWidget": [
+      "allowEmptyDate",
+      "local"
+    ],
+    "DropBoxWidget": [
+      "disableSearch",
+      "serverSideFilter"
+    ],
+    "GridTablePlusWidget": [
+      "hideIfNoData",
+      "minWidth",
+      "tabulatorColumnOptions",
+      "tabulatorEvents",
+      "tabulatorOptions"
+    ],
+    "GridTableWidget": [
+      "allowChangedDataUpdate",
+      "allowFullContentUpdated"
+    ],
+    "HistogramComboChartWidget": [
+      "datasetHistogram",
+      "datasetsLine",
+      "yAxesTicksFontStyle"
+    ],
+    "HorizontalTableWidget": [
+      "selectedRowBackgroundColor"
+    ],
+    "LineAreaChartWidget": [
+      "defaultBezierCurveTension",
+      "defaultFontFamily",
+      "xAxesOffset",
+      "xAxesOffsetLeft",
+      "xAxesOffsetRight",
+      "xAxesPosition",
+      "yAxesOffset",
+      "yAxesOffsetBottom",
+      "yAxesOffsetTop"
+    ],
+    "LineScatterComboWidget": [
+      "auxLineDashStyle",
+      "defaultFontFamily"
+    ],
+    "SliderWidget": [
+      "decimalPlace",
+      "legend",
+      "step",
+      "trackValueFontColor",
+      "trackValueFontSize",
+      "trackValueMagnifierLabelFontColor",
+      "trackValueMagnifierLabelFontSize"
+    ],
+    "StackedColumnChartWidget": [
+      "arrowLabelBorderColor",
+      "arrowLabelBorderWidth",
+      "arrowLabelPaddingTop",
+      "hideZeroBars",
+      "isBarClickable",
+      "labelAlignments",
+      "labelBorderColor",
+      "labelBorderWidth",
+      "labelDataLabelVisible",
+      "labelDataPointVisible",
+      "labelTextAlign",
+      "legendReversed",
+      "percentageLineOffsetBottom",
+      "percentageLineOffsetTop",
+      "xAxisPosition"
+    ],
+    "SwipeWidget": [
+      "closedSize"
+    ],
+    "TextWidget": [
+      "backgroundColor",
+      "innerCursor",
+      "innerHeight",
+      "innerWidth"
+    ],
+    "TornadoChartWidget": [
+      "baseTitle",
+      "gridLinesNum",
+      "leftTitle",
+      "rightTitle",
+      "titleVisible",
+      "xMax"
+    ],
+    "WaterFallWidget": [
+      "labelFontSize",
+      "xAxisFontSize",
+      "yAxisFontSize",
+      "yAxisSeparatesThousands",
+      "yAxisTicksPrecisionFixed"
+    ],
+    "Widget": [
+      "minHeight",
+      "minWidth"
+    ]
+  },
+  "undocumentedWidgets": [
+    "HorizontalBarChartWidget",
+    "RadarChartWidget"
+  ],
+  "externalWidgets": [
+    "FileUploadWidget",
+    "SharePointUploadWidget"
+  ],
+  "events": {
+    "GridTableWidget": [
+      "pasteLast"
+    ],
+    "TextWidget": [
+      "pasteLast"
+    ],
+    "GridTablePlusWidget": [
+      "cellClicked",
+      "selectionChanged"
+    ]
+  }
+}
