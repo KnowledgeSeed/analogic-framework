@@ -166,10 +166,15 @@ ${v.backdrop ? `<div style="${backdropStyle.join('')}" class="ks-container-backd
             return {};
         }
 
-        const w = $(window), winHeight = w.height(), winWidth = w.width();
+        // A design-scaled page (PageWidget.scaleToDesignWidth) zooms the body:
+        // the anchor's rect and the window are in screen px, but the popup's
+        // left/top are in the zoomed page's px - zoom would apply twice.
+        const zoom = app.designScale || 1;
+        const w = $(window), winHeight = w.height() / zoom, winWidth = w.width() / zoom;
         const popupHeight = v.heightRatio ? v.heightRatio * winHeight : v.heightNum;
         const popupWidth = v.widthRatio ? v.widthRatio * winWidth : v.widthNum;
-        const rect = a[0].getBoundingClientRect(), configOffset = v.offset;
+        const screenRect = a[0].getBoundingClientRect(), configOffset = v.offset;
+        const rect = {x: screenRect.x / zoom, y: screenRect.y / zoom, right: screenRect.right / zoom, bottom: screenRect.bottom / zoom};
         const anchorHeight = a.height(), anchorWidth = a.width(), pos = {};
 
         let bestSpace, offset = 0;
@@ -211,8 +216,8 @@ ${v.backdrop ? `<div style="${backdropStyle.join('')}" class="ks-container-backd
         }
 
         if (!v.fixed) {
-            pos.left += w.scrollLeft();
-            pos.top += w.scrollTop();
+            pos.left += w.scrollLeft() / zoom;
+            pos.top += w.scrollTop() / zoom;
         }
         const minLeft = 10;
         const maxLeft = winWidth - popupWidth - 10;

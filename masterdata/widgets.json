@@ -3626,6 +3626,13 @@
                 "name": "favicon",
                 "required": false,
                 "type": "string"
+            },
+            {
+                "comment": "width (px) the page was designed for; the page is zoomed by window width / designWidth to fill any screen",
+                "deprecated": false,
+                "name": "designWidth",
+                "required": false,
+                "type": "number"
             }
         ]
     },
