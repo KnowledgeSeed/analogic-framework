@@ -4,12 +4,16 @@ on:
   workflow_dispatch:
 
 jobs:
+  compatibility:
+    uses: ./.github/workflows/main.yml
+    secrets: inherit
   build:
+    needs: compatibility
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get version
         id: set_version
@@ -20,7 +24,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Set up Python 3.10
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -29,8 +33,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install build twine
 
+      # Before anything is published: a masterdata error must not leave a released version behind.
+      - name: Build and validate masterdata package
+        run: python tools/masterdata/build_masterdata.py --out dist-masterdata
+
       - name: Python Build
         run: python -m build
 
       - name: Publish to PyPI
         run: python -m twine upload dist/* -u__token__ -p${{ secrets.PYPI_TOKEN }} --verbose
+
+      - name: Register framework release on Seeder Portal (draft)
+        env:
+          PORTAL_FRAMEWORK_RELEASE_API_KEY: ${{ secrets.PORTAL_FRAMEWORK_RELEASE_API_KEY }}
+        run: bash .github/scripts/register_framework_release.sh "${{ steps.set_version.outputs.version }}" dist-masterdata/masterdata.zip

@@ -1,9 +1,11 @@
 describe('Hello Analogic', () => {
-  it('Main', () => {
+  beforeEach(() => {
     cy
         .viewport(1920,1080)
         .visit('http://localhost:5000/helloanalogic/')
+  })
 
+  it('Main', () => {
     cy.get('#analogicDemoMainRow3Cell2Button').should('exist');
     cy.get('#analogicDemoMainRow3Cell3Button').should('exist');
     cy.get('#analogicDemoMainRow3Cell4Button').should('exist');
@@ -110,16 +112,21 @@ describe('Hello Analogic', () => {
     cy.get('#analogicDemoAllocationRow3Cell1Text > .ks-button > .ks-button-inner > .ks-button-content > .ks-button-label').contains('Admin');
     cy.get('#analogicDemoAllocationRow3Cell3Text > .ks-button > .ks-button-inner > .ks-button-content > .ks-button-label').click();
     cy.get('#analogicDemoAllocationFilterTable_2_1 > .ks-text > .ks-text-inner > .ks-text-icon > .icon-columns1').click();
+    cy.get('.loader').should('not.exist');
     cy.get('#analogicDemoAllocationHierarchySaveSelected > .ks-button > .ks-button-inner > .ks-button-content').should('exist');
     cy.get('#analogicDemoAllocationHierarchyRow1Cell1Text > .ks-text > .ks-text-inner > .ks-text-title').contains('Multi-level-selection');
     cy.get('#analogicDemoAllocationHierarchyGrid2Level1GridTable_0_0 > .ks-toggle > .ks-toggle-inner > .ks-toggle-label-off').contains('Selection Level 1');
     cy.get('#analogicDemoAllocationHierarchyGrid2Level1GridTable_1_0 > .ks-toggle > .ks-toggle-inner').click();
+    cy.get('.loader').should('not.exist');
     cy.get('#analogicDemoAllocationHierarchyGrid2Level2GridTable_1_0 > .ks-toggle > .ks-toggle-inner > .ks-toggle-label-off').contains('Selection Level 2');
     cy.get('#analogicDemoAllocationHierarchyGrid2Level2GridTable_1_0 > .ks-toggle > .ks-toggle-inner > .ks-toggle-label-off').click();
+    cy.get('.loader').should('not.exist');
     cy.get('#analogicDemoAllocationHierarchyGrid2Level3GridTable_2_0 > .ks-toggle > .ks-toggle-inner > .ks-toggle-label-off').contains('Selection Level 3');
     cy.get('#analogicDemoAllocationHierarchyGrid2Level3GridTable_1_0 > .ks-toggle > .ks-toggle-inner > .ks-toggle-label-off').click();
+    cy.get('.loader').should('not.exist');
     cy.get('#analogicDemoAllocationHierarchyGrid2Level4GridTable_0_0 > .ks-toggle > .ks-toggle-inner > .ks-toggle-label-off').contains('Selection Level 4');
     cy.get('#analogicDemoAllocationHierarchyGrid2Level4GridTable_1_0 > .ks-toggle > .ks-toggle-inner > .ks-toggle-label-off').click();
+    cy.get('.loader').should('not.exist');
     cy.get('#analogicDemoAllocationHierarchyGrid2Level5GridTable_1_0 > .ks-toggle > .ks-toggle-inner > .ks-toggle-label-off').contains('Selection Level 5');
     cy.get('#analogicDemoAllocationHierarchyGrid2Level5GridTable_3_0 > .ks-toggle > .ks-toggle-inner > .ks-toggle-label-off').click();
     cy.get('#analogicDemoAllocationHierarchyGrid2Level5GridTable_1_0 > .ks-toggle > .ks-toggle-inner > .ks-toggle-label-off').click();
