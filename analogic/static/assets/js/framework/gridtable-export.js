@@ -161,7 +161,9 @@ const GridTableExport = {
         });
     },
 
-    parseAttributeValues: (attributes) => {
+    // splitByComma: true (default) splits string entries on ',' into separate cells;
+    // false writes every entry into exactly one cell (empty entries keep their cell)
+    parseAttributeValues: (attributes, splitByComma = true) => {
         if (!Array.isArray(attributes) || attributes.length === 0) {
             if (attributes !== undefined && attributes !== null && attributes !== '') {
                 console.warn('[GridTableExport] attributes must be provided as an array.');
@@ -173,10 +175,13 @@ const GridTableExport = {
 
         const appendValue = (value) => {
             if (value === null || value === undefined) {
+                if (!splitByComma) {
+                    values.push('');
+                }
                 return;
             }
             const text = String(value).trim();
-            if (text === '') {
+            if (text === '' && splitByComma) {
                 return;
             }
             values.push(text);
@@ -188,7 +193,7 @@ const GridTableExport = {
                 return;
             }
 
-            if (typeof entry === 'string') {
+            if (typeof entry === 'string' && splitByComma) {
                 entry.split(',').forEach(segment => {
                     appendValue(segment);
                 });
@@ -1111,8 +1116,8 @@ const GridTableExport = {
     ) => {
 
         const sheetName = config.sheetName || GridTableExport.defaultSheetName;
-        const attributeValues = GridTableExport.parseAttributeValues(config.attributes);
-        const attrRowEnabled = attributeValues.length > 0;
+        const attributeValues = GridTableExport.parseAttributeValues(config.attributes, config.splitAttributesByComma !== false);
+        const attrRowEnabled = attributeValues.some(value => value !== '');
 
         const emptyColsLeft = GridTableExport.resolveEmptyColumnsLeft(
             config.startColumnIndex ?? config.startColumn,
@@ -1345,6 +1350,7 @@ const GridTableExport = {
 
         const sharedConfig = {
             attributes: Array.isArray(exportConfig.attributes) ? exportConfig.attributes : [],
+            splitAttributesByComma: exportConfig.splitAttributesByComma,
             repeatingCells: exportConfig.repeatingCells,
             excludeColumns: Array.isArray(exportConfig.excludeColumns) || typeof exportConfig.excludeColumns === 'string'
                 ? exportConfig.excludeColumns

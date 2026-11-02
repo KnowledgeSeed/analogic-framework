@@ -140,6 +140,8 @@ class StackedColumnChartWidget extends Widget {
             yAxisUnit: this.getRealValue('yAxisUnit', d, ''),
             yAxisDecimalNum: parseInt(this.getRealValue('yAxisDecimalNum', d, 2)),
             yAxisSeparatesThousands: this.getRealValue('yAxisSeparatesThousands', d, true),
+            yAxisThousandsSeparator: this.getRealValue('yAxisThousandsSeparator', d, ' '),
+            yAxisDecimalSeparator: this.getRealValue('yAxisDecimalSeparator', d, '.'),
             yAxisTicksPrecisionFixed: this.getRealValue('yAxisTicksPrecisionFixed', d, false),
 
             labelDataPointVisible: this.getRealValue('labelDataPointVisible', d, true),
@@ -292,7 +294,9 @@ class StackedColumnChartWidget extends Widget {
     getChartConfig() {
         const v = this.value, data = v.data, showOnlyZeroLine = v.yAxisShowOnlyZeroLine, stepSize = v.yAxisGridLinesNum ? v.yAxisGridLinesNum + 1 : 0, datasets = data.datasets, labels = data.labels;
 
-        const yAxisUnit = v.yAxisUnit, yAxisDecimalNum = v.yAxisDecimalNum, yAxisSeparatesThousands = v.yAxisSeparatesThousands, yAxisTicksPrecisionFixed = v.yAxisTicksPrecisionFixed;
+        const yAxisUnit = v.yAxisUnit, yAxisDecimalNum = v.yAxisDecimalNum, yAxisSeparatesThousands = v.yAxisSeparatesThousands, yAxisTicksPrecisionFixed = v.yAxisTicksPrecisionFixed,
+            yAxisThousandsSeparator = yAxisSeparatesThousands ? v.yAxisThousandsSeparator : '', yAxisDecimalSeparator = v.yAxisDecimalSeparator,
+            formatYValue = n => Utils.separatesThousands(Utils.precisionRound(n, yAxisDecimalNum, yAxisTicksPrecisionFixed), yAxisThousandsSeparator, yAxisDecimalSeparator) + yAxisUnit;
 
         let yMin = v.yMin, yMax = v.yMax, isYMinSet = $.isNumeric(yMin), isYMaxSet = $.isNumeric(yMax), min = Infinity, max = -Infinity, i, d, labelHalfStep = ((labels[1] || labels[0]) - (labels[0] || 0)) / 2, yTotal;
 
@@ -387,11 +391,7 @@ class StackedColumnChartWidget extends Widget {
                             return !c.isArrow && false !== c.tooltipsEnabled;
                         },
                         callbacks: {
-                            label: c => {
-                                c = Utils.precisionRound('object' === typeof c.raw ? c.raw.y : c.raw, yAxisDecimalNum, yAxisTicksPrecisionFixed);
-
-                                return (yAxisSeparatesThousands ? Utils.separatesThousands(c) : c) + yAxisUnit;
-                            }
+                            label: c => formatYValue('object' === typeof c.raw ? c.raw.y : c.raw)
                         }
                     },
                     datalabels: {
@@ -430,9 +430,7 @@ class StackedColumnChartWidget extends Widget {
                             }
 
                             if (v.labelDataPointVisible && (false !== d.labelDataPointVisible)) {
-                                e = Utils.precisionRound(null === n ? 0 : 'number' === typeof n ? n : n.y, yAxisDecimalNum, yAxisTicksPrecisionFixed);
-
-                                e = (yAxisSeparatesThousands ? Utils.separatesThousands(e) : e) + yAxisUnit;
+                                e = formatYValue(null === n ? 0 : 'number' === typeof n ? n : n.y);
                             }
 
                             if (v.labelDataLabelVisible && (false !== d.labelDataLabelVisible)) {
@@ -568,11 +566,7 @@ class StackedColumnChartWidget extends Widget {
                                 weight: v.yAxisTicksFontWeight,
                                 lineHeight: v.yAxisTicksFontLineHeight
                             },
-                            callback: v => {
-                                v = Utils.precisionRound(v, yAxisDecimalNum, yAxisTicksPrecisionFixed);
-
-                                return (yAxisSeparatesThousands ? Utils.separatesThousands(v) : v) + yAxisUnit;
-                            }
+                            callback: formatYValue
                         },
                         grid: {
                             display: v.yAxisGridDisplay,
