@@ -3258,6 +3258,8 @@ Configuration
 - ``yAxisUnit``: unit of the y axis
 - ``yAxisDecimalNum``: decimal number of the y axis
 - ``yAxisSeparatesThousands``: true or false
+- ``yAxisThousandsSeparator``: thousands separator character used when ``yAxisSeparatesThousands`` is true, e.g. ``','`` (default: ``' '``). Applies to the y axis ticks, tooltips and data point labels
+- ``yAxisDecimalSeparator``: decimal separator character, e.g. ``','`` (default: ``'.'``). Applies to the y axis ticks, tooltips and data point labels
 - ``yAxiyAxisTicksPrecisionFixed``: true or false
 - ``labelColor``: Color of the label
 - ``labelBackgroundColor``: Color of the label background
