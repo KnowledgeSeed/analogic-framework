@@ -159,6 +159,41 @@
                 "name": "tooltip",
                 "required": false,
                 "type": "string"
+            },
+            {
+                "comment": "Minimum height of the widget: a number (px) or a CSS size, e.g. '50%'. Default: none",
+                "deprecated": false,
+                "name": "minHeight",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Minimum width of the widget: a number (px) or a CSS size, e.g. '50%'. Default: none",
+                "deprecated": false,
+                "name": "minWidth",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Adds the 'wrapper' class (default margins) to the section of the widget. Default: false",
+                "deprecated": false,
+                "name": "margin",
+                "required": false,
+                "type": "boolean"
+            },
+            {
+                "comment": "GridTable cell widgets: refresh this cell when another column of the row finished an action, e.g. [{action: 'write', col: 3}] or [{event: 'eventName'}]. Default: none",
+                "deprecated": false,
+                "name": "depends",
+                "required": false,
+                "type": "list"
+            },
+            {
+                "comment": "Do not bind the refreshGridCell listeners of the cells after rendering. Default: false",
+                "deprecated": false,
+                "name": "disableRefreshGridCell",
+                "required": false,
+                "type": "boolean"
             }
         ]
     },
@@ -355,6 +390,27 @@
                 "name": "contextMenuEnabled",
                 "required": false,
                 "type": "boolean"
+            },
+            {
+                "comment": "Keyboard/mouse combinations that trigger the button, e.g. [{keys: ['control', 'click']}, {keys: ['shift', 'rightclick']}]. Default: false",
+                "deprecated": false,
+                "name": "keyboardShortcuts",
+                "required": false,
+                "type": "list"
+            },
+            {
+                "comment": "Confirmation message shown before the launch action is executed. Default: none",
+                "deprecated": false,
+                "name": "confirmMessage",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Second confirmation message, shown after the first one was accepted. Default: none",
+                "deprecated": false,
+                "name": "confirmMessage2",
+                "required": false,
+                "type": "string"
             }
         ]
     },
@@ -997,6 +1053,20 @@
                 "name": "tooltipsSeparatesThousands",
                 "required": false,
                 "type": "string"
+            },
+            {
+                "comment": "Title shown above the chart. Default: none",
+                "deprecated": false,
+                "name": "title",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Separates thousands in the left y axis labels. Default: true",
+                "deprecated": false,
+                "name": "leftYAxesLabelSeparatesThousands",
+                "required": false,
+                "type": "boolean"
             }
         ]
     },
@@ -1210,6 +1280,20 @@
                 "name": "fullYearButtonVisible",
                 "required": false,
                 "type": "boolean"
+            },
+            {
+                "comment": "Shows an empty field instead of today when datePicked is empty. Default: false",
+                "deprecated": false,
+                "name": "allowEmptyDate",
+                "required": false,
+                "type": "boolean"
+            },
+            {
+                "comment": "Locale of the displayed date, e.g. 'en-US', 'de-DE'. Default: false (hu-HU)",
+                "deprecated": false,
+                "name": "local",
+                "required": false,
+                "type": "string"
             }
         ]
     },
@@ -1367,6 +1451,20 @@
                 "name": "selectFirst",
                 "required": false,
                 "type": "string"
+            },
+            {
+                "comment": "Makes the search input of the dropdown read only. Default: false",
+                "deprecated": false,
+                "name": "disableSearch",
+                "required": false,
+                "type": "boolean"
+            },
+            {
+                "comment": "The typed search text is sent to the server (filter event) instead of filtering the loaded items. Default: false",
+                "deprecated": false,
+                "name": "serverSideFilter",
+                "required": false,
+                "type": "boolean"
             }
         ]
     },
@@ -2063,6 +2161,27 @@
                 "name": "title",
                 "required": false,
                 "type": "string"
+            },
+            {
+                "comment": "On updateContent the changed cell values are updated in place. false: every cell is redrawn. Default: true",
+                "deprecated": false,
+                "name": "allowChangedDataUpdate",
+                "required": false,
+                "type": "boolean"
+            },
+            {
+                "comment": "On updateContent rows added or removed are updated in place instead of re-rendering the whole table. Default: false",
+                "deprecated": false,
+                "name": "allowFullContentUpdated",
+                "required": false,
+                "type": "boolean"
+            },
+            {
+                "comment": "Shows this message (red) instead of the table. Default: none",
+                "deprecated": false,
+                "name": "errorMessage",
+                "required": false,
+                "type": "string"
             }
         ]
     },
@@ -2308,6 +2427,13 @@
                 "name": "width",
                 "required": false,
                 "type": "string"
+            },
+            {
+                "comment": "Callbacks of the table, e.g. {afterPageChange: ({page, pageSize, totalPages}) => {}}. Default: none",
+                "deprecated": false,
+                "name": "events",
+                "required": false,
+                "type": "object"
             }
         ]
     },
@@ -2325,6 +2451,48 @@
                 "name": "skin",
                 "required": false,
                 "type": "string"
+            },
+            {
+                "comment": "Title of the table. Default: none",
+                "deprecated": false,
+                "name": "title",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Hides the widget when the table has no rows. Default: false",
+                "deprecated": false,
+                "name": "hideIfNoData",
+                "required": false,
+                "type": "boolean"
+            },
+            {
+                "comment": "Minimum width of the table: a number (px) or a CSS size, e.g. '50%'. Default: false",
+                "deprecated": false,
+                "name": "minWidth",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Tabulator table options merged into the generated table definition. Default: {}",
+                "deprecated": false,
+                "name": "tabulatorOptions",
+                "required": false,
+                "type": "object"
+            },
+            {
+                "comment": "Tabulator column options merged into every generated column definition. Default: {}",
+                "deprecated": false,
+                "name": "tabulatorColumnOptions",
+                "required": false,
+                "type": "object"
+            },
+            {
+                "comment": "Tabulator event handlers, e.g. {rowClick: (e, row) => {}}. Default: {}",
+                "deprecated": false,
+                "name": "tabulatorEvents",
+                "required": false,
+                "type": "object"
             }
         ]
     },
@@ -2663,6 +2831,27 @@
                 "name": "maintainAspectRatio",
                 "required": false,
                 "type": "numeric"
+            },
+            {
+                "comment": "Chart.js dataset options of the histogram (last) dataset. Default: {}",
+                "deprecated": false,
+                "name": "datasetHistogram",
+                "required": false,
+                "type": "object"
+            },
+            {
+                "comment": "Chart.js dataset options of the line datasets, one object per dataset. Default: [{}, ...]",
+                "deprecated": false,
+                "name": "datasetsLine",
+                "required": false,
+                "type": "list"
+            },
+            {
+                "comment": "Font style of the y axis ticks, e.g. 'normal', 'italic', 'bold'",
+                "deprecated": false,
+                "name": "yAxesTicksFontStyle",
+                "required": false,
+                "type": "string"
             }
         ]
     },
@@ -2731,6 +2920,27 @@
                 "name": "fadeOutNum",
                 "required": false,
                 "type": "numeric"
+            },
+            {
+                "comment": "Title attribute of the table section. Default: none",
+                "deprecated": false,
+                "name": "title",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Adds an '<value> Only' search toggle above the table, e.g. {value: 'Active'}. Default: none",
+                "deprecated": false,
+                "name": "checkbox",
+                "required": false,
+                "type": "object"
+            },
+            {
+                "comment": "Background color of the selected row. Default: '#bfd9f2'",
+                "deprecated": false,
+                "name": "selectedRowBackgroundColor",
+                "required": false,
+                "type": "color"
             }
         ]
     },
@@ -2757,6 +2967,13 @@
                 "name": "fileName",
                 "required": false,
                 "type": "image"
+            },
+            {
+                "comment": "Font size (px) of the widget. Default: none",
+                "deprecated": false,
+                "name": "fontSize",
+                "required": false,
+                "type": "fontSize"
             }
         ]
     },
@@ -3224,6 +3441,69 @@
                 "name": "maintainAspectRatio",
                 "required": false,
                 "type": "numeric"
+            },
+            {
+                "comment": "Bezier curve tension of the datasets that set none (0: straight lines). Default: 0",
+                "deprecated": false,
+                "name": "defaultBezierCurveTension",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Font family of the chart. Default: 'imago, sans-serif'",
+                "deprecated": false,
+                "name": "defaultFontFamily",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Position of the x axis: 'bottom' or 'top'. Default: 'bottom'",
+                "deprecated": false,
+                "name": "xAxesPosition",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Space added before the first and after the last x value. Default: 0",
+                "deprecated": false,
+                "name": "xAxesOffset",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Space added before the first x value (overrides xAxesOffset). Default: 0",
+                "deprecated": false,
+                "name": "xAxesOffsetLeft",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Space added after the last x value (overrides xAxesOffset). Default: 0",
+                "deprecated": false,
+                "name": "xAxesOffsetRight",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Space above the highest and below the lowest y value, ratio of the y range. Default: 0.15",
+                "deprecated": false,
+                "name": "yAxesOffset",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Space above the highest y value (overrides yAxesOffset). Default: null",
+                "deprecated": false,
+                "name": "yAxesOffsetTop",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Space below the lowest y value (overrides yAxesOffset). Default: null",
+                "deprecated": false,
+                "name": "yAxesOffsetBottom",
+                "required": false,
+                "type": "numeric"
             }
         ]
     },
@@ -3600,6 +3880,20 @@
                 "name": "auxLineDash",
                 "required": false,
                 "type": "numeric"
+            },
+            {
+                "comment": "Dash length of the auxiliary lines (0: solid). Default: 0",
+                "deprecated": false,
+                "name": "auxLineDashStyle",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Font family of the chart. Default: 'imago, sans-serif'",
+                "deprecated": false,
+                "name": "defaultFontFamily",
+                "required": false,
+                "type": "string"
             }
         ]
     },
@@ -3794,6 +4088,13 @@
                 "name": "maintainAspectRatio",
                 "required": false,
                 "type": "numeric"
+            },
+            {
+                "comment": "Title shown above the chart. Default: none",
+                "deprecated": false,
+                "name": "title",
+                "required": false,
+                "type": "string"
             }
         ]
     },
@@ -3897,6 +4198,20 @@
                 "name": "tree",
                 "required": false,
                 "type": "string"
+            },
+            {
+                "comment": "Users may save public views. Default: true",
+                "deprecated": false,
+                "name": "allowCreatePublicView",
+                "required": false,
+                "type": "boolean"
+            },
+            {
+                "comment": "Users may save public subsets. Default: true",
+                "deprecated": false,
+                "name": "allowCreatePublicSubset",
+                "required": false,
+                "type": "boolean"
             }
         ]
     },
@@ -4401,6 +4716,55 @@
                 "name": "css",
                 "required": false,
                 "type": "list"
+            },
+            {
+                "comment": "Step of the slider. Default: 1",
+                "deprecated": false,
+                "name": "step",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Number of decimals of the displayed value. Default: 0",
+                "deprecated": false,
+                "name": "decimalPlace",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Colors of the slider handles, one per handle, e.g. [{color: '#f00'}]; clicking a legend item toggles its handle. Default: none",
+                "deprecated": false,
+                "name": "legend",
+                "required": false,
+                "type": "list"
+            },
+            {
+                "comment": "Font size of the value tooltip on hover. Default: none",
+                "deprecated": false,
+                "name": "trackValueFontSize",
+                "required": false,
+                "type": "fontSize"
+            },
+            {
+                "comment": "Font color of the value tooltip on hover. Default: none",
+                "deprecated": false,
+                "name": "trackValueFontColor",
+                "required": false,
+                "type": "color"
+            },
+            {
+                "comment": "Font size of the magnifier label (touch mode). Default: none",
+                "deprecated": false,
+                "name": "trackValueMagnifierLabelFontSize",
+                "required": false,
+                "type": "fontSize"
+            },
+            {
+                "comment": "Font color of the magnifier label (touch mode). Default: none",
+                "deprecated": false,
+                "name": "trackValueMagnifierLabelFontColor",
+                "required": false,
+                "type": "color"
             }
         ]
     },
@@ -4481,6 +4845,13 @@
                 "comment": "",
                 "deprecated": true,
                 "name": "widthStr",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Visible size (px) of the panel when closed. Default: 30",
+                "deprecated": false,
+                "name": "closedSize",
                 "required": false,
                 "type": "numeric"
             }
@@ -4593,6 +4964,13 @@
                 "name": "editable",
                 "required": false,
                 "type": "boolean"
+            },
+            {
+                "comment": "Hides the widget when its value is empty. Default: false",
+                "deprecated": false,
+                "name": "hideIfNoData",
+                "required": false,
+                "type": "boolean"
             }
         ]
     },
@@ -4682,6 +5060,13 @@
                 "name": "textFontSize",
                 "required": false,
                 "type": "fontSize"
+            },
+            {
+                "comment": "Hides the widget when its value is empty. Default: false",
+                "deprecated": false,
+                "name": "hideIfNoData",
+                "required": false,
+                "type": "boolean"
             }
         ]
     },
@@ -4896,6 +5281,34 @@
                 "name": "compactHtml",
                 "required": false,
                 "type": "boolean"
+            },
+            {
+                "comment": "Background color of the widget. Default: false",
+                "deprecated": false,
+                "name": "backgroundColor",
+                "required": false,
+                "type": "color"
+            },
+            {
+                "comment": "Width of the inner text block: a number (px) or a CSS size. Default: false",
+                "deprecated": false,
+                "name": "innerWidth",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Height of the inner text block: a number (px) or a CSS size. Default: false",
+                "deprecated": false,
+                "name": "innerHeight",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "CSS cursor of the inner text block, e.g. 'pointer'. Default: false",
+                "deprecated": false,
+                "name": "innerCursor",
+                "required": false,
+                "type": "string"
             }
         ]
     },
@@ -5053,6 +5466,48 @@
                 "name": "range",
                 "required": false,
                 "type": "numeric"
+            },
+            {
+                "comment": "Shows the column titles. Default: true",
+                "deprecated": false,
+                "name": "titleVisible",
+                "required": false,
+                "type": "boolean"
+            },
+            {
+                "comment": "Title of the baseline. Default: 'Baseline'",
+                "deprecated": false,
+                "name": "baseTitle",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Title of the left (low) side. Default: 'Input Low'",
+                "deprecated": false,
+                "name": "leftTitle",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Title of the right (high) side. Default: 'Input High'",
+                "deprecated": false,
+                "name": "rightTitle",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Number of the vertical grid lines. Default: 9",
+                "deprecated": false,
+                "name": "gridLinesNum",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Maximum of the x axis. Default: 50000",
+                "deprecated": false,
+                "name": "xMax",
+                "required": false,
+                "type": "numeric"
             }
         ]
     },
@@ -5203,6 +5658,41 @@
                 "name": "hiddenDatasets",
                 "required": false,
                 "type": "list"
+            },
+            {
+                "comment": "Font size (px) of the bar labels. Default: none",
+                "deprecated": false,
+                "name": "labelFontSize",
+                "required": false,
+                "type": "fontSize"
+            },
+            {
+                "comment": "Font size (px) of the x axis labels. Default: none",
+                "deprecated": false,
+                "name": "xAxisFontSize",
+                "required": false,
+                "type": "fontSize"
+            },
+            {
+                "comment": "Font size (px) of the y axis labels. Default: none",
+                "deprecated": false,
+                "name": "yAxisFontSize",
+                "required": false,
+                "type": "fontSize"
+            },
+            {
+                "comment": "Separates thousands in the y axis labels. Default: false",
+                "deprecated": false,
+                "name": "yAxisSeparatesThousands",
+                "required": false,
+                "type": "boolean"
+            },
+            {
+                "comment": "The y axis labels always show yAxisDecimalNum decimals. Default: false",
+                "deprecated": false,
+                "name": "yAxisTicksPrecisionFixed",
+                "required": false,
+                "type": "boolean"
             }
         ]
     },
@@ -6286,6 +6776,111 @@
                 "name": "arrowLabelBorderRadius",
                 "required": false,
                 "type": "numeric"
+            },
+            {
+                "comment": "Zero values get no bar. Default: true",
+                "deprecated": false,
+                "name": "hideZeroBars",
+                "required": false,
+                "type": "boolean"
+            },
+            {
+                "comment": "A click on a bar triggers the click event of the widget. Default: false",
+                "deprecated": false,
+                "name": "isBarClickable",
+                "required": false,
+                "type": "boolean"
+            },
+            {
+                "comment": "Shows the legend items in reverse order. Default: false",
+                "deprecated": false,
+                "name": "legendReversed",
+                "required": false,
+                "type": "boolean"
+            },
+            {
+                "comment": "Position of the x axis: 'bottom' or 'top'. Default: 'bottom'",
+                "deprecated": false,
+                "name": "xAxisPosition",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Space above the percentage line: a ratio, or a value when given as string. Default: 0",
+                "deprecated": false,
+                "name": "percentageLineOffsetTop",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Space below the percentage line: a ratio, or a value when given as string. Default: 0",
+                "deprecated": false,
+                "name": "percentageLineOffsetBottom",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Per data point label alignment ('anchor-align', e.g. 'end-top') used with manualLabelAlignmentSetting. Default: false",
+                "deprecated": false,
+                "name": "labelAlignments",
+                "required": false,
+                "type": "list"
+            },
+            {
+                "comment": "Border color of the data labels. Default: null",
+                "deprecated": false,
+                "name": "labelBorderColor",
+                "required": false,
+                "type": "color"
+            },
+            {
+                "comment": "Border width of the data labels. Default: 0",
+                "deprecated": false,
+                "name": "labelBorderWidth",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Text alignment inside the data labels: 'start', 'center', 'end'. Default: 'start'",
+                "deprecated": false,
+                "name": "labelTextAlign",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Shows the data labels. Default: true",
+                "deprecated": false,
+                "name": "labelDataLabelVisible",
+                "required": false,
+                "type": "boolean"
+            },
+            {
+                "comment": "Shows the data points. Default: true",
+                "deprecated": false,
+                "name": "labelDataPointVisible",
+                "required": false,
+                "type": "boolean"
+            },
+            {
+                "comment": "Border color of the arrow labels. Default: null",
+                "deprecated": false,
+                "name": "arrowLabelBorderColor",
+                "required": false,
+                "type": "color"
+            },
+            {
+                "comment": "Border width of the arrow labels. Default: 0",
+                "deprecated": false,
+                "name": "arrowLabelBorderWidth",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Top padding of the arrow labels. Default: 7",
+                "deprecated": false,
+                "name": "arrowLabelPaddingTop",
+                "required": false,
+                "type": "numeric"
             }
         ]
     },
@@ -6662,6 +7257,232 @@
                     "type": "numeric"
                 }
             ]
-        }
-
+        },
+    "HorizontalBarChartWidget": {
+        "name": "HorizontalBarChartWidget",
+        "parameters": [
+            {
+                "comment": "Title of the row title column. Default: none",
+                "deprecated": false,
+                "name": "column1Title",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Title of the delta chart column. Default: none",
+                "deprecated": false,
+                "name": "column2Title",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Title of the right table. Default: none",
+                "deprecated": false,
+                "name": "column3Title",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Header of the base column of the right table. Default: none",
+                "deprecated": false,
+                "name": "rightTableColumn1Title",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Header of the scenario column of the right table. Default: none",
+                "deprecated": false,
+                "name": "rightTableColumn2Title",
+                "required": false,
+                "type": "string"
+            }
+        ]
+    },
+    "RadarChartWidget": {
+        "name": "RadarChartWidget",
+        "parameters": [
+            {
+                "comment": "Title shown above the chart. Default: none",
+                "deprecated": false,
+                "name": "title",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Labels of the axes, e.g. ['Q1', 'Q2', 'Q3']. Data can provide them too",
+                "deprecated": false,
+                "name": "labels",
+                "required": false,
+                "type": "list"
+            },
+            {
+                "comment": "Chart.js radar datasets, merged with the datasets of the data, e.g. [{label: 'Plan', data: [1, 2, 3], borderColor: '#f00'}]",
+                "deprecated": false,
+                "name": "datasets",
+                "required": false,
+                "type": "list"
+            },
+            {
+                "comment": "Minimum of the scale. Default: null (automatic)",
+                "deprecated": false,
+                "name": "min",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Maximum of the scale. Default: null (automatic)",
+                "deprecated": false,
+                "name": "max",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Step between the ticks. Default: null (automatic)",
+                "deprecated": false,
+                "name": "stepSize",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Explicit tick values. Default: []",
+                "deprecated": false,
+                "name": "ticks",
+                "required": false,
+                "type": "list"
+            },
+            {
+                "comment": "Color of the tick labels. Default: '#666'",
+                "deprecated": false,
+                "name": "tickColor",
+                "required": false,
+                "type": "color"
+            },
+            {
+                "comment": "Font family of the tick labels. Default: null",
+                "deprecated": false,
+                "name": "tickFontFamily",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Font size of the tick labels. Default: 12",
+                "deprecated": false,
+                "name": "tickFontSize",
+                "required": false,
+                "type": "fontSize"
+            },
+            {
+                "comment": "Font style of the tick labels. Default: 'normal'",
+                "deprecated": false,
+                "name": "tickFontStyle",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Line width of the datasets. Default: 1.5",
+                "deprecated": false,
+                "name": "bezierCurveBorderWidth",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Bezier curve tension of the lines (0: straight). Default: 0",
+                "deprecated": false,
+                "name": "bezierCurveTension",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Height of the canvas: a number (px) or a CSS size. Default: false",
+                "deprecated": false,
+                "name": "canvasHeight",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Width of the canvas: a number (px) or a CSS size. Default: false",
+                "deprecated": false,
+                "name": "canvasWidth",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Skin of the chart. Default: 'standard'",
+                "deprecated": false,
+                "name": "skin",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Skin of the legend. Default: 'standard'",
+                "deprecated": false,
+                "name": "legendSkin",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Shows the legend; clicking a legend item toggles its dataset. Default: true",
+                "deprecated": false,
+                "name": "legendVisible",
+                "required": false,
+                "type": "boolean"
+            },
+            {
+                "comment": "Top padding of the chart. Default: 0",
+                "deprecated": false,
+                "name": "paddingTop",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Right padding of the chart. Default: 0",
+                "deprecated": false,
+                "name": "paddingRight",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Bottom padding of the chart. Default: 0",
+                "deprecated": false,
+                "name": "paddingBottom",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Left padding of the chart. Default: 0",
+                "deprecated": false,
+                "name": "paddingLeft",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Shows the tooltips. Default: true",
+                "deprecated": false,
+                "name": "tooltipsEnabled",
+                "required": false,
+                "type": "boolean"
+            },
+            {
+                "comment": "Chart.js tooltip interaction mode. Default: 'nearest'",
+                "deprecated": false,
+                "name": "tooltipsMode",
+                "required": false,
+                "type": "string"
+            },
+            {
+                "comment": "Width / height ratio of the canvas. Default: null",
+                "deprecated": false,
+                "name": "aspectRatio",
+                "required": false,
+                "type": "numeric"
+            },
+            {
+                "comment": "Keeps the aspect ratio when resizing. Default: false",
+                "deprecated": false,
+                "name": "maintainAspectRatio",
+                "required": false,
+                "type": "boolean"
+            }
+        ]
+    }
 }
