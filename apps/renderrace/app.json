@@ -1,0 +1,7 @@
+{
+  "projectName": "Render Race Test",
+  "projectId": "renderrace",
+  "authenticationMode": "NoLogin",
+  "mainPage": "rrMain",
+  "analogicApiAuthenticationMode": "unsecured"
+}

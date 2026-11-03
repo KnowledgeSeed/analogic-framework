@@ -1,0 +1,508 @@
+.ks-scrolltable-holder:after {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&0+0,1+100 */
+    background: -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 */
+    bottom: 0;
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 80px;
+}
+
+.ks-scrolltable-holder.end:after {
+    width: 0 !important;
+}
+
+.ks-scrolltable-pager {
+    background-color: #ebecec;
+    border-radius: 7px;
+    height: 50px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 160px;
+}
+
+.ks-scrolltable-pager-item {
+    color: #c5c6c6;
+    font-size: 12px;
+    font-weight: 600;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+}
+
+.ks-scrolltable-pager-item.ks-visible {
+    color: #858686;
+}
+
+.ks-scrolltable-pager-item + .ks-scrolltable-pager-item {
+    border-left: 1px solid #c5c6c6;
+}
+
+.ks-scrolltable-pager-range {
+    border-top: 5px solid #0066cc;
+    border-right: 15px solid #0066cc;
+    border-bottom: 5px solid #0066cc;
+    border-left: 15px solid #0066cc;
+    border-radius: 12px;
+    height: 55px;
+}
+
+.ks-scrolltable-pager-range::before {
+    border-top: 5px solid transparent;
+    border-right: 5px solid #fff;
+    border-bottom: 5px solid transparent;
+    margin-top: -4px;
+    left: -10px;
+    top: 50%;
+}
+
+.ks-scrolltable-pager-range::after {
+    border-top: 5px solid transparent;
+    border-left: 5px solid #fff;
+    border-bottom: 5px solid transparent;
+    margin-top: -4px;
+    right: -10px;
+    top: 50%;
+}
+
+.ks-scrolltable-holder-inner {
+    padding-left: 160px;
+}
+
+.ks-scrolltable-table {
+    margin-bottom: 20px;
+}
+
+.ks-scrolltable-table-names {
+    background-color: #fff;
+}
+
+.ks-scrolltable-table thead th.ks-scrolltable-name-col {
+    background-color: transparent;
+    width: 160px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.inner-row > .ks-scrolltable-name-col {
+    padding-left: 18px;
+}
+
+.inner-row > .ks-scrolltable-name-col:before {
+    background-color: #fff;
+    bottom: -1px;
+    content: "";
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 5px;
+}
+
+.inner-row > .ks-scrolltable-name-col:after {
+    background-color: #bfd9f2;
+    bottom: -1px;
+    content: "";
+    left: 5px;
+    position: absolute;
+    top: 0;
+    width: 5px;
+}
+
+.ks-scrolltable-table thead th {
+    background-color: #585959;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-right: 1px solid #fff;
+    color: #fff;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 15px 6px 12px;
+    text-align: left;
+    width: 100px;
+}
+
+.ks-scrolltable-header th {
+    min-width: 120px !important;
+    width: 120px !important;
+    line-height: 15px !important;
+}
+
+.ks-scrolltable-table-names th {
+    font-size: 15px;
+    line-height: 15px;
+}
+
+.ks-scrolltable-table tbody td.ks-scrolltable-name-col {
+    background-color: transparent;
+    border-left: 1px dashed #bfbfbf;
+    border-right: 1px solid #858686;
+    height: 46px;
+    text-align: left;
+    width: 160px;
+}
+
+.ks-scrolltable-table tbody td {
+    text-align: right;
+}
+
+.ks-scrolltable-table td {
+    background-clip: padding-box;
+    border-top: 1px solid #d8d9d9;
+    border-right: 1px dashed #bfbfbf;
+    border-bottom: 1px solid #d8d9d9;
+    border-left: 1px dashed #bfbfbf;
+    color: #000;
+    font-size: 15px;
+    font-weight: normal;
+    height: 46px;
+    line-height: 15px;
+    min-width: 120px;
+    padding: 15px 6px 12px;
+    width: 120px;
+}
+
+.ks-scrolltable-name-col .icon-comment-off {
+    color: #c5c6c6;
+    font-size: 15px;
+    position: relative;
+    top: 2px;
+}
+
+.ks-scrolltable-name-col .open-arrow {
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid #000;
+    cursor: pointer;
+    margin-top: -5px;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    vertical-align: middle;
+}
+
+.ks-scrolltable-name-col.opened .open-arrow {
+    border-top: 5px solid #000;
+    border-bottom: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    margin-top: -2.5px;
+}
+
+.ks-scrolltable-name-col .icon-comment-on {
+    color: #0066cc;
+    font-size: 15px;
+    position: relative;
+    top: 2px;
+}
+
+.ks-scrolltable-header {
+    padding-left: 1pt;
+}
+
+.ks-scrolltable-body {
+    padding-left: 1pt;
+    padding-right: 11px;
+}
+
+.ks-scrolltable-table tbody tr.disabled td,
+.ks-scrolltable-table tbody tr td.disabled {
+    background-color: #f5f5f5 !important;
+    background-clip: padding-box;
+    color: #858686;
+}
+
+.ks-scrolltable-body td > span {
+    max-width: 106px;
+    min-width: 106px;
+    width: 106px;
+}
+
+.ks-scrolltable-table td.ks-selected {
+    border: 2pt solid #0066cc;
+    position: relative !important;
+}
+
+.ks-scrolltable-table td.ks-cell-selected {
+    border: 2pt solid #0066cc;
+    position: relative !important;
+}
+
+.ks-scrolltable-table td .ks-cell-selected-control {
+    background-color: #0066cc;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    height: 22px;
+    line-height: 15px;
+    position: absolute;
+    right: -13px;
+    text-align: center;
+    top: -13px;
+    width: 22px;
+}
+
+.b > .ks-cell-selected-control, .b > .ks-cell-active-close {
+    bottom: -13px !important;
+    top: unset !important;
+}
+
+.b > .ks-cell-active-controls {
+    z-index: 8;
+    top: unset !important;
+    bottom: -35px !important;
+}
+
+.ks-cell-selected-control, .ks-cell-active-close, .ks-editing input {
+    z-index: 5;
+}
+
+.ks-scrolltable-table td.ks-cell-active {
+    border: 2pt solid #00965e;
+    position: relative !important;
+}
+
+.ks-scrolltable-table td .ks-cell-active-close {
+    background-color: #00965e;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    height: 22px;
+    line-height: 25px;
+    position: absolute;
+    right: -13px;
+    text-align: center;
+    top: -13px;
+    width: 22px;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.ks-scrolltable-table td .ks-cell-active-controls {
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    left: 50%;
+    line-height: 25px;
+    position: absolute;
+    text-align: center;
+    top: -40px;
+    width: 117px;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.ks-scrolltable-table td .ks-cell-active-controls.ks-control-finalize {
+    width: 121px;
+}
+
+.ks-scrolltable-table td .ks-cell-active-control {
+    background-color: #00965e;
+    cursor: pointer;
+    float: left;
+    width: 45px;
+}
+
+.ks-scrolltable-table td .ks-cell-active-controls.ks-control-finalize .ks-cell-active-control {
+    width: 60px;
+}
+
+.ks-scrolltable-table td .ks-cell-active-control:hover,
+.ks-scrolltable-table td .ks-cell-active-control.active {
+    background-color: #007046;
+}
+
+.ks-scrolltable-table td .ks-cell-active-copy,
+.ks-scrolltable-table td .ks-cell-active-confirm {
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+    margin-right: 1px;
+}
+
+.ks-scrolltable-table td .ks-cell-active-paste {
+    border-radius: 0;
+}
+
+.ks-scrolltable-table td .ks-cell-active-more,
+.ks-scrolltable-table td .ks-cell-active-cancel {
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+
+.ks-scrolltable-table td .ks-cell-active-cancel {
+    background-color: #e40046;
+}
+
+.ks-scrolltable-table td .ks-cell-active-more {
+    font-weight: bold;
+    line-height: 20px;
+    height: 25px;
+    margin-left: 1px;
+    width: 25px;
+}
+
+.ks-cell-active-more-controls {
+    cursor: pointer;
+    background-color: #fff;
+    border: 1px solid #b1b3b3;
+    border-radius: 12px;
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+    left: 50%;
+    padding: 2px;
+    position: absolute;
+    text-align: left;
+    top: -10px;
+    z-index: 100;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.ks-cell-active-more-controls .ks-cell-active-more-control {
+    border-radius: 8px;
+    padding: 12px 15px;
+    white-space: nowrap;
+}
+
+.ks-cell-active-more-controls .ks-cell-active-more-control:hover {
+    background-color: #bfe5d7;
+}
+
+.ks-cell-active-more-control.ks-disabled {
+    color: #c5c6c6;
+    cursor: default;
+}
+
+.ks-editing {
+    position: relative;
+}
+
+.ks-cell-widget-input {
+    border: 2px solid #0066cc;
+    height: calc(100% + 4px);
+    left: -6px;
+    position: absolute;
+    top: -2px;
+    width: calc(100% + 12px);
+    background-color: #fff;
+    border-radius: 7px;
+    color: #000;
+    display: block;
+    font-size: 16px;
+    padding: 0 12px;
+    -webkit-appearance: none;
+}
+
+.ks-editing .ks-scrolltable-input {
+    border: 2px solid #0066cc;
+    height: calc(100% + 4px);
+    left: -6px;
+    position: absolute;
+    top: -2px;
+    width: calc(100% + 12px);
+}
+
+table td.cell-range-top-left-corner {
+    border-top: 2pt solid #00965e;
+    border-left: 2pt solid #00965e;
+    position: relative;
+}
+table td.cell-range-top {
+    border-top: 2pt solid #00965e;
+}
+table td.cell-range-top-right-corner {
+    border-top: 2pt solid #00965e;
+    border-right: 2pt solid #00965e;
+    position: relative;
+}
+table td.cell-range-right {
+    border-right: 2pt solid #00965e;
+}
+table td.cell-range-bottom-right-corner {
+    border-bottom: 2pt solid #00965e;
+    border-right: 2pt solid #00965e;
+    position: relative;
+}
+table td.cell-range-bottom {
+    border-bottom: 2pt solid #00965e;
+}
+table td.cell-range-bottom-left-corner {
+    border-bottom: 2pt solid #00965e;
+    border-left: 2pt solid #00965e;
+    position: relative;
+}
+table td.cell-range-left {
+    border-left: 2pt solid #00965e;
+}
+
+table td.cell-range-top-left-corner.cell-copying {
+    border-top: 2pt dashed #00965e;
+    border-left: 2pt dashed #00965e;
+}
+table td.cell-range-top.cell-copying {
+    border-top: 2pt dashed #00965e;
+}
+table td.cell-range-top-right-corner.cell-copying {
+    border-top: 2pt dashed #00965e;
+    border-right: 2pt dashed #00965e;
+}
+table td.cell-range-right.cell-copying {
+    border-right: 2pt dashed #00965e;
+}
+table td.cell-range-bottom-right-corner.cell-copying {
+    border-bottom: 2pt dashed #00965e;
+    border-right: 2pt dashed #00965e;
+}
+table td.cell-range-bottom.cell-copying {
+    border-bottom: 2pt dashed #00965e;
+}
+table td.cell-range-bottom-left-corner.cell-copying {
+    border-bottom: 2pt dashed #00965e;
+    border-left: 2pt dashed #00965e;
+}
+table td.cell-range-left.cell-copying {
+    border-left: 2pt dashed #00965e;
+}
+
+.widget-loupe {
+    background-color: #fff;
+    border: 1px solid #858686;
+    border-radius: 8px;
+    border-bottom-left-radius: 0px;
+    color: #000;
+    font-size: 15px;
+    font-weight: normal;
+    max-width: 250px;
+    padding: 15px;
+    position: fixed;
+    z-index: 99999;
+}
+
+.widget-loupe.mobile-control {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+}
+
+.widget-loupe .icon-tooltip-arrow {
+    color: #0066cc;
+    display: table;
+    font-size: 12px;
+    margin-top: 5px;
+}

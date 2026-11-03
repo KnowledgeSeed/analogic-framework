@@ -22,9 +22,11 @@ class Widget {
 
     }
 
+    // A widget that renders with the loader blocks the clicks on the page right away, not only once the
+    // loader becomes visible: see Loader.start.
     renderStartLoader(withLoader) {
         if (withLoader) {
-            Loader.start(true);
+            Loader.start(true, true);
         }
     }
 
@@ -216,6 +218,56 @@ class Widget {
     }
 
     reRenderWidget(withState = false, withLoader = true, previouslyLoadedData = false) {
+        return this.queueRefresh('doReRenderWidget', [withState, withLoader, previouslyLoadedData]);
+    }
+
+    // Re-renders and content updates of a widget run one at a time. Two of them filling the holder at
+    // the same time let the one that loaded slower win, e.g. a quick second switch of a segmented
+    // control left the panel and the data of the first selected segment on the page. A request arriving
+    // while one runs waits for it, and of the waiting requests only the newest one runs (a waiting
+    // re-render is not downgraded to a content update): the last request is what the page shows.
+    queueRefresh(method, args) {
+        if (!this.runningRefresh) {
+            return this.runRefresh(method, args);
+        }
+
+        const queued = this.queuedRefresh || (this.queuedRefresh = {deferred: $.Deferred()});
+
+        if (!(queued.method === 'doReRenderWidget' && method === 'doUpdateWidgetContent')) {
+            queued.method = method;
+            queued.args = args;
+        }
+
+        return queued.deferred.promise();
+    }
+
+    runRefresh(method, args) {
+        const instance = this, next = () => {
+            const queued = instance.queuedRefresh;
+
+            instance.runningRefresh = false;
+            if (queued) {
+                instance.queuedRefresh = null;
+                instance.runRefresh(queued.method, queued.args).then(r => queued.deferred.resolve(r), e => queued.deferred.reject(e));
+            }
+        };
+
+        this.runningRefresh = true;
+
+        let result;
+        try {
+            result = $.when(this[method](...args));
+        } catch (e) {
+            result = $.Deferred().reject(e).promise();
+        }
+        result.then(next, next);
+
+        return result;
+    }
+
+    // The re-render itself; called directly only by a refresh that is already running (e.g. a content
+    // update that turns out to need a full re-render), anything else goes through reRenderWidget.
+    doReRenderWidget(withState = false, withLoader = true, previouslyLoadedData = false) {
         if (this.isRendering) {
             this.renderError();
         }
@@ -327,7 +379,11 @@ class Widget {
     }
 
     updateWidgetContent(withLoader = true) {
-        withLoader && Loader.start(true);
+        return this.queueRefresh('doUpdateWidgetContent', [withLoader]);
+    }
+
+    doUpdateWidgetContent(withLoader = true) {
+        withLoader && Loader.start(true, true);
         let instance = this;
         return this.updateContent().then((r) => {
             if ('update' === r) {
