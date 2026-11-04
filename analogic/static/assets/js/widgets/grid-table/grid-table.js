@@ -247,7 +247,7 @@ class GridTableWidget extends Widget {
             }
 
             if (!vv.allowFullContentUpdated && !instance.isContentUpdatable(processedData)) {
-                return instance.reRenderWidget(false, false, d);
+                return instance.doReRenderWidget(false, false, d);
             }
 
             for (widgetOptions of o.widgets || []) {
@@ -266,7 +266,7 @@ class GridTableWidget extends Widget {
             );
 
             if (GridTableWidget.hiddenColumnsDiffer(hiddenCols, instance.getHiddenColumns())) {
-                return instance.reRenderWidget(false, false, d);
+                return instance.doReRenderWidget(false, false, d);
             }
 
             instance.state['rows'] = rowNum;
