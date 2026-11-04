@@ -36,3 +36,4 @@ config.py
 .claude/
 apps/default/seeder_studio_trust.json
 /apps/*/seeder_studio_trust.json
+/config.py

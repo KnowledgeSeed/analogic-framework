@@ -604,7 +604,8 @@ const Utils = {
         return value.includes('CAMID') ? value : value.replace(/\\/g, '/');
     },
     checkScreenResolution() {
-        let disabled = app.disableCheckResolutionWarning === true;
+        // A design-scaled page always fits the window.
+        let disabled = app.disableCheckResolutionWarning === true || !!app.designScale;
         if (!app.checkScreenResolutionWarningDisplayed && disabled===false && $('body').width() - 100 > window.innerWidth) {
             Api.showPopup(app.screenResolutionWarningMessage ? app.screenResolutionWarningMessage : 'Your current screen resolution is below the recommended 1920*1080. For optimal user experience please lower your browser zoom to 90% or 80%.');
             app.checkScreenResolutionWarningDisplayed = true;
@@ -772,14 +773,19 @@ const Utils = {
         }
     },
     setAutoPosition(floatingElement, anchor, forcedPosition = null, leftOffset = null) {
+        // A design-scaled page (PageWidget.scaleToDesignWidth) zooms the body:
+        // screen px (rect, window) become the page's px, as in PopupWidget.
+        const zoom = app.designScale || 1;
         const w = $(window),
-            winHeight = w.height(),
-            winWidth = w.width(),
+            winHeight = w.height() / zoom,
+            winWidth = w.width() / zoom,
             height = floatingElement.outerHeight(),
             width = floatingElement.outerWidth(),
-            scrollLeft = w.scrollLeft(),
-            scrollTop = w.scrollTop();
-        const rect = anchor[0].getBoundingClientRect(),
+            scrollLeft = w.scrollLeft() / zoom,
+            scrollTop = w.scrollTop() / zoom;
+        const screenRect = anchor[0].getBoundingClientRect(),
+            rect = {left: screenRect.left / zoom, top: screenRect.top / zoom,
+                right: screenRect.right / zoom, bottom: screenRect.bottom / zoom},
             anchorWidth = anchor.width(),
             x = rect.left,
             y = rect.top,
