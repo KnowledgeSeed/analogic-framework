@@ -697,6 +697,11 @@ const Utils = {
             path.pop();
         }
 
+        // The default app has no name in its URL; under a mount prefix (config.js scriptRoot) it lives at the prefix.
+        if (path.length === 0 && app.scriptRoot) {
+            return app.scriptRoot.split('/').filter(s => s !== '');
+        }
+
         return path;
     },
     getAppSubPath() {

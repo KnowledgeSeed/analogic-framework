@@ -3,7 +3,7 @@
   "projectId": "$projectId",
   "authenticationMode": "$authenticationMode",
   "mainPage": "$mainPage",
-  "analogicApiAuthenticationMode": "unsecured",
+  "analogicApiAuthenticationMode": "global",
   "camNamespace": "$camNamespace",
   "proxy": {
     "target": "$modelApiUrl"

@@ -137,3 +137,12 @@ Auth.getHeader = (contentType = 'application/json; charset=utf-8', accept = 'app
 
     return headers;
 };
+
+// The session's CSRF token (templates/authenticated.html) on every same-origin jQuery request: checked by the data
+// endpoints when the app has csrfProtection on, ignored otherwise. Read once here: rendering replaces the body.
+Auth.csrfToken = (document.getElementById('analogic_csrf_token') || {}).value || '';
+$.ajaxPrefilter((options, originalOptions, jqXHR) => {
+    if (Auth.csrfToken && !options.crossDomain) {
+        jqXHR.setRequestHeader('X-CSRFToken', Auth.csrfToken);
+    }
+});

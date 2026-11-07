@@ -32,13 +32,14 @@
         {% endif %}
     </head>
     <body>
+    <input type="hidden" id="analogic_csrf_token" value="{{ analogic_csrf_token() }}">
     {% if current_app.get_authentication_provider().get_navigation_parameters() %}
         <input type="hidden" id="navigation_parameters" value="{{current_app.get_authentication_provider().pop_navigation_parameters()}}">
     {% else %}
         <input type="hidden" id="navigation_parameters" value="">
     {% endif %}
         {% if (cnf.useMinifiedAssets)%}
-            <script src="{{ url_for(cnf.blueprint_static, filename='assets/js/config' + cnf.get('auth_prov', '') + '.js')}}?v={{cnf.version}}"></script>
+            <script src="{{ url_for(cnf.blueprint_static, filename='assets/js/config' + cnf.get('auth_prov', '') + '.js')}}?v={{cnf.version}}" data-script-root="{{ request.script_root }}"></script>
             <script src="{{ url_for('static', filename='assets/js/minified.js')}}?v={{ cnf.version }}" charset="UTF-8"></script>
             <script src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/minified.js')}}?v={{ cnf.version }}" charset="UTF-8"></script>
             <script src="{{ url_for(cnf.blueprint_static, filename='assets/js/configs/repository.js')}}')}}?v={{cnf.version}}"></script>

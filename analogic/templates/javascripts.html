@@ -18,7 +18,7 @@
 <script src="{{ url_for('static', filename='assets/js/lib/exceljs.min.js') }}?v={{ cnf.version }}"></script>
 <script src="{{ url_for('static', filename='assets/js/lib/tabulator.js') }}?v={{ cnf.version }}"></script>
 
-<script src="{{ url_for(cnf.blueprint_static, filename='assets/js/config' + cnf.get('auth_prov','') + '.js') }}?v={{ cnf.version }}"></script>
+<script src="{{ url_for(cnf.blueprint_static, filename='assets/js/config' + cnf.get('auth_prov','') + '.js') }}?v={{ cnf.version }}" data-script-root="{{ request.script_root }}"></script>
 <!-- end libs -->
 
 

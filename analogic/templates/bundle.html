@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{ manifest.title or cnf.projectName }}</title>
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for(cnf.blueprint_static, filename='assets/skin/favicon/favicon-32x32.png') }}">
+        {% for style in manifest.styles %}
+        <link rel="stylesheet" href="{{ boot.bundleUrl }}{{ style }}">
+        {% endfor %}
+    </head>
+    <body>
+        <div id="analogic-bundle-root" data-bundle="{{ bundle_name }}"></div>
+        {# Data, not code: the CSP allows no inline script, and a JSON block is never executed. #}
+        <script id="analogic-bundle-boot" type="application/json">{{ boot | tojson }}</script>
+        <script type="module" src="{{ url_for('static', filename='sdk/bundle-boot.js') }}?v={{ cnf.version }}"></script>
+    </body>
+</html>

@@ -1,3 +1,4 @@
+import json
 import importlib.util
 import sys
 import tempfile
@@ -120,6 +121,29 @@ class TestCreateNewApp(unittest.TestCase):
             # nothing was copied over the leftovers
             self.assertFalse((leftover / 'app.json').exists())
 
+
+    def test_a_new_app_uses_the_global_api_user_and_the_mode_seeder_asks_for(self):
+        analogic_root = Path(__file__).resolve().parents[1]
+
+        with tempfile.TemporaryDirectory() as temp_instance_path:
+            app = Analogic(__name__, instance_path=temp_instance_path)
+            app.root_path = str(analogic_root)
+            app.authentication_providers['LoginCam'] = 'analogic'
+
+            with patch.object(app, 'trigger_change_monitor_for_restart'):
+                app.create_new_app('derived', 'main', 'http://tm1:8010')
+                app.create_new_app('chosen', 'main', 'http://tm1:8010', authentication_mode='LoginCam')
+                with self.assertRaises(Exception) as raised:
+                    app.create_new_app('unknown', 'main', authentication_mode='NoSuchMode')
+
+            apps = Path(temp_instance_path) / 'apps'
+            derived = json.loads((apps / 'derived' / 'app.json').read_text(encoding='utf-8'))
+            chosen = json.loads((apps / 'chosen' / 'app.json').read_text(encoding='utf-8'))
+            self.assertEqual('global', derived['analogicApiAuthenticationMode'])
+            self.assertEqual('LoginBasic', derived['authenticationMode'])
+            self.assertEqual('LoginCam', chosen['authenticationMode'])
+            self.assertIn('NoSuchMode', str(raised.exception))
+            self.assertFalse((apps / 'unknown').exists())
 
 if __name__ == '__main__':
     unittest.main()
