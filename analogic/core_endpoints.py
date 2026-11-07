@@ -5,7 +5,13 @@ from flask import request, redirect, render_template, jsonify, Response, current
 from functools import wraps
 from analogic.exceptions import AnalogicTM1ServiceException
 
+import mimetypes
+import os
 import traceback
+
+from flask import g, send_file
+
+from analogic import bundles
 
 core_endpoints = AnalogicEndpoint('core_endpoints', __name__)
 
@@ -57,9 +63,109 @@ def index():
 
     authentication_provider.add_page_meta_data_info()
 
+    # Read before index(): rendering the widget page pops them.
+    navigation_pending = bool(authentication_provider.get_navigation_parameters())
+
     response = authentication_provider.index()
 
+    main_bundle = authentication_provider.get_setting().get_config().get('mainBundle')
+    # ?p= navigation into a widget page (ctx.navigate({page})) still opens the widget pipeline once.
+    if (main_bundle and _is_page(response) and authentication_provider.check_app_authenticated()
+            and not navigation_pending):
+        return _bundle_page(authentication_provider, main_bundle)
+
+    if _is_page(response) and authentication_provider.check_app_authenticated():
+        # Widget pages: BundleWidgets start bundles here, so their csp additions apply to this page too.
+        setting = authentication_provider.get_setting()
+        manifest = bundles.widget_page_manifest(setting.site_root, setting.get_config().get('clientSecurity'),
+                                                current_app.logger)
+        if manifest:
+            g.analogic_bundle_page_manifest = manifest
+
     return response
+
+
+def _is_page(response):
+    status = response[1] if isinstance(response, tuple) and len(response) > 1 else getattr(response, 'status_code', 200)
+    return status == 200
+
+
+def _bundle_boot(authentication_provider, name, manifest):
+    """What a bundle starts with: on its own page (bundle.html) and inside a widget page (BundleWidget, through
+    bundle_session)."""
+    setting = authentication_provider.get_setting()
+    base = setting.get_base_url().rstrip('/') + '/'
+    return {
+        'bundle': name,
+        'baseUrl': base,
+        'bundleUrl': base + 'bundles/' + name + '/',
+        'entry': manifest['entry'],
+        'styles': list(manifest.get('styles', [])),
+        'title': manifest.get('title'),
+        'csrfToken': bundles.csrf_token(authentication_provider.session_handler),
+        'user': authentication_provider.get_logged_in_user_name(),
+        'permissions': [p for p in authentication_provider.get_permission_list() if p],
+        'config': bundles.public_config(setting.get_config()),
+        'dataSources': manifest['dataSources'],
+    }
+
+
+def _bundle_page(authentication_provider, name):
+    setting = authentication_provider.get_setting()
+    config = setting.get_config()
+    try:
+        manifest = bundles.load_manifest(setting.site_root, name, config.get('clientSecurity'))
+    except bundles.BundleError as e:
+        current_app.logger.error('Bundle %s of %s: %s', name, setting.get_instance(), e)
+        return render_template('500.html'), 500
+    if manifest is None:
+        return authentication_provider.get_not_found_response()
+    g.analogic_bundle_page_manifest = manifest
+    boot = _bundle_boot(authentication_provider, name, manifest)
+    return render_template('bundle.html', cnf=config, manifest=manifest, boot=boot, bundle_name=name)
+
+
+@core_endpoints.analogic_endpoint_route('/b/<name>', methods=['GET'])
+def bundle_page(name):
+    authentication_provider = get_authentication_provider()
+    if not bundles.NAME_PATTERN.match(name):
+        return authentication_provider.get_not_found_response()
+    if not authentication_provider.check_app_authenticated():
+        return redirect(authentication_provider.get_setting().get_base_url())
+    return _bundle_page(authentication_provider, name)
+
+
+@core_endpoints.analogic_endpoint_route('/bundles/<name>/<path:file_path>', methods=['GET'])
+@endpoint_login_required
+def bundle_file(name, file_path):
+    authentication_provider = get_authentication_provider()
+    setting = authentication_provider.get_setting()
+    try:
+        root = bundles.bundle_root(setting.site_root, name)
+    except bundles.BundleError:
+        return authentication_provider.get_not_found_response()
+    path = bundles.safe_path(root, file_path)
+    if path is None or not os.path.isfile(path) or os.path.basename(path) == bundles.MANIFEST:
+        return authentication_provider.get_not_found_response()
+    mimetype = 'text/javascript' if path.endswith(('.js', '.mjs')) else mimetypes.guess_type(path)[0]
+    response = send_file(path, mimetype=mimetype or 'application/octet-stream', max_age=0, conditional=True)
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['Cache-Control'] = 'private, no-cache'
+    return response
+
+
+@core_endpoints.analogic_endpoint_route('/bundle_session/<name>', methods=['GET'])
+@endpoint_login_required
+def bundle_session(name):
+    authentication_provider = get_authentication_provider()
+    setting = authentication_provider.get_setting()
+    try:
+        manifest = bundles.load_manifest(setting.site_root, name, setting.get_config().get('clientSecurity'))
+    except bundles.BundleError:
+        manifest = None
+    if manifest is None:
+        return authentication_provider.get_not_found_response()
+    return jsonify(_bundle_boot(authentication_provider, name, manifest))
 
 @core_endpoints.analogic_endpoint_route('/sitemap.xml', methods=['GET'])
 def sitemap():
@@ -104,7 +210,8 @@ def login():
 
 @core_endpoints.analogic_endpoint_route('/proxy/<path:sub_path>', methods=['GET', 'POST', 'PATCH'])
 def proxy(sub_path):
-    return get_authentication_provider().proxy(sub_path)
+    authentication_provider = get_authentication_provider()
+    return bundles.guard_data_request(authentication_provider, 'proxy', sub_path) or authentication_provider.proxy(sub_path)
 
 
 @core_endpoints.analogic_endpoint_route('/activeUser', methods=['GET'])
@@ -124,7 +231,8 @@ def logout():
 
 @core_endpoints.analogic_endpoint_route('/export', methods=['GET', 'POST'])
 def export():
-    return get_authentication_provider().export()
+    authentication_provider = get_authentication_provider()
+    return bundles.guard_data_request(authentication_provider, 'export') or authentication_provider.export()
 
 
 @core_endpoints.analogic_endpoint_route('/clearcache', methods=['GET'])
@@ -134,6 +242,9 @@ def clear_cache():
 
 @core_endpoints.analogic_endpoint_route('/pivot', methods=['GET', 'POST'])
 def pivot():
+    refusal = bundles.guard_data_request(get_authentication_provider(), 'pivot')
+    if refusal:
+        return refusal
     try:
         response = get_authentication_provider().pivot()
         return response
@@ -153,7 +264,8 @@ def pivot():
 
 @core_endpoints.analogic_endpoint_route('/middleware', methods=['GET', 'POST'])
 def middleware():
-    return get_authentication_provider().middleware()
+    authentication_provider = get_authentication_provider()
+    return bundles.guard_data_request(authentication_provider, 'middleware') or authentication_provider.middleware()
 
 
 @core_endpoints.analogic_endpoint_route('/upload_image', methods=['POST'])

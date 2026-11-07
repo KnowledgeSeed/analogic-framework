@@ -75,7 +75,7 @@ class Analogic(Flask):
         self.long_running_tasks = {}
 
     def create_new_app(self, name, main_page, model_api_url='', cam_namespace='', connected_seeder_url='',
-                       connected_seeder_application_version=''):
+                       connected_seeder_application_version='', authentication_mode=None):
         if name in self.analogic_applications:
             raise Exception('Application already exists')
 
@@ -102,7 +102,11 @@ class Analogic(Flask):
         self.replace_str_in_file(os.path.join(target, 'app.json'), '$camNamespace', cam_namespace)
         self.replace_str_in_file(os.path.join(target, 'app.json'), '$connectedSeederUrl', connected_seeder_url)
         self.replace_str_in_file(os.path.join(target, 'app.json'), '$connectedSeederApplicationVersion', connected_seeder_application_version)
-        authentication_mode = 'NoLogin' if model_api_url == '' else 'LoginBasic' if cam_namespace == '' else 'LoginCam'
+        if not authentication_mode:
+            authentication_mode = 'NoLogin' if model_api_url == '' else 'LoginBasic' if cam_namespace == '' else 'LoginCam'
+        elif authentication_mode not in self.authentication_providers:
+            shutil.rmtree(target, ignore_errors=True)
+            raise Exception(f"Unknown authentication mode '{authentication_mode}'")
         self.replace_str_in_file(os.path.join(target, 'app.json'), '$authenticationMode', authentication_mode)
         self.replace_str_in_file(os.path.join(target, 'static', 'assets', 'js', 'configs', 'widget-config.js'),
                                  '$projectId', name)
@@ -460,6 +464,17 @@ def create_app(instance_path, start_scheduler=True, initialize_auth_providers=Tr
 
     def inject_current_app():
         return {'current_app': current_app}
+
+    def inject_csrf_token():
+        def analogic_csrf_token():
+            from analogic.bundles import csrf_token
+            try:
+                return csrf_token(current_app.get_authentication_provider().session_handler)
+            except Exception:
+                return ''
+        return {'analogic_csrf_token': analogic_csrf_token}
+
+    app.context_processor(inject_csrf_token)
 
     def inject_page_meta_data_info():
         return dict(page_meta_data_info=getattr(g, 'page_meta_data_info', []))

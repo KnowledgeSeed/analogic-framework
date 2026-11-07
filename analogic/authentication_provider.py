@@ -716,6 +716,14 @@ class AuthenticationProvider(ABC):
     def get_available_backend_methods(self):
         return ['install', 'uninstall']
 
+    @classmethod
+    def get_app_settings_schema(cls):
+        """The app.json fields of this authentication mode for a settings form (Seeder), or None when the class does
+        not describe them. Format: {'title', 'description', 'fields': [{'path': 'proxy.target', 'type': 'string',
+        'title', 'description', 'required', 'secret', 'store', 'restart', 'default', 'enum'}]}. analogic-ext-seeder
+        has a catalog for the modes that return None; a class that returns a schema overrides it."""
+        return None
+
     @staticmethod
     def get_setting_parameter_descriptions():
         result = {

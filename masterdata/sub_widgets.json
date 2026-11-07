@@ -1,5 +1,6 @@
 {
   "ActionButtonRowWidget":  {"subWidgets": "0"},
+  "BundleWidget":  {"subWidgets": "0"},
   "ButtonWidget":  {"subWidgets": "0"},
   "ComboChartWidget":  {"subWidgets": "0"},
   "ContainerWidget": {"subWidgets": "*", "max":"*"},

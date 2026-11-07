@@ -65,6 +65,10 @@ csp_policy = {
 
 if eval(os.getenv('ANALOGIC_TALISMAN_ENABLED', 'True')):
     Talisman(app, force_https=False, content_security_policy=csp_policy, x_content_type_options=False)
+    # A bundle page extends this policy with its manifest's additions. After-request functions run in reverse order,
+    # so the first one runs after Talisman has set the header.
+    from analogic.bundles import apply_bundle_csp
+    app.after_request_funcs.setdefault(None, []).insert(0, apply_bundle_csp)
 
 if __name__ == "__main__":
     workers = int(os.getenv('ANALOGIC_WORKERS', '1'))
