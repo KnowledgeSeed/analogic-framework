@@ -8,6 +8,9 @@
   "ActionButtonRowWidget": [
     "action"
   ],
+  "BundleWidget": [
+    "changed"
+  ],
   "ButtonWidget": [
     "launch",
     "contextMenuAction",

@@ -6,6 +6,7 @@ app = {id: 0, isMobile: null, isTouched: false, url: {}};
 {% set script_root = request.script_root.rstrip('/') if request.script_root else '' %}
 app.scriptRoot = (document.currentScript && document.currentScript.dataset.scriptRoot || '').replace(/\/+$/, '');
 app.assetsUrl = app.scriptRoot + {{ url_for('static', filename='assets')[script_root|length:] | tojson }};
+app.sdkUrl = app.scriptRoot + {{ url_for('static', filename='sdk')[script_root|length:] | tojson }};
 app.applicationAssetsUrl = app.scriptRoot + {{ url_for(cnf.blueprint_static, filename='assets')[script_root|length:] | tojson }};
 app.applicationBaseUrl = app.scriptRoot + {{ ('' if cnf.instance == 'default' else '/' ~ cnf.instance) | tojson }};
 app.tm1CellsetId = (cellsetId) => `Cellsets('${cellsetId}')?`;

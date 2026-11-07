@@ -36,7 +36,11 @@ function stringParams(params) {
     return result;
 }
 
-export function createContext(boot) {
+/**
+ * extras (a BundleWidget passes them): props - the widget's values (ctx.props), widget - {id, emit(value)} (ctx.widget).
+ * On a bundle page ctx.props is {} and ctx.widget is null.
+ */
+export function createContext(boot, extras = {}) {
     const listeners = {};
     const base = boot.baseUrl.endsWith('/') ? boot.baseUrl : boot.baseUrl + '/';
     let csrfToken = boot.csrfToken;
@@ -99,6 +103,8 @@ export function createContext(boot) {
         dataSources: Object.freeze({...(boot.dataSources || {})}),
         // Helpers, so a bundle needs no import of this module's URL.
         utils: Object.freeze({cellsetRows, cellsetColumns}),
+        props: Object.freeze({...(extras.props || {})}),
+        widget: extras.widget ? Object.freeze({...extras.widget}) : null,
 
         /** {user, permissions} as the server sees them. refresh=true asks the server again. */
         async session(refresh = false) {

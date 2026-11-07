@@ -112,6 +112,20 @@ class BundlesTest(unittest.TestCase):
         self.assertIn("connect-src 'self' ws://localhost:8100", header)
         self.assertIn("object-src 'none'", header)
 
+    def test_a_widget_page_gets_the_union_of_its_bundles_policies(self):
+        self.write_bundle('board', {'entry': 'dist/index.js', 'csp': {'imgSrc': ['data:', 'blob:'], 'fontSrc': ['data:']}})
+        self.write_bundle('broken', {'entry': 'dist/missing.js'})
+        manifest = bundles.widget_page_manifest(self.root)
+        self.assertEqual({'worker-src': ["'self'", 'blob:'], 'img-src': ['data:', 'blob:'], 'font-src': ['data:']},
+                         manifest['csp'])
+        base = bundles.parse_csp("default-src 'self'; img-src 'self'")
+        self.assertEqual({'default-src': ["'self'"], 'img-src': ["'self'", 'data:', 'blob:'],
+                          'worker-src': ["'self'", 'blob:'], 'font-src': ["'self'", 'data:']},
+                         bundles.parse_csp(bundles.csp_header(bundles.csp_policy(manifest, base))))
+        empty = tempfile.TemporaryDirectory()
+        self.addCleanup(empty.cleanup)
+        self.assertIsNone(bundles.widget_page_manifest(empty.name))
+
     def test_a_bundle_request_needs_the_csrf_token_and_an_allowed_source(self):
         provider = Provider(self.root, {})
         headers = {bundles.BUNDLE_HEADER: 'sales'}

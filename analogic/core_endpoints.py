@@ -74,12 +74,40 @@ def index():
             and not navigation_pending):
         return _bundle_page(authentication_provider, main_bundle)
 
+    if _is_page(response) and authentication_provider.check_app_authenticated():
+        # Widget pages: BundleWidgets start bundles here, so their csp additions apply to this page too.
+        setting = authentication_provider.get_setting()
+        manifest = bundles.widget_page_manifest(setting.site_root, setting.get_config().get('clientSecurity'),
+                                                current_app.logger)
+        if manifest:
+            g.analogic_bundle_page_manifest = manifest
+
     return response
 
 
 def _is_page(response):
     status = response[1] if isinstance(response, tuple) and len(response) > 1 else getattr(response, 'status_code', 200)
     return status == 200
+
+
+def _bundle_boot(authentication_provider, name, manifest):
+    """What a bundle starts with: on its own page (bundle.html) and inside a widget page (BundleWidget, through
+    bundle_session)."""
+    setting = authentication_provider.get_setting()
+    base = setting.get_base_url().rstrip('/') + '/'
+    return {
+        'bundle': name,
+        'baseUrl': base,
+        'bundleUrl': base + 'bundles/' + name + '/',
+        'entry': manifest['entry'],
+        'styles': list(manifest.get('styles', [])),
+        'title': manifest.get('title'),
+        'csrfToken': bundles.csrf_token(authentication_provider.session_handler),
+        'user': authentication_provider.get_logged_in_user_name(),
+        'permissions': [p for p in authentication_provider.get_permission_list() if p],
+        'config': bundles.public_config(setting.get_config()),
+        'dataSources': manifest['dataSources'],
+    }
 
 
 def _bundle_page(authentication_provider, name):
@@ -93,18 +121,7 @@ def _bundle_page(authentication_provider, name):
     if manifest is None:
         return authentication_provider.get_not_found_response()
     g.analogic_bundle_page_manifest = manifest
-    base = setting.get_base_url().rstrip('/') + '/'
-    boot = {
-        'bundle': name,
-        'baseUrl': base,
-        'bundleUrl': base + 'bundles/' + name + '/',
-        'entry': manifest['entry'],
-        'csrfToken': bundles.csrf_token(authentication_provider.session_handler),
-        'user': authentication_provider.get_logged_in_user_name(),
-        'permissions': [p for p in authentication_provider.get_permission_list() if p],
-        'config': bundles.public_config(config),
-        'dataSources': manifest['dataSources'],
-    }
+    boot = _bundle_boot(authentication_provider, name, manifest)
     return render_template('bundle.html', cnf=config, manifest=manifest, boot=boot, bundle_name=name)
 
 
@@ -148,10 +165,7 @@ def bundle_session(name):
         manifest = None
     if manifest is None:
         return authentication_provider.get_not_found_response()
-    return jsonify({'user': authentication_provider.get_logged_in_user_name(),
-                    'permissions': [p for p in authentication_provider.get_permission_list() if p],
-                    'csrfToken': bundles.csrf_token(authentication_provider.session_handler),
-                    'dataSources': manifest['dataSources']})
+    return jsonify(_bundle_boot(authentication_provider, name, manifest))
 
 @core_endpoints.analogic_endpoint_route('/sitemap.xml', methods=['GET'])
 def sitemap():

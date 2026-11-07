@@ -323,6 +323,28 @@ def _refuse(message):
 
 # ------------------------------------------------------------------------------------------------- the page
 
+def widget_page_manifest(site_root, client_security=None, logger=None):
+    """A widget page may hold BundleWidgets of any installed bundle, so its policy gets the union of their csp
+    additions (each validated like on a bundle page). None when the app has no bundles. A broken manifest is
+    skipped: its widget fails to start, the rest of the page keeps its policy."""
+    csp = {}
+    found = False
+    for name in list_bundles(site_root):
+        try:
+            manifest = load_manifest(site_root, name, client_security)
+        except BundleError as e:
+            if logger:
+                logger.warning('Bundle %s skipped for the widget page policy: %s', name, e)
+            continue
+        if manifest is None:
+            continue
+        found = True
+        for directive, sources in manifest.get('csp', {}).items():
+            current = csp.setdefault(directive, [])
+            current.extend(s for s in sources if s not in current)
+    return {'csp': csp} if found else None
+
+
 def public_config(config):
     keys = ('projectName', 'mainPage', 'sessionExpiresInMinutes', 'mainBundle', 'bundleOnly')
     return {k: config.get(k) for k in keys if k in config}

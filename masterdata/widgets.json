@@ -234,6 +234,25 @@
         "name": "Application",
         "parameters": []
     },
+    "BundleWidget": {
+        "name": "BundleWidget",
+        "parameters": [
+            {
+                "comment": "Name of an installed client bundle of the app (apps/<app>/bundles/<name>/, deployed from the IB Client bundles panel). Its mount(element, ctx) runs inside this widget, limited to the bundle's data allowlist.",
+                "deprecated": false,
+                "name": "bundle",
+                "required": true,
+                "type": "string"
+            },
+            {
+                "comment": "Values passed to the bundle as ctx.props (a repository loader may return them as \"props\").",
+                "deprecated": false,
+                "name": "props",
+                "required": false,
+                "type": "object"
+            }
+        ]
+    },
     "ButtonWidget": {
         "name": "ButtonWidget",
         "parameters": [
