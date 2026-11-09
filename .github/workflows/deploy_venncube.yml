@@ -1,0 +1,51 @@
+name: Deploy venncubed/analogic to TrustMe
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-venncubed-analogic-kseed-docker1
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, linux, kseed-docker1]
+    env:
+      DEPLOY_DIR: /opt/dockerdata/applications/venncubed/analogic
+      COMPOSE_FILE: docker-compose-bjoern.yml
+      COMPOSE_PROJECT_NAME: venncubed-analogic
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          clean: true
+
+      - name: Copy application files
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo mkdir -p "$DEPLOY_DIR"
+          sudo rsync -a --no-owner --no-group --omit-dir-times \
+            --exclude='.git/' --exclude='.env' --exclude='.env.*' \
+            "$GITHUB_WORKSPACE"/ "$DEPLOY_DIR"/
+
+      - name: Validate Docker Compose config
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$DEPLOY_DIR"
+          rendered_config="$(docker compose config)"
+          grep -q '^  analogic:' <<<"$rendered_config"
+          grep -q 'published: "5000"' <<<"$rendered_config"
+
+      - name: Start Analogic stack
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$DEPLOY_DIR"
+          docker compose up -d --build --no-deps --force-recreate
+          docker compose ps
